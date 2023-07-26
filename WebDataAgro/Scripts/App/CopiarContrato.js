@@ -832,7 +832,7 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 6) {
         obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
     }
-    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 4) {
         obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
         if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
             obj.MotivoOperacionAnterior = "Otro";
@@ -842,8 +842,6 @@ function ObtenerDatos(error) {
             obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
             obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         }
-
-
     }
     if (obj.TipoNegocioId == 3) {
         obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val();

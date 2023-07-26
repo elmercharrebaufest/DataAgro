@@ -633,32 +633,22 @@ function Filtrar() {
     var currentFilters = grid.dataSource.filter();
     let filtroSap = TraerFiltrosConValores();
     currentFilters = { filters: [], logic: 'and' };
-    grid.dataSource.filter(currentFilters);
     if (filtroSap.filter != null) {
-        //-----------------------------------------
         currentFilters.filters = currentFilters.filters.filter(function (x) {
             return x.field != 'ContratoSAP' && x.field != undefined
         });
-        //currentFilters.filters = currentFilters.filters.filter(function (x) {
-        //    return x.field != 'ContratoCorredor' && x.field != undefined
-        //});
 
         var contratoSapFilters = { logic: 'or', filters: [] };
-        //var contratoCorredorFilters = { logic: 'or', filters: [] };
 
         for (var i = 0; i < filtroSap.filter.filters[0].filters.length; i++) {
             contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'contains', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
             contratoSapFilters.filters.push({ field: 'Negocio', operator: 'contains', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
 
             contratoSapFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
-            //contratoCorredorFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
         }
         currentFilters.filters.push(contratoSapFilters);
-        //currentFilters.filters.push(contratoCorredorFilters);    
         grid.dataSource.filter(currentFilters);
     }
-    filtrarZona();
-    recargarGrilla();
 
 }
 
@@ -736,8 +726,6 @@ function filtrarMesa() {
         comerciales.filters.push({ field: 'ComercialCreadorId', operator: 'eq', value: parseInt(comercialId) });
         comerciales.filters.push({ field: 'ComercialId', operator: 'eq', value: parseInt(comercialId) });
 
-        //addOrRemoveFilter(grilla, "ComercialCreadorId", "eq", parseInt(comercialId));     
-        //addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId)); 
         $("#negociosPropiosDiv").addClass("selected");
         $("#negociosPropios").addClass("selected").removeClass("varios");
         var currentFilters = grilla.dataSource.filter();
@@ -752,7 +740,6 @@ function filtrarMesa() {
         $("#negociosPropiosDiv").removeClass("selected");
         $("#negociosPropios").addClass("varios").removeClass("selected");
     }
-    recargarGrilla();
 }
 
 function addOrRemoveFilter(grid, field, operator, value) {

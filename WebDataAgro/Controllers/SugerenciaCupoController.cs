@@ -35,7 +35,7 @@ namespace WebDataAgro.Controllers
             this.comercialManager = comercialManager;
         }
 
-        [Autorizacion(PermisosDataAgro.SugerenciaDeCupos)]
+        [Autorizacion(PermisosDataAgro.SugerenciaDeCupos, PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria)]
         public ActionResult Index(int? materialId = null, string centroId = "1029", int? ComercialSeleccionado = null, bool muestraModal = false)
         {
             ComercialSeleccionado = ComercialSeleccionado ?? GlobalVariables.ComercialId;
@@ -88,7 +88,16 @@ namespace WebDataAgro.Controllers
                     Selected = i.CodigoSap == centroId
                 });
             }
-            ViewBag.CenLista = new SelectList(listaCentro, "Value", "Text", centroId);
+
+            if (PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria))
+            {
+                ViewBag.CenLista = new SelectList(listaCentro.Where(x => x.Value == "1029").ToList(), "Value", "Text", centroId);
+            }
+            else
+            {
+                ViewBag.CenLista = new SelectList(listaCentro, "Value", "Text", centroId);
+            }
+
             ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
             var primerCierre = materialId == null ? null : cupoManager.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
 

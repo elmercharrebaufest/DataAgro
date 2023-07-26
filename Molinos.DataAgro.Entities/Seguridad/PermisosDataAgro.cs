@@ -344,6 +344,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         Visualizar_CupoNoPropio = 732,
         [Display(ResourceType = typeof(Text), Name = "Disponibilidad_De_Cupos_Descarga")]
         DisponibilidadDeCuposDescarga = 733,
+        [Display(ResourceType = typeof(Text), Name = "Cupos_Acopios_SolicitudExtraordinaria")]
+        Cupos_Acopios_SolicitudExtraordinaria = 734,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

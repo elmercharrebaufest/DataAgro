@@ -1290,7 +1290,7 @@ function armarSelects(result) {
         }
 
         if (obj.materialId <= 0) {
-            MensErr("Debe seleccionar un Maerial");
+            MensErr("Debe seleccionar un Material");
             return false;
         }
         if (obj.nombre == "") {
@@ -1385,10 +1385,12 @@ function armarSelects(result) {
 function eliminarCampoProduccion(val) {
     var item = $(val).attr("id").split("eliminarProd")[1];
 
-    for (var i = 0; i < (aGuardar[item].granos.length); i++) {
-        if ((aGuardar[item].granos[i].campañaId != "null") || (aGuardar[item].granos[i].granoId != "null")) {
-            cambios.CampaniaId.push(aGuardar[item].granos[i].campañaId);
-            cambios.CampaniaDesc.push(aGuardar[item].granos[i].campaña);
+    var indice = aGuardar.findIndex(x => x.item == parseInt($(val).attr("id").split("eliminarProd")[1]));
+
+    for (var i = 0; i < (aGuardar[indice].granos.length); i++) {
+        if ((aGuardar[indice].granos[i].campañaId != "null") || (aGuardar[indice].granos[i].granoId != "null")) {
+            cambios.CampaniaId.push(aGuardar[indice].granos[i].campañaId);
+            cambios.CampaniaDesc.push(aGuardar[indice].granos[i].campaña);
         }
     }
     $("#granocontenedor" + item).remove();
@@ -1433,13 +1435,16 @@ function eliminarKMZEstablecimiento(val) {
         }
     }
 }
+
 function eliminarAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarAlm")[1];
 
-    for (var i = 0; i < (aGuardarAlmacenamiento[item].granosAlmacenamiento.length); i++) {
-        if ((aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId != "null")) {
-            cambios.CampaniaId.push(aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId);
-            cambios.CampaniaDesc.push(aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campaña);
+    var indice = aGuardarAlmacenamiento.findIndex(x => x.item == parseInt($(val).attr("id").split("eliminarAlm")[1]));
+
+    for (var i = 0; i < (aGuardarAlmacenamiento[indice].granosAlmacenamiento.length); i++) {
+        if ((aGuardarAlmacenamiento[indice].granosAlmacenamiento[i].campañaId != "null")) {
+            cambios.CampaniaId.push(aGuardarAlmacenamiento[indice].granosAlmacenamiento[i].campañaId);
+            cambios.CampaniaDesc.push(aGuardarAlmacenamiento[indice].granosAlmacenamiento[i].campaña);
         }
     }
     $("#granocontenedoralmacenamiento" + item).remove();
@@ -1449,6 +1454,7 @@ function eliminarAlmacenamiento(val) {
 
     recalcularSegmentacion();
 }
+
 function eliminarKMZAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarKMZAlm")[1];
     $("#eliminarKMZAlm" + item).remove();

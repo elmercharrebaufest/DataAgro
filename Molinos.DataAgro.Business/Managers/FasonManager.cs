@@ -9,9 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -22,13 +20,21 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IProveedorManager mobjProveedorManager;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IConsultarAcuerdosGeneradosAgent acuerdosGeneradosAgent;
+        private readonly IFinalizarFasonAgent finalizarFasonAgent;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager, ILogDataAgroManager logDataAgroManager)
+        public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager,
+            ILogDataAgroManager logDataAgroManager, IConsultarAcuerdosGeneradosAgent acuerdosGeneradosAgent,
+            IFinalizarFasonAgent finalizarFasonAgent, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
             this.logDataAgroManager = logDataAgroManager;
+            this.acuerdosGeneradosAgent = acuerdosGeneradosAgent;
+            this.finalizarFasonAgent = finalizarFasonAgent;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
 
         private Resultado Validar(Fason oParam, Resultado oErrorMessages)
@@ -102,7 +108,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                     }
-                }                
+                }
             }
 
             if (oParam.FechaDesde.Year == 1)
@@ -118,6 +124,66 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
             }
+
+            if (oParam.FechaOperacion > DateTime.Now.Date)
+            {
+                oErrorMessages.Error("FechaOperacion", "La Fecha de operación tiene que ser menor o igual al día de hoy.");
+            }
+            else
+            {
+                if (oParam.Id > 0)
+                {
+                    var contrato = repositorio.Obtener<Negocio, FasonDto>(x => x.Id == oParam.Id, x => new FasonDto { Fecha = x.Fecha });
+                    if ((oParam.FechaOperacion != contrato.Fecha.Date && oParam.FechaOperacion < contrato.Fecha.Date))
+                    {
+                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
+
+                        if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
+                            && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
+                        {
+                            oErrorMessages.Error("FechaOperacion", "La Fecha de Operación no puede ser anterior al último día hábil: " + diaAnterior.ToString("dd/MM/yyyy"));
+                        }
+
+                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Escriba el motivo por el cual la Fecha de Operación es anterior a hoy.");
+                        }
+
+                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio escribir un motivo con más de 5 caracteres.");
+                        }
+                    }
+                    if (oParam.FechaOperacion > contrato.Fecha.Date && oParam.Venta != true)
+                    {
+                        oErrorMessages.Error("NoInformaSio", "La Fecha de Operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
+                    }
+                }
+                else
+                {
+                    if (oParam.FechaOperacion < DateTime.Now.Date)
+                    {
+                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil(null);
+
+                        if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
+                            && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
+                        {
+                            oErrorMessages.Error("FechaOperacion", "La Fecha de operación no puede ser anterior al último día hábil: " + diaAnterior.ToString("dd/MM/yyyy"));
+                        }
+
+                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Escriba el motivo por el cual la Fecha de operación es anterior a hoy.");
+                        }
+
+                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio escribir un motivo con más de 5 caracteres.");
+                        }
+                    }
+                }
+            }
+
             return oErrorMessages;
         }
 
@@ -156,10 +222,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                 }
+                var proveedorFason = repositorio.Obtener<Proveedor>(oFason.ProveedorId);
                 oFasonSave.Precio = oFason.Precio;
                 oFasonSave.Cantidad = oFason.Cantidad;
                 oFasonSave.EstadoId = estado;
-                oFasonSave.Proveedor = oFason.Proveedor;
+                oFasonSave.Proveedor = proveedorFason;
                 oFasonSave.ComercialId = oFason.ComercialId;
                 oFasonSave.MonedaId = oFason.MonedaId;
                 oFasonSave.MaterialId = oFason.MaterialId;
@@ -170,6 +237,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.FechaHasta = oFason.FechaHasta;
                 oFasonSave.TrigoEspecial = oFason.TrigoEspecial;
                 oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
+                oFasonSave.FechaOperacion = oFason.FechaOperacion;
+                oFasonSave.MotivoOperacionAnterior = oFason.MotivoOperacionAnterior;
+                oFasonSave.DescripcionOperacionAnterior = oFason.DescripcionOperacionAnterior;
             }
             else
             {
@@ -180,7 +250,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oFason.Fecha = DateTime.Now;
                 oFason.EstadoId = estado;
-                oFason.FechaOperacion = DateTime.Now;
 
                 repositorio.Agregar(oFason);
             }
@@ -408,7 +477,13 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", x.FechaDesde),
                 FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.FechaHasta)
+                                           SqlFunctions.DateName("year", x.FechaHasta),
+                FechaOperacionFormateado = SqlFunctions.DateName("day", x.FechaOperacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaOperacion),
+                FechaOperacion = x.FechaOperacion,
+                MotivoOperacionAnterior = x.MotivoOperacionAnterior,
+                DescripcionOperacionAnterior = x.DescripcionOperacionAnterior
             });
             return contrato;
         }

@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent\IClienteBolsaRosarioAPIAgent.cs" />
+    <Compile Include="Agent\IConsultarAcuerdosGeneradosAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionParcialAgent.cs" />
     <Compile Include="Agent\IValidarPesificacionAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionComisionesAgent.cs" />

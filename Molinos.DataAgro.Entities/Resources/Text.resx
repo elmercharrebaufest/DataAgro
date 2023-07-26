@@ -905,4 +905,7 @@
   <data name="Mail_MATPrimary" xml:space="preserve">
     <value>Recibir Mail MAT</value>
   </data>
+  <data name="Cupos_Acopios_SolicitudExtraordinaria" xml:space="preserve">
+    <value>Cupos Acopios Solicitud Extraordinaria</value>
+  </data>
 </root>

@@ -141,6 +141,7 @@
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
+    <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
     <Compile Include="Dto\CapacidadProductivaDto.cs" />

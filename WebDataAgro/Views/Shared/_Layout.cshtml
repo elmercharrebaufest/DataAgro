@@ -582,12 +582,12 @@
                             </ul>
                         </li>
                     }
-                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos) || PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos) || PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos) || PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="cupos-a" class="dropdown-toggle nav-text6 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Cupos <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="cupos">
-                                @if (PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
+                                @if (PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos) || PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria))
                                 {
                                     <li>
                                         <a href="~/SugerenciaCupo" class="nav-link misreporteslink">

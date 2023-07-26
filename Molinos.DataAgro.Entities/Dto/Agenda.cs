@@ -36,13 +36,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string RazonSocial { get; set; }
         public string Detalle { get; set; }
         public string TipoDeAcividad { get; set; }
-        public DateTime FechaHoraActividad { get; set; }
+        public DateTime? FechaHoraActividad { get; set; }
         public DateTime? FechaHoraRecordatorio { get; set; }
         public string Apellido { get; set; }
         public string NombreContacto { get; set; }
         public int ActividadId { get; set; }
-
-
     }
 
     public class RptActividadAgendaParam

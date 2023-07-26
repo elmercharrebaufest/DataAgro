@@ -1,4 +1,11 @@
-﻿<script src="~/Scripts/html2canvas.js"></script>
+﻿@{ 
+    var Cupos_Acopios = PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria);
+}
+<script>
+    Cupos_Acopios = '@Cupos_Acopios';
+</script>
+
+<script src="~/Scripts/html2canvas.js"></script>
 
 <div class="modal fade" id="modalSolicitudExtraordinaria" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-SE" role="document">

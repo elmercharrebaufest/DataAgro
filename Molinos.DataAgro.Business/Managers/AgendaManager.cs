@@ -38,7 +38,8 @@ namespace Molinos.DataAgro.Business.Managers
         public List<AgendaStore> VistaPreviaAgenda(RptActividadAgendaParam oParam)
         {
             var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == oParam.ActiveDirectoryId, x => x.ComercialId);
-            return repositorio.SelStore<AgendaStore>("DataAgro_TraerAgenda", 0, comercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
+            var data =  repositorio.SelStore<AgendaStore>("DataAgro_TraerAgenda", 0, comercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
+            return data;
         }
     }
 }

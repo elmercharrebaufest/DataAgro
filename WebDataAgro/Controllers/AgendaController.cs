@@ -49,7 +49,7 @@ namespace WebDataAgro.Controllers
 
             oParam.ActiveDirectoryId = GlobalVariables.IdActiveDirectory;
 
-            var datos = mobjAgendaManager.ExportarAgenda(oParam, GlobalVariables.Equipo);
+            var datos = mobjAgendaManager.VistaPreviaAgenda(oParam);
 
             var oLstAgenda = new LstAgendaActividad(reportesManager);
 

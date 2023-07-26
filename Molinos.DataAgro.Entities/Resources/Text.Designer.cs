@@ -844,6 +844,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cupos Acopios Solicitud Extraordinaria.
+        /// </summary>
+        public static string Cupos_Acopios_SolicitudExtraordinaria {
+            get {
+                return ResourceManager.GetString("Cupos_Acopios_SolicitudExtraordinaria", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datos Research.
         /// </summary>
         public static string Datos_Research {
@@ -959,18 +968,16 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("Disponibilidad_De_Cupos", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disponibilidad de Cupos con Descarga.
         /// </summary>
-        public static string Disponibilidad_De_Cupos_Descarga
-        {
-            get
-            {
+        public static string Disponibilidad_De_Cupos_Descarga {
+            get {
                 return ResourceManager.GetString("Disponibilidad_De_Cupos_Descarga", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Envio Mail Negocios Anula y Reemplaza.
         /// </summary>

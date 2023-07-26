@@ -635,6 +635,15 @@ function LimpiarModalSolicitudExtraordinaria() {
     checkSoja();
     $("#Sustentable").prop("checked", false);
     $("#EPA").prop("checked", false);
+
+    // Si tiene permiso "Cupos_Acopios", establecer valores de "ProveedorIdSE" y buscadorProveedorSE
+    if (Cupos_Acopios == "True") {
+        $("#ProveedorIdSE").val(2852);
+        $("#buscadorProveedorSE").val("MOLINOS AGRO S.A.(30715118773)");
+        $("#buscadorProveedorSE").trigger("change");
+        $("#buscadorProveedorSE").prop("disabled", true);
+        $(".k-clear-value").hide();
+    }
 }
 
 function AbrirModalSolicitudExtraordinaria() {

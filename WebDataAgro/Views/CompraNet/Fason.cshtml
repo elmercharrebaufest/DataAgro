@@ -130,23 +130,27 @@
                 <option value="1">MATBA ROFEX SA</option>
             </select>
         </div>
-        <div class="noFason noAcuerdo ampliar" id="fechaOperacionDiv">
-            <div class="col-sm-1 ">
-                <label>Fecha Operacion</label>
+    </div>
+    <div class="row noAgente ampliar" id="divFechaAnteriorFason" hidden>
+        <div id="fechaOperacionDiv">
+            <div class="col-sm-2 ">
+                <label>Fecha de Operación</label>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3 col-md-2">
                 <input id="fechaOperacionId" type="date" data-bind="value: Parametros.fechaOperacionId" style="width:100%" />
             </div>
         </div>
-    </div>
-    <div class="row noAgente noFason noAcuerdo ampliar">
+
         <div id="fechaOperacionMotivoDiv" style="display:none;">
-            <div class="col-sm-offset-6 col-sm-1">
+            <div class="col-sm-offset-2 col-sm-1">
                 <label>Motivo</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <select id="motivoAnterior" class="" data-bind="source: MotivoAnteriorCombo, value: Parametros.motivoAnterior, disabled: isControlDisabled"></select>
                 <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+            <div class="col-sm-4 descripcion" style="margin-top: 7px">
+                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="descripcionMotivoAnterior" rows="3" maxlength="100"></textarea>
             </div>
             <div class="col-sm-4" style="margin-top: 7px" hidden id="motivoTexto">
                 <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>

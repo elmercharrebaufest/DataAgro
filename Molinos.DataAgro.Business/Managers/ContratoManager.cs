@@ -1003,30 +1003,30 @@ namespace Molinos.DataAgro.Business.Managers
                                 if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
                                     && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
                                 {
-                                    oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+                                    oErrorMessages.Error("FechaOperacion", "La Fecha de Operación no puede ser anterior al último día hábil: " + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
                                 if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la Fecha Operación es anterior al día de la fecha.");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Escriba el motivo por el cual la Fecha de Operación es anterior a hoy.");
                                 }
 
                                 if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio escribir un motivo con más de 5 caracteres.");
                                 }
 
                                 if (oParam.Venta != true)
                                 {
                                     if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
                                     {
-                                        oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
+                                        oErrorMessages.Error("NoInformaSio", "La Fecha de Operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                                     }
                                 }
                             }
                             if (oParam.FechaOperacion > contrato.Fecha.Date && oParam.Venta != true)
                             {
-                                oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
+                                oErrorMessages.Error("NoInformaSio", "La Fecha de Operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
                             }
                         }
                         else
@@ -5964,7 +5964,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (acuerdo.Cantidad < cantidadEnDA + cantidadRecibida)
             {
                 var resultadoError = new GrabarContratoResult();
-                resultadoError.Error("ContratoAcuerdoMasivo", "La cantidad que se intentó cargar supera los kilos disponibles del acuerdo (" + cantidadEnDA.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "Kg).");
+                resultadoError.Error("Fatal", "La cantidad que se intentó cargar supera los kilos disponibles del acuerdo (" + (acuerdo.Cantidad - cantidadEnDA).ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "Kg).");
                 results.Add(resultadoError);
                 return results;
             }

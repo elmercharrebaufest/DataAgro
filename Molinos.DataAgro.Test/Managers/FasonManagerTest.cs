@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -11,11 +10,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Script.Serialization;
-using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -28,6 +22,9 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
+        private Mock<IConsultarAcuerdosGeneradosAgent> acuerdosGeneradosAgentMock;
+        private Mock<IFinalizarFasonAgent> finalizarFasonAgentMock;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         [SetUp]
         public void SetUp()
         {
@@ -35,8 +32,12 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
+            acuerdosGeneradosAgentMock = new Mock<IConsultarAcuerdosGeneradosAgent>();
+            finalizarFasonAgentMock = new Mock<IFinalizarFasonAgent>();
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
 
-            target = new FasonManager(logger.Object, repositorioMock.Object, proveedorManagerMock.Object, logDataAgroManagerMock.Object);
+            target = new FasonManager(logger.Object, repositorioMock.Object, proveedorManagerMock.Object,
+                logDataAgroManagerMock.Object, acuerdosGeneradosAgentMock.Object, finalizarFasonAgentMock.Object, diasHabilesAgentMock.Object);
         }
 
         [Test]
@@ -54,11 +55,15 @@ namespace Molinos.DataAgro.Test.Managers
                 CampanaId = 1,
                 Posicion = "01.2019",
                 FechaDesde = DateTime.Now,
-                FechaHasta = DateTime.Now
+                FechaHasta = DateTime.Now,
+                FechaOperacion = DateTime.Today.AddDays(-1),
+                MotivoOperacionAnterior = "Otro",
+                DescripcionOperacionAnterior = "Test GrabarFasonOk"
             };
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato { Fecha = DateTime.Now });
 
             var result = target.GrabarFason(oFason);
 
@@ -109,10 +114,14 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialCreadorId = 1,
                 ComercialId = 2,
                 TrigoEspecial = true,
-                Estado = new EstadoContrato { EstadoContratoId = 1 }
+                Estado = new EstadoContrato { EstadoContratoId = 1 },
+                FechaOperacion = DateTime.Today.AddDays(-1),
+                MotivoOperacionAnterior = "Otro",
+                DescripcionOperacionAnterior = "Test FasonManager"
             };
 
             repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);
+            repositorioMock.Setup(y => y.Obtener<Negocio, FasonDto>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, FasonDto>>>())).Returns(new FasonDto { Fecha = DateTime.Now });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
             var result = target.GrabarFason(oFason);
@@ -206,7 +215,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado }
             };
 
-            repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);          
+            repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(5)).Throws(new Exception("Error obtener estado"));
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(4)).Returns(new EstadoContrato { });

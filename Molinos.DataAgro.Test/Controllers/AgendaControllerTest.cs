@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ExportarAgendaOk()
         {
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            mobjAgendaManager.Setup(x => x.ExportarAgenda(It.IsAny<RptActividadAgendaParam>(), It.Is<List<int>>(y => y.Count == 2))).Returns(new List<AgendaStore>()
+            mobjAgendaManager.Setup(x => x.VistaPreviaAgenda(It.IsAny<RptActividadAgendaParam>())).Returns(new List<AgendaStore>()
             {
                 new AgendaStore{}
             });

@@ -34,19 +34,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     (rpt.ProveedorId == null || actividad.Proveedor.ProveedorId == rpt.ProveedorId) &&
                     (rpt.FechaDesde == null || DbFunctions.TruncateTime(actividad.FechaHoraActividad) >= DbFunctions.TruncateTime(rpt.FechaDesde)) &&
                     (rpt.FechaHasta == null || DbFunctions.TruncateTime(actividad.FechaHoraActividad) <= DbFunctions.TruncateTime(rpt.FechaHasta))
-
-
                 orderby actividad.FechaHoraRecordatorio == null ? 1 : 0, actividad.FechaHoraRecordatorio
                 select new AgendaStore
                 {
-                    ActividadId = actividad.ActividadId,
-                    Apellido = proveedorComercial.Comercial.Apellido,
-                    Detalle= actividad.Detalle,
-                    FechaHoraActividad= actividad.FechaHoraActividad,
-                    FechaHoraRecordatorio= actividad.FechaHoraRecordatorio.HasValue ? actividad.FechaHoraRecordatorio : actividad.FechaHoraActividad,
-                    NombreContacto= contactoComercial.Apellido + " " + contactoComercial.Nombres, 
-                    RazonSocial= proveedorComercial.Proveedor.RazonSocial,
-                    TipoDeAcividad = actividad.TipoActividad.Descripcion 
+                    ActividadId = (int?)actividad.ActividadId ?? 0,
+                    Apellido = proveedorComercial.Comercial.Apellido ?? "",
+                    Detalle = actividad.Detalle ?? "",
+                    FechaHoraActividad = actividad.FechaHoraActividad,
+                    FechaHoraRecordatorio = actividad.FechaHoraRecordatorio.HasValue ? actividad.FechaHoraRecordatorio : actividad.FechaHoraActividad,
+                    NombreContacto = contactoComercial.Apellido + " " + contactoComercial.Nombres,
+                    RazonSocial = proveedorComercial.Proveedor.RazonSocial ?? "",
+                    TipoDeAcividad = actividad.TipoActividad.Descripcion ?? ""
                 };
 
             return resultado.ToList();

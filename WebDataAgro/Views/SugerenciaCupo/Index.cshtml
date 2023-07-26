@@ -203,7 +203,12 @@
     var lista = (List<Molinos.DataAgro.Entities.Dto.SugerenciaCupoDto>)ViewBag.Lista;
     var sugerenciaPorComercial = (List<Molinos.DataAgro.Entities.Dto.SugerenciaPorComercialDto>)ViewBag.Sugerencia;
     var materialId = ViewBag.Material;
+    var Cupos_Acopios = PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria);
 }
+
+<script>
+    Cupos_Acopios = '@Cupos_Acopios';
+</script>
 
 <link href="~/Content/cupo.css" rel="stylesheet" />
 
@@ -220,6 +225,7 @@
             </a>
         </li>
     </ul>
+    @*<div class="tab-content @(Cupos_Acopios ? "hide" : "")">*@
     <div class="tab-content">
         @*<div class="tab-pane active" id="payment">
                 <div class="row">
