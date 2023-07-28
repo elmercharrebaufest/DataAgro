@@ -20,24 +20,17 @@ namespace Molinos.DataAgro.Test.Managers
         private FasonManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
-        private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
-        private Mock<IConsultarAcuerdosGeneradosAgent> acuerdosGeneradosAgentMock;
-        private Mock<IFinalizarFasonAgent> finalizarFasonAgentMock;
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            proveedorManagerMock = new Mock<IProveedorManager>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
-            acuerdosGeneradosAgentMock = new Mock<IConsultarAcuerdosGeneradosAgent>();
-            finalizarFasonAgentMock = new Mock<IFinalizarFasonAgent>();
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
 
-            target = new FasonManager(logger.Object, repositorioMock.Object, proveedorManagerMock.Object,
-                logDataAgroManagerMock.Object, acuerdosGeneradosAgentMock.Object, finalizarFasonAgentMock.Object, diasHabilesAgentMock.Object);
+            target = new FasonManager(logger.Object, repositorioMock.Object, logDataAgroManagerMock.Object, diasHabilesAgentMock.Object);
         }
 
         [Test]

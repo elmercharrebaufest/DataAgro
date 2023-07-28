@@ -17,23 +17,15 @@ namespace Molinos.DataAgro.Business.Managers
     public class FasonManager : IFasonManager
     {
         private readonly IRepositorio repositorio;
-        private readonly IProveedorManager mobjProveedorManager;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
-        private readonly IConsultarAcuerdosGeneradosAgent acuerdosGeneradosAgent;
-        private readonly IFinalizarFasonAgent finalizarFasonAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager,
-            ILogDataAgroManager logDataAgroManager, IConsultarAcuerdosGeneradosAgent acuerdosGeneradosAgent,
-            IFinalizarFasonAgent finalizarFasonAgent, IDiasHabilesAgent diasHabilesAgent)
+        public FasonManager(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            mobjProveedorManager = oMSProveedorManager;
             this.logDataAgroManager = logDataAgroManager;
-            this.acuerdosGeneradosAgent = acuerdosGeneradosAgent;
-            this.finalizarFasonAgent = finalizarFasonAgent;
             this.diasHabilesAgent = diasHabilesAgent;
         }
 
@@ -546,9 +538,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
+        //private string SapFinalizarFason(Fason fason)
+        //{
+        //    return finalizarFasonAgent.Finalizar(fason);
+        //}
+        //public List<AcuerdoSap> ObtenerAcuerdoParaFason(string CuitProveedor, int materialId, string filtro)
+        //{
+        //    return acuerdosGeneradosAgent.ConsultarAcuerdos(CuitProveedor, materialId, filtro);
+        //}
     }
 }
-
-
-
-
