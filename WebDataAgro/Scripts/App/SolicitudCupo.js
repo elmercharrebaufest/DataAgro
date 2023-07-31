@@ -546,7 +546,14 @@ function InicializarElementos() {
         min: kendo.parseDate($("#FechaSE").val()),
         change: function () {
             CrearTablaFechaHasta();
-            if (($("#FechaSE").val() < $("#FechaHastaSE").val()) && $("#FechaHastaSE").val() != "") {
+
+            var fechaSEString = $("#FechaSE").val();
+            var fechaHastaSEString = $("#FechaHastaSE").val();
+            // Convertimos las fechas de formato string a objetos Date
+            var fechaSE = new Date(fechaSEString.split('/').reverse().join('/'));
+            var fechaHastaSE = new Date(fechaHastaSEString.split('/').reverse().join('/'));
+
+            if ((fechaSE < fechaHastaSE) && $("#FechaHastaSE").val() != "") {
                 $("#boton-carga-masiva").show();
             } else $("#boton-carga-masiva").hide();
         }

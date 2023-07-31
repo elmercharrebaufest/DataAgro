@@ -427,6 +427,24 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Cupera", $"Error en el envio de datos.");
                 return error;
             }
+            fechaIngreso = fechaIngreso.Date;
+            var cuposCreados = repositorio.Contar<Cupo>(x => x.FechaIngreso == fechaIngreso && 
+                                                             x.MaterialId == materialId && 
+                                                             x.CentroId == centroId && 
+                                                             x.EstadoCupoId != 9 && 
+                                                             x.EstadoCupoId != 4);
+
+            var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId && 
+                                                                              x.Fecha == fechaIngreso && 
+                                                                              x.CentroId == centroId, x => x.LimiteCupo);
+
+            if (cantidad > limiteCupo - cuposCreados)
+            {
+                CupoResult error = new CupoResult();
+                error.Error("Cupera", $"La cantidad de Cupos con Descarga solicitada ({cantidad}) excede al límite general disponible ({limiteCupo - cuposCreados}) para el día " + fechaIngreso.ToString("dd/MM/yyyy"));
+                return error;
+            }
+
             var cuposConDescargaCreados = repositorio.Contar<Cupo>(x => x.ConDescarga == true &&
                                                                         x.NegocioId != null &&
                                                                         x.FechaIngreso == fechaIngreso &&
@@ -434,7 +452,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                                         x.CentroId == centroId &&
                                                                         x.EstadoCupoId != 9 &&
                                                                         x.EstadoCupoId != 4);
-            fechaIngreso = fechaIngreso.Date;
+            
             int limiteDescarga = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
                                                                                   x.Fecha == fechaIngreso &&
                                                                                   x.CentroId == centroId, x => x.LimiteDescarga);
