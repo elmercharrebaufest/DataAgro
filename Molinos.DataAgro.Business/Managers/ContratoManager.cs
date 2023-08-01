@@ -2626,7 +2626,19 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Error(e);
                     }
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
+                    logger.Info($"FinalizarContrato repositorio.GuardarCambios(); id: {oContratoSave.Id} ");
+
+                    try
+                    {
+                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
+                        logger.Info($"FinalizarContrato LogCambiosDataAgro; id: {oContratoSave.Id} ");
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                        mailManager.EnviarMail(new List<string> { ConfigurationManager.AppSettings["EmailSoporte"] }, $"Error guardar log finalizar contrato {oContratoSave.Id}", "", null, null, null, null, null);
+                    }
+
                     EnviarMailFinalizado(idActiveDirectory, oContratoSave, objDescuento, objCalidad);
 
                 }
@@ -2660,7 +2672,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 logger.Debug(" Error Intentando finalizar el contrato " + contratoId + " estado: " + oContratoSave.EstadoId);
             }
-            repositorio.GuardarCambios();
+            //repositorio.GuardarCambios();
             return oEntityErrors;
         }
 

@@ -48,8 +48,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             try
             {
-                using (var transaction = new TransactionScope())
-                {
+                //using (var transaction = new TransactionScope())
+                //{
                     SI_ZMPWS_DATAAGRO_PRE_SLIPClient agent = new SI_ZMPWS_DATAAGRO_PRE_SLIPClient();
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
@@ -437,10 +437,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         throw new Exception(devolucion.EX_MENSAJE_ERROR);
                     }
-                    transaction.Complete();
+                    //transaction.Complete();
                     return devolucion.EX_CONTRATO_SAP;
 
-                }
+                //}
 
 
             }

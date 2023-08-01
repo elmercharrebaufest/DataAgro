@@ -1251,7 +1251,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
 
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
             Assert.That(!resultado.HayError);
         }
 
@@ -1304,7 +1304,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { Id = 1, ComercialId = 1, Key = "ala" } });
 
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
             Assert.That(!resultado.HayError);
         }
 
@@ -1321,7 +1321,7 @@ namespace Molinos.DataAgro.Test.Managers
             resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
             Assert.That(resultado.HayError);
 
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(3));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(0));
         }
 
         [Test]
@@ -1371,7 +1371,7 @@ namespace Molinos.DataAgro.Test.Managers
               .Throws(new Exception("Error generico"));
 
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
             Assert.That(resultado.HayError);
         }
 
@@ -2070,7 +2070,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<int>() { 1 });
 
             target.FinalizacionAutomatica(It.IsAny<string>());
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
         }
 
         [Test]
