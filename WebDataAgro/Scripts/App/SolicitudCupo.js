@@ -523,6 +523,8 @@ function InicializarElementos() {
     });
 
     function changeFechaSE() {
+        CrearTablaFechaHasta();
+
         $("#FechaHastaSE").data("kendoDatePicker").value("");
         var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
         datepicker.min(kendo.parseDate($("#FechaSE").val()));
