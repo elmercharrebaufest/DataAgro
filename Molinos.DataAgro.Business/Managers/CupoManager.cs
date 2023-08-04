@@ -946,6 +946,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"El proveedor {id} no tiene ContactoComercial. cupos {string.Join(", ", listaCupos)}");
                     return;
                 }
+                // GSIAN: le enviamos al mail del corredor o a los mails de los contactos del corredor?
                 string emailComercial = "";
                 string emailComercialCreador = "";
 
@@ -971,7 +972,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (cupo.ComercialCreador != null)
                 {
                     try
-                    {
+                    { // GSIAN: Es correcto que un CcD no tenga un comercial creador??
                         emailComercialCreador = mailManager.GetEmailUserActiveDirectory(cupo.ComercialCreador.IdActiveDirectory);
                         oMensaje.To.Add(emailComercialCreador);
                     }
@@ -3277,12 +3278,16 @@ namespace Molinos.DataAgro.Business.Managers
                                                                         x.ConDescarga == true &&
                                                                         x.NegocioId > 0);
 
+                    var disponibilidadCuposConDescarga = limiteCupoZona.CantidadCupoConDescarga - CuposConsumidos;
+
+                    int cuposDisponibles = DisponibilidadRealCuposConDescarga(disponibilidadCuposConDescarga, itemConf);
+
                     result.Add(new DisponibilidadCuposDto
                     {
                         CentroCodigo = itemConf.Centro.CodigoSap,
                         CentroNombre = itemConf.Centro.Descripcion,
                         Consumidos = CuposConsumidos,
-                        Disponibles = limiteCupoZona.CantidadCupoConDescarga - CuposConsumidos,
+                        Disponibles = cuposDisponibles,
                         Fecha = itemConf.Fecha,
                         Limite = limiteCupoZona.CantidadCupoConDescarga,
                         MaterialCodigo = itemConf.Material.Codigo,
@@ -3296,20 +3301,23 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var itemCupo in itemConf.CantidadCupo)
                     {
-                        //if (itemCupo.CantidadCupoConDescarga > 0)
-                        //{
                         var CuposConsumidosZona = repositorio.Contar<Cupo>(x => x.FechaIngreso == itemConf.Fecha &&
                                                                                 x.CentroId == itemConf.CentroId &&
                                                                                 x.MaterialId == itemConf.MaterialId &&
                                                                                 x.ZonaCupoId == itemCupo.ZonaCupoId &&
                                                                                 x.ConDescarga == true &&
                                                                                 x.NegocioId > 0);
+
+                        var disponibilidadCuposConDescarga = itemCupo.CantidadCupoConDescarga - CuposConsumidosZona;
+
+                        int cuposDisponibles = DisponibilidadRealCuposConDescarga(disponibilidadCuposConDescarga, itemConf);
+
                         result.Add(new DisponibilidadCuposDto
                         {
                             CentroCodigo = itemConf.Centro.CodigoSap,
                             CentroNombre = itemConf.Centro.Descripcion,
                             Consumidos = CuposConsumidosZona,
-                            Disponibles = itemCupo.CantidadCupoConDescarga - CuposConsumidosZona,
+                            Disponibles = cuposDisponibles,
                             Fecha = itemConf.Fecha,
                             Limite = itemCupo.CantidadCupoConDescarga,
                             MaterialCodigo = itemConf.Material.Codigo,
@@ -3318,11 +3326,42 @@ namespace Molinos.DataAgro.Business.Managers
                             ZonaId = itemCupo.ZonaCupoId.ToString(),
                             ZonaNombre = itemCupo.ZonaCupo.Descripcion
                         });
-                        //}
                     }
                 }
             }
             return result;
+        }
+
+        public int DisponibilidadRealCuposConDescarga(int disponibilidadCuposConDescarga, ConfiguracionCupo configuracionCupo)
+        {
+            // Verificar si hay disponibilidad general.
+            var cuposCreados = repositorio.Contar<Cupo>(y => y.FechaIngreso == configuracionCupo.Fecha &&
+                                                             y.MaterialId == configuracionCupo.MaterialId &&
+                                                             y.CentroId == configuracionCupo.CentroId &&
+                                                             y.EstadoCupoId != 9 &&
+                                                             y.EstadoCupoId != 4);
+
+            var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(y => y.MaterialId == configuracionCupo.MaterialId &&
+                                                                              y.Fecha == configuracionCupo.Fecha &&
+                                                                              y.CentroId == configuracionCupo.CentroId, y => y.LimiteCupo);
+
+            var disponibilidadGeneralCupos = limiteCupo - cuposCreados;
+
+            var cuposDisponibles = 0;
+            if (disponibilidadGeneralCupos <= 0)
+            {
+                cuposDisponibles = 0;
+            }
+            else if (disponibilidadCuposConDescarga <= disponibilidadGeneralCupos)
+            {
+                cuposDisponibles = disponibilidadCuposConDescarga;
+            }
+            else
+            {
+                cuposDisponibles = disponibilidadGeneralCupos;
+            }
+
+            return cuposDisponibles;
         }
 
         public List<DisponibilidadCuposDto> TraerCupoDisponibilidadNoPropios(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)

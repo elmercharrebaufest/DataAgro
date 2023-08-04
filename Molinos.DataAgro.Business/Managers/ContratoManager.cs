@@ -9237,17 +9237,12 @@ namespace Molinos.DataAgro.Business.Managers
             var hoy = DateTime.Now.Date;
             var fechaLimite = hoy.AddDays(diasParametro);
 
-            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x =>
-            x.CentroId == centroId && x.MaterialId == materialId
-            && x.Fecha >= hoy && x.Fecha <= fechaLimite
-            && x.Fecha <= fechaHasta && x.Fecha >= fechaDesde);
-
-            //var diasNegocio = (fechaHasta - fechaDesde).Days;
-            //var cantConfigCupo = configuracionCupo.Count();
-            //if (diasParametro <= diasNegocio && diasParametro <= cantConfigCupo)
-            //{
-            //    configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta).Take(diasParametro).ToList();
-            //}
+            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId &&
+                                                                                                   x.MaterialId == materialId &&
+                                                                                                   x.Fecha >= hoy &&
+                                                                                                   x.Fecha <= fechaLimite &&
+                                                                                                   x.Fecha <= fechaHasta &&
+                                                                                                   x.Fecha >= fechaDesde);
 
             List<ConfiguracionCupoDto> configCupo = new List<ConfiguracionCupoDto>();
             configuracionCupo.ForEach(x =>
@@ -9265,6 +9260,21 @@ namespace Molinos.DataAgro.Business.Managers
                                                                             y.EstadoCupoId != 9 &&
                                                                             y.ZonaCupoId == zonaComercial.Id);
 
+                var disponibilidadCuposConDescarga = limiteDescargaZona - cantidadCuposConsumidos;
+
+                // Verificar si hay disponibilidad general.
+                var cuposCreados = repositorio.Contar<Cupo>(y => y.FechaIngreso == x.Fecha &&
+                                                                 y.MaterialId == materialId &&
+                                                                 y.CentroId == centroId &&
+                                                                 y.EstadoCupoId != 9 &&
+                                                                 y.EstadoCupoId != 4);
+
+                var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(y => y.MaterialId == materialId &&
+                                                                                  y.Fecha == x.Fecha &&
+                                                                                  y.CentroId == centroId, y => y.LimiteCupo);
+
+                var disponibilidadGeneralCupos = limiteCupo - cuposCreados;
+
                 ConfiguracionCupoDto cc = new ConfiguracionCupoDto();
 
                 cc.CentroId = x.CentroId;
@@ -9272,9 +9282,20 @@ namespace Molinos.DataAgro.Business.Managers
                 cc.LimiteDescarga = x.LimiteDescarga;
                 cc.MaterialId = x.MaterialId;
                 cc.CuposConsumidos = cantidadCuposConsumidos;
-                //cc.CuposDisponibles = x.LimiteDescarga - cantidadCuposConsumidos;
-                cc.CuposDisponibles = limiteDescargaZona - cantidadCuposConsumidos;
-                //cc.LimiteDescarga = x.LimiteDescarga;
+
+                if (disponibilidadGeneralCupos <= 0)
+                {
+                    cc.CuposDisponibles = 0;
+                }
+                else if (disponibilidadCuposConDescarga <= disponibilidadGeneralCupos)
+                {
+                    cc.CuposDisponibles = disponibilidadCuposConDescarga;
+                }
+                else
+                {
+                    cc.CuposDisponibles = disponibilidadGeneralCupos;
+                }
+
                 cc.LimiteDescarga = limiteDescargaZona;
 
                 configCupo.Add(cc);
