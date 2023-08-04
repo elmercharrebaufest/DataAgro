@@ -2229,7 +2229,7 @@ function InicializarElementos() {
         //    MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
         //}
         $("#WarrantId").prop("checked", false);
-        $("#pagoDirectoId").prop("checked", false);
+        //$("#pagoDirectoId").prop("checked", false);
 
         //if ($(this).is(':checked') && $("#tipoId").val() == "2") {
         //    $(".ocultar").show();
@@ -2268,7 +2268,7 @@ function InicializarElementos() {
         //    }
 
         //}
-        $("#CDId").prop("checked", false);
+        //$("#CDId").prop("checked", false);
         $("#WarrantId").prop("checked", false);
 
 
