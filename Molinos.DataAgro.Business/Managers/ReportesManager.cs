@@ -2001,7 +2001,8 @@ namespace Molinos.DataAgro.Business.Managers
                         (x.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
                          /*calculo con %*/(x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + ((x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * x.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
                         /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
-                        ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
+                        ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                Pizarra = x.Pizarra,
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -2016,7 +2017,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 data = FiltrardetalleContratosPorMesAnio(contratos, mes.Value, anio.Value);
             }
-
 
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -2063,7 +2063,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 Virtual = x.Virtual,
-                Id = x.Id
+                Id = x.Id,
+                Pizarra = x.Pizarra,
             },
             x => verFijaciones
              && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -2076,7 +2077,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in fijaciones.Where(a => a.Virtual == true))
             {
-
                 item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
             }
             if (mes.HasValue && anio.HasValue)
@@ -2179,7 +2179,6 @@ namespace Molinos.DataAgro.Business.Managers
                 data.AddRange(fasones);
             }
 
-
             var acuerdos = repositorio.Listar<ContratoAcuerdo, DetalleContratoDto>(x => new DetalleContratoDto
             {
                 Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
@@ -2256,6 +2255,18 @@ namespace Molinos.DataAgro.Business.Managers
                 data.AddRange(acuerdos);
             }
 
+            if (data.Count > 0 && data.Any(a => a.Pizarra == true))
+            {
+                var maxFecha = data.Where(a => a.Pizarra == true).Max(a => DateTime.Parse(a.Fecha));
+                var preciosPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= maxFecha);
+                foreach (var item in data.Where(a => a.Pizarra == true && a.TipoNegocioId != 1).ToList())
+                {
+                    var precioPizarra = preciosPizarra.Where(x => x.Material.Descripcion == item.Material && x.FechaHasta <= DateTime.Parse(item.Fecha)).ToList();
+                    var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
+                    item.Moneda = precio.MonedaId;
+                    item.Precio = precio.Precio.ToString();
+                }
+            }
 
             return data;
         }
@@ -3341,14 +3352,14 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioId = x.NegocioId,
                 EsOperacionDirecta = string.IsNullOrEmpty(x.CuitCorredor) ? true : false,
                 Clasificacion = x.Clasificacion,
-                KgVencimientoPesificable = x.KgVencimientoPesificable, 
+                KgVencimientoPesificable = x.KgVencimientoPesificable,
                 FechaHastaDolarizado = x.FechaHastaDolarizado,
                 KgTotales = x.KgTotales
             }, x => ids.Contains(x.Id));
-            EnviarMailPesificacionVencida(pesificados, fechaInstruccion, true,  kgTotales,  kgPesif);
+
+            EnviarMailPesificacionVencida(pesificados, fechaInstruccion, true, kgTotales, kgPesif);
             EnviarMailPesificacionVencida(pesificados, fechaInstruccion, false, kgTotales, kgPesif);
             GrabarFechaDeInstruccion(pesificados, fechaInstruccion, comercialId);
-
         }
 
         private void EnviarMailPesificacionVencida(List<ReportePesificadoDto> pesificado, DateTime fechaInstruccion, bool tieneCorredor, bool kgTotales, bool kgPesif)
@@ -3386,10 +3397,13 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, 
-                                    CantidadAgrupada = kgPesif ? (x.KgVencimientoPesificable ?? 0) : kgTotales ? (x.KgTotales ?? 0) : (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? (x.KgTotales ?? 0) : (x.KgVencimientoPesificable ?? 0), 
-                                    Contrato = x.Contrato, 
-                                    Fijacion = x.Fijacion }).ToList()
+                                item.Select(x => new AgrupacionPesificado
+                                {
+                                    Proveedor = x.RazonSocialProveedor,
+                                    CantidadAgrupada = kgPesif ? (x.KgVencimientoPesificable ?? 0) : kgTotales ? (x.KgTotales ?? 0) : (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? (x.KgTotales ?? 0) : (x.KgVencimientoPesificable ?? 0),
+                                    Contrato = x.Contrato,
+                                    Fijacion = x.Fijacion
+                                }).ToList()
                             };
                             logger.Debug("fecha hasta dolarizado: " + item.First().FechaHastaDolarizado.Value.ToString("dd-MM-yyyy hh:mm") + "hoy: " + hoy.ToString("dd-MM-yyyy hh:mm"));
                             var mails = DevolverMailComercialDeNegocio(pesi);
@@ -3423,14 +3437,17 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { 
+                                item.Select(x => new AgrupacionPesificado
+                                {
                                     Proveedor = x.RazonSocialProveedor,
                                     CantidadAgrupada = kgPesif ? (x.KgVencimientoPesificable ?? 0) : kgTotales ? (x.KgTotales ?? 0) : (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? (x.KgTotales ?? 0) : (x.KgVencimientoPesificable ?? 0),
-                                    Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
+                                    Contrato = x.Contrato,
+                                    Fijacion = x.Fijacion
+                                }).ToList()
                             };
                             logger.Debug("fecha hasta dolarizado: " + item.First().FechaHastaDolarizado.Value.ToString("dd-MM-yyyy hh:mm") + "hoy: " + hoy.ToString("dd-MM-yyyy hh:mm"));
 
-                            var mails = DevolverMailComercialDeNegocio(pesi);                         
+                            var mails = DevolverMailComercialDeNegocio(pesi);
                             if (mails != null)
                             {
                                 copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.CUIT == item.First().CuitVendedor).Select(x => x.Pesificado));
@@ -3614,8 +3631,9 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</tr>";
                 htmlBody += "</tbody>";
                 htmlBody += "</table>";
-            }         
-            if((corredor.Clasificacion.ToUpper().Contains("ACOPI") || corredor.Clasificacion.ToUpper().Contains("OTROS")) && corredor.EsOperacionDirecta){
+            }
+            if ((corredor.Clasificacion.ToUpper().Contains("ACOPI") || corredor.Clasificacion.ToUpper().Contains("OTROS")) && corredor.EsOperacionDirecta)
+            {
                 htmlBody += cabecera;
                 htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
                 htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";

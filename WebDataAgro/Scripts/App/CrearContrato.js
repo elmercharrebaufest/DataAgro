@@ -4806,7 +4806,9 @@ function CargarDatosEditar(contrato, hijo) {
         //$("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#buscadorProveedor").prop('disabled', false);
         $("#buscadorCorredor").prop('disabled', false);
-        $('#material').data("kendoDropDownList").enable(true);
+        if (contrato.Estado != 5) {
+            $('#material').data("kendoDropDownList").enable(true);
+        }
         $("#cantidadId").data("kendoNumericTextBox").enable(true);
         $("#contratoCondicionalId").val("");
         $("#contratoCondicional").val("");
