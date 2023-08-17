@@ -299,8 +299,16 @@ function generarFiltro(estado) {
     if ($("#per-tie-sel").val() && $("#per-tie-sel").val() != "null")
         filtro.Campaña = $("#per-tie-sel").val();
 
-    if ($("#segmentacion-sel").val() && $("#segmentacion-sel").val() != "null")
-        filtro.Segmentacion = $("#segmentacion-sel").val();
+    //if ($("#segmentacion-sel").val() && $("#segmentacion-sel").val() != "null")
+    //    filtro.Segmentacion = $("#segmentacion-sel").val();
+
+    if ($("#segmentacion-sel") && $("#segmentacion-sel").val() && $("#segmentacion-sel").val().length > 0) {
+        if ($.inArray("null", $("#segmentacion-sel").val()) === -1) {
+            filtro.Segmentacion = $("#segmentacion-sel").val().join("|");
+        } else {
+            filtro.Segmentacion = null;
+        }
+    }
 
     if ($("#condpreferentes") && $("#condpreferentes").val() && $("#condpreferentes").val().length > 0) {
         if ($.inArray("null", $("#condpreferentes").val()) === -1) {
@@ -854,7 +862,7 @@ function armarSelects(result) {
     }
 
     var htmlSegmentacion = "";
-    htmlSegmentacion += '<select id="segmentacion-sel">';
+    htmlSegmentacion += '<select multiple id="segmentacion-sel">';
     htmlSegmentacion += '<option value="null">Todos</option>';
     if (grupos[null]) {
         var nulo = grupos[null];
