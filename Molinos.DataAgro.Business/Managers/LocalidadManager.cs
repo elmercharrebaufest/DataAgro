@@ -49,10 +49,12 @@ namespace Molinos.DataAgro.Business
                 CodLocalidad = x.CodLocalidad,
                 Nombre = x.Nombre,
                 ProNombre = x.Provincia.Nombre,
+                PartidoNombre = x.Partido.Descripcion
             },
                 x => (oParam.Nombre.Trim() == "" || x.Nombre.Contains(oParam.Nombre.Trim())) &&
-                (oParam.ProvinciaId == null || x.ProvinciaId == oParam.ProvinciaId)
-            , 500).OrderBy(x => x.ProNombre).ThenBy(x => x.Nombre).ToList();
+                (oParam.ProvinciaId == null || x.ProvinciaId == oParam.ProvinciaId) &&
+                (oParam.PartidoId == null || x.PartidoId == oParam.PartidoId)
+            , 500).OrderBy(x => x.ProNombre).ThenBy(x => x.PartidoNombre).ThenBy(x => x.Nombre).ToList();
 
             return oResult;
         }
@@ -74,11 +76,22 @@ namespace Molinos.DataAgro.Business
 
         public LocalidadDto TraerLocalidad(int intLocalidadId)
         {
-            return repositorio.Obtener<Localidad, LocalidadDto>(x => x.LocalidadId == intLocalidadId, x => new LocalidadDto { CodLocalidad = x.CodLocalidad, LocalidadId = x.LocalidadId, Nombre = x.Nombre });
+            var localidad = repositorio.Obtener<Localidad, LocalidadDto>(x => x.LocalidadId == intLocalidadId, x => new LocalidadDto
+            {
+                CodLocalidad = x.CodLocalidad,
+                LocalidadId = x.LocalidadId,
+                ProvinciaId = x.ProvinciaId,
+                Provincia_Nombre = x.Provincia.Nombre,
+                Nombre = x.Nombre,
+                PartidoId = x.PartidoId,
+                Partido_Nombre = x.Partido.Descripcion
+            });
+            return localidad;
         }
         public Resultado GrabarLocalidad(Localidad oLocalidad)
         {
             var oEntityErrors = new Resultado();
+            List<Localidad> listLocalidades;
 
             EntityValid.ValidateAll(oLocalidad, oEntityErrors);
 
@@ -88,11 +101,23 @@ namespace Molinos.DataAgro.Business
             }
 
             if (oLocalidad.LocalidadId != 0)
+                listLocalidades = repositorio.Listar<Localidad>(x => x.LocalidadId != oLocalidad.LocalidadId && x.CodLocalidad == oLocalidad.CodLocalidad).ToList();
+            else
+                listLocalidades = repositorio.Listar<Localidad>(x => x.CodLocalidad == oLocalidad.CodLocalidad).ToList();
+
+            if (listLocalidades != null && listLocalidades.Count > 0)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage() { Message = "Ya existe el código de localidad" });
+                return oEntityErrors;
+            }
+
+            if (oLocalidad.LocalidadId != 0)
             {
                 var oLocalidadSave = repositorio.Obtener<Localidad>(oLocalidad.LocalidadId);
                 oLocalidadSave.CodLocalidad = oLocalidad.CodLocalidad;
                 oLocalidadSave.Nombre = oLocalidad.Nombre;
                 oLocalidadSave.ProvinciaId = oLocalidad.ProvinciaId;
+                oLocalidadSave.PartidoId = oLocalidad.PartidoId;
             }
             else
             {
@@ -105,8 +130,9 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
-                throw;
+                logger.Error(ex.Message);
+                oEntityErrors.Error("", ex.Message);
+                return oEntityErrors;
             }
             return oEntityErrors;
         }
@@ -151,13 +177,20 @@ namespace Molinos.DataAgro.Business
         }
         public LocalidadQry TraerLocalidadProvincia(string localidad, string provincia)
         {
-            var localidadDto = repositorio.Obtener<Localidad, LocalidadQry>(x => x.Nombre == localidad && x.Provincia.Nombre == provincia, x => new LocalidadQry() { LocalidadId = x.LocalidadId, Nombre = x.Nombre});
+            var localidadDto = repositorio.Obtener<Localidad, LocalidadQry>(x => x.Nombre == localidad && x.Provincia.Nombre == provincia, x => new LocalidadQry() { LocalidadId = x.LocalidadId, Nombre = x.Nombre });
             localidadDto.ProvinciaId = repositorio.Obtener<Provincia, int>(x => x.Nombre == provincia, x => x.ProvinciaId);
             return localidadDto;
         }
+        public ResultIniPartido TraerPartidosPorProvincia(int provinciaId)
+        {
+            var qry = new CombosQueries(logger, repositorio);
+
+            var oPartidosPorProvincia = new ResultIniPartido()
+            {
+                Partidos = qry.GetPartidoCombo(provinciaId)
+            };
+
+            return oPartidosPorProvincia;
+        }
     }
 }
-
-
-
-

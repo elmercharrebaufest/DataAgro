@@ -265,6 +265,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         Habilitacion_Boleto = 522,
         [Display(ResourceType = typeof(Text), Name = "ConfigurarExcedente")]
         ConfigurarExcedente = 523,
+        [Display(ResourceType = typeof(Text), Name = "Configuracion_Localidad")]
+        ConfiguracionLocalidad = 524,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

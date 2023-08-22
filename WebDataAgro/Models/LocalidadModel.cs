@@ -53,5 +53,14 @@ namespace WebDataAgro.Models
             this.Localidad = new LocalidadDto();
         }
     }
-}
 
+    public class ResultPartidosModel : Resultado
+    {
+        public ResultIniPartido Datos { get; set; }
+
+        public ResultPartidosModel()
+        {
+            Datos = new ResultIniPartido();
+        }
+    }
+}

@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string Nombre { get; set; }
         public int? ProvinciaId { get; set; }
+        public int? PartidoId { get; set; }
     }
     
     public class ResultIniLocalidad
@@ -25,8 +26,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CodLocalidad { get; set; }
         public string Nombre { get; set; }
         public string ProNombre { get; set; }
+        public string PartidoNombre { get; set; }
     }
 
+    public class ResultIniPartido
+    {
+        public List<Partido> Partidos { get; set; }
+    }
 }
-
-

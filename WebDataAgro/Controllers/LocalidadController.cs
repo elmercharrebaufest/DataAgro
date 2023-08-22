@@ -1,13 +1,10 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -99,7 +96,15 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Eliminar(AbmLocalidadParam oParam)
+        //public async Task<ActionResult> Eliminar(AbmLocalidadParam oParam)
+        //{
+        //    return new JsonResult()
+        //    {
+        //        Data = mobjLocalidadManager.EliminarLocalidad(oParam.LocalidadId),
+        //        MaxJsonLength = Int32.MaxValue
+        //    };
+        //}
+        public ActionResult Eliminar(AbmLocalidadParam oParam)
         {
             return new JsonResult()
             {
@@ -107,7 +112,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
 
         public ActionResult Cancelar()
         {
@@ -117,7 +121,17 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public ActionResult TraerPartidosPorProvincia(int provinciaId)
+        {
+            return new JsonResult()
+            {
+                Data = new ResultPartidosModel
+                {
+                    Datos = mobjLocalidadManager.TraerPartidosPorProvincia(provinciaId)
+                },
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }
-
-

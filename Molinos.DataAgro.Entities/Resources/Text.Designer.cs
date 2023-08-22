@@ -529,6 +529,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuración Localidades.
+        /// </summary>
+        public static string Configuracion_Localidad {
+            get {
+                return ResourceManager.GetString("Configuracion_Localidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuración Logs.
         /// </summary>
         public static string Configuracion_Logs {

@@ -28,14 +28,12 @@ namespace Molinos.DataAgro.Entities.Entities
                 oErrorMessages.Error("Nombre", "El campo 'Nombre' no debe estar vacio");
             }
 
-            if (this.Provincia == null)
-            {
-                oErrorMessages.Error("Provincia", "El campo 'Provincia' no debe estar vacio");
-            }
+            //if (this.Provincia == null)
+            //{
+            //    oErrorMessages.Error("Provincia", "El campo 'Provincia' no debe estar vacio");
+            //}
 
             return !oErrorMessages.HayErrores;
         }
     }
 }
-
-

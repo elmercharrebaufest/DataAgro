@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void FiltrarLocalidadTest()
         {
-            var localidadFiltro = new ParamAbmLocalidad() { Nombre = "A", ProvinciaId = 1 };
+            var localidadFiltro = new ParamAbmLocalidad() { Nombre = "A", ProvinciaId = 1, PartidoId = 2 };
             localidadManagerMock.Setup(x => x.TraerFiltroLocalidad(localidadFiltro)).Returns(new ResultIniLocalidad
             {
                 Localidad = new List<LocalidadIni>()
@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"LocalidadId\":1,\"CodLocalidad\":\"A\",\"Nombre\":\"A\",\"ProNombre\":\"A\"}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"LocalidadId\":1,\"CodLocalidad\":\"A\",\"Nombre\":\"A\",\"ProNombre\":\"A\",\"PartidoNombre\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -105,11 +105,12 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.Eliminar(new AbmLocalidadParam { LocalidadId = 1 });
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            List<string> resultadosOk = new List<string> {
-            "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
-            "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":3,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}"
-            };
-            Assert.AreEqual(true, resultadosOk.Contains(a));
+            //List<string> resultadosOk = new List<string> {
+            //"{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
+            //"{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":3,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}"
+            //};
+            //Assert.AreEqual(true, resultadosOk.Contains(a)); -> para el Eliminar async
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
         [Test]

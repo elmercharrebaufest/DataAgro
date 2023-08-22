@@ -24,7 +24,20 @@ namespace Molinos.DataAgro.Business
 
         public List<Provincia> GetProvinciaCombo()
         {
-            return repositorio.Listar<Provincia>().OrderBy(x => x.Orden).ToList();
+            return repositorio.Listar<Provincia>().OrderBy(x => x.Nombre).ToList();
+        }
+
+        public List<Partido> GetPartidoCombo(int provinciaId)
+        {
+            List<Partido> listPartido;
+
+            //if(provinciaId == -1)
+            //    listPartido = repositorio.Listar<Partido>().OrderBy(x => x.Descripcion).ToList();
+            //else
+                listPartido = repositorio.Listar<Partido>(x => x.ProvinciaId == provinciaId).OrderBy(x => x.Descripcion).ToList();
+
+            //return repositorio.Listar<Partido>(x => x.ProvinciaId == provinciaId).OrderBy(x => x.Descripcion).ToList();
+            return listPartido;
         }
 
         public List<LocalidadCombo> GetLocalidadCombo()
@@ -314,8 +327,3 @@ namespace Molinos.DataAgro.Business
 
     }
 }
-
-
-
-
-

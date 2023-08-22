@@ -908,4 +908,7 @@
   <data name="Cupos_Acopios_SolicitudExtraordinaria" xml:space="preserve">
     <value>Cupos Acopios Solicitud Extraordinaria</value>
   </data>
+  <data name="Configuracion_Localidad" xml:space="preserve">
+    <value>Configuración Localidades</value>
+  </data>
 </root>

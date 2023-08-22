@@ -25,5 +25,7 @@ namespace Molinos.DataAgro.Interfaces
         LocalidadQry TraerLocalidadProvincia(string localidad, string provincia);
 
         List<LocalidadDto> ListarLocalidadTodas();
+
+        ResultIniPartido TraerPartidosPorProvincia(int provinciaId);
     }
 }

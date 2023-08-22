@@ -33,6 +33,12 @@ function InicializarElementos() {
         }
     });
 
+    $("#ParamPartidoId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "PartidoId",
+        noDataTemplate: 'No hay datos...',
+    });
+
     $("#ProvinciaId").kendoDropDownList({
         dataTextField: "Nombre",
         dataValueField: "ProvinciaId"
@@ -42,6 +48,11 @@ function InicializarElementos() {
         if (e.keyCode == 46) {
             $("#ProvinciaId").data("kendoDropDownList").text("");
         }
+    });
+
+    $("#PartidoId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
     });
 
     $("#butFiltrar").kendoButton({
@@ -79,17 +90,19 @@ function CrearResultadosDataSource(datos) {
                     CodLocalidad: { type: "string", editable: false },
                     Nombre: { type: "string", editable: false },
                     ProNombre: { type: "string", editable: false },
+                    PartidoNombre: { type: "string", editable: false },
                 }
             }
         },
         change: function (e) {
-            var mens = ""; var tot = this.data().length;
+            var mens = "";
+            var tot = this.data().length;
             var cant = this.view().length;
 
             viewModel.set("recordMessage", "");
 
             if (tot >= 500) {
-                mens = "Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.";
+                mens = "Es posible que existan más registros. Ajuste los parámetros de busqueda para reducir los resultados.";
             }
 
             if (tot > 0) {
@@ -111,7 +124,8 @@ function CreateGridLocalidad() {
         columns: [
             { field: "CodLocalidad", title: "Código", width: "150px" },
             { field: "Nombre", title: "Localidad" },
-            { field: "ProNombre", title: "Provincia", width: "180px" },
+            { field: "ProNombre", title: "Provincia", width: "200px" },
+            { field: "PartidoNombre", title: "Partido", width: "200px" }
         ],
 
         sortable: true,
@@ -175,6 +189,7 @@ function CrearViewModel() {
     var param = {
         "Nombre": "",
         "ProvinciaId": null,
+        "PartidoId": null
     };
 
     var ResultadosDataSource = CrearResultadosDataSource([]);
@@ -194,6 +209,7 @@ function CrearViewModel() {
         isDeleteDisabled: true,
 
         ProvinciaCombo: [],
+        PartidoCombo: [],
 
         Localidad: null,
     });
@@ -218,6 +234,7 @@ function InicializarCombos() {
 
 function AsignarCombos() {
     viewModel.set("ProvinciaCombo", datosIniAbmLocalidad.Datos.Provincia);
+    CargarPartidos();
 }
 
 function AsignarBotones() {
@@ -268,9 +285,13 @@ function LlenarGrilla(showMessage) {
         return;
     }
 
+    if ($("#ParamPartidoId").data("kendoDropDownList").dataItem() != undefined) {
+        var partidoId = $("#ParamPartidoId").data("kendoDropDownList").dataItem().Id;
+    }
     var param = {
         "Nombre": viewModel.get("Parametros.Nombre"),
         "ProvinciaId": GetDropDownValue(viewModel, "Parametros.ProvinciaId.ProvinciaId"),
+        "PartidoId": partidoId
     };
 
     var result = MSExecuteOnServer('/Localidad/Filtrar', param);
@@ -284,7 +305,7 @@ function LlenarGrilla(showMessage) {
             viewModel.set("Resultados", CrearResultadosDataSource(result.Datos));
 
             if (result.Datos.length >= 500) {
-                viewModel.set("recordMessage", result.Datos.length.toString() + " Registros. Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.");
+                viewModel.set("recordMessage", "Se muestran " + result.Datos.length.toString() + " registros, pero es posible que existan más. Ajuste los parámetros de búsqueda para reducir los resultados.");
             }
             else if (result.Datos.length > 1) {
                 viewModel.set("recordMessage", result.Datos.length.toString() + " Registros.");
@@ -300,7 +321,7 @@ function LlenarGrilla(showMessage) {
             HabilitarCancelar();
 
             if (showMessage) {
-                MensInfo("No se encontraron datos que cumplan con el filtro indicado");
+                MensInfo("No se encontraron datos que cumplan con el filtro indicado.");
             }
         }
     }
@@ -314,22 +335,30 @@ function UpdateViewModel(model) {
         viewModel.set("isDeleteDisabled", false);
     }
 
+    var provinciaId = model.Localidad.ProvinciaId;
+
+    var result = MSExecuteOnServer('/Localidad/TraerPartidosPorProvincia', { provinciaId });
+    viewModel.set("PartidoCombo", result.Datos.Partidos);
+
     var localidad = {
         "LocalidadId": model.Localidad.LocalidadId,
         "CodLocalidad": model.Localidad.CodLocalidad,
         "Nombre": model.Localidad.Nombre,
         "ProvinciaId": model.Localidad.ProvinciaId,
+        "PartidoId": model.Localidad.PartidoId,
     };
 
     viewModel.set("Localidad", localidad);
 
     viewModel.Localidad.ProvinciaId = $("#ProvinciaId").data("kendoDropDownList").dataItem();
+    viewModel.Localidad.PartidoId = $("#PartidoId").data("kendoDropDownList").dataItem();
 }
 
 function LimpiarValidaciones() {
     $("#errCodLocalidad").css("display", "none");
     $("#errNombre").css("display", "none");
     $("#errProvinciaId").css("display", "none");
+    $("#errPartidoId").css("display", "none");
 }
 
 function HabilitarInicio() {
@@ -377,7 +406,7 @@ function Modificar() {
     }
 
     var param = {
-        "LocalidadId": data.LocalidadId,
+        "LocalidadId": data.LocalidadId
     };
 
     var result = MSExecuteOnServer('/Localidad/Aplicar', param);
@@ -396,7 +425,7 @@ function Modificar() {
 }
 
 function Eliminar() {
-    Confirma('¿ Confirma la eliminación de este registro ?',
+    Confirma('¿Confirma la eliminación de este registro?',
         function (dialogItself) {
             EjecutarEliminar();
             dialogItself.close();
@@ -421,7 +450,7 @@ function EjecutarEliminar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
+            //UpdateViewModel(result);
             LimpiarValidaciones();
             HabilitarInicio();
             LlenarGrilla(false);
@@ -450,6 +479,7 @@ function Grabar() {
         "CodLocalidad": viewModel.get("Localidad.CodLocalidad"),
         "Nombre": viewModel.get("Localidad.Nombre"),
         "ProvinciaId": GetDropDownValue(viewModel, "Localidad.ProvinciaId.ProvinciaId"),
+        "PartidoId": $("#PartidoId").data("kendoDropDownList").dataItem().Id
     };
 
     var result = MSExecuteOnServer('/Localidad/Grabar', datos);
@@ -469,4 +499,17 @@ function Grabar() {
 
 function Cancelar() {
     $('#rootwizard').bootstrapWizard('show', 'tab1');
+}
+
+function CargarPartidos(variable) {
+    //var provinciaId = -1;
+    var provinciaId = 0;
+    if (variable == 1 && $("#ParamProvinciaId").data("kendoDropDownList").dataItem() != undefined) {
+        provinciaId = $("#ParamProvinciaId").data("kendoDropDownList").dataItem().ProvinciaId;
+    } else if (variable == 2 && $("#ProvinciaId").data("kendoDropDownList").dataItem() != undefined) {
+        provinciaId = $("#ProvinciaId").data("kendoDropDownList").dataItem().ProvinciaId;
+    }
+
+    var result = MSExecuteOnServer('/Localidad/TraerPartidosPorProvincia', { provinciaId });
+    viewModel.set("PartidoCombo", result.Datos.Partidos);
 }

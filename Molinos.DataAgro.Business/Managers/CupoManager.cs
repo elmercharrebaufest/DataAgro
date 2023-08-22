@@ -1134,10 +1134,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             }
-            if (cupo.Observaciones != null)
-            {
-                htmlBody += cupo.Observaciones + "<br />";
-            }
+            //if (cupo.Observaciones != null)
+            //{
+            //    htmlBody += cupo.Observaciones + "<br />";
+            //}
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
 

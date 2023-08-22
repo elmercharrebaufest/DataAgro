@@ -433,6 +433,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionLocalidad))
+                                {
+                                    <li>
+                                        <a href="~/Localidad" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Localidades
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
                                 {
                                     <li>

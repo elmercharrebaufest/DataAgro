@@ -1,8 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -11,7 +8,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -19,7 +15,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace Molinos.DataAgro.Test.Controllers
@@ -400,7 +395,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             localidadManagerMock.Verify(x => x.TraerLocalidadPorProvincia(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":[{\"LocalidadId\":1,\"CodLocalidad\":\"A\",\"Nombre\":\"A\",\"ProNombre\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":[{\"LocalidadId\":1,\"CodLocalidad\":\"A\",\"Nombre\":\"A\",\"ProNombre\":null,\"PartidoNombre\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
