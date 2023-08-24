@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface ICupoManager
     {
-        CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias);
+        CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias, bool validarDisponibilidad = true);
         DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo);
         List<DateTime> FechasComprendidas(int? materialId);
         Resultado EliminarCupo(int id, string comerciall, bool enviarMail);

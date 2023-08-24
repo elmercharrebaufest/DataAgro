@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.cartasDePortePendienteAplicarAgent = cartasDePortePendienteAplicarAgent;
             this.centroManager = centroManager;
         }
-        public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
+        public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias, bool validarDisponibilidad = true)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
             bool activarLogDebug = false;
@@ -144,7 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 //}
                                 cupo.FechaIngreso = d.Fecha;
 
-                                if (cupo.ConDescarga != true)
+                                if (validarDisponibilidad)
                                 {
                                     if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA ValidarDisponibilidadCupera()");
                                     var errorV = ValidarDisponibilidadCupera(cupo.MaterialId, cupo.CentroId, cupo.FechaIngreso, d.Cantidad.Value);

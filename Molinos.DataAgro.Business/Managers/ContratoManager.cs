@@ -2140,7 +2140,7 @@ namespace Molinos.DataAgro.Business.Managers
                         List<DiaCupo> listDiaCupo = new List<DiaCupo>();
                         listDiaCupo.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo });
 
-                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo);
+                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo, false);
 
                         oEntityErrors.Errores.AddRange(cupoGrabado.Errores);
                         oEntityErrors.ListaCupos.AddRange(cupoGrabado.ListaCupos);
@@ -2152,7 +2152,7 @@ namespace Molinos.DataAgro.Business.Managers
                         List<DiaCupo> listDiaFlete = new List<DiaCupo>();
                         listDiaFlete.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete });
 
-                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete);
+                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete, false);
 
                         CupoResult crTemp = new CupoResult();
                         crTemp.ListaCupos.AddRange(cupoGrabado.ListaCupos.Select(a => "*" + a + "*"));

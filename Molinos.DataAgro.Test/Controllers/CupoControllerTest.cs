@@ -148,7 +148,7 @@ namespace Molinos.DataAgro.Test.Controllers
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
-            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
+            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>(), It.IsAny<bool>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
             var result = target.CrearCupo(cupoModel) as ViewResult;
@@ -181,7 +181,7 @@ namespace Molinos.DataAgro.Test.Controllers
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
-            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
+            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>(), It.IsAny<bool>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
             var result = target.GuardarCupo(cupoModel) as JsonResult;
@@ -216,7 +216,7 @@ namespace Molinos.DataAgro.Test.Controllers
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
-            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
+            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>(), It.IsAny<bool>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
 

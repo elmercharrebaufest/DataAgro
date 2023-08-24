@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Test.Managers
                     }
                 });
 
-            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>())).
+            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>(), It.IsAny<bool>())).
                Returns(new CupoResult() { ListaCupos = new List<string>() { "MOL/123223", "MOL/232323" } });
 
             repositorioMock.Setup(y => y.Obtener<Comercial>(It.IsAny<int>()))
