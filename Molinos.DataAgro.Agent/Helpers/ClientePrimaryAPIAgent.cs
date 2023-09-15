@@ -171,8 +171,13 @@ namespace Molinos.DataAgro.Agent.Helpers
             var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
             if (item != null)
             {
-                var anio = (int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1).ToString();
-                int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio)).Select(a => a.CampañaId).SingleOrDefault();
+                var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
+                var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
+                int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
+                if (materialId == 2 && mes == 12)                
+                    anio += 1;
+                
+                int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
                 return campaña ?? 0;
             }
             else

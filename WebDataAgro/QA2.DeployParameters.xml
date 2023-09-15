@@ -2,7 +2,7 @@
 <parameters>
   <setParameter name="IIS Web Application Name" value="DataAgroQa2" />
   <setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; Initial Catalog=DataAgroDEV; Integrated Security=True " />
-  <setParameter name="SmtpServer Key" value="smtp.molinosagro.com.ar" />
+  <setParameter name="SmtpServer Key" value="smtpnuevo.molinosagro.com.ar" />
   <setParameter name="SmtpServerPort Key" value="25" />
   <setParameter name="ImapServer Key" value="outlook.office365.com" />
   <setParameter name="ImapServerPort Key" value="993" />
