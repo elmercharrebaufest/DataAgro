@@ -936,7 +936,14 @@ function ObtenerDatos(error) {
 
     if (obj.TipoNegocioId == 1) {
         obj.KgMinimo = $("#minimoId").val();
-        obj.KgMaximo = $("#maximaId").val();
+
+        if ($("#maximaId").val() !== undefined) {
+            var kgMaximo = $("#maximaId").val();
+            kgMaximo = kgMaximo.replace(",", ".");
+            obj.KgMaximo = Math.round(kgMaximo);
+        } else {
+            obj.KgMaximo = $("#maximaId").val();
+        }
     }
     if ($("#ventaId").is(":checked") == true) {
         obj.Venta = true;
