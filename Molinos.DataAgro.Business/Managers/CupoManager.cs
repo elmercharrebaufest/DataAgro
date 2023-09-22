@@ -428,14 +428,14 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             fechaIngreso = fechaIngreso.Date;
-            var cuposCreados = repositorio.Contar<Cupo>(x => x.FechaIngreso == fechaIngreso && 
-                                                             x.MaterialId == materialId && 
-                                                             x.CentroId == centroId && 
-                                                             x.EstadoCupoId != 9 && 
+            var cuposCreados = repositorio.Contar<Cupo>(x => x.FechaIngreso == fechaIngreso &&
+                                                             x.MaterialId == materialId &&
+                                                             x.CentroId == centroId &&
+                                                             x.EstadoCupoId != 9 &&
                                                              x.EstadoCupoId != 4);
 
-            var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId && 
-                                                                              x.Fecha == fechaIngreso && 
+            var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
+                                                                              x.Fecha == fechaIngreso &&
                                                                               x.CentroId == centroId, x => x.LimiteCupo);
 
             if (cantidad > limiteCupo - cuposCreados)
@@ -452,7 +452,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                                         x.CentroId == centroId &&
                                                                         x.EstadoCupoId != 9 &&
                                                                         x.EstadoCupoId != 4);
-            
+
             int limiteDescarga = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
                                                                                   x.Fecha == fechaIngreso &&
                                                                                   x.CentroId == centroId, x => x.LimiteDescarga);
@@ -946,7 +946,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"El proveedor {id} no tiene ContactoComercial. cupos {string.Join(", ", listaCupos)}");
                     return;
                 }
-                // GSIAN: le enviamos al mail del corredor o a los mails de los contactos del corredor?
+
                 string emailComercial = "";
                 string emailComercialCreador = "";
 
@@ -972,7 +972,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (cupo.ComercialCreador != null)
                 {
                     try
-                    { // GSIAN: Es correcto que un CcD no tenga un comercial creador??
+                    {
                         emailComercialCreador = mailManager.GetEmailUserActiveDirectory(cupo.ComercialCreador.IdActiveDirectory);
                         oMensaje.To.Add(emailComercialCreador);
                     }
@@ -1127,7 +1127,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             //if ((cupo.Sustentable ?? false)==false && (cupo.EPA ?? false)==false)
             //{
-                htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "</td></tr>";
             //}
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
@@ -1711,9 +1711,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             List<SugerenciaCupoDto> newNegocios = new List<SugerenciaCupoDto>();
 
-
             //primera ronda de sugerencias TENIENDO en cuenta el limite de % por dia por prov
-            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal))
+            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal))
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
@@ -1754,7 +1753,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             //segunda ronda de sugerencias de lo pendiente SIN tener en cuenta el limite de % por dia por prov
-            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal))
+            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal))
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
@@ -1891,7 +1890,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             //}
             //logger.Debug("CrearSugerenciaCupo - pongo precio pizarra a FijacionDePrecioContrato que no tienen precio");
+
+            List<int> idsTiposNegociosExcluidos = repositorio.Listar<FormulaTipoNegocioExcluido, int>(x => x.TipoNegocioId, x => x.FormulaId == formula.Id);
             var tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(x => (int)x.AnulaYReemplazaContratoId, x => x.AnulaYReemplazaContratoId != null);
+
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
                 new SugerenciaCupoDto
                 {
@@ -1939,6 +1941,7 @@ namespace Molinos.DataAgro.Business.Managers
                     x.EPA != true &&
                     x.EsFason != true &&
                     !(tienenAnulaYReemplaza.Any(a => a == x.Id)) &&
+                    !(idsTiposNegociosExcluidos.Any(a => a == x.TipoNegocioId)) &&
                     formula.NegociosDesde <= (x.FechaHastaOriginal ?? x.FechaHasta) && formula.NegociosHasta >= (x.FechaHastaOriginal ?? x.FechaHasta)
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());

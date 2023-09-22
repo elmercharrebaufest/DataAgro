@@ -18,5 +18,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         Resultado ActualizarDias(FormulaIni formulaDias);
         List<CriterioIni> TodosLosCriterios();
         Resultado ActualizarCierre(FormulaIni formulaDias);
+        ResultIniTipoNegocioExcluido TraerTiposNegociosExcluidosGuardados(int MaterialId);
+        Resultado ActualizarTiposNegociosExcluidos(int materialId, List<TipoNegocioDto> tiposNegociosExcluidos, FormulaIni formulaDias);
     }
 }

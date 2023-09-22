@@ -591,7 +591,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
                 oFijacionDePrecioSave.TipoPosicionCBOTId = oFijacionDePrecio.TipoPosicionCBOTId;
                 oFijacionDePrecioSave.ProveedorComisionistaId = oFijacionDePrecio.ProveedorComisionistaId;
-                
+
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -1720,23 +1720,45 @@ namespace Molinos.DataAgro.Business.Managers
 
                 try
                 {
+                    double cantidadKilos = 0, kilosPendientes = 0;
                     if (fijacionVirtual != null)
                     {
                         var kilos = DevolverKilosPendientesAnularFijacionCanje(oFijacionSave.Id);
+
                         if (kilos.KilosPendientes >= oFijacionSave.Cantidad)
                         {
                             oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                            cantidadKilos = oFijacionSave.Cantidad;
+                            kilosPendientes = 0;
                         }
                         else
                         {
                             oFijacionSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                             oFijacionSave.Cantidad -= kilos.KilosPendientes;
+                            cantidadKilos = kilos.KilosPendientes;
+                            kilosPendientes = oFijacionSave.Cantidad - kilos.KilosPendientes;
                         }
                     }
                     else
                     {
                         oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        cantidadKilos = oFijacionSave.Cantidad;
+                        kilosPendientes = 0;
                     }
+
+                    LogAnulacionContrato logAnulacionContrato = new LogAnulacionContrato()
+                    {
+                        Fecha = DateTime.Now,
+                        NegocioId = oFijacionSave.Id,
+                        TipoNegocio = repositorio.Obtener<TipoNegocio, string>(x => x.TipoNegocioId == oFijacionSave.TipoNegocioId, x => x.Descripcion),
+                        ComercialId = (int)oFijacionSave.ComercialId,
+                        ContratoSAP = oFijacionSave.ContratoSAP,
+                        FijacionSAP = oFijacionSave.FijacionSAP,
+                        CantidadKilos = cantidadKilos,
+                        KilosPendientes = kilosPendientes,
+                    };
+                    repositorio.Agregar<LogAnulacionContrato>(logAnulacionContrato);
+
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionSave.Id), TipoAccionLogDataAgro.Eliminar, oFijacionSave.GetType());
                 }
@@ -1804,7 +1826,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oContratoSave.Virtual == null)
                     {
-                        if (!ValidarFijacionDisponibleParaAnular(oContratoSave, oEntityErrors))                       
+                        if (!ValidarFijacionDisponibleParaAnular(oContratoSave, oEntityErrors))
                         {
                             return oEntityErrors;
                         }
@@ -1985,11 +2007,11 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var fijacionDePrecio = repositorio.Obtener<FijacionDePrecioContrato>(x => x.Id == id && x.Virtual == true);
+
                 if (fijacionDePrecio.EstadoId != (int)EnumEstadoContrato.Finalizado && fijacionDePrecio.EstadoId != (int)EnumEstadoContrato.PreAnulado)
                 {
                     return result;
                 }
-                var asd = repositorio.Listar<FijacionVirtualSap>(x => x.FijacionVirtualId == id && x.FijacionCanje.EstadoId == (int)EnumEstadoContrato.Finalizado);
                 var kilosConsumidos = repositorio.Listar<FijacionVirtualSap>(x => x.FijacionVirtualId == id && x.FijacionCanje.EstadoId == (int)EnumEstadoContrato.Finalizado).Sum(a => a.Cantidad);
                 result.KilosPendientes = fijacionDePrecio.Cantidad - kilosConsumidos;
 

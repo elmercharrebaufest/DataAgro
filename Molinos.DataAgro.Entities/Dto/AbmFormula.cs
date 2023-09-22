@@ -77,5 +77,10 @@ namespace Molinos.DataAgro.Entities.Dto
     //    public ICollection<CriterioIni> Criterios { get; set; }
     //}
 
+    public class ResultIniTipoNegocioExcluido
+    {
+        public ICollection<FormulaTipoNegocioExcluidoDto> TiposNegocioExcluidos { get; set; }
+    }
+
 
 }

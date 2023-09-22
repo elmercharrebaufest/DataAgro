@@ -146,7 +146,9 @@
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
     <Compile Include="Dto\CapacidadProductivaDto.cs" />
     <Compile Include="Dto\EstadoHomeDto.cs" />
+    <Compile Include="Dto\FormulaTipoNegocioExcluidoDto.cs" />
     <Compile Include="Dto\HedgeMargenMoliendaDto.cs" />
+    <Compile Include="Dto\LogAnulacionContratoDto.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
@@ -382,7 +384,9 @@
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
+    <Compile Include="Entities\FormulaTipoNegocioExcluido.cs" />
     <Compile Include="Entities\HedgeMargenMolienda.cs" />
+    <Compile Include="Entities\LogAnulacionContrato.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
     <Compile Include="Entities\ServicioValor.cs" />

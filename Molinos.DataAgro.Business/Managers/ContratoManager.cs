@@ -2200,7 +2200,7 @@ namespace Molinos.DataAgro.Business.Managers
             var cupoNuevo = new Cupo
             {
                 Id = 0,
-                ProveedorId = contrato.ProveedorId.Value,
+                ProveedorId = contrato.CorredorId.Value == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
                 MaterialId = contrato.MaterialId,
                 FechaIngreso = contrato.FechaEntrega,
                 CentroId = contrato.DestinoId.Value,
@@ -2216,6 +2216,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ConDescarga = contrato.ConDescarga,
                 Sustentable = contrato.Sustentable,
                 EPA = contrato.EPA,
+                ComercialCreadorId = contrato.ComercialCreadorId,
             };
 
             return cupoNuevo;
@@ -5290,6 +5291,18 @@ namespace Molinos.DataAgro.Business.Managers
                         tipo = TipoAccionLogDataAgro.Modificar;
                     }
 
+                    LogAnulacionContrato logAnulacionContrato = new LogAnulacionContrato()
+                    {
+                        Fecha = DateTime.Now,
+                        NegocioId = oContratoSave.Id,
+                        TipoNegocio = repositorio.Obtener<TipoNegocio, string>(x => x.TipoNegocioId == oContratoSave.TipoNegocioId, x => x.Descripcion),
+                        ComercialId = (int)oContratoSave.ComercialId,
+                        ContratoSAP = oContratoSave.ContratoSAP,
+                        CantidadKilos = cantidadContrato,
+                        KilosPendientes = oContratoSave.Cantidad,
+                    };
+                    repositorio.Agregar<LogAnulacionContrato>(logAnulacionContrato);
+
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipo, oContratoSave.GetType());
                 }
@@ -5730,8 +5743,8 @@ namespace Molinos.DataAgro.Business.Managers
             bc.FechaCiertaFormateado = negocio.FechaCierta.HasValue ? negocio.FechaCierta.Value.ToString("dd-MM-yyyy") : "";
             bc.EsFason = negocio is Contrato ? (negocio as Contrato).EsFason : false;
             bc.PorcentajeDePago = negocio is Contrato ? (negocio as Contrato).PorcentajeDePago : null;
-            bc.FechaOperacion = negocio.FechaOperacion.Date;
-            bc.FechaOperacionFormateado = negocio.FechaOperacion.ToString("dd-MM-yyyy");
+            bc.FechaOperacion = negocio.Id == 0 ? DateTime.Now : negocio.FechaOperacion.Date;
+            bc.FechaOperacionFormateado = negocio.Id == 0 ? DateTime.Now.ToString("dd-MM-yyyy") : negocio.FechaOperacion.ToString("dd-MM-yyyy");
             bc.MotivoOperacionAnterior = negocio.MotivoOperacionAnterior;
             bc.DescripcionOperacionAnterior = negocio.DescripcionOperacionAnterior;
             bc.FechaConfirmacion = negocio.FechaConfirmacion.HasValue ? negocio.FechaConfirmacion.Value.Date : (DateTime?)null;
@@ -7540,7 +7553,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim());
                         contrato.FechaHasta = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
                         contrato.FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
-                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim()) * 1000;
+                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim());
                         contrato.Cuit = rows.ElementAt(ii)[8].ToString().Trim();
                         contrato.ClasificacionId = rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
                         contrato.PlanCanje = rows.ElementAt(ii)[10].ToString().Trim().ToUpper() == "X";

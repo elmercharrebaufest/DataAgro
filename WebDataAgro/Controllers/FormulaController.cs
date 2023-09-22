@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Molinos.DataAgro.Entities;
@@ -18,21 +19,44 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class FormulaController : Controller
     {
-
-
+        
+        
         private IFormulaManager mobjFormulaManager;
         private IMaterialManager materialManager;
+        private ICupoManager cupoManager;
+        private readonly IHttpContextManager httpContextManager;
+        private ITipoNegocioManager tipoNegocioManager;
 
-        public FormulaController(IFormulaManager oFormulaManager, IMaterialManager materialManager)
+        public FormulaController(IFormulaManager oFormulaManager, IMaterialManager materialManager, ICupoManager cupoManager, IHttpContextManager httpContextManager, ITipoNegocioManager tipoNegocioManager)
         {
             mobjFormulaManager = oFormulaManager;
             this.materialManager = materialManager;
+            this.cupoManager = cupoManager;
+            this.httpContextManager = httpContextManager;
+            this.tipoNegocioManager = tipoNegocioManager;
         }
+
         [Autorizacion(PermisosDataAgro.AlgoritimoDeCupos)]
         public ActionResult Index()
         {
+            FillViewBag();
             return View();
         }
+
+        private void FillViewBag()
+        {
+            var tipoNegocio = tipoNegocioManager.TraerTodoTipoNegocio().FindAll(x => x.Descripcion.Contains("A FIJAR") || x.Descripcion.Contains("A PRECIO") || x.Descripcion.Contains("ESPACIO"));
+            
+            var tipoNegocioListItems = tipoNegocio.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.TipoNegocioId.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Text);
+            ViewBag.TipoNegocio = tipoNegocioListItems;
+        }
+
         public ActionResult Inicializar(int? MaterialId)
         {
             return new JsonResult()
@@ -150,6 +174,60 @@ namespace WebDataAgro.Controllers
                     NegociosHasta = formulaDias.NegociosHasta
                 };
             }
+
+            return new JsonResult()
+            {
+                Data = modelo,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        //static readonly object _lockEjecutarFormula = new object();
+
+        //private async Task<string> EjecutarFormulaAsync(int materialId,FormulaDto formula, string path)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        //lock (_lockEjecutarFormula)
+        //        //{
+        //        //Thread.Sleep(5000);
+        //        cupoManager.EjecutarAlgoritmoManual(materialId, formula, null, path);
+        //        //}
+        //    });
+        //    return "";
+        //}
+
+        //public ActionResult EjecutarFormula(int materialId)
+        //{
+        //   var formula= cupoManager.ObtenerFormulaDto(materialId);
+        //    var path = httpContextManager.ObtenerPathLogoMail();
+        //    var a = EjecutarFormulaAsync(materialId, formula, path);
+        //    return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail con el resultado del algoritmo.");
+        //}
+
+        public ActionResult BuscarTiposNegociosExcluidos(int? MaterialId)
+        {
+            var modelo = new ResultIniTipoNegocioExcluidoModel();
+            var result = mobjFormulaManager.TraerTiposNegociosExcluidosGuardados(MaterialId ?? 3);
+
+            if (result != null)
+            {
+                modelo.Datos = result.TiposNegocioExcluidos;
+            }
+
+            return new JsonResult()
+            {
+                Data = modelo,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ActualizarTiposNegociosExcluidos(int materialId, List<TipoNegocioDto> tiposNegociosExcluidos, FormulaIni formulaDias)
+        {
+            var modelo = new AbmFormulaResult();
+
+            var entityErrors = mobjFormulaManager.ActualizarTiposNegociosExcluidos(materialId, tiposNegociosExcluidos, formulaDias);
+            modelo.Errores = entityErrors.Errores;
 
             return new JsonResult()
             {

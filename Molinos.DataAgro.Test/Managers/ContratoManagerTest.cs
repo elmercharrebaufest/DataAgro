@@ -4311,7 +4311,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = "1000"
             };
             repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()))
-                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5 });
+                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5, ComercialId = 1 });
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
             var res = target.AnularContratoSAP(contrato);
             repositorioMock.Verify(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()), Times.Once);
@@ -4326,7 +4326,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = "-1000"
             };
             repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()))
-                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5 });
+                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5, ComercialId = 1 });
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
             var res = target.AnularContratoSAP(contrato);
             repositorioMock.Verify(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()), Times.Once);

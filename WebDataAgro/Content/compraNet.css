@@ -1360,3 +1360,11 @@ body {
             vertical-align: middle;
             border: 1px solid #dddddd;
         }
+
+.importePorcentaje {
+    float: left;
+    font-weight: bolder;
+    text-align: right;
+    top: -3px !important;
+    color: blue;
+}

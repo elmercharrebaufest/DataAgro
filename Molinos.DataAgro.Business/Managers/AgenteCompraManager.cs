@@ -22,16 +22,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHedgeManager oHedgeManager;
         private readonly ILogDataAgroManager logDataAgroManager;
         private ILogger logger;
-        //private readonly IDiasHabilesAgent oDiasHabilesAgent;
+        private readonly IDiasHabilesAgent oDiasHabilesAgent;
 
 
-        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager, ILogDataAgroManager logDataAgroManager/*, IDiasHabilesAgent oDiasHabilesAgent*/)
+        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager, ILogDataAgroManager logDataAgroManager, IDiasHabilesAgent oDiasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oHedgeManager = oHedgeManager;
             this.logDataAgroManager = logDataAgroManager;
-            //this.oDiasHabilesAgent = oDiasHabilesAgent;
+            this.oDiasHabilesAgent = oDiasHabilesAgent;
         }
 
         //--------------------------------------------------
@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(AgenteCompra oParam, Resultado oErrorMessages)
         {
+            bool posicionIncorrecta = false;
             if (oParam.MaterialId == 0)
             {
                 oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacío");
@@ -72,12 +73,14 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.Posicion == "" || oParam.Posicion == null)
             {
                 oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
+                posicionIncorrecta = true;
             }
             else
             {
                 if (oParam.Posicion.Split('.').Length != 2)
                 {
                     oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                    posicionIncorrecta = true;
                 }
                 else
                 {
@@ -86,16 +89,19 @@ namespace Molinos.DataAgro.Business.Managers
                     if (!int.TryParse(oParam.Posicion.Split('.')[1], out i) || !int.TryParse(oParam.Posicion.Split('.')[0], out i))
                     {
                         oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                        posicionIncorrecta = true;
                     }
                     else
                     {
                         if (int.Parse(oParam.Posicion.Split('.')[0]) > 12)
                         {
                             oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                            posicionIncorrecta = true;
                         }
                         if (oParam.Posicion.Split('.')[1].Length < 4)
                         {
                             oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                            posicionIncorrecta = true;
                         }
 
                     }
@@ -153,6 +159,25 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
             //}
+
+            if (!posicionIncorrecta)
+            {
+                int cantDiasHabilesRestar = 5;
+                int mes = Int32.Parse(oParam.Posicion.Split('.')[0]);
+                int anio = Int32.Parse(oParam.Posicion.Split('.')[1]);
+                DateTime fechaInicioMes = new DateTime(anio, mes, 1);
+                var ultimosDiasHabilesDelMes = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaInicioMes);
+                if (ultimosDiasHabilesDelMes != null)
+                {
+                    var posicionFecha = ultimosDiasHabilesDelMes.Count - cantDiasHabilesRestar;
+                    var fechaLimite = ultimosDiasHabilesDelMes[posicionFecha];
+                    if (oParam.FechaOperacion >= fechaLimite)
+                    {
+                        oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser uno de los últimos 5 días hábiles del mes de la posición.");
+                    }
+                }
+            }
+
             return oErrorMessages;
         }
 

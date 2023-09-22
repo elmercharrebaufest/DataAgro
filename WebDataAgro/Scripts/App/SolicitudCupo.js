@@ -74,7 +74,9 @@ function CargarGrilla() {
                     Zona: { type: "string" },
                     Centro: { type: "string" },
                     Fecha: { type: "date" },
-                    Estado: { type: "string" }
+                    Estado: { type: "string" },
+                    FechaCreacion: { type: "date" },
+                    Observacion: { type: "string" },
                 }
             }
         },
@@ -200,6 +202,11 @@ function CargarGrilla() {
                 }, format: _DefaultDateTemplate
             },
             {
+                field: "FechaCreacion", title: "Fecha Creación", type: "date", editable: function (dataItem) {
+                    return false;
+                }, format: _DefaultDateTemplate
+            },
+            {
                 field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "110px",
                 filterable: { extra: false },
                 editable: function (dataItem) {
@@ -243,6 +250,13 @@ function CargarGrilla() {
                         },
                     });
                 }
+            },
+            {
+                field: "Observacion", type: "string", title: "Observación", editable: function (dataItem) {
+                    return false;
+                },
+                headerAttributes: { "class": classExterno },
+                attributes: { "class": "mobile-xs " + classExterno }
             },
             {
                 field: "Estado", title: "Estado", editable: function (dataItem) {
@@ -352,10 +366,13 @@ function CargarGrilla() {
         //,
         //filter: defaultFilter
     });
-    var fecha = new Date(); // Fecha actual
-    fecha.setDate(fecha.getDate() - 7);
+
+    //var fecha = new Date();
+    //fecha.setDate(fecha.getDate() - 7);
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
-    addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
+    //addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
+    addOrRemoveFilter(grilla, "FechaCreacion", "gte", new Date());
+
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);

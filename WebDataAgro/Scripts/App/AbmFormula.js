@@ -14,6 +14,7 @@ $(document).ready(function () {
 
     crearPopupAgregarHijo();
     iniciarCampos();
+    cargarTiposNegociosExcluidos();
 
 
 });
@@ -158,6 +159,7 @@ function crearArbol() {
 
         save: function (e) {
             validarPrioridadIngresadaEnEditar(e);
+            cargarTiposNegociosExcluidos();
         },
 
 
@@ -225,6 +227,7 @@ function iniciarCampos() {
         format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
+            actualizarTiposNegociosExcluidos();
         }
     });
 
@@ -232,6 +235,7 @@ function iniciarCampos() {
         format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
+            actualizarTiposNegociosExcluidos();
         }
     });
 
@@ -239,6 +243,7 @@ function iniciarCampos() {
         format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
+            actualizarTiposNegociosExcluidos();
         }
     });
 
@@ -246,6 +251,7 @@ function iniciarCampos() {
         format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
+            actualizarTiposNegociosExcluidos();
         }
     });
     $("#MaterialId").kendoDropDownList({
@@ -253,9 +259,16 @@ function iniciarCampos() {
         dataValueField: "MaterialId",
         change: function () {
             recargarPantalla();
+            cargarTiposNegociosExcluidos();
         }
     });
 
+    $("#TipoNegocioId").kendoMultiSelect({
+        autoClose: false,
+        change: function () {
+            actualizarTiposNegociosExcluidos();
+        }
+    });
 }
 
 function iniciarDatosComboAgregarCriterios() {
@@ -289,6 +302,7 @@ function actualizarCierre() {
 
 function agregar(e) {
 
+    recargarPantalla();
     var id = $("#padreid").val();
     var maximoParaEsteCriterio = parseInt($("#maximo").val());
 
@@ -330,8 +344,9 @@ function agregar(e) {
         }
         if (!ExistsErrorMessages(result.Errores)) {
             recargarPantalla();
+            cargarTiposNegociosExcluidos();
         }
-    }
+    }    
 
 
     $("#treelist").data("kendoTreeList").dataSource.read();
@@ -462,3 +477,73 @@ $(document)
     .ajaxStop(function () {
         $.unblockUI();
     });
+
+//function EjecutarAlgoritmo() {
+
+//    var mensaje = MSExecuteOnServer('/Formula/EjecutarFormula', { materialId: $("#MaterialId").val() });
+//    if (mensaje != null) {
+//        MensInfoReload(mensaje);
+//    } else {
+//        MensErr("Error al ejecutar el algoritmo")
+//    }
+//}
+
+function cargarTiposNegociosExcluidos() {
+    var material = $("#MaterialId").val() == "" ? null : parseInt($("#MaterialId").val());
+    datos = {
+        MaterialId: material
+    }
+    var result = MSExecuteOnServer('/Formula/BuscarTiposNegociosExcluidos', datos);
+
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowTooltipMessages("err", result.Errores);
+        }
+        if (!ExistsErrorMessages(result.Errores)) {
+            // Obtener la instancia del MultiSelect
+            var multiSelect = $("#TipoNegocioId").data("kendoMultiSelect");
+            // Obtener los datos seleccionados actualmente
+            var datosSeleccionados = [];
+            // Agregar los nuevos elementos preseleccionados a los datos existentes
+            result.Datos.forEach(function (elemento) {
+                datosSeleccionados.push(elemento.TipoNegocioId);
+            });
+            // Establecer los datos seleccionados en el MultiSelect
+            multiSelect.value(datosSeleccionados);
+        }
+    }
+}
+
+function actualizarTiposNegociosExcluidos() {
+    var formulaDias = datosDias();
+    var tiposNegociosExcluidos = [];
+    // Obtener una referencia al widget kendoMultiSelect
+    var multiSelect = $("#TipoNegocioId").data("kendoMultiSelect");
+    // Obtener los elementos seleccionados como objetos de datos
+    var selectedItems = multiSelect.dataItems();
+
+    for (var i = 0; i < selectedItems.length; i++) {
+        var selectedItem = selectedItems[i];
+        // Acceder a las propiedades del objeto de datos
+        var TipoNegocioId = parseInt(selectedItem.value);
+        var Descripcion = selectedItem.text;
+
+        tiposNegociosExcluidos.push({ TipoNegocioId: TipoNegocioId, Descripcion: Descripcion })
+    }
+
+    var datos = {
+        materialId: parseInt($("#MaterialId").val()),
+        tiposNegociosExcluidos: tiposNegociosExcluidos,
+        formulaDias: formulaDias,
+    }
+    var result = MSExecuteOnServer('/Formula/ActualizarTiposNegociosExcluidos', datos);
+
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowTooltipMessages("err", result.Errores);
+            cargarTiposNegociosExcluidos();
+        }
+    }
+
+    
+}

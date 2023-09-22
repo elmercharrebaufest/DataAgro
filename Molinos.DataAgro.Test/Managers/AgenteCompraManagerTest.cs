@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IHedgeManager> hedgeManagerMock;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private JavaScriptSerializer serializer;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
 
         [SetUp]
         public void SetUp()
@@ -39,10 +40,11 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             hedgeManagerMock = new Mock<IHedgeManager>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new AgenteCompraManager(logger.Object, repositorioMock.Object, hedgeManagerMock.Object, logDataAgroManagerMock.Object);
+            target = new AgenteCompraManager(logger.Object, repositorioMock.Object, hedgeManagerMock.Object, logDataAgroManagerMock.Object, diasHabilesAgentMock.Object);
         }
 
         [Test]

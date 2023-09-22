@@ -3,6 +3,8 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/AbmFormula")
+    <script src="~/Scripts/App/KendoExtensions.js"></script>
+    <script src="~/Scripts/App/Filtros.js"></script>
 }
 
 <h3>Algoritmo de Cupos</h3>
@@ -77,7 +79,16 @@
     <input type='button' id="agregarCriterio" class="k-primary" onclick="agregar()" value='Agregar' />
 </div>
 
-
+<div class="row">
+    <div class="col-md-2">
+        <label style="margin-top: 11.875px !important;">Tipos de Negocios excluidos</label>
+    </div>
+    <div class="col-md-4">
+        @Html.ListBox("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control filtroBusquedaPorId", @id = "TipoNegocioId" })
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4"></div>
+</div>
 
 <style>
     .popover-content {
@@ -148,6 +159,14 @@
     input.k-textbox, textarea.k-textbox {
         width: 100px;
         text-align: center;
+    }
+
+    k-icon k-i-loading k-hidden {
+        display: none !important;
+    }
+
+    .k-i-loading {
+        display: none;
     }
 </style>
 

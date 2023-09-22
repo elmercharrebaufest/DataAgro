@@ -16,17 +16,17 @@ using Molinos.DataAgro.Interfaces;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-
-
-
+    
+    
+    
     public class FormulaManager : IFormulaManager
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ICupoManager cupoManager;
 
-
-
+        
+        
         public FormulaManager(ILogger logger, IRepositorio repositorio, ICupoManager cupoManager)
         {
             this.logger = logger;
@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Business.Managers
             ObtenerTodosLosCriterios(formula.Criterio, criteriosTodosDto.Criterios);
 
             return criteriosTodosDto;
-
+        
         }
 
         private void ObtenerTodosLosCriterios(Criterio criterio, ICollection<CriterioIni> lista)
@@ -83,10 +83,10 @@ namespace Molinos.DataAgro.Business.Managers
             EntityValid.ValidateAll(criterio, oEntityErrors);
             var criterioss = repositorio.Listar<Criterio>();
 
-
+            
             if (criterio.Id != 0)
             {
-
+                
                 Criterio criterioPadre = criterioss.Where(c => c.Id == criterio.PadreId).First();
                 Criterio criterioViejo = criterioss.Where(c => c.Id == criterio.Id).First();
 
@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Business.Managers
                 //int sumaPrioridadDisponible = 100 - criterioPadre.Hijos.Sum(x => x.Prioridad) + criterioViejo.Prioridad;
                 int prioridadNueva = criterio.Prioridad;
 
-
+                
                 if (sumaPrioridadDisponible < prioridadNueva)
                 {
                     if (sumaPrioridadDisponible == 0)
@@ -106,7 +106,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oEntityErrors.Error("", "La Prioridad Debe ser menor a : " + sumaPrioridadDisponible.ToString());
                     }
-
+                
                 }
             }
             if (criterio.Prioridad == 0)
@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
 
-
+            var idFormula = formula.Id;
             Criterio criterioAsd = (Criterio)GetInstance("Molinos.DataAgro.Entities.Entities." + criterio.Descripcion);
 
             criterioAsd.PadreId = criterio.PadreId;
@@ -141,7 +141,7 @@ namespace Molinos.DataAgro.Business.Managers
             //formula.Inicio = formulaDias.Inicio;
             //formula.CantDias = formulaDias.CantDias;
 
-
+            
             if (criterioAsd.Id == 0)
             {
                 AgregarCriterio(formula.Criterio, criterioAsd);
@@ -155,6 +155,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.Agregar(formula);
                 repositorio.GuardarCambios();
+
+                GuardarTiposNegociosExcluidos(idFormula, MaterialId);
             }
             catch (Exception ex)
             {
@@ -194,7 +196,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
 
-
+            var idFormula = formula.Id;
             var criterioAsd = (Criterio)GetInstance("Molinos.DataAgro.Entities.Entities." + criterio.Descripcion);
 
             criterioAsd.PadreId = criterio.PadreId;
@@ -209,6 +211,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.Agregar(formula);
                 repositorio.GuardarCambios();
+
+                GuardarTiposNegociosExcluidos(idFormula, MaterialId);
             }
             catch (Exception ex)
             {
@@ -218,19 +222,19 @@ namespace Molinos.DataAgro.Business.Managers
 
             logger.Debug("Guardando el criterio:" + criterio.Descripcion);
 
-
+            
             return oEntityErrors;
         }
         public ResultIniFormula UltimaFormula(int MaterialId)
         {
-
+            
             if (repositorio.Listar<Formula>(x => x.MaterialId == MaterialId).Count() == 0)
             {
                 var hoy = DateTime.Now.Date;
                 var material = repositorio.Obtener<Material>(MaterialId);
                 repositorio.Agregar<Formula>(new Formula { Material = material, Criterio = new CriterioRaiz { Prioridad = 100 }, Fecha = DateTime.Now, CentroId = 1, CuposDesde = hoy, CuposHasta = hoy, MaterialId = MaterialId, NegociosDesde = hoy, NegociosHasta = hoy });
                 repositorio.GuardarCambios();
-
+            
             }
 
             Formula formulaDeBase = repositorio.Listar<Formula>(x => x.MaterialId == MaterialId).OrderBy(f => f.Id).ToList().Last();
@@ -331,7 +335,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in results)
             {
-
+                
                 // el algoritmo no tiene en cuenta estos contratos
                 if (item.Name == "CriterioEsFason" || item.Name == "CriterioEsFijacionDePrecioContrato" || item.Name == "CriterioEsPrimerNegocio") continue;
 
@@ -344,7 +348,7 @@ namespace Molinos.DataAgro.Business.Managers
                     DisplayNameAttribute atributoDisplay = (DisplayNameAttribute)myAttributes[1];
                     string nombreEnDisplay = atributoDisplay.DisplayName.ToString();
 
-
+                    
                     criterioNuevo.Concreta = ((Molinos.DataAgro.Entities.CustomAtributte.Concreta)myAttributes[0]).result;
                     criterioNuevo.DisplayName = nombreEnDisplay;
                     criterioNuevo.Descripcion = item.Name;
@@ -422,18 +426,18 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private ICollection<CriterioIni> cargarHijos(Criterio criterio)
         {
-
+            
             ICollection<CriterioIni> HijosCargados = new List<CriterioIni>();
 
-
+            
             if (criterio.Hijos != null && criterio.Hijos.Count > 0)
             {
                 foreach (var hijo in criterio.Hijos)
                 {
-
+                    
                     if (hijo.PadreId == 8)
                     {
-
+                        
                         HijosCargados.Add(
                         new CriterioIni
                         {
@@ -444,7 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Concreta = hijo.Concreta,
                             Hijos = cargarHijos(hijo)
                         });
-
+                    
                     }
                     else
                     {
@@ -460,7 +464,7 @@ namespace Molinos.DataAgro.Business.Managers
                             });
                     }
 
-
+                
                 }
             }
 
@@ -488,7 +492,88 @@ namespace Molinos.DataAgro.Business.Managers
 
         //}
 
+        public ResultIniTipoNegocioExcluido TraerTiposNegociosExcluidosGuardados(int MaterialId)
+        {
+            Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(MaterialId));
 
+            ResultIniTipoNegocioExcluido tiposNegociosExcluidosTodosDto = new ResultIniTipoNegocioExcluido();
+            tiposNegociosExcluidosTodosDto.TiposNegocioExcluidos = new List<FormulaTipoNegocioExcluidoDto>();
 
+            List<FormulaTipoNegocioExcluido> tiposNegociosExcluidos = repositorio.Listar<FormulaTipoNegocioExcluido>(x => x.FormulaId == formula.Id).ToList();
+
+            tiposNegociosExcluidos.ForEach(x => tiposNegociosExcluidosTodosDto.TiposNegocioExcluidos.Add(new FormulaTipoNegocioExcluidoDto
+            {
+                Id = x.Id,
+                FormulaId = x.FormulaId,
+                TipoNegocioId = x.TipoNegocioId,
+                TipoNegocio = x.TipoNegocio.Descripcion
+            }));
+
+            return tiposNegociosExcluidosTodosDto;
+        }
+
+        public Resultado ActualizarTiposNegociosExcluidos(int materialId, List<TipoNegocioDto> tiposNegociosExcluidos, FormulaIni formulaDias)
+        {
+
+            var entityErrors = ActualizarDias(formulaDias);
+
+            var oEntityErrors = new Resultado();
+            
+            Formula ultimaFormula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(materialId));
+
+            entityErrors.Errores.ForEach(x => oEntityErrors.Errores.Add(x));
+
+            if (ultimaFormula == null)
+            {
+                oEntityErrors.Error("", "No se encontró fórmula");
+            }
+
+            if (oEntityErrors.HayErrores || oEntityErrors.HayError)
+            {
+                return oEntityErrors;
+            }
+
+            if (tiposNegociosExcluidos != null)
+            {
+                tiposNegociosExcluidos.ForEach(x =>
+                {
+                    FormulaTipoNegocioExcluido formulaTiposNegociosExcluidos = new FormulaTipoNegocioExcluido()
+                    {
+                        FormulaId = ultimaFormula.Id,
+                        TipoNegocioId = x.TipoNegocioId,
+                        TipoNegocio = repositorio.Obtener<TipoNegocio>(y => y.TipoNegocioId == x.TipoNegocioId)
+                    };
+
+                    repositorio.Agregar(formulaTiposNegociosExcluidos);
+                });
+            }
+
+            repositorio.GuardarCambios();
+
+            return oEntityErrors;
+        }
+
+        private void GuardarTiposNegociosExcluidos(int idFormula, int MaterialId)
+        {
+            List<FormulaTipoNegocioExcluido> listFormulaTipoNegocioExcluido = repositorio.Listar<FormulaTipoNegocioExcluido>(x => x.FormulaId == idFormula);
+            var ultimaFormula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(MaterialId));
+
+            if (listFormulaTipoNegocioExcluido != null)
+            {
+                listFormulaTipoNegocioExcluido.ForEach(x =>
+                {
+                    FormulaTipoNegocioExcluido formulaTiposNegociosExcluidos = new FormulaTipoNegocioExcluido()
+                    {
+                        FormulaId = ultimaFormula.Id,
+                        TipoNegocioId = x.TipoNegocioId,
+                        TipoNegocio = repositorio.Obtener<TipoNegocio>(y => y.TipoNegocioId == x.TipoNegocioId)
+                    };
+
+                    repositorio.Agregar(formulaTiposNegociosExcluidos);
+                });
+            }
+
+            repositorio.GuardarCambios();
+        }
     }
 }

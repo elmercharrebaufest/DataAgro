@@ -23,7 +23,10 @@ namespace Molinos.DataAgro.Test.Controllers
         private FormulaController target;
         private Mock<IFormulaManager> formulaManagerMock;
         private Mock<IMaterialManager> materialManagerMock;
+        private Mock<ICupoManager> cupoManagerMock;
+        private Mock<IHttpContextManager> httpContextoManagerMock;
         private JavaScriptSerializer serializer;
+        private Mock<ITipoNegocioManager> tipoNegocioManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -31,7 +34,10 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             formulaManagerMock = new Mock<IFormulaManager>();
             materialManagerMock = new Mock<IMaterialManager>();
-            target = new FormulaController(formulaManagerMock.Object, materialManagerMock.Object);
+            cupoManagerMock = new Mock<ICupoManager>();
+            httpContextoManagerMock = new Mock<IHttpContextManager>();
+            tipoNegocioManagerMock = new Mock<ITipoNegocioManager>();
+            target = new FormulaController(formulaManagerMock.Object, materialManagerMock.Object, cupoManagerMock.Object, httpContextoManagerMock.Object, tipoNegocioManagerMock.Object);
         }
         [Test]
         public void InicializarTest()
@@ -161,5 +167,30 @@ namespace Molinos.DataAgro.Test.Controllers
             var data = (AbmFormulaResult)((JsonResult)result).Data;
             Assert.IsNotNull(data);
         }
+        //[Test]
+        //public void EjecutarFormulaTest()
+        //{
+        //    var formula = new FormulaDto
+        //    {
+        //        CentroId = 3,
+        //        CuposDesde = DateTime.Now,
+        //        CuposHasta = DateTime.Now,
+        //        NegociosHasta = DateTime.Now,
+        //        NegociosDesde = DateTime.Now,
+        //        Fecha = DateTime.Now,
+        //        MaterialId = 3
+        //    };
+        //    cupoManagerMock.Setup(x => x.ObtenerFormulaDto(It.IsAny<int>())).Returns(formula);
+        //    httpContextoManagerMock.Setup(x => x.ObtenerPathLogoMail()).Returns("");
+        //    cupoManagerMock.Setup(x => x.EjecutarAlgoritmoManual(It.IsAny<int>(), formula,  null, ""));
+        //    var result = target.EjecutarFormula(3);
+
+        //    Assert.NotNull(result);
+
+        //    var a = serializer.Serialize(result);
+        //    Assert.AreEqual(
+        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"Estamos procesando tu solicitud, en breve te enviaremos un mail con el resultado del algoritmo.\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+        //        a);
+        //}
     }
 }

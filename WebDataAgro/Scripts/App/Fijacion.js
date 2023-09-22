@@ -4459,12 +4459,34 @@ function CalcularPrecioTotalApertura() {
 
             precioNeto += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
             precioNeto += ObtenerDescuentoPorFecha();
+            CalcularImporteOPorcentajeCorrespondiente(precioNeto, porcentajeComision, importeComision);
             precioNeto += (precioNeto * porcentajeComision) - precioTarifaFlete;
             precioNeto += importeComision;
 
             $("#totalApertura").text(kendo.toString(precioNeto, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
         }
         return precioNeto;
+    }
+}
+
+function CalcularImporteOPorcentajeCorrespondiente(precio, porcentaje, importe) {
+    $("#ImporteEnPorcentaje").html("");
+    $("#PorcentajeEnImporte").html("");
+
+    if (porcentaje > 0) {
+        $("#PorcentajeEnImporte").html(kendo.toString(precio * porcentaje, "n2"));
+    }
+    if (importe > 0) {
+        $("#ImporteEnPorcentaje").html("% " + (redondearNumero((importe / precio) * 100)));
+    }
+}
+
+function redondearNumero(numero) {
+    const numeroFormateado = parseFloat(numero).toFixed(2);
+    if (numeroFormateado.endsWith('.00')) {
+        return numeroFormateado.slice(0, -3);
+    } else {
+        return numeroFormateado;
     }
 }
 

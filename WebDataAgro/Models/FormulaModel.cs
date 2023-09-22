@@ -32,6 +32,16 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class ResultIniTipoNegocioExcluidoModel : Resultado
+    {
+        public ICollection<FormulaTipoNegocioExcluidoDto> Datos { get; set; }
+
+        public ResultIniTipoNegocioExcluidoModel()
+        {
+            this.Datos = new List<FormulaTipoNegocioExcluidoDto>();
+        }
+    }
+
     public class AbmCriterioResult : Resultado
     {
         public CriterioDto Criterio { get; set; }
