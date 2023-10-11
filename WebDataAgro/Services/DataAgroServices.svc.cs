@@ -467,7 +467,7 @@ namespace WebDataAgro.Services
             contrato.EPA = contratoSAP.EPA == "X";
             if (contrato.EPA == true || contrato.Sustentable == true)
             {
-                if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x=> x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
+                if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x => x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
                 {
                     contrato.SustentableTipoDBId = 1;
                     contrato.ImporteSustentable = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Importe;
@@ -600,8 +600,8 @@ namespace WebDataAgro.Services
 
             foreach (var desc in contrato.Descuentos)
             {
-                // los importes en USDM que llegan de sap tienen un 0 de mas, solo para generales por fuera
-                if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM" && desc.TipoPeriodoDBId == 1 && desc.TipoDBId == 2)
+                // los importes en USDM que llegan de sap tienen un 0 de mas
+                if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM")
                 {
                     desc.Importe = desc.Importe / 10;
                 }
@@ -761,7 +761,7 @@ namespace WebDataAgro.Services
 
 
         }
-        
+
         public ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP)
         {
             var oEntityErrors = new ResultadoSap();
@@ -1237,6 +1237,33 @@ namespace WebDataAgro.Services
             }
 
         }
+
+        public ResultadoSap ConfirmarFijacionSAP(string fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            var contrato = new Contrato();
+            try
+            {
+                logger.Debug("ConfirmarFijacion" + (fijacionSAP ?? ""));
+                Resultado resultado = fijacionDePrecioContratoManager.ConfirmarFijacionSAP(fijacionSAP);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("ConfirmarFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
+
 
         #endregion
     }

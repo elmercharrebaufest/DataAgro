@@ -1051,6 +1051,18 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);
         }
+
+        [Test]
+        public void ConfirmarFijacionSAPTestOk()
+        {
+            string fijacionSAP = "200349433";
+            fijacionManager.Setup(y => y.ConfirmarFijacionSAP(It.IsAny<string>()))
+           .Returns(new Resultado());
+            var result = target.ConfirmarFijacionSAP(fijacionSAP);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(false, result.HayError);
+        }
     }
 }
 

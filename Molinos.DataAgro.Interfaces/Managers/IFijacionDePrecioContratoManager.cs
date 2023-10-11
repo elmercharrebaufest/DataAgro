@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarFijacionResult GrabarFijacionDePrecioTercero(FijacionDePrecioContrato oFijacionDePrecio);
         void ConfirmacionAutomaticaPizarra13Hrs();
         void EnviarMailFijacion(int fijacion, string idActiveDirectory);
-
+        Resultado ConfirmarFijacionSAP(string fijacionSAP);
     }
 }
 

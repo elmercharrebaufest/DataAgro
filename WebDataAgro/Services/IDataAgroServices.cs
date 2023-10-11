@@ -24,7 +24,7 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoSap ActualizarEstadoComercial(List<InformeComercialSAPDTO> oInformeComercialSAP);
-       
+
         [OperationContract]
         ResultadoSap ActualizarContratoSAP(ContratoSAPDto contratoSAP);
 
@@ -33,7 +33,7 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoSap AltaCupoSAP(CupoSapDto cupoSAP);
-        
+
         [OperationContract]
         ResultadoSap AnularContratoSAP(ContratoSAP contratoSAP);
 
@@ -63,6 +63,10 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         List<SISA> BuscarProveedorEnSisa(string cuit);
+
+        [OperationContract]
+        ResultadoSap ConfirmarFijacionSAP(string fijacionSAP);
+
         #endregion
     }
 }

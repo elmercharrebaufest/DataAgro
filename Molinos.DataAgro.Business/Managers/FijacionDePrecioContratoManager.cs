@@ -1601,6 +1601,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var fijacionSave = new FijacionDePrecioContrato();
                 fijacionSave.FijacionSAP = fijacion.FijacionSAP;
+                fijacionSave.ConfirmadoSAP = true;
                 fijacionSave.ChequeElectronico = fijacion.ChequeElectronico;
                 fijacionSave.PagoCBU = fijacion.PagoCBU;
                 fijacionSave.TrigoEspecial = fijacion.TrigoEspecial;
@@ -2256,5 +2257,27 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+        public Resultado ConfirmarFijacionSAP(string fijacionSAP)
+        {
+            var resultado = new Resultado();
+            if (string.IsNullOrEmpty(fijacionSAP))
+            {
+                resultado.Error("fijacionSAP", "fijacionSAP no puede ser null.");
+                return resultado;
+            }
+            fijacionSAP = fijacionSAP.PadLeft(10,'0');
+            var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP == fijacionSAP && x.EstadoId == (int)EnumEstadoContrato.Finalizado);
+            if (fijacion == null)
+            {
+                resultado.Error("fijacionSAP", $"No se encontro la fijacion Nro {fijacionSAP}.");
+                return resultado;
+            }
+
+            fijacion.ConfirmadoSAP = true;
+            repositorio.GuardarCambios();
+            logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacion.Id), TipoAccionLogDataAgro.Crear, fijacion.GetType());
+
+            return resultado;
+        }
     }
 }

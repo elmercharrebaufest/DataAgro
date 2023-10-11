@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Test.Managers
         private JavaScriptSerializer serializer;
         private Mock<INegocioManager> negocioManagerMock;
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
-        private Mock<IAnularFijacionAgent>  anularFijacionMock;
+        private Mock<IAnularFijacionAgent> anularFijacionMock;
         private Mock<IValidarLiquidacionComisionesAgent> validarLiquidacionComisionMock;
         private Mock<IValidarLiquidacionFinalAgent> validarLiquidacionFinalMock;
         private Mock<IValidarLiquidacionParcialAgent> validarLiquidacionParcialMock;
@@ -1388,6 +1388,98 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.DevolverKilosPendientesAnularFijacionCanje(1);
             Assert.AreEqual(0, result.KilosPendientes);
+        }
+
+
+        [Test]
+        public void ConfirmarFijacionTestOk()
+        {
+
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado },
+                EstadoId = (int)EnumEstadoContrato.Confirmado,
+                Comercial = new Comercial { ComercialId = 1 },
+                Precio = 100,
+                MonedaId = "ARP  ",
+                Cantidad = 5000,
+                FijacionSAP = "1",
+                Virtual = true
+
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>())).Returns(fijacion);
+            SetupLogGuardarFijacion();
+
+            var result = target.ConfirmarFijacionSAP("121");
+
+            Assert.NotNull(result);
+            Assert.AreEqual(false, result.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+        }
+
+        private void SetupLogGuardarFijacion()
+        {
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado },
+                EstadoId = (int)EnumEstadoContrato.Confirmado,
+                Comercial = new Comercial { ComercialId = 1 },
+                Precio = 100,
+                MonedaId = "ARP  ",
+                Cantidad = 5000,
+                FijacionSAP = "1",
+                Virtual = true
+
+            };
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>())).Returns(fijacion);
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "111111"
+                    }
+                });
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(
+                  new FijacionDePrecioContrato
+                  {
+                      Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente, Descripcion = "Pendiente" },
+                      Ampliaciones = 2,
+                      Proveedor = new Proveedor() { CUIT = "00027362" },
+                      ContratoSAP = "0002343211",
+                      MaterialId = 1,
+
+                  });
+        }
+
+        [Test]
+        public void ConfirmarFijacionTestFijacionNullError()
+        {  
+            var result = target.ConfirmarFijacionSAP(null);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(true, result.HayError);
+
+        }
+
+        [Test]
+        public void ConfirmarFijacionTestFijacionNoEncontradaError()
+        {
+            var result = target.ConfirmarFijacionSAP("212132132");
+
+            Assert.NotNull(result);
+            Assert.AreEqual(true, result.HayError);
+
         }
 
     }
