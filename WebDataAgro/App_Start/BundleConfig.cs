@@ -272,6 +272,9 @@ namespace WebDataAgro
                                     "~/Scripts/App/SolicitudCupo.js",
                                     "~/Scripts/kendo/messages/kendo.messages.es-AR.min.js",
                                     "~/Scripts/jquery.unobtrusive-ajax.js"));
+            bundles.Add(new ScriptBundle("~/bundles/FAQ").Include(
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/FAQ.js"));
             bundles.IgnoreList.Clear();
         }
     }

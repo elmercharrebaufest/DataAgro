@@ -149,6 +149,8 @@
     <Compile Include="Dto\FormulaTipoNegocioExcluidoDto.cs" />
     <Compile Include="Dto\HedgeMargenMoliendaDto.cs" />
     <Compile Include="Dto\LogAnulacionContratoDto.cs" />
+    <Compile Include="Dto\ManualesDto.cs" />
+    <Compile Include="Dto\ManualesLogVisitas.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
@@ -387,6 +389,8 @@
     <Compile Include="Entities\FormulaTipoNegocioExcluido.cs" />
     <Compile Include="Entities\HedgeMargenMolienda.cs" />
     <Compile Include="Entities\LogAnulacionContrato.cs" />
+    <Compile Include="Entities\Manuales.cs" />
+    <Compile Include="Entities\ManualesLogVisitas.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
     <Compile Include="Entities\ServicioValor.cs" />

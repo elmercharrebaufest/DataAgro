@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campaña { get; set; }
 
         public string Material { get; set; }
-        
+        public string Comercial { get; set; }
 
         public object Clone()
         {

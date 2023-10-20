@@ -4,48 +4,28 @@
 
 <link href="~/Content/FAQ.css" rel="stylesheet" type="text/css" />
 
+@section Scripts {
+    @Scripts.Render("~/bundles/FAQ")
+    <script src="~/Scripts/html2canvas.js"></script>
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+}
+
 <div id="divFAQ">
     <h3 class="centrarFAQ">Manuales de Originación</h3>
     <br />
     <div class="col-xs-12 col-sm-12 col-md-12 centrarFAQ">
-        <div class="documento">
-            <a style="text-decoration:none!important" target="_blank" href="https://b2cdataagro.blob.core.windows.net/faq/Manual%20de%20originaci%C3%B3n%20MOA.%20Negocios.pdf?v=@DateTime.Now.Ticks">
-                <div class="doc-header">
-                    <h5><i aria-hidden="true" class="fa fa-file-pdf-o"></i>  NEGOCIOS</h5>
-                </div>
-                <div class="doc-description">
-                    <p>Carga de contratos. Aplicaciones. Excedentes y faltantes. Facturación y pagos. Matba Rofex.</p>
-                </div>
-            </a>
+        <div class="input">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar..">
         </div>
     </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12 centrarFAQ">
-        <div class="documento">
-            <a style="text-decoration:none!important" target="_blank" href="https://b2cdataagro.blob.core.windows.net/faq/Manual%20de%20originaci%C3%B3n%20MOA.%20Log%C3%ADstica.pdf?v=@DateTime.Now.Ticks">
-                <div class="doc-header">
-                    <h5><i aria-hidden="true" class="fa fa-file-pdf-o"></i>  LOGÍSTICA</h5>
-                </div>
-                <div class="doc-description">
-                    <p>Cupos. Cartas de porte. Calidad de recibo. Flete procedencia. Tipos de camiones.</p>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12 centrarFAQ">
-        <div class="documento">
-            <a style="text-decoration:none!important" target="_blank" href="https://b2cdataagro.blob.core.windows.net/faq/Manual%20de%20originaci%C3%B3n%20MOA.%20Documentaci%C3%B3n.pdf?v=@DateTime.Now.Ticks">
-                <div class="doc-header">
-                    <h5><i aria-hidden="true" class="fa fa-file-pdf-o"></i>  DOCUMENTACIÓN</h5>
-                </div>
-                <div class="doc-description">
-                    <p>Alta proveedores. Creditos a proveedores. Referentes materias primas. Alta campos sustentables.</p>
-                </div>
-            </a>
-        </div>
-    </div>
+    <br />
+    <div class="contenedorManuales"></div>
 
     @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
-
 </div>
+
+<!-- Modal Cupos con Descarga -->
+@Html.Partial("_ModalEnviarSugerencia")

@@ -32,9 +32,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHedgeManager> oHedgeManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
-
+        private Mock<IFAQManager> faqManagerMock;
         private JavaScriptSerializer serializer;
-
 
         [SetUp]
         public void SetUp()
@@ -52,6 +51,8 @@ namespace Molinos.DataAgro.Test.Controllers
             diferencialManagerMock = new Mock<IDiferencialManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             precioPizarraManagerMock = new Mock<IPrecioPizarraManager>();
+            faqManagerMock = new Mock<IFAQManager>();
+
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new TareasProgramadasController(loggerMock.Object,
                                                      contratoManagerMock.Object,
@@ -64,7 +65,8 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      oHedgeManagerMock.Object,
                                                      diferencialManagerMock.Object,
                                                      proveedorManagerMock.Object,
-                                                     precioPizarraManagerMock.Object);
+                                                     precioPizarraManagerMock.Object,
+                                                     faqManagerMock.Object);
         }
 
         [Test]
@@ -241,6 +243,15 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ConfirmacionAutomaticaPizarra13HrsTest()
         {
             var result = target.ConfirmacionAutomaticaPizarra13Hrs() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarFechaUltimaActualizacionManualesFAQTest()
+        {
+            var result = target.ActualizarFechaUltimaActualizacionManualesFAQ() as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);

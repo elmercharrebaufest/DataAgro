@@ -198,6 +198,7 @@
     <Compile Include="Managers\BoletoManager.cs" />
     <Compile Include="Managers\CapacidadProductivaManager.cs" />
     <Compile Include="Managers\CupoNoPropioManager.cs" />
+    <Compile Include="Managers\FAQManager.cs" />
     <Compile Include="Managers\HabilitacionBoletoManager.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManager.cs" />
     <Compile Include="Managers\HttpContextManager.cs" />

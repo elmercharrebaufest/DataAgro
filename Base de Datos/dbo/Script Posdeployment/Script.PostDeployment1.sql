@@ -354,3 +354,6 @@ IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 Mater
 IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Soja')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Soja'), 0); END
 IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Girasol')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Girasol'), 0); END
 IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Girasol AO')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Girasol AO'), 0); END
+
+IF NOT EXISTS (select 1 from Rol where Descripcion = 'Recibir Sugerencia FAQ') BEGIN insert into Rol (Descripcion) values ('Recibir Sugerencia FAQ'); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END

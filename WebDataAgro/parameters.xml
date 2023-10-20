@@ -129,8 +129,12 @@
 						match="/configuration/appSettings/add[@key='EmailInformeComercial']
                            /@value" />
 	</parameter>
-  
-  
+  <parameter name="AmbienteLocal Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='AmbienteLocal']
+                           /@value" />
+  </parameter>
+
   <parameter name="HTTP_Port Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/system.serviceModel/client

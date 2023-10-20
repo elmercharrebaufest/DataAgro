@@ -31,5 +31,6 @@ namespace Molinos.DataAgro.Interfaces
         List<Comercial> ListarComercialesSinRecibirMail();
         List<Comercial> ListarComercialesOyTNorte();
         List<ComercialQry> ListarComercialesAsignanNegocios();
+        List<Comercial> ListarComercialesRecibirSugerenciaFAQ();
     }
 }

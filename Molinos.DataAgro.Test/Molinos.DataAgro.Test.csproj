@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CupoNoPropioControllerTest.cs" />
+    <Compile Include="Controllers\FAQControllerTest.cs" />
     <Compile Include="Controllers\NegocioPesificacionControllerTest.cs" />
     <Compile Include="Controllers\ReportePesificadosControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionInternaControllerTest.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
     <Compile Include="Managers\CapacidadProductivaManagerTest.cs" />
     <Compile Include="Managers\CupoNoPropioManagerTest.cs" />
+    <Compile Include="Managers\FAQManagerTest.cs" />
     <Compile Include="Managers\HabilitacionBoletoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManagerTest.cs" />
     <Compile Include="Managers\FacacopManagerTest.cs" />

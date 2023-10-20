@@ -20,7 +20,7 @@
   <setParameter name="SinConexionSap Key" value="0" />
   <setParameter name="ValorPruebaSap Key" value="0" />
   <setParameter name="AmbientePruebas Key" value="1" />
-  <setParameter name="AmbientePruebas Key" value="1" />
+  <setParameter name="AmbienteLocal Key" value="0" />
 
   <setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG2300.LST" />
   <setParameter name="Facacop Key" value="\\sapprgap\ftproot\transf\matprim\facacop.txt" />

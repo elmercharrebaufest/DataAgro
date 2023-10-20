@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Agent
                             Directo = "SI",
                             PlanCanje = "SI"
                         },
-                        Corredor = "NO",
+                        Corredor = tipoProv == "CORR" ? "SI" : "NO",
                         Fason = "NO"
                     },
                     Consignatario = "SI",

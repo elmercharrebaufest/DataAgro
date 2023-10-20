@@ -1028,6 +1028,7 @@
     <Content Include="Scripts\App\CupoDisponibilidadDescarga.js" />
     <Content Include="Scripts\App\CupoNoPropio.js" />
     <Content Include="Scripts\App\DescargarBoleto.js" />
+    <Content Include="Scripts\App\FAQ.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
     <Content Include="Scripts\App\PanelAsociarNegocios.js" />
@@ -2830,6 +2831,7 @@
     <Content Include="Views\CompraNet\_ModalCuposConDescarga.cshtml" />
     <Content Include="Views\Cupo\DisponibilidadDescarga.cshtml" />
     <Content Include="Views\Cupo\Disponibilidad.cshtml" />
+    <Content Include="Views\FAQ\_ModalEnviarSugerencia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -8,6 +8,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Ingreso_DataAgro")]
         IngresoDataAgro = 0,
 
+        [Display(ResourceType = typeof(Text), Name = "Recibir_Mail_SugerenciaFAQ")]
+        Recibir_Mail_SugerenciaFAQ = 50,
+
         //Proveedor
         [Display(ResourceType = typeof(Text), Name = "Contador_Proveedores")]
         ContadorProveedores = 101,

@@ -23,12 +23,13 @@ namespace WebDataAgro.Controllers
         private readonly IDiferencialManager diferencialManager;
         private readonly IProveedorManager proveedorManager;
         private readonly IPrecioPizarraManager precioPizarraManager;
+        private readonly IFAQManager faqManager;
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
-            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager)
+            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager)
 
         {
             this.logger = logger;
@@ -43,6 +44,7 @@ namespace WebDataAgro.Controllers
             this.diferencialManager = diferencialManager;
             this.proveedorManager = proveedorManager;
             this.precioPizarraManager = precioPizarraManager;
+            this.faqManager = faqManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -344,6 +346,15 @@ namespace WebDataAgro.Controllers
             logger.Info($"Inicio Confirmación Automatica Pizarra 13hrs");
             fijacionManager.ConfirmacionAutomaticaPizarra13Hrs();
             logger.Info($"Fin Confirmación Automatica Pizarra 13hrs");
+            return Content("ok");
+        }
+
+        public ActionResult ActualizarFechaUltimaActualizacionManualesFAQ()
+        {
+            logger.Info($"Actualizar fecha última actualización Manuales FAQ");
+            faqManager.ActualizarFechaUltimaActualizacionManualesFAQ();
+            logger.Info($"Actualizar fecha última actualización Manuales FAQ - Finalizado");
+            
             return Content("ok");
         }
     }

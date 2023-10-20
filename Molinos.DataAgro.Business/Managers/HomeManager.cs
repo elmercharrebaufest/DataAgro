@@ -774,6 +774,7 @@ namespace Molinos.DataAgro.Business.Managers
             var compraDto = new List<CompraDto>();
             var proveedorIds = new List<int?>();
             var proveedores = repositorio.Listar<Proveedor>().ToList();
+            var comerciales = repositorio.Listar<Comercial>().ToList();
             var cuits = proveedores.Select(x => x.CUIT).Distinct().ToList();
             foreach (var cuit in cuits)
             {
@@ -818,6 +819,8 @@ namespace Molinos.DataAgro.Business.Managers
                 itemDto.CorredorCuit = x.CorredorCuit;
                 itemDto.RazonSocialCorredor = x.RazonSocialCorredor;
                 itemDto.Clasificacion = !String.IsNullOrEmpty(x.CorredorCuit) ? "CORREDOR" : x.Clasificacion;
+                itemDto.Comercial = comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Nombres + ' ' + comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Apellido;
+
                 if (((!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF") || (!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF")) ||
                     (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF") || (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF") ||
                     (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF") || (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF")

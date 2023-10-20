@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Business
             {
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                 {
-                    asunto = "Mail de Prueba - " + asunto;
+                    asunto = "Mail Pruebas - " + asunto;
                     enviarA.Add("dataagro@baufest.com");
                 }
                 var oMensaje = CrearMailBase(cuerpo, asunto, enviarA, emailRemitente);
@@ -71,6 +71,9 @@ namespace Molinos.DataAgro.Business
 
         public string GetEmailUserActiveDirectory(string UserName)
         {
+            if (ConfigurationManager.AppSettings["AmbienteLocal"] == "1")
+                return "dataagro@baufest.com";
+
             DirectoryEntry entry = new DirectoryEntry();
             string userName = UserName;
             try

@@ -6030,7 +6030,7 @@ function EstablecerCostoFinanciero() {
                         tasa = result.Tasa;
                     }
                     if (tasa == 0) {
-                        MensAlerta("Debe completar el costo Financiero de forma manual");
+                        //MensAlerta("Debe completar el costo Financiero de forma manual"); // meet 27/9/23 piden sacar validación. DAT100-2534
                     } else {
                         var precio = Number($("#precioId").val().toString().replace(',', '.'));
                         tasa = Number(tasa);

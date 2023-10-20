@@ -15,6 +15,22 @@
     transition: .25s linear;
 }
 
+.input {
+    color: #3f4845;
+    font-size: 15px;
+    width: 90%;
+    background: #fff;
+    border-radius: 11px;
+    padding: 0px;
+    display: block;
+    line-height: 1.2;
+    margin-bottom: 0px;
+    box-shadow: 2px 2px 2px -3px rgb(0 0 0 / 45%);
+    opacity: .8;
+    cursor: pointer;
+    transition: .25s linear;
+}
+
 .centrarFAQ {
     display: flex;
     justify-content: center;
@@ -33,4 +49,15 @@
 
 .fa-file-pdf-o {
     color: #ef1e24;
+}
+
+#myInput {
+    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 100%; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 40px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    margin-bottom: 0px; /* Add some space below the input */
 }

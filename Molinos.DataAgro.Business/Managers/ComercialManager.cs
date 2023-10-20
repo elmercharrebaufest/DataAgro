@@ -413,5 +413,10 @@ namespace Molinos.DataAgro.Business
               || x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AltaCupos))), 0, "Comercial");
             //se listan también los usuarios con rol Cupos
         }
+
+        public List<Comercial> ListarComercialesRecibirSugerenciaFAQ()
+        {
+            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Recibir_Mail_SugerenciaFAQ)));
+        }
     }
 }

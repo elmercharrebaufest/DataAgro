@@ -144,15 +144,14 @@ namespace WebDataAgro.Controllers
             List<string> tipos = new List<string> { "BasicoContrato", "StoredPorProveedorResult", "CupoDto" };
             if (tipos.Contains(actual.Tipo))
             {
-                ViewBag.Mensaje = actual.AccionRealizada + " " + actual.Clase + ": " + actual.Descripcion;
-
+                ViewBag.Mensaje = actual.AccionRealizada + " " + actual.Clase + ": " + actual.Descripcion + " - " + actual.Fecha + " - " + actual.Usuario;
             }
             return PartialView("_MostrarDiferenciasTabla", CamposCambiados);
         }
 
         public JsonResult BuscarProveedor(string text)
         {
-            var proveedores = proveedorManager.DevolverProveedoresCorredores(text, false, "",false);
+            var proveedores = proveedorManager.DevolverProveedoresCorredores(text, false, "", false);
 
             return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
