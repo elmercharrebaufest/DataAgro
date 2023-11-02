@@ -268,8 +268,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public Resultado EliminarCupo(Cupo cupo)
+        public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
+            var r = repo != null ? repo : repositorio;
             var resultado = new Resultado();
             try
             {
@@ -277,9 +278,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+                var datosConfiguracion = r.Obtener<Configuracion>(1);
                 logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
-                var token = ObtenerToken(datosConfiguracion.ClaveStop);
+                TokenStop token;
+
+                if (tokenNuevo == null)
+                    token = ObtenerToken(datosConfiguracion.ClaveStop);
+                else
+                    token = tokenNuevo;
 
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
                 var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
@@ -317,6 +323,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
                         logger.Debug("Error al Modificar en STOP  linea 315" + cupo.CupoSap);
                         logger.Debug(error.ToJson());
+                        // Si el Cupo ya fue anulado en STOP, no lo toma como error y podrá anular en SAP.
+                        if (error.errorCode == "10011") return resultado;
                         resultado.Error(error.errorCode, error.userMessage);
                         return resultado;
                     }
@@ -325,7 +333,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     logger.Debug("Error al Modificar en STOP linea 323" + cupo.CupoSap);
                     cupo.EstadoCupoId = estado;
-                    repositorio.GuardarCambios();
+                    r.GuardarCambios();
                     resultado.Error("", "Cupo con CTG");
                     return resultado;
                 }
@@ -338,7 +346,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return resultado;
             }
         }
-
 
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
@@ -618,7 +625,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 userMessage = "No se pudo modificar en STOP."
                             };
                         }
-                        cupo.ErrorStop = error.userMessage;                        
+                        cupo.ErrorStop = error.userMessage;
                         logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
                         throw new Exception("Error Stop: " + error.userMessage);
                     }
@@ -763,27 +770,27 @@ namespace Molinos.DataAgro.Agent.Helpers
             var listaCupos = new ConsultaTurnosActivosStop() { data = new List<RespuestaCupoNoPropioStop>() };
             //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
             provider = CultureInfo.InvariantCulture;
-                HttpResponseMessage response = client.PostAsJsonAsync(
-                       $"v1.1.0/misturnosactivos/{token.Data}/{fechaDesde.ToString("yyyy-MM-dd")}/{fechaHasta.ToString("yyyy-MM-dd")}", new { }).Result;
-                response.EnsureSuccessStatusCode();
-                var res = response.Content.ReadAsAsync<dynamic>().Result;
-                var jObject = JObject.Parse(res.ToString());
-                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
-                if (!respuesta.isError)
-                {
-                    ConsultaTurnosActivosStop model = JsonConvert.DeserializeObject<ConsultaTurnosActivosStop>(jObject.ToString());
-                    listaCupos.data.AddRange(model.data);
-                    //logger.Debug(model.results.Count);
-                    //if (model.results.Count > 0)
-                    //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
-                }
-                else
-                {
-                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                    logger.Debug(error.ToJson() + " fechaDesde: " + fechaDesde.ToString() + " - fechaHasta: " + fechaHasta.ToString());
-                }
-            
+            HttpResponseMessage response = client.PostAsJsonAsync(
+                   $"v1.1.0/misturnosactivos/{token.Data}/{fechaDesde.ToString("yyyy-MM-dd")}/{fechaHasta.ToString("yyyy-MM-dd")}", new { }).Result;
+            response.EnsureSuccessStatusCode();
+            var res = response.Content.ReadAsAsync<dynamic>().Result;
+            var jObject = JObject.Parse(res.ToString());
+            ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+            //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
+            if (!respuesta.isError)
+            {
+                ConsultaTurnosActivosStop model = JsonConvert.DeserializeObject<ConsultaTurnosActivosStop>(jObject.ToString());
+                listaCupos.data.AddRange(model.data);
+                //logger.Debug(model.results.Count);
+                //if (model.results.Count > 0)
+                //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+            }
+            else
+            {
+                ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                logger.Debug(error.ToJson() + " fechaDesde: " + fechaDesde.ToString() + " - fechaHasta: " + fechaHasta.ToString());
+            }
+
             return listaCupos;
         }
         #endregion

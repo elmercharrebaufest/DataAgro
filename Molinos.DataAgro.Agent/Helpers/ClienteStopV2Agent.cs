@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logDataAgroManager = logDataAgroManager;
             this.cupoManagerInj = cupoManagerInj;
         }
-        private TokenStop ObtenerToken(string clave)
+        public TokenStop ObtenerToken(string clave)
         {
             try
             {
@@ -286,8 +286,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public Resultado EliminarCupo(Cupo cupo)
+        public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
+            var r = repo != null ? repo : repositorio;
             var resultado = new Resultado();
             try
             {
@@ -295,9 +296,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+                var datosConfiguracion = r.Obtener<Configuracion>(1);
                 logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
-                var token = ObtenerToken(datosConfiguracion.ClaveStop);
+                TokenStop token;
+
+                if (tokenNuevo == null)
+                    token = ObtenerToken(datosConfiguracion.ClaveStop);
+                else
+                    token = tokenNuevo;
 
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
                 var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
@@ -336,6 +342,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
                         logger.Debug("Error al Modificar en STOP  linea 315" + cupo.CupoSap);
                         logger.Debug(error.ToJson());
+                        // Si el Cupo ya fue anulado en STOP, no lo toma como error y podrá anular en SAP.
+                        if (error.errorCode == "10011") return resultado;
                         resultado.Error(error.errorCode, error.userMessage);
                         return resultado;
                     }
@@ -344,7 +352,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     logger.Debug("Error al Modificar en STOP linea 323" + cupo.CupoSap);
                     cupo.EstadoCupoId = estado;
-                    repositorio.GuardarCambios();
+                    r.GuardarCambios();
                     resultado.Error("", "Cupo con CTG");
                     return resultado;
                 }
@@ -357,6 +365,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return resultado;
             }
         }
+
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
             logger.Debug("Iniciando consulta ConsultarCuposDiarios");
@@ -726,7 +735,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     });
                     var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
 
-                    var cuposModificados = repositorio.Listar<Cupo>(x => x.FechaIngreso >= fechaDesde && x.FechaIngreso<= fechaHasta && cuposSapStop.Contains(x.CupoSap) && x.EstadoCupoId != 4);
+                    var cuposModificados = repositorio.Listar<Cupo>(x => x.FechaIngreso >= fechaDesde && x.FechaIngreso <= fechaHasta && cuposSapStop.Contains(x.CupoSap) && x.EstadoCupoId != 4);
                     logger.Debug($"ConsultarMisTurnosActivos, consulta cupo");
                     var cuposAgrupados = cuposModificados.GroupBy(a => a.CupoSap);
 

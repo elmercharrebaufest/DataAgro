@@ -163,5 +163,19 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void ObtenerCentroPorCodigoSapTest()
+        {
+            centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap("1")).Returns(new CentroDto { Id = 1 });
+            var result = target.ObtenerCentroPorCodigoSap("1");
+
+            Assert.NotNull(result);
+
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

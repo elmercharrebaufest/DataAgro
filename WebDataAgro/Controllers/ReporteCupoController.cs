@@ -51,7 +51,6 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-
         public ActionResult BuscaDatosTabla(DataSourceRequest request)
         {
             if (request.Sort == null)
@@ -67,13 +66,12 @@ namespace WebDataAgro.Controllers
         }
         public JsonResult BuscarProveedor(string text)
         {
-            var proveedores = proveedormanager.DevolverProveedoresCorredores(text, false, "",false);
+            var proveedores = proveedormanager.DevolverProveedoresCorredores(text, false, "", false);
             return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
 
         private void FillViewBag()
         {
-
             var material = mobjMaterialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
@@ -83,7 +81,6 @@ namespace WebDataAgro.Controllers
                         Selected = false
                     }).OrderBy(x => x.Value);
             ViewBag.Material = materialesListItems;
-
 
             var listaZonas = zonaCupoManager.TraerTodoZonaCupo().ZonaCupo.Select(
                     x => new SelectListItem
@@ -114,7 +111,6 @@ namespace WebDataAgro.Controllers
                }).OrderBy(x => x.Value);
             ViewBag.Centro = centroListItems;
 
-
             var comercial = mobjComercialManager.TraerTodoComercial();
             comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) || a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) || a.Rol.ToUpper().Contains("Mesa".ToUpper())) && a.Deshabilitado != true).ToList();
             var comercialListItems = comercial.Comercial.Select(
@@ -125,33 +121,31 @@ namespace WebDataAgro.Controllers
                    Selected = false
                }).OrderBy(x => x.Value);
             ViewBag.Comercial = comercialListItems;
-
-
         }
         static readonly object _lockAnulacionMasiva = new object();
 
         public async Task<string> AnulacionMasivaAsync(List<int> equipo, List<int> ids, string path)
         {
-          
             var comercialId = GlobalVariables.IdActiveDirectory;
             await Task.Run(() =>
             {
                 //Thread.Sleep(5000);
-                cupoManager.AnulacionMasiva(equipo, comercialId, ids, path);
-
+                //cupoManager.AnulacionMasiva(equipo, comercialId, ids, path);
+                cupoManager.AnulacionMasiva2(equipo, comercialId, ids, path);
             });
+
             return "";
         }
 
         public ActionResult AnulacionMasiva(List<int> ids)
-        {           
+        {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var path = httpContextManager.ObtenerPathLogoMail();
             if (ids.Count == 0)
             {
                 return Json("Ningún cupo para anular");
             }
-            var a = AnulacionMasivaAsync(equipo, ids, path);           
+            var a = AnulacionMasivaAsync(equipo, ids, path);
             return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail.");
         }
     }

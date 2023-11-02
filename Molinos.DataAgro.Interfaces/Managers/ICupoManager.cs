@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias, bool validarDisponibilidad = true);
         DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo);
         List<DateTime> FechasComprendidas(int? materialId);
-        Resultado EliminarCupo(int id, string comerciall, bool enviarMail);
+        Resultado EliminarCupo(int id, string comerciall, bool enviarMail, TokenStop token = null);
         //Task ObtenerToken();
         Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta);
         void TransmitirCupos();
@@ -52,6 +52,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPA);
         void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
+        void AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
         void EnviarMailSugerenciasPendientesPorComercial();

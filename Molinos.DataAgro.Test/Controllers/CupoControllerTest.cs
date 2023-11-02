@@ -282,7 +282,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void EliminarCupoTest()
         {
-            cupoManagerMock.Setup(x => x.EliminarCupo(It.IsAny<int>(), It.IsAny<string>(), true))
+            cupoManagerMock.Setup(x => x.EliminarCupo(It.IsAny<int>(), It.IsAny<string>(), true, null))
                 .Returns(new Resultado { Errores= new List<ErrorMessage>()});
             var result = target.EliminarCupo(1);
 

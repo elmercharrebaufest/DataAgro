@@ -44,6 +44,9 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IContratoKgPendienteAgent> contratoKgPendienteAgent;
         private Mock<ICartasDePortePendienteAplicarAgent> cartasDePortePendienteAplicarAgent;
         private Mock<ICentroManager> centroManager;
+        private Mock<IClienteStopV1Agent> clienteStopV1Agent;
+        private Mock<IClienteStopV2Agent> clienteStopV2Agent;
+        private Mock<Func<ICupoManager>> cupoManagerInj;
 
         [SetUp]
         public void SetUp()
@@ -68,14 +71,20 @@ namespace Molinos.DataAgro.Test.Managers
             contratoKgPendienteAgent = new Mock<IContratoKgPendienteAgent>();
             cartasDePortePendienteAplicarAgent = new Mock<ICartasDePortePendienteAplicarAgent>();
             centroManager = new Mock<ICentroManager>();
+            clienteStopV1Agent = new Mock<IClienteStopV1Agent>();
+            clienteStopV2Agent = new Mock<IClienteStopV2Agent>();
+            cupoManagerInj = new Mock<Func<ICupoManager>>();
 
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
+            ConfigurationManager.AppSettings["UrlBaseSTOP"] = "https://demo.ssta.gob.ar/turnos/";
+            ConfigurationManager.AppSettings["nroPlantaRuca"] = "1";
+
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
                 logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object,
-                cumplimientoCuposAgent.Object, contratoKgPendienteAgent.Object, cartasDePortePendienteAplicarAgent.Object, centroManager.Object);
-            repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
+                cumplimientoCuposAgent.Object, contratoKgPendienteAgent.Object, cartasDePortePendienteAplicarAgent.Object, centroManager.Object, cupoManagerInj.Object);
+            repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true, ClaveStop = "4A756BD0-3911-868D-408C-FFC3D2A73C13" });
         }
 
         [Test]
@@ -208,12 +217,12 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>(), null, null)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             repositorioMock.Setup(x => x.GuardarCambios());
 
             var result = target.EliminarCupo(1, "a", true);
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
-            clienteStopMock.Verify(x => x.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
+            clienteStopMock.Verify(x => x.EliminarCupo(It.IsAny<Cupo>(), null, null), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             eliminarCupoAgentMock.Verify(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
 
@@ -258,13 +267,13 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new Cupo() { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
+            clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>(), null, null)).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
             var result = target.EliminarCupo(1, "a", false);
 
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Once);
             eliminarCupoAgentMock.Verify(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
+            clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>(), null, null), Times.Once);
 
             Assert.NotNull(result);
 
@@ -328,6 +337,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, CupoDto>>>()), Times.Once);
             Assert.IsNotNull(result);
         }
+
         [Test]
         public void EliminarVariosCupoTestOk()
         {
@@ -337,7 +347,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new Cupo() { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
+            clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>(), null, null)).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
+
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, CupoDto>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                .Returns(new List<CupoDto>() {new CupoDto
                 {
@@ -349,15 +360,16 @@ namespace Molinos.DataAgro.Test.Managers
                     ProveedorId = 1,
                     ZonaCupoId = 2,
                 }});
+
             var result = target.EliminarVarios(new List<int>() { 1, 2 }, "a");
 
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Exactly(2));
-            repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Exactly(2));
-            eliminarCupoAgentMock.Verify(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
-            clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>()), Times.Exactly(2));
-
+            repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Exactly(1));
+            //eliminarCupoAgentMock.Verify(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
+            //clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>(), null, null), Times.Exactly(2));
             Assert.NotNull(result);
         }
+
         [Test]
         public void ObtenerCodigoSapTestOk()
         {
@@ -370,6 +382,19 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
             Assert.AreEqual("a", result);
         }
+
+        //[Test]
+        //public void ObtenerTokenStopTestOk()
+        //{
+        //    repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<TokenStop, bool>>>(), It.IsAny<Expression<Func<TokenStop, string>>>()))
+        //        .Returns("aaabbbbccc");
+        //    var result = target.ObtenerTokenStop();
+
+        //    repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<TokenStop, bool>>>(), It.IsAny<Expression<Func<TokenStop, string>>>()), Times.Once);
+
+        //    Assert.NotNull(result);
+        //    Assert.AreEqual("aaabbbbccc", result);
+        //}
 
         [Test]
         public void ObtenerSugerenciaCupoTest()

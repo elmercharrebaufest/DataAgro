@@ -40,7 +40,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.clienteStopV1Agent = new ClienteStopV1Agent(logger, repositorio, cupoManagerInj, logDataAgroManager);
             this.clienteStopV2Agent = new ClienteStopV2Agent(logger, repositorio, cupoManagerInj, logDataAgroManager);
         }
-        
 
         public void CrearCupo(List<string> cupos)
         {
@@ -79,21 +78,20 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        
-        public Resultado EliminarCupo(Cupo cupo)
+        public Resultado EliminarCupo(Cupo cupo, TokenStop token = null, RepositorioEF repo = null)
         {
             try
             {
                 if (versionClienteStop == "1.1.0")
                 {
-                    return clienteStopV1Agent.EliminarCupo(cupo);
+                    return clienteStopV1Agent.EliminarCupo(cupo, token, repo);
                 }
                 if (versionClienteStop == "2.0.0")
                 {
-                    return clienteStopV2Agent.EliminarCupo(cupo);
+                    return clienteStopV2Agent.EliminarCupo(cupo, token, repo);
                 }
 
-                return clienteStopV1Agent.EliminarCupo(cupo);
+                return clienteStopV1Agent.EliminarCupo(cupo, token, repo);
             }
             catch (Exception e)
             {
@@ -115,14 +113,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
 
                 return clienteStopV1Agent.ConsultarCuposDiarios();
-
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
-
 
         public void ModificarCupo(Cupo cupo)
         {
@@ -163,7 +159,27 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
-
         #endregion
+
+        public TokenStop ObtenerTokenStop(RepositorioEF repo = null)
+        {
+            var r = repo != null ? repo : repositorio;
+            var datosConfiguracion = r.Obtener<Configuracion>(1);
+            logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
+
+            string versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
+            if (versionClienteStop == "1.1.0")
+            {
+                return clienteStopV1Agent.ObtenerToken(datosConfiguracion.ClaveStop);
+            }
+            else if (versionClienteStop == "2.0.0")
+            {
+                return clienteStopV2Agent.ObtenerToken(datosConfiguracion.ClaveStop);
+            }
+            else
+            {
+                return clienteStopV1Agent.ObtenerToken(datosConfiguracion.ClaveStop);
+            }
+        }
     }
 }

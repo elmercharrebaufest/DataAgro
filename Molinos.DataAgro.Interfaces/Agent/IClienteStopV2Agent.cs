@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -15,7 +16,7 @@ namespace Molinos.DataAgro.Interfaces
         //int ConsultarCupo(string cupo, int terminalId, string token);
 
         List<RespuestaCupoStop> ConsultarCuposDiarios();
-        Resultado EliminarCupo(Cupo cupo);
+        Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null);
         //List<Cupo> ObtenerCuposPorFecha(DateTime fechaDelCupo);
         //ConsultaCuposStop ObtenerDatosDeStop(Configuracion datosConfiguracion, HttpClient client, List<DateTime> fechas);
         void ModificarCupo(Cupo cupo);

@@ -24,6 +24,9 @@ using OfficeOpenXml;
 using System.IO;
 using Molinos.DataAgro.Agent;
 using System.Text.RegularExpressions;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -56,7 +59,7 @@ namespace Molinos.DataAgro.Business.Managers
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
             IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent,
-            ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent, ICentroManager centroManager)
+            ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent, ICentroManager centroManager, Func<ICupoManager> cupoManagerInj)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -667,7 +670,106 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.ObtenerConsultaEscalar(new TraerTodosCupos(request, equipo));
         }
 
-        public Resultado EliminarCupo(int id, string comercial, bool enviarMail)
+        private async Task<List<CupoEliminarResult>> EliminarCupoStopAsync(List<int> listaIdCupos, string comercial, bool enviarMail, TokenStop token = null, RepositorioEF repo = null)
+        {
+            var r = repo != null ? repo : repositorio;
+            Configuracion datosConfiguracion = r.Obtener<Configuracion>(1);
+            List<CupoEliminarResult> listaResultado = new List<CupoEliminarResult>();
+            List<Task<CupoEliminarResult>> tareasConsulta = new List<Task<CupoEliminarResult>>();
+
+            foreach (int id in listaIdCupos)
+            {
+                Cupo cupoSap = r.Obtener<Cupo>(id);
+
+                if (!cupoSap.Centro.NoPropio)
+                {
+                    System.Diagnostics.Debug.WriteLine("AGREGA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
+                    tareasConsulta.Add(Task.Run(() => AnularCupoStopAsync(cupoSap, datosConfiguracion, null, token, (RepositorioEF)r)));
+                }
+            }
+            System.Diagnostics.Debug.WriteLine($"agrego todos {DateTime.Now}");
+
+            // Espera a que todas las tareas se completen
+            Task.WhenAll(tareasConsulta).ContinueWith(completedTasks =>
+            {
+                if (completedTasks.IsFaulted)
+                {
+                    System.Diagnostics.Debug.WriteLine("Al menos una tarea falló.");
+                }
+                else
+                {
+                    listaResultado = completedTasks.Result.ToList();
+                    System.Diagnostics.Debug.WriteLine("Todos los procesos se completaron:");
+                    foreach (CupoEliminarResult result in listaResultado)
+                    {
+                        System.Diagnostics.Debug.WriteLine("resultados " + result.ToJson());
+                    }
+                }
+            }).Wait();
+            System.Diagnostics.Debug.WriteLine($"Finnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn {DateTime.Now}");
+
+            return listaResultado;
+        }
+
+        private Resultado EliminarCupoSap(CupoEliminarResult cupoEliminar, string comercial, bool enviarMail)
+        {
+            try
+            {
+                var cupoSap = repositorio.Obtener<Cupo>(cupoEliminar.cupo.Id);
+
+                if (!cupoEliminar.HayError)
+                {
+                    if (cupoSap.Centro.NoPropio)
+                    {
+                        if (cupoSap.EstadoCupoId != 1)
+                        {
+                            var nuevoError = new Resultado();
+                            nuevoError.Error("Error", "El cupo no puede ser anulado. Cupo: " + cupoSap.CupoSap);
+                            return nuevoError;
+                        }
+                        var cuponoPropio = repositorio.Obtener<CupoNoPropio>(x => x.CupoId == cupoSap.Id);
+                        cuponoPropio.CupoId = null;
+                    }
+
+                    cupoSap.EstadoCupoId = 4;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSap.Id, null), TipoAccionLogDataAgro.Eliminar);
+                    if (!cupoSap.Centro.NoPropio)
+                    {
+                        var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap, comercial);
+                        if (resultado != "OK")
+                        {
+                            cupoEliminar.Error("SAP", $"Anulado correctamente en STOP, Error al anular en SAP: {resultado}");
+                        }
+                    }
+                    var cupos = new List<CupoDto> {
+                       new CupoDto {
+                        ZonaCupo = cupoSap.ZonaCupo?.Descripcion,
+                        CupoSap = cupoSap.CupoSap,
+                        Proveedor = cupoSap.Proveedor?.RazonSocial,
+                        Material = cupoSap.Material?.Descripcion,
+                        ProveedorId = cupoSap.ProveedorId,
+                        ComercialId = cupoSap.ComercialId
+                       }
+                    };
+                    if (enviarMail)
+                    {
+                        EnviarMailProveedorAnulacionCupo(cupos);
+                        EnviarMailComercialAnulacionCupo(comercial, cupos);
+                        EnviarMailCreadorAnulacionCupo(cupos, comercial);
+                    }
+                }
+                return cupoEliminar;
+            }
+            catch (Exception e)
+            {
+                var nuevoResultado = new Resultado();
+                nuevoResultado.Error("eliminar", e.Message);
+                return nuevoResultado;
+            }
+        }
+
+        public Resultado EliminarCupo(int id, string comercial, bool enviarMail, TokenStop token = null)
         {
             try
             {
@@ -679,7 +781,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var resultStop = new Resultado();
                 if (!cupoSap.Centro.NoPropio)
                 {
-                    resultStop = AnularCupoStop(cupoSap, datosConfiguracion, null);
+                    resultStop = AnularCupoStop(cupoSap, datosConfiguracion, null, token);
                 }
                 if (!resultStop.HayError)
                 {
@@ -733,7 +835,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private Resultado AnularCupoStop(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente)
+        private Resultado AnularCupoStop(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente, TokenStop token = null)
         {
             logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new Resultado();
@@ -744,17 +846,49 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevoResultado.Error("Error", "Error al anular el cupo " + cupoSap.CupoSap + " en STOP: Sin conexión a STOP.");
                     return nuevoResultado;
                 }
-                var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap) : clienteStopAgent.EliminarCupo(cupoSap);
+                var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap, token) : clienteStopAgent.EliminarCupo(cupoSap, token);
                 if (resultadoStop.HayError)
                 {
                     logger.Debug("AnularCupoStop HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
                     foreach (var e in resultadoStop.Errores)
                     {
-                        nuevoResultado.Error("Error", $"Error al anular el cupo {cupoSap.CupoSap} en STOP: {e.Message}."); ;
+                        nuevoResultado.Error("Error", $"Error al anular el cupo {cupoSap.CupoSap} en STOP: {e.Message}.");
                     }
                     return nuevoResultado;
                 }
             }
+            return nuevoResultado;
+        }
+
+        private async Task<CupoEliminarResult> AnularCupoStopAsync(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente, TokenStop token = null, RepositorioEF repo = null)
+        {
+            System.Diagnostics.Debug.WriteLine("INICIA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
+            logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
+            var nuevoResultado = new CupoEliminarResult();
+
+            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == 1 || cupoSap.EstadoCupoId == 6) && cupoSap.CupoStop != null)
+            {
+                if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
+                {
+                    nuevoResultado.Error("Error", "Error al anular el cupo " + cupoSap.CupoSap + " en STOP: Sin conexión a STOP.");
+                    nuevoResultado.cupo = cupoSap;
+                    return nuevoResultado;
+                }
+                var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap, token, repo) : clienteStopAgent.EliminarCupo(cupoSap, token, repo);
+                if (resultadoStop.HayError)
+                {
+                    logger.Debug("AnularCupoStop HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
+                    foreach (var e in resultadoStop.Errores)
+                    {
+                        nuevoResultado.Error("Error", $"Error al anular el cupo {cupoSap.CupoSap} en STOP: {e.Message}.");
+                    }
+                    nuevoResultado.cupo = cupoSap;
+                    return nuevoResultado;
+                }
+            }
+            nuevoResultado.cupo = cupoSap;
+            System.Diagnostics.Debug.WriteLine("TERMINA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
+
             return nuevoResultado;
         }
 
@@ -903,14 +1037,26 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado EliminarVarios(List<int> c, string comercial)
         {
             var resultado = new Resultado();
-            foreach (var cupo in c)
+            TokenStop token = clienteStopAgent.ObtenerTokenStop();
+            Task<List<CupoEliminarResult>> resCupos3 = EliminarCupoStopAsync(c, comercial, false, token);
+
+            foreach (CupoEliminarResult cupoEliminar in resCupos3.Result)
             {
-                var resCupos = EliminarCupo(cupo, comercial, false);
+                var resCupos = EliminarCupoSap(cupoEliminar, comercial, false);
                 if (resCupos.HayError)
                 {
                     resultado.Errores.AddRange(resCupos.Errores);
                 }
             }
+
+            //foreach (var cupo in c)
+            //{
+            //    var resCupos = EliminarCupo(cupo, comercial, false, token);
+            //    if (resCupos.HayError)
+            //    {
+            //        resultado.Errores.AddRange(resCupos.Errores);
+            //    }
+            //}
             var cupos = repositorio.Listar<Cupo, CupoDto>(x => new CupoDto
             {
                 ZonaCupo = x.ZonaCupo.Descripcion,
@@ -4369,6 +4515,8 @@ namespace Molinos.DataAgro.Business.Managers
                     var listaCuposOk = new List<CupoDto>();
                     var listaCuposError = new List<CupoDto>();
 
+                    TokenStop token = clienteStopAgent.ObtenerTokenStop();
+
                     foreach (var c in cupos)
                     {
                         try
@@ -4398,7 +4546,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
                                 logger.Debug($"El cupo: {c.CupoSap} se esta anulando en STOP: " + DateTime.Now);
-                                errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
+                                errorStop = AnularCupoStop(c, datosConfiguracion, cliente, token);
                                 logger.Debug($"Fin STOP: {c.CupoSap} : " + DateTime.Now);
                                 if (errorStop.HayError)
                                 {
@@ -4434,7 +4582,6 @@ namespace Molinos.DataAgro.Business.Managers
                                         };
                                         listaCuposError.Add(cupoError);
                                     }
-
                                 }
 
                                 if (!errorStop.HayError)
@@ -4453,8 +4600,6 @@ namespace Molinos.DataAgro.Business.Managers
                                     listaCuposOk.Add(cuposOk);
                                 }
                             }
-
-
                         }
                         catch (Exception e)
                         {
@@ -4482,8 +4627,159 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 logger.Error("Error al anular los cupos", e);
             }
+        }
 
+        public void AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path)
+        {
+            try
+            {
+                var momento = DateTime.Now;
+                if (ids != null)
+                {
+                    ids = ids.ToList();
+                    var result = new Resultado();
+                    var errorStop = new Resultado();
+                    var context = new DataAgroDbContext();
+                    var repo = new RepositorioEF(context);
+                    var logmanager = new LogDataAgroManager(repo, logger);
+                    var eliminarcupoSap = new EliminarCupoAgent(logger, repo);
+                    var cupos = repo.Listar<Cupo>(x => ids.Contains(x.Id));
+                    var datosConfiguracion = repo.Obtener<Configuracion>(1);
+                    var mail = new MailManager(logger, repo);
+                    var listaCuposOk = new List<CupoDto>();
+                    var listaCuposError = new List<CupoDto>();
 
+                    TokenStop token = clienteStopAgent.ObtenerTokenStop(repo);
+
+                    List<Cupo> cuposNoPropios = cupos.FindAll(x => x.Centro.NoPropio == true && x.EstadoCupoId == 1).ToList();
+
+                    foreach (var c in cuposNoPropios)
+                    {
+                        try
+                        {
+                            var noPropio = repo.Obtener<CupoNoPropio>(a => a.Codigo == c.CupoSap);
+                            noPropio.CupoId = null;
+                            c.EstadoCupoId = 4;
+                            repo.GuardarCambios();
+                            logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+                            var cuposOk = new CupoDto
+                            {
+                                CupoSap = c.CupoSap,
+                                Proveedor = c.Proveedor.RazonSocial,
+                                Material = c.Material.Descripcion,
+                                ZonaCupo = c.ZonaCupo.Descripcion,
+                                ComercialId = c.ComercialId,
+                                ProveedorId = c.ProveedorId
+                            };
+                            listaCuposOk.Add(cuposOk);
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            var cuposOk = new CupoDto
+                            {
+                                CupoSap = c.CupoSap,
+                                Proveedor = "",
+                                Material = "",
+                                ZonaCupo = "",
+                                ComercialId = 0,
+                                ProveedorId = 0,
+                                MensajeError = "Error al anular",
+                            };
+                            listaCuposOk.Add(cuposOk);
+                        }
+                    }
+
+                    List<int> cupos2 = cupos.FindAll(x => x.Centro.NoPropio == false).Select(x => x.Id).ToList();
+
+                    //var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
+
+                    Task<List<CupoEliminarResult>> resCupos3 = EliminarCupoStopAsync(cupos2, comercialId, false, token, repo);
+
+                    foreach (CupoEliminarResult cupoEliminar in resCupos3.Result)
+                    {
+                        Cupo c = repo.Obtener<Cupo>(cupoEliminar.cupo.Id);
+                        try
+                        {
+                            if (cupoEliminar.HayError)
+                            {
+                                var cupoError = new CupoDto
+                                {
+                                    CupoSap = c.CupoSap,
+                                    Proveedor = c.Proveedor.RazonSocial,
+                                    Material = c.Material.Descripcion,
+                                    MensajeError = "Error al anular en STOP: " + cupoEliminar.ListaErrores.First().Message,
+                                    ZonaCupo = c.ZonaCupo.Descripcion
+                                };
+                                listaCuposError.Add(cupoError);
+                            }
+                            else
+                            {
+                                c.EstadoCupoId = 4;
+                                logger.Debug($"El cupo: {c.CupoSap} se esta anulando en SAP " + DateTime.Now);
+                                var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
+                                logger.Debug($"Fin SAP: {c.CupoSap} : " + DateTime.Now);
+                                if (resultado != "OK")
+                                {
+                                    if (c.Centro.Acopio)
+                                    {
+                                        c.EstadoCupoId = 1;
+                                    }
+                                    var cupoError = new CupoDto
+                                    {
+                                        CupoSap = c.CupoSap,
+                                        Proveedor = c.Proveedor.RazonSocial,
+                                        Material = c.Material.Descripcion,
+                                        MensajeError = "Anulado Ok en STOP. Error al anular en SAP: " + resultado,
+                                        ZonaCupo = c.ZonaCupo.Descripcion
+                                    };
+                                    listaCuposError.Add(cupoError);
+                                }
+                            }
+
+                            if (!cupoEliminar.HayError)
+                            {
+                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+
+                                var cuposOk = new CupoDto
+                                {
+                                    CupoSap = c.CupoSap,
+                                    Proveedor = c.Proveedor.RazonSocial,
+                                    Material = c.Material.Descripcion,
+                                    ZonaCupo = c.ZonaCupo.Descripcion,
+                                    ComercialId = c.ComercialId,
+                                    ProveedorId = c.ProveedorId
+                                };
+                                listaCuposOk.Add(cuposOk);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            var cuposOk = new CupoDto
+                            {
+                                CupoSap = c.CupoSap,
+                                Proveedor = "",
+                                Material = "",
+                                ZonaCupo = "",
+                                ComercialId = 0,
+                                ProveedorId = 0,
+                                MensajeError = "Error al anular",
+                            };
+                            listaCuposOk.Add(cuposOk);
+                        }
+                    }
+
+                    repo.GuardarCambios();
+                    EnviarMailAnulacionCupo(result, comercialId, momento, repo, mail, path, listaCuposError, listaCuposOk);
+                    EnviarMailCreadorAnulacionCupo(listaCuposOk, comercialId);
+                    EnviarMailProveedorAnulacionCupo(listaCuposOk);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error al anular los cupos", e);
+            }
         }
 
         private void EnviarMailAnulacionCupo(Resultado resultado, string active, DateTime momento, RepositorioEF repo, MailManager mail, string path, List<CupoDto> conError, List<CupoDto> ok)

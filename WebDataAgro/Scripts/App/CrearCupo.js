@@ -121,6 +121,19 @@ function InicializarCargaCupos() {
     $("#planta").change(function () {
         checkSoja();
         MostrarVisualizarStock();
+
+        var codigoSap = $(this).val();
+        var result = MSExecuteOnServer("/Centro/ObtenerCentroPorCodigoSap", { codigoSap });
+        if (result != null) {
+            if (result.Acopio) {
+                $("#flete").prop('checked', true);
+                $("#zona").val("9");
+            } else {
+                $("#flete").prop('checked', false);
+                $("#zona").val("0");
+            }
+        }
+
         //if ($(this).val() == "1074") {
         //    $("#flete").attr('disabled', 'disabled');
         //    $("#flete").prop('checked', false);

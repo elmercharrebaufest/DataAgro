@@ -143,6 +143,7 @@
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
+    <Compile Include="Dto\CupoEliminarResult.cs" />
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
     <Compile Include="Dto\CapacidadProductivaDto.cs" />
     <Compile Include="Dto\EstadoHomeDto.cs" />

@@ -126,5 +126,16 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public ActionResult ObtenerCentroPorCodigoSap(string codigoSap)
+        {
+            CentroDto result = mobjCentroManager.ObtenerCentroPorCodigoSap(codigoSap);
+
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

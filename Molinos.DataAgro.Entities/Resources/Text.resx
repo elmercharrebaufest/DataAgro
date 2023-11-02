@@ -911,4 +911,7 @@
   <data name="Configuracion_Localidad" xml:space="preserve">
     <value>Configuración Localidades</value>
   </data>
+    <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
+        <value>Recibir Mail Sugerencia FAQ</value>
+    </data>
 </root>
