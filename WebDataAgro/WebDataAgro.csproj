@@ -90,7 +90,8 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalLibs\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\KendoGridBinder.2.0.0\lib\net45\KendoGridBinder.dll</HintPath>
@@ -2007,6 +2008,7 @@
     </None>
     <Content Include="Services\AuthService.svc" />
     <Content Include="Services\DataAgroServices.svc" />
+    <Content Include="ExternalLibs\Kendo.DynamicLinq.dll" />
     <Content Include="Views\Cupo\CrearCupoTercero.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -1,1 +1,26 @@
 ﻿$tf
+/.vs
+/Base de Datos/bin/Output
+/Base de Datos/obj/Debug
+/Base de Datos/Base de Datos.dbmdl
+/Base de Datos/Base de Datos.jfm
+/Base de Datos/Base de Datos.sqlproj.user
+/Molinos.DataAgro.Agent/bin/Debug
+/Molinos.DataAgro.Agent/obj/Debug
+/Molinos.DataAgro.Build/bin/Debug
+/Molinos.DataAgro.Build/obj/Debug
+/Molinos.DataAgro.Business/bin/Debug
+/Molinos.DataAgro.Business/obj/Debug
+/Molinos.DataAgro.Entities/bin/Debug
+/Molinos.DataAgro.Entities/obj/Debug
+/Molinos.DataAgro.Interfaces/bin/Debug
+/Molinos.DataAgro.Interfaces/obj/Debug
+/Molinos.DataAgro.Report/bin/Debug
+/Molinos.DataAgro.Report/obj/Debug
+/Molinos.DataAgro.Repository/bin/Debug
+/Molinos.DataAgro.Repository/obj/Debug
+/Molinos.DataAgro.Test/obj/Debug
+/packages
+/WebDataAgro/bin
+/WebDataAgro/obj/Debug
+/WebDataAgro/WebDataAgro.csproj.user
