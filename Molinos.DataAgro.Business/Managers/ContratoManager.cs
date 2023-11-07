@@ -4903,7 +4903,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else if (oContrato.Cantidad >= 100000)
                 {
                     htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad + (30 * oContrato.Cantidad) / 100).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.KgMaximo ?? 0).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                 }
             }
             if (oContrato.EstablecimientoPropio == true)
