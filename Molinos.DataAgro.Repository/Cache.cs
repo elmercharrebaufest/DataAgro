@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Caching;
+using System.Security.Claims;
+using System.Web.Caching;
+using System.Web.UI.WebControls;
 
 namespace Molinos.DataAgro.Repository
 {
@@ -36,6 +41,17 @@ namespace Molinos.DataAgro.Repository
         public void Remover(string clave)
         {
             if (Existe(clave)) cache.Remove(clave);
+        }
+        public List<KeyValuePair<string,string>> ListAllCacheItems()
+        {
+            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+            var cacheItems = cache.Select(kvp => kvp);
+
+            foreach (var cacheItem in cacheItems)
+            {
+                list.Add(new KeyValuePair<string, string>(cacheItem.Key, cacheItem.Value.ToString()));
+            }
+            return list;
         }
     }
 }

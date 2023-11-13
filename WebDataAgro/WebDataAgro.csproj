@@ -223,6 +223,7 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\BoletoController.cs" />
+    <Compile Include="Controllers\CacheController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
@@ -2834,6 +2835,7 @@
     <Content Include="Views\Cupo\DisponibilidadDescarga.cshtml" />
     <Content Include="Views\Cupo\Disponibilidad.cshtml" />
     <Content Include="Views\FAQ\_ModalEnviarSugerencia.cshtml" />
+    <Content Include="Views\Cache\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

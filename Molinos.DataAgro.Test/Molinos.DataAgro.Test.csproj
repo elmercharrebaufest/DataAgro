@@ -153,6 +153,7 @@
     <Compile Include="Controllers\PrecioPizarraControllerTest.cs" />
     <Compile Include="Controllers\ReporteResearchControllerTest.cs" />
     <Compile Include="Controllers\ResearchControllerTest.cs" />
+    <Compile Include="Controllers\CacheControllerTest.cs" />
     <Compile Include="Controllers\ZonaControllerTest.cs" />
     <Compile Include="Controllers\OperadorControllerTest.cs" />
     <Compile Include="Controllers\ErrorControllerTest.cs" />
