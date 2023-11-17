@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<TipoResearch> TraerResearch();
         Resultado GrabarNotificacion(NotificacionResearch notificacion);
         Resultado EliminarNotificacion(int id);
-
+        void SincronizarResearchPowerApp();
     }
 }
 

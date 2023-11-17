@@ -24,12 +24,13 @@ namespace WebDataAgro.Controllers
         private readonly IProveedorManager proveedorManager;
         private readonly IPrecioPizarraManager precioPizarraManager;
         private readonly IFAQManager faqManager;
+        private readonly IResearchManager researchManager;
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
-            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager)
+            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager, IResearchManager researchManager)
 
         {
             this.logger = logger;
@@ -45,6 +46,7 @@ namespace WebDataAgro.Controllers
             this.proveedorManager = proveedorManager;
             this.precioPizarraManager = precioPizarraManager;
             this.faqManager = faqManager;
+            this.researchManager = researchManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -355,6 +357,15 @@ namespace WebDataAgro.Controllers
             faqManager.ActualizarFechaUltimaActualizacionManualesFAQ();
             logger.Info($"Actualizar fecha última actualización Manuales FAQ - Finalizado");
             
+            return Content("ok");
+        }
+
+        public ActionResult SincronizarResearch()
+        {
+            logger.Info($"Sincronizar Research Power App");
+            researchManager.SincronizarResearchPowerApp();
+            logger.Info($"Sincronizar Research Power App");
+
             return Content("ok");
         }
     }
