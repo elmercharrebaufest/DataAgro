@@ -863,7 +863,7 @@ namespace Molinos.DataAgro.Business.Managers
         private async Task<CupoEliminarResult> AnularCupoStopAsync(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente, TokenStop token = null, RepositorioEF repo = null)
         {
             System.Diagnostics.Debug.WriteLine("INICIA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
-            logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
+            logger.Debug("AnularCupoStopAsync " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new CupoEliminarResult();
 
             if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == 1 || cupoSap.EstadoCupoId == 6) && cupoSap.CupoStop != null)
@@ -877,7 +877,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap, token, repo) : clienteStopAgent.EliminarCupo(cupoSap, token, repo);
                 if (resultadoStop.HayError)
                 {
-                    logger.Debug("AnularCupoStop HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
+                    logger.Debug("AnularCupoStopAsync HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
                     foreach (var e in resultadoStop.Errores)
                     {
                         nuevoResultado.Error("Error", $"Error al anular el cupo {cupoSap.CupoSap} en STOP: {e.Message}.");
