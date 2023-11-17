@@ -5,6 +5,7 @@ using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
@@ -28,6 +29,7 @@ namespace Molinos.DataAgro.Test.Managers
         private ResearchManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
+        private Mock<IClienteResearchAgent> clienteResearchAgentMock;
 
 
         [SetUp]
@@ -35,7 +37,8 @@ namespace Molinos.DataAgro.Test.Managers
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            target = new ResearchManager(logger.Object, repositorioMock.Object);
+            clienteResearchAgentMock = new Mock<IClienteResearchAgent>();
+            target = new ResearchManager(logger.Object, repositorioMock.Object, clienteResearchAgentMock.Object);
         }
 
         [Test]

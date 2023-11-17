@@ -33,6 +33,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
         private Mock<IFAQManager> faqManagerMock;
+        private Mock<IResearchManager> researchManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -52,6 +53,7 @@ namespace Molinos.DataAgro.Test.Controllers
             proveedorManagerMock = new Mock<IProveedorManager>();
             precioPizarraManagerMock = new Mock<IPrecioPizarraManager>();
             faqManagerMock = new Mock<IFAQManager>();
+            researchManagerMock = new Mock<IResearchManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new TareasProgramadasController(loggerMock.Object,
@@ -66,7 +68,8 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      diferencialManagerMock.Object,
                                                      proveedorManagerMock.Object,
                                                      precioPizarraManagerMock.Object,
-                                                     faqManagerMock.Object);
+                                                     faqManagerMock.Object,
+                                                     researchManagerMock.Object);
         }
 
         [Test]

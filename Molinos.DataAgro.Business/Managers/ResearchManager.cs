@@ -3,8 +3,7 @@ using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Validations;
-using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -12,9 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -22,11 +18,15 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        public ResearchManager(ILogger logger, IRepositorio repositorio)
+        private readonly IClienteResearchAgent clienteResearchAgent;
+
+        public ResearchManager(ILogger logger, IRepositorio repositorio, IClienteResearchAgent clienteResearchAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.clienteResearchAgent = clienteResearchAgent;
         }
+
         public Resultado EliminarResearchAvanceSiembra(int researchAvanceSiembraId)
         {
             var oEntityErrors = new Resultado();
@@ -576,6 +576,19 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Errores.Add(new ErrorMessage(200, "Se Eliminó Correctamente"));
             }
             return error;
+        }
+
+        public void SincronizarResearchPowerApp()
+        {
+            try
+            {
+                List<ResearchDto> listResearch = clienteResearchAgent.ConsultarItems();
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
         }
     }
 }
