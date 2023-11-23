@@ -647,6 +647,18 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug($"bloquear: {bloquear.ToJson()}");
             logger.Debug($"liberar: {liberar.ToJson()}");
 
+            var errores = new Resultado();
+            List<LimiteCupoDto> limites = TraerLimites((int)id);
+            logger.Debug($"limites: {limites.ToJson()}");
+            var totConsumidos = limites.Sum(x => x.Consumidos);
+            if (totConsumidos > limite) {
+                errores.Error("Limite", "El nuevo límite de cupos ("+ limite + ") no puede ser menor a los cupos consumidos ("+ totConsumidos + ").");
+            }
+            if (errores.Errores.Count>0)
+            {
+                return errores;
+            }
+
             var configuracionDto = repositorio.Obtener<ConfiguracionCupo, ConfiguracionCupoDto>(x => x.Id == id.Value,
                 x => new ConfiguracionCupoDto
                 {
