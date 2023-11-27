@@ -688,6 +688,9 @@ namespace WebDataAgro.Controllers
                     MaxJsonLength = Int32.MaxValue
                 };
             }
+            if (copia.Venta == true && copia.TipoNegocioId == 2)
+                copia.Cantidad = Math.Abs(copia.Cantidad);
+
             return new JsonResult()
             {
                 Data = copia,
@@ -1149,7 +1152,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-    
+
 
         public JsonResult ObtenerCapacidadProductivaPendiente(int proveedorId)
         {
@@ -1254,7 +1257,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        
+
         public JsonResult EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId)
         {
             var estado = mobjContratoManager.EstaConfirmadoEnSAP(contratoSAP, TipoNegocioId);
@@ -1271,7 +1274,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public JsonResult ValidarCopiarContrato(int id)
         {
             var estado = mobjContratoManager.ValidarCopiarContrato(id);
@@ -1355,7 +1358,7 @@ namespace WebDataAgro.Controllers
 
                 if (fileSubido.ContentLength > 0)
                 {
-                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);                    
+                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
                     if (tipoAlta == "1")
                     {
                         var resultado = mobjContratoManager.AltaMasivaContratos(dsExcel, contratoAcuerdo, GlobalVariables.ComercialId);
