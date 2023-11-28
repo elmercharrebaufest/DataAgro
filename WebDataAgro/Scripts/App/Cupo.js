@@ -819,7 +819,8 @@ function AnularSeleccionados() {
         $("#cupos-seleccionados-a-borrar").text(obj.join(", "));
         $("#BorrarVarios").show();
         $("#BorrarVarios").click(function () {
-            result = MSExecuteOnServer('/Cupo/EliminarVarios', { listaCupos: borrar });
+            //result = MSExecuteOnServer('/Cupo/EliminarVarios', { listaCupos: borrar });
+            result = MSExecuteOnServer('/ReporteCupo/AnulacionMasiva', { ids: borrar });
             $("#modalBorrarVarios").modal('toggle');
             recargarGrilla();
             ErrorAnulacion(result);
