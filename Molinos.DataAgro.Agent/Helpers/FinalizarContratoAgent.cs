@@ -266,7 +266,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     descuentoGeneralSobrePrecio.Importe += contrato.ImporteSustentable ?? 0;
                     descuentoGeneralSobrePrecio.MonedaId = contrato.MonedaSustentableId;
                 }
-                logger.Debug("Servicio: " + contrato.AperturaPrecio);
+                logger.Debug("AperturaPrecio: " + contrato.AperturaPrecio);
+                logger.Debug("Servicios: " + contrato.Servicios.ToJson());
                 foreach (var servicio in servicios)
                 {
                     servicioSap.Add(new ZMPES6620
@@ -280,8 +281,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                     }
                     );
-
                 }
+                logger.Debug("Servicios a enviar a SAP para NegocioID "+ contrato.Id + ": " + servicioSap.ToXml());
+
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
                 //string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";

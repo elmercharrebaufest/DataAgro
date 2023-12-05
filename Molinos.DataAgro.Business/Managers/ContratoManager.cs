@@ -2615,6 +2615,16 @@ namespace Molinos.DataAgro.Business.Managers
                         oContratoSave.AperturaPrecio = objApertura;
                     }
 
+                    if(oContratoSave.Servicios != null)
+                        logger.Debug("Servicios oContratoSave: " + oContratoSave.Servicios.ToJson());
+
+                    //if (oContratoSave.Servicios == null || (oContratoSave.Servicios != null && oContratoSave.Servicios.Count == 0))
+                    //{
+                    //    var objServicios = repositorio.Listar<Servicio>(x => x.NegocioId == oContratoSave.Id);
+                    //    if (objApertura != null)
+                    //        oContratoSave.Servicios = objServicios;
+                    //}
+
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;

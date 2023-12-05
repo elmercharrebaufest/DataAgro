@@ -242,6 +242,10 @@ function InicializarElementos() {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
+            if ($("#buscadorProveedor").val() == "") {
+                $("#proveedorId").val("");
+                HayMercaderia();
+            }
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
@@ -252,8 +256,6 @@ function InicializarElementos() {
 
             }
             InicializarBordesRojos();
-
-
         },
         select: function (e) {
             if (e.dataItem.Deshabilitar) {
@@ -419,6 +421,11 @@ function InicializarElementos() {
                         $("#pagoCbuDiv").hide();
                     }
                 }
+
+                $("#corredorId").val("");
+                $("#proveedorId").val("");
+                HayMercaderia();
+
             } else {
                 $("#dolarizadoExpressId").prop("checked", false);
                 $("#dolarizadoExpressId").prop("disabled", true);

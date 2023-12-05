@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -14,12 +15,15 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal Desde { get; set; }
         public decimal Hasta { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("ServicioValorId")]
         public virtual ServicioValor ServicioValor { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("NegocioId")]
         public virtual Negocio Negocio { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
 
