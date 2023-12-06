@@ -1782,6 +1782,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oContrato.Servicios != null && oContrato.Servicios.Count > 0)
                 {
+                    logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}");
                     GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
                 }
 
@@ -1819,6 +1820,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.UsuarioId = oContrato.UsuarioId;
                 if (oContrato.Servicios != null && oContrato.Servicios.Count > 0)
                 {
+                    logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
                     GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
                 }
             }
@@ -2080,6 +2082,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.Servicios != null && oContrato.Servicios.Count > 0)
             {
+                logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
                 GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
             }
 
@@ -2615,8 +2618,23 @@ namespace Molinos.DataAgro.Business.Managers
                         oContratoSave.AperturaPrecio = objApertura;
                     }
 
-                    if(oContratoSave.Servicios != null)
-                        logger.Debug("Servicios oContratoSave: " + oContratoSave.Servicios.ToJson());
+                    //if(oContratoSave.Servicios != null)
+                    //    logger.Debug("Servicios oContratoSave: " + oContratoSave.Servicios.ToJson());
+
+                    if (oContratoSave.Servicios != null)
+                    {
+                        var serviciosContrato = oContratoSave.Servicios.Select(s => new {
+                            Id = s.Id,
+                            ServicioValor = s.ServicioValor,
+                            Importe = s.Importe,
+                            MonedaId = s.MonedaId,
+                            NegocioId = s.NegocioId,
+                            Desde = s.Desde,
+                            Hasta = s.Hasta
+                        }).ToList();
+
+                        logger.Debug("Servicios oContratoSave: " + serviciosContrato.ToJson());
+                    }
 
                     //if (oContratoSave.Servicios == null || (oContratoSave.Servicios != null && oContratoSave.Servicios.Count == 0))
                     //{
@@ -8718,6 +8736,17 @@ namespace Molinos.DataAgro.Business.Managers
             var serviciosMaestro = TraerTodoServicio(materialid, centroId);
             if (servicios != null && servicios.Count > 0)
             {
+                var serviciosContrato = servicios.Select(s => new {
+                    Id = s.Id,
+                    ServicioValor = s.ServicioValor,
+                    Importe = s.Importe,
+                    MonedaId = s.MonedaId,
+                    NegocioId = s.NegocioId,
+                    Desde = s.Desde,
+                    Hasta = s.Hasta
+                }).ToList();
+                logger.Debug("Servicios en INI-GrabarServicioModificado(): " + (serviciosContrato.Count() > 15 ? serviciosContrato.ToJson() : (serviciosContrato.Count() + " servicios")));
+
                 foreach (var s in servicios)
                 {
                     if (serviciosMaestro.Any(x => x.ServicioValorId == s.ServicioValorId) && serviciosMaestro.Where(x => x.ServicioValorId == s.ServicioValorId).FirstOrDefault().Importe != s.Importe)
@@ -8729,6 +8758,17 @@ namespace Molinos.DataAgro.Business.Managers
                         s.Modificado = false;
                     }
                 }
+
+                var serviciosContrato2 = servicios.Select(s => new {
+                    Id = s.Id,
+                    ServicioValor = s.ServicioValor,
+                    Importe = s.Importe,
+                    MonedaId = s.MonedaId,
+                    NegocioId = s.NegocioId,
+                    Desde = s.Desde,
+                    Hasta = s.Hasta
+                }).ToList();
+                logger.Debug("Servicios en FIN-GrabarServicioModificado(): " + (serviciosContrato2.Count() > 15 ? serviciosContrato2.ToJson() : (serviciosContrato2.Count() + " servicios")));
             }
         }
 
