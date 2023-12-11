@@ -447,7 +447,7 @@ namespace Molinos.DataAgro.Business.Managers
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                //&& (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
                && (((x is Contrato) && (x as Contrato).PrestamoDevolucion != true) || !(x is Contrato))
-               //&& (((x is Contrato) && (x as Contrato).Venta != true) || !(x is Contrato))
+               && (((x is Contrato) && (x as Contrato).Venta != true) || !(x is Contrato))
                && (((x is Contrato) && (x as Contrato).AnulaYReemplazaContratoId == null) || !(x is Contrato))
 
                && !(((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true && (x as FijacionDePrecioContrato).Virtual != true && (x as FijacionDePrecioContrato).Contrato.Canje == true))
@@ -612,9 +612,7 @@ namespace Molinos.DataAgro.Business.Managers
                 BahiaBlanca = (x.Destino.CodigoSap == "1168") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
-            && (x.TipoNegocioId == 2 || (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1)) 
-            //&& x.Venta != true 
-            && x.AnulaYReemplazaContratoId == null &&
+            && (x.TipoNegocioId == 2 || (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1)) && x.Venta != true && x.AnulaYReemplazaContratoId == null &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
@@ -1010,7 +1008,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2)
                 //&& (x.Canje != true)
                 && (x.PrestamoDevolucion != true)
-                //&& (x.Venta != true)
+                && (x.Venta != true)
             ).Select(x => new PosicionPorMaterial
             {
                 Id = x.Id,
