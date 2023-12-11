@@ -17,7 +17,6 @@ namespace Molinos.DataAgro.Entities.Dto
         //public bool? Sincronizado { get; set; }
         public DateTime? FechaAlta { get; set; }
         //public List<AdjuntoResearch> Adjuntos { get; set; }
-
         //public DateTime? Created { get; set; }
         public string tipoCarga { get; set; }
         public string Cultivo { get; set; }
