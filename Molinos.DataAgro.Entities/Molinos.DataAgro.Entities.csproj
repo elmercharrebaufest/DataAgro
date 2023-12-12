@@ -438,6 +438,14 @@
     <Compile Include="Entities\ManualesLogVisitas.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
+    <Compile Include="Entities\ResearchCoeficienteCultivo.cs" />
+    <Compile Include="Entities\ResearchCondicion.cs" />
+    <Compile Include="Entities\ResearchCondicionCultivo.cs" />
+    <Compile Include="Entities\ResearchEstadio.cs" />
+    <Compile Include="Entities\ResearchEstadioFenologico.cs" />
+    <Compile Include="Entities\ResearchHumedadSuelo.cs" />
+    <Compile Include="Entities\ResearchTipoCarga.cs" />
+    <Compile Include="Entities\ResearchTipoMuestra.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />

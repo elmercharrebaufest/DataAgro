@@ -343,6 +343,14 @@
     <Build Include="dbo\Tables\LogAnulacionContrato.sql" />
     <Build Include="dbo\Tables\Manuales.sql" />
     <Build Include="dbo\Tables\ManualesLogVisitas.sql" />
+    <Build Include="dbo\Tables\ResearchCoeficienteCultivo.sql" />
+    <Build Include="dbo\Tables\ResearchCondicion.sql" />
+    <Build Include="dbo\Tables\ResearchCondicionCultivo.sql" />
+    <Build Include="dbo\Tables\ResearchEstadio.sql" />
+    <Build Include="dbo\Tables\ResearchEstadioFenologico.sql" />
+    <Build Include="dbo\Tables\ResearchHumedadSuelo.sql" />
+    <Build Include="dbo\Tables\ResearchTipoCarga.sql" />
+    <Build Include="dbo\Tables\ResearchTipoMuestra.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
