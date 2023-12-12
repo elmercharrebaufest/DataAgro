@@ -200,7 +200,15 @@
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />
     <Compile Include="Dto\ReporteSojaEPADto.cs" />
+    <Compile Include="Dto\ResearchCoeficienteCultivoDto.cs" />
+    <Compile Include="Dto\ResearchCondicionCultivoDto.cs" />
+    <Compile Include="Dto\ResearchCondicionDto.cs" />
     <Compile Include="Dto\ResearchDto.cs" />
+    <Compile Include="Dto\ResearchEstadioDto.cs" />
+    <Compile Include="Dto\ResearchEstadioFenologicoDto.cs" />
+    <Compile Include="Dto\ResearchHumedadSueloDto.cs" />
+    <Compile Include="Dto\ResearchTipoCargaDto.cs" />
+    <Compile Include="Dto\ResearchTipoMuestraDto.cs" />
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
