@@ -313,7 +313,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ActualizarPrecioPizarra()
         {
-            if (DateTime.Now > DateTime.Now.Date.AddHours(10) && DateTime.Now < DateTime.Now.Date.AddHours(13).AddMinutes(1))
+            if (DateTime.Now > DateTime.Now.Date.AddHours(12) && DateTime.Now < DateTime.Now.Date.AddHours(13).AddMinutes(1))
             {
                 logger.Info($"Actualizar Precios Pizarra");
                 precioPizarraManager.ActualizarPrecioPizarra(DateTime.Now.Date.AddDays(-1), false);
