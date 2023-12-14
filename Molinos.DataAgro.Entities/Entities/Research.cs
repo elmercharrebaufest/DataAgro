@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Molinos.DataAgro.Entities.Dto
+namespace Molinos.DataAgro.Entities.Entities
 {
-    public class ResearchDto
+    public partial class Research
     {
-        public int? Id { get; set; }
+        [Key]
+        public int? ResearchId { get; set; }
         public int MaterialId { get; set; }
         public int? MaterialIdAntecesor { get; set; }
         public int? EstadioId { get; set; }
@@ -39,12 +42,34 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Author { get; set; }
         public string Editor { get; set; }
         public bool? Attachments { get; set; }
-        public List<ResearchAdjuntoDto> Adjuntos { get; set; }
         public bool? Sincronizado { get; set; }
+        public List<ResearchAdjunto> Adjuntos { get; set; }
         public int? LocalidadId { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
+        [ForeignKey("MaterialIdAntecesor")]
+        public virtual Material MaterialAntecesor { get; set; }
+        [ForeignKey("EstadioId")]
+        public virtual ResearchEstadio ResearchEstadio { get; set; }
+        [ForeignKey("CondicionId")]
+        public virtual ResearchCondicion ResearchCondicion { get; set; }
+        [ForeignKey("HumedadSueloId")]
+        public virtual ResearchHumedadSuelo ResearchHumedadSuelo { get; set; }
+        [ForeignKey("TipoMuestraIdUno")]
+        public virtual ResearchTipoMuestra ResearchTipoMuestraUno { get; set; }
+        [ForeignKey("TipoMuestraIdDos")]
+        public virtual ResearchTipoMuestra ResearchTipoMuestraDos { get; set; }
+        [ForeignKey("TipoMuestraIdTres")]
+        public virtual ResearchTipoMuestra ResearchTipoMuestraTres { get; set; }
+        [ForeignKey("CampañaId")]
+        public virtual Campaña Campana { get; set; }
+        [ForeignKey("TipoCargaId")]
+        public virtual ResearchTipoCarga ResearchTipoCarga { get; set; }
+        [ForeignKey("LocalidadId")]
+        public virtual Localidad LocalidadObj { get; set; }
     }
 
-    public class ResearchAdjuntoDto
+    public class ResearchAdjunto
     {
         public int Id { get; set; }
         public string Path { get; set; }

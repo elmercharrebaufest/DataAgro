@@ -393,7 +393,7 @@ IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select M
 IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Muy seco, grietas profundas') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Muy seco, grietas profundas'); END
 IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Seco, grietas pequeñas') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Seco, grietas pequeñas'); END
 IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Seco en superficie, pero aparece humedad en los primeros cm') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Seco en superficie, pero aparece humedad en los primeros cm'); END
-IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Humedo en superficie') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Humedo en superficie'); END
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Húmedo en superficie') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Húmedo en superficie'); END
 IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Suelo saturado') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Suelo saturado'); END
 
 --ResearchEstadio
