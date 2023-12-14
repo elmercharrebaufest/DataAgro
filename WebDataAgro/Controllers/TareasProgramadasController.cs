@@ -362,9 +362,9 @@ namespace WebDataAgro.Controllers
 
         public ActionResult SincronizarResearch()
         {
-            logger.Info($"Sincronizar Research Power App");
+            logger.Info($"INICIO - Sincronizar Research Power App");
             researchManager.SincronizarResearchPowerApp();
-            logger.Info($"Sincronizar Research Power App");
+            logger.Info($"FIN - Sincronizar Research Power App");
 
             return Content("ok");
         }

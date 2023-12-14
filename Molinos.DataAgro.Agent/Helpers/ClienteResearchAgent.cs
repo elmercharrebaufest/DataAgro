@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Microsoft.SharePoint.Client;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Repository;
@@ -12,12 +13,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class ClienteResearchAgent: IClienteResearchAgent
+    public class ClienteResearchAgent : IClienteResearchAgent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
@@ -36,8 +35,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logDataAgroManager = logDataAgroManager;
         }
 
-        public List<ResearchDto> ConsultarItems() {
+        public List<ResearchDto> ConsultarItems()
+        {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ListItem itemError = null;
             try
             {
                 using (ClientContext context = new ClientContext(urlResearch))
@@ -64,93 +65,155 @@ namespace Molinos.DataAgro.Agent.Helpers
                     context.Load(items);
                     context.ExecuteQuery();//ejecutamos
 
-                    List<ResearchDto> listPrecios = new List<ResearchDto>();
+                    List<ResearchDto> listaResearchDto = new List<ResearchDto>();
+                    List<Material> listaMateriales = repositorio.Listar<Material>();
+
+                    List<ResearchEstadioDto> listaEstadioDto = repositorio.Listar<ResearchEstadio>()
+                        .Select(x => new ResearchEstadioDto { EstadioId = x.EstadioId, Descripcion = x.Descripcion }).ToList();
+
+                    List<ResearchCondicionDto> listaCondicionDto = repositorio.Listar<ResearchCondicion>()
+                        .Select(x => new ResearchCondicionDto { CondicionId = x.CondicionId, Descripcion = x.Descripcion }).ToList();
+
+                    List<ResearchHumedadSueloDto> listaHumedadSueloDto = repositorio.Listar<ResearchHumedadSuelo>()
+                        .Select(x => new ResearchHumedadSueloDto { HumedadSueloId = x.HumedadSueloId, Descripcion = x.Descripcion }).ToList();
+
+                    List<LocalidadDto> listaLocalidadDto = repositorio.Listar<Localidad>()
+                        .Select(x => new LocalidadDto { LocalidadId = x.LocalidadId, Nombre = x.Nombre, PartidoId = x.PartidoId, ProvinciaId = x.ProvinciaId }).ToList();
+                    List<Partido> listaPartido = repositorio.Listar<Partido>().ToList();
+                    List<ProvinciaDto> listaProvinciaDto = repositorio.Listar<Provincia>().Select(x => new ProvinciaDto { ProvinciaId = x.ProvinciaId, Nombre = x.Nombre }).ToList();
+
+                    List<ResearchTipoMuestraDto> listaTipoMuestraDto = repositorio.Listar<ResearchTipoMuestra>()
+                        .Select(x => new ResearchTipoMuestraDto { TipoMuestraId = x.TipoMuestraId, Descripcion = x.Descripcion }).ToList();
+
+                    List<ResearchTipoCargaDto> listaTipoCargaDto = repositorio.Listar<ResearchTipoCarga>()
+                        .Select(x => new ResearchTipoCargaDto { TipoCargaId = x.TipoCargaId, Descripcion = x.Descripcion }).ToList();
+
+                    List<CampañaDto> listaCampañaDto = repositorio.Listar<Campaña>()
+                        .Select(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToList();
 
                     //armamos la lista DTO o lo que necesitemos para trabajar
                     foreach (ListItem item in items)
                     {
                         ResearchDto itemData = new ResearchDto();
+                        itemError = item;
 
-                        //itemData.Title = item["Title"].ToString();
-                        //itemData.Usuario = item["Usuariorelevo"].ToString();
-                        //itemData.Zona = item["Zona"].ToString();
-                        itemData.Id = item["ID"] is int ? int.Parse(item["ID"].ToString()) : (int?)null;
+                        //var idDetener = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
+                        //if (idDetener == 15)
+                        //{
+                        //    var b = 0;
+                        //}
+
                         //itemData.Sincronizado = item["Sincronizado"] is bool ? (bool)item["Sincronizado"] : (bool?)null;
-                        itemData.FechaAlta = item["Created"] is DateTime ? (DateTime)item["Created"] : (DateTime?)null;
-                        //itemData.PathDocumentos = (FieldUrlValue)item["Documentos"];
 
-                        itemData.tipoCarga = item["tipoCarga"] == null ? "" : item["tipoCarga"].ToString();
-                        itemData.Cultivo = item["Cultivo"] == null ? "" : item["Cultivo"].ToString();
-                        itemData.Antecesor = item["Antecesor"] == null ? "" : item["Antecesor"].ToString();
-                        itemData.Campana = item["Campa_x00f1_a"] == null ? "" : item["Campa_x00f1_a"].ToString();
-                        itemData.EstadioFenologico = item["Estadiofenologico"] == null ? "" : item["Estadiofenologico"].ToString();
-                        itemData.CondicionCultivo = item["Condicioncultivo"] == null ? "" : item["Condicioncultivo"].ToString();
-                        itemData.HumedadSuelo = item["Humedadsuelo"] == null ? "" : item["Humedadsuelo"].ToString();
+                        itemData.MaterialId = listaMateriales.First(x => x.Descripcion.ToUpper() == item["Cultivo"].ToString().ToUpper()).MaterialId;
+                        itemData.MaterialIdAntecesor = listaMateriales.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Antecesor"]?.ToString().ToUpper())?.MaterialId;
+                        itemData.EstadioId = listaEstadioDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Estadiofenologico"]?.ToString().ToUpper())?.EstadioId;
+                        itemData.CondicionId = listaCondicionDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Condicioncultivo"]?.ToString().ToUpper())?.CondicionId;
+                        itemData.HumedadSueloId = listaHumedadSueloDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Humedadsuelo"]?.ToString().ToUpper())?.HumedadSueloId;
                         itemData.Comentarios = item["Comentarios"] == null ? "" : item["Comentarios"].ToString();
+
                         itemData.Partido = item["Partido"] == null ? "" : item["Partido"].ToString();
                         itemData.Localidad = item["Localidad"] == null ? "" : item["Localidad"].ToString();
                         itemData.Provincia = item["Provincia"] == null ? "" : item["Provincia"].ToString();
+                        var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
+                        var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
+                        itemData.LocalidadId = partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
+                        
                         itemData.Latitud = item["Latitud"] is int ? int.Parse(item["Latitud"].ToString()) : (int?)null;
                         itemData.Longitud = item["Longitud"] is int ? int.Parse(item["Longitud"].ToString()) : (int?)null;
-                        itemData.rendimiento = item["rendimiento"] is double ? double.Parse(item["rendimiento"].ToString()) : (double?)null;
-                        itemData.MuestraUno = item["Muestra1"] == null ? "" : item["Muestra1"].ToString();
+                        itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasUno = item["Medidas1"] == null ? "" : item["Medidas1"].ToString();
                         itemData.PromedioMuestraUno = item["Promediomuestra1"] is int ? int.Parse(item["Promediomuestra1"].ToString()) : (int?)null;
-                        itemData.MuestraDos = item["Muestra2"] == null ? "" : item["Muestra2"].ToString();
+                        itemData.TipoMuestraIdDos = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra2"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasDos = item["Medidas2"] == null ? "" : item["Medidas2"].ToString();
                         itemData.PromedioMuestraDos = item["Promediomuestra2"] is int ? int.Parse(item["Promediomuestra2"].ToString()) : (int?)null;
-                        itemData.MuestraTres = item["Muestra3"] == null ? "" : item["Muestra3"].ToString();
+                        itemData.TipoMuestraIdTres = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra3"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasTres = item["Medidas3"] == null ? "" : item["Medidas3"].ToString();
                         itemData.PromedioMuestraTres = item["Promediomuestra3"] is int ? int.Parse(item["Promediomuestra3"].ToString()) : (int?)null;
                         itemData.DistanciaHileras = item["Distanciahileras"] is double ? double.Parse(item["Distanciahileras"].ToString()) : (double?)null;
+
+                        // GSIAN: podemos tomar el coef. de forma automática según el material? Tabla "ResearchCoeficienteCultivo"
                         itemData.Coeficiente = item["Coeficiente"] is double ? double.Parse(item["Coeficiente"].ToString()) : (double?)null;
-                        itemData.estadoConectividad = item["estadoConectividad"] == null ? "" : item["estadoConectividad"].ToString();
-                        itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : (bool?)null;
+
+                        itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                         itemData.CapitulosGirasol = item["CapitulosGirasol"] is int ? int.Parse(item["CapitulosGirasol"].ToString()) : (int?)null;
+                        itemData.FechaAlta = item["Created"] is DateTime ? (DateTime)item["Created"] : (DateTime?)null;
+                        itemData.Rendimiento = item["rendimiento"] is double ? double.Parse(item["rendimiento"].ToString()) : (double?)null;
+                        itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
+
+                        // GSIAN: Se podría generar una clase si es necesario.
+                        itemData.EstadoConectividad = item["estadoConectividad"] == null ? "" : item["estadoConectividad"].ToString();
+
+                        itemData.IdPowerApp = item["ID"] is int ? int.Parse(item["ID"].ToString()) : (int?)null;
+                        itemData.FechaModificacion = item["Modified"] is DateTime ? (DateTime)item["Modified"] : (DateTime?)null;
                         //itemData.Author = item["Author"] == null ? "" : item["Author"].ToString();// crear obj
                         //itemData.Editor = item["Editor"] == null ? "" : item["Editor"].ToString();// crear obj
+                        itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : (bool?)null;
+                        itemData.Adjuntos = new List<ResearchAdjuntoDto>();
+                        var rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                         // Inicializa otras propiedades
 
                         string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
                         Console.WriteLine(json);
 
+                        if (itemData.Attachments == true)
+                        {
+                            // get files
+                            //string folderRelativeUrl = $"/sites/ResearchMOA/Documentos Compartidos/{itemData.Title}";
+                            string folderRelativeUrl = $"{rutaArchivos}/Attachments/{itemData.IdPowerApp}";
+                            Folder folder = web.GetFolderByServerRelativeUrl(folderRelativeUrl);
+                            FileCollection files = folder.Files;
 
-                        //// get files
-                        //string folderRelativeUrl = $"/sites/ResearchMOA/Documentos Compartidos/{itemData.Title}";
-                        //Folder folder = web.GetFolderByServerRelativeUrl(folderRelativeUrl);
-                        //FileCollection files = folder.Files;
+                            context.Load(files);
+                            context.ExecuteQuery();
 
-                        //context.Load(files);
-                        //context.ExecuteQuery();
+                            var rutaCompleta = "";
+                            if (files.Count() > 0)
+                            {
+                                // Crear el directorio si no existe
+                                rutaCompleta = Path.Combine(downloadPathResearch, itemData.IdPowerApp.ToString());
+                                Directory.CreateDirectory(rutaCompleta);
+                            }
 
-                        //foreach (Microsoft.SharePoint.Client.File file in files)
-                        //{
-                        //    Console.WriteLine($"Nombre del archivo: {file.Name}, Tamaño: {file.Length}");
+                            foreach (Microsoft.SharePoint.Client.File file in files)
+                            {
+                                Console.WriteLine($"Nombre del archivo: {file.Name}, Tamaño: {file.Length}");
 
-                        //    var stream = file.OpenBinaryStream();
-                        //    context.ExecuteQuery();
-                        //    //save files
-                        //    using (var fileStream = new FileStream(Path.Combine(downloadPathResearch, file.Name), FileMode.Create))
-                        //    {
-                        //        stream.Value.CopyTo(fileStream);
-                        //    }
-                        //}
+                                ResearchAdjuntoDto adjuntoResearch = new ResearchAdjuntoDto()
+                                {
+                                    Id = (int)itemData.IdPowerApp,
+                                    Path = Path.Combine(rutaCompleta, file.Name),
+                                    Nombre = file.Name,
+                                };
+                                itemData.Adjuntos.Add(adjuntoResearch);
 
-                        listPrecios.Add(itemData);
+                                var stream = file.OpenBinaryStream();
+                                context.ExecuteQuery();
+                                //save files
+                                //using (var fileStream = new FileStream(Path.Combine(downloadPathResearch, file.Name), FileMode.Create))
+                                using (var fileStream = new FileStream(Path.Combine(rutaCompleta, file.Name), FileMode.Create))
+                                {
+                                    stream.Value.CopyTo(fileStream);
+                                }
+                            }
+                        }
+
+                        listaResearchDto.Add(itemData);
 
                         //actualizar registro sincronizado
                         //item["Sincronizado"] = true;
                         //item.Update();
                         //context.ExecuteQuery();//ejecutar
-
                     }
-                    return listPrecios;
+                    return listaResearchDto;
                 }
             }
             catch (Exception e)
             {
                 logger.Debug($"Error al Consultar registros de Research");
+                var id = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
+                logger.Info($"ERROR Research con registro: {id}");
                 logger.Error(e.Message);
                 throw;
             }
