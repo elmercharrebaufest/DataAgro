@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Molinos.DataAgro.Interfaces.Agent
 {
     public interface IClienteResearchAgent
     {
-        List<ResearchDto> ConsultarItems();
+        List<Research> ConsultarItems();
     }
 }

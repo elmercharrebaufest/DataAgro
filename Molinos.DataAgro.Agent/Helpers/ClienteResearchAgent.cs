@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logDataAgroManager = logDataAgroManager;
         }
 
-        public List<ResearchDto> ConsultarItems()
+        public List<Research> ConsultarItems()
         {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ListItem itemError = null;
@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     context.Load(items);
                     context.ExecuteQuery();//ejecutamos
 
-                    List<ResearchDto> listaResearchDto = new List<ResearchDto>();
+                    List<Research> listaResearchDto = new List<Research>();
                     List<Material> listaMateriales = repositorio.Listar<Material>();
 
                     List<ResearchEstadioDto> listaEstadioDto = repositorio.Listar<ResearchEstadio>()
@@ -94,7 +94,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //armamos la lista DTO o lo que necesitemos para trabajar
                     foreach (ListItem item in items)
                     {
-                        ResearchDto itemData = new ResearchDto();
+                        Research itemData = new Research();
                         itemError = item;
 
                         //var idDetener = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
@@ -118,18 +118,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
                         var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
                         itemData.LocalidadId = partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
-                        
+
                         itemData.Latitud = item["Latitud"] is int ? int.Parse(item["Latitud"].ToString()) : (int?)null;
                         itemData.Longitud = item["Longitud"] is int ? int.Parse(item["Longitud"].ToString()) : (int?)null;
                         itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasUno = item["Medidas1"] == null ? "" : item["Medidas1"].ToString();
-                        itemData.PromedioMuestraUno = item["Promediomuestra1"] is int ? int.Parse(item["Promediomuestra1"].ToString()) : (int?)null;
+                        itemData.PromedioMuestraUno = item["Promediomuestra1"] is double ? double.Parse(item["Promediomuestra1"].ToString()) : (double?)null;
                         itemData.TipoMuestraIdDos = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra2"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasDos = item["Medidas2"] == null ? "" : item["Medidas2"].ToString();
-                        itemData.PromedioMuestraDos = item["Promediomuestra2"] is int ? int.Parse(item["Promediomuestra2"].ToString()) : (int?)null;
+                        itemData.PromedioMuestraDos = item["Promediomuestra2"] is double ? double.Parse(item["Promediomuestra2"].ToString()) : (double?)null;
                         itemData.TipoMuestraIdTres = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra3"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasTres = item["Medidas3"] == null ? "" : item["Medidas3"].ToString();
-                        itemData.PromedioMuestraTres = item["Promediomuestra3"] is int ? int.Parse(item["Promediomuestra3"].ToString()) : (int?)null;
+                        itemData.PromedioMuestraTres = item["Promediomuestra3"] is double ? double.Parse(item["Promediomuestra3"].ToString()) : (double?)null;
                         itemData.DistanciaHileras = item["Distanciahileras"] is double ? double.Parse(item["Distanciahileras"].ToString()) : (double?)null;
 
                         // GSIAN: podemos tomar el coef. de forma automática según el material? Tabla "ResearchCoeficienteCultivo"
@@ -149,7 +149,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         //itemData.Author = item["Author"] == null ? "" : item["Author"].ToString();// crear obj
                         //itemData.Editor = item["Editor"] == null ? "" : item["Editor"].ToString();// crear obj
                         itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : (bool?)null;
-                        itemData.Adjuntos = new List<ResearchAdjuntoDto>();
+                        //itemData.Adjuntos = new List<ResearchAdjunto>();
                         var rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                         // Inicializa otras propiedades
@@ -180,13 +180,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 Console.WriteLine($"Nombre del archivo: {file.Name}, Tamaño: {file.Length}");
 
-                                ResearchAdjuntoDto adjuntoResearch = new ResearchAdjuntoDto()
+                                ResearchAdjunto adjuntoResearch = new ResearchAdjunto()
                                 {
-                                    Id = (int)itemData.IdPowerApp,
+                                    ResearchAdjuntoId = (int)itemData.IdPowerApp,
                                     Path = Path.Combine(rutaCompleta, file.Name),
                                     Nombre = file.Name,
+                                    IdPowerApp = (int)itemData.IdPowerApp,
                                 };
-                                itemData.Adjuntos.Add(adjuntoResearch);
+                                repositorio.Agregar(adjuntoResearch);
 
                                 var stream = file.OpenBinaryStream();
                                 context.ExecuteQuery();
@@ -200,6 +201,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
 
                         listaResearchDto.Add(itemData);
+
+                        repositorio.Agregar(itemData);
+                        repositorio.GuardarCambios();
 
                         //actualizar registro sincronizado
                         //item["Sincronizado"] = true;

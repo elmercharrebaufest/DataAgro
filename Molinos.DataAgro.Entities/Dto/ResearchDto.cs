@@ -19,13 +19,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? Longitud { get; set; }
         public int? TipoMuestraIdUno { get; set; }
         public string MedidasUno { get; set; }
-        public int? PromedioMuestraUno { get; set; }
+        public double? PromedioMuestraUno { get; set; }
         public int? TipoMuestraIdDos { get; set; }
         public string MedidasDos { get; set; }
-        public int? PromedioMuestraDos { get; set; }
+        public double? PromedioMuestraDos { get; set; }
         public int? TipoMuestraIdTres { get; set; }
         public string MedidasTres { get; set; }
-        public int? PromedioMuestraTres { get; set; }
+        public double? PromedioMuestraTres { get; set; }
         public double? DistanciaHileras { get; set; }
         public double? Coeficiente { get; set; }
         public int? CampañaId { get; set; }
@@ -46,9 +46,10 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ResearchAdjuntoDto
     {
-        public int Id { get; set; }
+        public int ResearchAdjuntoId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }
+        public int IdPowerApp { get; set; }
         public string Extension { get { return System.IO.Path.GetExtension(Nombre); } }
         public byte[] Data { get; set; }
     }

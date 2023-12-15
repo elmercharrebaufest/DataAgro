@@ -22,13 +22,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? Longitud { get; set; }
         public int? TipoMuestraIdUno { get; set; }
         public string MedidasUno { get; set; }
-        public int? PromedioMuestraUno { get; set; }
+        public double? PromedioMuestraUno { get; set; }
         public int? TipoMuestraIdDos { get; set; }
         public string MedidasDos { get; set; }
-        public int? PromedioMuestraDos { get; set; }
+        public double? PromedioMuestraDos { get; set; }
         public int? TipoMuestraIdTres { get; set; }
         public string MedidasTres { get; set; }
-        public int? PromedioMuestraTres { get; set; }
+        public double? PromedioMuestraTres { get; set; }
         public double? DistanciaHileras { get; set; }
         public double? Coeficiente { get; set; }
         public int? CampañaId { get; set; }
@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Editor { get; set; }
         public bool? Attachments { get; set; }
         public bool? Sincronizado { get; set; }
-        public List<ResearchAdjunto> Adjuntos { get; set; }
+        //public List<ResearchAdjunto> Adjuntos { get; set; }
         public int? LocalidadId { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
@@ -71,9 +71,10 @@ namespace Molinos.DataAgro.Entities.Entities
 
     public class ResearchAdjunto
     {
-        public int Id { get; set; }
+        public int ResearchAdjuntoId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }
+        public int IdPowerApp { get; set; }
         public string Extension { get { return System.IO.Path.GetExtension(Nombre); } }
         public byte[] Data { get; set; }
     }
