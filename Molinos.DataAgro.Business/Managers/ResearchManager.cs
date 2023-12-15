@@ -582,8 +582,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                List<ResearchDto> listResearch = clienteResearchAgent.ConsultarItems();
-
+                List<Research> listResearch = clienteResearchAgent.ConsultarItems();
             }
             catch (Exception e)
             {
