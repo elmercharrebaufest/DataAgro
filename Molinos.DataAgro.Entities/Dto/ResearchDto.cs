@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ResearchAdjuntoDto> Adjuntos { get; set; }
         public bool? Sincronizado { get; set; }
         public int? LocalidadId { get; set; }
+        public int? ComercialId { get; set; }
     }
 
     public class ResearchAdjuntoDto

@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Sincronizado { get; set; }
         //public List<ResearchAdjunto> Adjuntos { get; set; }
         public int? LocalidadId { get; set; }
+        public int? ComercialId { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MaterialIdAntecesor")]
@@ -67,6 +68,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ResearchTipoCarga ResearchTipoCarga { get; set; }
         [ForeignKey("LocalidadId")]
         public virtual Localidad LocalidadObj { get; set; }
+        [ForeignKey("ComercialId")]
+        public virtual Comercial Comercial { get; set; }
     }
 
     public class ResearchAdjunto
