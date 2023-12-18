@@ -58,7 +58,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     context.Load(list);
                     context.ExecuteQuery();//este es el que ejecuta lo que armamos antes, sin este es como no hacer nada
 
-
                     // a la lista/pagina le pedimos que nos traiga todos los items
                     CamlQuery query = CamlQuery.CreateAllItemsQuery();// aca se puede mejorar para filtrar los ya sinconinizados
                     ListItemCollection items = list.GetItems(query);
@@ -91,19 +90,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                     List<CampañaDto> listaCampañaDto = repositorio.Listar<Campaña>()
                         .Select(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToList();
 
+                    List<ComercialDto> listaComercialDto = repositorio.Listar<Comercial>()
+                        .Select(x => new ComercialDto { ComercialId = x.ComercialId, Email = x.Email }).Where(x => x.Email != null).ToList();
+
                     //armamos la lista DTO o lo que necesitemos para trabajar
                     foreach (ListItem item in items)
                     {
                         Research itemData = new Research();
                         itemError = item;
 
-                        //var idDetener = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
-                        //if (idDetener == 15)
-                        //{
-                        //    var b = 0;
-                        //}
-
-                        //itemData.Sincronizado = item["Sincronizado"] is bool ? (bool)item["Sincronizado"] : (bool?)null;
+                        guardarLog(item);
 
                         itemData.MaterialId = listaMateriales.First(x => x.Descripcion.ToUpper() == item["Cultivo"].ToString().ToUpper()).MaterialId;
                         itemData.MaterialIdAntecesor = listaMateriales.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Antecesor"]?.ToString().ToUpper())?.MaterialId;
@@ -111,14 +107,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                         itemData.CondicionId = listaCondicionDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Condicioncultivo"]?.ToString().ToUpper())?.CondicionId;
                         itemData.HumedadSueloId = listaHumedadSueloDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Humedadsuelo"]?.ToString().ToUpper())?.HumedadSueloId;
                         itemData.Comentarios = item["Comentarios"] == null ? "" : item["Comentarios"].ToString();
-
                         itemData.Partido = item["Partido"] == null ? "" : item["Partido"].ToString();
                         itemData.Localidad = item["Localidad"] == null ? "" : item["Localidad"].ToString();
                         itemData.Provincia = item["Provincia"] == null ? "" : item["Provincia"].ToString();
                         var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
                         var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
                         itemData.LocalidadId = partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
-
                         itemData.Latitud = item["Latitud"] is int ? int.Parse(item["Latitud"].ToString()) : (int?)null;
                         itemData.Longitud = item["Longitud"] is int ? int.Parse(item["Longitud"].ToString()) : (int?)null;
                         itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
@@ -131,28 +125,26 @@ namespace Molinos.DataAgro.Agent.Helpers
                         itemData.MedidasTres = item["Medidas3"] == null ? "" : item["Medidas3"].ToString();
                         itemData.PromedioMuestraTres = item["Promediomuestra3"] is double ? double.Parse(item["Promediomuestra3"].ToString()) : (double?)null;
                         itemData.DistanciaHileras = item["Distanciahileras"] is double ? double.Parse(item["Distanciahileras"].ToString()) : (double?)null;
-
                         // GSIAN: podemos tomar el coef. de forma automática según el material? Tabla "ResearchCoeficienteCultivo"
                         itemData.Coeficiente = item["Coeficiente"] is double ? double.Parse(item["Coeficiente"].ToString()) : (double?)null;
-
                         itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                         itemData.CapitulosGirasol = item["CapitulosGirasol"] is int ? int.Parse(item["CapitulosGirasol"].ToString()) : (int?)null;
                         itemData.FechaAlta = item["Created"] is DateTime ? (DateTime)item["Created"] : (DateTime?)null;
                         itemData.Rendimiento = item["rendimiento"] is double ? double.Parse(item["rendimiento"].ToString()) : (double?)null;
                         itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
-
                         // GSIAN: Se podría generar una clase si es necesario.
                         itemData.EstadoConectividad = item["estadoConectividad"] == null ? "" : item["estadoConectividad"].ToString();
-
                         itemData.IdPowerApp = item["ID"] is int ? int.Parse(item["ID"].ToString()) : (int?)null;
                         itemData.FechaModificacion = item["Modified"] is DateTime ? (DateTime)item["Modified"] : (DateTime?)null;
-                        //itemData.Author = item["Author"] == null ? "" : item["Author"].ToString();// crear obj
-                        //itemData.Editor = item["Editor"] == null ? "" : item["Editor"].ToString();// crear obj
+                        FieldUserValue autor = new FieldUserValue();
+                        autor = (FieldUserValue)item["Author"];
+                        itemData.Author = autor.Email;
+                        itemData.ComercialId = listaComercialDto.FirstOrDefault(x => x.Email.ToUpper() == itemData.Author?.ToUpper())?.ComercialId;
+                        FieldUserValue editor = new FieldUserValue();
+                        editor = (FieldUserValue)item["Editor"];
+                        itemData.Editor = editor.Email;
                         itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : (bool?)null;
-                        //itemData.Adjuntos = new List<ResearchAdjunto>();
-                        var rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
-
-                        // Inicializa otras propiedades
+                        string rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                         string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
                         Console.WriteLine(json);
@@ -160,7 +152,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         if (itemData.Attachments == true)
                         {
                             // get files
-                            //string folderRelativeUrl = $"/sites/ResearchMOA/Documentos Compartidos/{itemData.Title}";
                             string folderRelativeUrl = $"{rutaArchivos}/Attachments/{itemData.IdPowerApp}";
                             Folder folder = web.GetFolderByServerRelativeUrl(folderRelativeUrl);
                             FileCollection files = folder.Files;
@@ -168,7 +159,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             context.Load(files);
                             context.ExecuteQuery();
 
-                            var rutaCompleta = "";
+                            string rutaCompleta = "";
                             if (files.Count() > 0)
                             {
                                 // Crear el directorio si no existe
@@ -192,7 +183,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 var stream = file.OpenBinaryStream();
                                 context.ExecuteQuery();
                                 //save files
-                                //using (var fileStream = new FileStream(Path.Combine(downloadPathResearch, file.Name), FileMode.Create))
                                 using (var fileStream = new FileStream(Path.Combine(rutaCompleta, file.Name), FileMode.Create))
                                 {
                                     stream.Value.CopyTo(fileStream);
@@ -205,10 +195,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         repositorio.Agregar(itemData);
                         repositorio.GuardarCambios();
 
-                        //actualizar registro sincronizado
-                        //item["Sincronizado"] = true;
-                        //item.Update();
-                        //context.ExecuteQuery();//ejecutar
+                        // GSIAN: prueba para eliminar registro sincronizado
+                        //var idDetener2 = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
+                        //if (idDetener2 == 127)
+                        //{
+                        //    item.DeleteObject();
+                        //    context.ExecuteQuery();
+                        //}
                     }
                     return listaResearchDto;
                 }
@@ -221,6 +214,49 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error(e.Message);
                 throw;
             }
+        }
+
+        private void guardarLog(ListItem item)
+        {
+            var data = new
+            {
+                Material = item["Cultivo"],
+                MaterialAntecesor = item["Antecesor"],
+                EstadioFenologico = item["Estadiofenologico"],
+                CondicionCultivo = item["Condicioncultivo"],
+                HumedadSuelo = item["Humedadsuelo"],
+                Comentarios = item["Comentarios"],
+                Partido = item["Partido"],
+                Localidad = item["Localidad"],
+                Provincia = item["Provincia"],
+                Latitud = item["Latitud"],
+                Longitud = item["Longitud"],
+                TipoMuestraUno = item["Muestra1"],
+                MedidasUno = item["Medidas1"],
+                PromedioMuestraUno = item["Promediomuestra1"],
+                TipoMuestraDos = item["Muestra2"],
+                MedidasDos = item["Medidas2"],
+                PromedioMuestraDos = item["Promediomuestra2"],
+                TipoMuestraTres = item["Muestra3"],
+                MedidasTres = item["Medidas3"],
+                PromedioMuestraTres = item["Promediomuestra3"],
+                DistanciaHileras = item["Distanciahileras"],
+                Coeficiente = item["Coeficiente"],
+                Campaña = item["Campa_x00f1_a"],
+                CapitulosGirasol = item["CapitulosGirasol"],
+                FechaAlta = item["Created"],
+                Rendimiento = item["rendimiento"],
+                TipoCarga = item["tipoCarga"],
+                EstadoConectividad = item["estadoConectividad"],
+                IdPowerApp = item["ID"],
+                FechaModificacion = item["Modified"],
+                Author = item["Author"],
+                Editor = item["Editor"],
+                Attachments = item["Attachments"],
+            };
+
+            string jsonData = JsonConvert.SerializeObject(data);
+            logger.Info($"Research a sincronizar ID {int.Parse(item["ID"].ToString())}: {jsonData}");
         }
     }
 }

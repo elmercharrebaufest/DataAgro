@@ -36,6 +36,7 @@
 	[Attachments] BIT NOT NULL,
 	[Sincronizado] BIT NULL,
 	[LocalidadId] INT NULL,
+	[ComercialId] INT NULL,
 	CONSTRAINT [PK_Research] PRIMARY KEY CLUSTERED ([ResearchId] ASC),
 	CONSTRAINT [FK_Research_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
 	CONSTRAINT [FK_Research_MaterialAntecesor] FOREIGN KEY ([MaterialIdAntecesor]) REFERENCES [dbo].[Material] ([MaterialId]),
@@ -48,4 +49,5 @@
 	CONSTRAINT [FK_Research_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
 	CONSTRAINT [FK_Research_ResearchTipoCarga] FOREIGN KEY ([TipoCargaId]) REFERENCES [dbo].[ResearchTipoCarga] ([TipoCargaId]),
 	CONSTRAINT [FK_Research_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [dbo].[Localidad] ([LocalidadId]),
+	CONSTRAINT [FK_Research_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
 )
