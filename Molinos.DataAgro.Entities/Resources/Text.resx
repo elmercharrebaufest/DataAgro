@@ -914,4 +914,7 @@
     <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
         <value>Recibir Mail Sugerencia FAQ</value>
     </data>
+	<data name="Mapa_Research" xml:space="preserve">
+        <value>Mapa Research</value>
+    </data>
 </root>
