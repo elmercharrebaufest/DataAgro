@@ -251,6 +251,7 @@
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
     <Compile Include="Controllers\LogDataAgroController.cs" />
     <Compile Include="Controllers\ReporteProveedoresController.cs" />
+    <Compile Include="Controllers\ResearchMapaController.cs" />
     <Compile Include="Controllers\TerminosYCondicionesController.cs" />
     <Compile Include="Controllers\FormulaController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
@@ -432,6 +433,7 @@
     <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
+    <Content Include="Content\ResearchMapa.css" />
     <Content Include="Content\Sugerencia.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
@@ -1038,6 +1040,7 @@
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AbmFechaFeriado.js" />
     <Content Include="Scripts\App\NegocioPesificacion.js" />
+    <Content Include="Scripts\App\ResearchMapa.js" />
     <Content Include="Scripts\App\SolicitudCupo.js" />
     <Content Include="Scripts\App\AdministracionCupoGrilla.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
@@ -2836,6 +2839,7 @@
     <Content Include="Views\Cupo\Disponibilidad.cshtml" />
     <Content Include="Views\FAQ\_ModalEnviarSugerencia.cshtml" />
     <Content Include="Views\Cache\Index.cshtml" />
+    <Content Include="Views\ResearchMapa\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

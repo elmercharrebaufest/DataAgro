@@ -113,8 +113,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
                         var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
                         itemData.LocalidadId = partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
-                        itemData.Latitud = item["Latitud"] is int ? int.Parse(item["Latitud"].ToString()) : (int?)null;
-                        itemData.Longitud = item["Longitud"] is int ? int.Parse(item["Longitud"].ToString()) : (int?)null;
+                        itemData.Latitud = item["Latitud"] is double ? double.Parse(item["Latitud"].ToString()) : (double?)null;
+                        itemData.Longitud = item["Longitud"] is double ? double.Parse(item["Longitud"].ToString()) : (double?)null;
                         itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
                         itemData.MedidasUno = item["Medidas1"] == null ? "" : item["Medidas1"].ToString();
                         itemData.PromedioMuestraUno = item["Promediomuestra1"] is double ? double.Parse(item["Promediomuestra1"].ToString()) : (double?)null;
@@ -128,7 +128,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         // GSIAN: podemos tomar el coef. de forma automática según el material? Tabla "ResearchCoeficienteCultivo"
                         itemData.Coeficiente = item["Coeficiente"] is double ? double.Parse(item["Coeficiente"].ToString()) : (double?)null;
                         itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
-                        itemData.CapitulosGirasol = item["CapitulosGirasol"] is int ? int.Parse(item["CapitulosGirasol"].ToString()) : (int?)null;
+                        itemData.CapitulosGirasol = item["CapitulosGirasol"] is double ? double.Parse(item["CapitulosGirasol"].ToString()) : (double?)null;
                         itemData.FechaAlta = item["Created"] is DateTime ? (DateTime)item["Created"] : (DateTime?)null;
                         itemData.Rendimiento = item["rendimiento"] is double ? double.Parse(item["rendimiento"].ToString()) : (double?)null;
                         itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;

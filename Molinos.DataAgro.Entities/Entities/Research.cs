@@ -18,8 +18,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Partido { get; set; }
         public string Localidad { get; set; }
         public string Provincia { get; set; }
-        public int? Latitud { get; set; }
-        public int? Longitud { get; set; }
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
         public int? TipoMuestraIdUno { get; set; }
         public string MedidasUno { get; set; }
         public double? PromedioMuestraUno { get; set; }
@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public double? DistanciaHileras { get; set; }
         public double? Coeficiente { get; set; }
         public int? CampañaId { get; set; }
-        public int? CapitulosGirasol { get; set; }
+        public double? CapitulosGirasol { get; set; }
         public DateTime? FechaAlta { get; set; }
         public double? Rendimiento { get; set; }
         public int? TipoCargaId { get; set; }

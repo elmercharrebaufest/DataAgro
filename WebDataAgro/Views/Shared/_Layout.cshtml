@@ -662,6 +662,15 @@
                                         </a>
                                     </li>
                                 }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
+                                {
+                                    <li>
+                                        <a href="~/ResearchMapa" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Mapa Research
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }

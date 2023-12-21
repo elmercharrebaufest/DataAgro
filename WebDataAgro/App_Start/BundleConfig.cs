@@ -275,6 +275,10 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/FAQ").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/FAQ.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ResearchMapa").Include(
+                                       "~/Scripts/KendoExtensions.js"
+                                       //"~/Scripts/App/ResearchMapa.js"
+                                       ));
             bundles.IgnoreList.Clear();
         }
     }
