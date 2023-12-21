@@ -1447,6 +1447,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mapa Research.
+        /// </summary>
+        public static string Mapa_Research {
+            get {
+                return ResourceManager.GetString("Mapa_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Marzo.
         /// </summary>
         public static string March {
