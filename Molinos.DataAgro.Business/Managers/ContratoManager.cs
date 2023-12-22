@@ -2598,6 +2598,17 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(a => a.Id == contratoId);
 
+            var listaServicioValor = repositorio.Listar<ServicioValor>();
+            List<int> listaFiltradaServicioValor = new List<int>();
+            if (listaServicioValor != null)
+            {
+                List<ServicioValor> listaFiltrada = listaServicioValor
+                    .Where(x => x.MaterialId == oContratoSave.MaterialId && x.CentroId == oContratoSave.DestinoId)
+                    .ToList();
+
+                listaFiltrada.ForEach(x => listaFiltradaServicioValor.Add(x.Id));
+            }
+
             if (oContratoSave != null && string.IsNullOrEmpty(oContratoSave.ContratoSAP) && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
                 Nullable<DateTime> fecha = null;
@@ -2655,6 +2666,8 @@ namespace Molinos.DataAgro.Business.Managers
                         }).ToList();
 
                         logger.Debug("Servicios oContratoSave: " + serviciosContrato.ToJson());
+
+                        oContratoSave.Servicios = oContratoSave.Servicios.Where(x => listaFiltradaServicioValor.Contains(x.ServicioValorId)).ToList();
                     }
 
                     //if (oContratoSave.Servicios == null || (oContratoSave.Servicios != null && oContratoSave.Servicios.Count == 0))
