@@ -458,7 +458,7 @@ namespace WebDataAgro.Services
             }
             if (contrato.Venta == true && contrato.TipoNegocioId == 2)
             {
-                contrato.Cantidad = Math.Abs(contrato.Cantidad);
+                contrato.Cantidad = Math.Abs(contrato.Cantidad) * -1;
             }
             if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
             {

@@ -1625,6 +1625,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+            if (oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oContratoSave.Venta == true)
+            {
+                oContrato.Ampliaciones = oContrato.Ampliaciones * -1;
+            }
             if (oContratoSave.ContratoMadre != null)
             {
                 var sap = oContratoSave.ContratoMadre.PadLeft(10, '0');
