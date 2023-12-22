@@ -1847,6 +1847,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
+            oContratoSave.Venta = oContrato.Venta;
+            if (oContratoSave.Venta == true)
+                oContratoSave.Cantidad = -Math.Abs(oContratoSave.Cantidad);
+
             oContratoSave.Precio = oContrato.Precio;
             oContratoSave.FechaEntrega = oContrato.FechaEntrega;
             oContratoSave.CampanaId = oContrato.CampanaId;
@@ -1930,7 +1934,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Insumo = oContrato.Insumo;
             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
-            oContratoSave.Venta = oContrato.Venta;
             oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue &&
              oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
              oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
@@ -5303,6 +5306,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 logger.Debug("Contrato: " + oContratoSave.ContratoSAP);
                 double cantidadContrato = double.TryParse(contrato.Cantidad, out cantidadContrato) ? cantidadContrato : 0;
+                if (oContratoSave.Venta == true && oContratoSave.TipoNegocioId == 2)
+                {
+                    cantidadContrato = cantidadContrato * -1;
+                }
+
                 try
                 {
                     var cantidadKg = (double)oContratoSave.Cantidad + cantidadContrato;
@@ -6567,7 +6575,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
 
-            htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))
+            htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + Split(Math.Abs(oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))
                 + " Kg.";
             if (oContrato.CantidadCamiones != null)
             {
