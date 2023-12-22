@@ -42,16 +42,30 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ResearchAdjuntoDto> Adjuntos { get; set; }
         public bool? Sincronizado { get; set; }
         public int? LocalidadId { get; set; }
-        public int? ComercialId { get; set; }
+        public string Campaña { get; set; }
+        public string MaterialAntecesor { get; set; }
+        public string Material { get; set; }
+        public int? PartidoId { get; set; }
+        public int ProvinciaId { get; set; }
+        public int ComercialId { get; set; }
+        public string Comercial { get; set; }
+        public string TipoMuestraUno { get; set; }
+        public string TipoMuestraDos { get; set; }
+        public string TipoMuestraTres { get; set; }
+        public string Estadio { get; set; }
+        public string Condicion { get; set; }
+        public string HumedadSuelo { get; set; }
+        public bool Eliminado { get; set; }
+        public DateTime? Fecha { get; set; }
+        public string TipoCarga { get; set; }
     }
 
     public class ResearchAdjuntoDto
     {
         public int ResearchAdjuntoId { get; set; }
+        public int ResearchId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }
-        public int IdPowerApp { get; set; }
         public string Extension { get { return System.IO.Path.GetExtension(Nombre); } }
-        public byte[] Data { get; set; }
     }
 }

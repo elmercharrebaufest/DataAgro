@@ -145,6 +145,7 @@
     <Compile Include="Controllers\AdministracionCupoControllerTest.cs" />
     <Compile Include="Controllers\LogDataAgroControllerTest.cs" />
     <Compile Include="Controllers\HabilitacionBoletoControllerTest.cs" />
+    <Compile Include="Controllers\ResearchReporteControllerTests.cs" />
     <Compile Include="Controllers\SugerenciaCupoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />
@@ -279,10 +280,6 @@
     <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
       <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>
       <Name>Molinos.DataAgro.Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebDataAgro\WebDataAgro.csproj">
-      <Project>{4a4b326d-1ed3-4aed-a2b9-06ec9464810d}</Project>
-      <Name>WebDataAgro</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

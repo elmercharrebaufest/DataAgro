@@ -1,4 +1,5 @@
-﻿using KendoGridBinder;
+﻿using Kendo.DynamicLinq;
+using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -39,6 +40,13 @@ namespace Molinos.DataAgro.Interfaces.Managers
         Resultado GrabarNotificacion(NotificacionResearch notificacion);
         Resultado EliminarNotificacion(int id);
         void SincronizarResearchPowerApp();
+        DataSourceResult BuscaDatosTabla(DataSourceRequest filtro);
+        List<ResearchCondicion> TraerResearchCondicion();
+        List<ResearchEstadio> TraerResearchEstadio();
+        List<ResearchTipoCarga> TraerResearchTipoCarga();
+        List<ResearchTipoMuestra> TraerResearchTipoMuestra();
+        List<ResearchHumedadSuelo> TraerResearchHumedadSuelo();
+        Resultado BorrarResearch(int id);
     }
 }
 

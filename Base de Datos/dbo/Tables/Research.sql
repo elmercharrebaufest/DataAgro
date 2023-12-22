@@ -37,6 +37,7 @@
 	[Sincronizado] BIT NULL,
 	[LocalidadId] INT NULL,
 	[ComercialId] INT NULL,
+	[Eliminado] BIT NOT NULL DEFAULT(0),
 	CONSTRAINT [PK_Research] PRIMARY KEY CLUSTERED ([ResearchId] ASC),
 	CONSTRAINT [FK_Research_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
 	CONSTRAINT [FK_Research_MaterialAntecesor] FOREIGN KEY ([MaterialIdAntecesor]) REFERENCES [dbo].[Material] ([MaterialId]),

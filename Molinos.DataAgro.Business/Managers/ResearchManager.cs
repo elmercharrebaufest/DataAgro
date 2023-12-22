@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
@@ -588,6 +589,45 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 logger.Error(e);
             }
+        }
+
+        public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerResearchPorFiltro(filtro));
+        }
+
+        public List<ResearchCondicion> TraerResearchCondicion()
+        {
+            return repositorio.Listar<ResearchCondicion>();
+        }       
+
+        public List<ResearchEstadio> TraerResearchEstadio()
+        {
+            return repositorio.Listar<ResearchEstadio>();
+        }
+
+        public List<ResearchTipoCarga> TraerResearchTipoCarga()
+        {
+            return repositorio.Listar<ResearchTipoCarga>();
+        }
+
+        public List<ResearchTipoMuestra> TraerResearchTipoMuestra()
+        {
+            return repositorio.Listar<ResearchTipoMuestra>();
+        }
+
+        public List<ResearchHumedadSuelo> TraerResearchHumedadSuelo()
+        {
+            return repositorio.Listar<ResearchHumedadSuelo>();
+        }
+
+        public Resultado BorrarResearch(int id)
+        {
+            Resultado resultado = new Resultado();
+            var registro = repositorio.Obtener<Research>(id);
+            registro.Eliminado = true;
+            repositorio.GuardarCambios();
+            return resultado;
         }
     }
 }

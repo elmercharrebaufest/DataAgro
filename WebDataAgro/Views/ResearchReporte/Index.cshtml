@@ -1,0 +1,157 @@
+﻿@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Reporte de Research";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ResearchReporteIndex")
+}
+
+@section Styles {
+    <link href="~/Content/ResearchReporte.css" rel="stylesheet" />
+}
+
+<div class="Titulo">
+    <h4> Reporte Research </h4>
+</div>
+<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+</div>
+<br />
+
+<div id="filtrar" class="container collapse">
+    <div class="row">
+        <div class="col-md-2">
+            <label>Material</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), new { @class = "multiselect", @id = "MaterialId", multiple = "true" })
+        </div>
+        <div class="col-md-2">
+            <label>Humedad Suelo</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("HumedadSueloId", new SelectList(ViewBag.HumedadSuelo, "Value", "Text"), new { @class = "multiselect", @id = "HumedadSueloId", multiple = "true" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Condicion</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("CondicionId", new SelectList(ViewBag.Condicion, "Value", "Text"), new { @class = "multiselect", @id = "CondicionId", multiple = "true" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Estadio</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("EstadioId", new SelectList(ViewBag.Estadio, "Value", "Text"), new { @class = "multiselect", @id = "EstadioId", multiple = "true" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Tipo Carga</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "CondicionId", multiple = "true" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Fecha de Carga</label>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDeCarga">
+                <input id="fechaCargaId" class="filtroFecha" name="Fecha-desde" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDeCargaHasta">
+                <input id="fechaCargaHastaId" class="filtroFecha" name="Fecha-hasta" type="date" style="width: 100%" />
+            </span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Campaña</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("CampañaId", new SelectList(ViewBag.Campania, "Value", "Text"), new { @class = "multiselect", @id = "CampañaId", multiple = "true" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Comercial</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), new { @class = "multiselect", @id = "ComercialId", multiple = "true" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Eliminados</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="EPAId" name="EPA">
+            Sí: @Html.RadioButton("Eliminado", true, new { @class = "filtroBoleano ocultarAnular", @id = "Eliminado" })
+            No: @Html.RadioButton("Eliminado", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEliminado()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
+        <div class="col-md-2">
+            <label>Campaña</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "TipoCargaId", multiple = "true" })
+        </div>        
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <label>Provincia</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"), new { @class = "multiselect", @id = "ProvinciaId", multiple = "true" })
+        </div>
+        <div class="col-md-6" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
+        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-excel"></span>Reporte Comercial</a>
+    </div>
+</script>
+<div class="resultado">
+    <div id="grid" class="tabla-result">
+    </div>
+</div>
+
+@*ModalBorrar*@
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="campo clearfix">
+                <div class="espaciolineas">¿Está seguro que desea eliminar el registro <span id="idModalBorrar"></span>?</div>
+            </div>      
+            <div class="modal-footer clearfix ">
+                <br />
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="confirmarBorrar" class="myBtn btnSubmit" data-dismiss="modal">Si</button>
+                </div>
+
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="cancelarBorrar" class="myBtn " data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

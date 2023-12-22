@@ -640,24 +640,24 @@
                         </li>
                     }
 
-                    @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch) || PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
+                    @if (PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Research <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="research">
-                                @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
+                                @*@if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
                                 {
                                     <li>
                                         <a href="~/Research" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Datos Research
                                         </a>
                                     </li>
-                                }
+                                }*@
 
                                 @if (PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
                                 {
                                     <li>
-                                        <a href="~/ReporteResearch" class="nav-link misreporteslink">
+                                        <a href="~/ResearchReporte" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Research
                                         </a>
                                     </li>
