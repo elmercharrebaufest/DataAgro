@@ -1697,6 +1697,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
+            var listaServicioValor = repositorio.Listar<ServicioValor>();
+            List<int> listaFiltradaServicioValor = new List<int>();
+            if (listaServicioValor != null)
+            {
+                List<ServicioValor> listaFiltrada = listaServicioValor
+                    .Where(x => x.MaterialId == oContrato.MaterialId && x.CentroId == oContrato.DestinoId)
+                    .ToList();
+
+                listaFiltrada.ForEach(x => listaFiltradaServicioValor.Add(x.Id));
+            }
+
             Validar(oContrato, oEntityErrors, false);
 
             if (oEntityErrors.Errores.Count > 0)
@@ -1784,6 +1795,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}");
                     GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
+
+                    oContrato.Servicios = oContrato.Servicios.Where(x => listaFiltradaServicioValor.Contains(x.ServicioValorId)).ToList();
                 }
 
                 if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.DesdeFijacion != oContrato.DesdeFijacion ||
@@ -1822,6 +1835,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
                     GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
+
+                    oContrato.Servicios = oContrato.Servicios.Where(x => listaFiltradaServicioValor.Contains(x.ServicioValorId)).ToList();
                 }
             }
 
@@ -2081,6 +2096,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
                 GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
+
+                oContrato.Servicios = oContrato.Servicios.Where(x => listaFiltradaServicioValor.Contains(x.ServicioValorId)).ToList();
             }
 
             if (oContratoSave.ContratoSAP != null)
@@ -8725,6 +8742,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void GrabarServicioModificado(List<Servicio> servicios, int materialid, int centroId)
         {
+            logger.Debug($"Servicios - Material {materialid} - Centro {centroId}");
             var serviciosMaestro = TraerTodoServicio(materialid, centroId);
             if (servicios != null && servicios.Count > 0)
             {
