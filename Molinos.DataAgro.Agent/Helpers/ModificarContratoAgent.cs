@@ -452,17 +452,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+
+                var cantidadAbsoluta = Math.Abs(contrato.Cantidad);
+
                 topesFijacion.Add(new ZMPES5280
                 {
                     FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
                     FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
                     HORAACT = "00:00:00",
                     CANT_MAX = contrato.TipoNegocioId == 1 ?
-                           contrato.Cantidad < 30000 ?
-                           Convert.ToDecimal(contrato.Cantidad) :
-                           (contrato.Cantidad >= 30000 && contrato.Cantidad <= 100000) ? 30000
+                           cantidadAbsoluta < 30000 ?
+                           Convert.ToDecimal(cantidadAbsoluta) :
+                           (cantidadAbsoluta >= 30000 && cantidadAbsoluta <= 100000) ? 30000
                            : Convert.ToDecimal(contrato.KgMaximo) : 0,
-                    CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
+                    CANT_MIN = contrato.TipoNegocioId == 1 ? cantidadAbsoluta < 30000 ? Convert.ToDecimal(cantidadAbsoluta) : 30000 : 0,
                     FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                     VALOR = "KG"
@@ -474,7 +477,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     repositorio.Obtener<Contrato, string>(x => x.Id == contrato.AnulaYReemplazaContratoId, x => x.ContratoSAP);
                 var detalle = new ZMPES5270();
 
-                detalle.CANTIDAD = Convert.ToDecimal(contrato.Cantidad);
+                detalle.CANTIDAD = Convert.ToDecimal(cantidadAbsoluta);
                 detalle.CONTR_DATAAGRO = contrato.Id.ToString();
                 detalle.COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion);
                 detalle.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
