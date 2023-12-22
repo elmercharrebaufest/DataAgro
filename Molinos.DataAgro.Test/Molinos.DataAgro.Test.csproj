@@ -281,6 +281,10 @@
       <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>
       <Name>Molinos.DataAgro.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebDataAgro\WebDataAgro.csproj">
+      <Project>{4A4B326D-1ED3-4AED-A2B9-06EC9464810D}</Project>
+      <Name>WebDataAgro</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
