@@ -171,15 +171,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 Console.WriteLine($"Nombre del archivo: {file.Name}, Tamaño: {file.Length}");
 
-                                ResearchAdjunto adjuntoResearch = new ResearchAdjunto()
+                                itemData.Adjuntos.Add(new ResearchAdjunto()
                                 {
                                     ResearchAdjuntoId = (int)itemData.IdPowerApp,
                                     Path = Path.Combine(rutaCompleta, file.Name),
                                     Nombre = file.Name,
-                                    IdPowerApp = (int)itemData.IdPowerApp,
-                                };
-                                repositorio.Agregar(adjuntoResearch);
-
+                                });
                                 var stream = file.OpenBinaryStream();
                                 context.ExecuteQuery();
                                 //save files

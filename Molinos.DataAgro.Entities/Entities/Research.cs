@@ -43,7 +43,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Editor { get; set; }
         public bool? Attachments { get; set; }
         public bool? Sincronizado { get; set; }
-        //public List<ResearchAdjunto> Adjuntos { get; set; }
         public int? LocalidadId { get; set; }
         public int? ComercialId { get; set; }
         [ForeignKey("MaterialId")]
@@ -70,15 +69,20 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Localidad LocalidadObj { get; set; }
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
+        public bool Eliminado { get; set; }
+
+        [InverseProperty("Research")]
+        public virtual List<ResearchAdjunto> Adjuntos { get; set; } = new List<ResearchAdjunto>();
     }
 
     public class ResearchAdjunto
     {
+        [Key]
         public int ResearchAdjuntoId { get; set; }
+        public int ResearchId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }
-        public int IdPowerApp { get; set; }
-        public string Extension { get { return System.IO.Path.GetExtension(Nombre); } }
-        public byte[] Data { get; set; }
+        [ForeignKey("ResearchId")]
+        public virtual Research Research { get; set; }
     }
 }
