@@ -1136,7 +1136,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Fecha Operacion: " + oFijacionDePrecioContrato.FechaOperacion.ToShortDateString() + "<br /> ";
             }
-            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
+            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Eliminado); // rechazado ??
             if (contrato != null)
             {
                 //if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
@@ -4340,7 +4340,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Fecha Operacion: " + oFijacionDePrecioContrato.FechaOperacion.ToShortDateString() + "<br /> ";
             }
-            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
+            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Eliminado); // rechazado ??
             if (contrato != null)
             {
                 if (contrato.AperturaPrecio.Count > 0 || contrato.AperturaPrecio != null)
