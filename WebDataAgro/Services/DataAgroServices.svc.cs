@@ -446,7 +446,7 @@ namespace WebDataAgro.Services
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" ? true : false;            
+            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS" ? true : false;            
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {
