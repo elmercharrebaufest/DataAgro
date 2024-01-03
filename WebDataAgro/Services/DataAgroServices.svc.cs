@@ -180,6 +180,8 @@ namespace WebDataAgro.Services
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
                 var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP && x.EstadoId != 8);
+                if (contratoOriginal != null)
+                    contrato.TipoNegocioId = contratoOriginal.TipoNegocioId;
                 CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors, contratoSAP);
