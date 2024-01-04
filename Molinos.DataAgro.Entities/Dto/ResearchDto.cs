@@ -46,8 +46,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MaterialAntecesor { get; set; }
         public string Material { get; set; }
         public int? PartidoId { get; set; }
-        public int ProvinciaId { get; set; }
-        public int ComercialId { get; set; }
+        public int? ProvinciaId { get; set; }
+        public int? ComercialId { get; set; }
         public string Comercial { get; set; }
         public string TipoMuestraUno { get; set; }
         public string TipoMuestraDos { get; set; }

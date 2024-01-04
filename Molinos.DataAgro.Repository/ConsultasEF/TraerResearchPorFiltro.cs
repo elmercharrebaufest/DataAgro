@@ -49,8 +49,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                         Author = x.Author,
                         Editor = x.Editor,
-                        ComercialId = 63,//falta id
-                        Comercial = "Eugenio Martin",//asdsad
+                        ComercialId = x.ComercialId != null ? x.ComercialId : 44, //falta id
+                        Comercial = (string)(x.ComercialId != null ? x.Comercial.Nombres : "Desconocido"),
 
                         EstadoConectividad = x.EstadoConectividad,
                         Sincronizado = x.Sincronizado,
