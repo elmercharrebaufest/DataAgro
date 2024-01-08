@@ -3875,18 +3875,24 @@ function validarDescuento(descuento) {
     }
 
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
+        descuento.Porcentaje = descuento.Porcentaje.toString().replace(',', '.');
         for (var i = 0; i < descuentos.length; i++) {
 
-            if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId &&
+            if ($("#material").val() == "4" &&
                 descuentos[i].TipoDBId == descuento.TipoDBId &&
-                descuentos[i].Importe == descuento.Importe &&
-                descuentos[i].Porcentaje == descuento.Porcentaje &&
-                descuentos[i].MonedaId == descuento.MonedaId || descuentos[i].TipoDBDesc == descuento.TipoDBDesc) {
-
+                descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuento.TipoPeriodoDBId == 1 &&
+                ((descuentos[i].Importe > 0 && descuento.Importe > 0) || (descuentos[i].Porcentaje > 0 && descuento.Porcentaje > 0) ||
+                    (descuento.TipoDBId == 1 && (descuentos[i].Importe > 0 || descuentos[i].Porcentaje > 0)))) {
                 sonIguales = true;
                 break;
             }
 
+            if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuentos[i].TipoDBId == descuento.TipoDBId
+                && descuentos[i].TipoPeriodoDBId == 1 && $("#material").val() != "4"
+            ) {
+                sonIguales = true;
+                break;
+            }
         }
     }
     if (sonIguales) {
