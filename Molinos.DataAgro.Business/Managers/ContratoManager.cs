@@ -1264,7 +1264,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == 2 && oParam.Precio > 0)
+                if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oParam.Precio > 0 && oParam.MaterialId != (int)EnumMateriales.GIRASOL)
                 {
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación Sobre Precio cuando tiene precio.");
                 }

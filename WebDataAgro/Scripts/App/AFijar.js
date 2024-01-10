@@ -3387,20 +3387,10 @@ function validarDescuento(descuento) {
         }
     }
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
-        descuento.Porcentaje = descuento.Porcentaje.toString().replace(',', '.');
         for (var i = 0; i < descuentos.length; i++) {
-
-            if ($("#material").val() == "4" &&
-                descuentos[i].TipoDBId == descuento.TipoDBId && descuento.TipoDBId == 2 &&
-                descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuento.TipoPeriodoDBId == 1 &&
-                ((descuentos[i].Importe > 0 && descuento.Importe > 0) || (descuentos[i].Porcentaje > 0 && descuento.Porcentaje > 0))) {
-                sonIguales = true;
-                break;
-            }
-
             console.log(descuento.FechaDesde);
             if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuentos[i].TipoDBId == descuento.TipoDBId
-                && descuentos[i].TipoPeriodoDBId == 1 && $("#material").val() != "4"
+                && descuentos[i].TipoPeriodoDBId == 1
             ) {
                 sonIguales = true;
                 break;
