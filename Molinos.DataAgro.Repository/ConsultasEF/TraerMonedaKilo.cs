@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && x.TipoAgenteCompraId == null
                 //&& (x.Canje != true)
                 && (x.PrestamoDevolucion != true)
-                //&& (x.Venta != true)
+                && (x.Venta != true)
                 && x.Pizarra != true
                 && x.AnulaYReemplazaContratoId == null
                 ).Select(x=> new {
