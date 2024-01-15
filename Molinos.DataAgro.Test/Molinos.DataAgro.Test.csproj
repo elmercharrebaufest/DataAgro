@@ -145,6 +145,7 @@
     <Compile Include="Controllers\AdministracionCupoControllerTest.cs" />
     <Compile Include="Controllers\LogDataAgroControllerTest.cs" />
     <Compile Include="Controllers\HabilitacionBoletoControllerTest.cs" />
+    <Compile Include="Controllers\ResearchMapaControllerTests.cs" />
     <Compile Include="Controllers\ResearchReporteControllerTests.cs" />
     <Compile Include="Controllers\SugerenciaCupoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoControllerTest.cs" />

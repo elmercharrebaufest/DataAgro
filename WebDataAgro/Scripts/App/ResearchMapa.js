@@ -1,17 +1,62 @@
 ﻿import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe/dist/photoswipe-lightbox.esm.js';
 var markers;
-var map = L.map('map').setView([-38.678907, -61.104765], 5);
-var selectedGrano = "Todos";
-var selectedCampania = "Todos";
+var map = L.map('map'
+    , {
+    fullscreenControl: true,
+    fullscreenControlOptions: {
+        position: 'topleft'
+    }    }
+).setView([-38.678907, -61.104765], 5);
 var addressPoints = [{}];
-
 // Obtén una referencia al botón y al panel de filtros
 const filterButton = document.getElementById("filter-button");
 const filterForm = document.getElementById("filter-form");
+var maxClusterRadius = 80;
+
+const LeafIcon = L.Icon.extend({
+    options: {
+        iconSize: [28, 45],
+        iconAnchor: [15, 40],
+        popupAnchor: [-3, -35]
+    }
+});
+
+const maizIcon = new LeafIcon({ iconUrl: 'maiz.png' });
+const girasolIcon = new LeafIcon({ iconUrl: 'girasol.png' });
+const trigoIcon = new LeafIcon({ iconUrl: 'trigo.png' });
+const sojaIcon = new LeafIcon({ iconUrl: 'soja.png' });
+
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+L.control.scale().addTo(map);
+
+
+L.Control.Watermark = L.Control.extend({
+    onAdd: function (map) {
+        var div = L.DomUtil.create('div');
+        var divAMover = $("#filter-panel");
+        divAMover.appendTo(div);
+        return div;
+    },
+    onRemove: function (map) {
+
+    }
+});
+L.control.watermark = function (opts) {
+    return new L.Control.Watermark(opts);
+}
+L.control.watermark({ position: 'topright' }).addTo(map);
+
+
+
+markers = L.markerClusterGroup({
+    maxClusterRadius: maxClusterRadius
+});
 
 $(document).ready(function () {
     busquedaFiltrada();
-    updateMarkers(selectedGrano, selectedCampania);
 });
 
 // Agrega un evento clic al botón para mostrar/ocultar el panel de filtros
@@ -23,32 +68,95 @@ filterButton.addEventListener("click", () => {
     }
 });
 
-// Agrega un evento de cambio al selector de granos
-document.getElementById("grano-filter").addEventListener("change", function () {
-    selectedGrano = this.value;
-    console.log(`${selectedGrano} - ${selectedCampania}`);
+document.getElementById("GranoId").addEventListener("change", function () {
+    if (document.getElementById("GranoId").value == "") {
+        document.getElementById("CampanaId").value = "";
+    } else {
+        var result = MSExecuteOnServer("/CompraNet/TraerCampanaActualMaterial", { MaterialId: document.getElementById("GranoId").value });
+        document.getElementById("CampanaId").value = result;
+    }
     busquedaFiltrada();
-    updateMarkers(selectedGrano, selectedCampania);
+});
+document.getElementById("CampanaId").addEventListener("change", function () {
+    busquedaFiltrada();
+});
+document.getElementById("AgrupadoId").addEventListener("change", function () {
+    busquedaFiltrada();
 });
 
-document.getElementById("campania-filter").addEventListener("change", function () {
-    selectedCampania = this.value;
-    console.log(`${selectedGrano} - ${selectedCampania}`);
-    busquedaFiltrada();
-    updateMarkers(selectedGrano, selectedCampania);
-});
 
 function busquedaFiltrada() {
-    // /ResearchReporte/BuscaDatosTabla
+    var granoId = Number(document.getElementById("GranoId").value);
+    var campañaId = Number(document.getElementById("CampanaId").value);
+    if (granoId == 0 || granoId == NaN) {
+        granoId = null;
+    }
+    if (campañaId == 0 || campañaId == NaN) {
+        campañaId = null;
+    }
+    var agrupadoId = document.getElementById("AgrupadoId");
+    if (agrupadoId.checked) {
+        maxClusterRadius= 80;
+    } else {
+        maxClusterRadius = 0;
+    }
+    var filtro = {
+        "take": 2147483647,
+        "filter": {
+            "field": null,
+            "value": {},
+            "logic": "and",
+            "operator": null,
+            "filters": [
+            ]
+        },
+        "pageSize": 2147483647
+    };
 
-    //var param = {
-    //    "Nombre": viewModel.get("Parametros.Nombre"),
-    //    "ProvinciaId": GetDropDownValue(viewModel, "Parametros.ProvinciaId.ProvinciaId"),
-    //    "PartidoId": partidoId
-    //};
+    if (granoId != null) {
+        filtro.filter.filters.push(
+            {
+                "field": null,
+                "value": {},
+                "logic": "or",
+                "operator": null,
+                "filters": [
+                    {
+                        "field": "MaterialId",
+                        "value": granoId,
+                        "logic": null,
+                        "operator": "eq",
+                        "filters": {}
+                    }
+                ]
+            });
+    }
+    if (campañaId != null) {
+        filtro.filter.filters.push(
+            {
+                "field": null,
+                "value": {},
+                "logic": "or",
+                "operator": null,
+                "filters": [
+                    {
+                        "field": "CampañaId",
+                        "value": campañaId,
+                        "logic": null,
+                        "operator": "eq",
+                        "filters": {}
+                    }
+                ]
+            });
+    }
 
-    var result = MSExecuteOnServer('/ResearchMapa/BuscaDatosTabla');
-
+    if (campañaId == null && granoId == null) {
+        filtro.filter = null;
+    }
+    BlockUi('Cargando...');
+    addressPoints = [];
+    var result = MSExecuteOnServer("/ResearchReporte/BuscaDatosTabla", filtro);
+    $.unblockUI();
     result.Data.forEach(x => addressPoints.push({
         tipoCarga: x.TipoCarga,
         grano: x.Material,
@@ -74,28 +182,25 @@ function busquedaFiltrada() {
         lat: x.Latitud,
         lng: x.Longitud,
         id: x.Id,
-        imgs: [
-            "https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg",
-            "https://fastly.picsum.photos/id/866/2000/3000.jpg?hmac=_X5OfUFRDyrhMZM4Z43W_pCrWO3_3tFYaAa_MWe23f0"
-        ]
-    }))
+        imgs: x.Adjuntos.map((adjunto) => {
+            return adjunto.Path;
+        })
+        //"https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg",
+        //"https://fastly.picsum.photos/id/866/2000/3000.jpg?hmac=_X5OfUFRDyrhMZM4Z43W_pCrWO3_3tFYaAa_MWe23f0"
+
+    }));
+
+    updateMarkers();
 }
 
-function updateMarkers(selectedGrano, selectedCampania) {
-
-    // Filtra los marcadores según el grano seleccionado
-    var filteredMarkers = addressPoints.filter(function (marker) {
-        return ((marker.grano === selectedGrano || selectedGrano == "Todos") && (marker.campania === selectedCampania || selectedCampania == "Todos"));
-    });
-
+function updateMarkers() {
     map.removeLayer(markers);
 
     markers = L.markerClusterGroup({
-        maxClusterRadius: 80
+        maxClusterRadius: maxClusterRadius
     });
-
-    for (var i = 0; i < filteredMarkers.length; i++) {
-        var a = filteredMarkers[i];
+    for (var i = 0; i < addressPoints.length; i++) {
+        var a = addressPoints[i];
         //if (a.grano == "Soja") {
         //    a.icon = sojaIcon;
         //} else if (a.grano == "Maiz") {
@@ -112,29 +217,13 @@ function updateMarkers(selectedGrano, selectedCampania) {
     }
 
     map.addLayer(markers);
+
+
+    //L.marker([51.5, -0.09]).addTo(map).bindPopup("I am a green leaf.");
+    //L.marker([51.495, -0.083]).addTo(map).bindPopup("I am a red leaf.");
+    //L.marker([51.49, -0.1]).addTo(map).bindPopup("I am an orange leaf.");
+
 }
-
-
-//addressPoints = [
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -31.8325816, lng: -64.2238798667, id: "537", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://fastly.picsum.photos/id/866/2000/3000.jpg?hmac=_X5OfUFRDyrhMZM4Z43W_pCrWO3_3tFYaAa_MWe23f0"] },
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -31.8210922667, lng: -64.2209316333, id: "2", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Maiz", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -31.8210819833, lng: -64.2213903167, id: "3", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Trigo", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -31.8210881833, lng: -64.2215004833, id: "3A", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Girasol", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -36.8211946833, lng: -60.2213655333, id: "1", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Trigo", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -36.8209458667, lng: -60.2214051333, id: "5", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Girasol", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -36.8208292333, lng: -60.2214374833, id: "7", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -36.8315855167, lng: -60.2279767, id: "454", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Girasol", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8096336833, lng: -61.2223743833, id: "176", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Maiz", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.80970685, lng: -61.2221815833, id: "178", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8102146667, lng: -61.2211562833, id: "190", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Girasol", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8088037167, lng: -61.2242227, id: "156", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8112330167, lng: -61.2193425667, id: "210", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Trigo", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8116368667, lng: -61.2193005167, id: "212", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Maiz", antecesor: "Trigo", campania: "21-22", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.80812645, lng: -61.2255449333, id: "146", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Trigo", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8080231333, lng: -61.2286383167, id: "125", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Soja", antecesor: "Trigo", campania: "22-23", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8089538667, lng: -61.2222222333, id: "174", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] },
-//    { tipoCarga: "Express", grano: "Maiz", antecesor: "Trigo", campania: "21-22", estadoFenologico: "xxxxx", condicion: "Buena", humedad: "poca", comentarios: "asdas", provincia: "Bs As", partido: "Caba", localidad: "Palermo", rendimiento: 34, tipoMuestra1: "Granos por hilera", medida1: "33, 44, 55", promedio1: 44, tipoMuestra2: "Granos por hilera", medida2: "33, 44, 55", promedio2: 44, tipoMuestra3: "Granos por hilera", medida3: "33, 44, 55", promedio3: 44, lat: -32.8080905833, lng: -61.2275400667, id: "129", imgs: ["https://media.traveler.es/photos/63f0b0c5834b3e6c89f3d30f/16:9/w_2560%2climit/BAP0A6%2520(1).jpg", "https://www.buscounchollo.com/blog/app/uploads/2022/08/AdobeStock_280800797.jpg"] }
-//];
 
 // Función para cargar una imagen y obtener sus dimensiones
 function loadImageDimensions(src) {
@@ -155,7 +244,6 @@ function loadImageDimensions(src) {
 // Definir una función para cargar la información del popup
 function cargarInformacionPopup(popup) {
     if (document.getElementById("info-carousel") == null) {
-        console.log("null document.getElementById info - carousel");
         var elemDiv = document.createElement('div');
         elemDiv.setAttribute("id", "info-carousel");
         document.body.appendChild(elemDiv);
@@ -231,51 +319,6 @@ function cargarInformacionPopup(popup) {
 
     return document.getElementById("info-carousel");
 }
-
-const LeafIcon = L.Icon.extend({
-    options: {
-        iconSize: [28, 45],
-        iconAnchor: [15, 40],
-        popupAnchor: [-3, -35]
-    }
-});
-
-const maizIcon = new LeafIcon({ iconUrl: 'maiz.png' });
-const girasolIcon = new LeafIcon({ iconUrl: 'girasol.png' });
-const trigoIcon = new LeafIcon({ iconUrl: 'trigo.png' });
-const sojaIcon = new LeafIcon({ iconUrl: 'soja.png' });
-
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-L.control.scale().addTo(map);
-
-
-markers = L.markerClusterGroup({
-    maxClusterRadius: 80
-});
-
-for (var i = 0; i < addressPoints.length; i++) {
-    var a = addressPoints[i];
-    //if (a.grano == "Soja") {
-    //    a.icon = sojaIcon;
-    //} else if (a.grano == "Maiz") {
-    //    a.icon = maizIcon;
-    //} else if (a.grano == "Trigo") {
-    //    a.icon = trigoIcon;
-    //} else if (a.grano == "Girasol") {
-    //    a.icon = girasolIcon;
-    //}
-
-    var marker = L.marker(new L.LatLng(a.lat, a.lng), a);
-    marker.bindPopup(cargarInformacionPopup);
-    markers.addLayer(marker);
-}
-
-map.addLayer(markers);
-
-
 function createCarousel() {
     var lightbox = new PhotoSwipeLightbox({
         gallery: '#info-carousel',
@@ -287,8 +330,6 @@ function createCarousel() {
         imageClickAction: 'zoom',
     });
     lightbox.on('uiRegister', function () {
-        console.log(2)
-        console.log(lightbox.pswp)
         lightbox.pswp.ui.registerElement({
             name: 'rotate-button',
             ariaLabel: 'Toggle zoom',
