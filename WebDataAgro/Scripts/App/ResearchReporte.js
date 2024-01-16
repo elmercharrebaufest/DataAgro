@@ -157,10 +157,9 @@ function CreateGrid() {
             { field: "Comentarios", title: "Comentarios", width: 70 },
             { field: "MaterialAntecesor", title: "Material<br>Antecesor", width: 70 },
             { field: "TipoCarga", title: "Tipo<br>Carga", width: 70 },
-
             //{ field: "Attachments", title: "Attachments", type: "string", title: "Tiene Adjuntos", template: function (dataItem) { return dataItem.Attachments ? "Si" : "No"; }, width: 80 },
             { field: "Eliminado", type: "string", title: "Eliminado", template: function (dataItem) { return dataItem.Eliminado ? "Si" : "No"; }, width: 80 },
-            { field: "Adjuntos", template: function (dataItem) { return listaAdjuntos(dataItem); }, title: "Adjuntos" },
+            { field: "Adjuntos", template: function (dataItem) { return listaAdjuntos(dataItem); }, title: "Adjuntos", width: 120 },
             { template: function (dataItem) { return botonBorrar(dataItem, 'fa-trash err'); }, width: 40, title: "Elim." },
 
 
@@ -215,11 +214,11 @@ function CreateGrid() {
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                    var dataItem = {
-                        Eliminado: row.cells[29].value,
-                        Adjuntos: row.cells[30].value,
-                    };
-              
+                var dataItem = {
+                    Eliminado: row.cells[29].value,
+                    Adjuntos: row.cells[30].value,
+                };
+
                 var asdv = dataItem.value;
                 var asd = templateAdjuntos(dataItem);
                 row.cells[29].value = templateEliminado(dataItem);
@@ -371,22 +370,26 @@ function InicializarElementos() {
     //    }
     //});
 
-    //inicializarPopUpSap("Contratos");
+    $("#PartidoId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        dataSource: [],
+        optionLabel: "Selecione una",
+        filter: "contains",
+    });
 }
-
+function getProvinciaId() {
+    var provinciaId = $("#ProvinciaId").val();
+    console.log(provinciaId);
+    provinciaId = 1;
+    return {
+        provinciaId: provinciaId
+    }
+};
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
 }
 
-//$("#DolarizadoId").click(function () {
-
-//    if ($("#DolarizadoId").is(':checked')) {
-//        $("#fechalimiteId").data("kendoDatePicker").enable(false);
-//        $("#fechalimiteId").data("kendoDatePicker").value("");
-//    } else {
-//        $("#fechalimiteId").data("kendoDatePicker").enable();
-//    }
-//});
 function customExport() {
     //TraerFiltrosConValores();
     var funcReturn = function (data) {
@@ -400,3 +403,17 @@ function customExport() {
     MSExecuteOnServerAsync('/Contrato/Export', TraerFiltrosConValores(), funcReturn, true);
 }
 
+document.getElementById("ProvinciaId").addEventListener("change", function () {
+    var provId = document.getElementById("ProvinciaId").value;
+    //$("#PartidoId").data("kendoDropDownList").val("");
+    if (provId >= 0) {
+        var result = MSExecuteOnServer("/ResearchReporte/TraerPartidosPorProvincia", { provinciaId: provId });
+        var dataSource = new kendo.data.DataSource({
+            data: result,
+            sort: { field: "Descripcion", dir: "asc" }
+        });
+        $("#PartidoId").data("kendoDropDownList").setDataSource(dataSource);
+    } else {
+
+    }
+});

@@ -104,7 +104,7 @@
         </div>
         <div class="col-md-4">
             @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "TipoCargaId", multiple = "true" })
-        </div>        
+        </div>
     </div>
 
     <div class="row">
@@ -112,8 +112,18 @@
             <label>Provincia</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"), new { @class = "multiselect", @id = "ProvinciaId", multiple = "true" })
+            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"),"Seleccione una provincia", new { @class = "filtroBusquedaPorId form-control", @id = "ProvinciaId" })
         </div>
+        <div class="col-md-2">
+            <label>Provincia</label>
+        </div>
+        <div class="col-md-4">
+            <input id="PartidoId" name="PartidoId" class="form-control filtroBusquedaPorId" />
+        </div>
+    </div>
+
+    <div class="row">
+        
         <div class="col-md-6" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
         </div>

@@ -25,14 +25,18 @@ namespace WebDataAgro.Controllers
         private readonly ICampañaManager campañaManager;
         private readonly IComercialManager comercialManager;
         private readonly IProvinciaManager provinciaManager;
+        private readonly ILocalidadManager localidadManager;
 
-        public ResearchReporteController(IResearchManager researchManager, IMaterialManager materialManager, ICampañaManager campañaManager, IComercialManager comercialManager, IProvinciaManager provinciaManager)
+        public ResearchReporteController(IResearchManager researchManager, IMaterialManager materialManager,
+            ICampañaManager campañaManager, IComercialManager comercialManager, IProvinciaManager provinciaManager,
+            ILocalidadManager localidadManager)
         {
             this.researchManager = researchManager;
             this.materialManager = materialManager;
             this.campañaManager = campañaManager;
             this.comercialManager = comercialManager;
             this.provinciaManager = provinciaManager;
+            this.localidadManager = localidadManager;
         }
 
         [Autorizacion(PermisosDataAgro.ReporteResearch)]
@@ -56,7 +60,7 @@ namespace WebDataAgro.Controllers
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-        
+
         private void FillViewBag()
         {
 
@@ -153,7 +157,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Provincia = provinciaListItems;
 
         }
-        
+
         public ActionResult Export(DataSourceRequest filtro)
         {
             var model = new ReportesModel();
@@ -198,6 +202,12 @@ namespace WebDataAgro.Controllers
                 Data = researchManager.BorrarResearch(id),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public JsonResult TraerPartidosPorProvincia(int provinciaId)
+        {
+            var result = localidadManager.TraerPartidosPorProvincia(provinciaId);
+            return Json(result.Partidos, JsonRequestBehavior.AllowGet);
         }
     }
 }
