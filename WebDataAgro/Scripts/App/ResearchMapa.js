@@ -2,10 +2,11 @@
 var markers;
 var map = L.map('map'
     , {
-    fullscreenControl: true,
-    fullscreenControlOptions: {
-        position: 'topleft'
-    }    }
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    }
 ).setView([-38.678907, -61.104765], 5);
 var addressPoints = [{}];
 // Obtén una referencia al botón y al panel de filtros
@@ -96,7 +97,7 @@ function busquedaFiltrada() {
     }
     var agrupadoId = document.getElementById("AgrupadoId");
     if (agrupadoId.checked) {
-        maxClusterRadius= 80;
+        maxClusterRadius = 80;
     } else {
         maxClusterRadius = 0;
     }
@@ -108,6 +109,21 @@ function busquedaFiltrada() {
             "logic": "and",
             "operator": null,
             "filters": [
+                {
+                    "field": null,
+                    "value": {},
+                    "logic": "or",
+                    "operator": null,
+                    "filters": [
+                        {
+                            "field": "Eliminado",
+                            "value": false,
+                            "logic": null,
+                            "operator": "eq",
+                            "filters": {}
+                        }
+                    ]
+                }
             ]
         },
         "pageSize": 2147483647
@@ -149,10 +165,8 @@ function busquedaFiltrada() {
                 ]
             });
     }
+      
 
-    if (campañaId == null && granoId == null) {
-        filtro.filter = null;
-    }
     BlockUi('Cargando...');
     addressPoints = [];
     var result = MSExecuteOnServer("/ResearchReporte/BuscaDatosTabla", filtro);
