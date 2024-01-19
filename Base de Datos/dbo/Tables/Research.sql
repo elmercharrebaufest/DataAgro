@@ -38,6 +38,8 @@
 	[LocalidadId] INT NULL,
 	[ComercialId] INT NULL,
 	[Eliminado] BIT NOT NULL DEFAULT(0),
+	[ProvinciaId] INT NULL,
+	[PartidoId] INT NULL,
 	CONSTRAINT [PK_Research] PRIMARY KEY CLUSTERED ([ResearchId] ASC),
 	CONSTRAINT [FK_Research_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
 	CONSTRAINT [FK_Research_MaterialAntecesor] FOREIGN KEY ([MaterialIdAntecesor]) REFERENCES [dbo].[Material] ([MaterialId]),
