@@ -1264,7 +1264,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oParam.Precio > 0 && oParam.MaterialId != (int)EnumMateriales.GIRASOL)
+                if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oParam.Precio > 0)
                 {
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación Sobre Precio cuando tiene precio.");
                 }
@@ -2655,7 +2655,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (oContratoSave.Servicios != null)
                     {
-                        var serviciosContrato = oContratoSave.Servicios.Select(s => new {
+                        var serviciosContrato = oContratoSave.Servicios.Select(s => new
+                        {
                             Id = s.Id,
                             ServicioValor = s.ServicioValor,
                             Importe = s.Importe,
@@ -8776,7 +8777,8 @@ namespace Molinos.DataAgro.Business.Managers
             var serviciosMaestro = TraerTodoServicio(materialid, centroId);
             if (servicios != null && servicios.Count > 0)
             {
-                var serviciosContrato = servicios.Select(s => new {
+                var serviciosContrato = servicios.Select(s => new
+                {
                     Id = s.Id,
                     ServicioValor = s.ServicioValor,
                     Importe = s.Importe,
@@ -8799,7 +8801,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                var serviciosContrato2 = servicios.Select(s => new {
+                var serviciosContrato2 = servicios.Select(s => new
+                {
                     Id = s.Id,
                     ServicioValor = s.ServicioValor,
                     Importe = s.Importe,
