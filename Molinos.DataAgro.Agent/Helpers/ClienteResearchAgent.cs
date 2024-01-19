@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -27,6 +29,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         readonly String passwordResearch = ConfigurationManager.AppSettings["PasswordResearch"];
         readonly String domainResearch = ConfigurationManager.AppSettings["DomainResearch"];
         readonly String downloadPathResearch = ConfigurationManager.AppSettings["DownloadPathResearch"];
+        readonly String connectionStringAzure = ConfigurationManager.AppSettings["ConnectionStringAzure"];
+        private const string NOMBRE_CONTENEDOR = "research";
 
         public ClienteResearchAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager)
         {
@@ -93,7 +97,23 @@ namespace Molinos.DataAgro.Agent.Helpers
                     List<ComercialDto> listaComercialDto = repositorio.Listar<Comercial>()
                         .Select(x => new ComercialDto { ComercialId = x.ComercialId, Email = x.Email }).Where(x => x.Email != null).ToList();
 
-                    //armamos la lista DTO o lo que necesitemos para trabajar
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionStringAzure);
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference(NOMBRE_CONTENEDOR);
+                    // Definir los permisos del SAS token
+                    SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy
+                    {
+                        SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-15),// Tiempo de inicio del acceso (15 minutos antes del tiempo actual)
+                        SharedAccessExpiryTime = DateTime.UtcNow.AddHours(1),   // Tiempo de expiración del acceso (1 hora después del tiempo actual)
+                        Permissions = SharedAccessBlobPermissions.List | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write
+                    };
+                    // Generar el SAS token
+                    string sasToken = container.GetSharedAccessSignature(sasConstraints, null);
+                    // Combinar la cadena de conexión con el SAS token
+                    string containerUriWithSas2 = $"{GetContainerUri(connectionStringAzure, NOMBRE_CONTENEDOR)}{sasToken}";
+                    // Crear un CloudBlobContainer con la URL del contenedor y el SAS token
+                    CloudBlobContainer cloudBlobContainer = new CloudBlobContainer(new Uri(containerUriWithSas2));
+                    
                     foreach (ListItem item in items)
                     {
                         Research itemData = new Research();
@@ -112,7 +132,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         itemData.Provincia = item["Provincia"] == null ? "" : item["Provincia"].ToString();
                         var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
                         var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
-                        itemData.LocalidadId = partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
+                        itemData.LocalidadId = item["LocalidadId"] != null ? int.Parse(item["LocalidadId"].ToString()) : 
+                            partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
+                        itemData.ProvinciaId = item["ProvinciaId"] is int ? int.Parse(item["ProvinciaId"].ToString()) : (int?)null;
+                        itemData.PartidoId = item["PartidoId"] is int ? int.Parse(item["PartidoId"].ToString()) : (int?)null;
                         itemData.Latitud = item["Latitud"] is double ? double.Parse(item["Latitud"].ToString()) : (double?)null;
                         itemData.Longitud = item["Longitud"] is double ? double.Parse(item["Longitud"].ToString()) : (double?)null;
                         itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
@@ -125,14 +148,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                         itemData.MedidasTres = item["Medidas3"] == null ? "" : item["Medidas3"].ToString();
                         itemData.PromedioMuestraTres = item["Promediomuestra3"] is double ? double.Parse(item["Promediomuestra3"].ToString()) : (double?)null;
                         itemData.DistanciaHileras = item["Distanciahileras"] is double ? double.Parse(item["Distanciahileras"].ToString()) : (double?)null;
-                        // GSIAN: podemos tomar el coef. de forma automática según el material? Tabla "ResearchCoeficienteCultivo"
                         itemData.Coeficiente = item["Coeficiente"] is double ? double.Parse(item["Coeficiente"].ToString()) : (double?)null;
                         itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                         itemData.CapitulosGirasol = item["CapitulosGirasol"] is double ? double.Parse(item["CapitulosGirasol"].ToString()) : (double?)null;
                         itemData.FechaAlta = item["Created"] is DateTime ? (DateTime)item["Created"] : (DateTime?)null;
                         itemData.Rendimiento = item["rendimiento"] is double ? double.Parse(item["rendimiento"].ToString()) : (double?)null;
                         itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
-                        // GSIAN: Se podría generar una clase si es necesario.
                         itemData.EstadoConectividad = item["estadoConectividad"] == null ? "" : item["estadoConectividad"].ToString();
                         itemData.IdPowerApp = item["ID"] is int ? int.Parse(item["ID"].ToString()) : (int?)null;
                         itemData.FechaModificacion = item["Modified"] is DateTime ? (DateTime)item["Modified"] : (DateTime?)null;
@@ -159,31 +180,34 @@ namespace Molinos.DataAgro.Agent.Helpers
                             context.Load(files);
                             context.ExecuteQuery();
 
-                            string rutaCompleta = "";
-                            if (files.Count() > 0)
-                            {
-                                // Crear el directorio si no existe
-                                rutaCompleta = Path.Combine(downloadPathResearch, itemData.IdPowerApp.ToString());
-                                Directory.CreateDirectory(rutaCompleta);
-                            }
-
                             foreach (Microsoft.SharePoint.Client.File file in files)
                             {
-                                Console.WriteLine($"Nombre del archivo: {file.Name}, Tamaño: {file.Length}");
+                                string blobUri = "";
+                                var stream = file.OpenBinaryStream();
+                                context.ExecuteQuery();
+
+                                string rutaArchivo = itemData.IdPowerApp.ToString() + "/" + file.Name;
+                                
+                                // Descargar la imagen desde SharePoint
+                                byte[] imageBytes = DownloadImageFromSharePoint(stream);
+
+                                CloudBlockBlob blob = container.GetBlockBlobReference(rutaArchivo);
+
+                                using (MemoryStream memoryStream = new MemoryStream(imageBytes))
+                                {
+                                    blob.UploadFromStream(memoryStream);
+                                    blobUri = blob.Uri.ToString();
+                                }
+                                
+                                // Subir la imagen al contenedor de Azure Blob Storage y obtener su url
+                                //blobUri = UploadImage(cloudBlobContainer, rutaArchivo, imageBytes);
 
                                 itemData.Adjuntos.Add(new ResearchAdjunto()
                                 {
                                     ResearchAdjuntoId = (int)itemData.IdPowerApp,
-                                    Path = Path.Combine(rutaCompleta, file.Name),
+                                    Path = blobUri,
                                     Nombre = file.Name,
                                 });
-                                var stream = file.OpenBinaryStream();
-                                context.ExecuteQuery();
-                                //save files
-                                using (var fileStream = new FileStream(Path.Combine(rutaCompleta, file.Name), FileMode.Create))
-                                {
-                                    stream.Value.CopyTo(fileStream);
-                                }
                             }
                         }
 
@@ -211,6 +235,50 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error(e.Message);
                 throw;
             }
+        }
+
+        static string UploadImage(CloudBlobContainer container, string blobName, byte[] imageBytes)
+        {
+            string blobUri = "";
+            // Obtener una referencia al blob
+            var blob = container.GetBlockBlobReference(blobName);
+            // Crea el blob (simulando la carpeta) en el contenedor
+            blob.UploadText("");
+
+            // Subir la imagen al blob
+            using (var stream = new MemoryStream(imageBytes))
+            {
+                try
+                {
+                    blob.UploadFromStreamAsync(stream);
+                    // Obtén la ubicación del blob recién creado
+                    blobUri = blob.Uri.ToString();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return blobUri;
+        }
+
+        static byte[] DownloadImageFromSharePoint(ClientResult<Stream> fileStream)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                fileStream.Value.CopyTo(memoryStream);
+                fileStream.Value.Close(); // se agrega por las dudas, para verificar.
+                return memoryStream.ToArray();
+            }
+        }
+
+        static string GetContainerUri(string connectionString, string containerName)
+        {
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(containerName);
+            return container.Uri.ToString();
         }
 
         private void guardarLog(ListItem item)
