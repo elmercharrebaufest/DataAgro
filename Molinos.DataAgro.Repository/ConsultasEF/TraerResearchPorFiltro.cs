@@ -76,7 +76,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CondicionId = x.CondicionId,
                         Condicion = x.ResearchCondicion.Descripcion,
                         Coeficiente = x.Coeficiente,
-                        Rendimiento = x.Rendimiento,
+                        Rendimiento = x.RendimientoCalculado,
                         HumedadSueloId = x.HumedadSueloId,
                         HumedadSuelo = x.ResearchHumedadSuelo.Descripcion,
                         CapitulosGirasol = x.CapitulosGirasol,

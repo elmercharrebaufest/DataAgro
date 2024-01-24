@@ -23,6 +23,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ICampañaManager> campañaManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IProvinciaManager> provinciaManagerMock;
+        private Mock<ILocalidadManager> localidadManagerMock;
         private ResearchReporteController controller;
 
         [SetUp]
@@ -33,13 +34,15 @@ namespace Molinos.DataAgro.Test.Controllers
             campañaManagerMock = new Mock<ICampañaManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             provinciaManagerMock = new Mock<IProvinciaManager>();
+            localidadManagerMock = new Mock<ILocalidadManager>();
 
             controller = new ResearchReporteController(
                 researchManagerMock.Object,
                 materialManagerMock.Object,
                 campañaManagerMock.Object,
                 comercialManagerMock.Object,
-                provinciaManagerMock.Object);
+                provinciaManagerMock.Object,
+                localidadManagerMock.Object);
         }
 
         [Test]

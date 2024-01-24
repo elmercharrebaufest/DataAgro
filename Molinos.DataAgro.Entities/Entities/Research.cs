@@ -75,6 +75,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual List<ResearchAdjunto> Adjuntos { get; set; } = new List<ResearchAdjunto>();
         public int? ProvinciaId { get; set; }
         public int? PartidoId { get; set; }
+        public double? RendimientoCalculado { get; set; }
         //[ForeignKey("ProvinciaId")]
         //public virtual Provincia Provincia { get; set; }
         //[ForeignKey("PartidoId")]

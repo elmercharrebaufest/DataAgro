@@ -58,6 +58,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Eliminado { get; set; }
         public DateTime? Fecha { get; set; }
         public string TipoCarga { get; set; }
+        public double? RendimientoCalculado { get; set; }
     }
 
     public class ResearchAdjuntoDto

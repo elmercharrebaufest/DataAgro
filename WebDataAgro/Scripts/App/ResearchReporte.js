@@ -222,7 +222,7 @@ function CreateGrid() {
                 var asdv = dataItem.value;
                 var asd = templateAdjuntos(dataItem);
                 row.cells[29].value = templateEliminado(dataItem);
-                row.cells[30].value = dataItem.Adjuntos.length == 0 ? "Si" : "No";;
+                row.cells[30].value = dataItem.Adjuntos.length == 0 ? "No" : "Si";
             }
         },
     }).data("kendoGrid");
