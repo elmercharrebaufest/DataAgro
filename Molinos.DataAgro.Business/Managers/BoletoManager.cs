@@ -23,6 +23,7 @@ using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.css;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -74,7 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
                             error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, mensaje));
                             continue;
                         }
-                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : "");
+                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
                         if (consultaBoleto.Generado == "") // probar casos anulados
                         {
                             var tempBoleto = new BoletoGeneradoDto
@@ -104,9 +105,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                                         var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
                                         EnviarMailBoleto(itemNegocio.BoletoDescripcion,
-                                            (itemNegocio.TipoNegocioId == 1 || itemNegocio.TipoNegocioId == 2) ? "Contrato" : itemNegocio.TipoNegocioId == 3 ? "Fijación" : itemNegocio.TipoNegocio,
+                                            (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
                                             String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
-                                            itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : Split(itemNegocio.ContratoSAP.TrimStart('0')),
+                                            itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : Split(itemNegocio.ContratoSAP.TrimStart('0')),
                                             consultaBoleto.Version, comercial, emailproveedor, pdf);
                                     }
                                 }
@@ -118,7 +119,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 try
                                 {
                                     File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
-                                         + (itemNegocio.TipoNegocioId == 3 ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
+                                         + (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
                                 }
                                 catch (Exception ex)
                                 {
@@ -146,7 +147,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var neg = negocios.Find(n => n.Negocio.Contains(itemContrato) || n.ContratoSAP.Contains(itemContrato));
                     if (neg == null)
                     {
-                        error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = 2, ContratoSAP = itemContrato }, false, 0, "El negocio no esta habilitado para generar boleto"));
+                        error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = (int)EnumTipoNegocio.A_PRECIO, ContratoSAP = itemContrato }, false, 0, "El negocio no esta habilitado para generar boleto"));
                     }
                 }
 
@@ -209,7 +210,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new BoletoGeneradoDto
             {
-                ContratoSAP = Convert.ToInt64(itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : itemNegocio.ContratoSAP).ToString(),
+                ContratoSAP = Convert.ToInt64(itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : itemNegocio.ContratoSAP).ToString(),
                 Generado = generado,
                 Version = version,
                 Mensaje = mensaje
@@ -227,15 +228,15 @@ namespace Molinos.DataAgro.Business.Managers
                     if (tipo.Descripcion == negocio.TipoNegocio)
                     {
                         logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
-                        if ((negocio.TipoNegocioId == 3 ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 1 && tipo.Confirma)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 1 && tipo.Confirma)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == 3 ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 2 && tipo.BoletoFisico)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 2 && tipo.BoletoFisico)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == 3 ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 4 && tipo.CartaOferta)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 4 && tipo.CartaOferta)
                         {
                             negociosFiltrados.Add(negocio);
                         }
@@ -568,7 +569,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
             {
                 var precio = "";
-                if (basico.TipoNegocioId == 2)
+                if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     precio = basico.Moneda + " " + basico.PrecioNeto.ToString();
 
@@ -578,15 +579,15 @@ namespace Molinos.DataAgro.Business.Managers
                     precio = "A Fijar";
                 }
                 var titulo = "";
-                if (basico.TipoNegocioId == 2)
+                if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta para cereales y oleaginosos";
                 }
-                if (basico.TipoNegocioId == 1 && basico.Canje != true)
+                if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje != true)
                 {
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta de granos a fijar precio";
                 }
-                if (basico.TipoNegocioId == 1 && basico.Canje == true)
+                if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje == true)
                 {
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
                 }
@@ -627,7 +628,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var mensaje = "";
             var kilosDisponibles = 10000;
-            if (tipoNegocio == 3)
+            if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
             {
                 var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
                 if (contrato != null)

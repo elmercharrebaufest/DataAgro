@@ -1,9 +1,7 @@
-﻿using Kendo.DynamicLinq;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Report;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,12 +10,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class BoletoController : Controller
     {
         private IBoletoManager mobjBoletoManager;
@@ -63,15 +63,15 @@ namespace WebDataAgro.Controllers
             var tipoNegocios = new List<int>();
             if (boleto.TipoNegocioId == 1)
             {
-                tipoNegocios.Add(1);
-                tipoNegocios.Add(2);
+                tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
+                tipoNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
             }
             else
             {
-                tipoNegocios.Add(3);
+                tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }
             List<string> contratos = new List<string>();
-            foreach(string itemContrato in boleto.ContratoSAP.Split(';').ToList())
+            foreach (string itemContrato in boleto.ContratoSAP.Split(';').ToList())
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }
@@ -83,6 +83,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         private void CompletarVista()
         {
             var tipoNegocio = mobjBoletoManager.TraerDatosCombo(null);
@@ -105,7 +106,6 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult ListarBoletos()
         {
-
             var boletos = Directory.GetFiles(_logDir)
                 .Where(path => path.EndsWith(".pdf"))
                 .Select(path => new FileInfo(path))
@@ -118,7 +118,6 @@ namespace WebDataAgro.Controllers
                 })
                 .OrderByDescending(x => x.Nombre)
                 .ToList();
-
 
             return Json(boletos);
         }
@@ -153,14 +152,13 @@ namespace WebDataAgro.Controllers
                 else
                 {
                     //return Json(fileBytes); 
-                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf,nombre);
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, nombre);
                 }
             }
             catch (Exception)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
         }
     }
 }
