@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Agregar<PrecioPizarra>(precioPizarra)).Returns(precioPizarra);
             repositorioMock.Setup(x => x.GuardarCambios());
             precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("OK");
-            var resultado = target.GrabarPrecioPizarra(precioPizarra);
+            var resultado = target.GrabarPrecioPizarra(precioPizarra, false);
 
             repositorioMock.Verify(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioPizarra>()), Times.Once);
@@ -116,6 +116,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.AreEqual(1, resultado.Count);
         }
+
         [Test]
         public void EliminarPizarraOk()
         {
@@ -130,6 +131,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsTrue(resultado.HayErrores);
             Assert.AreEqual(200, resultado.ListaErrores[0].ErrorCode);
         }
+
         [Test]
         public void TraerPrecioPizarraPorIdOk()
         {

@@ -5,23 +5,23 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class PrecioPizarraAgent : IPrecioPizarraAgent
     {
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+
         public PrecioPizarraAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public string Crear(Molinos.DataAgro.Entities.Entities.PrecioPizarra precioPizarra)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -50,8 +50,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 };
                 return Ejecutar(rq);
             }
-
         }
+
         public string Anular(Molinos.DataAgro.Entities.Entities.PrecioPizarra precioPizarra)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -74,6 +74,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return Ejecutar(rq);
             }
         }
+
         string Ejecutar(Z_MPRFC_PRECIO_PIZARRA request)
         {
             try
@@ -112,7 +113,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error("Error comunicacion SAP", e);
                 throw e;
             }
-
         }
     }
 }

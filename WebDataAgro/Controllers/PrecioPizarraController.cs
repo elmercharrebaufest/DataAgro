@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -20,13 +21,16 @@ namespace WebDataAgro.Controllers
         private readonly IPrecioPizarraManager oPrecioPizarraManager;
         private readonly IMaterialManager oMaterialManager;
         private readonly IPizarraManager oPizarraManager;
+        private readonly ILogger logger;
 
-        public PrecioPizarraController(IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
+        public PrecioPizarraController(IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager, ILogger logger)
         {
             this.oPrecioPizarraManager = oPrecioPizarraManager;
             this.oMaterialManager = oMaterialManager;
             this.oPizarraManager = oPizarraManager;
+            this.logger = logger;
         }
+
         // GET: PrecioPizarra
         [Autorizacion(PermisosDataAgro.VisualizarPizarra)]
         public ActionResult Index()
@@ -67,7 +71,6 @@ namespace WebDataAgro.Controllers
                 MonedaId = precioPizarraModel.MonedaId,
                 UnidadMedida = precioPizarraModel.UnidadMedida,
                 ComercialId = GlobalVariables.ComercialId
-
             };
             return precioPizarra;
         }
@@ -87,13 +90,12 @@ namespace WebDataAgro.Controllers
                     PizarraId = i.PizarraId,
                     Precio = i.Precio,
                     UnidadMedida = i.UnidadMedida
-
                 };
                 lista.Add(precioPizarraModel);
-
             }
             return lista;
         }
+
         public ActionResult BuscarPorPizarraYMaterial(int materialId, int pizarraId)
         {
             return new JsonResult()
@@ -114,6 +116,7 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception e)
             {
+                logger.Error("Error en ActualizarPrecioPizarra(): ", e);
                 throw e;
             }
         }
@@ -129,6 +132,7 @@ namespace WebDataAgro.Controllers
                 Resultado = resultado
             });
         }
+
         private void FillViewBag()
         {
             var material = oMaterialManager.TraerTodoMaterial();
@@ -162,7 +166,5 @@ namespace WebDataAgro.Controllers
                 }).OrderBy(x => x.Value);
             ViewBag.Moneda = monedaListItems;
         }
-
     }
 }
-

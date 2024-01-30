@@ -2,9 +2,6 @@
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces.Managers
 {
@@ -12,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
     {
         List<PrecioPizarraDto> TraerTodoPrecioPizarraPorMaterialYPizarra(int materialId, int pizarraId);
         List<PrecioPizarraDto> TraerTodoPrecioPizarra();
-        Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra);
+        Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra, bool manual = false);
         List<MonedaDto> TraerTodoMoneda();
         PrecioPizarraDto TraerPrecioPizarraPorId(int id);
         Resultado EliminarPizarra(int id);

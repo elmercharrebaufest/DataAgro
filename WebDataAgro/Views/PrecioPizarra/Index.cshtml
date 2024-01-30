@@ -16,7 +16,6 @@
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 }
 
-
 <div class="container">
     <br />
     @using (Ajax.BeginForm("GrabarPrecioPizarra", null, new AjaxOptions { UpdateTargetId = "listaPrecioPizarra", InsertionMode = InsertionMode.Replace }, new { }))
@@ -78,16 +77,16 @@
             <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
             <button type="button" class="formulario-footer-cancelar k-button k-button-icontext cancelar">Cancelar</button>
         </div>
-
     }
 
     <br />
     <button type="button" class="formulario-footer-cancelar k-button k-button-icontext" onclick="ActualizarPrecioPizarraBCR()">Actualizar Precio Pizarra BCR</button>
+    <span>
+        @Html.TextBoxFor(x => x.FechaActualizaPrecio, new { @id = "fechaActualizaPrecio", @class = "limpiar" })
+    </span>
     <br />
 
     <div id="listaPrecioPizarra">
         @Html.Partial("_ListaPrecioPizarra", Model)
     </div>
 </div>
-
-

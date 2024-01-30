@@ -5,7 +5,6 @@ using static WebDataAgro.MvcApplication;
 using System;
 using WebDataAgro.Helpers.Excel;
 using Molinos.DataAgro.Interfaces.Managers;
-using System.Security.Cryptography;
 
 namespace WebDataAgro.Controllers
 {
@@ -356,7 +355,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"Actualizar fecha última actualización Manuales FAQ");
             faqManager.ActualizarFechaUltimaActualizacionManualesFAQ();
             logger.Info($"Actualizar fecha última actualización Manuales FAQ - Finalizado");
-            
+
             return Content("ok");
         }
 

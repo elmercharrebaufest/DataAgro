@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var fechaActualizaPrecioString = "";
+
+$(document).ready(function () {
     $('#menuproveedor').hide();
     InicializarDate();
 });
@@ -23,13 +25,22 @@ function InicializarDate() {
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
     });
     fechaHastaString = $("#fechaHasta").val();
+
+    $("#fechaActualizaPrecio").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"],
+        change: function () {
+            fechaActualizaPrecioString = $("#fechaActualizaPrecio").val();
+        }
+    });
+    fechaActualizaPrecioString = $("#fechaActualizaPrecio").val();
 }
 
 function LimpiarForm() {
     $(".limpiar").val("");
     $("#MonedaId").val("ARP  ");
     InicializarDate();
-
 }
 
 function mostrarocultar(element) {
@@ -95,19 +106,20 @@ function CargarPizarraHistorico() {
             }
         }
     }
-
 }
 
 function ActualizarPrecioPizarraBCR() {
-    var currentDateObj = new Date();
-    var numberOfMlSeconds = currentDateObj.getTime();
-    var addMlSeconds = 60 * 60000 * -24;
-    var newDateObj = new Date(numberOfMlSeconds + addMlSeconds);
 
-    var fecha2 = formatoFecha(newDateObj, 'dd/mm/yy');
-    var fecha1 = fecha2 + " 00:00:00";
+    var fechaActualizaPrecio = formatoFechaString(fechaActualizaPrecioString);
+    //var currentDateObj = new Date();
+    //var numberOfMlSeconds = currentDateObj.getTime();
+    //var addMlSeconds = 60 * 60000 * -24;
+    //var newDateObj = new Date(numberOfMlSeconds + addMlSeconds);
 
-    var data = MSExecuteOnServer('/PrecioPizarra/ActualizarPrecioPizarra', { fecha: fecha1, manual: true });
+    //var fecha2 = formatoFecha(newDateObj, 'dd/mm/yy');
+    //var fecha1 = fecha2 + " 00:00:00";
+
+    var data = MSExecuteOnServer('/PrecioPizarra/ActualizarPrecioPizarra', { fecha: fechaActualizaPrecio, manual: true });
     if (data == "Ok") {
         MensInfo("Actualización de Precio Pizarra finalizó correctamente!");
     } else {
@@ -124,4 +136,17 @@ function formatoFecha(fecha, formato) {
     }
 
     return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
+}
+
+function formatoFechaString(fechaString) {
+    var partes = fechaString.split('-');
+    var fechaNuevaString = `${partes[2]}/${partes[1]}/${partes[0]}`;
+    var fechaDate = new Date(fechaNuevaString);
+
+    var dia = fechaDate.getDate();
+    var mes = fechaDate.getMonth() + 1; // Nota: en JavaScript, los meses comienzan desde 0
+    var año = fechaDate.getFullYear() % 100; // Tomar solo los últimos dos dígitos del año
+    var fechaFormateada = `${dia}/${mes}/${año} 00:00:00`;
+
+    return fechaFormateada;
 }
