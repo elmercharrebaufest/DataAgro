@@ -1082,5 +1082,10 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
             Assert.IsFalse(result.Count > 0 ? result.All(x => x.HayError) : false);
         }
+
+        [Test]
+        public void VerificarSolicitudesExtraordinariasPendientesTest() {
+            target.VerificarSolicitudesExtraordinariasPendientes(DateTime.Now);
+        }
     }
 }

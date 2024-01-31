@@ -367,5 +367,18 @@ namespace WebDataAgro.Controllers
 
             return Content("ok");
         }
+
+        public ActionResult VerificarSolicitudesExtraordinariasPendientes(string fecha)
+        {
+            DateTime dia = DateTime.Now.Date;
+            logger.Info($"VerificarSolicitudesExtraordinariasPendientes - Inicio");
+            if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
+            {
+                dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
+            }
+            cupoManager.VerificarSolicitudesExtraordinariasPendientes(dia);
+            logger.Info($"VerificarSolicitudesExtraordinariasPendientes - Finalizado");
+            return Content("ok");
+        }
     }
 }

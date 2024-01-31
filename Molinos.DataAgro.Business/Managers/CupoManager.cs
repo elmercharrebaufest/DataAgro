@@ -1614,7 +1614,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaExcel.Add(excel);
             }
             return listaExcel.OrderByDescending(x => x.Puntaje).ToList();
-        }      
+        }
         public List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion = null)
         {
             try
@@ -3215,7 +3215,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         foreach (var f in dias)
                         {
-                            if(f == d.Key)
+                            if (f == d.Key)
                             {
                                 dia.Diacupo.Add(new DiaCupo
                                 {
@@ -3232,7 +3232,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 });
                             }
                         }
-                       
+
                     }
                     lista.Add(dia);
                 }
@@ -3874,7 +3874,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaSugerenciaPorComercial.Add(total);
 
             }
-            foreach (var sugerenciaPorComercial in listaSugerenciaPorComercial.GroupBy(a=>a.ComercialId))
+            foreach (var sugerenciaPorComercial in listaSugerenciaPorComercial.GroupBy(a => a.ComercialId))
             {
                 for (var dt = formula.CuposDesde; dt <= formula.CuposHasta; dt = dt.AddDays(1))
                 {
@@ -3891,7 +3891,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            
+
             repositorio.AgregarTodos(listaSugerenciaPorComercial);
         }
 
@@ -6806,7 +6806,7 @@ namespace Molinos.DataAgro.Business.Managers
                         formulaDatos.Add(new FormulaDtoExcel
                         {
                             Material = formula.Material,
-                            Criterio = hijo.Descripcion.Replace("Criterio",""),
+                            Criterio = hijo.Descripcion.Replace("Criterio", ""),
                             Puntuacion = Decimal.ToInt32(hijo.Puntuacion),
                             CuposDesde = formula.CuposDesde,
                             CuposHasta = formula.CuposHasta,
@@ -6882,7 +6882,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 };
             }
-           
+
 
         }
 
@@ -6934,6 +6934,49 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return cantidadCupo;
+        }
+
+        public void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha)
+        {
+            try
+            {
+                List<string> lineasCuerpoMail = new List<string>();
+                List<AdministracionCupo> solicitudesExtraordinariasList = repositorio.Listar<AdministracionCupo>(x => x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente);
+
+                if (solicitudesExtraordinariasList != null && solicitudesExtraordinariasList.Count > 0)
+                {
+                    var asunto = $"Solicitudes Extraordinarias pendientes";
+                    lineasCuerpoMail.Add($"Existen {solicitudesExtraordinariasList.Count} Solicitudes Extraordinarias en estado Pendiente");
+                    EnviarMailSolicitudesPendientes(asunto, lineasCuerpoMail);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error en tarea programada VerificarSolicitudesExtraordinariasPendientes: " + e);
+                throw;
+            }
+        }
+
+        private void EnviarMailSolicitudesPendientes(string asunto, List<string> cuerpo)
+        {
+            LinkedResource resource = new LinkedResource(httpContextManager.ObtenerPathLogoMail())
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
+            var destinatarios = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Mail_SolExt_Pendientes))).Select(x => x.IdActiveDirectory).ToList();
+            List<string> copia = new List<string> { ConfigurationManager.AppSettings["EmailSoporte"] };
+            string htmlBody = "";
+            foreach (var mensaje in cuerpo)
+            {
+                htmlBody += mensaje + "<br /><br />";
+            }
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + resource.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(resource);
+            mailManager.EnviarMail(destinatarios, asunto, "", copia, alternateView);
         }
     }
 }

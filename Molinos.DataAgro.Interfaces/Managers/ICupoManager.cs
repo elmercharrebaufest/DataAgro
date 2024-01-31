@@ -72,5 +72,6 @@ namespace Molinos.DataAgro.Interfaces
         List<CupoResult> DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver);
         List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
         CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
+        void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha);
     }
 }
