@@ -102,7 +102,6 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     if (enviarEmail)
                                     {
-
                                         var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
                                         EnviarMailBoleto(itemNegocio.BoletoDescripcion,
                                             (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
@@ -153,7 +152,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                 //repositorio.AgregarTodos(error.boletos);
                 repositorio.GuardarCambios();
-
             }
             catch (Exception e)
             {
@@ -196,16 +194,12 @@ namespace Molinos.DataAgro.Business.Managers
         public string ObtenerIdentDescarga()
         {
             DateTime oNow = DateTime.Now;
-
             string strFechaHora = oNow.ToString("yyyyMMddHHmmss");
-
             string strTicks = oNow.Ticks.ToString();
-
             string strIdent = strFechaHora + strTicks;
-
             return strIdent;
-
         }
+
         private static BoletoGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, int version, string mensaje)
         {
             return new BoletoGeneradoDto
@@ -246,7 +240,6 @@ namespace Molinos.DataAgro.Business.Managers
             return negociosFiltrados;
         }
 
-
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
         {
             var datosCombo = new DatosIniContrato();
@@ -254,10 +247,6 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.tiponegocio.Add(new TipoNegocioQry { TipoNegocioId = 2, Descripcion = "Fijación" });
             return datosCombo;
         }
-
-
-
-
 
         public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf)
         {
@@ -364,7 +353,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     basico.Descuentos.Add(generalSobre);
                 }
-
             }
         }
 
@@ -391,7 +379,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-
                 using (var stream = new MemoryStream())
                 {
                     using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 100f))
@@ -434,7 +421,6 @@ namespace Molinos.DataAgro.Business.Managers
                         stream.Close();
                         return bytes;
                     }
-
                 }
             }
             catch (Exception ex)
@@ -449,15 +435,15 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             //}
-            if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             }
-            if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 1)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisicoBuenosAires.html");
             }
-            if (basico.BoletoContratoId == 4)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
             }
@@ -566,13 +552,12 @@ namespace Molinos.DataAgro.Business.Managers
         
     </style>";
 
-            if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2)
             {
                 var precio = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     precio = basico.Moneda + " " + basico.PrecioNeto.ToString();
-
                 }
                 else
                 {
@@ -599,7 +584,7 @@ namespace Molinos.DataAgro.Business.Managers
                      titulo, clausulashtml, basico.FechaOperacionFormateado, "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
             }
-            else if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 1)
+            else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)
             {
                 var corredor = basico.CorredorId > 0 ? ($"<tr><td><b> Contrato N°: {basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3)}</b> <br />" +
                 $"<b>Comprador: {basico.RazonSocialCorredor}</b><br /><b> CUIT: {basico.CUITCorredor} </b> </td></tr>") : "";
@@ -608,7 +593,7 @@ namespace Molinos.DataAgro.Business.Managers
                 basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
             }
-            else if (basico.BoletoContratoId == 4)
+            else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 //var localidad = reposi
                 string clausulasNumeradas = "";
@@ -620,7 +605,6 @@ namespace Molinos.DataAgro.Business.Managers
                     , basico.Corredor, basico.CUITCorredor, clausulasNumeradas);
                 return xHtml;
             }
-
             return xHtml;
         }
 

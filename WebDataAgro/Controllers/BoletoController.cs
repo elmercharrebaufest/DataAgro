@@ -26,8 +26,8 @@ namespace WebDataAgro.Controllers
 
         public BoletoController(IBoletoManager oBoletoManager, IReportesManager reportesManager)
         {
-            mobjBoletoManager = oBoletoManager;
-            reportesManager = reportesManager;
+            this.mobjBoletoManager = oBoletoManager;
+            this.reportesManager = reportesManager;
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
         public ActionResult Index()
@@ -61,12 +61,12 @@ namespace WebDataAgro.Controllers
             CompletarVista();
             //List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
-            if (boleto.TipoNegocioId == 1)
+            if (boleto.TipoNegocioId == 1) // Contrato
             {
                 tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
                 tipoNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
             }
-            else
+            else // Fijación
             {
                 tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }

@@ -7400,7 +7400,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("Material", "El Material seleccionado no está habilitado para la carga de contratos sin boleto");
                 return resultado;
             }
-            if (tipoNegocioId == 1)
+            if (tipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
                 if (centro != null && (!centrosHabilitados.Any(x => x.CentroId == centro && x.TipoNegocioId == tipoNegocioId)))
                 {
@@ -7408,7 +7408,7 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultado;
                 }
             }
-            else if (tipoNegocioId == 2)
+            else if (tipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
                 if (centro != null && (!centrosHabilitados.Any(x => x.CentroId == centro && x.TipoNegocioId == tipoNegocioId)))
                 {
@@ -7450,7 +7450,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8) && x.ConfirmadoSAP != true && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2));
+                x.MaterialId == materialId && (x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado) && x.ConfirmadoSAP != true && (x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO));
 
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
@@ -7531,7 +7531,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var cuitCorredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == corredorId, x => x.CUIT);
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
+                x.MaterialId == materialId && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado));
 
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
