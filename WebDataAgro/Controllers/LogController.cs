@@ -42,14 +42,10 @@ namespace WebDataAgro.Controllers
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var logs = oLogManager.TraerTodoLog(fecha);
 
-            //return Json(logs, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(logs, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
 
-            // Serializar manualmente los datos a JSON
-            var serializer = new JavaScriptSerializer();
-            var jsonString = serializer.Serialize(logs);
-
-            // Devolver el JSON serializado como ContentResult
-            return Content(jsonString, "application/json");
+            return jsonResult;
         }
 
         public List<LogModel> TransformarAModel(List<LogDto> logDto)
