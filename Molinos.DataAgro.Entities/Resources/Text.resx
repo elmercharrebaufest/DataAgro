@@ -917,4 +917,7 @@
 	<data name="Mapa_Research" xml:space="preserve">
         <value>Mapa Research</value>
     </data>
+	<data name="Mail_SolExt_Pendientes" xml:space="preserve">
+        <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
+    </data>
 </root>

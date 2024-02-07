@@ -1447,6 +1447,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recibir Mail de Solicitudes Extraordinarias Pendientes.
+        /// </summary>
+        public static string Mail_SolExt_Pendientes {
+            get {
+                return ResourceManager.GetString("Mail_SolExt_Pendientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mapa Research.
         /// </summary>
         public static string Mapa_Research {
