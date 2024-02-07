@@ -4315,7 +4315,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var error = new Resultado();
             logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.Id);
-            // GSIAN: Acá no debería obtener por el ID ? Puede existir mas de un ContratoSAP.
+            //  GSIAN: Acá no debería obtener por el ID ? Puede existir mas de un ContratoSAP.
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP && x.EstadoId != 8);
             if (contratoSave == null || contratoSave.Id == 0)
             {
