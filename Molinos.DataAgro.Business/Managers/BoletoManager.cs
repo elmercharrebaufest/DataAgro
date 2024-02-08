@@ -266,7 +266,7 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add("dataagro@molinosagro.com.ar");
                 logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
             }
-            var subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial;
+            var subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial + " - Contrato Nro. " + contrato;
 
             mailManager.EnviarMail(comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), pdf, "Boleto.pdf");
         }
