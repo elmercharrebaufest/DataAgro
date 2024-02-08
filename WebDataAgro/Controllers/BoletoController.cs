@@ -71,7 +71,7 @@ namespace WebDataAgro.Controllers
                 tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }
             List<string> contratos = new List<string>();
-            foreach (string itemContrato in boleto.ContratoSAP.Split(';').ToList())
+            foreach (string itemContrato in boleto.ContratoSAP.TrimEnd(';').Split(';').ToList())
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }

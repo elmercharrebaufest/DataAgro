@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Business.Managers
                                             (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
                                             String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
                                             itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : Split(itemNegocio.ContratoSAP.TrimStart('0')),
-                                            consultaBoleto.Version, comercial, emailproveedor, pdf);
+                                            consultaBoleto.Version, comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.Substring(3) + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
                                     }
                                 }
                                 catch (Exception ex)
@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 try
                                 {
                                     File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
-                                         + (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
+                                         + (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP.Substring(3) + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
                                 }
                                 catch (Exception ex)
                                 {
@@ -248,7 +248,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf)
+        public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
         {
             var lista = new List<string>();
             //var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
@@ -268,7 +268,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial;
 
-            mailManager.EnviarMail(comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), pdf, "Boleto.pdf");
+            mailManager.EnviarMail(comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), pdf, nombrePDF + ".pdf");
         }
 
         private AlternateView CuerpoMailBoleto(String filePath, string contrato, string version)

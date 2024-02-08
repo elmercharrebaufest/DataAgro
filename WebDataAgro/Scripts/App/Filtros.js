@@ -487,12 +487,14 @@ function crearPopUp(nombrePopUp) {
 
 function GenerarContratoSAPDesde() {
     var arr = "";
-    $("#contratos-table tr").each(function () {
+
+    $('#contratos-table> tbody > tr').not(':first').each(function () {
         if (arr != "") {
             arr += ";";
         }
-        arr += $(this).find("td:first").text(); //put elements into array
+        arr += $(this).find("td").not(".hide").text();
     });
+
     $("#ContratoSAPId").val(arr);
     $("#ContratoSAPHastaId").attr('disabled', 'disabled');
     $("#ContratoSAPHastaId").val('');
