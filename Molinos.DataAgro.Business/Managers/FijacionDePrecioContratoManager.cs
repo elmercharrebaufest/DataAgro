@@ -1287,6 +1287,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
+                    logger.Debug("Finalizando Finalizacion: " + fijacion.Id);
                     var error = FinalizarFijacion(fijacion.Id, idActiveDirectory);
                 }
                 catch (Exception ex)

@@ -3677,11 +3677,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var contratosConfirmados = repositorio.Listar<Contrato, int>(a => a.Id, x => x.EstadoId == 2 || x.EstadoId == 4);
             logger.Debug("Contratos a Finalizar: " + contratosConfirmados.Count);
+            logger.Debug("Contratos a Finalizar Ids: " + String.Join(", ", contratosConfirmados));
             var oEntityErrors = new GrabarContratoResult();
             foreach (var id in contratosConfirmados)
             {
                 try
                 {
+                    logger.Debug("Finalizando contrato: " + id);
                     var error = FinalizarContrato(id, idActiveDirectory);
                 }
                 catch (Exception ex)
