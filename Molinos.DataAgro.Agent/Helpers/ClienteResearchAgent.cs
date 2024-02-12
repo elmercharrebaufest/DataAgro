@@ -85,6 +85,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     foreach (ListItem item in items)
                     {
                         string valoresCalculo = "";
+                        Resultado resultado = new Resultado();
                         try
                         {
                             Research itemData = new Research();
@@ -105,8 +106,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             var partidoId = provinciaId == null ? null : listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
                             itemData.LocalidadId = item["LocalidadId"] != null ? int.Parse(item["LocalidadId"].ToString()) :
                                 partidoId == null ? null : listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
-                            itemData.ProvinciaId = item["ProvinciaId"] is int ? int.Parse(item["ProvinciaId"].ToString()) : (int?)null;
-                            itemData.PartidoId = item["PartidoId"] is int ? int.Parse(item["PartidoId"].ToString()) : (int?)null;
+                            itemData.ProvinciaId = item["ProvinciaId"] is string ? int.Parse(item["ProvinciaId"].ToString()) : (int?)null;
+                            itemData.PartidoId = item["PartidoId"] is string ? int.Parse(item["PartidoId"].ToString()) : (int?)null;
                             itemData.Latitud = item["Latitud"] is double ? double.Parse(item["Latitud"].ToString()) : (double?)null;
                             itemData.Longitud = item["Longitud"] is double ? double.Parse(item["Longitud"].ToString()) : (double?)null;
                             itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
@@ -135,7 +136,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FieldUserValue editor = new FieldUserValue();
                             editor = (FieldUserValue)item["Editor"];
                             itemData.Editor = editor.Email;
-                            itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : (bool?)null;
+                            itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : false;
                             string rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                             double espigas_Plantas_m2 = 0, rendimiento = 0;
@@ -143,6 +144,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                                         .Where(x => x.MaterialId == itemData.MaterialId && x.CondicionId == itemData.CondicionId)
                                         .Select(x => x.Valor)
                                         .FirstOrDefault();
+
+                            resultado = validarResearch(itemData, p1000);
 
                             switch (itemData.MaterialId)
                             {
@@ -179,7 +182,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 default:
                                     break;
                             }
-                            itemData.RendimientoCalculado = Math.Round(rendimiento, 2);
+                            itemData.RendimientoCalculado = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 2, MidpointRounding.AwayFromZero);
 
                             string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
                             Console.WriteLine(json);
@@ -228,26 +231,36 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                             listaResearchDto.Add(itemData);
 
-                            repositorio.Agregar(itemData);
-                            repositorio.GuardarCambios();
-
-                            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                            if (resultado.HayError)
                             {
-                                logger.Info($"Simula eliminar en Sharpoint el registro: {itemData.IdPowerApp}");
+                                logger.Info($"INICIO - ERROR Research con registro: {itemData.IdPowerApp} - {valoresCalculo}");
+                                logger.Error($"{cadenaDeErrores(resultado)}");
+                                logger.Info($"FIN - ERROR Research con registro: {itemData.IdPowerApp}");
                             }
                             else
                             {
-                                item.DeleteObject();
-                                context.ExecuteQuery();
+                                repositorio.Agregar(itemData);
+                                repositorio.GuardarCambios();
+
+                                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                                {
+                                    logger.Info($"Simula eliminar en Sharpoint el registro: {itemData.IdPowerApp}");
+                                }
+                                else
+                                {
+                                    item.DeleteObject();
+                                    context.ExecuteQuery();
+                                }
                             }
                         }
                         catch (Exception e)
                         {
-                            logger.Debug($"Error en item Research");
                             var id = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
-                            logger.Info($"ERROR Research con registro: {id}");
-                            logger.Info(valoresCalculo);
+                            logger.Info($"INICIO - ERROR Research con registro: {id} - {valoresCalculo}");
                             logger.Error(e.Message);
+                            if (e.InnerException?.InnerException != null) logger.Error(e.InnerException?.InnerException?.Message);
+                            if (resultado.HayError) logger.Error($"{cadenaDeErrores(resultado)}");
+                            logger.Info($"FIN - ERROR Research con registro: {id}");
                         }
                     }
                     return listaResearchDto;
@@ -255,10 +268,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug($"Error al Consultar registros de Research");
                 var id = itemError["ID"] is int ? int.Parse(itemError["ID"].ToString()) : (int?)null;
-                logger.Info($"ERROR Research con registro: {id}");
-                logger.Error(e.Message);
+                logger.Error($"Error al consultar registros de Research - ID {id}: {e.Message}");
                 throw;
             }
         }
@@ -317,6 +328,47 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             string jsonData = JsonConvert.SerializeObject(data);
             logger.Info($"Research a sincronizar ID {int.Parse(item["ID"].ToString())}: {jsonData}");
+        }
+
+        private string cadenaDeErrores(Resultado resultado)
+        {
+            string errores = "";
+            resultado.Errores.ForEach(x => errores += x.Message);
+            return errores;
+        }
+
+        private Resultado validarResearch(Research itemData, int p1000)
+        {
+            Resultado resultado = new Resultado();
+
+            if (itemData.PromedioMuestraUno == 0) resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraUno no puede ser 0 (cero)."));
+            if (itemData.PromedioMuestraUno == null) resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraUno no puede ser NULL."));
+
+            if (itemData.DistanciaHileras == 0) resultado.Errores.Add(new ErrorMessage(400, $"El campo DistanciaHileras no puede ser 0 (cero)."));
+            if (itemData.DistanciaHileras == null) resultado.Errores.Add(new ErrorMessage(400, $"El campo DistanciaHileras no puede ser NULL."));
+
+            if (itemData.PromedioMuestraDos == 0 && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.TRIGO || itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraDos no puede ser 0 (cero)."));
+            if (itemData.PromedioMuestraDos == null && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.TRIGO || itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraDos no puede ser NULL."));
+
+            if (itemData.PromedioMuestraTres == 0 && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser 0 (cero)."));
+            if (itemData.PromedioMuestraTres == null && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser NULL."));
+
+            if (p1000 == 0 && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.TRIGO || itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo p1000 no puede ser 0 (cero)."));
+
+            if (itemData.Coeficiente == 0) resultado.Errores.Add(new ErrorMessage(400, $"El campo Coeficiente no puede ser 0 (cero)."));
+            if (itemData.Coeficiente == null) resultado.Errores.Add(new ErrorMessage(400, $"El campo Coeficiente no puede ser NULL."));
+
+            if (itemData.CapitulosGirasol == 0 && itemData.MaterialId == (int)EnumMateriales.GIRASOL)
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo CapitulosGirasol no puede ser 0 (cero)."));
+            if (itemData.CapitulosGirasol == null && itemData.MaterialId == (int)EnumMateriales.GIRASOL)
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo CapitulosGirasol no puede ser NULL."));
+
+            return resultado;
         }
     }
 }

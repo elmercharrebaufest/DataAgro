@@ -184,6 +184,7 @@ function busquedaFiltrada() {
         partido: x.Partido,
         localidad: x.Localidad,
         rendimiento: x.Rendimiento,
+        rendimientoCalculado: x.RendimientoCalculado,
         tipoMuestra1: x.TipoMuestraUno,
         medida1: x.MedidasUno,
         promedio1: x.PromedioMuestraUno,
@@ -280,6 +281,7 @@ function cargarInformacionPopup(popup) {
         + '<div class="col-md-12"><span class="bold-text">Comentarios:</span> <span id="comentarios"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Hubicacion:</span> <span id="hubicacion"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Rendimiento:</span> <span id="rendimiento"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Rendimiento Calculado:</span> <span id="rendimientoCalculado"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra1"></span> <span id="medida1"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra2"></span> <span id="medida2"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra3"></span> <span id="medida3"></span></div>'
@@ -297,6 +299,7 @@ function cargarInformacionPopup(popup) {
     document.getElementById("comentarios").innerHTML = popup.options.comentarios;
     document.getElementById("hubicacion").innerHTML = `${popup.options.provincia == null ? "" : (popup.options.provincia + ", ")} ${popup.options.partido == null ? "" : (popup.options.partido + ", ")} ${popup.options.localidad == null ? "" : popup.options.localidad}`;
     document.getElementById("rendimiento").innerHTML = popup.options.rendimiento;
+    document.getElementById("rendimientoCalculado").innerHTML = popup.options.rendimientoCalculado;
 
     if (popup.options.tipoMuestra1 != null && popup.options.tipoMuestra1 != "") {
         document.getElementById("tipoMuestra1").innerHTML = popup.options.tipoMuestra1;
