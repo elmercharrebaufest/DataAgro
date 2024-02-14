@@ -6,13 +6,12 @@ $(document).ready(function () {
     //$("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     CreateGrid();
     InicializarElementos();
-
-
 });
 
 function deseleccionarRadioButtonEliminado() {
     $('[name=Eliminado]:checked').prop('checked', false);
 }
+
 function CreateGrid() {
     kendo.ui.FilterMultiCheck.prototype.options.messages =
         $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
@@ -22,7 +21,6 @@ function CreateGrid() {
     var ds = {
         transport: {
             parameterMap: function (options, operation) {
-
                 if (operation == "read") {
                     return JSON.stringify(options)
                 }
@@ -30,7 +28,6 @@ function CreateGrid() {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
                 return options;
-
             },
             read: {
                 type: 'post',
@@ -39,13 +36,11 @@ function CreateGrid() {
                 url: '/ResearchReporte/BuscaDatosTabla',
 
                 data: function () {
-
                     let filtroCompleto = TraerFiltrosConValores();
 
                     return filtroCompleto;
                 }
             }
-
         },
         schema: {
             data: 'Data',
@@ -86,6 +81,7 @@ function CreateGrid() {
                     Condicion: { type: "string" },
                     Coeficiente: { type: "number" },
                     Rendimiento: { type: "number" },
+                    RendimientoCalculado: { type: "number" },
                     HumedadSueloId: { type: "number" },
                     HumedadSuelo: { type: "string" },
                     CapitulosGirasol: { type: "number" },
@@ -150,6 +146,7 @@ function CreateGrid() {
             { field: "MedidasTres", title: "Medidas", width: 80 },
             { field: "PromedioMuestraTres", title: "Promedio", width: 70 },
             { field: "Rendimiento", title: "Rendimiento", width: 80 },
+            { field: "RendimientoCalculado", title: "RendimientoCalculado", width: 80 },
             { field: "CapitulosGirasol", title: "Capitulos<br>Girasol", width: 70 },
             { field: "DistanciaHileras", title: "Distancia<br>Hileras", width: 70 },
             { field: "Latitud", title: "Latitud", width: 70 },
@@ -161,8 +158,6 @@ function CreateGrid() {
             { field: "Eliminado", type: "string", title: "Eliminado", template: function (dataItem) { return dataItem.Eliminado ? "Si" : "No"; }, width: 80 },
             { field: "Adjuntos", template: function (dataItem) { return listaAdjuntos(dataItem); }, title: "Adjuntos", width: 120 },
             { template: function (dataItem) { return botonBorrar(dataItem, 'fa-trash err'); }, width: 40, title: "Elim." },
-
-
         ],
         pageable: {
             messages: {
@@ -195,44 +190,32 @@ function CreateGrid() {
             for (var i = 0; i < sheet.rows[0].cells.length; i++) {
                 sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace("<br>", " ").replace("<br>", " ").replace("<br>", " ");
             }
-            //var templateHora = kendo.template(this.columns[6].template);
-            //var templatePizarra = kendo.template(this.columns[15].template);
-            //var templateSustentable = kendo.template(this.columns[34].columns[0].template);
-            ////var templateTarifaAConvenir = kendo.template(this.columns[34].columns[3].template);
-            //var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-            //var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
-            //var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
-            //var templatePesificado = kendo.template(this.columns[38].columns[0].template);
-            //var templateSIO = kendo.template(this.columns[39].template);
-            //var templateTrigoEsp = kendo.template(this.columns[40].template);
-            //var templateCesion = kendo.template(this.columns[59].template);
-            //var templateCondicional = kendo.template(this.columns[62].template);
-            //var templateConDescarga = kendo.template(this.columns[75].template);
-            var templateEliminado = kendo.template(this.columns[29].template);
-            var templateAdjuntos = kendo.template(this.columns[30].template);
+
+            var templateEliminado = kendo.template(this.columns[30].template);
+            var templateAdjuntos = kendo.template(this.columns[31].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
-                    Eliminado: row.cells[29].value,
-                    Adjuntos: row.cells[30].value,
+                    Eliminado: row.cells[30].value,
+                    Adjuntos: row.cells[31].value,
                 };
 
                 var asdv = dataItem.value;
                 var asd = templateAdjuntos(dataItem);
-                row.cells[29].value = templateEliminado(dataItem);
-                row.cells[30].value = dataItem.Adjuntos.length == 0 ? "No" : "Si";
+                row.cells[30].value = templateEliminado(dataItem);
+                row.cells[31].value = dataItem.Adjuntos.length == 0 ? "No" : "Si";
             }
         },
     }).data("kendoGrid");
-
 
     var exportFlag = false;
     var columnasHidden = [];// ["Latitud", "Longitud", "Comentarios", "MaterialAntecesor", "TipoCarga", "MedidasUno", "MedidasDos", "MedidasTres", "Attachments", "Eliminado"];
     for (var i in columnasHidden) {
         grid.hideColumn(columnasHidden[i]);
     }
+
     $("#grid").data("kendoGrid").bind("excelExport", function (e) {
         if (!exportFlag) {
             for (var i in columnasHidden) {
@@ -266,7 +249,6 @@ function listaAdjuntos(dataItem) {
     }
     div += "</div>";
     return div;
-
 }
 
 function botonBorrar(dataItem, icono) {
@@ -279,11 +261,13 @@ function botonBorrar(dataItem, icono) {
         return '<div></div>';
     }
 }
+
 function ModalBorrar(id) {
     $("#idModalBorrar").html(id);
     idModalBorrar = id;
     $("#modalBorrar").modal('show');
 }
+
 $("#confirmarBorrar").click(function () {
     result = MSExecuteOnServer('/ResearchReporte/BorrarRegistro', { id: idModalBorrar });
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
@@ -293,9 +277,11 @@ $("#confirmarBorrar").click(function () {
         recargarGrilla();
     }
 });
+
 function recargarGrilla() {
     $('#grid').data('kendoGrid').dataSource.read();
 }
+
 function ObtenerFecha() {
     var hoy = new Date();
     var anio = hoy.getFullYear();
@@ -327,48 +313,7 @@ function ObtenerFechaMas30() {
 }
 
 function InicializarElementos() {
-    //$(".number").kendoNumericTextBox({
-    //    culture: "es-AR",
-    //    format: "n0",
-    //    value: " ",
-    //    decimals: 0,
-    //    restrictDecimals: true,
-    //    spinners: false,
-    //    min: 0
-    //});
-    //kendo.culture("es-AR");
-
-    //$("#nuevoNumContrato").kendoNumericTextBox({
-    //    culture: "es-AR",
-    //    format: "######################",
-    //    value: " ",
-    //    decimals: 0,
-    //    restrictDecimals: true,
-    //    spinners: false,
-    //    min: 0
-    //});
-
     $(".multiselect").kendoMultiSelect({});
-
-    //CrearMultiSelectFiltro("#ClasificacionId", "Clasificacion", "ClasificacionId", "/Contrato/ListarClasificacion");
-
-
-    //$("#SustentableId").click(function () {
-    //    if ($("#SustentableId").is(':checked')) {
-    //        $("#Importe_SustentableId").prop('disabled', true);
-    //        $("#Importe_SustentableId").data("kendoNumericTextBox").value("");
-    //    } else {
-    //        $("#Importe_SustentableId").prop('disabled', false);
-    //    }
-    //});
-    //$("#PesificadoId").click(function () {
-    //    if ($("#PesificadoId").is(':checked')) {
-    //        $("#Dias_PesificadoId").prop('disabled', true);
-    //        $("#Dias_PesificadoId").data("kendoNumericTextBox").value("");
-    //    } else {
-    //        $("#Dias_PesificadoId").prop('disabled', false);
-    //    }
-    //});
 
     $("#PartidoId").kendoDropDownList({
         dataTextField: "Descripcion",
@@ -378,6 +323,7 @@ function InicializarElementos() {
         filter: "contains",
     });
 }
+
 function getProvinciaId() {
     var provinciaId = $("#ProvinciaId").val();
     console.log(provinciaId);
@@ -386,6 +332,7 @@ function getProvinciaId() {
         provinciaId: provinciaId
     }
 };
+
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
 }
