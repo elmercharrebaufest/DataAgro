@@ -20,6 +20,7 @@ using Autofac.Integration.Wcf;
 using System.Data.SqlClient;
 using System.Net.Mail;
 using System.Configuration;
+using System.Net;
 
 namespace WebDataAgro
 {
@@ -221,6 +222,11 @@ namespace WebDataAgro
 
         private static void EnviarMailTimeOut(SqlException filterContext)
         {
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+            {
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+            }
+
             SmtpClient oCliente = default(SmtpClient);
             int Condicion = 0;
             if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))

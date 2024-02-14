@@ -13,6 +13,7 @@ using System.Configuration;
 using System.DirectoryServices;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -112,9 +113,9 @@ namespace Molinos.DataAgro.Business
                 Subject = asunto,
                 //Sender = string.IsNullOrEmpty(remitente) ? null : new MailAddress(remitente)
             };
-            if(remitente != null)
+            if (remitente != null)
             {
-                foreach(var item in remitente)
+                foreach (var item in remitente)
                 {
                     oMensaje.ReplyToList.Add(item);
                 }
@@ -126,7 +127,7 @@ namespace Molinos.DataAgro.Business
                     }
                 }
             }
-            
+
             foreach (string mail in enviarA)
             {
                 if (!string.IsNullOrEmpty(mail))
@@ -145,6 +146,11 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 SmtpClient oCliente = default(SmtpClient);
                 int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
@@ -158,7 +164,7 @@ namespace Molinos.DataAgro.Business
                 if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
                 {
                     string passCredencial = "";
-                    if(oMensaje.Sender == null)
+                    if (oMensaje.Sender == null)
                     {
                         passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
                     }
@@ -173,7 +179,7 @@ namespace Molinos.DataAgro.Business
                         //        passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
                         //        break;
                         //};
-                        if(oMensaje.Sender.Address == correoMateriasPrimas)
+                        if (oMensaje.Sender.Address == correoMateriasPrimas)
                         {
                             passCredencial = ConfigurationManager.AppSettings["CredentialPasswordPesificados"];
                         }
@@ -195,6 +201,7 @@ namespace Molinos.DataAgro.Business
                 logger.Error($"Fallo el SmtpClient con error:  {ex.Message}");
             }
         }
+
         public void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null, List<string> emailRemitente = null)
         {
             List<string> enviarAstring = new List<string>();
@@ -221,6 +228,7 @@ namespace Molinos.DataAgro.Business
             }
             this.EnviarMail(enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo, emailRemitente);
         }
+
         public void ReenviarMailCierreDia(string asuntoABuscar, string asuntoNuevoMail, string cuerpo)
         {
             try
@@ -325,7 +333,7 @@ namespace Molinos.DataAgro.Business
                     "",
                     null,
                     AlternateView.CreateAlternateViewFromString(Text, null, MediaTypeNames.Text.Html),
-                    null,null
+                    null, null
                     );
 
                 //MailMessage mensaje = MimeKitExtensions.ConvertToMailMessage(originalMessage);

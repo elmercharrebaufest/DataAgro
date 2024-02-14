@@ -19,6 +19,7 @@ using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -3538,6 +3539,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailPendiente()
         {
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+            {
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+            }
+
             var hoy = DateTime.Now.Date;
             var contratosPendientes = repositorio.Listar<Negocio, AvisoContratoDto>(x => new AvisoContratoDto
             {
@@ -3571,7 +3577,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-
                         logger.Debug("Numero de Contratos Pendientes " + contratosPorCreador.ToList().Count + " del comercial " + contratosPorCreador.Key);
                         var oMensaje = new MailMessage
                         {
@@ -3642,6 +3647,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
+
         private AlternateView CuerpoMailContrato(string filePath, List<AvisoContratoDto> contratosPendientes, string idActiveDirectory)
         {
             var nombreApellido = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == idActiveDirectory, x => x.Nombres + " " + x.Apellido);
@@ -3847,6 +3853,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var emailComercial = new List<string>();
 
                 if (administrativo != null)
