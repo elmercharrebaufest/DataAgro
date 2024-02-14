@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -1085,6 +1086,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = cupo.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
                 if (proveedorContacto.Count == 0)

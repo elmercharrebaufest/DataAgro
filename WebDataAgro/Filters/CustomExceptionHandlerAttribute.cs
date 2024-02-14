@@ -5,20 +5,21 @@ using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
 
 namespace WebDataAgro.Filters
 {
     public class CustomExceptionHandlerAttribute : FilterAttribute, IExceptionFilter
-    {        
+    {
         public void OnException(ExceptionContext filterContext)
         {
             if (!filterContext.ExceptionHandled)
             {
                 try
                 {
-                    var logger = LogManager.GetLogger("Global");                    
+                    var logger = LogManager.GetLogger("Global");
                     logger.Error(filterContext.Exception.GetOriginalException(), "Excepción no manejada: ");
                 }
                 catch (Exception ex)
@@ -44,6 +45,11 @@ namespace WebDataAgro.Filters
 
         private static void EnviarMailTimeOut(ExceptionContext filterContext)
         {
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+            {
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+            }
+
             SmtpClient oCliente = default(SmtpClient);
             int Condicion = 0;
             if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))

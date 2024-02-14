@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -339,6 +340,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var oMensaje = new MailMessage();
 
                 oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
@@ -437,17 +443,22 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Send(oMensaje);
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
             }
         }
+
         public Resultado EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar)
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = oContrato.CorredorId.HasValue ? oContrato.CorredorId : oContrato.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
 
@@ -578,6 +589,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = oFijacionDePrecioContrato.CorredorId.HasValue ? oFijacionDePrecioContrato.CorredorId : oFijacionDePrecioContrato.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
 
@@ -686,7 +702,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
                 oCliente.Send(oMensaje);
-
 
                 return new Resultado();
             }
@@ -1001,7 +1016,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
             }
-            if( oContrato.TarifaAConvenir == true)
+            if (oContrato.TarifaAConvenir == true)
             {
                 htmlBody += "Negocio sustentable con tarifa a convenir antes de la entrega.<br />";
             }
