@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ModificarContratoFinalizado;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -571,8 +572,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
                 detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
-                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
-                    contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+
+                var CODIGO_TC = "";
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    CODIGO_TC = "04";
+                }
+                else
+                {
+                    CODIGO_TC = "02";
+                }
+
+                detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? CODIGO_TC :
+                    contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;
                 detalle.POSICION = CalcularPosicion(contrato.FechaDesde);
