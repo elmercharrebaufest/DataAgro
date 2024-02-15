@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -66,6 +66,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string ActualizarCompraNet {
             get {
                 return ResourceManager.GetString("ActualizarCompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actualizar ALV CompraNet.
+        /// </summary>
+        public static string ActualizarCompraNet_Duplicate_1_ {
+            get {
+                return ResourceManager.GetString("ActualizarCompraNet_Duplicate[1]", resourceCulture);
             }
         }
         
@@ -984,6 +993,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Disponibilidad_De_Cupos_Descarga {
             get {
                 return ResourceManager.GetString("Disponibilidad_De_Cupos_Descarga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dólar Americano.
+        /// </summary>
+        public static string Divisa_USD {
+            get {
+                return ResourceManager.GetString("Divisa_USD", resourceCulture);
             }
         }
         
@@ -2135,6 +2153,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ver Todas Las Sugerencias.
+        /// </summary>
+        public static string Ver_Todas_Las_Sugerencias_Duplicate_1_ {
+            get {
+                return ResourceManager.GetString("Ver_Todas_Las_Sugerencias_Duplicate[1]", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ver Todo Comercial.
         /// </summary>
         public static string Ver_Todos_Comercial {
@@ -2428,6 +2455,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string VisualizarReportePagoDiferido {
             get {
                 return ResourceManager.GetString("VisualizarReportePagoDiferido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Pago Diferido.
+        /// </summary>
+        public static string VisualizarReportePagoDiferido_Duplicate_1_ {
+            get {
+                return ResourceManager.GetString("VisualizarReportePagoDiferido_Duplicate[1]", resourceCulture);
             }
         }
         

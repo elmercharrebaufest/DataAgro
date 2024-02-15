@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Resources;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -49,7 +50,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             res.Texto += $"de la cosecha  { clausula.Basico.Campania } ";
             if (clausula.Basico.TipoNegocioId == 2)
             {
-                res.Texto += $"a  { clausula.Basico.PrecioNeto } { clausula.Basico.Moneda } ({DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
+                res.Texto += $"a  { clausula.Basico.PrecioNeto } { clausula.Basico.Moneda } ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
 
             }
             if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true)
@@ -102,6 +103,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
             }
             
             return letras;
+        }
+
+        private string DivisaEnLetras(string divisa)
+        {
+            return divisa == "USDM"? Text.Divisa_USD: "";
         }
     }
 }

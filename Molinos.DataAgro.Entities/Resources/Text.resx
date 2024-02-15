@@ -841,7 +841,7 @@
   <data name="ModificarFijacionVirtual" xml:space="preserve">
     <value>Modificar Fijacion Virtual</value>
   </data>
-  <data name="VisualizarReportePagoDiferido" xml:space="preserve">
+  <data name="VisualizarReportePagoDiferido_Duplicate[1]" xml:space="preserve">
     <value>Visualizar Reporte Pago Diferido</value>
   </data>
   <data name="ReasignarProveedorPantallaCupo" xml:space="preserve">
@@ -856,14 +856,13 @@
   <data name="VisualizarReporteContratosAFijarPase" xml:space="preserve">
     <value>Visualizar Reporte Contratos A Fijar Pase</value>
   </data>
-
   <data name="Ver_Todas_Las_Sugerencias" xml:space="preserve">
     <value>Ver Todas Las Sugerencias</value>
   </data>
   <data name="ImporteSustentableEspecial" xml:space="preserve">
     <value>Importe Sustentable Especial</value>
   </data>
-  <data name="Ver_Todas_Las_Sugerencias" xml:space="preserve">
+  <data name="Ver_Todas_Las_Sugerencias_Duplicate[1]" xml:space="preserve">
     <value>Ver Todas Las Sugerencias</value>
   </data>
   <data name="DescripcionRequerido" xml:space="preserve">
@@ -887,7 +886,7 @@
   <data name="ConfigurarExcedente" xml:space="preserve">
     <value>Configurar Excedente</value>
   </data>
-  <data name="ActualizarCompraNet" xml:space="preserve">
+  <data name="ActualizarCompraNet_Duplicate[1]" xml:space="preserve">
     <value>Actualizar ALV CompraNet</value>
   </data>
   <data name="Visualizar_CupoNoPropio" xml:space="preserve">
@@ -911,13 +910,16 @@
   <data name="Configuracion_Localidad" xml:space="preserve">
     <value>Configuración Localidades</value>
   </data>
-    <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
+  <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
         <value>Recibir Mail Sugerencia FAQ</value>
     </data>
-	<data name="Mapa_Research" xml:space="preserve">
+  <data name="Mapa_Research" xml:space="preserve">
         <value>Mapa Research</value>
     </data>
-	<data name="Mail_SolExt_Pendientes" xml:space="preserve">
+  <data name="Mail_SolExt_Pendientes" xml:space="preserve">
         <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
     </data>
+  <data name="Divisa_USD" xml:space="preserve">
+    <value>Dólar Americano</value>
+  </data>
 </root>
