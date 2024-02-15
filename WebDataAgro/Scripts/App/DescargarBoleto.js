@@ -34,7 +34,8 @@
             },
             {
                 field: "LastWriteTime", title: "Fecha Modificación", template: function (dataItem) {
-                    return "<label  style=' color: black'> <strong>" + dataItem.FechaUltimaEscritura + "</strong></label>"
+                    let fecha = moment(dataItem.FechaUltimaEscritura, 'YYYY/MM/DD HH:mm').format("DD/MM/YYYY HH:mm");
+                    return "<label  style=' color: black'> <strong>" + fecha + "</strong></label>"
                 }
             },
             {

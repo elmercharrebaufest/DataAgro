@@ -282,7 +282,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     );
                 }
-                logger.Debug("Servicios a enviar a SAP para NegocioID "+ contrato.Id + ": " + servicioSap.ToXml());
+                logger.Debug("Servicios a enviar a SAP para NegocioID " + contrato.Id + ": " + servicioSap.ToXml());
 
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
@@ -403,12 +403,25 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
                 rq2.IM_CONTRATO.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
                 rq2.IM_CONTRATO.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
-                rq2.IM_CONTRATO.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
-                rq2.IM_CONTRATO.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
+                rq2.IM_CONTRATO.COND_PAGO = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";
+                rq2.IM_CONTRATO.PORC_MULTA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "10" : "";
                 rq2.IM_CONTRATO.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 rq2.IM_CONTRATO.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
-                rq2.IM_CONTRATO.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
-                rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" : contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+                rq2.IM_CONTRATO.PIZARRA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
+
+                var CODIGO_TC = "";
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    CODIGO_TC = "04";
+                }
+                else
+                {
+                    CODIGO_TC = "02";
+                }
+
+                rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? CODIGO_TC :
+                    contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+
                 rq2.IM_CONTRATO.BLOQUEO = "";
                 rq2.IM_CONTRATO.TIPO_CAMBIO_FIJO = 0;
                 rq2.IM_CONTRATO.POSICION = CalcularPosicion(contrato.FechaDesde);
