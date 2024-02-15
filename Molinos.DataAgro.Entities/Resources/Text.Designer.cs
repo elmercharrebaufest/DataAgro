@@ -997,6 +997,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pesos.
+        /// </summary>
+        public static string Divisa_ARP {
+            get {
+                return ResourceManager.GetString("Divisa_ARP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dólar Americano.
         /// </summary>
         public static string Divisa_USD {

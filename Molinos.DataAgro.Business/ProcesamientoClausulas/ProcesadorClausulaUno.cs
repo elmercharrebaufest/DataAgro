@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         private string DivisaEnLetras(string divisa)
         {
-            return divisa == "USDM"? Text.Divisa_USD: "";
+            return divisa == "USD"? Text.Divisa_USD: Text.Divisa_ARP;
         }
     }
 }

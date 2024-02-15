@@ -922,4 +922,7 @@
   <data name="Divisa_USD" xml:space="preserve">
     <value>Dólar Americano</value>
   </data>
+  <data name="Divisa_ARP" xml:space="preserve">
+    <value>Pesos</value>
+  </data>
 </root>
