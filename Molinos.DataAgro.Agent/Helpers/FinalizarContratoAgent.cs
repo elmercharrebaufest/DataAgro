@@ -409,18 +409,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
                 rq2.IM_CONTRATO.PIZARRA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
 
-                var CODIGO_TC = "";
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1" || (contrato.Fecha >= DateTime.Parse("2024-02-19") && ConfigurationManager.AppSettings["ActivarBLEND"] == "Si"))
                 {
-                    CODIGO_TC = "04";
+                    rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "04" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.TipoAgenteCompraId == null ? "04" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 }
                 else
                 {
-                    CODIGO_TC = "02";
+                    rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 }
-
-                rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? CODIGO_TC :
-                    contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+                logger.Info($"Contrato Nro: {contrato.Id} - CODIGO_TC: {rq2.IM_CONTRATO.CODIGO_TC}");
 
                 rq2.IM_CONTRATO.BLOQUEO = "";
                 rq2.IM_CONTRATO.TIPO_CAMBIO_FIJO = 0;
@@ -458,8 +458,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return devolucion.EX_CONTRATO_SAP;
 
                 //}
-
-
             }
             catch (Exception e)
             {
