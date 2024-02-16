@@ -31,7 +31,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-
                 return "OK";
             }
             try
@@ -110,7 +109,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_DB = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         });
-
                     };
                 }
                 decimal? precioNetoSustentable = null;
@@ -279,7 +277,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 PORC = apertura.Porcentaje
                             });
                         }
-
                     }
                 }
 
@@ -318,7 +315,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                     }
                     );
-
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
 
@@ -346,8 +342,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Localidad obtenida");
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
-
-
 
                 logger.Debug("Cargando contrato");
                 var conModificado =
@@ -430,10 +424,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.CondicionalMonedaId != contrato.CondicionalMonedaId ||
                     contratoGuardado.CondicionalPrecio != contrato.CondicionalPrecio ||
                     contratoGuardado.CondicionalContratoId != contrato.CondicionalContratoId ||
-                    contratoGuardado.CondicionalCantidad != contrato.CondicionalCantidad
-
-                    ;
-
+                    contratoGuardado.CondicionalCantidad != contrato.CondicionalCantidad;
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
                     descuentosGenerales != null && descuentosGenerales.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
@@ -567,24 +558,24 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
                 detalle.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
                 detalle.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
-                detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
-                detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
-                detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
+                detalle.COND_PAGO = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";
+                detalle.PORC_MULTA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "10" : "";
+                detalle.PIZARRA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
                 detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
 
-                var CODIGO_TC = "";
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1" || (contrato.Fecha >= DateTime.Parse("2024-02-19") && ConfigurationManager.AppSettings["ActivarBLEND"] == "Si"))
                 {
-                    CODIGO_TC = "04";
+                    detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "04" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.TipoAgenteCompraId == null ? "04" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 }
                 else
                 {
-                    CODIGO_TC = "02";
+                    detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
+                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 }
-
-                detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? CODIGO_TC :
-                    contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+                logger.Info($"Contrato Nro: {contrato.Id} - CODIGO_TC: {detalle.CODIGO_TC}");
 
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;
@@ -645,8 +636,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error("Error comunicacion SAP", e);
                 throw;
             }
-
         }
+
         private static decimal? PrecioNetoSustentableSobrePrecio(Contrato contrato, decimal? precioNetoSustentable)
         {
             decimal porcentajeComision = contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
@@ -663,6 +654,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             precioNetoSustentable = Math.Round(precioOriginal, 2);
             return precioNetoSustentable;
         }
+
         private string RellenarEspaciosSAP(string value, int stringLength)
         {
             if (value != null)
@@ -675,6 +667,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
+
         private string CalcularPosicion(DateTime fechaDesde)
         {
             var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(fechaDesde);
