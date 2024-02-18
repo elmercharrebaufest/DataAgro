@@ -564,7 +564,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
 
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1" || (contrato.Fecha >= DateTime.Parse("2024-02-19") && ConfigurationManager.AppSettings["ActivarBLEND"] == "Si"))
+                string CargaDesdeBLEND = ConfigurationManager.AppSettings["CargaDesdeBLEND"];
+                string CargaHastaBLEND = ConfigurationManager.AppSettings["CargaHastaBLEND"];
+                if (contrato.Fecha >= DateTime.Parse(CargaDesdeBLEND) && (ConfigurationManager.AppSettings["ActivarBLEND"] == "Si" || (ConfigurationManager.AppSettings["ActivarBLEND"] == "No" && CargaHastaBLEND != "" && contrato.Fecha < DateTime.Parse(CargaHastaBLEND))))
                 {
                     detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "04" :
                         contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.TipoAgenteCompraId == null ? "04" :
@@ -575,7 +577,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
                         contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 }
-                logger.Info($"Contrato Nro: {contrato.Id} - CODIGO_TC: {detalle.CODIGO_TC}");
+                logger.Info($"MODIFICA - NegocioId: {contrato.Id} - Contrato Nro: {contrato.ContratoSAP} - CODIGO_TC: {detalle.CODIGO_TC}");
 
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;
