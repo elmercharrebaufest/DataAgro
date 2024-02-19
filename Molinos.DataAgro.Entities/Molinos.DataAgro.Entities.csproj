@@ -168,10 +168,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Enums\EnumBoletoCompraNet.cs" />
+    <Compile Include="Common\Enums\EnumBolsaCompraNet.cs" />
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumMateriales.cs" />
+    <Compile Include="Common\Enums\EnumTipoDB.cs" />
     <Compile Include="Common\Enums\EnumTipoNegocio.cs" />
     <Compile Include="Common\Enums\EnumTipoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="Common\Enums\EnumClasificacionNegocio.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\EnumNegocioTipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Common\Enums\EnumTipoPeriodoDB.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
