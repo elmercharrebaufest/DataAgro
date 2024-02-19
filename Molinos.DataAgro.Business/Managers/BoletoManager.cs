@@ -368,6 +368,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var clausula = servicioClausula.DevolverClausulas(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
+                    if ((basico.TipoNegocioId != (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y No es precio a Fijar SALTAR esta iteracion
                     clausula.Orden = orden++;
                     result.Add(clausula);
                 }

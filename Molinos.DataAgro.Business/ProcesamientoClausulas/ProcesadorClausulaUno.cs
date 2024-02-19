@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             res.Texto += $"de la cosecha  { clausula.Basico.Campania } ";
             if (clausula.Basico.TipoNegocioId == 2)
             {
-                res.Texto += $"a  { clausula.Basico.PrecioNeto } { clausula.Basico.Moneda } ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
+                res.Texto += $"a  { NumeroConSeparadores(clausula.Basico.PrecioNeto) } { clausula.Basico.Moneda } ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
 
             }
             if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true)
@@ -108,6 +108,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
         private string DivisaEnLetras(string divisa)
         {
             return divisa == "USD"? Text.Divisa_USD: Text.Divisa_ARP;
+        }
+
+        private string NumeroConSeparadores(decimal? numero)
+        {
+            var objNumberFormatInfo = new System.Globalization.NumberFormatInfo() { NumberGroupSeparator = "." };
+            return numero.GetValueOrDefault().ToString("#,###", objNumberFormatInfo);
         }
     }
 }
