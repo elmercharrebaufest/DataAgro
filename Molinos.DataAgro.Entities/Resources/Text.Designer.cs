@@ -349,6 +349,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $.
+        /// </summary>
+        public static string ARP {
+            get {
+                return ResourceManager.GetString("ARP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Asignar Proveedores a Comerciales.
         /// </summary>
         public static string Asignar_Proveedores {
@@ -2113,6 +2122,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string TipoNegocioRequerido {
             get {
                 return ResourceManager.GetString("TipoNegocioRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to U$S.
+        /// </summary>
+        public static string USD {
+            get {
+                return ResourceManager.GetString("USD", resourceCulture);
             }
         }
         

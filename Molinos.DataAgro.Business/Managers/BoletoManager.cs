@@ -368,7 +368,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var clausula = servicioClausula.DevolverClausulas(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
-                    if ((basico.TipoNegocioId != (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y No es precio a Fijar SALTAR esta iteracion
+                    if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    if ((basico.CorredorId==0) && item.DisplayName.Equals("Clausula Veinte")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
                     clausula.Orden = orden++;
                     result.Add(clausula);
                 }
@@ -492,7 +493,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_005 {
             font-family: Arial,serif;
-            font-size: 8.1px;
+            font-size: 11.1px;
             color: rgb(0,0,0);
             font-weight: bold;
             font-style: normal;
@@ -501,7 +502,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_006 {
             font-family: Arial,serif;
-            font-size: 8px;
+            font-size: 11.1px;
             color: rgb(0,0,0);
             font-weight: normal;
             font-style: normal;
@@ -582,7 +583,7 @@ namespace Molinos.DataAgro.Business.Managers
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
-                     titulo, clausulashtml, basico.FechaOperacionFormateado, "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
+                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)

@@ -925,4 +925,10 @@
   <data name="Divisa_ARP" xml:space="preserve">
     <value>Pesos</value>
   </data>
+  <data name="USD" xml:space="preserve">
+    <value>U$S</value>
+  </data>
+  <data name="ARP" xml:space="preserve">
+    <value>$</value>
+  </data>
 </root>

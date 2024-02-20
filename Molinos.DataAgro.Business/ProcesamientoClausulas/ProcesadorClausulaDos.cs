@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 res.Texto += $"habiendo a su vez mercadería descargada ";
             }
-            res.Texto += $"haciéndose el recibo por el comprador en planta { clausula.Basico.DestinoDescripcion }, Localidad { clausula.Basico.DestinoLocalidad }, " +
+            res.Texto += $"haciéndose el recibo por el comprador en planta { ReemplazarSanLorenzo(clausula.Basico.DestinoDescripcion) }, Localidad { clausula.Basico.DestinoLocalidad }, " +
                 $"de Provincia de { clausula.Basico.DestinoProvincia }. Queda establecido que toda tasa contribución, impuesto provincial y/o municipal que grave " +
                 $"la presente operación será a cargo de la parte vendedora. ";
 
@@ -44,6 +44,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             }
             return letras;
+        }
+
+        private string ReemplazarSanLorenzo(string palabra)
+        {
+            return palabra.Equals("S. Lorenzo") ? "San Lorenzo" : palabra;
         }
     }
 }
