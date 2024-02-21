@@ -497,6 +497,9 @@ namespace Molinos.DataAgro.Business.Managers
             font-style: normal;
             text-decoration: none;
         }
+        .cls_005_top {
+            vertical-align: top;
+        }
 
         .cls_006 {
             font-family: Arial,serif;
