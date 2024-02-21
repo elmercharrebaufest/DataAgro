@@ -39,6 +39,8 @@
   
   <setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
   <setParameter name="CupoMaizPorSugerencias Key" value="Si" />
+
+  <setParameter name="ActivarBLEND Key" value="No" />
   
   <setParameter name="PathBoletos Key" value="\\MOAFSP01\MATERIAS_PRIMAS\CONTRATOSGAP\" />
 

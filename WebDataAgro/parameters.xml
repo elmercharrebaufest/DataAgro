@@ -135,6 +135,12 @@
                            /@value" />
   </parameter>
 
+	<parameter name="ActivarBLEND Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ActivarBLEND']
+                           /@value" />
+	</parameter>
+
   <parameter name="HTTP_Port Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/system.serviceModel/client

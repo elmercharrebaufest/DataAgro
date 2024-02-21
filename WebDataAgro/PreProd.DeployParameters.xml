@@ -40,6 +40,8 @@
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
 
+	<setParameter name="ActivarBLEND Key" value="No" />
+
 	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
 
   <setParameter name="HTTP_Port Service Endpoint Address"  value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
