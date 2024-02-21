@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Business.Managers
                                             (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
                                             String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
                                             itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0'),
-                                            consultaBoleto.Version, comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
+                                            tempBoleto.Version.ToString(), comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
                                     }
                                 }
                                 catch (Exception ex)
@@ -641,12 +641,50 @@ namespace Molinos.DataAgro.Business.Managers
                 var res = status.ValidarEstado(negocio.ContratoSAP);
                 if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
-                    mensaje = "No se pudo generar el boleto para el contrato seleccionado";
-                    logger.Debug("No se pudo generar el boleto por el status: " + res.Status + " " + negocio.ContratoSAP);
-
+                    string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
+                    mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: {motivoStatus}";
+                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
                 }
             }
             return mensaje;
+        }
+
+        private string StatusNegocioEnGeneracionBoleto(EstadoSAPDto statusNegocio)
+        {
+            string msje = "";
+            switch (statusNegocio.Status)
+            {
+                case "A":
+                    msje = "Con Anulación Automática";
+                    break;
+                case "X":
+                    msje = "Confirmado";
+                    break;
+                case "F":
+                    msje = "Liquidación Finalizada";
+                    break;
+                case "C":
+                    msje = "Cumplido";
+                    break;
+                case "M":
+                    msje = "Con Anulación Parcial";
+                    break;
+                case "B":
+                    msje = "Contrato Anulado Totalmente";
+                    break;
+                case "K":
+                    msje = "Cumplido en Camiones(no se usa)";
+                    break;
+                case "T":
+                    msje = "Contrato de Canje Cerrado(no se usa)";
+                    break;
+                case "J":
+                    msje = "Prefijación Cerrada(no se usa)";
+                    break;
+                default:
+                    break;
+            }
+            return msje;
         }
     }
 
