@@ -369,7 +369,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
                     if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
-                    if ((basico.CorredorId==0) && item.DisplayName.Equals("Clausula Veinte")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    if ((basico.CorredorId==0) && item.DisplayName.Equals("Clausula Veinte")) continue;//es clausula Veinte y no tiene proveedor SALTAR esta iteracion
                     clausula.Orden = orden++;
                     result.Add(clausula);
                 }
@@ -453,7 +453,7 @@ namespace Molinos.DataAgro.Business.Managers
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
         }
 
-        private static string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
+        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
         {
             string clausulashtml = String.Join("", clausulas.OrderBy(a => a.Orden).Select(a => "<br />" + a.Orden + " . " + a.Texto).ToList());
             var stylesHtml = @"<style type='text/css'>
@@ -554,7 +554,7 @@ namespace Molinos.DataAgro.Business.Managers
         
     </style>";
 
-            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2) //ACtualizar con Enum BolsaCompraNet
             {
                 var precio = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
@@ -578,13 +578,14 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
                 }
+                var numeroSio = status.ValidarEstado(basico.ContratoSAP).NumeroSio;
 
                 xHtml = string.Format(xHtml,
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
-                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
+                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"),"5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""),numeroSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)
             {

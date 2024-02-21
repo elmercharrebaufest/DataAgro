@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 if (contrato.PorcentajeDePago != null)
                 {
-                    res.Texto += $"El pago se hará {  contrato.PorcentajeDePago  } " +
+                    res.Texto += $"El pago se hará {  contrato.PorcentajeDePago  } %" +
                       $"({ DevolverNumeroEnLetras(contrato.PorcentajeDePago.Value) } por ciento), ";
                 }
                 if ((clausula.Basico.TipoNegocioId == 3 && contrato.Canje == true) || clausula.Basico.TipoNegocioId == 1)
@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 }
                 if (contrato.PorcentajeDePago != null)
                 {
-                    res.Texto += $", con mercadería descargada en planta, liquidándose el { (100 - contrato.PorcentajeDePago.Value) } ({ DevolverNumeroEnLetras(100 - contrato.PorcentajeDePago.Value) } por ciento) " +
+                    res.Texto += $", con mercadería descargada en planta, liquidándose el { (100 - contrato.PorcentajeDePago.Value) }% ({ DevolverNumeroEnLetras(100 - contrato.PorcentajeDePago.Value) } por ciento) " +
                     $"restante a los 30 (treinta) días del cumplimiento del contrato.";
                 }               
                 if (contrato.PagoDirectoVendedor == true)

@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaDos clausula)
         {
             var res = new ResultadoClausula();  
-            res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesdeFormateado} hasta {clausula.Basico.FechaHastaFormateado} ";
+            res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesde.GetValueOrDefault().ToString("dd'/'MM'/'yyyy")} hasta {clausula.Basico.FechaHasta.GetValueOrDefault().ToString("dd'/'MM'/'yyyy")} ";
             if (clausula.Basico.MercsDeposito == true)
             {
                 res.Texto += $"habiendo a su vez mercadería descargada ";
