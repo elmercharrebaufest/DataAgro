@@ -106,8 +106,8 @@ namespace Molinos.DataAgro.Business.Managers
                                         EnviarMailBoleto(itemNegocio.BoletoDescripcion,
                                             (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
                                             String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
-                                            itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : Split(itemNegocio.ContratoSAP.TrimStart('0')),
-                                            consultaBoleto.Version, comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
+                                            itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0'),
+                                            tempBoleto.Version.ToString(), comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
                                     }
                                 }
                                 catch (Exception ex)
@@ -222,15 +222,15 @@ namespace Molinos.DataAgro.Business.Managers
                     if (tipo.Descripcion == negocio.TipoNegocio)
                     {
                         logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 1 && tipo.Confirma)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 2 && tipo.BoletoFisico)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == 4 && tipo.CartaOferta)
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
                         {
                             negociosFiltrados.Add(negocio);
                         }
@@ -327,15 +327,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Importe = 0,
                 Porcentaje = 0,
-                TipoPeriodoDBId = 1,
-                TipoDBId = 2
+                TipoPeriodoDBId = (int)EnumTipoPeriodoDB.GENERALES,
+                TipoDBId = (int)EnumTipoDB.POR_FUERA_DEL_PRECIO
             };
             var generalSobre = new DescuentoBonificacionDto()
             {
                 Importe = 0,
                 Porcentaje = 0,
-                TipoPeriodoDBId = 1,
-                TipoDBId = 1
+                TipoPeriodoDBId = (int)EnumTipoPeriodoDB.GENERALES,
+                TipoDBId = (int)EnumTipoDB.SOBRE_EL_PRECIO
             };
             if (basico.Descuentos == null)
             {
@@ -343,12 +343,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var descuentoGeneralFueraPrecio = basico.Descuentos.Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
+                var descuentoGeneralFueraPrecio = basico.Descuentos.Where(x => x.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && x.TipoDBId == (int)EnumTipoDB.POR_FUERA_DEL_PRECIO).FirstOrDefault();
                 if (descuentoGeneralFueraPrecio == null)
                 {
                     basico.Descuentos.Add(generalPorFuera);
                 }
-                var descuentoGeneralSobrePrecio = basico.Descuentos.Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                var descuentoGeneralSobrePrecio = basico.Descuentos.Where(x => x.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && x.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).FirstOrDefault();
                 if (descuentoGeneralSobrePrecio == null)
                 {
                     basico.Descuentos.Add(generalSobre);
@@ -435,11 +435,11 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             //}
-            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.ROSARIO)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             }
-            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisicoBuenosAires.html");
             }
@@ -497,6 +497,9 @@ namespace Molinos.DataAgro.Business.Managers
             font-style: normal;
             text-decoration: none;
         }
+        .cls_005_top {
+            vertical-align: top;
+        }
 
         .cls_006 {
             font-family: Arial,serif;
@@ -552,7 +555,7 @@ namespace Molinos.DataAgro.Business.Managers
         
     </style>";
 
-            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.ROSARIO)
             {
                 var precio = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
@@ -584,7 +587,7 @@ namespace Molinos.DataAgro.Business.Managers
                      titulo, clausulashtml, basico.FechaOperacionFormateado, "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
             }
-            else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == 1)
+            else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
                 var corredor = basico.CorredorId > 0 ? ($"<tr><td><b> Contrato N°: {basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3)}</b> <br />" +
                 $"<b>Comprador: {basico.RazonSocialCorredor}</b><br /><b> CUIT: {basico.CUITCorredor} </b> </td></tr>") : "";
@@ -638,12 +641,50 @@ namespace Molinos.DataAgro.Business.Managers
                 var res = status.ValidarEstado(negocio.ContratoSAP);
                 if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
-                    mensaje = "No se pudo generar el boleto para el contrato seleccionado";
-                    logger.Debug("No se pudo generar el boleto por el status: " + res.Status + " " + negocio.ContratoSAP);
-
+                    string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
+                    mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: {motivoStatus}";
+                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
                 }
             }
             return mensaje;
+        }
+
+        private string StatusNegocioEnGeneracionBoleto(EstadoSAPDto statusNegocio)
+        {
+            string msje = "";
+            switch (statusNegocio.Status)
+            {
+                case "A":
+                    msje = "Con Anulación Automática";
+                    break;
+                case "X":
+                    msje = "Confirmado";
+                    break;
+                case "F":
+                    msje = "Liquidación Finalizada";
+                    break;
+                case "C":
+                    msje = "Cumplido";
+                    break;
+                case "M":
+                    msje = "Con Anulación Parcial";
+                    break;
+                case "B":
+                    msje = "Contrato Anulado Totalmente";
+                    break;
+                case "K":
+                    msje = "Cumplido en Camiones(no se usa)";
+                    break;
+                case "T":
+                    msje = "Contrato de Canje Cerrado(no se usa)";
+                    break;
+                case "J":
+                    msje = "Prefijación Cerrada(no se usa)";
+                    break;
+                default:
+                    break;
+            }
+            return msje;
         }
     }
 
