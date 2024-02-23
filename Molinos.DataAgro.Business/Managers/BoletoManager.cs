@@ -582,13 +582,16 @@ namespace Molinos.DataAgro.Business.Managers
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
                 }
                 var numeroSio = status.ValidarEstado(basico.ContratoSAP).NumeroSio;
+                string seccionSio = basico.CorredorId > 0 ?
+                    String.Empty :
+                    "<div class=\"espacio\"></div><div style=\"\" class=\"\"><span class=\"cls_006\">NÚMERO DE SIO GRANOS " + numeroSio + "</span></div><div class=\"espacio\"></div><div class=\"espacio\"></div>";
 
                 xHtml = string.Format(xHtml,
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
                      titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"),"5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""),numeroSio);
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""),seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {

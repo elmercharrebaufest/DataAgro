@@ -28,13 +28,13 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 $"entregan a Molinos Agro S.A. domiciliado en AVENIDA PRESIDENTE MANUEL QUINTANA 192, PISO 1° de la Ciudad de Buenos Aires (en adelante el comprador), la cantidad de { clausula.Basico.Cantidad} kg. " +
                 $"(kilogramos {((int)Math.Abs(clausula.Basico.Cantidad)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }) de {clausula.Basico.Material } {(clausula.Basico.CantidadCamiones != 0 ? "o el resultante de " + clausula.Basico.CantidadCamiones + "camiones" : "") }" +
                 $"y demás condiciones ";
-            if (clausula.Basico.StandardDeCalidadId == 7)
-            {
-                res.Texto += "CALIDAD GRADO 2 ";
-            }
-            else if (clausula.Basico.TrigoEspecial == true)
+            if (clausula.Basico.TrigoEspecial == true && clausula.Basico.StandardDeCalidadId != 7)
             {
                 res.Texto += "CALIDAD ESPECIAL ";
+            }
+            else
+            {
+                res.Texto += "CALIDAD " + clausula.Basico.StandardDeCalidadDescripcion.ToUpper() + " ";
             }
             if (clausula.Basico.Calidades != null && clausula.Basico.StandardDeCalidadId != 7)
             {
