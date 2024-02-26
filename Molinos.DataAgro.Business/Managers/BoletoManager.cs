@@ -369,9 +369,10 @@ namespace Molinos.DataAgro.Business.Managers
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
                     if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
-                    if ((basico.CorredorId==0) && item.DisplayName.Equals("Clausula Veinte")) continue;//es clausula Veinte y no tiene proveedor SALTAR esta iteracion
+                    if ((basico.CorredorId == 0) && item.DisplayName.Equals("Clausula Veinte")) continue;//es clausula Veinte y no tiene proveedor SALTAR esta iteracion
+                    if (!(basico.MaterialId == (int)EnumMateriales.SOJA) && item.DisplayName.Equals("Clausula CuarentaYOcho")) continue;//es clausula CuarentaYOcho y el contrato NO es de Soja SALTAR esta iteracion
                     clausula.Orden = orden++;
-                    result.Add(clausula);
+                    result.Add(clausula); 
                 }
             }
             return result.OrderBy(x => x.Orden).ToList();

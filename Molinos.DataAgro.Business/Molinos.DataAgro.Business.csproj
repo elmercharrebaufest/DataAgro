@@ -275,6 +275,7 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCuatro.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYDos.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYOcho.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSiete.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYTres.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYUno.cs" />
