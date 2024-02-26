@@ -296,7 +296,8 @@ namespace Molinos.DataAgro.Business.Managers
                 "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
                 "<br/><br/>Saludos Cordiales,<br/><br/>" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
-                "<br/><br/>Molinos Agro S.A. ";
+                "<br/><br/>Molinos Agro S.A.<br/><br/><br/><br/>" +
+                "www.molinosagro.com.ar";
             htmlBody += "<style> table, th, td{ }</style>";
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
