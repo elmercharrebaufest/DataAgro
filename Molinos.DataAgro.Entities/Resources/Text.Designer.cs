@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -68,7 +68,6 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("ActualizarCompraNet", resourceCulture);
             }
         }
-        
         /// <summary>
         ///   Looks up a localized string similar to Algoritimo de Cupos.
         /// </summary>
@@ -336,6 +335,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string AprobarCupo {
             get {
                 return ResourceManager.GetString("AprobarCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $.
+        /// </summary>
+        public static string ARP {
+            get {
+                return ResourceManager.GetString("ARP", resourceCulture);
             }
         }
         
@@ -984,6 +992,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Disponibilidad_De_Cupos_Descarga {
             get {
                 return ResourceManager.GetString("Disponibilidad_De_Cupos_Descarga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pesos.
+        /// </summary>
+        public static string Divisa_ARP {
+            get {
+                return ResourceManager.GetString("Divisa_ARP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dólar Americano.
+        /// </summary>
+        public static string Divisa_USD {
+            get {
+                return ResourceManager.GetString("Divisa_USD", resourceCulture);
             }
         }
         
@@ -2086,6 +2112,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string TipoNegocioRequerido {
             get {
                 return ResourceManager.GetString("TipoNegocioRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to U$S.
+        /// </summary>
+        public static string USD {
+            get {
+                return ResourceManager.GetString("USD", resourceCulture);
             }
         }
         

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Resources;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -22,18 +23,18 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaUno clausula)
         {
             var res = new ResultadoClausula();
-            res.Texto = $"Los señores { clausula.Basico.RazonSocialProveedor} (en adelante el vendedor) domiciliados en { clausula.Basico.ProveedorDireccion } de la { clausula.Basico.ProveedorLocalidad }, " +
+            res.Texto = $"Los señores { clausula.Basico.RazonSocialProveedor} (en adelante el vendedor) domiciliados en { clausula.Basico.ProveedorDireccion } de la { clausula.Basico.ProveedorLocalidad }, de Provincia de " +
                 $"{ clausula.Basico.ProveedorProvincia }, CP { clausula.Basico.ProveedorCP }, { (String.IsNullOrEmpty(clausula.Basico.ContratoCorredor) ? "" : "por intermedio de" + clausula.Basico.RazonSocialCorredor)}" +
                 $"entregan a Molinos Agro S.A. domiciliado en AVENIDA PRESIDENTE MANUEL QUINTANA 192, PISO 1° de la Ciudad de Buenos Aires (en adelante el comprador), la cantidad de { clausula.Basico.Cantidad} kg. " +
                 $"(kilogramos {((int)Math.Abs(clausula.Basico.Cantidad)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }) de {clausula.Basico.Material } {(clausula.Basico.CantidadCamiones != 0 ? "o el resultante de " + clausula.Basico.CantidadCamiones + "camiones" : "") }" +
                 $"y demás condiciones ";
-            if (clausula.Basico.StandardDeCalidadId == 7)
-            {
-                res.Texto += "CALIDAD GRADO 2 ";
-            }
-            else if (clausula.Basico.TrigoEspecial == true)
+            if (clausula.Basico.TrigoEspecial == true && clausula.Basico.StandardDeCalidadId != 7)
             {
                 res.Texto += "CALIDAD ESPECIAL ";
+            }
+            else
+            {
+                res.Texto += "CALIDAD " + clausula.Basico.StandardDeCalidadDescripcion.ToUpper() + " ";
             }
             if (clausula.Basico.Calidades != null && clausula.Basico.StandardDeCalidadId != 7)
             {
@@ -49,7 +50,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             res.Texto += $"de la cosecha  { clausula.Basico.Campania } ";
             if (clausula.Basico.TipoNegocioId == 2)
             {
-                res.Texto += $"a  { clausula.Basico.PrecioNeto } { clausula.Basico.Moneda } ({DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
+                res.Texto += $"a  { NumeroConSeparadores(clausula.Basico.PrecioNeto) } { DivisaSimbolica(clausula.Basico.Moneda) } ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
 
             }
             if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true)
@@ -63,14 +64,14 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
 
             }
-            res.Texto += $"puesta sobre camión en: Planta { clausula.Basico.DestinoDescripcion } " +
+            res.Texto += $"puesta sobre camión en: Planta { ReemplazarSanLorenzo(clausula.Basico.DestinoDescripcion) } " +
                    $"Localidad { clausula.Basico.DestinoLocalidad }, de Provincia de { clausula.Basico.DestinoProvincia }. A todos los efectos impositivos los vendedores declaran que " +
-                   $"la mercadería { (clausula.Basico.ClasificacionContrato == "PRODUCTOR" ? "SI" : "NO") } es de su propia producción. ";
+                   $"la mercadería { (clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO") } es de su propia producción. ";
             if (clausula.Basico.Consignatario == true)
             {
                 res.Texto += "El vendedor actúa en carácter de consignatario. ";
             }
-            res.Texto += $"Procedencia de la mercadería: { clausula.Basico.Localidad } (localidad) Pcia. de { clausula.Basico.Provincia } ";
+            res.Texto += $"Procedencia de la mercadería: { clausula.Basico.Localidad }, de Provincia de {clausula.Basico.Provincia} ";
             if (clausula.Basico.EstablecimientoPropio == true)
             {
                 res.Texto += "Campo es Propio ";
@@ -102,6 +103,27 @@ namespace Molinos.DataAgro.Business.Procesamiento
             }
             
             return letras;
+        }
+
+        private string DivisaEnLetras(string divisa)
+        {
+            return divisa == "USD"? Text.Divisa_USD: Text.Divisa_ARP;
+        }
+
+        private string DivisaSimbolica(string divisa)
+        {
+            return divisa == "USD" ? Text.USD : Text.ARP;
+        }
+
+        private string NumeroConSeparadores(decimal? numero)
+        {
+            var objNumberFormatInfo = new System.Globalization.NumberFormatInfo() { NumberGroupSeparator = "." };
+            return numero.GetValueOrDefault().ToString("#,###", objNumberFormatInfo);
+        }
+
+        private string ReemplazarSanLorenzo(string palabra)
+        {
+            return palabra.Equals("S. Lorenzo") ?"San Lorenzo":palabra;
         }
     }
 }

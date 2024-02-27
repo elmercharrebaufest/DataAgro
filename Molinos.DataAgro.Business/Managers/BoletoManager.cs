@@ -369,8 +369,10 @@ namespace Molinos.DataAgro.Business.Managers
                 var clausula = servicioClausula.DevolverClausulas(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
+                    if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
                     clausula.Orden = orden++;
-                    result.Add(clausula);
+                    result.Add(clausula); 
                 }
             }
             return result.OrderBy(x => x.Orden).ToList();
@@ -452,7 +454,7 @@ namespace Molinos.DataAgro.Business.Managers
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
         }
 
-        private static string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
+        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
         {
             string clausulashtml = String.Join("", clausulas.OrderBy(a => a.Orden).Select(a => "<br />" + a.Orden + " . " + a.Texto).ToList());
             var stylesHtml = @"<style type='text/css'>
@@ -492,7 +494,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_005 {
             font-family: Arial,serif;
-            font-size: 8.1px;
+            font-size: 11.1px;
             color: rgb(0,0,0);
             font-weight: bold;
             font-style: normal;
@@ -504,7 +506,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_006 {
             font-family: Arial,serif;
-            font-size: 8px;
+            font-size: 11.1px;
             color: rgb(0,0,0);
             font-weight: normal;
             font-style: normal;
@@ -580,13 +582,17 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
                 }
+                var numeroSio = status.ValidarEstado(basico.ContratoSAP).NumeroSio;
+                string seccionSio = basico.CorredorId > 0 ?
+                    String.Empty :
+                    "<div class=\"espacio\"></div><div style=\"\" class=\"\"><span class=\"cls_006\">NÚMERO DE SIO GRANOS " + numeroSio + "</span></div><div class=\"espacio\"></div><div class=\"espacio\"></div>";
 
                 xHtml = string.Format(xHtml,
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
-                     titulo, clausulashtml, basico.FechaOperacionFormateado, "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
+                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"),"5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""),seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
