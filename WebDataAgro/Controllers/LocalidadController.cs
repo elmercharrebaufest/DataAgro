@@ -133,5 +133,22 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public ActionResult ListarLocalidades()
+        {
+            return new JsonResult()
+            {
+                Data = mobjLocalidadManager.ListarLocalidadTodas(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult ListarPartidos()
+        {
+            return new JsonResult()
+            {
+                Data = mobjLocalidadManager.ListarPartidos(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

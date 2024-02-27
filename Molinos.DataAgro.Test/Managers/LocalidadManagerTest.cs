@@ -158,5 +158,16 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.AreEqual(1, resultado.LocalidadId);
         }
+
+        [Test]
+        public void ListarPartidosOk()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Partido, PartidoDto>>>(), It.IsAny<Expression<Func<Partido, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<PartidoDto>() { new PartidoDto { Descripcion = "a", Id = 1 } });
+            var resultado = target.ListarPartidos();
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Count);
+        }
     }
 }

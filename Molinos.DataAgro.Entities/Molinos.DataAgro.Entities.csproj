@@ -201,6 +201,7 @@
     <Compile Include="Dto\ManualesDto.cs" />
     <Compile Include="Dto\ManualesLogVisitas.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
+    <Compile Include="Dto\PartidoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />

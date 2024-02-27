@@ -192,5 +192,10 @@ namespace Molinos.DataAgro.Business
 
             return oPartidosPorProvincia;
         }
+
+        public List<PartidoDto> ListarPartidos()
+        {
+            return repositorio.Listar<Partido, PartidoDto>(x => new PartidoDto { Id = x.Id, Descripcion = x.Descripcion, Provincia = x.Provincia.Nombre, ProvinciaId = x.ProvinciaId}, x => true);
+        }
     }
 }
