@@ -27,5 +27,6 @@ namespace Molinos.DataAgro.Interfaces
         List<LocalidadDto> ListarLocalidadTodas();
 
         ResultIniPartido TraerPartidosPorProvincia(int provinciaId);
+        List<PartidoDto> ListarPartidos();
     }
 }

@@ -125,5 +125,49 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":0,\"CodLocalidad\":\"\",\"Nombre\":\"\",\"ProvinciaId\":0,\"PartidoId\":null,\"Provincia\":null,\"Partido\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void ListarLocalidadesTest()
+        {
+            localidadManagerMock.Setup(x => x.ListarLocalidadTodas()).Returns(new List<LocalidadDto>()
+                {
+                    new LocalidadDto()
+                    {
+                        LocalidadId = 1,
+                        Nombre= "A",
+                        CodLocalidad = "A"
+                    }
+            });
+            var result = target.ListarLocalidades();
+
+            Assert.NotNull(result);
+
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":0,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void ListarPartidosTest()
+        {
+            localidadManagerMock.Setup(x => x.ListarPartidos()).Returns(new List<PartidoDto>()
+                {
+                    new PartidoDto()
+                    {
+                        Id = 1,
+                        Descripcion= "A",
+                        Provincia = "A"
+                    }
+            });
+            var result = target.ListarLocalidades();
+
+            Assert.NotNull(result);
+
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }
