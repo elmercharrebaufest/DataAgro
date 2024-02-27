@@ -841,9 +841,6 @@
   <data name="ModificarFijacionVirtual" xml:space="preserve">
     <value>Modificar Fijacion Virtual</value>
   </data>
-  <data name="VisualizarReportePagoDiferido_Duplicate[1]" xml:space="preserve">
-    <value>Visualizar Reporte Pago Diferido</value>
-  </data>
   <data name="ReasignarProveedorPantallaCupo" xml:space="preserve">
     <value>Reasignar Proveedor Pantalla Cupo</value>
   </data>
@@ -861,9 +858,6 @@
   </data>
   <data name="ImporteSustentableEspecial" xml:space="preserve">
     <value>Importe Sustentable Especial</value>
-  </data>
-  <data name="Ver_Todas_Las_Sugerencias_Duplicate[1]" xml:space="preserve">
-    <value>Ver Todas Las Sugerencias</value>
   </data>
   <data name="DescripcionRequerido" xml:space="preserve">
     <value>El campo Descripcion es requerido</value>
@@ -885,9 +879,6 @@
   </data>
   <data name="ConfigurarExcedente" xml:space="preserve">
     <value>Configurar Excedente</value>
-  </data>
-  <data name="ActualizarCompraNet_Duplicate[1]" xml:space="preserve">
-    <value>Actualizar ALV CompraNet</value>
   </data>
   <data name="Visualizar_CupoNoPropio" xml:space="preserve">
     <value>Visualizar Cupo No Propio</value>
