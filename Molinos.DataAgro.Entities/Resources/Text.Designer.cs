@@ -68,16 +68,6 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("ActualizarCompraNet", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Actualizar ALV CompraNet.
-        /// </summary>
-        public static string ActualizarCompraNet_Duplicate_1_ {
-            get {
-                return ResourceManager.GetString("ActualizarCompraNet_Duplicate[1]", resourceCulture);
-            }
-        }
-        
         /// <summary>
         ///   Looks up a localized string similar to Algoritimo de Cupos.
         /// </summary>
@@ -2180,15 +2170,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ver Todas Las Sugerencias.
-        /// </summary>
-        public static string Ver_Todas_Las_Sugerencias_Duplicate_1_ {
-            get {
-                return ResourceManager.GetString("Ver_Todas_Las_Sugerencias_Duplicate[1]", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ver Todo Comercial.
         /// </summary>
         public static string Ver_Todos_Comercial {
@@ -2482,15 +2463,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string VisualizarReportePagoDiferido {
             get {
                 return ResourceManager.GetString("VisualizarReportePagoDiferido", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Visualizar Reporte Pago Diferido.
-        /// </summary>
-        public static string VisualizarReportePagoDiferido_Duplicate_1_ {
-            get {
-                return ResourceManager.GetString("VisualizarReportePagoDiferido_Duplicate[1]", resourceCulture);
             }
         }
         
