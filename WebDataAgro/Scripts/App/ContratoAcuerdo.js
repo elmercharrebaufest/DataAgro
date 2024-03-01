@@ -4566,6 +4566,7 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
+            // GSIAN: Revisar si se puede pasar parámetro por TC.
             var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {

@@ -80,7 +80,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado ValidacionesAnulaYReemplaza(string contratoSap);
         List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero);
         List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int id);
-        decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda);
+        decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda, string typeOfRate = "M");
         Resultado GrabarNegociosAsociados(List<NegocioAsociadoDto> negocios, int contratoId, decimal precioPonderado);
         bool TieneAsociados(int contratoId);
         bool EsUnContratoAsociado(int negocioId);

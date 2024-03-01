@@ -215,5 +215,8 @@ namespace Molinos.DataAgro.Entities.Entities
             Ampliaciones = 0;
             Pizarra = false;
         }
+        public int? TipoDeCambioId { get; set; }
+        [ForeignKey("TipoDeCambioId")]
+        public virtual TipoDeCambio TipoDeCambio { get; set; }
     }
 }

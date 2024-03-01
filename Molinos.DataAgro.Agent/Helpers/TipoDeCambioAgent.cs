@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Agent
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public decimal TraerTipoDeCambio(DateTime? fecha)
+        public decimal TraerTipoDeCambio(DateTime? fecha, string typeOfRate)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
@@ -42,7 +42,14 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO() { DATE = fecha.Value.Date.ToString("yyyy-MM-dd"), FOREIGN_AMOUNT = 1, FOREIGN_CURRENCY = "USDM ", LOCAL_CURRENCY = "ARP  " };
+                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO()
+                    {
+                        DATE = fecha.Value.Date.ToString("yyyy-MM-dd"),
+                        FOREIGN_AMOUNT = 1,
+                        FOREIGN_CURRENCY = "USDM ",
+                        LOCAL_CURRENCY = "ARP  ",
+                        //TYPE_OF_RATE = typeOfRate
+                    };
                     logger.Debug(rq.ToXml());
 
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO(rq);
@@ -56,7 +63,8 @@ namespace Molinos.DataAgro.Agent
                 }
             }
         }
-        public decimal TraerTipoDeCambioMoneda(DateTime? fecha, string moneda)
+
+        public decimal TraerTipoDeCambioMoneda(DateTime? fecha, string moneda, string typeOfRate)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
@@ -75,7 +83,14 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO() { DATE = fecha.Value.Date.ToString("yyyy-MM-dd"), FOREIGN_AMOUNT = 1, FOREIGN_CURRENCY = moneda, LOCAL_CURRENCY = "ARP  " };
+                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO()
+                    {
+                        DATE = fecha.Value.Date.ToString("yyyy-MM-dd"),
+                        FOREIGN_AMOUNT = 1,
+                        FOREIGN_CURRENCY = moneda,
+                        LOCAL_CURRENCY = "ARP  "
+                        //TYPE_OF_RATE = typeOfRate
+                    };
                     logger.Debug(rq.ToXml());
 
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO(rq);
@@ -90,14 +105,14 @@ namespace Molinos.DataAgro.Agent
             }
         }
 
-        public decimal TraerTipoDeCambioUltimoDiaHabil(DateTime? fecha)
+        public decimal TraerTipoDeCambioUltimoDiaHabil(DateTime? fecha, string typeOfRate)
         {
             if (fecha == null)
             {
                 fecha = DateTime.Now.Date;
             }
             fecha = diasHabilesAgent.UltimoDiaHabil(fecha);
-            var tipoDeCambio = TraerTipoDeCambio(fecha);
+            var tipoDeCambio = TraerTipoDeCambio(fecha, typeOfRate);
             return tipoDeCambio;
         }
     }

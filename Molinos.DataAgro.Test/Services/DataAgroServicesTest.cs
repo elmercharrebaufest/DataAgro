@@ -997,7 +997,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void TraerTipoDeCambioTestOk()
         {
-            var result = target.TraerTipoDeCambio(DateTime.Now.Date, null);
+            var result = target.TraerTipoDeCambio(DateTime.Now.Date, null, "M");
             Assert.IsNotNull(result);
         }
 

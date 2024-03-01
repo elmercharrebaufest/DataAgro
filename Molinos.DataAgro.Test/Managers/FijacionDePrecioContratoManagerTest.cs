@@ -1180,7 +1180,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 MonedaSobrePrecioContrato = "USD  ",
             };
-            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>())).Returns(1);
+            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>(), "M")).Returns(1);
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double>() { 10000 });
@@ -1306,7 +1306,7 @@ namespace Molinos.DataAgro.Test.Managers
             Contrato afijar = new Contrato { Descuentos = new List<DescuentoBonificacion>() { new DescuentoBonificacion { TipoDBId = 1, TipoPeriodoDBId = 1, Porcentaje = 0, Importe = 10, MonedaId = "USD  " } } };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(afijar);
 
-            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>())).Returns(1);
+            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>(), "M")).Returns(1);
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double>() { 10000 });
@@ -1464,7 +1464,7 @@ namespace Molinos.DataAgro.Test.Managers
 
         [Test]
         public void ConfirmarFijacionTestFijacionNullError()
-        {  
+        {
             var result = target.ConfirmarFijacionSAP(null);
 
             Assert.NotNull(result);

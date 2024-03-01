@@ -19,6 +19,10 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IRepositorio repositorio;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly ILogger logger;
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public FinalizarContratoAgent(ILogger logger, IRepositorio repositorio, ITipoDeCambioAgent tipoCambioAgent, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
@@ -26,9 +30,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.tipoCambioAgent = tipoCambioAgent;
             this.diasHabilesAgent = diasHabilesAgent;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
@@ -97,9 +98,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
 
+                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
+
                 if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
                 {
-                    var tipoCambio = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.Date), 2, MidpointRounding.AwayFromZero);
+                    var tipoCambio = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.Date, typeOfRate), 2, MidpointRounding.AwayFromZero);
                     foreach (var p in contrato.PrecioPactado)
                     {
                         decimal importe = 0;
@@ -409,19 +412,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
                 rq2.IM_CONTRATO.PIZARRA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
 
-                string CargaDesdeBLEND = ConfigurationManager.AppSettings["CargaDesdeBLEND"];
-                if (contrato.Fecha >= DateTime.Parse(CargaDesdeBLEND) && ConfigurationManager.AppSettings["ActivarBLEND"] == "Si")
-                {
-                    rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "04" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.TipoAgenteCompraId == null ? "04" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
-                }
-                else
-                {
-                    rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
-                }
-                logger.Info($"FINALIZA NegocioId: {contrato.Id} - CODIGO_TC: {rq2.IM_CONTRATO.CODIGO_TC}");
+                string codigoTC = DevolverTipoCambioSAP(contrato.TipoNegocioId, contrato.MonedaId, contrato.TipoAgenteCompraId, contrato.Fecha);
+                rq2.IM_CONTRATO.CODIGO_TC = codigoTC;
+                logger.Info($"FINALIZA NegocioId: {contrato.Id} - CODIGO_TC: {rq2.IM_CONTRATO.CODIGO_TC} - TipoDeCambioId: {contrato.TipoDeCambioId}");
 
                 rq2.IM_CONTRATO.BLOQUEO = "";
                 rq2.IM_CONTRATO.TIPO_CAMBIO_FIJO = 0;
@@ -497,6 +490,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
+
         private string CalcularPosicion(DateTime fechaDesde)
         {
             var ultimoDiaHabilDelMes = diasHabilesAgent.ObtenerDiasHabilesDelMes(fechaDesde).LastOrDefault();
@@ -505,6 +499,29 @@ namespace Molinos.DataAgro.Agent.Helpers
             var dias = Math.Abs(diferenciaEntreDias.Days);
             return dias >= 10 ? (fechaDesde.Month.ToString().PadLeft(2, '0')) + "." + (fechaDesde.Year) :
                    ((fechaDesdeMesSiguiente.Month).ToString().PadLeft(2, '0')) + "." + (fechaDesdeMesSiguiente.Year);
+        }
+
+        public string DevolverTipoCambioSAP(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool? modifica = false)
+        {
+            string CargaDesdeBLEND = ConfigurationManager.AppSettings["CargaDesdeBLEND"];
+            string CargaHastaBLEND = ConfigurationManager.AppSettings["CargaHastaBLEND"];
+            string codigoTC;
+
+            if ((modifica == false && fecha >= DateTime.Parse(CargaDesdeBLEND) && ConfigurationManager.AppSettings["ActivarBLEND"] == "Si") ||
+                (modifica == true && (ConfigurationManager.AppSettings["ActivarBLEND"] == "Si" && fecha >= DateTime.Parse(CargaDesdeBLEND) ||
+                    (ConfigurationManager.AppSettings["ActivarBLEND"] == "No" && fecha >= DateTime.Parse(CargaDesdeBLEND) && CargaHastaBLEND != "" && fecha < DateTime.Parse(CargaHastaBLEND)))))
+            {
+                codigoTC = tipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && monedaId == "USDM " && tipoAgenteCompraId == null ? "04" :
+                    tipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && tipoAgenteCompraId == null ? "04" :
+                    tipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && monedaId == "USDM " && tipoAgenteCompraId != null ? "03" : "";
+            }
+            else
+            {
+                codigoTC = tipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && monedaId == "USDM " && tipoAgenteCompraId == null ? "02" :
+                    tipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && monedaId == "USDM " && tipoAgenteCompraId != null ? "03" : "";
+            }
+
+            return codigoTC;
         }
     }
 }

@@ -14,6 +14,7 @@ var cargaFijacionAyer;
 var tieneDolarizado;
 var modificarDolarizadoFinalizado;
 var primeraCargaEdit = false;
+// GSIAN: Revisar si se puede pasar parámetro por TC.
 var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
 var FechaFeriados = MSExecuteOnServer('/CompraNet/FechaFeriados');
 var aFijar = null;
@@ -2030,6 +2031,7 @@ function InicializarElementos() {
             }
         },
         change: function () {
+            // GSIAN: Revisar si se puede pasar parámetro por TC.
             valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val() });
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();

@@ -16,16 +16,18 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly IRepositorio repositorio;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly ILogger logger;
+        private readonly IFinalizarContratoAgent finalizarContratoAgent;
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent)
+        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent, IFinalizarContratoAgent finalizarContratoAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.diasHabilesAgent = diasHabilesAgent;
+            this.finalizarContratoAgent = finalizarContratoAgent;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string Modificar(Contrato contrato, Contrato contratoGuardado)
         {
@@ -564,20 +566,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
 
-                string CargaDesdeBLEND = ConfigurationManager.AppSettings["CargaDesdeBLEND"];
-                string CargaHastaBLEND = ConfigurationManager.AppSettings["CargaHastaBLEND"];
-                if (contrato.Fecha >= DateTime.Parse(CargaDesdeBLEND) && (ConfigurationManager.AppSettings["ActivarBLEND"] == "Si" || (ConfigurationManager.AppSettings["ActivarBLEND"] == "No" && CargaHastaBLEND != "" && contrato.Fecha < DateTime.Parse(CargaHastaBLEND))))
-                {
-                    detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "04" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.TipoAgenteCompraId == null ? "04" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
-                }
-                else
-                {
-                    detalle.CODIGO_TC = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
-                        contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
-                }
-                logger.Info($"MODIFICA - NegocioId: {contrato.Id} - Contrato Nro: {contrato.ContratoSAP} - CODIGO_TC: {detalle.CODIGO_TC}");
+                #region BLEND
+                detalle.CODIGO_TC = finalizarContratoAgent.DevolverTipoCambioSAP(contrato.TipoNegocioId, contrato.MonedaId, contrato.TipoAgenteCompraId, contrato.Fecha, true);
+                #endregion
+                logger.Info($"MODIFICA - NegocioId: {contrato.Id} - Contrato Nro: {contrato.ContratoSAP} - CODIGO_TC: {detalle.CODIGO_TC} - TipoDeCambioId: {contrato.TipoDeCambioId}");
 
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;

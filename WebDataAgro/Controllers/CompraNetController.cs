@@ -997,14 +997,14 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
-        public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion)
+        // GSIAN: Revisar si se puede pasar parámetro por TC. Ver llamadas desde JS
+        public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion, string typeOfRate = "M")
         {
             if (fechaOperacion == null || fechaOperacion == DateTime.Now.Date)
             {
                 fechaOperacion = DateTime.Now.Date;
             }
-            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value);
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value, typeOfRate);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
 
@@ -1122,6 +1122,8 @@ namespace WebDataAgro.Controllers
             };
 
         }
+
+        // GSIAN: Revisar si se puede pasar parámetro por TC.
         public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
         {
             var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda);
@@ -1217,6 +1219,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        // GSIAN: Revisar si se puede pasar parámetro por TC.
         public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId)
         {
             var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId);

@@ -5512,6 +5512,7 @@ function AgregarPrecioPactado() {
             }
             else {
                 if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
+                    // GSIAN: Revisar si se puede pasar parámetro por TC.
                     var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
                     var ImporteMonedaIgual = 0;
                     console.log("valorDolar", valorDolar);
@@ -5563,6 +5564,7 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
+            // GSIAN: Revisar si se puede pasar parámetro por TC.
             var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
@@ -5871,6 +5873,7 @@ function validarCredito(cuitProv) {
         var cuitAux = cuitProv.split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
+            // GSIAN: Revisar si se puede pasar parámetro por TC.
             var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0], cantidad: cantidad, precio: precio, moneda: moneda });
 
 
@@ -6162,6 +6165,7 @@ function CalcularImporteDeOperacion(precio, cantidad) {
     var importe = 0;
     if ($("#ventaId").is(":checked")) {
         if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
+            // GSIAN: Revisar si se puede pasar parámetro por TC.
             importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
                 precio: precio,
                 cantidad: cantidad,

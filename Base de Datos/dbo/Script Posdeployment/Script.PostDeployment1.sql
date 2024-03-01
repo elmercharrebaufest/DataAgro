@@ -469,3 +469,6 @@ IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos por
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Hileras por espiga') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Hileras por espiga'); END
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Capítulos en 10 mts') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Capítulos en 10 mts'); END
 
+--TipoDeCambio
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END
