@@ -172,6 +172,7 @@
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
+    <Compile Include="Common\Enums\EnumStandarCalidad.cs" />
     <Compile Include="Common\Enums\EnumMateriales.cs" />
     <Compile Include="Common\Enums\EnumTipoDB.cs" />
     <Compile Include="Common\Enums\EnumTipoNegocio.cs" />
@@ -442,6 +443,10 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYOcho.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYNueve.cs" />
+    <Compile Include="Entities\ClausulaCincuenta.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYUno.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
