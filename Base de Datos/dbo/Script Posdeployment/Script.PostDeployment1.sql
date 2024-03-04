@@ -469,3 +469,7 @@ IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos por
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Hileras por espiga') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Hileras por espiga'); END
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Capítulos en 10 mts') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Capítulos en 10 mts'); END
 
+--EstadoHome
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Presidente') BEGIN insert into PuestoApoderado (Descripcion) values ('Presidente'); END
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Apoderado') BEGIN insert into PuestoApoderado (Descripcion) values ('Apoderado'); END
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN insert into PuestoApoderado (Descripcion) values ('Otros'); END

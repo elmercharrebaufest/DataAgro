@@ -2295,6 +2295,11 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 Nombres = can.nombre,
                                 Apellido = can.apellido,
+                                CuitApoderado = can.cuit,
+                                FechaDesde = can.desde,
+                                FechaHasta = can.hasta,
+                                EsApoderado = can.esApoderado,
+                                PuestoApoderadoId = can.puestoApoderadoId,
                                 Cargo = can.cargo,
                                 FechaNacimiento = can.fechaNacimiento,
                                 Puesto = can.puesto,
