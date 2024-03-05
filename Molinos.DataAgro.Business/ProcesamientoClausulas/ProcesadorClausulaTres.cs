@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 {
                     res.Texto += contrato.CondicionFijacion.Descripcion;
                 }
-                if (clausula.Basico.TipoNegocioId == 2)
+                if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     if (clausula.Basico.Dias_Pesificado > 0)
                     {
