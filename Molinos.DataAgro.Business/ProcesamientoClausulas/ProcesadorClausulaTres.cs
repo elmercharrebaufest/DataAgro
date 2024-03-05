@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     res.Texto += $"El pago se hará {contrato.PorcentajeDePago} " +
                       $"({DevolverNumeroEnLetras(contrato.PorcentajeDePago.Value)} por ciento), ";
                 }
-                if ((clausula.Basico.TipoNegocioId == 3 && contrato.Canje == true) || clausula.Basico.TipoNegocioId == 1)
+                if ((clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && contrato.Canje == true) || clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
                 {
                     res.Texto += contrato.CondicionFijacion.Descripcion;
                 }
