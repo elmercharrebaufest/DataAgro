@@ -206,6 +206,7 @@
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />
+    <Compile Include="Dto\PuestoApoderadoDto.cs" />
     <Compile Include="Dto\ReporteSojaEPADto.cs" />
     <Compile Include="Dto\ResearchCoeficienteCultivoDto.cs" />
     <Compile Include="Dto\ResearchCondicionCultivoDto.cs" />
@@ -455,6 +456,7 @@
     <Compile Include="Entities\LogAnulacionContrato.cs" />
     <Compile Include="Entities\Manuales.cs" />
     <Compile Include="Entities\ManualesLogVisitas.cs" />
+    <Compile Include="Entities\PuestoApoderado.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
     <Compile Include="Entities\Research.cs" />
