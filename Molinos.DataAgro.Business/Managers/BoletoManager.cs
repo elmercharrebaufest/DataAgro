@@ -76,7 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
                             continue;
                         }
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
-                        if (consultaBoleto.Generado == "") // probar casos anulados
+                        if (consultaBoleto.Generado == "" || consultaBoleto.Generado.Equals("X")) // probar casos anulados
                         {
                             var tempBoleto = new BoletoGeneradoDto
                             {
@@ -133,6 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
+                            if(consultaBoleto.Generado != "") logger.Info($"Boleto.Generado = {consultaBoleto.Generado} -- contrato SAP {itemNegocio.ContratoSAP}");
                             error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El boleto ya se encuentra generado en SAP"));
                         }
                     }
