@@ -218,11 +218,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     }
 
-    public class PuestoApoderado
-    {
-        public int? puestoApoderadoId { get; set; }
-        public string Descripcion { get; set; }
-    }
+    
 
 
 }

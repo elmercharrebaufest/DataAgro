@@ -28,6 +28,6 @@
     [PuestoApoderadoId]         INT             NULL,
     CONSTRAINT [PK_ContactoComercial] PRIMARY KEY CLUSTERED ([ContactoComercialId] ASC),
     CONSTRAINT [FK_ContactoComercial_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
-    CONSTRAINT [FK_ContactoComercial_PuestoApoderado] FOREIGN KEY ([PuestoApoderadoId]) REFERENCES [dbo].[PuestoApoderado] ([PuestoApoderadoId])
+    CONSTRAINT [FK_ContactoComercial_PuestoApoderado] FOREIGN KEY ([PuestoApoderadoId]) REFERENCES [dbo].[PuestoApoderado] ([Id])
 );
 
