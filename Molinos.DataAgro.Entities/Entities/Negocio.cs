@@ -215,5 +215,6 @@ namespace Molinos.DataAgro.Entities.Entities
             Ampliaciones = 0;
             Pizarra = false;
         }
+        public bool? DolarExportador { get; set; }
     }
 }

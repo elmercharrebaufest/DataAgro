@@ -2008,6 +2008,7 @@ namespace Molinos.DataAgro.Business.Managers
             var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
             oContratoSave.MonedaCreditoDisponible = validarCreditoAgente.ValidarCredito(cuit).Moneda;
             oContratoSave.ConDescarga = oContrato.ConDescarga;
+            oContratoSave.DolarExportador = oContrato.DolarExportador;
 
             if (oContratoSave.PrecioPactado != null)
             {
@@ -3533,6 +3534,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Modificado = y.Modificado
                 }).ToList(),
                 ConDescarga = x.ConDescarga,
+                DolarExportador = x.DolarExportador,
             });
             return contrato;
         }
@@ -4470,6 +4472,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             contratoSave.Servicios = contrato.Servicios;
             contratoSave.ConDescarga = contrato.ConDescarga;
+            contratoSave.DolarExportador = contrato.DolarExportador;
 
             if (contrato.Servicios != null && contrato.Servicios.Count > 0)
             {
@@ -5965,6 +5968,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.FechaHastaOriginalFormateado = (negocio is Contrato) ? (negocio as Contrato).FechaHastaOriginal != null ? (negocio as Contrato).FechaHastaOriginal.Value.ToString("dd-MM-yyyy") : "" : "";
             bc.FechaDolarizadoOriginalFormateado = (negocio is Contrato) ? (negocio as Contrato).FechaDolarizadoOriginal != null ? (negocio as Contrato).FechaDolarizadoOriginal.Value.ToString("dd-MM-yyyy") : "" : "";
             bc.ConDescarga = (negocio is Contrato) && (negocio as Contrato).ConDescarga.HasValue && (negocio as Contrato).ConDescarga.Value;
+            bc.DolarExportador = (negocio is Contrato) && (negocio as Contrato).DolarExportador.HasValue && (negocio as Contrato).DolarExportador.Value;
             return bc;
         }
 

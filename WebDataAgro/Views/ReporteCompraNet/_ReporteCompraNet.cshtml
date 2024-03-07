@@ -739,7 +739,16 @@
                             @Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Sum(y => y.Cantidad)).ToString("N0")
                         </a>
                     </th>
-                    <th></th>
+
+                    <th>
+                        @{List<int> values0 = new List<int>();
+                            Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values0.AddRange(agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList()));
+                        }
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '', '','@string.Join(",",values0)')">
+                            @Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.PrecioPonderado).ToString("N0")
+                        </a>
+                    </th>
+
                     @foreach (var op in Model.AgenteCompras.ListaOperadores)
                     {
                         var cantidad = Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Where(y => y.OperadorId == op.OperadorId).Sum(y => y.Cantidad));
