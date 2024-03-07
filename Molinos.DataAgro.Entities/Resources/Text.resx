@@ -922,4 +922,7 @@
   <data name="ARP" xml:space="preserve">
     <value>$</value>
   </data>
+  <data name="Proveedor_Apoderados" xml:space="preserve">
+    <value>Proveedor Apoderados</value>
+  </data>
 </root>

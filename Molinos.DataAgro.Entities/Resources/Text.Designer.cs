@@ -1959,6 +1959,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proveedor Apoderados.
+        /// </summary>
+        public static string Proveedor_Apoderados {
+            get {
+                return ResourceManager.GetString("Proveedor_Apoderados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Proveedor de ZonaPropia.
         /// </summary>
         public static string ProveedorZonaPropia {
