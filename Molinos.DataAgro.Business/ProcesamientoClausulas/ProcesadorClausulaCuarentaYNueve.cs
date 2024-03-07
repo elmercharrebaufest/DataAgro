@@ -11,22 +11,22 @@ using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
-    public class ProcesadorClausulaDoce : ProcesadorClausula<ClausulaDoce>
+    public class ProcesadorClausulaCuarentaYNueve : ProcesadorClausula<ClausulaCuarentaYNueve>
     {
-        public ProcesadorClausulaDoce(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto)
+        public ProcesadorClausulaCuarentaYNueve(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto)
            : base(repositorio, log, estadoBoleto)
         {
 
         }
 
-        public override ResultadoClausula DevolverClausulas(ClausulaDoce clausula)
+        public override ResultadoClausula DevolverClausulas(ClausulaCuarentaYNueve clausula)
         {
             var res = new ResultadoClausula();
 
-            res.Texto += "El comprador otorgará el cupo con un código alfanumérico que obligatoriamente debe consignarse en el campo observaciones " +
-                "de cada carta de porte. En caso de que el vendedor remita camiones sin poseer cupo para la descarga, el comprador podrá, a su exclusiva " +
-                "opción, proceder a la descarga de los mismos, debiendo en tal caso el vendedor abonar al comprador U$S 10 (DIEZ Dolar Americano) por tonelada en " +
-                "concepto de gastos extras por descargas no otorgadas ";
+            if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA &&  clausula.Basico.StandardCalidadId == (int)EnumStandarCalidad.ESPECIAL)
+            {
+                res.Texto += $" Granos verdes: De 0% a 20% 0 descuento. Del 20,1 en adelante se descontará 0,2% por punto porcentual " + "excedido. Granos verdes: De 0,5% a 30% descuento 0,20. De 30,1% a 45% 0 descuento. De 45,1% a 60% descuento 0,20. Del 60,1% " + "en adelante se descontará 0,2% por punto porcentual excedido.";
+            }
 
             return res;
         }

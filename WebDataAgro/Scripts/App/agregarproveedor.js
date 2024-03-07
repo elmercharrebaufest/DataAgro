@@ -2357,7 +2357,11 @@ function armarFuncionalidades() {
         var obj = {};
         obj.nombre = $("#concom-nombre").val();
         obj.apellido = $("#concom-apellido").val();
-
+        obj.cuit = $("#concom-cuit").val();
+        obj.desde = $("#concom-desde").val();
+        obj.hasta = $("#concom-hasta").val();
+        obj.esApoderado = $("#concom-esapoderado").is(":checked") ? 1 : 0;
+        obj.puestoApoderadoId = $("#concom-puestoapoderado").val();
         obj.emails = [];
         if (($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) ||
             ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) ||

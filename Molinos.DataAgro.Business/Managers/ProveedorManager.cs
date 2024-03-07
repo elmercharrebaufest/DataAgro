@@ -1311,6 +1311,8 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
                 comercial = repositorio.Listar<Comercial, ComercialDto>(
                     x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido }),
+                tiposApoderados = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
+                    x => new PuestoApoderadoDto { Id = x.Id, Descripcion = x.Descripcion }),
             };
 
             return DatosCombo;
@@ -2295,6 +2297,11 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 Nombres = can.nombre,
                                 Apellido = can.apellido,
+                                CuitApoderado = can.cuit,
+                                FechaDesde = can.desde,
+                                FechaHasta = can.hasta,
+                                EsApoderado = can.esApoderado,
+                                PuestoApoderadoId = can.puestoApoderadoId,
                                 Cargo = can.cargo,
                                 FechaNacimiento = can.fechaNacimiento,
                                 Puesto = can.puesto,

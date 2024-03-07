@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.MaterialId == 3)
+            if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA)
             {
                 res.Texto += "El vendedor/procesador/acopiador/solicitante de servicios de elevación, fazón o acondicionamiento acepta que el grano " +
                     "de soja será analizado y en caso de detectarse la presencia de tecnologías patentadas se proporcionará al propietario de la tecnología " +

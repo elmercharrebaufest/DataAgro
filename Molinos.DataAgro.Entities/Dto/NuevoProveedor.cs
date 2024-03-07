@@ -156,12 +156,17 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int? contactoComercialId { get; set; }
         public string apellido { get; set; }
+        public string nombre { get; set; }
+        public string cuit { get; set; }
+        public DateTime? desde { get; set; }
+        public DateTime? hasta { get; set; }
+        public bool esApoderado { get; set; }
+        public int? puestoApoderadoId { get; set; }
         public string cargo { get; set; }
         public List<string> emails { get; set; }
         public DateTime? fechaNacimiento { get; set; }
         public List<int> intereses { get; set; }
         public int? item { get; set; }
-        public string nombre { get; set; }
         public string otrosIntereses { get; set; }
         public bool? principal { get; set; }
         public string puesto { get; set; }
@@ -212,6 +217,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? campañaId { get; set; }
 
     }
+
+    
 
 
 }

@@ -22,10 +22,11 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IAzureAgent azureAgent;
-        readonly String urlResearch = ConfigurationManager.AppSettings["UrlResearch"];
-        readonly String libraryNameResearch = ConfigurationManager.AppSettings["LibraryNameResearch"];
-        readonly String userNameResearch = ConfigurationManager.AppSettings["UserNameResearch"];
-        readonly String passwordResearch = ConfigurationManager.AppSettings["PasswordResearch"];
+        private readonly string urlResearch = ConfigurationManager.AppSettings["UrlResearch"];
+        private readonly string libraryNameResearch = ConfigurationManager.AppSettings["LibraryNameResearch"];
+        private readonly string attachmentsResearch = ConfigurationManager.AppSettings["AttachmentsResearch"];
+        private readonly string userNameResearch = ConfigurationManager.AppSettings["UserNameResearch"];
+        private readonly string passwordResearch = ConfigurationManager.AppSettings["PasswordResearch"];
 
         public ClienteResearchAgent(ILogger logger, IRepositorio repositorio, IAzureAgent azureAgent)
         {
@@ -53,14 +54,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //selecionar la lista/pagina en sharepoint por nombre
                     Web web = context.Web;
 
-                    List list = web.Lists.GetByTitle(libraryNameResearch);
-                    context.Load(list);
+                    List listResearch = web.Lists.GetByTitle(libraryNameResearch);
+                    context.Load(listResearch);
                     context.ExecuteQuery();//este es el que ejecuta lo que armamos antes, sin este es como no hacer nada
 
                     // a la lista/pagina le pedimos que nos traiga todos los items
                     CamlQuery query = CamlQuery.CreateAllItemsQuery();// aca se puede mejorar para filtrar los ya sinconinizados
-                    ListItemCollection items = list.GetItems(query);
-                    context.Load(items);
+                    ListItemCollection itemsResearch = listResearch.GetItems(query);
+                    context.Load(itemsResearch);
                     context.ExecuteQuery();//ejecutamos
 
                     List<Research> listaResearchDto = new List<Research>();
@@ -82,7 +83,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     CloudBlobContainer cloudBlobContainer = azureAgent.GenerarBlobContainer(sasToken);
 
-                    foreach (ListItem item in items)
+                    foreach (ListItem item in itemsResearch)
                     {
                         string valoresCalculo = "";
                         Resultado resultado = new Resultado();
@@ -145,44 +146,48 @@ namespace Molinos.DataAgro.Agent.Helpers
                                         .Select(x => x.Valor)
                                         .FirstOrDefault();
 
-                            resultado = validarResearch(itemData, p1000);
-
-                            switch (itemData.MaterialId)
+                            if (itemData.TipoCargaId == 1) //Carga completa
                             {
-                                case (int)EnumMateriales.MAIZ:
-                                    valoresCalculo = $"MAIZ - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioMuestraTres: {itemData.PromedioMuestraTres} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
-                                    double espigas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras / 10);
+                                resultado = validarResearch(itemData, p1000);
 
-                                    rendimiento = (double)(espigas_m2 * itemData.PromedioMuestraDos * itemData.PromedioMuestraTres * p1000 * itemData.Coeficiente);
-                                    break;
-                                case (int)EnumMateriales.TRIGO:
-                                    valoresCalculo = $"TRIGO - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
-                                    // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
-                                    espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
-                                    // Prom. Granos x Espiga/planta = itemData.PromedioMuestraDos
+                                switch (itemData.MaterialId)
+                                {
+                                    case (int)EnumMateriales.MAIZ:
+                                        valoresCalculo = $"MAIZ - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioMuestraTres: {itemData.PromedioMuestraTres} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
+                                        double espigas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras / 10);
 
-                                    rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * p1000 * itemData.Coeficiente);
-                                    break;
-                                case (int)EnumMateriales.SOJA:
-                                    valoresCalculo = $"SOJA - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioMuestraTres: {itemData.PromedioMuestraTres} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
-                                    // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
-                                    espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
-                                    // Prom. Vainas/planta = itemData.PromedioMuestraDos
-                                    // Prom. Granos por vaina = itemData.PromedioMuestraTres
+                                        rendimiento = (double)(espigas_m2 * itemData.PromedioMuestraDos * itemData.PromedioMuestraTres * p1000 * itemData.Coeficiente);
+                                        break;
+                                    case (int)EnumMateriales.TRIGO:
+                                        valoresCalculo = $"TRIGO - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
+                                        // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
+                                        espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
+                                        // Prom. Granos x Espiga/planta = itemData.PromedioMuestraDos
 
-                                    rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * itemData.PromedioMuestraTres * p1000 * itemData.Coeficiente);
-                                    break;
-                                case (int)EnumMateriales.GIRASOL:
-                                    valoresCalculo = $"GIRASOL - PromedioMuestraUno: {itemData.PromedioMuestraUno} - CapitulosGirasol: {itemData.CapitulosGirasol} - DistanciaHileras: {itemData.DistanciaHileras} - Coeficiente: {itemData.Coeficiente}";
-                                    double promedio_al_cuadrado = Math.Pow((double)itemData.PromedioMuestraUno, 2);
-                                    // Peso por capítulo (grs) = -14,53 + ( 1,07 * itemData.PromedioMuestraUno) + ( 0,2 * itemData.PromedioMuestraUno * itemData.PromedioMuestraUno)
-                                    double peso_por_capítulo_grs = (double)(-14.53 + (1.07 * itemData.PromedioMuestraUno) + (0.2 * promedio_al_cuadrado));
-                                    rendimiento = (double)(itemData.CapitulosGirasol / itemData.DistanciaHileras / 10 * peso_por_capítulo_grs * itemData.Coeficiente * 10000);
-                                    break;
-                                default:
-                                    break;
+                                        rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * p1000 * itemData.Coeficiente);
+                                        break;
+                                    case (int)EnumMateriales.SOJA:
+                                        valoresCalculo = $"SOJA - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioMuestraTres: {itemData.PromedioMuestraTres} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
+                                        // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
+                                        espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
+                                        // Prom. Vainas/planta = itemData.PromedioMuestraDos
+                                        // Prom. Granos por vaina = itemData.PromedioMuestraTres
+
+                                        rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * itemData.PromedioMuestraTres * p1000 * itemData.Coeficiente);
+                                        break;
+                                    case (int)EnumMateriales.GIRASOL:
+                                        valoresCalculo = $"GIRASOL - PromedioMuestraUno: {itemData.PromedioMuestraUno} - CapitulosGirasol: {itemData.CapitulosGirasol} - DistanciaHileras: {itemData.DistanciaHileras} - Coeficiente: {itemData.Coeficiente}";
+                                        double promedio_al_cuadrado = Math.Pow((double)itemData.PromedioMuestraUno, 2);
+                                        // Peso por capítulo (grs) = -14,53 + ( 1,07 * itemData.PromedioMuestraUno) + ( 0,2 * itemData.PromedioMuestraUno * itemData.PromedioMuestraUno)
+                                        double peso_por_capítulo_grs = (double)(-14.53 + (1.07 * itemData.PromedioMuestraUno) + (0.2 * promedio_al_cuadrado));
+                                        rendimiento = (double)(itemData.CapitulosGirasol / itemData.DistanciaHileras / 10 * peso_por_capítulo_grs * itemData.Coeficiente * 10000);
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 2, MidpointRounding.AwayFromZero);
                             }
-                            itemData.RendimientoCalculado = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 2, MidpointRounding.AwayFromZero);
 
                             string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
                             Console.WriteLine(json);

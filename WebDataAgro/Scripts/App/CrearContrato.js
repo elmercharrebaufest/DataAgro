@@ -25,6 +25,7 @@ $(document).ready(function () {
     InicializarDatos();
     AutocompleteProcedencia();
     OcultarCamposAgente();
+    $("#material").data("kendoDropDownList").trigger("change");
 });
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
@@ -838,7 +839,7 @@ function InicializarElementos() {
                 //$("#cargarCantidadPendienteFijar").show();
 
             }
-            else if (this.value() == 4) {
+            else if (this.value() == 4) { // FASON
                 //var tipoId = $("#tipoId").data("kendoDropDownList").value();
                 //error = false;
                 //obj = ObtenerDatos(error);
@@ -865,7 +866,7 @@ function InicializarElementos() {
                 }
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
                 $("#pizarraDiv").prop("checked", false);
-            } else if (this.value() == 5) {
+            } else if (this.value() == 5) { // AGENTE DE COMPRAS
                 $(".noAgente").hide();
                 $("#boton-ampliar").hide();
                 $("#campanaDiv").show();
@@ -878,7 +879,14 @@ function InicializarElementos() {
                 $("#pizarraDiv").prop("checked", false);
                 $("#fechaOperacionDiv").show();
 
-            } else if (this.value() == 6) {
+                if ($("#material").val() === "1" || $("#material").val() === "3") { // SOJA o MAIZ
+                    $("#dolarExportadorDiv").show();
+                } else {
+                    $("#dolarExportadorDiv").hide();
+                    $("#dolarExportadorId").prop("checked", false);
+                }
+
+            } else if (this.value() == 6) { // CONTRATO ACUERDO
                 var tipoId = $("#tipoId").data("kendoDropDownList").value();
                 error = false;
                 obj = ObtenerDatos(error);
@@ -999,7 +1007,7 @@ function InicializarElementos() {
                 CalcularPrecioTotalApertura();
             }
             ClickEnPizarra();
-            if (this.value() == 6) {
+            if (this.value() == 6) { // CONTRATO ACUERDO
                 var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
                 $("#precioId").data("kendoNumericTextBox").value("");
                 $("#precioId").trigger('change');
@@ -1074,6 +1082,12 @@ function InicializarElementos() {
                 $("#fasonEspecial").show();
             } else {
                 $("#fasonEspecial").hide();
+            }
+            if (($("#material").val() === "1" || $("#material").val() === "3") && $("#tipoId").val() === "5") { // (SOJA o MAIZ) y AGENTE DE COMPRAS
+                $("#dolarExportadorDiv").show();
+            } else {
+                $("#dolarExportadorDiv").hide();
+                $("#dolarExportadorId").prop("checked", false);
             }
             $("#contratoId").val("");
             $(".datoscontrato").hide();
@@ -4296,6 +4310,9 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.TrigoEspecial == true) {
         $("#trigoEspecialFasonId").prop("checked", true);
+    }
+    if (contrato.DolarExportador == true) {
+        $("#dolarExportadorId").prop("checked", true);
     }
     LimpiarBoleto();
     boletoId = contrato.BoletoId;

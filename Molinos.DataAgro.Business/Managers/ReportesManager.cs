@@ -827,7 +827,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x.OcultarEnTablero == false &&
                 DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
                 DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta &&
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value });
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value, x.DolarExportador });
             foreach (var agentesPorPosicionYMaterial in agentes)
             {
                 var agenteTemp = new AgenteCompraDto() { Operador = new List<AgenteCompraDto.OperadorCantidad>() };
@@ -843,7 +843,7 @@ namespace Molinos.DataAgro.Business.Managers
                     operador.Ids.Add(agente.Id);
                     agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
                     agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
-                    agenteTemp.MaterialDesc = agente.Material.Descripcion;
+                    agenteTemp.MaterialDesc = agente.DolarExportador == true ? agente.Material.Descripcion + " Dolar Export." : agente.Material.Descripcion;
                     agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
                     agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
                     agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)Math.Abs(x.Cantidad)) / agentesPorPosicionYMaterial.Sum(x => (decimal)Math.Abs(x.Cantidad));
@@ -1855,7 +1855,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cuit = "",
                 RazonCorredor = "",
                 CuitCorredor = "",
-                Material = x.Material.Descripcion,
+                Material = x.DolarExportador == true ? x.Material.Descripcion + " Dolar Export." : x.Material.Descripcion,
                 TipoNegocio = "Agente",
                 TipoNegocioId = 6,
                 CampanaId = null,
@@ -2283,7 +2283,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Agente = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
                 Operador = x.Operador.Descripcion,
-                Material = x.Material.Descripcion,
+                Material = x.DolarExportador == true ? x.Material.Descripcion + " Dolar Export." : x.Material.Descripcion,
                 Posicion = x.Posicion,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio.ToString(),

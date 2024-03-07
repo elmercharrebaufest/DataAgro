@@ -46,7 +46,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         OcultarCamposEditar = 116,
         [Display(ResourceType = typeof(Text), Name = "ReasignarProveedorPantallaCupo")]
         ReasignarProveedorPantallaCupo = 117,
-        
+        [Display(ResourceType = typeof(Text), Name = "Proveedor_Apoderados")]
+        ProveedorApoderados = 118,
+
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,

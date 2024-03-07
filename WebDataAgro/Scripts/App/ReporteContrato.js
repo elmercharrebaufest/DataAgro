@@ -81,6 +81,7 @@ function CreateGridInformeCompraNet() {
                     Precio: { type: "number", format: "n2" },
                     EPA: { type: "boolean" },
                     ConDescarga: { type: "boolean" },
+                    DolarExportador: { type: "boolean" },
                 }
             }
         },
@@ -344,6 +345,7 @@ function CreateGridInformeCompraNet() {
             { field: "FechaDolarizadoOriginalFormateado", type: "string", title: "Dolarizado <br>Original", width: 80,  },
             { field: "FechaHastaOriginalFormateado", type: "string", title: "Hasta <br>Original", width: 80 },
             { field: "ConDescarga", type: "string", title: "Con <br>Descarga", template: function (dataItem) { return dataItem.ConDescarga ? "Si" : "No"; }, width: 80 },
+            { field: "DolarExportador", type: "string", title: "Dolar <br>Exportador", template: function (dataItem) { return dataItem.DolarExportador ? "Si" : "No"; }, width: 80 },
             
         ],
         excelExport: function (e) {
@@ -367,6 +369,7 @@ function CreateGridInformeCompraNet() {
             var templateCesion = kendo.template(this.columns[59].template);
             var templateCondicional = kendo.template(this.columns[62].template);
             var templateConDescarga = kendo.template(this.columns[75].template);
+            var templateDolarExportador = kendo.template(this.columns[76].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -387,6 +390,7 @@ function CreateGridInformeCompraNet() {
                     Cesion: row.cells[71].value,
                     Condicional: row.cells[74].value,
                     ConDescarga: row.cells[87].value,
+                    DolarExportador: row.cells[88].value,
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -426,6 +430,7 @@ function CreateGridInformeCompraNet() {
                 row.cells[71].value = templateCesion(dataItem);
                 row.cells[74].value = templateCondicional(dataItem);
                 row.cells[87].value = templateConDescarga(dataItem);
+                row.cells[88].value = templateDolarExportador(dataItem);
             }
         },
         pageable: {

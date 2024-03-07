@@ -460,6 +460,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaOperacionFormateado = SqlFunctions.DateName("day", x.FechaOperacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
+                DolarExportador = x.DolarExportador,
             });
             return contrato;
         }
