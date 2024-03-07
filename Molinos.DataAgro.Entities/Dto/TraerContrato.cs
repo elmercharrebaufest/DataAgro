@@ -276,6 +276,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? SustentableTipoDBId { get; set; }
         public string SustentableTipoDB { get; set; }
         public bool? ConDescarga { get; set; }
+        public bool? DolarExportador { get; set; }
     }
 
     public class StoredPorContratoResult

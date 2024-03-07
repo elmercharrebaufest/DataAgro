@@ -458,6 +458,11 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     } else {
         $("#trigoEspecialId").prop("checked", false);
     }
+    if (contrato.DolarExportador == true) {
+        $("#dolarExportadorId").prop("checked", true);
+    } else {
+        $("#dolarExportadorId").prop("checked", false);
+    }
     LimpiarBoleto();
     if (contrato.BoletoId == 1) {
         $("#boletoConfirmaId").prop("checked", true);
@@ -777,6 +782,7 @@ function ObtenerDatos(error) {
     obj.Servicios = viewModel.Servicios;
 
     obj.Especial = $("#trigoEspecialFasonId").is(":checked") ? true : false;
+    obj.DolarExportador = $("#dolarExportadorId").is(":checked") ? true : false;
     obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;
 
     obj.ZonaId = obj.MaterialId == 5 ?
