@@ -1,12 +1,10 @@
-﻿
---BolsaCompraNet
+﻿--BolsaCompraNet
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bs As') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Bs As','01'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Rosario') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Rosario','02'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Santa Fe') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Santa Fe','03'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Cordoba') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Cordoba','04'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Entre Ríos') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Entre Ríos','05'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bahía Blanca') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Bahía Blanca','07'); END
-
 
 --BoletoCompraNet
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Confirma') BEGIN insert into BoletoCompraNet (Descripcion) values ('Confirma'); END
@@ -222,7 +220,6 @@ IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3 and TipoNegoci
 IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (4,1, 3); END
 IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (5,1, 3); END
 
-
 --TipoPosicionCBOT
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'CBOT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('CBOT'); END
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'MAT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('MAT'); END
@@ -245,6 +242,7 @@ IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir 
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Liquidación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion) values ('A partir de la fecha de Liquidación', 1); END
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Fijación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion, CondicionPesificado) values ('A partir de la fecha de Fijación', 1, 1); END
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'Anteriores al pago') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionPesificado) values ('Anteriores al pago', 1); END
+
 --Configuracion
 Update Configuracion set RedespachoMaximoARP = isnull(RedespachoMaximoARP, 1000), RedespachoMaximoUSDM = isnull(RedespachoMaximoUSDM, 60)
 
@@ -257,10 +255,10 @@ IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Carta Oferta') BEG
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirmación de Negocio') BEGIN insert into BoletoVenta (Descripcion) values ('Confirmación de Negocio'); END
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'A Convenir') BEGIN insert into BoletoVenta (Descripcion) values ('A Convenir'); END
 
-
 --TipoAdministracionCupo
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Algoritmo') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Algoritmo'); END
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
+
 --TipoNegocioRangoConfirmacionAutomatica
 IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO Y FIJACION') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO Y FIJACION'); END
 IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO'); END
@@ -275,7 +273,6 @@ IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Comisionista') BE
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
 
 -- TipoNegocioDetalle
-
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR', 1); END
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR PASE', 1); END
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'CANJE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('CANJE', 1); END
@@ -292,7 +289,6 @@ IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION CA
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION PASE', 3); END
 
 -- Clausula
-
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaUno', 1, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDos', 2, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTres', 3, 1); END
@@ -340,7 +336,6 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCu
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYCinco',45 , 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSeis',46, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSiete',47 , 1); END
-
 
 --EstadoHome
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Habilitado') BEGIN insert into EstadoHome (Descripcion, Color) values ('Habilitado', 'green'); END
@@ -460,14 +455,14 @@ IF NOT EXISTS (select 1 from ResearchTipoCarga where Descripcion = 'Completa') B
 IF NOT EXISTS (select 1 from ResearchTipoCarga where Descripcion = 'Express') BEGIN insert into ResearchTipoCarga (Descripcion) values('Express'); END
 
 --ResearchTipoMuestra
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en 1 m') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en 1 m'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos por espiga') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos por espiga'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Plantas en 1 m') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Plantas en 1 m'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en la hilera (1 m)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en la hilera (1 m)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Plantas en la hilera (1 m)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Plantas en la hilera (1 m)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en la hilera (10 mts)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en la hilera (10 mts)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Diámetro del Capítulo (cm)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Diámetro del Capítulo (cm)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos por espiga/planta') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos por espiga/planta'); END
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Vainas por planta') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Vainas por planta'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en 10 mts') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en 10 mts'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos por hilera (largo)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos por hilera (largo)'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Hileras por espiga') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Hileras por espiga'); END
-IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Capítulos en 10 mts') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Capítulos en 10 mts'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Largo de la espiga (granos)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Largo de la espiga (granos)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos alrededor') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos alrededor'); END
 
 --Puesto Apoderado(Roles Apoderados)
 IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Presidente') BEGIN insert into PuestoApoderado (Descripcion) values ('Presidente'); END
