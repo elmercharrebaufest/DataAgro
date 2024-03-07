@@ -55,14 +55,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     Web web = context.Web;
 
                     List listResearch = web.Lists.GetByTitle(libraryNameResearch);
-                    context.Load(list);
                     context.Load(listResearch);
                     context.ExecuteQuery();//este es el que ejecuta lo que armamos antes, sin este es como no hacer nada
 
                     // a la lista/pagina le pedimos que nos traiga todos los items
                     CamlQuery query = CamlQuery.CreateAllItemsQuery();// aca se puede mejorar para filtrar los ya sinconinizados
                     ListItemCollection itemsResearch = listResearch.GetItems(query);
-                    context.Load(items);
                     context.Load(itemsResearch);
                     context.ExecuteQuery();//ejecutamos
 
