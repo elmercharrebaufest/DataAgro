@@ -234,6 +234,23 @@ function buscarRazonSocial(val) {
 }
 
 function armarSelects(result) {
+
+    //Inicia Carga Select Tipo de Apoderado/PuestoApoderado
+    var htmlTipoApoderado = ""; 
+    htmlTipoApoderado += '<select class="campo-input-select" id="concom-puestoapoderado">';
+    htmlTipoApoderado += '<option value = "null">Seleccione...</option>';
+    result.tiposApoderados.sort(function (a, b) {
+        var textA = a.Descripcion.toUpperCase();
+        var textB = b.Descripcion.toUpperCase();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
+    for (j in result.tiposApoderados) {
+        htmlTipoApoderado += '<option value="' + result.tiposApoderados[j].Id + '">' + result.tiposApoderados[j].Descripcion + '</option>';
+    }
+    htmlTipoApoderado += '</select>';
+    $(".concom-puestoapoderado").append(htmlTipoApoderado);
+        //Fin Carga Select PuestoApoderado
+
     var grupos = {};
     for (var jj in result.segm) {
         (function (j) {
@@ -1380,8 +1397,10 @@ function armarSelects(result) {
         var valor = $("#provincia-compranet").val();
         buscarLocalidadCompraNet(valor);
     });
-}
 
+    
+}
+//Fin Armar Selects
 function eliminarCampoProduccion(val) {
     var item = $(val).attr("id").split("eliminarProd")[1];
 
@@ -2349,6 +2368,22 @@ function armarFuncionalidades() {
             $("#comisionistaDiv").show();
         }
     });
+
+    //Evento Oculta EsApoderado Secccion $("body").on( "change","#concom-esapoderado", function() {
+    $("body").on("change", "#concom-esapoderado", function () {
+        if ($("#concom-esapoderado").is(":checked") == true) {
+            $(".concom-puestoapoderadoDiv").show();
+            $(".concom-cuitDiv").show();
+            $(".concom-desdeDiv").show();
+            $(".concom-hastaDiv").show();
+        } else {
+            $(".concom-puestoapoderadoDiv").hide();
+            $(".concom-cuitDiv").hide();
+            $(".concom-desdeDiv").hide();
+            $(".concom-hastaDiv").hide();
+        }
+    });
+    //Fin Evento
 
     $("#GuardarContactoComercial").click(function () {
         if (!ValidarContactoComercial())
