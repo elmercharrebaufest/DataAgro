@@ -224,8 +224,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
                 oAgenteSave.FechaOperacion = oAgente.FechaOperacion;
-
-
+                oAgenteSave.DolarExportador = oAgente.DolarExportador;
             }
             else
             {
@@ -255,6 +254,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+
         public GrabarAgenteResult FinalizarAgente(int agenteId)
         {
             var oEntityErrors = new GrabarAgenteResult();
