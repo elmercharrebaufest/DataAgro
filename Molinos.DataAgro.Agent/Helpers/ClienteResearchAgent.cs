@@ -55,14 +55,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                     Web web = context.Web;
 
                     List listResearch = web.Lists.GetByTitle(libraryNameResearch);
+                    List listAttachments = web.Lists.GetByTitle(attachmentsResearch);
                     context.Load(listResearch);
+                    context.Load(listAttachments);
                     context.ExecuteQuery();//este es el que ejecuta lo que armamos antes, sin este es como no hacer nada
 
                     // a la lista/pagina le pedimos que nos traiga todos los items
                     CamlQuery query = CamlQuery.CreateAllItemsQuery();// aca se puede mejorar para filtrar los ya sinconinizados
                     ListItemCollection itemsResearch = listResearch.GetItems(query);
+                    ListItemCollection itemsAttachment = listAttachments.GetItems(query);
                     context.Load(itemsResearch);
-                    context.ExecuteQuery();//ejecutamos
+                    context.Load(itemsAttachment);
+                    context.ExecuteQuery();
 
                     List<Research> listaResearchDto = new List<Research>();
                     List<Material> listaMateriales = repositorio.Listar<Material>();
@@ -92,7 +96,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             Research itemData = new Research();
                             itemError = item;
 
-                            guardarLog(item);
+                            GuardarLog(item);
 
                             itemData.MaterialId = listaMateriales.First(x => x.Descripcion.ToUpper() == item["Cultivo"].ToString().ToUpper()).MaterialId;
                             itemData.MaterialIdAntecesor = listaMateriales.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Antecesor"]?.ToString().ToUpper())?.MaterialId;
@@ -137,7 +141,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FieldUserValue editor = new FieldUserValue();
                             editor = (FieldUserValue)item["Editor"];
                             itemData.Editor = editor.Email;
-                            itemData.Attachments = item["Attachments"] is bool ? (bool)item["Attachments"] : false;
                             string rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                             double espigas_Plantas_m2 = 0, rendimiento = 0;
@@ -190,18 +193,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
 
                             string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
-                            Console.WriteLine(json);
 
-                            if (itemData.Attachments == true)
+                            var adjuntos = itemsAttachment.Where(x => Convert.ToInt32(x["ID_Relevamiento"]) == Convert.ToInt32(item["ID"])).ToList();
+
+                            if (adjuntos.Any())
                             {
-                                // get files
-                                string folderRelativeUrl = $"{rutaArchivos}/Attachments/{itemData.IdPowerApp}";
-                                Folder folder = web.GetFolderByServerRelativeUrl(folderRelativeUrl);
-                                FileCollection files = folder.Files;
-
-                                context.Load(files);
-                                context.ExecuteQuery();
-
                                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                                 {
                                     itemData.Adjuntos.Add(new ResearchAdjunto()
@@ -212,23 +208,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 }
                                 else
                                 {
-                                    foreach (Microsoft.SharePoint.Client.File file in files)
+                                    foreach (var adjunto in adjuntos)
                                     {
-                                        string blobUri = "";
-                                        var stream = file.OpenBinaryStream();
+                                        string nombre = adjunto["FileLeafRef"].ToString();
+                                        string rutaAdjunto = adjunto["FileRef"].ToString();
+
+                                        ClientResult<Stream> fileStream = web.GetFileByServerRelativeUrl(rutaAdjunto).OpenBinaryStream();
                                         context.ExecuteQuery();
+                                        byte[] imageBytes = DownloadImageFromSharePoint(fileStream);
 
-                                        string rutaArchivo = itemData.IdPowerApp.ToString() + "/" + file.Name;
-
-                                        // Descargar la imagen desde SharePoint
-                                        byte[] imageBytes = DownloadImageFromSharePoint(stream);
-
-                                        blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, rutaArchivo, imageBytes);
+                                        string blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, itemData.IdPowerApp.ToString() + "/" + nombre, imageBytes);
 
                                         itemData.Adjuntos.Add(new ResearchAdjunto()
                                         {
                                             Path = blobUri,
-                                            Nombre = file.Name,
+                                            Nombre = nombre,
                                         });
                                     }
                                 }
@@ -289,7 +283,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        private void guardarLog(ListItem item)
+        private void GuardarLog(ListItem item)
         {
             var data = new
             {
