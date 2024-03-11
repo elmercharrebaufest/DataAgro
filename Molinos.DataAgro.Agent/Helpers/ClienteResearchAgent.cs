@@ -141,6 +141,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FieldUserValue editor = new FieldUserValue();
                             editor = (FieldUserValue)item["Editor"];
                             itemData.Editor = editor.Email;
+                            itemData.Attachments = false;
                             string rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
 
                             double espigas_Plantas_m2 = 0, rendimiento = 0;
@@ -151,7 +152,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                             if (itemData.TipoCargaId == 1) //Carga completa
                             {
-                                resultado = validarResearch(itemData, p1000);
+                                resultado = ValidarResearch(itemData, p1000);
 
                                 switch (itemData.MaterialId)
                                 {
@@ -198,6 +199,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                             if (adjuntos.Any())
                             {
+                                itemData.Attachments = true;
                                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                                 {
                                     itemData.Adjuntos.Add(new ResearchAdjunto()
@@ -233,7 +235,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             if (resultado.HayError)
                             {
                                 logger.Info($"INICIO - ERROR Research con registro: {itemData.IdPowerApp} - {valoresCalculo}");
-                                logger.Error($"{cadenaDeErrores(resultado)}");
+                                logger.Error($"{CadenaDeErrores(resultado)}");
                                 logger.Info($"FIN - ERROR Research con registro: {itemData.IdPowerApp}");
                             }
                             else
@@ -258,7 +260,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             logger.Info($"INICIO - ERROR Research con registro: {id} - {valoresCalculo}");
                             logger.Error(e.Message);
                             if (e.InnerException?.InnerException != null) logger.Error(e.InnerException?.InnerException?.Message);
-                            if (resultado.HayError) logger.Error($"{cadenaDeErrores(resultado)}");
+                            if (resultado.HayError) logger.Error($"{CadenaDeErrores(resultado)}");
                             logger.Info($"FIN - ERROR Research con registro: {id}");
                         }
                     }
@@ -329,14 +331,14 @@ namespace Molinos.DataAgro.Agent.Helpers
             logger.Info($"Research a sincronizar ID {int.Parse(item["ID"].ToString())}: {jsonData}");
         }
 
-        private string cadenaDeErrores(Resultado resultado)
+        private string CadenaDeErrores(Resultado resultado)
         {
             string errores = "";
             resultado.Errores.ForEach(x => errores += x.Message);
             return errores;
         }
 
-        private Resultado validarResearch(Research itemData, int p1000)
+        private Resultado ValidarResearch(Research itemData, int p1000)
         {
             Resultado resultado = new Resultado();
 

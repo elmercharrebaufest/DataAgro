@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaModificacion { get; set; }
         public string Author { get; set; }
         public string Editor { get; set; }
-        public bool? Attachments { get; set; }
+        public bool Attachments { get; set; }
         public bool? Sincronizado { get; set; }
         public int? LocalidadId { get; set; }
         public int? ComercialId { get; set; }
