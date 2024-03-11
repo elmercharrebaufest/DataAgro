@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
+using System.Web.WebPages;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -23,7 +24,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.ContratoId > 0)
+            if (clausula.Basico.ContratoId > 0 && clausula.Basico.CorredorId > 0 && !clausula.Basico.CUITCorredor.IsEmpty())
             {
                 res.Texto += $"Los señores {clausula.Basico.RazonSocialCorredor }, CUIT N° {clausula.Basico.CUITCorredor }, actúan en la presente operación en carácter de " +
                     $"corredores quedando facultados por los vendedores para fijar el precio, facturar, recibir el pago, firmar recibos de mercadería, ampliaciones " +
