@@ -364,3 +364,20 @@ document.getElementById("ProvinciaId").addEventListener("change", function () {
 
     }
 });
+
+function SincronizarResearch() {
+    BlockUi('Sincronizando...');
+    $.ajax({
+        url: '/TareasProgramadas/SincronizarResearch',
+        type: 'POST',
+        success: function (response) {
+            if (response == "ok") {
+                window.location = '/ResearchReporte/Index';
+                $.unblockUI();
+            } else {
+                $.unblockUI();
+                MensErr("Ocurrió un error al ejecutar la sincronización de los registros.");
+            }
+        }
+    });
+}

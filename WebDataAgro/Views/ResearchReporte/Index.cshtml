@@ -4,19 +4,25 @@
 }
 
 @section Scripts {
-    @Scripts.Render("~/bundles/ResearchReporteIndex")
+    @Scripts.Render("~/bundles/ResearchReporte")
 }
 
 @section Styles {
     <link href="~/Content/ResearchReporte.css" rel="stylesheet" />
 }
 
-<div class="Titulo">
-    <h4> Reporte Research </h4>
+<div class="row filtro-desplegable">
+    <br />
+    <div class="col-xs-6 col-lg-6" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+        <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important; border-radius: 7px;">Mostrar</span></strong></div>
+    </div>
+    <div class="col-xs-6 col-lg-6" style="display: flex; justify-content: flex-end;">
+        <button class="k-button" onclick="SincronizarResearch()" type="button" style="border-color: #017940; border-radius: 7px !important">
+            <i class="fa fa-refresh"></i> Sincronizar datos
+        </button>
+    </div>
 </div>
-<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
-    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
-</div>
+
 <br />
 
 <div id="filtrar" class="container collapse">
@@ -28,7 +34,7 @@
             @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), new { @class = "multiselect", @id = "MaterialId", multiple = "true" })
         </div>
         <div class="col-md-2">
-            <label>Humedad Suelo</label>
+            <label>Humedad del Suelo</label>
         </div>
         <div class="col-md-4">
             @Html.DropDownList("HumedadSueloId", new SelectList(ViewBag.HumedadSuelo, "Value", "Text"), new { @class = "multiselect", @id = "HumedadSueloId", multiple = "true" })
@@ -37,7 +43,7 @@
     <br />
     <div class="row">
         <div class="col-md-2">
-            <label>Condicion</label>
+            <label>Condición</label>
         </div>
         <div class="col-md-4">
             @Html.DropDownList("CondicionId", new SelectList(ViewBag.Condicion, "Value", "Text"), new { @class = "multiselect", @id = "CondicionId", multiple = "true" })
@@ -106,13 +112,13 @@
             @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "TipoCargaId", multiple = "true" })
         </div>
     </div>
-
+    <br />
     <div class="row">
         <div class="col-md-2">
             <label>Provincia</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"),"Seleccione una provincia", new { @class = "filtroBusquedaPorId form-control", @id = "ProvinciaId" })
+            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"), "Seleccione una provincia", new { @class = "filtroBusquedaPorId form-control", @id = "ProvinciaId" })
         </div>
         <div class="col-md-2">
             <label>Partido</label>
@@ -121,16 +127,15 @@
             <input id="PartidoId" name="PartidoId" class="form-control filtroBusquedaPorId" />
         </div>
     </div>
-
+    <br />
     <div class="row">
-        
-        <div class="col-md-6" style="text-align:right">
+        <div class="col-md-12" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
         </div>
     </div>
-
 </div>
 
+<br />
 <script type="text/x-kendo-template" id="templateToolbar">
     <div class="">
         <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
@@ -150,8 +155,8 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
             </div>
             <div class="campo clearfix">
-                <div class="espaciolineas">¿Está seguro que desea eliminar el registro <span id="idModalBorrar"></span>?</div>
-            </div>      
+                <div class="espaciolineas">¿Está seguro de que desea eliminar el registro <span id="idModalBorrar"></span>?</div>
+            </div>
             <div class="modal-footer clearfix ">
                 <br />
                 <div class="col-xs-6 noPaddingRight">
