@@ -1,4 +1,11 @@
-﻿.formulario-footer-cancelar {
+﻿.filtro-desplegable {
+    border-bottom: 3px solid #017940;
+    margin-bottom: 10px;
+    padding: 0 0 5px 20px;
+    cursor: pointer;
+}
+
+.formulario-footer-cancelar {
     font-family: "G-Open Sans-n4", Arial;
     color: #787878;
     font-size: 100%;
@@ -151,12 +158,10 @@ textarea.k-textbox {
     height: auto;
 }
 
-
 #grid {
     font-size: 12px;
     /*overflow-x: scroll;*/
 }
-
 
 div.col-md-6.col-sm-10 .k-icon.k-i-close {
     display: none !important;
@@ -166,7 +171,6 @@ body.modal-open {
     position: relative;
     overflow-y: hidden !important;
 }
-
 
 .k-filter-menu .k-button {
     width: auto !important;
@@ -185,7 +189,6 @@ body {
     display: inline-block;
 }
 
-
 .page-container {
     padding: 0 !important;
 }
@@ -193,8 +196,6 @@ body {
 .page-content-wrapper .page-content {
     padding: 0 !important;
 }
-
-
 
 @media (max-width: 1023px) {
     .k-filter-row th, .k-grid-header th.k-header {
@@ -205,9 +206,6 @@ body {
 .col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
     display: flex;
 }
-
-
-
 
 @media (max-width: 1216px) {
     .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
@@ -240,7 +238,6 @@ body {
     padding-left: 14px;
 }
 
-
 @media (max-width: 1024px) {
     #grid {
         overflow-x: auto;
@@ -259,9 +256,10 @@ body {
 }
 
 .row {
-     margin-right: 0;
-     margin-left: 0;
+    margin-right: 0;
+    margin-left: 0;
 }
+
 .k-grid td {
     text-overflow: unset;
 }
@@ -269,6 +267,7 @@ body {
 .k-filter-row th, .k-grid-header th.k-header {
     text-overflow: unset;
 }
+
 .k-grid-header th.k-header {
-    line-height: 1.1em!important;
+    line-height: 1.1em !important;
 }
