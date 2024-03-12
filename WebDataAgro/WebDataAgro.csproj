@@ -2866,9 +2866,6 @@
     <Content Include="Views\CupoNoPropio\Index.cshtml" />
     <Content Include="Views\CupoNoPropio\ModalCrearCupoNoPropio.cshtml" />
     <Content Include="Views\CompraNet\AltaMasivaContratos.cshtml" />
-    <Content Include="Templates\AltaMasiva.xlsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\CompraNet\ModalServicios.cshtml" />
     <Content Include="Templates\AltaMasivaConvenio.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -2887,6 +2884,9 @@
     <Content Include="Views\Cache\Index.cshtml" />
     <Content Include="Views\ResearchMapa\Index.cshtml" />
     <Content Include="Views\ResearchReporte\Index.cshtml" />
+    <Content Include="Templates\AltaMasiva.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
