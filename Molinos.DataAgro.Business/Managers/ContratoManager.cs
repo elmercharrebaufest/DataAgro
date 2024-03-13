@@ -498,6 +498,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacío.");
                 }
+                if (oParam.DestinoId == 4 && oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                {
+                    oErrorMessages.Error("DestinoId", "El campo 'Destino' Cuando es 'La Cautiva' no permite generar Carta Oferta.");
+                }
                 if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null) && oParam.PrestamoDevolucion != true && oParam.Canje != true)
                 {
                     oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no deben estar vacías cuando el contrato es 'A Fijar'.");

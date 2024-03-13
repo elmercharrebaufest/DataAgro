@@ -1487,6 +1487,12 @@ function InicializarElementos() {
             } else {
                 BorrarComisionSiEsAcopio();
             }
+            if ($("#destinoId").val() == 4) {
+                $(".row-carta-oferta").hide();
+            }
+            else {
+                $(".row-carta-oferta").show()
+            }
             ValidarSinBoleto();
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
