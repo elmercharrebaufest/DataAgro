@@ -3319,7 +3319,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -3682,7 +3682,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "</table>";
             htmlBody += "Motivo de rechazo: " + cupo.MotivoRechazo;
-            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +

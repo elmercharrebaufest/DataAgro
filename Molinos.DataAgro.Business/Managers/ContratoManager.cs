@@ -5153,7 +5153,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +

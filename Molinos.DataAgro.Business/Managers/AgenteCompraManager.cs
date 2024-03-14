@@ -9,9 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -21,7 +19,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IHedgeManager oHedgeManager;
         private readonly ILogDataAgroManager logDataAgroManager;
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
 
 
@@ -72,7 +70,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Posicion == "" || oParam.Posicion == null)
             {
-                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
+                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacío");
                 posicionIncorrecta = true;
             }
             else
@@ -110,19 +108,19 @@ namespace Molinos.DataAgro.Business.Managers
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
             {
-                oErrorMessages.Error("Precio", "Precio fuera de Rango");
+                oErrorMessages.Error("Precio", "El precio está fuera de rango.");
             }
             var dia = oHedgeManager.Dia();
             if (dia != null)
             {
                 if (dia.Cerrado.Value)
                 {
-                    oErrorMessages.Error("", "El Día de Operación ya se ha cerrado");
+                    oErrorMessages.Error("FechaOperacion", "El día de operación ya está cerrado.");
                 }
             }
             if (oParam.FechaOperacion > DateTime.Now.Date)
             {
-                oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
+                oErrorMessages.Error("FechaOperacion", "La fecha tiene que ser menor o igual al día de hoy.");
             }
             //else
             //{
@@ -185,7 +183,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarAgenteResult();
             AgenteCompra oAgenteSave = null;
-            this.Validar(oAgente, oEntityErrors);
+            Validar(oAgente, oEntityErrors);
 
             if (oEntityErrors.HayErrores)
             {
@@ -196,7 +194,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
                 if (oAgenteSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
-                    oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
+                    oEntityErrors.Error("GrabarAgente", "El Agente de Compras no se puede modificar.");
                     return oEntityErrors;
                 }
                 var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
@@ -291,11 +289,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
-                    oEntityErrors.Error("", "Agente de Compras ya se encuentra Finalizadao");
+                    oEntityErrors.Error("FinalizarAgente", "El Agente de Compras ya se encuentra finalizado.");
                 }
                 else if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
                 {
-                    oEntityErrors.Error("", "Agente de Compras ya ha sido Rechazado");
+                    oEntityErrors.Error("FinalizarAgente", "El Agente de Compras ya ha sido rechazado.");
                 }
             }
             return oEntityErrors;
@@ -306,7 +304,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (string.IsNullOrEmpty(oAgente.MotivoRechazo) || string.IsNullOrWhiteSpace(oAgente.MotivoRechazo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo del rechazo.");
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
@@ -412,7 +410,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("", "Este Negocio no se puede rechazar por estar Rechazado o Eliminado");
+                oEntityErrors.Error("BorrarAgente", "Este negocio no se puede rechazar porque ya está rechazado o eliminado.");
             }
             return oEntityErrors;
         }
@@ -472,7 +470,7 @@ namespace Molinos.DataAgro.Business.Managers
             var heedgeDia = oHedgeManager.Dia();
             if (heedgeDia != null && (heedgeDia.Cerrado ?? false))
             {
-                oEntityErrors.Error("", "El Día de Operación ya se ha cerrado");
+                oEntityErrors.Error("GrabarAmpliacionAgente", "El día de operación ya está cerrado.");
                 return oEntityErrors;
             }
             if (oAgenteSave.EstadoId <= (int)EnumEstadoContrato.Con_Error)
@@ -492,7 +490,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
+                oEntityErrors.Error("GrabarAmpliacionAgente", "El Agente de Compras no se puede modificar.");
             }
             return oEntityErrors;
         }
@@ -521,7 +519,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("Confirmar", "El Agente no se puede confirmar");
+                oEntityErrors.Error("ConfirmarAgenteCompra", "El Agente no se puede confirmar.");
             }
             return oEntityErrors;
         }
@@ -544,7 +542,3 @@ namespace Molinos.DataAgro.Business.Managers
 
     }
 }
-
-
-
-
