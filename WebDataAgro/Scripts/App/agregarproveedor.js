@@ -2633,8 +2633,15 @@ function armarFuncionalidades() {
 
         $(".datos-contactocomercial-guardados").append(htmlComerciales);
 
+        //Limpiar Formulario Agregar Contacto Comercial
         $("#concom-nombre").val("");
         $("#concom-apellido").val("");
+        $("#concom-cuit").val("");
+        $("#concom-esapoderado").prop("checked", false);
+        $('#concom-puestoapoderado').val('null');
+        $("#concom-desde").val('null');
+        $("#concom-hasta").val('null');
+
         $("#concom-email1").val("");
         if ($("#concom-email2").length)
             $("#concom-email2").parent().remove();
@@ -2667,6 +2674,10 @@ function armarFuncionalidades() {
 function eliminarContactoComercial(val) {
     var item = $(val).attr("id").split("concom-eliminar")[1];
     $("#comercial" + item).remove();
+    let aEliminar = aGuardarContactoComercial.filter(function (el) {
+        return el.item == parseInt(item);
+    });
+    if (aEliminar[0].esApoderado && !tienePermisoApoderados) return MensAlerta("No tiene Permisos");
     aGuardarContactoComercial = aGuardarContactoComercial.filter(function (el) {
         return el.item !== parseInt(item);
     });
@@ -2674,99 +2685,121 @@ function eliminarContactoComercial(val) {
 }
 
 function editarContactoComercial(id) {
-    var obj = aGuardarContactoComercial.filter(function (el) {
-        return el.item === parseInt(id);
-    });
+    
+        var obj = aGuardarContactoComercial.filter(function (el) {
+            return el.item === parseInt(id);
+        });
     obj = obj[0];
-
-    $("#concom-nombre").val(obj.nombre);
-    $("#concom-apellido").val(obj.apellido);
-    $("#concom-fechanacimientodia").val(obj.dia);
-    $("#concom-fechanacimientomes").val(obj.mes);
-    $("#concom-anionacimientomes").val(obj.anio);
-    $("#concom-cargo").val(obj.cargo);
-    $("#concom-puesto").val(obj.puesto);
-    $("#concom-intereses").val(obj.intereses);
-    $("#concom-intereses").multiselect("refresh");
-    $("#concom-otrosintereses").val(obj.otrosIntereses);
-
-    if (obj.principal == 1) {
-        $("#concom-principal").prop("checked", true);
-    } else {
-        $("#concom-principal").prop("checked", false);
+    if (obj.esApoderado && !tienePermisoApoderados) return MensAlerta("No tiene Permisos");//tienePermisoApoderados es bool
+        $("#concom-nombre").val(obj.nombre);
+        $("#concom-apellido").val(obj.apellido);
+        $("#concom-fechanacimientodia").val(obj.dia);
+        $("#concom-fechanacimientomes").val(obj.mes);
+        $("#concom-anionacimientomes").val(obj.anio);
+        $("#concom-cargo").val(obj.cargo);
+        $("#concom-puesto").val(obj.puesto);
+        $("#concom-intereses").val(obj.intereses);
+        $("#concom-intereses").multiselect("refresh");
+        $("#concom-otrosintereses").val(obj.otrosIntereses);
+    if (obj.esApoderado && tienePermisoApoderados) {
+        //Activar casilla EsApoderado
+        $("#concom-esapoderado").prop("checked", true);
+        //Hacer visibles los demas campos correspondientes
+        $(".concom-puestoapoderadoDiv").show();
+        $(".concom-cuitDiv").show();
+        $(".concom-desdeDiv").show();
+        $(".concom-hastaDiv").show();
+        //Setear fechas
+        let fechaDesde = new Date(parseInt(obj.desde.replace("/Date(", "").replace(")/", ""), 10));
+        $('#concom-desde').val(
+            fechaDesde.getFullYear() + '-' +
+            ('0' + (fechaDesde.getMonth() + 1)).slice(-2) + '-' +
+            ('0' + fechaDesde.getDate()).slice(-2)
+        );
+        let fechaHasta = new Date(parseInt(obj.hasta.replace("/Date(", "").replace(")/", ""), 10));
+        $("#concom-hasta").val(fechaHasta.toISOString().split('T')[0]);
+        //Setear Puesto
+        $('#concom-puestoapoderado').val(obj.puestoApoderadoId);
+        //Setear Cuit
+        $('#concom-cuit').val(obj.cuit);
     }
-    if (obj.CompraNet == 1) {
-        $("#concom-compranet").prop("checked", true);
-    } else {
-        $("#concom-compranet").prop("checked", false);
-    }
-    if (obj.Cupo == 1) {
-        $("#concom-cupo").prop("checked", true);
-    } else {
-        $("#concom-cupo").prop("checked", false);
-    }
-    if (obj.Boleto == 1) {
-        $("#concom-boleto").prop("checked", true);
-    } else {
-        $("#concom-boleto").prop("checked", false);
-    }
-
-    var cantEmails = obj.emails.length;
-    $("#concom-email1").val(obj.emails[0]);
-    for (var i = 2; i <= cantEmails; i++) {
-        if (obj.emails[i - 1] != null) {
-            if (!($("#concom-email" + i + "") && $("#concom-email" + i + "").length > 0)) {
-                var div = "";
-                div += '<div class="formulario-campo">'
-                    + '<input type="text" class="campo-input-text" id="concom-email' + i + '" style="margin-right: 50px;margin-top: 5px;" />'
-                    + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail' + i + '" />'
-                    + '</div>';
-                $(".concom-campo-email").append(div);
-
-                $("#concom-eliminarMail" + i + "").click(function () {
-                    $(this).parent().remove();
-                });
-
-                $("#concom-email" + i + "").val(obj.emails[i - 1]);
-            }
+        if (obj.principal == 1) {
+            $("#concom-principal").prop("checked", true);
+        } else {
+            $("#concom-principal").prop("checked", false);
         }
-    }
+        if (obj.CompraNet == 1) {
+            $("#concom-compranet").prop("checked", true);
+        } else {
+            $("#concom-compranet").prop("checked", false);
+        }
+        if (obj.Cupo == 1) {
+            $("#concom-cupo").prop("checked", true);
+        } else {
+            $("#concom-cupo").prop("checked", false);
+        }
+        if (obj.Boleto == 1) {
+            $("#concom-boleto").prop("checked", true);
+        } else {
+            $("#concom-boleto").prop("checked", false);
+        }
 
-    var cantTelefonos = obj.telefonos.length;
-    $("#concom-TipoTelefono1").val(obj.telefonos[0].tipoTelefono);
-    $("#concom-Telefono1").val(obj.telefonos[0].telefono);
-    for (i = 2; i <= cantTelefonos; i++) {
-        if (obj.telefonos[i - 1].TipoTelefono != null && obj.telefonos[i - 1].telefono) {
-            if (!($("#concom-Telefono" + i + "") && $("#concom-Telefono" + i + "").length > 0)) {
-                var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
-                htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono' + i + '">';
-                htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-                for (var jj in resultInit.tiptel) {
-                    (function (j) {
-                        htmlTipoTelefono += '<option value="' + resultInit.tiptel[j].TipoTelefonoId + '">' + resultInit.tiptel[j].Descripcion + '</option>';
-                    })(jj);
+        var cantEmails = obj.emails.length;
+        $("#concom-email1").val(obj.emails[0]);
+        for (var i = 2; i <= cantEmails; i++) {
+            if (obj.emails[i - 1] != null) {
+                if (!($("#concom-email" + i + "") && $("#concom-email" + i + "").length > 0)) {
+                    var div = "";
+                    div += '<div class="formulario-campo">'
+                        + '<input type="text" class="campo-input-text" id="concom-email' + i + '" style="margin-right: 50px;margin-top: 5px;" />'
+                        + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail' + i + '" />'
+                        + '</div>';
+                    $(".concom-campo-email").append(div);
+
+                    $("#concom-eliminarMail" + i + "").click(function () {
+                        $(this).parent().remove();
+                    });
+
+                    $("#concom-email" + i + "").val(obj.emails[i - 1]);
                 }
-                htmlTipoTelefono += '</select>'
-                    + '<input type="text" placeholder="Telefono"  class="campo-input-text" id="concom-Telefono' + i + '" style="margin-right: 64px;margin-top: 5px;" />'
-                    + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarTelefono' + i + '" />'
-                    + '</div>';
-
-                $(".concom-campo-telefono").append(htmlTipoTelefono);
-
-                $("#concom-eliminarTelefono" + i + "").click(function () {
-                    $(this).parent().remove();
-                });
-
-                $("#concom-TipoTelefono" + i + "").val(obj.telefonos[i - 1].tipoTelefono);
-                $("#concom-Telefono" + i + "").val(obj.telefonos[i - 1].telefono);
             }
         }
-    }
-    $("#concom-id").val(obj.contactoComercialId ? obj.contactoComercialId : 0);
-    $("#comercial" + id).remove();
-    aGuardarContactoComercial = aGuardarContactoComercial.filter(function (el) {
-        return el.item !== parseInt(id);
-    });
+
+        var cantTelefonos = obj.telefonos.length;
+        $("#concom-TipoTelefono1").val(obj.telefonos[0].tipoTelefono);
+        $("#concom-Telefono1").val(obj.telefonos[0].telefono);
+        for (i = 2; i <= cantTelefonos; i++) {
+            if (obj.telefonos[i - 1].TipoTelefono != null && obj.telefonos[i - 1].telefono) {
+                if (!($("#concom-Telefono" + i + "") && $("#concom-Telefono" + i + "").length > 0)) {
+                    var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
+                    htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono' + i + '">';
+                    htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
+                    for (var jj in resultInit.tiptel) {
+                        (function (j) {
+                            htmlTipoTelefono += '<option value="' + resultInit.tiptel[j].TipoTelefonoId + '">' + resultInit.tiptel[j].Descripcion + '</option>';
+                        })(jj);
+                    }
+                    htmlTipoTelefono += '</select>'
+                        + '<input type="text" placeholder="Telefono"  class="campo-input-text" id="concom-Telefono' + i + '" style="margin-right: 64px;margin-top: 5px;" />'
+                        + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarTelefono' + i + '" />'
+                        + '</div>';
+
+                    $(".concom-campo-telefono").append(htmlTipoTelefono);
+
+                    $("#concom-eliminarTelefono" + i + "").click(function () {
+                        $(this).parent().remove();
+                    });
+
+                    $("#concom-TipoTelefono" + i + "").val(obj.telefonos[i - 1].tipoTelefono);
+                    $("#concom-Telefono" + i + "").val(obj.telefonos[i - 1].telefono);
+                }
+            }
+        }
+        $("#concom-id").val(obj.contactoComercialId ? obj.contactoComercialId : 0);
+        $("#comercial" + id).remove();
+        aGuardarContactoComercial = aGuardarContactoComercial.filter(function (el) {
+            return el.item !== parseInt(id);
+        });
 }
 
 function InicializarDatos() {

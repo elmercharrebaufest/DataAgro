@@ -2349,6 +2349,11 @@ namespace Molinos.DataAgro.Business.Managers
                         var mod = oParam.contactocomercial.Where(x => x.contactoComercialId == con.ContactoComercialId).First();
                         con.Apellido = mod.apellido;
                         con.Nombres = mod.nombre;
+                        con.CuitApoderado = mod.cuit;
+                        con.EsApoderado = mod.esApoderado;
+                        con.PuestoApoderadoId = mod.puestoApoderadoId;
+                        con.FechaDesde = mod.desde;
+                        con.FechaHasta = mod.hasta;
                         con.ProveedorId = (int)oParam.ProveedorId;
                         con.OtrosIntereses = mod.otrosIntereses;
                         con.Puesto = mod.puesto;
