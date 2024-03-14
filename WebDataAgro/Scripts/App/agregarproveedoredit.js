@@ -161,6 +161,11 @@ function armarComercial(comerciales) {
             obj.contactoComercialId = comerciales[i].ContactoComercialId; //TODO: Poner el id que va
             obj.nombre = comerciales[i].Nombres;
             obj.apellido = comerciales[i].Apellido;
+            obj.esApoderado = comerciales[i].EsApoderado?true:false;
+            obj.cuit = comerciales[i].CuitApoderado;
+            obj.puestoApoderadoId = comerciales[i].PuestoApoderadoId;
+            obj.desde = comerciales[i].FechaDesde;
+            obj.hasta = comerciales[i].FechaHasta;
             obj.emails = [];
             if (comerciales[i].Email1)
                 obj.emails.push(comerciales[i].Email1);

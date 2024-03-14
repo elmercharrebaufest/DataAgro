@@ -11,11 +11,13 @@
     var modificarRazonSocial = PermisosHelper.Is(PermisosDataAgro.ModificarRazonSocial);
     var deshabilitarProveedor = PermisosHelper.Is(PermisosDataAgro.DeshabilitarProveedor);
     var ocultarCamposEditar = PermisosHelper.Is(PermisosDataAgro.OcultarCamposEditar);
+    var mostrarCamposApoderado = PermisosHelper.Is(PermisosDataAgro.ProveedorApoderados);
     if (global_asax.GlobalVariables.EsAdministrador)
     {
         modificarDatosCampos = false;
     }
 }
+<script>var tienePermisoApoderados = ConvertirStringABool('@mostrarCamposApoderado');</script>
 <script>
     var ProveedorId = '@ViewBag.ProveedorId';
     var modificarDatosCampos = ConvertirStringABool('@modificarDatosCampos');
@@ -293,7 +295,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row concom-form">
+                <div @(mostrarCamposApoderado ? "" : "hidden") class="row concom-form">
                     <div class="col-lg-5">
                         <div class="label-contacto">
                             Es Apoderado
