@@ -1,4 +1,5 @@
 ﻿var dataFile;
+var timeExcel = new Date().getTime();
 
 $(document).ready(function () {
     $("#menuproveedor").hide();
@@ -96,6 +97,13 @@ $(document).ready(function () {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
         }
     });
+
+    var formAltaMasiva = document.getElementById("downloadAltaMasiva");
+    var formAltaMasivaConvenio = document.getElementById("downloadAltaMasivaConvenio");
+    var formAltaMasivaMATBA = document.getElementById("divDescargarPlantillaMATBA");
+    formAltaMasiva.action += "?v=" + timeExcel;
+    formAltaMasivaConvenio.action += "?v=" + timeExcel;
+    formAltaMasivaMATBA.action += "?v=" + timeExcel;
 });
 
 
