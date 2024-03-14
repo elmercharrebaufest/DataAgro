@@ -124,7 +124,7 @@ function CreateGrid() {
         },
         dataSource: ds,
         columns: [
-            { field: "Id", title: "#", type: "number", format: "{0:n0}", width: 40 },
+            { field: "Id", title: "ID", type: "number", format: "{0:n0}", width: 45 },
             { field: "FechaAlta", type: "date", title: "Fecha Alta", format: _DefaultDateTemplate, width: 80 },
             { field: "Material", title: "Material", width: 80 },
             { field: "Comercial", title: "Comercial", width: 80 },
@@ -154,7 +154,6 @@ function CreateGrid() {
             { field: "Comentarios", title: "Comentarios", width: 70 },
             { field: "MaterialAntecesor", title: "Material<br>Antecesor", width: 70 },
             { field: "TipoCarga", title: "Tipo<br>Carga", width: 70 },
-            //{ field: "Attachments", title: "Attachments", type: "string", title: "Tiene Adjuntos", template: function (dataItem) { return dataItem.Attachments ? "Si" : "No"; }, width: 80 },
             { field: "Eliminado", type: "string", title: "Eliminado", template: function (dataItem) { return dataItem.Eliminado ? "Si" : "No"; }, width: 80 },
             { field: "Adjuntos", template: function (dataItem) { return listaAdjuntos(dataItem); }, title: "Adjuntos", width: 120 },
             { template: function (dataItem) { return botonBorrar(dataItem, 'fa-trash err'); }, width: 40, title: "Elim." },
@@ -187,27 +186,56 @@ function CreateGrid() {
         filterable: false,
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
+            var newRows = [];
             for (var i = 0; i < sheet.rows[0].cells.length; i++) {
-                sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace("<br>", " ").replace("<br>", " ").replace("<br>", " ");
+                sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace(/<br>/g, " ");
             }
-
-            var templateEliminado = kendo.template(this.columns[30].template);
-            var templateAdjuntos = kendo.template(this.columns[31].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
-
-                var dataItem = {
-                    Eliminado: row.cells[30].value,
-                    Adjuntos: row.cells[31].value,
-                };
-
-                var asdv = dataItem.value;
-                var asd = templateAdjuntos(dataItem);
-                row.cells[30].value = templateEliminado(dataItem);
-                row.cells[31].value = dataItem.Adjuntos.length == 0 ? "No" : "Si";
+                row.cells[29].value = row.cells[29].value ? "Si" : "No";
             }
-        },
+
+            // Proceso para adjuntos:
+            for (var i = 1; i < sheet.rows.length; i++) {
+                var row = sheet.rows[i];
+                var dataItem = { Adjuntos: row.cells[30].value };
+
+                if (dataItem.Adjuntos.constructor === window.init) {
+                    dataItem.Adjuntos = Array.from(dataItem.Adjuntos); // Convertir init a array
+                }
+                if (dataItem.Adjuntos.length === 0) {
+                    row.cells[30].value = "No contiene";
+                } else {
+                    var imagenData = dataItem.Adjuntos.map(function (imagen) {
+                        return {
+                            url: imagen.Path,
+                            nombre: imagen.Nombre,
+                        };
+                    });
+                    if (imagenData.length === 1) {
+                        var hyperlink = `=HYPERLINK("${imagenData[0].url}", "${imagenData[0].nombre}")`;
+                        row.cells[30].formula = hyperlink;
+                    } else {
+                        var firstHyperlink = `=HYPERLINK("${imagenData[0].url}", "${imagenData[0].nombre}")`;
+                        row.cells[30].formula = firstHyperlink;
+
+                        // Insertar las demás filas con adjuntos
+                        for (var l = 1; l < imagenData.length; l++) {
+                            var newRow = { cells: [] };
+                            for (var k = 0; k < row.cells.length; k++) {
+                                newRow.cells.push({ value: "" }); // Insertar celdas vacías
+                            }
+                            newRow.cells[30].formula = `=HYPERLINK("${imagenData[l].url}", "${imagenData[l].nombre}")`;
+                            newRows.push(newRow);
+                        }
+                    }
+                }
+                sheet.rows.splice(i + 1, 0, ...newRows);
+                i += newRows.length;
+                newRows = [];
+            }
+        }
     }).data("kendoGrid");
 
     var exportFlag = false;
@@ -253,7 +281,7 @@ function listaAdjuntos(dataItem) {
 
 function botonBorrar(dataItem, icono) {
     if (dataItem.Eliminado != true) {
-        return '<button data-toggle="tooltip" title="Rechazar" ' +
+        return '<button data-toggle="tooltip" title="Eliminar registro" ' +
             'onclick="ModalBorrar(' +
             "'" + dataItem.Id + "'" + ',' +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';

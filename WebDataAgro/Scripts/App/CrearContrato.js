@@ -1487,6 +1487,12 @@ function InicializarElementos() {
             } else {
                 BorrarComisionSiEsAcopio();
             }
+            if ($("#destinoId").val() == 4) {
+                $(".row-carta-oferta").hide();
+            }
+            else {
+                $(".row-carta-oferta").show()
+            }
             ValidarSinBoleto();
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
@@ -3579,7 +3585,7 @@ function AsignarDatos() {
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
     var bolsaFisico = [];
     for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
-        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As" || datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Rosario")
+        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As")
             bolsaFisico.push(datosIniCrearContrato.Datos.Bolsa[i]);
     }
     viewModel.set("BolsaFisicoCombo", bolsaFisico);
