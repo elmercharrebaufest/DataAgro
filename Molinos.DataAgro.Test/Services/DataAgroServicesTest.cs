@@ -1053,6 +1053,21 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
+        public void ListarApoderadosPorProveedorTestOk()
+        {
+            var cuit = "30345456230";
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
+               .Returns(new Proveedor { ProveedorId = 1 ,CUIT = "30345456230" } );
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+               .Returns(new List<ContactoComercial>() { new ContactoComercial { ProveedorId = 1 } });
+
+            var result = target.ListarApoderadosPorProveedor(cuit);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [Test]
         public void ConfirmarFijacionSAPTestOk()
         {
             string fijacionSAP = "200349433";
