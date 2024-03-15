@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business
 
     public class MailManager : IMailManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public MailManager(ILogger logger, IRepositorio repositorio)
@@ -362,13 +362,12 @@ namespace Molinos.DataAgro.Business
                     {
                         var mail = GetEmailUserActiveDirectory(enviar);
                         enviarAstring.Add(mail);
-                        logger.Info("Se envia en copia el mail {0} dia a {1}, con idad {2}", asunto, mail, enviar);
+                        logger.Info("Se envia el mail {0} a {1}, con ActiveDirectory {2}", asunto, mail, enviar);
                     }
                     catch (Exception e)
                     {
                         logger.Error(e);
                     }
-
                 }
             }
             if (copia != null)
@@ -379,14 +378,13 @@ namespace Molinos.DataAgro.Business
                     {
                         copiaAstring.Add(cc);
                     }
-
                     else
                     {
                         try
                         {
                             var mail = GetEmailUserActiveDirectory(cc);
                             copiaAstring.Add(mail);
-                            logger.Info("Se envia en copia el mail {0} dia a {1}, con idad {2}", asunto, mail, cc);
+                            logger.Info("Se envia en copia el mail {0} a {1}, con ActiveDirectory {2}", asunto, mail, cc);
                         }
                         catch (Exception e)
                         {
@@ -395,7 +393,7 @@ namespace Molinos.DataAgro.Business
                     }
                 }
             }
-            this.EnviarMail(new Comercial(), enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo, emailRemitente);
+            EnviarMail(new Comercial(), enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo, emailRemitente);
         }
     }
 }
