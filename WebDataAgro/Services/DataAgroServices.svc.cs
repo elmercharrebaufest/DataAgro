@@ -1271,7 +1271,24 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
+        public List<ContactoComercial> ListarApoderadosPorProveedor(string cuit)
+        {
+            try
+            {
+                logger.Debug("ListarApoderadosPorProveedor " + cuit);
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+                var apoderados = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado==true);
 
+
+                return apoderados;
+            }
+            catch (Exception e)
+            {
+                logger.Debug(e);
+                throw;
+            }
+
+        }
         #endregion
     }
 }
