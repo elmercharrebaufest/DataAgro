@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Agent
                         FOREIGN_AMOUNT = 1,
                         FOREIGN_CURRENCY = "USDM ",
                         LOCAL_CURRENCY = "ARP  ",
-                        //TYPE_OF_RATE = typeOfRate
+                        TYPE_OF_RATE = typeOfRate
                     };
                     logger.Debug(rq.ToXml());
 
@@ -88,8 +88,8 @@ namespace Molinos.DataAgro.Agent
                         DATE = fecha.Value.Date.ToString("yyyy-MM-dd"),
                         FOREIGN_AMOUNT = 1,
                         FOREIGN_CURRENCY = moneda,
-                        LOCAL_CURRENCY = "ARP  "
-                        //TYPE_OF_RATE = typeOfRate
+                        LOCAL_CURRENCY = "ARP  ",
+                        TYPE_OF_RATE = typeOfRate
                     };
                     logger.Debug(rq.ToXml());
 

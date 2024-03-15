@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.TipoDeCambio {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -39,6 +39,8 @@ namespace Molinos.DataAgro.Agent.TipoDeCambio {
         private string fOREIGN_CURRENCYField;
         
         private string lOCAL_CURRENCYField;
+        
+        private string tYPE_OF_RATEField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -88,6 +90,18 @@ namespace Molinos.DataAgro.Agent.TipoDeCambio {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string TYPE_OF_RATE {
+            get {
+                return this.tYPE_OF_RATEField;
+            }
+            set {
+                this.tYPE_OF_RATEField = value;
+                this.RaisePropertyChanged("TYPE_OF_RATE");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -99,7 +113,7 @@ namespace Molinos.DataAgro.Agent.TipoDeCambio {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
