@@ -127,6 +127,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (d.Cantidad > 0)
                             {
+                                d.Fecha = DateTime.Now.AddHours(1);
                                 if (d.Fecha < DateTime.Today)
                                 {
                                     error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
@@ -1279,7 +1280,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             //if ((cupo.Sustentable ?? false)==false && (cupo.EPA ?? false)==false)
             //{
-            htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "<br>" + (((bool)cupo.EPA && cupo.MaterialId == (int)EnumMateriales.SOJA) ? "<p> SOJA EPA: no se reciben camiones escalables chasis acoplado, ni bateas. Solamente escalables Tolva y camiones comunes</p></td></tr>" : "</td></tr>");
+
             //}
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
