@@ -200,7 +200,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             if (adjuntos.Any())
                             {
                                 itemData.Attachments = true;
-                                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                                 {
                                     itemData.Adjuntos.Add(new ResearchAdjunto()
                                     {
