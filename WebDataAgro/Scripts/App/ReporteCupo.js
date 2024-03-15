@@ -185,6 +185,7 @@ function InicializarCuposIndex() {
             { field: "Transportista", type: "string", width: 150 },
             { field: "Chofer", type: "string", width: 150 },
             { field: "MotivoRechazo", title: "Motivo de Rechazo", type: "string", width: 150 },
+            { field: "Cumplimiento", title: "Cumplimiento", type: "string", width: 150, template: function (dataItem) { return dataItem.Cumplimiento ? "Si" : "No"; } }
         ],
         pageable: {
             messages: {
