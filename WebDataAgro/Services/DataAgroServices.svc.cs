@@ -448,7 +448,7 @@ namespace WebDataAgro.Services
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS" ? true : false;            
+            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS" ? true : false;
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {
@@ -1271,23 +1271,31 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public List<ContactoComercial> ListarApoderadosPorProveedor(string cuit)
+        public List<ApoderadoSapDto> ListarApoderadosPorProveedor(string cuit)
         {
             try
             {
                 logger.Debug("ListarApoderadosPorProveedor " + cuit);
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
-                var apoderados = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado==true);
+                //var apoderados = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado == true);
 
+                List<ApoderadoSapDto> listaApoderadosDto2 = repositorio.Listar<ContactoComercial, ApoderadoSapDto>(x => new ApoderadoSapDto
+                {
+                    Nombres = x.Nombres,
+                    Apellido = x.Apellido,
+                    CuitApoderado = x.CuitApoderado,
+                    Puesto = x.PuestoApoderado == null ? null : x.PuestoApoderado.Descripcion,
+                    FechaDesde = x.FechaDesde,
+                    FechaHasta = x.FechaHasta
+                }, x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado == true).ToList();
 
-                return apoderados;
+                return listaApoderadosDto2;
             }
             catch (Exception e)
             {
                 logger.Debug(e);
                 throw;
             }
-
         }
         #endregion
     }
