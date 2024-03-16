@@ -145,7 +145,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("Agente de Compras ya se encuentra Finalizadao", result.ListaErrores[0].Message);
+            Assert.AreEqual("El Agente de Compras ya se encuentra finalizado.", result.ListaErrores[0].Message);
         }
         [Test]
         public void FinalizarAgenterechazadoTest()
@@ -165,7 +165,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("Agente de Compras ya ha sido Rechazado", result.ListaErrores[0].Message);
+            Assert.AreEqual("El Agente de Compras ya ha sido rechazado.", result.ListaErrores[0].Message);
         }
         [Test]
         public void BorrarAgenteTestOk()
@@ -203,7 +203,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("Este Negocio no se puede rechazar por estar Rechazado o Eliminado", result.ListaErrores[0].Message);
+            Assert.AreEqual("Este negocio no se puede rechazar porque ya está rechazado o eliminado.", result.ListaErrores[0].Message);
         }
         [Test]
         public void TraerAgenteTestOk()
@@ -257,7 +257,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("El Día de Operación ya se ha cerrado", result.Errores[0].Message);
+            Assert.AreEqual("El día de operación ya está cerrado.", result.Errores[0].Message);
         }
         [Test]
         public void GrabarAmpliacionAgenteTestFinalizado()
@@ -276,7 +276,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("El Agente de Compras no se puede modificar", result.Errores[0].Message);
+            Assert.AreEqual("El Agente de Compras no se puede modificar.", result.Errores[0].Message);
         }
 
         [Test]

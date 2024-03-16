@@ -67,6 +67,9 @@ namespace WebDataAgro.Services
         [OperationContract]
         ResultadoSap ConfirmarFijacionSAP(string fijacionSAP);
 
+        [OperationContract]
+        List<ApoderadoSapDto> ListarApoderadosPorProveedor(string cuit);
+
         #endregion
     }
 }
