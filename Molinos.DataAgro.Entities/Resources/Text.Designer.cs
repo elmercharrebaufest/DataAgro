@@ -68,6 +68,7 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("ActualizarCompraNet", resourceCulture);
             }
         }
+        
         /// <summary>
         ///   Looks up a localized string similar to Algoritimo de Cupos.
         /// </summary>
@@ -645,7 +646,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Jefe Envio Mail Negocios Con Dia Anterior.
+        ///   Looks up a localized string similar to Jefe Envio Mail Negocios Con Día Anterior.
         /// </summary>
         public static string Configuraciones_JefeEnvioMailNegociosConDiaAnterior {
             get {
@@ -834,7 +835,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crear Negocios con fecha mayor la día anterior.
+        ///   Looks up a localized string similar to Crear Negocios con fecha mayor al día anterior.
         /// </summary>
         public static string Crear_Negocios_FechaMayorDiaAnterior {
             get {
@@ -866,15 +867,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Cupos_Acopios_SolicitudExtraordinaria {
             get {
                 return ResourceManager.GetString("Cupos_Acopios_SolicitudExtraordinaria", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Datos Research.
-        /// </summary>
-        public static string Datos_Research {
-            get {
-                return ResourceManager.GetString("Datos_Research", resourceCulture);
             }
         }
         
@@ -1014,6 +1006,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eliminar Registro Research.
+        /// </summary>
+        public static string Eliminar_Registro_Research {
+            get {
+                return ResourceManager.GetString("Eliminar_Registro_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Envio Mail Negocios Anula y Reemplaza.
         /// </summary>
         public static string EnvioMailNegociosAnulaYReemplaza {
@@ -1023,7 +1024,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Envio Mail a Negocios Con Dia Anterior en Fijaciones.
+        ///   Looks up a localized string similar to Enviar Mail de Negocios Con Día Anterior en Fijaciones.
         /// </summary>
         public static string EnvioMailNegociosConDiaAnteriorFijacion {
             get {
@@ -1311,7 +1312,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Habilitacion Boleto.
+        ///   Looks up a localized string similar to Habilitación Boleto.
         /// </summary>
         public static string Habilitacion_Boleto {
             get {
@@ -1518,7 +1519,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mercaderia en Deposito.
+        ///   Looks up a localized string similar to Mercadería en Deposito.
         /// </summary>
         public static string MercaderiaEnDeposito {
             get {
@@ -1662,7 +1663,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificacion fijacion dolarizado express.
+        ///   Looks up a localized string similar to Modificar fijación dolarizado express.
         /// </summary>
         public static string ModificarDolarizadoExpress {
             get {
@@ -1671,7 +1672,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificacion fijacion dolarizado.
+        ///   Looks up a localized string similar to Modificar fijación dolarizado.
         /// </summary>
         public static string ModificarDolarizadoFinalizado {
             get {
@@ -1680,7 +1681,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Fijacion Virtual.
+        ///   Looks up a localized string similar to Modificar Fijación Virtual.
         /// </summary>
         public static string ModificarFijacionVirtual {
             get {
@@ -1689,7 +1690,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Limite Dolarizado.
+        ///   Looks up a localized string similar to Modificar Límite Dolarizado.
         /// </summary>
         public static string ModificarLimiteDolarizado {
             get {
@@ -1707,7 +1708,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Limite Pesificado Finalizado.
+        ///   Looks up a localized string similar to Modificar Límite Pesificado Finalizado.
         /// </summary>
         public static string ModificarLimitePesificadoFinalizado {
             get {
@@ -1725,7 +1726,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Razon Social.
+        ///   Looks up a localized string similar to Modificar Razón Social.
         /// </summary>
         public static string ModificarRazonSocial {
             get {
@@ -1761,7 +1762,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crear Negocios con Fecha Mayor al Dia Anterior en Fijaciones.
+        ///   Looks up a localized string similar to Crear Negocios con Fecha Mayor al Día Anterior en Fijaciones.
         /// </summary>
         public static string NegociosFechaMayorDiaAnteriorFijacion {
             get {
@@ -2049,15 +2050,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reporte Research.
-        /// </summary>
-        public static string Reporte_Research {
-            get {
-                return ResourceManager.GetString("Reporte_Research", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Septiembre.
         /// </summary>
         public static string September {
@@ -2157,6 +2149,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Ver_Mesa {
             get {
                 return ResourceManager.GetString("Ver_Mesa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Reporte Research.
+        /// </summary>
+        public static string Ver_Reporte_Research {
+            get {
+                return ResourceManager.GetString("Ver_Reporte_Research", resourceCulture);
             }
         }
         
@@ -2395,7 +2396,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Reporte Evolucion Fijacion.
+        ///   Looks up a localized string similar to Visualizar Reporte Evolución Fijación.
         /// </summary>
         public static string Visualizar_Reporte_Evolucion_Fijacion {
             get {
@@ -2431,7 +2432,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Anulacion En Reporte Cupo.
+        ///   Looks up a localized string similar to Visualizar Anulación En Reporte Cupos.
         /// </summary>
         public static string VisualizarAnulacionEnReporteCupo {
             get {

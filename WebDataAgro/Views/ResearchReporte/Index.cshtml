@@ -13,10 +13,10 @@
 
 <div class="row filtro-desplegable">
     <br />
-    <div class="col-xs-6 col-lg-6" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="col-xs-6 col-lg-8" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
         <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important; border-radius: 7px;">Mostrar</span></strong></div>
     </div>
-    <div class="col-xs-6 col-lg-6" style="display: flex; justify-content: flex-end;">
+    <div class="col-xs-6 col-lg-4" style="display: flex; justify-content: flex-end;">
         <button class="k-button" onclick="SincronizarResearch()" type="button" style="border-color: #017940; border-radius: 7px !important">
             <i class="fa fa-refresh"></i> Sincronizar datos
         </button>
@@ -136,12 +136,7 @@
 </div>
 
 <br />
-<script type="text/x-kendo-template" id="templateToolbar">
-    <div class="">
-        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
-        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-excel"></span>Reporte Comercial</a>
-    </div>
-</script>
+
 <div class="resultado">
     <div id="grid" class="tabla-result">
     </div>
@@ -170,3 +165,5 @@
         </div>
     </div>
 </div>
+
+<div id="permisos" data-eliminar="@PermisosHelper.Is(PermisosDataAgro.EliminarRegistroResearch)"></div>

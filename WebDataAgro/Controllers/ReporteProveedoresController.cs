@@ -1,8 +1,6 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using System;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -20,7 +18,7 @@ namespace WebDataAgro.Controllers
             this.proveedorManager = proveedorManager;
         }
         // GET: ResearchAvanceSiembra
-        [Autorizacion(PermisosDataAgro.ReporteResearch)]
+        [Autorizacion(PermisosDataAgro.VerReporteResearch)]
         public ActionResult Index()
         {
             return View();
@@ -29,7 +27,7 @@ namespace WebDataAgro.Controllers
         public ActionResult BuscarDatosProveedor(DataSourceRequest request)
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var model = proveedorManager.BuscarDatosProveedor(request,equipo);
+            var model = proveedorManager.BuscarDatosProveedor(request, equipo);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
         [HttpPost]
@@ -55,5 +53,3 @@ namespace WebDataAgro.Controllers
         }
     }
 }
-
-
