@@ -2395,7 +2395,7 @@ function armarFuncionalidades() {
         obj.cuit = $("#concom-cuit").val();
         obj.desde = $("#concom-desde").val();
         obj.hasta = $("#concom-hasta").val();
-        obj.esApoderado = $("#concom-esapoderado").is(":checked") ? 1 : 0;
+        obj.esApoderado = $("#concom-esapoderado").is(":checked") ? true : false;
         obj.puestoApoderadoId = $("#concom-puestoapoderado").val();
         obj.emails = [];
         if (($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) ||
@@ -2569,9 +2569,9 @@ function armarFuncionalidades() {
         }
 
         aGuardarContactoComercial.push(obj);
-
+        var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
         var htmlComerciales = "";
-        htmlComerciales += '<div class="contenedor-contacto-comercial" id="comercial' + cantContactoComercial + '">' +
+        htmlComerciales += '<div class="contenedor-contacto-comercial  ' + (obj.esApoderado == true ? 'color-Apoderado' : '') +'" id="comercial' + cantContactoComercial + '">' +
             '<div class="contenedor-contacto-comercial-titulo">' +
             '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
             '<span class="span-contacto-comercial"> ' +
@@ -2596,7 +2596,7 @@ function armarFuncionalidades() {
             '<span class="contenedor-contacto-comercial-posicion-der">' +
             (obj.puesto ? obj.puesto : "No se especifica puesto") +
             '</span>' +
-            '</div>' +
+            '</div>' + (obj.esApoderado == true ? etiquetaApoderado : "") +
             '<div class="contenedor-contacto-comercial-telefonos">' +
             (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
             '</div>' +

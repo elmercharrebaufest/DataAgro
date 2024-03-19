@@ -152,6 +152,7 @@ function armarBasico(basico) {
 }
 
 function armarComercial(comerciales) {
+    var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
     var htmlComerciales = "";
     for (var ii in comerciales) {
         (function (i) {
@@ -226,8 +227,7 @@ function armarComercial(comerciales) {
             obj.Boleto = comerciales[i].Boleto;
             obj.item = cantContactoComercial;
             aGuardarContactoComercial.push(obj);
-
-            htmlComerciales += '<div class="contenedor-contacto-comercial" id="comercial' + cantContactoComercial + '">' +
+            htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') +'" id="comercial' + cantContactoComercial + '">' +
                 '<div class="contenedor-contacto-comercial-titulo">' +
                 '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
                 '<span class="span-contacto-comercial"> ' +
@@ -252,7 +252,7 @@ function armarComercial(comerciales) {
                 '<span class="contenedor-contacto-comercial-posicion-der">' +
                 (comerciales[i].Puesto ? comerciales[i].Puesto : "No especifica puesto") +
                 '</span>' +
-                '</div>' +
+                '</div>' + (comerciales[i].EsApoderado==true? etiquetaApoderado: "") +
                 '<div class="contenedor-contacto-comercial-telefonos">' +
                 (comerciales[i].Telefono1 ? comerciales[i].Telefono1 + (comerciales[i].Telefono2 ? " - " + comerciales[i].Telefono2 : "") + (comerciales[i].Telefono3 ? " - " + comerciales[i].Telefono3 : "") : "No especifica teléfono") +
                 '</div>' +
@@ -260,30 +260,30 @@ function armarComercial(comerciales) {
                 (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-extras">' +
-                '<div class="row">' +
-                '<div class="col-lg-6">' +
-                '<span class="contenedor-contacto-comercial-extras-label">' +
-                'Fecha de nacimiento:' +
-                '</span>' +
-                '</div>' +
-                '<div class="col-lg-6">' +
-                '<span class="contenedor-contacto-comercial-extras-value">' +
-                (comerciales[i].FechaNacimiento ? kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "m") + " de " + kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "yyyy") : "no especifica") +
-                '</span>' +
-                '</div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col-lg-6">' +
-                '<span class="contenedor-contacto-comercial-extras-label">' +
-                'Intereses' +
-                '</span>' +
-                '</div>' +
-                '<div class="col-lg-6">' +
-                '<span class="contenedor-contacto-comercial-extras-value">' +
-                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") +
-                '</span>' +
-                '</div>' +
-                '</div>' +
+                    '<div class="row">' +
+                        '<div class="col-lg-6">' +
+                            '<span class="contenedor-contacto-comercial-extras-label">' +
+                                'Fecha de nacimiento:' +
+                            '</span>' +
+                        '</div>' +
+                        '<div class="col-lg-6">' +
+                            '<span class="contenedor-contacto-comercial-extras-value">' +
+                                (comerciales[i].FechaNacimiento ? kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "m") + " de " + kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "yyyy") : "no especifica") +
+                            '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="row">' +
+                        '<div class="col-lg-6">' +
+                            '<span class="contenedor-contacto-comercial-extras-label">' +
+                                'Intereses' +
+                            '</span>' +
+                        '</div>' +
+                        '<div class="col-lg-6">' +
+                            '<span class="contenedor-contacto-comercial-extras-value">' +
+                                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") +
+                            '</span>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
                 '</div>';
         })(ii);
