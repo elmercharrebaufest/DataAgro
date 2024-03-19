@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Kendo.DynamicLinq;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using WebDataAgro.Atributos;
-using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -23,9 +12,6 @@ namespace WebDataAgro.Controllers
         private readonly ICampañaManager campañaManager;
         private readonly IMaterialManager materialManager;
 
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
         public ResearchMapaController(ICampañaManager campañaManager, IMaterialManager materialManager)
         {
             this.campañaManager = campañaManager;
@@ -33,7 +19,7 @@ namespace WebDataAgro.Controllers
         }
 
         // GET: ResearchMapa
-        [Autorizacion(PermisosDataAgro.DatosResearch)]
+        [Autorizacion(PermisosDataAgro.MapaResearch)]
         public ActionResult Index()
         {
             FillViewBag();
@@ -59,7 +45,6 @@ namespace WebDataAgro.Controllers
                 Value = x.CampañaId.ToString(),
                 Selected = false
             }).OrderBy(x => x.Text);
-
 
             ViewBag.Campania = campaniaListItems;
 

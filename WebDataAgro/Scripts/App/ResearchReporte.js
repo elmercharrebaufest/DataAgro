@@ -1,7 +1,8 @@
 ﻿var idModalBorrar = 0;
+var eliminarRegistro;
 $(document).ready(function () {
     kendo.culture("es-AR");
-
+    eliminarRegistro = document.getElementById('permisos').getAttribute('data-eliminar');
     inicializarTodosKendoDate($(".filtroFecha"));
     //$("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     CreateGrid();
@@ -156,7 +157,13 @@ function CreateGrid() {
             { field: "TipoCarga", title: "Tipo<br>Carga", width: 70 },
             { field: "Eliminado", type: "string", title: "Eliminado", template: function (dataItem) { return dataItem.Eliminado ? "Si" : "No"; }, width: 80 },
             { field: "Adjuntos", template: function (dataItem) { return listaAdjuntos(dataItem); }, title: "Adjuntos", width: 120 },
-            { template: function (dataItem) { return botonBorrar(dataItem, 'fa-trash err'); }, width: 40, title: "Elim." },
+            {
+                template: function (dataItem) {
+                    if (eliminarRegistro == 'True') return botonBorrar(dataItem, 'fa-trash err');
+                    else return '';
+                },
+                width: 40, title: "Elim."
+            }
         ],
         pageable: {
             messages: {
