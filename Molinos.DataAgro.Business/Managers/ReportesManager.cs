@@ -2708,6 +2708,29 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
+        public ReporteLocalidadesModel ObtenerDatosReporteLocalidades()
+        {
+            ReporteLocalidadesModel result = new ReporteLocalidadesModel();
+
+            var localidades = repositorio.Listar<Localidad, LocalidadDto>(localidad => new LocalidadDto { Nombre = localidad.Nombre, Partido_Nombre = localidad.Partido.Descripcion, PartidoId = localidad.PartidoId, CodLocalidad = localidad.CodLocalidad, ProvinciaId = localidad.ProvinciaId, Provincia_Nombre = localidad.Provincia.Nombre });
+
+            foreach (var local in localidades)
+            {
+                if (local.PartidoId != null)
+                {
+                    result.tablero.Add(new ReporteLocalidades
+                    {
+                        Nombre = local.Nombre,
+                        CodLocalidad = local.CodLocalidad,
+                        PartidoId = (int)local.PartidoId,
+                        NombreProvincia = local.Provincia_Nombre != null ? local.Provincia_Nombre : string.Empty
+                    }); 
+                }
+            }
+
+            return result;
+        }
+
         public ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId,
             int? MaterialId, int? GrupoCompraId, int? ClasificacionId, int? DestinoId)
         {
