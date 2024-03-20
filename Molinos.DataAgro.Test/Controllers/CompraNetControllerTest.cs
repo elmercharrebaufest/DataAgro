@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
                 acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object,
-                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object, diasHabilesAgentMock.Object);
+                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object, diasHabilesAgentMock.Object, null);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 

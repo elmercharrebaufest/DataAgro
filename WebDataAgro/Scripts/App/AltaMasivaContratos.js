@@ -199,6 +199,10 @@ function setFileName() {
     }
 }
 
+function descargaReporteLocalidades() {
+    document.getElementById("descargarReporteLocalidad").click();
+}
+
 function volverFormulario() {
 
     $("#fileLb").html('');

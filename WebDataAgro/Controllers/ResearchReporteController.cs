@@ -1,19 +1,13 @@
 ﻿using Kendo.DynamicLinq;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
-using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Design;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
-using WebDataAgro.Core;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -39,7 +33,7 @@ namespace WebDataAgro.Controllers
             this.localidadManager = localidadManager;
         }
 
-        [Autorizacion(PermisosDataAgro.ReporteResearch)]
+        [Autorizacion(PermisosDataAgro.VerReporteResearch)]
         public ActionResult Index()
         {
             FillViewBag();

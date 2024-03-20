@@ -30,7 +30,7 @@ namespace WebDataAgro.Controllers
             this.oCampañaManager = oCampañaManager;
         }
         // GET: ResearchAvanceSiembra
-        [Autorizacion(PermisosDataAgro.DatosResearch)]
+        [Autorizacion(PermisosDataAgro.MapaResearch)]
         public ActionResult Index()
         {
             return View();
@@ -188,7 +188,7 @@ namespace WebDataAgro.Controllers
                 Observaciones = researchAvanceSiembraModel.Observaciones,
                 FechaHora = researchAvanceSiembraModel.FechaHora,
                 CampaniaId = researchAvanceSiembraModel.CampaniaId
-                
+
             };
             return researchAvanceSiembra;
         }
@@ -258,7 +258,7 @@ namespace WebDataAgro.Controllers
                     FechaHora = i.FechaHora,
                     CampaniaId = i.CampaniaId,
                     CampaniaDescripcion = i.Campania
-                     
+
                 };
                 lista.Add(researchAvanceSiembraModel);
 
@@ -368,7 +368,7 @@ namespace WebDataAgro.Controllers
 
         private void FillViewBag()
         {
-            
+
             var material = oMaterialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
@@ -376,7 +376,7 @@ namespace WebDataAgro.Controllers
                         Text = x.Descripcion,
                         Value = x.MaterialId.ToString(),
                         Selected = false
-                    }).OrderBy(x=>x.Value);
+                    }).OrderBy(x => x.Value);
             ViewBag.Material = materialesListItems;
 
             var estadiosListItems = new List<SelectListItem>();
@@ -398,12 +398,13 @@ namespace WebDataAgro.Controllers
         public ActionResult BuscaAvanceSiembra(KendoGridMvcRequest request)
         {
             var model = oResearchManager.TraerAvanceSiembra(request);
-            return new JsonResult() {
-                Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue
+            return new JsonResult()
+            {
+                Data = model,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
             };
         }
     }
 
 }
-
-

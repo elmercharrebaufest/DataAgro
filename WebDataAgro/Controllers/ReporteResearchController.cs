@@ -16,7 +16,7 @@ namespace WebDataAgro.Controllers
             this.oResearchManager = oResearchManager;
         }
         // GET: ResearchAvanceSiembra
-        [Autorizacion(PermisosDataAgro.ReporteResearch)]
+        [Autorizacion(PermisosDataAgro.VerReporteResearch)]
         public ActionResult Index()
         {
             return View();
@@ -72,5 +72,3 @@ namespace WebDataAgro.Controllers
 
     }
 }
-
-

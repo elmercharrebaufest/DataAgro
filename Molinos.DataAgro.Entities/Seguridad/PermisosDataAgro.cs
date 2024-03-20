@@ -274,12 +274,14 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionLocalidad = 524,
 
         //Research
-        [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
-        DatosResearch = 601,
-        [Display(ResourceType = typeof(Text), Name = "Reporte_Research")]
-        ReporteResearch = 602,
+        [Display(ResourceType = typeof(Text), Name = "Mapa_Research")]
+        MapaResearch = 601,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Reporte_Research")]
+        VerReporteResearch = 602,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Research")]
         NotificacionesResearch = 603,
+        [Display(ResourceType = typeof(Text), Name = "Eliminar_Registro_Research")]
+        EliminarRegistroResearch = 604,
 
         //Cupos
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Cupos")]
