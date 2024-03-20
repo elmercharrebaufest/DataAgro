@@ -183,6 +183,19 @@
             <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
     </div>
+
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Cumplimiento</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="CumplimientoId" name="Cumplimietno">
+            Sí: @Html.RadioButton("Cumplimiento", true, new { @class = "filtroBoleano ocultarAnular", @id = "Cumplimiento" })
+            No: @Html.RadioButton("Cumplimiento", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonCumplimiento()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
+
+    </div>
     <br />
 
     @*<div class="row">
