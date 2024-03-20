@@ -66,6 +66,7 @@ function InicializarCuposIndex() {
                     Sustentable: { type: "boolean" },
                     EPA: { type: "boolean" },
                     ConDescarga: { type: "boolean" },
+                    Cumplimiento: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
                     CTGFechaDesde: { type: "date" }
 
@@ -354,6 +355,9 @@ function deseleccionarRadioButtonEPA() {
 }
 function deseleccionarRadioButtonConDescarga() {
     $('[name=ConDescarga]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonCumplimiento() {
+    $('[name=Cumplimiento]:checked').prop('checked', false);
 }
 
 function ConvertirFechaRegistroAString(filtros) {
