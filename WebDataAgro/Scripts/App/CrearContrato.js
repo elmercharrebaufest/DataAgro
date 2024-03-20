@@ -5512,8 +5512,8 @@ function AgregarPrecioPactado() {
             }
             else {
                 if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-                    // GSIAN: Revisar si se puede pasar parámetro por TC.
-                    var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+                    var typeOfRate = ObtenerTypeOfRate();
+                    var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
                     var ImporteMonedaIgual = 0;
                     console.log("valorDolar", valorDolar);
                     if (precioPactado.MonedaPactadoId == "USDM ") {
@@ -5564,8 +5564,8 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
-            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+            var typeOfRate = ObtenerTypeOfRate();
+            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
                 ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio / valorDolar;
@@ -5873,8 +5873,14 @@ function validarCredito(cuitProv) {
         var cuitAux = cuitProv.split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
-            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0], cantidad: cantidad, precio: precio, moneda: moneda });
+            var typeOfRate = ObtenerTypeOfRate();
+            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', {
+                cuit: cuit[0],
+                cantidad: cantidad,
+                precio: precio,
+                moneda: moneda,
+                typeOfRate: typeOfRate,
+            });
 
 
             if (validacion == "Sin Crédito") {
@@ -6165,13 +6171,14 @@ function CalcularImporteDeOperacion(precio, cantidad) {
     var importe = 0;
     if ($("#ventaId").is(":checked")) {
         if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
+            var typeOfRate = ObtenerTypeOfRate();
             importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
                 precio: precio,
                 cantidad: cantidad,
                 fechaOperacion: $("#fechaOperacionId").val(),
                 materialId: $("#material").val(),
-                monedaId: $("#precioMonedaId").val()
+                monedaId: $("#precioMonedaId").val(),
+                typeOfRate: typeOfRate,
             })
 
         }
@@ -6560,4 +6567,33 @@ function APrecioConAgenteDeCompra() {
         else
             $(".venta").hide();
     }
+}
+
+function ObtenerTypeOfRate() {
+    var typeOfRate = null;
+    if ($("#tipoId").val() != "" && $("#precioMonedaId").val() != "") {
+        var fecha;
+        if (contratoEdit != null) {
+            var fechaJSON = contratoEdit.Fecha;
+            var milisegundos = parseInt(fechaJSON.replace(/\D/g, ''));
+            fecha = new Date(milisegundos);
+        }
+        else {
+            fecha = new Date();
+        }
+
+        var parametros = {
+            tipoNegocioId: $("#tipoId").val(),
+            monedaId: $("#precioMonedaId").val(),
+            tipoAgenteCompraId: $("#AgenteCompraId").val() == "" ? null : $("#AgenteCompraId").val(),
+            fecha: fecha,
+            modifica: esEdicion == "True" ? true : false,
+        }
+
+        typeOfRate = MSExecuteOnServer("/Compranet/ObtenerTypeOfRate", parametros);
+
+        return typeOfRate;
+    }
+
+    return typeOfRate;
 }

@@ -6022,10 +6022,9 @@ namespace Molinos.DataAgro.Business.Managers
             return ccppAgent.ListarCartasDePortePendienteAplicar(req);
         }
 
-        public string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
+        public string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda, string typeOfRate)
         {
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
-            var tipoCambio = tipoCambioAgent.TraerTipoDeCambio(null);
+            var tipoCambio = tipoCambioAgent.TraerTipoDeCambio(null, typeOfRate);
             var resultado = "";
             if (!string.IsNullOrEmpty(cuit) && cantidad > 0 && precio > 0 && !string.IsNullOrEmpty(moneda))
             {
@@ -6527,7 +6526,7 @@ namespace Molinos.DataAgro.Business.Managers
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
-                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
+                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : contrato.TipoAgenteCompraId != null ? "U" : "M";
 
                 var importe = CalcularImporteDeOperacion(contrato.PrecioNeto ?? contrato.Precio, contrato.Cantidad, contrato.MaterialId, contrato.FechaOperacion, contrato.MonedaId, typeOfRate);
                 mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory), false, importe));
@@ -6978,7 +6977,6 @@ namespace Molinos.DataAgro.Business.Managers
         public decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda, string typeOfRate)
         {
             var diaAnterior = fechaoperacion.AddDays(-1);
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
             var cambio = tipoCambioAgent.TraerTipoDeCambio(diaAnterior, typeOfRate);
             if (moneda == "ARP  ")
             {
@@ -9455,6 +9453,14 @@ namespace Molinos.DataAgro.Business.Managers
                 FleteProcedencia = x.FleteProcedencia,
                 Centro = x.Centro.Descripcion
             }, x => x.NegocioId == contratoId && x.ConDescarga.HasValue && x.ConDescarga.Value);
+        }
+
+        public string ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica)
+        {
+            string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(tipoNegocioId, monedaId, tipoAgenteCompraId, fecha, modifica);
+            string typeOfRate = codigoTC == "04" ? "Z" : tipoAgenteCompraId != null ? "U" : "M";
+
+            return typeOfRate;
         }
     }
 }

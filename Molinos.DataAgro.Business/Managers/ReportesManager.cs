@@ -820,6 +820,7 @@ namespace Molinos.DataAgro.Business.Managers
             var listaAgentes = new List<AgenteCompraDto>();
             //if (fechaDesde == fechaHasta)
             //{
+            // GSIAN: No hay negocio de referencia para traer el "typeOfRate"
             var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
             fechaDesde = fechaDesde.Date;
             fechaHasta = fechaHasta.Date;
@@ -3139,6 +3140,7 @@ namespace Molinos.DataAgro.Business.Managers
             var dia = desde;
             while (dia <= hasta)
             {
+                // GSIAN: No hay negocio de referencia para traer el "typeOfRate"
                 cotizaciones.Add(dia, tipoDeCambio.TraerTipoDeCambio(dia));
                 dia = dia.AddDays(1);
             }

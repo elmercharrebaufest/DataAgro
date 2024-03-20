@@ -1123,10 +1123,9 @@ namespace WebDataAgro.Controllers
 
         }
 
-        // GSIAN: Revisar si se puede pasar parámetro por TC.
-        public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
+        public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda, string typeOfRate = "M")
         {
-            var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda);
+            var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda, typeOfRate);
             return new JsonResult()
             {
                 Data = String.IsNullOrEmpty(val) ? "" : val,
@@ -1219,10 +1218,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        // GSIAN: Revisar si se puede pasar parámetro por TC.
-        public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId)
+        public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId, string typeOfRate = "M")
         {
-            var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId);
+            var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId, typeOfRate);
             return new JsonResult()
             {
                 Data = result,
@@ -1486,6 +1484,16 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = cuposDelNegocio,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica)
+        {
+            var result = mobjContratoManager.ObtenerTypeOfRate(tipoNegocioId, monedaId, tipoAgenteCompraId, fecha, modifica);
+            return new JsonResult()
+            {
+                Data = result,
                 MaxJsonLength = Int32.MaxValue
             };
         }

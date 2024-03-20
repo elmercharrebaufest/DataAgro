@@ -4566,8 +4566,8 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
-            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+            var typeOfRate = ObtenerTypeOfRate();
+            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
                 ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio / valorDolar;
@@ -5044,4 +5044,33 @@ function ValidarProveedorSisa() {
         $("#mensaje").hide();
         $("#mensaje").val("");
     }
+}
+
+function ObtenerTypeOfRate() {
+    var typeOfRate = null;
+    if ($("#tipoId").val() != "" && $("#precioMonedaId").val() != "") {
+        var fecha;
+        if (contratoEdit != null) {
+            var fechaJSON = contratoEdit.Fecha;
+            var milisegundos = parseInt(fechaJSON.replace(/\D/g, ''));
+            fecha = new Date(milisegundos);
+        }
+        else {
+            fecha = new Date();
+        }
+
+        var parametros = {
+            tipoNegocioId: $("#tipoId").val(),
+            monedaId: $("#precioMonedaId").val(),
+            tipoAgenteCompraId: $("#AgenteCompraId").val() == "" ? null : $("#AgenteCompraId").val(),
+            fecha: fecha,
+            modifica: esEdicion == "True" ? true : false,
+        }
+
+        typeOfRate = MSExecuteOnServer("/Compranet/ObtenerTypeOfRate", parametros);
+
+        return typeOfRate;
+    }
+
+    return typeOfRate;
 }

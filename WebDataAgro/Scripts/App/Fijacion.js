@@ -14,7 +14,6 @@ var cargaFijacionAyer;
 var tieneDolarizado;
 var modificarDolarizadoFinalizado;
 var primeraCargaEdit = false;
-// GSIAN: Revisar si se puede pasar parámetro por TC.
 var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
 var FechaFeriados = MSExecuteOnServer('/CompraNet/FechaFeriados');
 var aFijar = null;
@@ -2031,8 +2030,8 @@ function InicializarElementos() {
             }
         },
         change: function () {
-            // GSIAN: Revisar si se puede pasar parámetro por TC.
-            valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val() });
+            var typeOfRate = ObtenerTypeOfRate();
+            valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val(), typeOfRate: typeOfRate });
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();
             var anio = hoy.getFullYear();
@@ -5376,4 +5375,33 @@ function HayTarifaAConvenir() {
 
 function MensajeTipoNegocio() {
     MensAlerta("El contrato seleccionado es un A FIJAR PASE. Consulte con MESA BA antes de fijar.");
+}
+
+function ObtenerTypeOfRate() {
+    var typeOfRate = null;
+    if ($("#tipoId").val() != "" && $("#precioMonedaId").val() != "") {
+        var fecha;
+        if (contratoEdit.Contrato != null) {
+            var fechaJSON = contratoEdit.Contrato.Fecha;
+            var milisegundos = parseInt(fechaJSON.replace(/\D/g, ''));
+            fecha = new Date(milisegundos);
+        }
+        else {
+            fecha = new Date();
+        }
+
+        var parametros = {
+            tipoNegocioId: $("#tipoId").val(),
+            monedaId: $("#precioMonedaId").val(),
+            tipoAgenteCompraId: $("#AgenteCompraId").val() == "" ? null : $("#AgenteCompraId").val(),
+            fecha: fecha,
+            modifica: esEdicion == "True" ? true : false,
+        }
+
+        typeOfRate = MSExecuteOnServer("/Compranet/ObtenerTypeOfRate", parametros);
+
+        return typeOfRate;
+    }
+
+    return typeOfRate;
 }

@@ -16,13 +16,15 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
+        private readonly IFinalizarContratoAgent finalizarContratoAgent;
 
-        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent, ITipoDeCambioAgent tipoCambioAgent)
+        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent, ITipoDeCambioAgent tipoCambioAgent, IFinalizarContratoAgent finalizarContratoAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.contratosParaFijacionAgent = contratosParaFijacionAgent;
             this.tipoCambioAgent = tipoCambioAgent;
+            this.finalizarContratoAgent = finalizarContratoAgent;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -53,7 +55,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
                     if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
                     {
-                        var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
+                        string codigoTC = finalizarContratoAgent.DevolverTipoCambioSAP(fijacion.TipoNegocioId, fijacion.MonedaId, fijacion.TipoAgenteCompraId, fijacion.Fecha);
+                        string typeOfRate = codigoTC == "04" ? "Z" : fijacion.TipoAgenteCompraId != null ? "U" : "M";
+                        var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date, typeOfRate), 2, MidpointRounding.AwayFromZero);
                         
                         if (fijacion.MonedaId.Trim() == "ARP")
                         {

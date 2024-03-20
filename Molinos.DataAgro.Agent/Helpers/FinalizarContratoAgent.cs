@@ -98,7 +98,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
 
-                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
+                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : contrato.TipoAgenteCompraId != null ? "U" : "M";
 
                 if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
                 {
