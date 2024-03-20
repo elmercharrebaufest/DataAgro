@@ -1285,8 +1285,8 @@ namespace WebDataAgro.Services
                     Apellido = x.Apellido,
                     CuitApoderado = x.CuitApoderado,
                     Puesto = x.PuestoApoderado == null ? null : x.PuestoApoderado.Descripcion,
-                    FechaDesde = x.FechaDesde,
-                    FechaHasta = x.FechaHasta
+                    FechaDesde = x.FechaDesde.HasValue ? (x.FechaDesde.Value.Year + "-" + ((x.FechaDesde.Value.Month < 10 ? "0" : "") + x.FechaDesde.Value.Month) + "-" + ((x.FechaDesde.Value.Day < 10 ? "0" : "") + x.FechaDesde.Value.Day)) : "",
+                    FechaHasta = x.FechaHasta.HasValue?(x.FechaHasta.Value.Year+"-"+((x.FechaHasta.Value.Month<10?"0":"")+x.FechaHasta.Value.Month)+"-"+((x.FechaHasta.Value.Day < 10 ? "0" : "") + x.FechaHasta.Value.Day) ): "",
                 }, x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado == true).ToList();
 
                 return listaApoderadosDto2;

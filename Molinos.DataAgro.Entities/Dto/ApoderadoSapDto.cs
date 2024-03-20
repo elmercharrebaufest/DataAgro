@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Apellido { get; set; }
         public string Puesto { get; set; }
         public string CuitApoderado { get; set; }
-        public DateTime? FechaDesde { get; set; }
-        public DateTime? FechaHasta { get; set; }
+        public string FechaDesde { get; set; }
+        public string FechaHasta { get; set; }
     }
 }
