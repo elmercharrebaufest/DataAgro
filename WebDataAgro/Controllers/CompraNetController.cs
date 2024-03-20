@@ -17,6 +17,9 @@ using static WebDataAgro.MvcApplication;
 using System.IO;
 using Molinos.DataAgro.Entities.Helpers;
 using System.Data;
+using DocumentFormat.OpenXml.EMMA;
+using WebDataAgro.Helpers.Excel;
+using Molinos.DataAgro.Business.Managers;
 
 namespace WebDataAgro.Controllers
 {
@@ -43,6 +46,8 @@ namespace WebDataAgro.Controllers
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly ICentroManager centroManager;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly IReportesManager reportesManager;
+
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
@@ -54,7 +59,7 @@ namespace WebDataAgro.Controllers
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
             IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
             IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
-            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent)
+            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent, IReportesManager reportesManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -72,6 +77,7 @@ namespace WebDataAgro.Controllers
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
+            this.reportesManager = reportesManager;
             this.configuracionInternaManager = configuracionInternaManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.centroManager = centroManager;
@@ -1395,6 +1401,16 @@ namespace WebDataAgro.Controllers
                 return Json(new { Resume = errores, Resultado = false }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult ReporteLocalidades()
+        {
+            var estado = "leido";
+            //return Json(estado, JsonRequestBehavior.AllowGet);
+            var model = reportesManager.ObtenerDatosReporteLocalidades();
+            return File(ExcelReporteCompleto.GenerarExcelLocalidades(model), "application/vnd.ms-excel");
+
+        }
+
 
         public JsonResult TraerServicios(int? materialId, int? centroId)
         {
