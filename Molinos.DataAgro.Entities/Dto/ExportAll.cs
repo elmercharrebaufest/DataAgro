@@ -100,6 +100,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CompraNet { get; set; }
         public string Cupo { get; set; }
         public string Boleto { get; set; }
+        public string EsApoderado { get; set; }
+        public string CuitApoderado { get; set; }
+        public string PuestoApoderado { get; set; }
+        public string FechaDesde { get; set; }
+        public string FechaHasta { get; set; }
+
         //public string OperaATravesDe { get; set; }
         //public string Comisionista { get; set; }
         //public string HabilitadoCuposConRiesgo { get; set; }

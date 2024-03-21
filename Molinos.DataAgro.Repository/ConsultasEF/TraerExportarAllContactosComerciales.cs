@@ -44,7 +44,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Telefono = ContactoComercial.Telefono1,
                     CompraNet = ContactoComercial.CompraNet.HasValue && ContactoComercial.CompraNet.Value ? "SI" : "NO",
                     Cupo = ContactoComercial.Cupo.HasValue && ContactoComercial.Cupo.Value ? "SI" : "NO",
-                    Boleto = ContactoComercial.Boleto.HasValue && ContactoComercial.Boleto.Value ? "SI" : "NO"
+                    Boleto = ContactoComercial.Boleto.HasValue && ContactoComercial.Boleto.Value ? "SI" : "NO",
+                    EsApoderado = ContactoComercial.EsApoderado.HasValue && ContactoComercial.EsApoderado.Value ? "SI" : "NO",
+                    CuitApoderado = ContactoComercial.CuitApoderado,
+                    PuestoApoderado = ContactoComercial.PuestoApoderado.Descripcion,
+                    FechaDesde = ContactoComercial.FechaDesde.HasValue? ContactoComercial.FechaDesde.Value.ToString():"",
+                    FechaHasta = ContactoComercial.FechaHasta.HasValue ? ContactoComercial.FechaHasta.Value.ToString() : "",
                 };
 
             return resultado.Distinct().ToList();

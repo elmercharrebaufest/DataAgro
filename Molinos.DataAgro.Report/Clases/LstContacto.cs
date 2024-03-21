@@ -308,13 +308,13 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-
+            
             workSheet2.Cells[1, 1].Value = "CUIT";
             workSheet2.Column(1).AutoFit();
 
             workSheet2.Cells[1, 2].Value = "Razón Social";
             workSheet2.Column(2).AutoFit();
-
+            //Contactos
             if (oDatos.ContactosPrincipales.Count > 0)
             {
                 oPropRow = oDatos.ContactosPrincipales[0].GetType().GetProperties();
@@ -358,6 +358,18 @@ namespace Molinos.DataAgro.Report
 
             workSheet3.Cells[1, 2].Value = "Razón Social";
             workSheet3.Column(2).AutoFit();
+
+            workSheet3.Cells[1, 17].Value = "Es Apoderado";
+            workSheet3.Column(6).AutoFit();
+
+            workSheet3.Cells[1, 18].Value = "Cuit Apoderado";
+            workSheet3.Column(6).AutoFit();
+
+            workSheet3.Cells[1, 19].Value = "Fecha Desde";
+            workSheet3.Column(6).AutoFit();
+
+            workSheet3.Cells[1, 20].Value = "Fecha Hasta";
+            workSheet3.Column(6).AutoFit();
 
             if (oDatos.Produccion.Count > 0)
             {
