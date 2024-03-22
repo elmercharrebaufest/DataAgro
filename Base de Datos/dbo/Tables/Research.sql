@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Research]
 (
-	[ResearchId] INT IDENTITY (1, 1) NOT NULL,
+	[Id] INT IDENTITY (1, 1) NOT NULL,
 	[MaterialId] INT NOT NULL,
 	[MaterialIdAntecesor] INT NULL,
 	[EstadioId] INT NULL,
@@ -41,7 +41,7 @@
 	[ProvinciaId] INT NULL,
 	[PartidoId] INT NULL,
 	[RendimientoCalculado] FLOAT NULL,
-	CONSTRAINT [PK_Research] PRIMARY KEY CLUSTERED ([ResearchId] ASC),
+	CONSTRAINT [PK_Research] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Research_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
 	CONSTRAINT [FK_Research_MaterialAntecesor] FOREIGN KEY ([MaterialIdAntecesor]) REFERENCES [dbo].[Material] ([MaterialId]),
 	CONSTRAINT [FK_Research_Estadio] FOREIGN KEY ([EstadioId]) REFERENCES [dbo].[ResearchEstadio] ([EstadioId]),

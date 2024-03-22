@@ -5,7 +5,8 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class ResearchDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
+        public int? IdPowerApp { get; set; }
         public int MaterialId { get; set; }
         public int? MaterialIdAntecesor { get; set; }
         public int? EstadioId { get; set; }
@@ -34,7 +35,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? Rendimiento { get; set; }
         public int? TipoCargaId { get; set; }
         public string EstadoConectividad { get; set; }
-        public int? IdPowerApp { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string Author { get; set; }
         public string Editor { get; set; }
@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ResearchAdjuntoDto
     {
-        public int ResearchAdjuntoId { get; set; }
+        public int Id { get; set; }
         public int ResearchId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }

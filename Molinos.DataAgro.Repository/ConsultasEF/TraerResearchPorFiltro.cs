@@ -1,21 +1,10 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
-using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Linq;
 using System.Transactions;
-
-
-
 
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
@@ -37,7 +26,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     from x in contexto.Set<Research>()
                     select new ResearchDto()
                     {
-                        Id = x.ResearchId,
+                        Id = x.Id,
                         IdPowerApp = x.IdPowerApp,
                         Fecha = DbFunctions.TruncateTime(x.FechaAlta),
                         FechaAlta = x.FechaAlta,
@@ -50,7 +39,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Author = x.Author,
                         Editor = x.Editor,
                         ComercialId = x.ComercialId != null ? x.ComercialId : 44, //falta id
-                        Comercial = (string)(x.ComercialId != null ? x.Comercial.Nombres : "Desconocido"),
+                        Comercial = (string)(x.ComercialId != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : x.Author ?? "Desconocido"),
 
                         EstadoConectividad = x.EstadoConectividad,
                         Sincronizado = x.Sincronizado,
@@ -63,11 +52,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Latitud = x.Latitud,
                         Longitud = x.Longitud,
                         LocalidadId = x.LocalidadId,
-                        PartidoId = x.LocalidadObj.PartidoId,
-                        ProvinciaId = x.LocalidadObj.ProvinciaId,
-                        Localidad = x.LocalidadObj.Nombre,
-                        Partido = x.LocalidadObj.Partido.Descripcion,
-                        Provincia = x.LocalidadObj.Provincia.Nombre,
+                        PartidoId = x.PartidoId,
+                        ProvinciaId = x.ProvinciaId,
+                        Localidad = x.Localidad,
+                        Partido = x.Partido,
+                        Provincia = x.Provincia,
 
                         Comentarios = x.Comentarios,
 
@@ -99,9 +88,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Attachments = x.Adjuntos.Any(),
                         Adjuntos = x.Adjuntos.Select(a => new ResearchAdjuntoDto
                         {
+                            Id = a.Id,
                             Nombre = a.Nombre,
                             Path = a.Path,
-                            ResearchAdjuntoId = a.ResearchAdjuntoId,
                             ResearchId = a.ResearchId
                         }).ToList(),
                     };
@@ -131,7 +120,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //}
             return result;
         }
-
 
         public virtual DataSourceResult Ejecutar(DbContext contexto)
         {

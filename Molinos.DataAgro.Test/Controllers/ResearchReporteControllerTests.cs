@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using Kendo.DynamicLinq;
 using Moq;
@@ -50,7 +48,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             //Arrange 
             materialManagerMock.Setup(m => m.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
-
+            researchManagerMock.Setup(x => x.TraerResearchId()).Returns(new List<int> { 1 });
             campañaManagerMock.Setup(c => c.TraerTodoCampania()).Returns(new List<CampañaDto>());          
             comercialManagerMock.Setup(c => c.TraerTodoComercial()).Returns(new ResultIniComercial { Comercial = new List<ComercialIni>() });
             var condicionList = new List<ResearchCondicion>();
@@ -80,6 +78,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.IsNotNull(result.ViewBag.Campania);
             Assert.IsNotNull(result.ViewBag.Comercial);
             Assert.IsNotNull(result.ViewBag.Provincia);
+            Assert.IsNotNull(result.ViewBag.ResearchId);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ViewResult>(result);
         }
@@ -87,14 +86,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscaDatosTabla_ReturnsJsonResult()
         {
-            // Arrange
             var filtro = new DataSourceRequest();
             researchManagerMock.Setup(r => r.BuscaDatosTabla(filtro)).Returns(new DataSourceResult());
 
-            // Act
             var result = controller.BuscaDatosTabla(filtro) as JsonResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
             Assert.IsInstanceOf<DataSourceResult>(result.Data);
@@ -103,30 +99,22 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void Export_ReturnsJsonResult()
         {
-            // Arrange
             var filtro = new DataSourceRequest();
-            // Mockear la llamada a researchManager.TraerContratosFiltrados según sea necesario
 
-            // Act
             var result = controller.Export(filtro) as JsonResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
-            // Ajusta según la estructura y tipo de datos esperados
         }
 
         [Test]
         public void BorrarRegistro_ReturnsJsonResult()
         {
-            // Arrange
             int id = 1;
             researchManagerMock.Setup(r => r.BorrarResearch(id)).Returns(new Resultado());
 
-            // Act
             var result = controller.BorrarRegistro(id) as JsonResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
             Assert.IsInstanceOf<Resultado>(result.Data);

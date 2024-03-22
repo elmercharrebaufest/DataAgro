@@ -17,7 +17,7 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class ResearchManager : IResearchManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IClienteResearchAgent clienteResearchAgent;
 
@@ -94,9 +94,10 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion + "",
                 Localidad = x.Localidad.Nombre + "",
                 Campania = x.Campania.Descripcion + "",
-                CampaniaId = x.CampaniaId 
+                CampaniaId = x.CampaniaId
             }, x => DbFunctions.TruncateTime(x.FechaHora) == hoy);
         }
+
         public List<ResearchAvanceCosechaDto> TraerTodoResearchAvanceCosecha()
         {
             var hoy = DateTime.Now.Date;
@@ -146,8 +147,6 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-
-
         public Resultado EliminarResearchAvanceCosecha(int researchAvanceCosechaId)
         {
             var oEntityErrors = new Resultado();
@@ -169,6 +168,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        
         private Resultado ValidarAvanceSiembra(ResearchAvanceSiembra researchAvanceSiembra)
         {
             var error = new Resultado();
@@ -240,7 +240,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Rendimiento no debe estar vacío"));
             }
-            if (researchAvanceCosecha.CampaniaId <= 0) 
+            if (researchAvanceCosecha.CampaniaId <= 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
@@ -250,10 +250,10 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarSituacionCultivo(ResearchSituacionCultivo researchSituacionCultivo)
         {
             var error = new Resultado();
-            
+
             if (researchSituacionCultivo.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));                
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
             }
             if (researchSituacionCultivo.LocalidadId <= 0)
             {
@@ -271,17 +271,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
-            
-            
+
+
 
             return error;
         }
+
         private Resultado ValidarVentaStock(ResearchVentaStock researchVentaStock)
         {
             var error = new Resultado();
             if (researchVentaStock.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));               
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
             }
             if (researchVentaStock.LocalidadId <= 0)
             {
@@ -291,7 +292,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
             }
-            if (researchVentaStock.Almacenado == null)
+            if (researchVentaStock.Almacenado == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Almacenado no debe estar vacío"));
             }
@@ -454,14 +455,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerAvanceCosecha(request));
         }
+
         public KendoGrid<ResearchSituacionCultivoDto> TraerSituacionCultivoParcial(KendoGridMvcRequest request)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerSituacionCultivoParcial(request));
         }
+
         public KendoGrid<ResearchVentaStockDto> TraerVentaStock(KendoGridMvcRequest request)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerVentaStock(request));
         }
+
         public NotificacionResearchDto TraerNotificaciones(int id)
         {
             return repositorio.Obtener<NotificacionResearch, NotificacionResearchDto>(x => x.Id == id,
@@ -482,30 +486,33 @@ namespace Molinos.DataAgro.Business.Managers
                     Mensaje = x.Mensaje
                 });
         }
-        public List<TipoResearch> TraerResearch()
+
+        public List<TipoResearch> TraerTipoResearch()
         {
             return repositorio.Listar<TipoResearch>();
         }
+
         public List<NotificacionResearchDto> TraerTodasNotificaciones()
         {
             return repositorio.Listar<NotificacionResearch, NotificacionResearchDto>(x => new NotificacionResearchDto
             {
                 Id = x.Id,
-                CampanaId=x.CampanaId,
-                CampanaDescripcion =x.Campana.Descripcion,
-                MaterialId=x.MaterialId,
-                MaterialDescripcion=x.Material.Descripcion,
-                TipoResearchId=x.TipoResearchId,
-                TipoResearchDescripcion=x.TipoResearch.Descripcion,
+                CampanaId = x.CampanaId,
+                CampanaDescripcion = x.Campana.Descripcion,
+                MaterialId = x.MaterialId,
+                MaterialDescripcion = x.Material.Descripcion,
+                TipoResearchId = x.TipoResearchId,
+                TipoResearchDescripcion = x.TipoResearch.Descripcion,
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
                 FechaHasta = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaHasta),
-                Mensaje =x.Mensaje
-             });
+                Mensaje = x.Mensaje
+            });
         }
+
         public Resultado GrabarNotificacion(NotificacionResearch notificacion)
         {
             var error = Validar(notificacion);
@@ -523,8 +530,9 @@ namespace Molinos.DataAgro.Business.Managers
                     notificacionSave.TipoResearchId = notificacion.TipoResearchId;
                     notificacionSave.FechaDesde = notificacion.FechaDesde;
                     notificacionSave.FechaHasta = notificacion.FechaHasta;
-                    notificacionSave.Mensaje = notificacion.Mensaje;                    
-                }else
+                    notificacionSave.Mensaje = notificacion.Mensaje;
+                }
+                else
                 {
                     repositorio.Agregar(notificacion);
                 }
@@ -537,27 +545,29 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
         }
+
         private Resultado Validar(NotificacionResearch notificacion)
         {
             var error = new Resultado();
             if (notificacion.MaterialId == 0)
             {
-                error.Error("Material","El Material no puede estar vacio");
+                error.Error("Material", "El Material no puede estar vacio");
             }
             if (notificacion.CampanaId == 0)
             {
                 error.Error("Campana", "La Campaña no puede estar vacia");
             }
-            if (notificacion.FechaDesde.Year == 1|| notificacion.FechaHasta.Year == 1)
+            if (notificacion.FechaDesde.Year == 1 || notificacion.FechaHasta.Year == 1)
             {
                 error.Error("Fecha", "Las Fechas no pueden estar vacia");
             }
-            if (notificacion.Mensaje =="" || notificacion.Mensaje == null)
+            if (notificacion.Mensaje == "" || notificacion.Mensaje == null)
             {
                 error.Error("Mensaje", "El mensaje no puede estar vacio");
             }
             return error;
         }
+
         public Resultado EliminarNotificacion(int id)
         {
             var error = new Resultado();
@@ -566,7 +576,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Remover<NotificacionResearch>(id);
                 repositorio.GuardarCambios();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex);
                 error.Error(ex.Source, ex.Message);
@@ -581,14 +591,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void SincronizarResearchPowerApp()
         {
-            try
-            {
-                List<Research> listResearch = clienteResearchAgent.ConsultarItems();
-            }
-            catch (Exception e)
-            {
-                logger.Error(e);
-            }
+            clienteResearchAgent.SincronizarDatosResearch();
         }
 
         public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro)
@@ -599,7 +602,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ResearchCondicion> TraerResearchCondicion()
         {
             return repositorio.Listar<ResearchCondicion>();
-        }       
+        }
 
         public List<ResearchEstadio> TraerResearchEstadio()
         {
@@ -628,6 +631,11 @@ namespace Molinos.DataAgro.Business.Managers
             registro.Eliminado = true;
             repositorio.GuardarCambios();
             return resultado;
+        }
+
+        public List<int> TraerResearchId()
+        {
+            return repositorio.Listar<Research, int>(x => x.Id);
         }
     }
 }

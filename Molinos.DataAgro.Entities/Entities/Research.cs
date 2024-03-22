@@ -8,7 +8,8 @@ namespace Molinos.DataAgro.Entities.Entities
     public partial class Research
     {
         [Key]
-        public int? ResearchId { get; set; }
+        public int Id { get; set; }
+        public int? IdPowerApp { get; set; }
         public int MaterialId { get; set; }
         public int? MaterialIdAntecesor { get; set; }
         public int? EstadioId { get; set; }
@@ -37,7 +38,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public double? Rendimiento { get; set; }
         public int? TipoCargaId { get; set; }
         public string EstadoConectividad { get; set; }
-        public int? IdPowerApp { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string Author { get; set; }
         public string Editor { get; set; }
@@ -45,6 +45,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Sincronizado { get; set; }
         public int? LocalidadId { get; set; }
         public int? ComercialId { get; set; }
+        public bool Eliminado { get; set; }
+        public int? ProvinciaId { get; set; }
+        public int? PartidoId { get; set; }
+        public double? RendimientoCalculado { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MaterialIdAntecesor")]
@@ -69,13 +73,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Localidad LocalidadObj { get; set; }
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
-        public bool Eliminado { get; set; }
-
         [InverseProperty("Research")]
         public virtual List<ResearchAdjunto> Adjuntos { get; set; } = new List<ResearchAdjunto>();
-        public int? ProvinciaId { get; set; }
-        public int? PartidoId { get; set; }
-        public double? RendimientoCalculado { get; set; }
         //[ForeignKey("ProvinciaId")]
         //public virtual Provincia Provincia { get; set; }
         //[ForeignKey("PartidoId")]
@@ -85,7 +84,7 @@ namespace Molinos.DataAgro.Entities.Entities
     public class ResearchAdjunto
     {
         [Key]
-        public int ResearchAdjuntoId { get; set; }
+        public int Id { get; set; }
         public int ResearchId { get; set; }
         public string Path { get; set; }
         public string Nombre { get; set; }

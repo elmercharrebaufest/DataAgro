@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,6 @@ namespace WebDataAgro.Controllers
 
         private void FillViewBag()
         {
-
             var material = materialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
@@ -139,7 +139,10 @@ namespace WebDataAgro.Controllers
                        Selected = false
                    });
 
+            var ids = researchManager.TraerResearchId();
+            var idListItems = ids.Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = false });
 
+            ViewBag.ResearchId = idListItems;
             ViewBag.Condicion = condicionListItems;
             ViewBag.Estadio = estadioListItems;
             ViewBag.TipoCarga = tipoCargaListItems;
@@ -149,7 +152,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Campania = campaniaListItems;
             ViewBag.Comercial = comercialListItems;
             ViewBag.Provincia = provinciaListItems;
-
+            ViewBag.ProvinciaJson = JsonConvert.SerializeObject(provincia);
         }
 
         public ActionResult Export(DataSourceRequest filtro)
