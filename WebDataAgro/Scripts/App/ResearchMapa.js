@@ -9,7 +9,7 @@ var map = L.map('map'
     }
 ).setView([-38.678907, -61.104765], 5);
 var addressPoints = [{}];
-// Obtén una referencia al botón y al panel de filtros
+
 const filterButton = document.getElementById("filter-button");
 const filterForm = document.getElementById("filter-form");
 var maxClusterRadius = 80;
@@ -33,7 +33,6 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 L.control.scale().addTo(map);
 
-
 L.Control.Watermark = L.Control.extend({
     onAdd: function (map) {
         var div = L.DomUtil.create('div');
@@ -45,12 +44,11 @@ L.Control.Watermark = L.Control.extend({
 
     }
 });
+
 L.control.watermark = function (opts) {
     return new L.Control.Watermark(opts);
 }
 L.control.watermark({ position: 'topright' }).addTo(map);
-
-
 
 markers = L.markerClusterGroup({
     maxClusterRadius: maxClusterRadius
@@ -60,7 +58,7 @@ $(document).ready(function () {
     busquedaFiltrada();
 });
 
-// Agrega un evento clic al botón para mostrar/ocultar el panel de filtros
+//mostrar/ocultar el panel de filtros
 filterButton.addEventListener("click", () => {
     if (filterForm.style.display === "none") {
         filterForm.style.display = "block";
@@ -81,19 +79,27 @@ document.getElementById("GranoId").addEventListener("change", function () {
 document.getElementById("CampanaId").addEventListener("change", function () {
     busquedaFiltrada();
 });
+
+document.getElementById("ResearchId").addEventListener("change", function () {
+    busquedaFiltrada();
+});
+
 document.getElementById("AgrupadoId").addEventListener("change", function () {
     busquedaFiltrada();
 });
 
-
 function busquedaFiltrada() {
     var granoId = Number(document.getElementById("GranoId").value);
     var campañaId = Number(document.getElementById("CampanaId").value);
+    var id = Number(document.getElementById("ResearchId").value);
     if (granoId == 0 || granoId == NaN) {
         granoId = null;
     }
     if (campañaId == 0 || campañaId == NaN) {
         campañaId = null;
+    }
+    if (id == 0 || id == NaN) {
+        id = null;
     }
     var agrupadoId = document.getElementById("AgrupadoId");
     if (agrupadoId.checked) {
@@ -165,7 +171,25 @@ function busquedaFiltrada() {
                 ]
             });
     }
-      
+    if (id != null) {
+        filtro.filter.filters.push(
+            {
+                "field": null,
+                "value": {},
+                "logic": "or",
+                "operator": null,
+                "filters": [
+                    {
+                        "field": "Id",
+                        "value": id,
+                        "logic": null,
+                        "operator": "eq",
+                        "filters": {}
+                    }
+                ]
+            });
+    }
+
 
     BlockUi('Cargando...');
     addressPoints = [];
@@ -197,6 +221,7 @@ function busquedaFiltrada() {
         lat: x.Latitud,
         lng: x.Longitud,
         id: x.Id,
+        idPowerApp: x.IdPowerApp,
         imgs: x.Adjuntos.map((adjunto) => {
             return adjunto.Path;
         })
@@ -232,8 +257,7 @@ function updateMarkers() {
     }
 
     map.addLayer(markers);
-
-
+    
     //L.marker([51.5, -0.09]).addTo(map).bindPopup("I am a green leaf.");
     //L.marker([51.495, -0.083]).addTo(map).bindPopup("I am a red leaf.");
     //L.marker([51.49, -0.1]).addTo(map).bindPopup("I am an orange leaf.");
@@ -256,7 +280,7 @@ function loadImageDimensions(src) {
     });
 }
 
-// Definir una función para cargar la información del popup
+// Función para cargar la información del popup
 function cargarInformacionPopup(popup) {
     if (document.getElementById("info-carousel") == null) {
         var elemDiv = document.createElement('div');
@@ -264,7 +288,6 @@ function cargarInformacionPopup(popup) {
         document.body.appendChild(elemDiv);
     }
 
-    //document.getElementById("info-carousel").innerHTML = ' <div class="info-carousel" id="info-carousel" class="leaflet-popup-content"> <div id="carousel-images"> </div><div class="row"> <div class="col-md-12"><span class="bold-text">#</span> <span id="id"></span></div><div class="col-md-12"><span class="bold-text">Tipo de carga:</span> <span id="tipoCarga"></span></div><div class="col-md-12"><span class="bold-text">Grano:</span> <span id="grano"></span></div><div class="col-md-12"><span class="bold-text">Antecesor:</span> <span id="antecesor"></span></div><div class="col-md-12"><span class="bold-text">Campania:</span> <span id="campania"></span></div><div class="col-md-12"><span class="bold-text">Estado Fenológico:</span> <span id="estadoFenologico"></span></div><div class="col-md-12"><span class="bold-text">Condición del Cultivo:</span> <span id="condicion"></span></div><div class="col-md-12"><span class="bold-text">Humedad del Suelo:</span> <span id="humedad"></span></div><div class="col-md-12"><span class="bold-text">Comentarios:</span> <span id="comentarios"></span></div><div class="col-md-12"><span class="bold-text">Hubicacion:</span> <span id="hubicacion"></span></div><div class="col-md-12"><span class="bold-text">Rendimiento:</span> <span id="rendimiento"></span></div><div class="col-md-12"><span class="bold-text" id="tipoMuestra1"></span> <span id="medida1"></span></div><div class="col-md-12"><span class="bold-text" id="tipoMuestra2"></span> <span id="medida2"></span></div><div class="col-md-12"><span class="bold-text" id="tipoMuestra3"></span> <span id="medida3"></span></div></div></div>';
     document.getElementById("info-carousel").innerHTML = ''
         + '<div class="info-carousel" id="info-carousel" class="leaflet-popup-content">'
         + '<div id="carousel-images"> </div>'
@@ -279,7 +302,7 @@ function cargarInformacionPopup(popup) {
         + '<div class="col-md-12"><span class="bold-text">Condición del Cultivo:</span> <span id="condicion"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Humedad del Suelo:</span> <span id="humedad"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Comentarios:</span> <span id="comentarios"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Hubicacion:</span> <span id="hubicacion"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Ubicación:</span> <span id="ubicacion"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Rendimiento:</span> <span id="rendimiento"></span></div>'
         //+ '<div class="col-md-12"><span class="bold-text">Rendimiento Calculado:</span> <span id="rendimientoCalculado"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra1"></span> <span id="medida1"></span></div>'
@@ -297,7 +320,7 @@ function cargarInformacionPopup(popup) {
     document.getElementById("condicion").innerHTML = popup.options.condicion;
     document.getElementById("humedad").innerHTML = popup.options.humedad;
     document.getElementById("comentarios").innerHTML = popup.options.comentarios;
-    document.getElementById("hubicacion").innerHTML = `${popup.options.provincia == null ? "" : (popup.options.provincia + ", ")} ${popup.options.partido == null ? "" : (popup.options.partido + ", ")} ${popup.options.localidad == null ? "" : popup.options.localidad}`;
+    document.getElementById("ubicacion").innerHTML = `${popup.options.provincia == null ? "" : (popup.options.provincia + ", ")} ${popup.options.partido == null ? "" : (popup.options.partido + ", ")} ${popup.options.localidad == null ? "" : popup.options.localidad}`;
     document.getElementById("rendimiento").innerHTML = popup.options.rendimiento;
     //document.getElementById("rendimientoCalculado").innerHTML = popup.options.rendimientoCalculado;
 
@@ -325,7 +348,7 @@ function cargarInformacionPopup(popup) {
                 carouselImages.innerHTML = carouselImages.innerHTML + a;
             })
             .catch((error) => {
-                console.error(error); // Manejar errores, si los hay
+                console.error(error);
             });
     });
     carouselImages.innerHTML = carouselImages.innerHTML + '</div>';

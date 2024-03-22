@@ -513,16 +513,30 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Count);
         }
         [Test]
-        public void TraerResearchOk()
+        public void TraerTipoResearchOk()
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<TipoResearch, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
           .Returns(new List<TipoResearch>() { new TipoResearch { Id = 1 } });
 
-            var result = target.TraerResearch();
+            var result = target.TraerTipoResearch();
 
             Assert.NotNull(result);
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<TipoResearch, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            Assert.AreEqual(1, result.Count);
+        }
+        [Test]
+        public void TraerResearchIdOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Research, int>>>(), It.IsAny<Expression<Func<Research, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+          .Returns(new List<int>() { 1 } );
+
+            var result = target.TraerResearchId();
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Research, int>>>(), It.IsAny<Expression<Func<Research, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
             Assert.AreEqual(1, result.Count);
         }

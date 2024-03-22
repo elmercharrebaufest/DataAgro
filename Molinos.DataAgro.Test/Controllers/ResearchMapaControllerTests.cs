@@ -1,15 +1,11 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
-using Kendo.DynamicLinq;
 using Moq;
 using WebDataAgro.Controllers;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Test.Controllers
 {
@@ -17,9 +13,9 @@ namespace Molinos.DataAgro.Test.Controllers
     [TestFixture]
     public class ResearchMapaControllerTests
     {
-
         private Mock<ICampañaManager> campañaManagerMock;
         private Mock<IMaterialManager> materialManagerMock;
+        private Mock<IResearchManager> researchManagerMock;
         private ResearchMapaController controller;
 
         [SetUp]
@@ -27,27 +23,24 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             campañaManagerMock = new Mock<ICampañaManager>();
             materialManagerMock = new Mock<IMaterialManager>();
+            researchManagerMock = new Mock<IResearchManager>();
 
-            controller = new ResearchMapaController(
-                campañaManagerMock.Object,
-                materialManagerMock.Object);
+            controller = new ResearchMapaController(campañaManagerMock.Object, materialManagerMock.Object, researchManagerMock.Object);
         }
 
         [Test]
         public void Index_ReturnsViewResult()
         {
-            //Arrange 
             materialManagerMock.Setup(m => m.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
-
             campañaManagerMock.Setup(c => c.TraerTodoCampania()).Returns(new List<CampañaDto>());
+            researchManagerMock.Setup(c => c.TraerResearchId()).Returns(new List<int> { 1 });
 
-            // Act
             var result = controller.Index() as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.ViewBag.Material);
             Assert.IsNotNull(result.ViewBag.Campania);
+            Assert.IsNotNull(result.ViewBag.ResearchId);
             Assert.IsInstanceOf<ViewResult>(result);
         }
     }

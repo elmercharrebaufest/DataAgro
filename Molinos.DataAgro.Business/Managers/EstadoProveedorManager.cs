@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        logger.Debug("Obteniendo datos de SAP" + userSap);
+                        logger.Debug("Obteniendo datos de usuario SAP " + userSap);
 
                         var list = oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
 

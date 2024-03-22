@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Controllers
@@ -11,11 +12,13 @@ namespace WebDataAgro.Controllers
     {
         private readonly ICampañaManager campañaManager;
         private readonly IMaterialManager materialManager;
+        private readonly IResearchManager researchManager;
 
-        public ResearchMapaController(ICampañaManager campañaManager, IMaterialManager materialManager)
+        public ResearchMapaController(ICampañaManager campañaManager, IMaterialManager materialManager, IResearchManager researchManager)
         {
             this.campañaManager = campañaManager;
             this.materialManager = materialManager;
+            this.researchManager = researchManager;
         }
 
         // GET: ResearchMapa
@@ -36,6 +39,7 @@ namespace WebDataAgro.Controllers
                         Value = x.MaterialId.ToString(),
                         Selected = false
                     }).OrderBy(x => x.Value);
+
             ViewBag.Material = materialesListItems;
 
             var campania = campañaManager.TraerTodoCampania().Where(x => x.CampañaId >= 6).ToList();
@@ -48,6 +52,10 @@ namespace WebDataAgro.Controllers
 
             ViewBag.Campania = campaniaListItems;
 
+            var ids = researchManager.TraerResearchId();
+            var idListItems = ids.Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = false });
+
+            ViewBag.ResearchId = idListItems;
         }
     }
 }
