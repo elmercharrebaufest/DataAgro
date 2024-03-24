@@ -6526,7 +6526,7 @@ namespace Molinos.DataAgro.Business.Managers
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
-                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : contrato.TipoAgenteCompraId != null ? "U" : "M";
+                string typeOfRate = contrato.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
 
                 var importe = CalcularImporteDeOperacion(contrato.PrecioNeto ?? contrato.Precio, contrato.Cantidad, contrato.MaterialId, contrato.FechaOperacion, contrato.MonedaId, typeOfRate);
                 mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory), false, importe));
@@ -9458,7 +9458,7 @@ namespace Molinos.DataAgro.Business.Managers
         public string ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica)
         {
             string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(tipoNegocioId, monedaId, tipoAgenteCompraId, fecha, modifica);
-            string typeOfRate = codigoTC == "04" ? "Z" : tipoAgenteCompraId != null ? "U" : "M";
+            string typeOfRate = codigoTC == "04" ? "Z" : "M";
 
             return typeOfRate;
         }

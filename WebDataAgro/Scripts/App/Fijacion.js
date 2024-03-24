@@ -2030,7 +2030,7 @@ function InicializarElementos() {
             }
         },
         change: function () {
-            var typeOfRate = ObtenerTypeOfRate();
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit.Contrato, esEdicion);
             valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val(), typeOfRate: typeOfRate });
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();
@@ -5375,33 +5375,4 @@ function HayTarifaAConvenir() {
 
 function MensajeTipoNegocio() {
     MensAlerta("El contrato seleccionado es un A FIJAR PASE. Consulte con MESA BA antes de fijar.");
-}
-
-function ObtenerTypeOfRate() {
-    var typeOfRate = null;
-    if ($("#tipoId").val() != "" && $("#precioMonedaId").val() != "") {
-        var fecha;
-        if (contratoEdit.Contrato != null) {
-            var fechaJSON = contratoEdit.Contrato.Fecha;
-            var milisegundos = parseInt(fechaJSON.replace(/\D/g, ''));
-            fecha = new Date(milisegundos);
-        }
-        else {
-            fecha = new Date();
-        }
-
-        var parametros = {
-            tipoNegocioId: $("#tipoId").val(),
-            monedaId: $("#precioMonedaId").val(),
-            tipoAgenteCompraId: $("#AgenteCompraId").val() == "" ? null : $("#AgenteCompraId").val(),
-            fecha: fecha,
-            modifica: esEdicion == "True" ? true : false,
-        }
-
-        typeOfRate = MSExecuteOnServer("/Compranet/ObtenerTypeOfRate", parametros);
-
-        return typeOfRate;
-    }
-
-    return typeOfRate;
 }

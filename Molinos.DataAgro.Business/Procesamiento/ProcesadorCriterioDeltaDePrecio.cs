@@ -27,10 +27,10 @@ namespace Molinos.DataAgro.Business
             var pizarraLista = Repositorio.Listar<PrecioPizarra>(x => x.FechaDesde <= hoy && x.FechaHasta >= hoy);
 
             string typeOfRate = null;
-            if (criterio.Dto.NegocioId != null && criterio.Dto.NegocioId != 0)
+            if (criterio.Dto != null && criterio.Dto.NegocioId != null && criterio.Dto.NegocioId != 0)
             {
                 Negocio negocio = Repositorio.Obtener<Negocio>(criterio.Dto.NegocioId);
-                typeOfRate = negocio.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : negocio.TipoAgenteCompraId != null ? "U" : "M";
+                typeOfRate = negocio.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
             }
             decimal dolarCotizacion = tipoDeCambio.TraerTipoDeCambio(null, typeOfRate);
             var pizarra = pizarraLista.Where(a => a.MaterialId == criterio.Dto.MaterialId).SingleOrDefault();

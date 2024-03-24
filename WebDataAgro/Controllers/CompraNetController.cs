@@ -997,7 +997,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        // GSIAN: Revisar si se puede pasar parámetro por TC. Ver llamadas desde JS
         public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion, string typeOfRate = "M")
         {
             if (fechaOperacion == null || fechaOperacion == DateTime.Now.Date)
