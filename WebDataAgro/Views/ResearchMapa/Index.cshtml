@@ -13,27 +13,31 @@
     <link href="~/Content/LeaFlet/leaflet.css" rel="stylesheet" />
     <link href="~/Content/LeaFlet/MarkerCluster.css" rel="stylesheet" />
     <link href="~/Content/LeaFlet/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/photoswipe.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/Control.FullScreen.css" rel="stylesheet" />
 
     <script src="~/Scripts/LeaFlet/leaflet.js"></script>
     <script src="~/Scripts/LeaFlet/leaflet.markercluster.js"></script>
-
-    <link href="~/Content/LeaFlet/photoswipe.css" rel="stylesheet" />
-
     <script src="~/Scripts/LeaFlet/Control.FullScreen.js"></script>
-    <link href="~/Content/LeaFlet/Control.FullScreen.css" rel="stylesheet" />
+
     <script src="~/Scripts/App/ResearchMapa.js" type="module"></script>
 }
 
 <div id="filter-panel" class="leaflet-control">
     <button id="filter-button">Filtros</button>
     <div id="filter-form" style="display: none;">
-        <!-- Aquí puedes agregar tus filtros -->
         <label for="GranoId">Material:</label>
         @Html.DropDownList("GranoId", new SelectList(ViewBag.Material, "Value", "Text"), "Todos", new { @class = "jform-control" })
 
         <label for="CampanaId">Campaña:</label>
         @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Todas", new { @class = "jform-control" })
-        <br /><label for="AgrupadoId">Agrupado:</label>
+        <br />
+        
+        <label for="ResearchId">ID:</label>
+        @Html.DropDownList("ResearchId", new SelectList(ViewBag.ResearchId, "Value", "Text"), "Todos", new { @class = "multiselect" })
+
+        <br />
+        <label for="AgrupadoId">Agrupado:</label>
         <input type="checkbox" id="AgrupadoId" name="AgrupadoId" checked />
     </div>
 </div>

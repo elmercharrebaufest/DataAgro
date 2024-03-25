@@ -62,18 +62,18 @@
             <label>Tipo Carga</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "CondicionId", multiple = "true" })
+            @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "TipoCargaId", multiple = "true" })
         </div>
 
         <div class="col-md-2">
             <label>Fecha de Carga</label>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2" title="Desde">
             <span id="fechaDeCarga">
                 <input id="fechaCargaId" class="filtroFecha" name="Fecha-desde" type="date" style="width: 100%" />
             </span>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2" title="Hasta">
             <span id="fechaDeCargaHasta">
                 <input id="fechaCargaHastaId" class="filtroFecha" name="Fecha-hasta" type="date" style="width: 100%" />
             </span>
@@ -98,27 +98,10 @@
     <br />
     <div class="row">
         <div class="col-md-2">
-            <label>Eliminados</label>
-        </div>
-        <div class="col-md-4 filtroBoleano" id="EPAId" name="EPA">
-            Sí: @Html.RadioButton("Eliminado", true, new { @class = "filtroBoleano ocultarAnular", @id = "Eliminado" })
-            No: @Html.RadioButton("Eliminado", false, new { @class = "ocultarAnular" })
-            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEliminado()" style="margin-left:3%; font-size:20px;color:red"></i>
-        </div>
-        <div class="col-md-2">
-            <label>Campaña</label>
-        </div>
-        <div class="col-md-4">
-            @Html.DropDownList("TipoCargaId", new SelectList(ViewBag.TipoCarga, "Value", "Text"), new { @class = "multiselect", @id = "TipoCargaId", multiple = "true" })
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-md-2">
             <label>Provincia</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ProvinciaId", new SelectList(ViewBag.Provincia, "Value", "Text"), "Seleccione una provincia", new { @class = "filtroBusquedaPorId form-control", @id = "ProvinciaId" })
+            <input id="ProvinciaId" name="ProvinciaId" class="form-control filtroBusquedaPorId" data-provincias="@ViewBag.ProvinciaJson" />
         </div>
         <div class="col-md-2">
             <label>Partido</label>
@@ -126,6 +109,29 @@
         <div class="col-md-4">
             <input id="PartidoId" name="PartidoId" class="form-control filtroBusquedaPorId" />
         </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>ID</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("Id", new SelectList(ViewBag.ResearchId, "Value", "Text"), new { @class = "multiselect", @id = "Id", multiple = "true" })
+        </div>
+        <label class="col-xs-4 col-md-2">Eliminados</label>
+        <label class="col-xs-6 col-md-4 filtroBoleano">
+            @*Sí: @Html.RadioButton("Eliminado", true, new { @class = "filtroBoleano ocultarAnular", @id = "Eliminado" })
+            No: @Html.RadioButton("Eliminado", false, new { @class = "ocultarAnular" })*@
+            @*<label>*@
+            Sí @Html.RadioButton("Eliminado", true, new { @class = "filtroBoleano ocultarAnular", @id = "Eliminado" })
+            @*</label>*@
+            <span style="margin-right: 20px;"></span>
+            @*<label>*@
+            No @Html.RadioButton("Eliminado", false, new { @class = "ocultarAnular" })
+            @*</label>*@
+            <span style="margin-right: 20px;"></span>
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEliminado()" title="Limpiar selección" style="margin-left:3%; font-size:20px;color:red"></i>
+        </label>
     </div>
     <br />
     <div class="row">
@@ -150,7 +156,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
             </div>
             <div class="campo clearfix">
-                <div class="espaciolineas">¿Está seguro de que desea eliminar el registro <span id="idModalBorrar"></span>?</div>
+                <div class="espaciolineas">¿Está seguro de que desea eliminar el registro con ID <span id="idModalBorrar"></span>?</div>
             </div>
             <div class="modal-footer clearfix ">
                 <br />

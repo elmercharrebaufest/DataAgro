@@ -2641,6 +2641,11 @@ function armarFuncionalidades() {
         $('#concom-puestoapoderado').val('null');
         $("#concom-desde").val('null');
         $("#concom-hasta").val('null');
+        //ocultar campos porque esapoderado es false
+        $(".concom-puestoapoderadoDiv").hide();
+        $(".concom-cuitDiv").hide();
+        $(".concom-desdeDiv").hide();
+        $(".concom-hastaDiv").hide();
 
         $("#concom-email1").val("");
         if ($("#concom-email2").length)

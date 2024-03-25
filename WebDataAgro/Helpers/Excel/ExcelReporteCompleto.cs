@@ -1378,6 +1378,8 @@ namespace WebDataAgro.Helpers.Excel
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
 
             var celda = sheet.GetRow(0).GetCell(0);
 
@@ -1393,11 +1395,19 @@ namespace WebDataAgro.Helpers.Excel
             celda = sheet.GetRow(0).GetCell(3);
             celda.SetCellValue("Partido");
             celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(4);
+            celda.SetCellValue("Partido ID");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(5);
+            celda.SetCellValue("Provincia ID");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
             sheet.AutoSizeColumn(0);
             sheet.AutoSizeColumn(1);
             sheet.AutoSizeColumn(2);
             sheet.AutoSizeColumn(3);
+            sheet.AutoSizeColumn(4);
+            sheet.AutoSizeColumn(5);
 
 
             foreach (var localidad in model.tablero)
@@ -1408,7 +1418,9 @@ namespace WebDataAgro.Helpers.Excel
                 CrearCelda(row, c, localidad.CodLocalidad, null); c++;
                 CrearCelda(row, c, localidad.Nombre, null); c++;
                 CrearCelda(row, c, localidad.NombreProvincia, null); c++;
+                CrearCelda(row, c, localidad.Descripcion != null ? localidad.Descripcion.ToString() : "", null); c++;
                 CrearCelda(row, c, localidad.PartidoId.ToString(), null); c++;
+                CrearCelda(row, c, localidad.ProvinciaId.ToString(), null); c++;
             }
 
             using (var fileData = new MemoryStream())

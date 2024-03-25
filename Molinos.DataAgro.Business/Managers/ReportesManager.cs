@@ -2712,20 +2712,23 @@ namespace Molinos.DataAgro.Business.Managers
         {
             ReporteLocalidadesModel result = new ReporteLocalidadesModel();
 
-            var localidades = repositorio.Listar<Localidad, LocalidadDto>(localidad => new LocalidadDto { Nombre = localidad.Nombre, Partido_Nombre = localidad.Partido.Descripcion, PartidoId = localidad.PartidoId, CodLocalidad = localidad.CodLocalidad, ProvinciaId = localidad.ProvinciaId, Provincia_Nombre = localidad.Provincia.Nombre });
+            var consulta = repositorio.Listar<Localidad, LocalidadDto>(localidad => new LocalidadDto { Nombre = localidad.Nombre, Partido_Nombre = localidad.Partido.Descripcion, PartidoId = localidad.PartidoId, CodLocalidad = localidad.CodLocalidad, ProvinciaId = localidad.ProvinciaId, Provincia_Nombre = localidad.Provincia.Nombre });
+
+            var localidades = repositorio.ListarConsulta(new TraerLocalidades());
+            
 
             foreach (var local in localidades)
             {
-                if (local.PartidoId != null)
-                {
+
                     result.tablero.Add(new ReporteLocalidades
                     {
-                        Nombre = local.Nombre,
+                        Nombre = local.Localidad,
                         CodLocalidad = local.CodLocalidad,
                         PartidoId = (int)local.PartidoId,
-                        NombreProvincia = local.Provincia_Nombre != null ? local.Provincia_Nombre : string.Empty
+                        Descripcion = local.Partido,
+                        NombreProvincia = local.Provincia,
+                        ProvinciaId = local.ProvinciaId
                     }); 
-                }
             }
 
             return result;

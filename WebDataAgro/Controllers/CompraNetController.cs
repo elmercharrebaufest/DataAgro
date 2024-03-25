@@ -1404,8 +1404,6 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ReporteLocalidades()
         {
-            var estado = "leido";
-            //return Json(estado, JsonRequestBehavior.AllowGet);
             var model = reportesManager.ObtenerDatosReporteLocalidades();
             return File(ExcelReporteCompleto.GenerarExcelLocalidades(model), "application/vnd.ms-excel");
 

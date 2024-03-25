@@ -205,6 +205,30 @@ if (!$("#concom-puesto").val() || $("#concom-puesto").val() === "") {
     return false;
 }
 */
+    //Si es Apoderado validar
+    if ($("#concom-esapoderado").is(":checked")) {
+        if (!$("#concom-cuit").val() || $("#concom-cuit").val() === "") {
+            MensErr("Se debe indicar el Cuit de Apoderado");
+            return false;
+        }
+
+        if (!$("#concom-desde").val() || $("#concom-desde").val() === "" || $("#concom-desde").val() === "null") {
+            MensErr("Se debe indicar la Fecha Inicial");
+            return false;
+        }
+        
+        if (!$("#concom-hasta").val() || $("#concom-hasta").val() === "" || $("#concom-hasta").val() === "null") {
+            MensErr("Se debe indicar la Fecha Final");
+            return false;
+        }
+
+        if (!$("#concom-puestoapoderado").val() || $("#concom-puestoapoderado").val() === "null") {
+            MensErr("Se debe indicar el Puesto del Apoderado");
+            return false;
+        }
+
+
+    }
 
     return true;
 }
