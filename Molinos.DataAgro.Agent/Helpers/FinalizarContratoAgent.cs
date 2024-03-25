@@ -1,16 +1,14 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent.FinalizarContrato;
+﻿using Molinos.DataAgro.Agent.FinalizarContrato;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
+using Autofac.Extras.NLog;
 using System.Linq;
-using System.Transactions;
+using System;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -66,9 +64,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
                             TIPO_DB = descBon.TipoDB.CodigoSap,
-                            FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
+                            FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
-                            IMPORTE_DB = descBon.Importe * (1 + (descBon.Porcentaje / 100)),
+                            IMPORTE_DB = Math.Round(descBon.Importe * (1 + (descBon.Porcentaje / 100)), 2),
                             MONEDA_DB = descBon.MonedaId ?? "",
                             MONEDA = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
@@ -228,10 +226,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     })
                     .FirstOrDefault();
                 if (contrato.Pizarra == true &&
-                    (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0)
-                        || contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && x.Porcentaje > 0)
-                        )
-                    )
+                    (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0) ||
+                    contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && x.Porcentaje > 0)))
                 {
                     descuentoGeneralSobrePrecio = new DescuentoBonificacion
                     {
@@ -279,8 +275,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         MONEDA = servicio.MonedaId,
                         FECHAACT = contrato.Fecha.ToString("yyyy-MM-dd"),
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
-                    }
-                    );
+                    });
                 }
                 logger.Debug("Servicios a enviar a SAP para NegocioID " + contrato.Id + ": " + servicioSap.ToXml());
 
@@ -293,7 +288,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
                 var cantidadAbsoluta = Math.Abs(contrato.Cantidad);
-
 
                 topesFijacion.Add(new ZMPES5280
                 {
@@ -462,8 +456,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP: No se pudo finalizar el contrato.");
-                logger.Error(e);
+                logger.Error("Error comunicacion SAP: No se pudo finalizar el contrato.", e);
                 throw;
             }
         }
