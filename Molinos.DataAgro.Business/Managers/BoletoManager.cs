@@ -657,6 +657,12 @@ namespace Molinos.DataAgro.Business.Managers
                     mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: {motivoStatus}";
                     logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
                 }
+                else if(string.IsNullOrEmpty(res.Status))
+                {
+                    // contrato en slip
+                    mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: slip";
+                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} - ContratoSAP: {negocio.ContratoSAP}");
+                }
             }
             return mensaje;
         }
