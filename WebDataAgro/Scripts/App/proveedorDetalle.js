@@ -678,9 +678,9 @@ function armarContacto() {
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-mails">' +
                     (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ") : "") +
-                    (comerciales[i].CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") +
-                    (comerciales[i].Cupo == true ? '<i title="Cupo" class="fa fa-truck"></i>' : "") +
-                    (comerciales[i].Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : "") +
+                    (comerciales[i].CompraNet == true ? '<i class="fa fa-check fa-lg" aria-hidden="true"></i>' : "") +
+                    (comerciales[i].Cupo == true ? '<i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") +
+                    (comerciales[i].Boleto == true ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-extras">' +
                     '<div class="row">' +
