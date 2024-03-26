@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Author = x.Author,
                         Editor = x.Editor,
                         ComercialId = x.ComercialId != null ? x.ComercialId : 44, //falta id
-                        Comercial = (string)(x.ComercialId != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : x.Author ?? "Desconocido"),
+                        Comercial = x.ComercialId != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : x.Author ?? "Desconocido",
 
                         EstadoConectividad = x.EstadoConectividad,
                         Sincronizado = x.Sincronizado,
@@ -81,6 +81,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PromedioMuestraUno = x.PromedioMuestraUno,
                         PromedioMuestraDos = x.PromedioMuestraDos,
                         PromedioMuestraTres = x.PromedioMuestraTres,
+                        PromedioGranosVaina = x.PromedioGranosVaina,
                         MedidasUno = x.MedidasUno,
                         MedidasDos = x.MedidasDos,
                         MedidasTres = x.MedidasTres,

@@ -59,6 +59,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? Fecha { get; set; }
         public string TipoCarga { get; set; }
         public double? RendimientoCalculado { get; set; }
+        public double? PromedioGranosVaina { get; set; }
     }
 
     public class ResearchAdjuntoDto

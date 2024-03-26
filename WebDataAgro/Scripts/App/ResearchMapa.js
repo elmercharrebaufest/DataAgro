@@ -218,6 +218,7 @@ function busquedaFiltrada() {
         tipoMuestra3: x.TipoMuestraTres,
         medida3: x.MedidasTres,
         promedio3: x.PromedioMuestraTres,
+        promedioGranosVaina: x.PromedioGranosVaina,
         lat: x.Latitud,
         lng: x.Longitud,
         id: x.Id,
@@ -292,22 +293,22 @@ function cargarInformacionPopup(popup) {
         + '<div class="info-carousel" id="info-carousel" class="leaflet-popup-content">'
         + '<div id="carousel-images"> </div>'
         + '<div class="row">'
-        + '<div class="col-md-12"><span class="bold-text">#</span> <span id="id"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Tipo de carga:</span> <span id="tipoCarga"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">ID:</span> <span id="id"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Grano:</span> <span id="grano"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Antecesor:</span> <span id="antecesor"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Campaña:</span> <span id="campania"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Estado Fenológico:</span> <span id="estadoFenologico"></span>'
-        + '</div>'
+        + '<div class="col-md-12"><span class="bold-text">Tipo de carga:</span> <span id="tipoCarga"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Antecesor:</span> <span id="antecesor"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Ubicación:</span> <span id="ubicacion"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Estado Fenológico:</span> <span id="estadoFenologico"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Condición del Cultivo:</span> <span id="condicion"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Humedad del Suelo:</span> <span id="humedad"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Comentarios:</span> <span id="comentarios"></span></div>'
-        + '<div class="col-md-12"><span class="bold-text">Ubicación:</span> <span id="ubicacion"></span></div>'
         + '<div class="col-md-12"><span class="bold-text">Rendimiento:</span> <span id="rendimiento"></span></div>'
         //+ '<div class="col-md-12"><span class="bold-text">Rendimiento Calculado:</span> <span id="rendimientoCalculado"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text">Comentarios:</span> <span id="comentarios"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra1"></span> <span id="medida1"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra2"></span> <span id="medida2"></span></div>'
         + '<div class="col-md-12"><span class="bold-text" id="tipoMuestra3"></span> <span id="medida3"></span></div>'
+        + '<div class="col-md-12"><span class="bold-text" id="granosVaina"></span> <span id="promedioGranosVaina"></span></div>'
         + '</div>'
         + '</div>';
 
@@ -325,16 +326,20 @@ function cargarInformacionPopup(popup) {
     //document.getElementById("rendimientoCalculado").innerHTML = popup.options.rendimientoCalculado;
 
     if (popup.options.tipoMuestra1 != null && popup.options.tipoMuestra1 != "") {
-        document.getElementById("tipoMuestra1").innerHTML = popup.options.tipoMuestra1;
+        document.getElementById("tipoMuestra1").innerHTML = `${popup.options.tipoMuestra1}: `;
         document.getElementById("medida1").innerHTML = `${popup.options.promedio1} (${popup.options.medida1})`;
     }
     if (popup.options.tipoMuestra2 != null && popup.options.tipoMuestra2 != "") {
-        document.getElementById("tipoMuestra2").innerHTML = popup.options.tipoMuestra2;
+        document.getElementById("tipoMuestra2").innerHTML = `${popup.options.tipoMuestra2}: `;
         document.getElementById("medida2").innerHTML = `${popup.options.promedio2} (${popup.options.medida2})`;
     }
     if (popup.options.tipoMuestra3 != null && popup.options.tipoMuestra3 != "") {
-        document.getElementById("tipoMuestra3").innerHTML = popup.options.tipoMuestra3;
+        document.getElementById("tipoMuestra3").innerHTML = `${popup.options.tipoMuestra3}: `;
         document.getElementById("medida3").innerHTML = `${popup.options.promedio3} (${popup.options.medida3})`;
+    }
+    if (popup.options.promedioGranosVaina != null && popup.options.promedioGranosVaina != "") {
+        document.getElementById("granosVaina").innerHTML = "Promedio de granos por vaina:";
+        document.getElementById("promedioGranosVaina").innerHTML = popup.options.promedioGranosVaina;
     }
 
     var carouselImages = document.getElementById('carousel-images');

@@ -134,12 +134,12 @@ namespace Molinos.DataAgro.Business.Managers
                         else
                         {
                             if(consultaBoleto.Generado != "") logger.Info($"Boleto.Generado = {consultaBoleto.Generado} -- contrato SAP {itemNegocio.ContratoSAP}");
-                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El boleto ya se encuentra generado en SAP"));
+                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El boleto ya se encuentra generado en SAP."));
                         }
                     }
                     else
                     {
-                        error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El negocio no corresponde al tipo de negocio indicado"));
+                        error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El negocio no corresponde al tipo de negocio indicado."));
                     }
                 }
                 foreach (string itemContrato in contratos)
@@ -147,7 +147,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var neg = negocios.Find(n => n.Negocio.Contains(itemContrato) || n.ContratoSAP.Contains(itemContrato));
                     if (neg == null)
                     {
-                        error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = (int)EnumTipoNegocio.A_PRECIO, ContratoSAP = itemContrato }, false, 0, "El negocio no esta habilitado para generar boleto"));
+                        error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = (int)EnumTipoNegocio.A_PRECIO, ContratoSAP = itemContrato }, false, 0, "El negocio no está habilitado para generar boleto."));
                     }
                 }
 
@@ -634,13 +634,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (contrato.Cantidad < (kilosDisponibles))
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación seleccionada";
-                        logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por cantidad no disponible " + negocio.FijacionSAP);
+                        mensaje = "No se pudo generar el boleto para la fijación por su cantidad de kilos.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por cantidad no disponible.");
                     }
                     if (contrato.Canje == true)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación seleccionada";
-                        logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por tener Canje " + negocio.FijacionSAP);
+                        mensaje = "No se pudo generar el boleto para la fijación por tener canje.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por tener Canje.");
                     }
                 }
                 else
@@ -654,14 +654,14 @@ namespace Molinos.DataAgro.Business.Managers
                 if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
                     string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
-                    mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: {motivoStatus}";
+                    mensaje = $"No se pudo generar el boleto para el contrato por su estado: {motivoStatus}";
                     logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
                 }
                 else if(string.IsNullOrEmpty(res.Status))
                 {
                     // contrato en slip
-                    mensaje = $"No se pudo generar el boleto para el contrato seleccionado. Estado contrato: slip";
-                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} - ContratoSAP: {negocio.ContratoSAP}");
+                    mensaje = $"No se pudo generar el boleto para el contrato por su estado: slip";
+                    logger.Debug($"No se pudo generar el boleto por tener status vacío - ContratoSAP: {negocio.ContratoSAP}");
                 }
             }
             return mensaje;

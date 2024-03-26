@@ -133,21 +133,22 @@ function CreateGrid() {
             { field: "Partido", title: "Partido", width: 80 },
             { field: "Localidad", title: "Localidad", width: 80 },
             { field: "Estadio", title: "Estadio", width: 80 },
-            { field: "Condicion", title: "Condicion", width: 80 },
+            { field: "Condicion", title: "Condición", width: 80 },
             { field: "Coeficiente", title: "Coeficiente", width: 80 },
             { field: "HumedadSuelo", title: "Humedad<br>del Suelo", width: 80 },
             { field: "TipoMuestraUno", title: "Muestra<br>Uno", width: 80 },
             { field: "MedidasUno", title: "Medidas", width: 80 },
-            { field: "PromedioMuestraUno", title: "Promedio", width: 70 },
+            { field: "PromedioMuestraUno", title: "Promedio<br>muestra 1", width: 70 },
             { field: "TipoMuestraDos", title: "Muestra<br>Dos", width: 80 },
             { field: "MedidasDos", title: "Medidas", width: 80 },
-            { field: "PromedioMuestraDos", title: "Promedio", width: 70 },
+            { field: "PromedioMuestraDos", title: "Promedio<br>muestra 2", width: 70 },
             { field: "TipoMuestraTres", title: "Muestra<br>Tres", width: 80 },
             { field: "MedidasTres", title: "Medidas", width: 80 },
-            { field: "PromedioMuestraTres", title: "Promedio", width: 70 },
+            { field: "PromedioMuestraTres", title: "Promedio<br>muestra 3", width: 70 },
+            { field: "PromedioGranosVaina", title: "Prom. G.<br>por Vaina", width: 70 },
             { field: "Rendimiento", title: "Rendimiento", width: 80 },
             //{ field: "RendimientoCalculado", title: "RendimientoCalculado", width: 80 },
-            { field: "CapitulosGirasol", title: "Capitulos<br>Girasol", width: 70 },
+            { field: "CapitulosGirasol", title: "Capítulos<br>Girasol", width: 70 },
             { field: "DistanciaHileras", title: "Distancia<br>Hileras", width: 70 },
             { field: "Latitud", title: "Latitud", width: 70 },
             { field: "Longitud", title: "Longitud", width: 70 },
@@ -199,19 +200,19 @@ function CreateGrid() {
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
-                row.cells[29].value = row.cells[29].value ? "Si" : "No";
+                row.cells[30].value = row.cells[30].value ? "Si" : "No";
             }
 
             // Proceso para adjuntos:
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
-                var dataItem = { Adjuntos: row.cells[30].value };
-
+                var dataItem = { Adjuntos: row.cells[31].value };
+                
                 if (dataItem.Adjuntos.constructor === window.init) {
                     dataItem.Adjuntos = Array.from(dataItem.Adjuntos); // Convertir init a array
                 }
                 if (dataItem.Adjuntos.length === 0) {
-                    row.cells[30].value = "No contiene";
+                    row.cells[31].value = "No contiene";
                 } else {
                     var imagenData = dataItem.Adjuntos.map(function (imagen) {
                         return {
@@ -221,10 +222,10 @@ function CreateGrid() {
                     });
                     if (imagenData.length === 1) {
                         var hyperlink = `=HYPERLINK("${imagenData[0].url}", "${imagenData[0].nombre}")`;
-                        row.cells[30].formula = hyperlink;
+                        row.cells[31].formula = hyperlink;
                     } else {
                         var firstHyperlink = `=HYPERLINK("${imagenData[0].url}", "${imagenData[0].nombre}")`;
-                        row.cells[30].formula = firstHyperlink;
+                        row.cells[31].formula = firstHyperlink;
 
                         // Insertar las demás filas con adjuntos
                         for (var l = 1; l < imagenData.length; l++) {
@@ -232,7 +233,7 @@ function CreateGrid() {
                             for (var k = 0; k < row.cells.length; k++) {
                                 newRow.cells.push({ value: "" }); // Insertar celdas vacías
                             }
-                            newRow.cells[30].formula = `=HYPERLINK("${imagenData[l].url}", "${imagenData[l].nombre}")`;
+                            newRow.cells[31].formula = `=HYPERLINK("${imagenData[l].url}", "${imagenData[l].nombre}")`;
                             newRows.push(newRow);
                         }
                     }

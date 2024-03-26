@@ -82,52 +82,51 @@ namespace Molinos.DataAgro.Agent.Helpers
                     List<CampañaDto> listaCampañaDto = repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
                     List<ComercialDto> listaComercialDto = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, Email = x.Email });
                     List<ResearchCondicionCultivo> listaCondicionCultivo = repositorio.Listar<ResearchCondicionCultivo>();
-                    
+                    int contadorAgregados = 0;
+
                     foreach (ListItem item in itemsResearch)
                     {
-                        string valoresCalculo = "";
                         Resultado resultado = new Resultado();
                         try
                         {
                             Research itemData = new Research();
-                            itemError = item;
 
                             GuardarLog(item);
 
-                            itemData.MaterialId = listaMateriales.First(x => x.Descripcion.ToUpper() == item["Cultivo"].ToString().ToUpper()).MaterialId;
+                            itemData.MaterialId = listaMateriales.First(x => x.Descripcion.ToUpper() == item["Cultivo"]?.ToString().ToUpper()).MaterialId;
                             itemData.MaterialIdAntecesor = listaMateriales.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Antecesor"]?.ToString().ToUpper())?.MaterialId;
                             itemData.EstadioId = listaEstadioDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Estadiofenologico"]?.ToString().ToUpper())?.EstadioId;
                             itemData.CondicionId = listaCondicionDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Condicioncultivo"]?.ToString().ToUpper())?.CondicionId;
                             itemData.HumedadSueloId = listaHumedadSueloDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Humedadsuelo"]?.ToString().ToUpper())?.HumedadSueloId;
-                            itemData.Comentarios = item["Comentarios"] == null ? "" : item["Comentarios"].ToString();
-                            itemData.Partido = item["Partido"] == null ? "" : item["Partido"].ToString();
-                            itemData.Localidad = item["Localidad"] == null ? "" : item["Localidad"].ToString();
-                            itemData.Provincia = item["Provincia"] == null ? "" : item["Provincia"].ToString();
-                            var provinciaId = listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
-                            var partidoId = provinciaId ?? listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == provinciaId)?.Id;
-                            itemData.LocalidadId = item["LocalidadId"] is int locId ? locId : partidoId == null ? null : //puede que también sea string
-                                listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == partidoId && x.ProvinciaId == provinciaId)?.LocalidadId;
-                            itemData.ProvinciaId = item["ProvinciaId"] is string provId ? int.Parse(provId) : provinciaId;
-                            itemData.PartidoId = item["PartidoId"] is string partId ? int.Parse(partId) : partidoId;
+                            itemData.Comentarios = item["Comentarios"] is string comentarios ? comentarios : "";
+                            itemData.Provincia = item["Provincia"] is string provincia ? provincia : "";
+                            itemData.Partido = item["Partido"] is string partido ? partido : "";
+                            itemData.Localidad = item["Localidad"] is string localidad ? localidad : "";
+                            itemData.ProvinciaId = item["ProvinciaId"] is string provId ? int.Parse(provId) : listaProvinciaDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Provincia.ToUpper())?.ProvinciaId;
+                            itemData.PartidoId = item["PartidoId"] is string partId ? int.Parse(partId) : itemData.ProvinciaId != null ?
+                                listaPartido.FirstOrDefault(x => x.Descripcion.ToUpper() == itemData.Partido.ToUpper() && x.ProvinciaId == itemData.ProvinciaId)?.Id : null;
+                            itemData.LocalidadId = item["LocalidadId"] is string locId ? int.Parse(locId) : itemData.PartidoId != null ?
+                                listaLocalidadDto.FirstOrDefault(x => x.Nombre.ToUpper() == itemData.Localidad.ToUpper() && x.PartidoId == itemData.PartidoId && x.ProvinciaId == itemData.ProvinciaId)?.LocalidadId : null;
                             itemData.Latitud = item["Latitud"] is double latitud ? latitud : (double?)null;
                             itemData.Longitud = item["Longitud"] is double longitud ? longitud : (double?)null;
                             itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
-                            itemData.MedidasUno = item["Medidas1"] == null ? "" : item["Medidas1"].ToString();
+                            itemData.MedidasUno = item["Medidas1"] is string medidas1 ? medidas1 : "";
                             itemData.PromedioMuestraUno = item["Promediomuestra1"] is double prom1 ? Math.Round(prom1, 2) : (double?)null;
                             itemData.TipoMuestraIdDos = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra2"]?.ToString().ToUpper())?.TipoMuestraId;
-                            itemData.MedidasDos = item["Medidas2"] == null ? "" : item["Medidas2"].ToString();
+                            itemData.MedidasDos = item["Medidas2"] is string medidas2 ? medidas2 : "";
                             itemData.PromedioMuestraDos = item["Promediomuestra2"] is double prom2 ? Math.Round(prom2, 2) : (double?)null;
                             itemData.TipoMuestraIdTres = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra3"]?.ToString().ToUpper())?.TipoMuestraId;
-                            itemData.MedidasTres = item["Medidas3"] == null ? "" : item["Medidas3"].ToString();
+                            itemData.MedidasTres = item["Medidas3"] is string medidas3 ? medidas3 : "";
                             itemData.PromedioMuestraTres = item["Promediomuestra3"] is double prom3 ? Math.Round(prom3, 2) : (double?)null;
+                            itemData.PromedioGranosVaina = item["PromedioGranosVaina"] is double promGV ? Math.Round(promGV, 2) : (double?)null;
                             itemData.DistanciaHileras = item["Distanciahileras"] is double hileras ? hileras : (double?)null;
-                            itemData.Coeficiente = item["Coeficiente"] is double ? Math.Round(double.Parse(item["Coeficiente"].ToString()), 2) : (double?)null;
+                            itemData.Coeficiente = item["Coeficiente"] is double coeficiente ? Math.Round(coeficiente, 2) : (double?)null;
                             itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                             itemData.CapitulosGirasol = item["CapitulosGirasol"] is double capGirasol ? capGirasol : (double?)null;
                             itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta : (DateTime?)null;
                             itemData.Rendimiento = item["rendimiento"] is double rendim ? rendim : (double?)null;
                             itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
-                            itemData.EstadoConectividad = item["estadoConectividad"] == null ? "" : item["estadoConectividad"].ToString();
+                            itemData.EstadoConectividad = item["estadoConectividad"] is string estadoConec ? estadoConec : "";
                             itemData.IdPowerApp = item["ID"] is int id ? id : (int?)null;
                             itemData.FechaModificacion = item["Modified"] is DateTime fecha ? fecha : (DateTime?)null;
                             FieldUserValue autor = new FieldUserValue();
@@ -138,14 +137,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                             editor = (FieldUserValue)item["Editor"];
                             itemData.Editor = editor.Email;
                             itemData.Attachments = false;
-                            string rutaArchivos = item["FileDirRef"] == null ? "" : item["FileDirRef"].ToString();
-
-                            double espigas_Plantas_m2 = 0, rendimiento = 0;
-                            int p1000 = listaCondicionCultivo.Where(x => x.MaterialId == itemData.MaterialId && x.CondicionId == itemData.CondicionId)
-                                        .Select(x => x.Valor).FirstOrDefault();
+                            itemData.Sincronizado = true;
+                            string rutaArchivos = item["FileDirRef"] is string fileDirRef ? fileDirRef : "";
 
                             if (itemData.TipoCargaId == 1) //Carga completa
                             {
+                                double espigas_Plantas_m2 = 0, rendimiento = 0;
+                                int p1000 = listaCondicionCultivo.Where(x => x.MaterialId == itemData.MaterialId && x.CondicionId == itemData.CondicionId).Select(x => x.Valor).FirstOrDefault();
+                                string valoresCalculo = "";
+
                                 resultado = ValidarResearch(itemData, p1000);
 
                                 switch (itemData.MaterialId)
@@ -165,18 +165,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                                         rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * p1000 * itemData.Coeficiente);
                                         break;
                                     case (int)EnumMateriales.SOJA:
-                                        valoresCalculo = $"SOJA - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioMuestraTres: {itemData.PromedioMuestraTres} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
+                                        valoresCalculo = $"SOJA - PromedioMuestraUno: {itemData.PromedioMuestraUno} - DistanciaHileras: {itemData.DistanciaHileras} - PromedioMuestraDos: {itemData.PromedioMuestraDos} - PromedioGranosVaina: {itemData.PromedioGranosVaina} - P1000: {p1000} - Coeficiente: {itemData.Coeficiente}";
                                         // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
                                         espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
                                         // Prom. Vainas/planta = itemData.PromedioMuestraDos
-                                        // Prom. Granos por vaina = itemData.PromedioMuestraTres
 
-                                        rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos /** itemData.PromedioMuestraTres -> este va a ser el campo PromedioGranosVaina*/ * p1000 * itemData.Coeficiente);
+                                        rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * itemData.PromedioGranosVaina * p1000 * itemData.Coeficiente);
                                         break;
                                     case (int)EnumMateriales.GIRASOL:
                                         valoresCalculo = $"GIRASOL - PromedioMuestraUno: {itemData.PromedioMuestraUno} - CapitulosGirasol: {itemData.CapitulosGirasol} - DistanciaHileras: {itemData.DistanciaHileras} - Coeficiente: {itemData.Coeficiente}";
                                         double promedio_al_cuadrado = Math.Pow((double)itemData.PromedioMuestraUno, 2);
-                                        // Peso por capítulo (grs) = -14,53 + ( 1,07 * itemData.PromedioMuestraUno) + ( 0,2 * itemData.PromedioMuestraUno * itemData.PromedioMuestraUno)
                                         double peso_por_capítulo_grs = (double)(-14.53 + (1.07 * itemData.PromedioMuestraUno) + (0.2 * promedio_al_cuadrado));
                                         rendimiento = (double)(itemData.CapitulosGirasol / itemData.DistanciaHileras / 10 * peso_por_capítulo_grs * itemData.Coeficiente * 10000);
                                         break;
@@ -226,17 +224,17 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                             if (resultado.HayError)
                             {
-                                logger.Info($"INICIO - ERROR Research con registro: {itemData.IdPowerApp} - {valoresCalculo}");
+                                logger.Info($"INICIO - ERROR Research con registro: {itemData.IdPowerApp}");
                                 logger.Error($"{CadenaDeErrores(resultado)}");
                                 logger.Info($"FIN - ERROR Research con registro: {itemData.IdPowerApp}");
                             }
                             else
                             {
                                 repositorio.Agregar(itemData);
-
+                                contadorAgregados++;
                                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                                 {
-                                    logger.Info($"Simula eliminar en SharePoint el registro: {itemData.IdPowerApp}");
+                                    logger.Info($"Simula eliminar en SharePoint el registro {itemData.IdPowerApp}");
                                 }
                                 else
                                 {
@@ -247,23 +245,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                         catch (Exception e)
                         {
-                            var id = item["ID"] is int ? (int)item["ID"] : (int?)null;
-                            logger.Info($"INICIO - ERROR Research con registro: {id} - {valoresCalculo}");
-                            logger.Error(e.Message);
+                            var id = item["ID"] is int itemId ? itemId : (int?)null;
+                            logger.Error($"Error Research con IdPowerApp {id}", e.Message);
                             if (e.InnerException?.InnerException != null) logger.Error(e.InnerException?.InnerException?.Message);
                             if (resultado.HayError) logger.Error($"{CadenaDeErrores(resultado)}");
-                            logger.Info($"FIN - ERROR Research con registro: {id}");
                         }
                     }
-                    var guardados = repositorio.GuardarCambios();
-                    logger.Info($"Se agregaron {guardados} registros a la base de datos.");
+                    repositorio.GuardarCambios();
+                    logger.Info($"Se agregaron {contadorAgregados} registros a la base de datos.");
                 }
             }
             catch (Exception e)
             {
-                //var id = itemError["ID"] is int ? (int)itemError["ID"] : (int?)null;
-                //logger.Error($"Error al consultar registros de Research - ID {id}: {e.Message}");
-                logger.Error(e);
+                logger.Error("SincronizarDatosResearch", e);
                 throw;
             }
         }
@@ -305,6 +299,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 TipoMuestraTres = item["Muestra3"],
                 MedidasTres = item["Medidas3"],
                 PromedioMuestraTres = item["Promediomuestra3"],
+                PromedioGranosVaina = item["PromedioGranosVaina"],
                 DistanciaHileras = item["Distanciahileras"],
                 Coeficiente = item["Coeficiente"],
                 Campaña = item["Campa_x00f1_a"],
@@ -321,7 +316,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             };
 
             string jsonData = JsonConvert.SerializeObject(data);
-            logger.Info($"Research a sincronizar ID {item["ID"]}: {jsonData}");
+            logger.Info($"Research a sincronizar IdPowerApp {item["ID"]}: {jsonData}");
         }
 
         private string CadenaDeErrores(Resultado resultado)
@@ -347,9 +342,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraDos no puede ser NULL."));
 
             if (itemData.PromedioMuestraTres == 0 && (itemData.MaterialId == (int)EnumMateriales.MAIZ))
-                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser 0 (cero)."));
-            if (itemData.PromedioMuestraTres == null && (itemData.MaterialId == (int)EnumMateriales.MAIZ)) //para soja puede ser 0
-                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser NULL."));
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser 0 (cero) para maíz."));
+            if (itemData.PromedioMuestraTres == null && (itemData.MaterialId == (int)EnumMateriales.MAIZ))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioMuestraTres no puede ser NULL para maíz."));
+
+            if (itemData.PromedioGranosVaina == 0 && (itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioGranosVaina no puede ser 0 (cero) para soja."));
+            if (itemData.PromedioGranosVaina == null && (itemData.MaterialId == (int)EnumMateriales.SOJA))
+                resultado.Errores.Add(new ErrorMessage(400, $"El campo PromedioGranosVaina no puede ser NULL para soja."));
 
             if (p1000 == 0 && (itemData.MaterialId == (int)EnumMateriales.MAIZ || itemData.MaterialId == (int)EnumMateriales.TRIGO || itemData.MaterialId == (int)EnumMateriales.SOJA))
                 resultado.Errores.Add(new ErrorMessage(400, $"El campo p1000 no puede ser 0 (cero)."));

@@ -127,7 +127,6 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (d.Cantidad > 0)
                             {
-                                d.Fecha = DateTime.Now.AddHours(1);
                                 if (d.Fecha < DateTime.Today)
                                 {
                                     error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");

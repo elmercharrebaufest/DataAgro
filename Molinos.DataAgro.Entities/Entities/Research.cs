@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProvinciaId { get; set; }
         public int? PartidoId { get; set; }
         public double? RendimientoCalculado { get; set; }
+        public double? PromedioGranosVaina { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MaterialIdAntecesor")]
