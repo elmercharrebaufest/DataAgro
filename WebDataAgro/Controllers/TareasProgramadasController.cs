@@ -1,10 +1,10 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Interfaces;
-using System.Web.Mvc;
+﻿using Molinos.DataAgro.Interfaces.Managers;
 using static WebDataAgro.MvcApplication;
-using System;
+using Molinos.DataAgro.Interfaces;
 using WebDataAgro.Helpers.Excel;
-using Molinos.DataAgro.Interfaces.Managers;
+using Autofac.Extras.NLog;
+using System.Web.Mvc;
+using System;
 
 namespace WebDataAgro.Controllers
 {
@@ -75,33 +75,33 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TransmitirCupoStop()
         {
-            logger.Info($"Transmitiendo cupos a STOP");
+            logger.Info("INICIO TransmitirCupoStop");
             cupoManager.TransmitirCupos();
-            logger.Info($"Borrado Automatico - Finalizado");
+            logger.Info("FIN TransmitirCupoStop - Borrado Automatico");
             return Content("ok");
         }
 
         public ActionResult ConsultarCuposDiarios()
         {
-            logger.Info($"Transmitiendo cupos a STOP");
+            logger.Info("INICIO ConsultarCuposDiarios a STOP");
             cupoManager.ConsultarCuposDiarios();
-            logger.Info($"Consulta Cupos a Stop - Finalizado");
+            logger.Info("FIN ConsultarCuposDiarios a STOP");
             return Content("ok");
         }
 
         public ActionResult AnularAcuerdos()
         {
-            logger.Info($"Anulando cantidad Pendiente de Acuerdos");
+            logger.Info("INICIO AnularAcuerdos (cantidad Pendiente de Acuerdos)");
             contratoAcuerdoManager.AnularAcuerdos();
-            logger.Info($"Anular - Finalizado");
+            logger.Info("FIN AnularAcuerdos");
             return Content("ok");
         }
 
         public ActionResult CrearSugerenciaCupo()
         {
-            logger.Info($"CrearSugerenciaCupo");
+            logger.Info("INICIO CrearSugerenciaCupo");
             cupoManager.CrearSugerenciaCupo();
-            logger.Info($"CrearSugerenciaCupo - Finalizado");
+            logger.Info("FIN CrearSugerenciaCupo");
             return Content("ok");
         }
 
@@ -112,44 +112,44 @@ namespace WebDataAgro.Controllers
             {
                 fechaD = DateTime.ParseExact(fecha, "yyyyMMdd", null);
             }
-            logger.Info($"ReporteCompraNet");
+            logger.Info("INICIO GrabarReporteCompraNet");
             reportesManager.GrabarDatosReporteCompraNet(fechaD, fechaD, "0", null);
 
-            logger.Info($"ReporteCompraNet - Finalizado");
+            logger.Info("FIN GrabarReporteCompraNet");
             return Content("ok");
         }
 
         public ActionResult EnvioMailSinCTG()
         {
-            logger.Info($"EnvioMailSinCtg - Iniciando");
+            logger.Info("INICIO EnvioMailSinCTG");
             cupoManager.EnviarMailSinCtg();
-            logger.Info($"EnvioMailSinCtg - Finalizado");
+            logger.Info("FIN EnvioMailSinCTG");
             return Content("ok");
         }
 
         public ActionResult EnvioMailNegociosConDiaAnterior()
         {
-            logger.Info($"EnvioMailNegociosConDiaAnterior - Iniciando");
+            logger.Info("INICIO EnvioMailNegociosConDiaAnterior");
             negocioManager.EnvioMailNegociosConDiaAnterior();
-            logger.Info($"EnvioMailNegociosConDiaAnterior - Finalizado");
+            logger.Info("FIN EnvioMailNegociosConDiaAnterior");
             return Content("ok");
         }
 
         public ActionResult RechazarSolicitudesVencidas()
         {
-            logger.Info($"RechazarSolicitudesVencidas - Iniciando");
+            logger.Info("INICIO RechazarSolicitudesVencidas");
             administracionCupoManager.RechazarSolicitudesVencidas();
-            logger.Info($"RechazarSolicitudesVencidas - Finalizado");
+            logger.Info("FIN RechazarSolicitudesVencidas");
             return Content("ok");
         }
 
         public ActionResult CerrarDia()
         {
-            logger.Info($"CerrarDiaHedge - Iniciando");
+            logger.Info("INICIO CerrarDiaHedge");
             var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
             var diferencial = diferencialManager.TraerDiferencial();
             oHedgeManager.JobCerrarDia(GlobalVariables.ComercialId, GlobalVariables.IdActiveDirectory, mailEnviar, diferencial == null ? 0 : diferencial.DiferencialDefault);
-            logger.Info($"CerrarDiaHedge - Finalizado");
+            logger.Info("FIN CerrarDiaHedge");
             return Content("ok");
         }
 
@@ -159,9 +159,9 @@ namespace WebDataAgro.Controllers
         {
             lock (_lockPesificados)
             {
-                logger.Info($"Pesificados - Iniciando " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
+                logger.Info("INICIO Pesificados - " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
                 reportesManager.GrabarTodoDatoPesificar();
-                logger.Info($"Pesificados - Finalizado " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
+                logger.Info("FIN Pesificados - " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
                 return Content("ok");
             }
 
@@ -170,19 +170,19 @@ namespace WebDataAgro.Controllers
         public ActionResult MigrarContratosPrimary(string fecha)
         {
             DateTime dia = DateTime.Now.Date;
-            logger.Info($"MigrarContratosPrimary - Inicio");
+            logger.Info("INICIO MigrarContratosPrimary");
             if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
             {
                 dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
             }
             negocioManager.MigrarContratosPrimary(dia);
-            logger.Info($"MigrarContratosPrimary - Finalizado");
+            logger.Info("FIN MigrarContratosPrimary");
             return Content("ok");
         }
 
         public ActionResult ActualizarRazonSocial()
         {
-            logger.Info("ActualizarRazonSocial - Iniciando");
+            logger.Info("INICIO ActualizarRazonSocial");
             try
             {
                 proveedorManager.ActualizarRazonSocial();
@@ -192,13 +192,13 @@ namespace WebDataAgro.Controllers
                 logger.Error(ex);
                 throw;
             }
-            logger.Info("ActualizarRazonSocial - Finalizado");
+            logger.Info("FIN ActualizarRazonSocial");
             return Content("ok");
         }
 
         public ActionResult ReportePagosDiferidos(string fecha)
         {
-            logger.Info("ReportePagosDiferidos - Iniciando");
+            logger.Info("INICIO ReportePagosDiferidos");
             try
             {
                 var hoy = DateTime.Now.Date;
@@ -229,32 +229,30 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception ex)
             {
-                logger.Info("ReportePagosDiferidos - Error");
-                logger.Error(ex);
+                logger.Error("ReportePagosDiferidos", ex);
             }
-            logger.Info("ReportePagosDiferidos - Finalizado");
+            logger.Info("FIN ReportePagosDiferidos");
             return Content("ok");
         }
 
         public ActionResult ActualizarCumplimientoCupos()
         {
-            logger.Info("ActualizarCumplimientoCupos - Iniciando");
+            logger.Info("INICIO ActualizarCumplimientoCupos");
             try
             {
                 cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date.AddDays(-1));
             }
             catch (Exception ex)
             {
-                logger.Info("ActualizarCumplimientoCupos - Error");
-                logger.Error(ex);
+                logger.Error("ActualizarCumplimientoCupos", ex);
             }
-            logger.Info("ActualizarCumplimientoCupos - Finalizado");
+            logger.Info("FIN ActualizarCumplimientoCupos");
             return Content("ok");
         }
 
         public ActionResult ActualizarCumplimientoCuposMasivo(string fechaDesde, string fechaHasta)
         {
-            logger.Info("ActualizarCumplimientoCuposMasivo - Iniciando");
+            logger.Info("INICIO ActualizarCumplimientoCuposMasivo");
             DateTime desde = DateTime.ParseExact(fechaDesde, "yyyyMMdd", null);
             DateTime hasta = DateTime.ParseExact(fechaHasta, "yyyyMMdd", null);
             for (var dt = desde; dt <= hasta; dt = dt.AddDays(1))
@@ -269,31 +267,31 @@ namespace WebDataAgro.Controllers
                     logger.Error(ex);
                 }
             }
-            logger.Info("ActualizarCumplimientoCuposMasivo - Finalizado");
+            logger.Info("FIN ActualizarCumplimientoCuposMasivo");
             return Content("ok");
         }
 
         public ActionResult EnvioMailNegociosAnulaYReemplaza()
         {
-            logger.Info($"EnvioMailNegociosAnulaYReemplaza - Iniciando");
+            logger.Info("INICIO EnvioMailNegociosAnulaYReemplaza");
             negocioManager.EnvioMailNegociosAnulaYReemplaza();
-            logger.Info($"EnvioMailNegociosAnulaYReemplaza - Finalizado");
+            logger.Info("FIN EnvioMailNegociosAnulaYReemplaza");
             return Content("ok");
         }
 
         public ActionResult EnviarMailSugerenciasPendientesPorComercial()
         {
-            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - inicio");
+            logger.Info("INICIO EnviarMailSugerenciasPendientesPorComercial");
             cupoManager.EnviarMailSugerenciasPendientesPorComercial();
-            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
+            logger.Info("FIN EnviarMailSugerenciasPendientesPorComercial");
             return Content("ok");
         }
 
         public ActionResult ActualizarMailProveedor()
         {
-            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - inicio");
+            logger.Info("INICIO EnviarMailSugerenciasPendientesPorComercial");
             proveedorManager.GrabarMailProveedor();
-            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
+            logger.Info("FIN EnviarMailSugerenciasPendientesPorComercial");
             return Content("ok");
         }
 
@@ -301,13 +299,13 @@ namespace WebDataAgro.Controllers
         {
             if (DateTime.Now >= DateTime.Now.Date.AddHours(7) && DateTime.Now <= DateTime.Now.Date.AddHours(21))
             {
-                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos");
+                logger.Info("INICIO ConsultarMisturnosActivos - Actualizar CupoNoPropio");
                 cupoManager.ConsultarMisTurnosActivos();
-                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - Finalizado");
+                logger.Info("FIN ConsultarMisturnosActivos - Actualizar CupoNoPropio");
             }
             else
             {
-                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - fuera de rango");
+                logger.Info("Fuera de Rango ConsultarMisturnosActivos - Actualizar CupoNoPropio");
             }
             return Content("ok");
         }
@@ -316,9 +314,9 @@ namespace WebDataAgro.Controllers
         {
             if (DateTime.Now > DateTime.Now.Date.AddHours(12) && DateTime.Now < DateTime.Now.Date.AddHours(13).AddMinutes(1))
             {
-                logger.Info($"Actualizar Precios Pizarra");
+                logger.Info("INICIO ActualizarPrecioPizarra");
                 precioPizarraManager.ActualizarPrecioPizarra(DateTime.Now.Date.AddDays(-1), false);
-                logger.Info($"Actualizar Precios Pizarra - Finalizado");
+                logger.Info("FIN ActualizarPrecioPizarra");
             }
             return Content("ok");
         }
@@ -327,43 +325,43 @@ namespace WebDataAgro.Controllers
         {
             //if (DateTime.Now > DateTime.Now.Date.AddHours(10) && DateTime.Now < DateTime.Now.Date.AddHours(11).AddMinutes(1))
             //{
-            logger.Info($"Actualizar Proveedores Home");
+            logger.Info("INICIO ActualizarProveedoresHome");
             proveedorManager.ActualizarProveedoresHome();
-            logger.Info($"Actualizar Proveedores Home - Finalizado");
+            logger.Info("FIN ActualizarProveedoresHome");
             //}
             return Content("ok");
         }
 
         public ActionResult ActualizarEstadoDeContratos()
         {
-            logger.Info($"Inicio Actualizar EstadoContrato");
+            logger.Info("INICIO ActualizarEstadoDeContrato");
             contratoManager.ActualizarEstadoDeContratos();
-            logger.Info($"Fin Actualizar EstadoContrato");
+            logger.Info("FIN ActualizarEstadoDeContrato");
             return Content("ok");
         }
 
         public ActionResult ConfirmacionAutomaticaPizarra13Hrs()
         {
-            logger.Info($"Inicio Confirmación Automatica Pizarra 13hrs");
+            logger.Info("INICIO ConfirmacionAutomaticaPizarra13hrs");
             fijacionManager.ConfirmacionAutomaticaPizarra13Hrs();
-            logger.Info($"Fin Confirmación Automatica Pizarra 13hrs");
+            logger.Info("FIN ConfirmacionAutomaticaPizarra13hrs");
             return Content("ok");
         }
 
         public ActionResult ActualizarFechaUltimaActualizacionManualesFAQ()
         {
-            logger.Info($"Actualizar fecha última actualización Manuales FAQ");
+            logger.Info("INICIO Actualizar fecha última actualización Manuales FAQ");
             faqManager.ActualizarFechaUltimaActualizacionManualesFAQ();
-            logger.Info($"Actualizar fecha última actualización Manuales FAQ - Finalizado");
+            logger.Info("FIN Actualizar fecha última actualización Manuales FAQ");
 
             return Content("ok");
         }
 
         public ActionResult SincronizarResearch()
         {
-            logger.Info($"INICIO - Sincronizar Research Power App");
+            logger.Info("INICIO SincronizarResearch Power App");
             researchManager.SincronizarResearchPowerApp();
-            logger.Info($"FIN - Sincronizar Research Power App");
+            logger.Info("FIN SincronizarResearch Power App");
 
             return Content("ok");
         }
@@ -371,13 +369,13 @@ namespace WebDataAgro.Controllers
         public ActionResult VerificarSolicitudesExtraordinariasPendientes(string fecha)
         {
             DateTime dia = DateTime.Now.Date;
-            logger.Info($"VerificarSolicitudesExtraordinariasPendientes - Inicio");
+            logger.Info("INICIO VerificarSolicitudesExtraordinariasPendientes");
             if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
             {
                 dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
             }
             cupoManager.VerificarSolicitudesExtraordinariasPendientes(dia);
-            logger.Info($"VerificarSolicitudesExtraordinariasPendientes - Finalizado");
+            logger.Info("FIN VerificarSolicitudesExtraordinariasPendientes");
             return Content("ok");
         }
     }
