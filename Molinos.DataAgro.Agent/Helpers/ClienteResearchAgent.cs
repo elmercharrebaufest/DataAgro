@@ -140,13 +140,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                             itemData.Sincronizado = true;
                             string rutaArchivos = item["FileDirRef"] is string fileDirRef ? fileDirRef : "";
 
-                            double espigas_Plantas_m2 = 0, rendimiento = 0;
-                            int p1000 = listaCondicionCultivo.Where(x => x.MaterialId == itemData.MaterialId && x.CondicionId == itemData.CondicionId).Select(x => x.Valor).FirstOrDefault();
-
                             if (itemData.TipoCargaId == 1) //Carga completa
                             {
-                                resultado = ValidarResearch(itemData, p1000);
+                                double espigas_Plantas_m2 = 0, rendimiento = 0;
+                                int p1000 = listaCondicionCultivo.Where(x => x.MaterialId == itemData.MaterialId && x.CondicionId == itemData.CondicionId).Select(x => x.Valor).FirstOrDefault();
                                 string valoresCalculo = "";
+
+                                resultado = ValidarResearch(itemData, p1000);
 
                                 switch (itemData.MaterialId)
                                 {
@@ -169,14 +169,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                                         // Espigas/Plantas m2 = Promedio m lineal / Distancia hileras (cm)
                                         espigas_Plantas_m2 = (double)(itemData.PromedioMuestraUno / itemData.DistanciaHileras);
                                         // Prom. Vainas/planta = itemData.PromedioMuestraDos
-                                        // Prom. Granos por vaina = itemData.PromedioMuestraTres
 
                                         rendimiento = (double)(espigas_Plantas_m2 * itemData.PromedioMuestraDos * itemData.PromedioGranosVaina * p1000 * itemData.Coeficiente);
                                         break;
                                     case (int)EnumMateriales.GIRASOL:
                                         valoresCalculo = $"GIRASOL - PromedioMuestraUno: {itemData.PromedioMuestraUno} - CapitulosGirasol: {itemData.CapitulosGirasol} - DistanciaHileras: {itemData.DistanciaHileras} - Coeficiente: {itemData.Coeficiente}";
                                         double promedio_al_cuadrado = Math.Pow((double)itemData.PromedioMuestraUno, 2);
-                                        // Peso por capítulo (grs) = -14,53 + ( 1,07 * itemData.PromedioMuestraUno) + ( 0,2 * itemData.PromedioMuestraUno * itemData.PromedioMuestraUno)
                                         double peso_por_capítulo_grs = (double)(-14.53 + (1.07 * itemData.PromedioMuestraUno) + (0.2 * promedio_al_cuadrado));
                                         rendimiento = (double)(itemData.CapitulosGirasol / itemData.DistanciaHileras / 10 * peso_por_capítulo_grs * itemData.Coeficiente * 10000);
                                         break;
