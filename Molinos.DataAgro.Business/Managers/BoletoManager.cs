@@ -24,6 +24,7 @@ using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.css;
 using Molinos.DataAgro.Entities.Common.Enums;
+using System.Globalization;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -703,6 +704,14 @@ namespace Molinos.DataAgro.Business.Managers
                     break;
             }
             return msje;
+        }
+
+        public List<String> FiltrarNegociosPorFecha(string desde,string hasta,int tipoNegocio)
+        {
+            var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var fechaHasta = DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var lista = repositorio.Listar<Contrato>(x => x.TipoNegocioId==tipoNegocio & x.ContratoSAP!=null & x.ContratoSAP!=string.Empty & x.Fecha > fechaDesde & x.Fecha < fechaHasta);
+            return lista.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
         }
     }
 
