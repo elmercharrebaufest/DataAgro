@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -18,14 +19,20 @@ namespace Molinos.DataAgro.Business
         }
         public override decimal Calcular(CriterioDeltaDePrecio criterio)
         {
-            if (String.IsNullOrEmpty( criterio.Dto.MonedaId)  || criterio.Dto.Precio == null || criterio.Dto.Precio == 0)
+            if (String.IsNullOrEmpty(criterio.Dto.MonedaId) || criterio.Dto.Precio == null || criterio.Dto.Precio == 0)
             {
                 return 0;
             }
             DateTime hoy = DateTime.Now.Date;
             var pizarraLista = Repositorio.Listar<PrecioPizarra>(x => x.FechaDesde <= hoy && x.FechaHasta >= hoy);
 
-            decimal dolarCotizacion = tipoDeCambio.TraerTipoDeCambio(null);
+            string typeOfRate = null;
+            if (criterio.Dto != null && criterio.Dto.NegocioId != null && criterio.Dto.NegocioId != 0)
+            {
+                Negocio negocio = Repositorio.Obtener<Negocio>(criterio.Dto.NegocioId);
+                typeOfRate = negocio.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND ? "Z" : "M";
+            }
+            decimal dolarCotizacion = tipoDeCambio.TraerTipoDeCambio(null, typeOfRate);
             var pizarra = pizarraLista.Where(a => a.MaterialId == criterio.Dto.MaterialId).SingleOrDefault();
             decimal precioPizarra = 1;
             if (pizarra == null)

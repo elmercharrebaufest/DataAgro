@@ -4566,7 +4566,8 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
+            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
                 ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio / valorDolar;

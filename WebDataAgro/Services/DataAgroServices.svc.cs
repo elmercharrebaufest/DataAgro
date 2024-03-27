@@ -1129,16 +1129,17 @@ namespace WebDataAgro.Services
             return oFacacop;
         }
 
-        public decimal TraerTipoDeCambio(DateTime? fecha, string moneda)
+        // Quienes usan este servicio? En que casos lo usan? Habría que avisarles que la RFC se modificó y devuelve de acuerdo al tipo de cambio (BLED u otro)
+        public decimal TraerTipoDeCambio(DateTime? fecha, string moneda, string typeOfRate)
         {
             if (string.IsNullOrEmpty(moneda))
             {
-                return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
+                return tipoDeCambioAgent.TraerTipoDeCambio(fecha, typeOfRate);
             }
             else
             {
                 moneda = moneda.Trim().ToUpper().PadRight(5, ' ');
-                return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda);
+                return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda, typeOfRate);
             }
         }
 

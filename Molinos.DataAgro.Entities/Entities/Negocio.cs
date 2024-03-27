@@ -216,5 +216,8 @@ namespace Molinos.DataAgro.Entities.Entities
             Pizarra = false;
         }
         public bool? DolarExportador { get; set; }
+        public int? TipoDeCambioId { get; set; }
+        [ForeignKey("TipoDeCambioId")]
+        public virtual TipoDeCambio TipoDeCambio { get; set; }
     }
 }

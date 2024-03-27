@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IValidarLiquidacionFinalAgent validarLiquidacionFinalAgent;
         private readonly IValidarLiquidacionParcialAgent validarLiquidacionParcialAgent;
         private readonly IValidarPesificacionAgent validarPesificacionAgent;
+        private readonly IContratoManager contratoManager;
 
 
         public FijacionDePrecioContratoManager(
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual,
             INegocioManager negocioManager, IConfiguracionInternaManager configuracionInternaManager,
             IAnularFijacionAgent anularFijacion, IValidarLiquidacionComisionesAgent validarLiquidacionComisionesAgent, IValidarLiquidacionFinalAgent validarLiquidacionFinalAgent,
-            IValidarLiquidacionParcialAgent validarLiquidacionParcialAgent, IValidarPesificacionAgent validarPesificacionAgent)
+            IValidarLiquidacionParcialAgent validarLiquidacionParcialAgent, IValidarPesificacionAgent validarPesificacionAgent, IContratoManager contratoManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -92,6 +93,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.validarLiquidacionFinalAgent = validarLiquidacionFinalAgent;
             this.validarLiquidacionParcialAgent = validarLiquidacionParcialAgent;
             this.validarPesificacionAgent = validarPesificacionAgent;
+            this.contratoManager = contratoManager;
         }
 
         //--------------------------------------------------
@@ -1854,6 +1856,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var fijacion = TraerFijacion(negocio.Id);
 
+                string typeOfRate = contratoManager.ObtenerTypeOfRate(negocio.TipoNegocioId, negocio.MonedaId, negocio.TipoAgenteCompraId, (DateTime)negocio.Fecha, negocio.Id != 0);
                 if (fijacion.PorcentajeSobrePrecioContrato > 0)
                 {
                     negocio.PorcentajeComision = fijacion.PorcentajeSobrePrecioContrato;
@@ -1863,7 +1866,7 @@ namespace Molinos.DataAgro.Business.Managers
                     negocio.ImporteComision = fijacion.ImporteSobrePrecioContrato;
                     if (fijacion.MonedaSobrePrecioContrato != negocio.MonedaId)
                     {
-                        var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion);
+                        var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion, typeOfRate);
                         if (negocio.MonedaId == "ARP  ")
                         {
                             negocio.ImporteComision = negocio.ImporteComision * cambio;
@@ -1892,7 +1895,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 negocio.ImporteComision = descuento.Importe;
                                 if (descuento.MonedaId != negocio.MonedaId)
                                 {
-                                    var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion);
+                                    var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion, typeOfRate);
                                     if (negocio.MonedaId == "ARP  ")
                                     {
                                         negocio.ImporteComision = negocio.ImporteComision * cambio;
@@ -2079,7 +2082,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var afijar = TraerDatosFijacion(proveedor.CUIT, cuitCorredor, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id);
-            var cambio = tipoDeCambioAgent.TraerTipoDeCambio(fijacion.FechaOperacion);
+            string typeOfRate = contratoManager.ObtenerTypeOfRate(fijacion.TipoNegocioId, fijacion.MonedaId, fijacion.TipoAgenteCompraId, fijacion.Fecha, fijacion.Id != 0);
+            var cambio = tipoDeCambioAgent.TraerTipoDeCambio(fijacion.FechaOperacion, typeOfRate);
             if (afijar[0].Aperturas != null && afijar[0].Aperturas.Count > 0)
             {
                 var aperturaAFijar = afijar[0].Aperturas;

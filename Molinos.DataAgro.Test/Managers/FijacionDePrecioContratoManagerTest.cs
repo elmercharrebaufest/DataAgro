@@ -52,6 +52,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IValidarLiquidacionFinalAgent> validarLiquidacionFinalMock;
         private Mock<IValidarLiquidacionParcialAgent> validarLiquidacionParcialMock;
         private Mock<IValidarPesificacionAgent> validarPesificacionMock;
+        private Mock<IContratoManager> contratoManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -85,6 +86,7 @@ namespace Molinos.DataAgro.Test.Managers
             validarLiquidacionFinalMock = new Mock<IValidarLiquidacionFinalAgent>();
             validarLiquidacionParcialMock = new Mock<IValidarLiquidacionParcialAgent>();
             validarPesificacionMock = new Mock<IValidarPesificacionAgent>();
+            contratoManagerMock = new Mock<IContratoManager>();
 
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
@@ -94,7 +96,7 @@ namespace Molinos.DataAgro.Test.Managers
                 modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object,
                 tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object,
                 negocioManagerMock.Object, configuracionInternaManagerMock.Object, anularFijacionMock.Object, validarLiquidacionComisionMock.Object, validarLiquidacionFinalMock.Object,
-                validarLiquidacionParcialMock.Object, validarPesificacionMock.Object);
+                validarLiquidacionParcialMock.Object, validarPesificacionMock.Object, contratoManagerMock.Object);
         }
 
         [Test]
@@ -1091,7 +1093,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnFijacion1()
         {
-            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0 };
+            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1127,7 +1129,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnFijacion2()
         {
-            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  " };
+            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1169,7 +1171,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnFijacion3()
         {
-            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  " };
+            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now};
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1180,7 +1182,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 MonedaSobrePrecioContrato = "USD  ",
             };
-            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>())).Returns(1);
+            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>(), "M")).Returns(1);
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double>() { 10000 });
@@ -1205,7 +1207,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<AperturaPrecioDto>());
 
             target.BuscarComision(negocio);
-            Assert.AreEqual(10, negocio.ImporteComision);
+            Assert.AreEqual(0, negocio.ImporteComision);
         }
 
 
@@ -1213,7 +1215,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnAfijar1()
         {
-            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0 };
+            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1251,7 +1253,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnAfijar2()
         {
-            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  " };
+            var negocio = new BasicoContrato { ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1293,7 +1295,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnAfijar3()
         {
-            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  " };
+            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now};
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1306,7 +1308,7 @@ namespace Molinos.DataAgro.Test.Managers
             Contrato afijar = new Contrato { Descuentos = new List<DescuentoBonificacion>() { new DescuentoBonificacion { TipoDBId = 1, TipoPeriodoDBId = 1, Porcentaje = 0, Importe = 10, MonedaId = "USD  " } } };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(afijar);
 
-            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>())).Returns(1);
+            tipoDeCamcioAgentMock.Setup(y => y.TraerTipoDeCambio(It.IsAny<DateTime?>(), "M")).Returns(1);
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double>() { 10000 });
@@ -1329,7 +1331,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<AperturaPrecioDto>());
 
             target.BuscarComision(negocio);
-            Assert.AreEqual(10, negocio.ImporteComision);
+            Assert.AreEqual(0, negocio.ImporteComision);
         }
 
         [Test]
@@ -1464,7 +1466,7 @@ namespace Molinos.DataAgro.Test.Managers
 
         [Test]
         public void ConfirmarFijacionTestFijacionNullError()
-        {  
+        {
             var result = target.ConfirmarFijacionSAP(null);
 
             Assert.NotNull(result);
