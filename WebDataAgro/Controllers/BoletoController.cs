@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -159,6 +160,14 @@ namespace WebDataAgro.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+        }
+
+        public ActionResult FiltrarBoletos(string desde, string hasta, int negocio)
+        {
+            return new JsonResult()
+            {
+                Data = mobjBoletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
+            };
         }
     }
 }

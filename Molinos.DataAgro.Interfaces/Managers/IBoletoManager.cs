@@ -15,5 +15,6 @@ namespace Molinos.DataAgro.Interfaces
         BoletoResult GrabarBoleto(List<int> tipoNegocios, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo);
         string ObtenerIdentDescarga();
         byte[] BoletoEnByte(string archivoUrl);
+        List<string> FiltrarNegociosPorFecha(string desde, string hasta, int negocio);
     }
 }
