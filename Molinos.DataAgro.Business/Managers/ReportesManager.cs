@@ -2713,8 +2713,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             ReporteLocalidadesModel result = new ReporteLocalidadesModel();
 
-            var consulta = repositorio.Listar<Localidad, LocalidadDto>(localidad => new LocalidadDto { Nombre = localidad.Nombre, Partido_Nombre = localidad.Partido.Descripcion, PartidoId = localidad.PartidoId, CodLocalidad = localidad.CodLocalidad, ProvinciaId = localidad.ProvinciaId, Provincia_Nombre = localidad.Provincia.Nombre });
-
             var localidades = repositorio.ListarConsulta(new TraerLocalidades());
             
 
@@ -2730,6 +2728,23 @@ namespace Molinos.DataAgro.Business.Managers
                         NombreProvincia = local.Provincia,
                         ProvinciaId = local.ProvinciaId
                     }); 
+            }
+
+            return result;
+        }
+
+        public ReporteProveedoresModel ObtenerDatosReporteProveedorComerciales(List<ComercialDto> comerciales)
+        {
+            ReporteProveedoresModel result = new ReporteProveedoresModel();
+            foreach (var comercio in comerciales)
+            {
+
+                result.tablero.Add(new ReporteProveedores
+                {
+                    Nombres = comercio.Nombres,
+                    Apellido = comercio.Apellido,
+                    ComercialId = comercio.ComercialId,
+                });
             }
 
             return result;
