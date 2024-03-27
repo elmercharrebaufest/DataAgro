@@ -706,11 +706,15 @@ namespace Molinos.DataAgro.Business.Managers
             return msje;
         }
 
-        public List<String> FiltrarNegociosPorFecha(string desde,string hasta,int tipoNegocio)
+        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
         {
+            int negocio = tipoNegocio == 1 ? (int)EnumTipoNegocio.A_PRECIO : (int)EnumTipoNegocio.FIJACION;
             var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var fechaHasta = DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var lista = repositorio.Listar<Contrato>(x => x.TipoNegocioId==tipoNegocio & x.ContratoSAP!=null & x.ContratoSAP!=string.Empty & x.Fecha > fechaDesde & x.Fecha < fechaHasta);
+            var lista = negocio == (int)EnumTipoNegocio.A_PRECIO ?
+                repositorio.Listar<Negocio>(x => x.TipoNegocioId == negocio && !string.IsNullOrEmpty(x.ContratoSAP) && (x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta)) :
+                negocio == (int)EnumTipoNegocio.FIJACION ? repositorio.Listar<Negocio>(x => x.TipoNegocioId == negocio && !string.IsNullOrEmpty(x.ContratoSAP) && (x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta) && x.Cantidad >= 10000000 && (x.BoletoVentaId == 2 || x.BoletoVentaId == 3)) :
+                new List<Negocio>();
             return lista.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
         }
     }
