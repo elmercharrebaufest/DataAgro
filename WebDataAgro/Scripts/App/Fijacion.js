@@ -2030,7 +2030,8 @@ function InicializarElementos() {
             }
         },
         change: function () {
-            valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val() });
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit.Contrato, esEdicion);
+            valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val(), typeOfRate: typeOfRate });
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();
             var anio = hoy.getFullYear();

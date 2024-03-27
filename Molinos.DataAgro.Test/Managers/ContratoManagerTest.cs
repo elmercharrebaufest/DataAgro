@@ -82,6 +82,8 @@ namespace Molinos.DataAgro.Test.Managers
             ConfigurationManager.AppSettings["UseDefaultCredentials"] = "S";
             ConfigurationManager.AppSettings["EnableSSL"] = "S";
             ConfigurationManager.AppSettings["CredentialPassword"] = "Hola1234";
+            ConfigurationManager.AppSettings["CargaDesdeBLEND"] = "2024-02-19";
+            ConfigurationManager.AppSettings["ActivarBLEND"] = "Si";
             this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();

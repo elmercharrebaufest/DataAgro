@@ -1263,12 +1263,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ValidarCreditoTest()
         {
 
-            contratoManagerMock.Setup(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>())).Returns("");
+            contratoManagerMock.Setup(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>())).Returns("");
             var result = target.ValidarCredito("", 1, 1, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);

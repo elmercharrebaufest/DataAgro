@@ -19,6 +19,7 @@
             <xsd:element name="FOREIGN_AMOUNT" type="rfc:curr13.2" />
             <xsd:element name="FOREIGN_CURRENCY" type="rfc:cuky5" />
             <xsd:element name="LOCAL_CURRENCY" type="rfc:cuky5" />
+            <xsd:element name="TYPE_OF_RATE" type="rfc:char1" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -26,6 +27,11 @@
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="curr13.2">

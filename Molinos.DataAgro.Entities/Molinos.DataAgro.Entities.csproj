@@ -175,6 +175,7 @@
     <Compile Include="Common\Enums\EnumStandarCalidad.cs" />
     <Compile Include="Common\Enums\EnumMateriales.cs" />
     <Compile Include="Common\Enums\EnumTipoDB.cs" />
+    <Compile Include="Common\Enums\EnumTipoDeCambio.cs" />
     <Compile Include="Common\Enums\EnumTipoNegocio.cs" />
     <Compile Include="Common\Enums\EnumTipoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
@@ -471,6 +472,7 @@
     <Compile Include="Entities\ResearchTipoCarga.cs" />
     <Compile Include="Entities\ResearchTipoMuestra.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
+    <Compile Include="Entities\TipoDeCambio.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />
     <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />

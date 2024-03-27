@@ -5535,7 +5535,8 @@ function AgregarPrecioPactado() {
             }
             else {
                 if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-                    var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+                    var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
+                    var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
                     var ImporteMonedaIgual = 0;
                     console.log("valorDolar", valorDolar);
                     if (precioPactado.MonedaPactadoId == "USDM ") {
@@ -5586,7 +5587,8 @@ function CalcularNetoFijacionConDescuentos() {
     var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
-            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
+            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { typeOfRate: typeOfRate });
             console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
                 ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio / valorDolar;
@@ -5894,7 +5896,14 @@ function validarCredito(cuitProv) {
         var cuitAux = cuitProv.split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
-            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0], cantidad: cantidad, precio: precio, moneda: moneda });
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
+            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', {
+                cuit: cuit[0],
+                cantidad: cantidad,
+                precio: precio,
+                moneda: moneda,
+                typeOfRate: typeOfRate,
+            });
 
 
             if (validacion == "Sin Crédito") {
@@ -6185,12 +6194,14 @@ function CalcularImporteDeOperacion(precio, cantidad) {
     var importe = 0;
     if ($("#ventaId").is(":checked")) {
         if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
             importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
                 precio: precio,
                 cantidad: cantidad,
                 fechaOperacion: $("#fechaOperacionId").val(),
                 materialId: $("#material").val(),
-                monedaId: $("#precioMonedaId").val()
+                monedaId: $("#precioMonedaId").val(),
+                typeOfRate: typeOfRate,
             })
 
         }
@@ -6579,4 +6590,34 @@ function APrecioConAgenteDeCompra() {
         else
             $(".venta").hide();
     }
+}
+
+function ObtenerTypeOfRate(tipoNegocio, moneda, agenteDeCompra, contrato, esEdicion) {
+    var typeOfRate = null;
+    if (tipoNegocio != "" && moneda != "") {
+        var fecha;
+        if (contrato != undefined && contrato != null) {
+            var fechaJSON = contrato.Fecha;
+            var milisegundos = parseInt(fechaJSON.replace(/\D/g, ''));
+            fecha = new Date(milisegundos);
+        }
+        else {
+            fecha = new Date();
+        }
+
+        var parametros = {
+            tipoNegocioId: tipoNegocio,
+            monedaId: moneda,
+            tipoAgenteCompraId: agenteDeCompra == "" ? null : agenteDeCompra,
+            fecha: fecha,
+            //modifica: esEdicion == "True" ? true : false,
+            modifica: ConvertirStringABool(esEdicion),
+        }
+
+        typeOfRate = MSExecuteOnServer("/Compranet/ObtenerTypeOfRate", parametros);
+
+        return typeOfRate;
+    }
+
+    return typeOfRate;
 }
