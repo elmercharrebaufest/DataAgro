@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         public void SincronizarDatosResearch()
         {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            ListItem itemError = null;
+            
             try
             {
                 using (ClientContext context = new ClientContext(urlResearch))
@@ -50,17 +50,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     context.Credentials = new SharePointOnlineCredentials(userNameResearch, securePassword);
 
-                    //selecionar la lista/pagina en sharepoint por nombre
-                    Web web = context.Web;
+                    Web web = context.Web; //selecionar la lista/pagina en sharepoint por nombre
 
                     List listResearch = web.Lists.GetByTitle(libraryNameResearch);
                     List listAttachments = web.Lists.GetByTitle(attachmentsResearch);
                     context.Load(listResearch);
                     context.Load(listAttachments);
-                    context.ExecuteQuery();//este es el que ejecuta lo que armamos antes, sin este es como no hacer nada
+                    context.ExecuteQuery(); //esto es lo que ejecuta lo que armamos antes, sin eso es como no hacer nada
 
                     // a la lista/pagina le pedimos que nos traiga todos los items
-                    CamlQuery query = CamlQuery.CreateAllItemsQuery();// aca se puede mejorar para filtrar los ya sinconinizados
+                    CamlQuery query = CamlQuery.CreateAllItemsQuery(); // aca se puede mejorar para filtrar los ya sinconinizados
                     ListItemCollection itemsResearch = listResearch.GetItems(query);
                     ListItemCollection itemsAttachment = listAttachments.GetItems(query);
                     context.Load(itemsResearch);
@@ -111,16 +110,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                             itemData.Longitud = item["Longitud"] is double longitud ? longitud : (double?)null;
                             itemData.TipoMuestraIdUno = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra1"]?.ToString().ToUpper())?.TipoMuestraId;
                             itemData.MedidasUno = item["Medidas1"] is string medidas1 ? medidas1 : "";
-                            itemData.PromedioMuestraUno = item["Promediomuestra1"] is double prom1 ? Math.Round(prom1, 2) : (double?)null;
+                            itemData.PromedioMuestraUno = item["Promediomuestra1"] is double prom1 ? prom1 : (double?)null;
                             itemData.TipoMuestraIdDos = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra2"]?.ToString().ToUpper())?.TipoMuestraId;
                             itemData.MedidasDos = item["Medidas2"] is string medidas2 ? medidas2 : "";
-                            itemData.PromedioMuestraDos = item["Promediomuestra2"] is double prom2 ? Math.Round(prom2, 2) : (double?)null;
+                            itemData.PromedioMuestraDos = item["Promediomuestra2"] is double prom2 ? prom2 : (double?)null;
                             itemData.TipoMuestraIdTres = listaTipoMuestraDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["Muestra3"]?.ToString().ToUpper())?.TipoMuestraId;
                             itemData.MedidasTres = item["Medidas3"] is string medidas3 ? medidas3 : "";
-                            itemData.PromedioMuestraTres = item["Promediomuestra3"] is double prom3 ? Math.Round(prom3, 2) : (double?)null;
-                            itemData.PromedioGranosVaina = item["PromedioGranosVaina"] is double promGV ? Math.Round(promGV, 2) : (double?)null;
+                            itemData.PromedioMuestraTres = item["Promediomuestra3"] is double prom3 ? prom3 : (double?)null;
+                            itemData.PromedioGranosVaina = item["PromedioGranosVaina"] is double promGV ? promGV : (double?)null;
                             itemData.DistanciaHileras = item["Distanciahileras"] is double hileras ? hileras : (double?)null;
-                            itemData.Coeficiente = item["Coeficiente"] is double coeficiente ? Math.Round(coeficiente, 2) : (double?)null;
+                            itemData.Coeficiente = item["Coeficiente"] is double coeficiente ? coeficiente : (double?)null;
                             itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                             itemData.CapitulosGirasol = item["CapitulosGirasol"] is double capGirasol ? capGirasol : (double?)null;
                             itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta : (DateTime?)null;
@@ -185,7 +184,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 2, MidpointRounding.AwayFromZero);
                             }
 
-                            string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
+                            //string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
+                            itemData.PromedioMuestraUno = Math.Round((double)itemData.PromedioMuestraUno, 2); //los decimales exactos son necesarios para el cálculo del rendimiento pero no para mostrarse luego
+                            itemData.PromedioMuestraDos = Math.Round((double)itemData.PromedioMuestraDos, 2);
+                            itemData.PromedioMuestraTres = Math.Round((double)itemData.PromedioMuestraTres, 2);
 
                             var adjuntos = itemsAttachment.Where(x => Convert.ToInt32(x["ID_Relevamiento"]) == Convert.ToInt32(item["ID"])).ToList();
 
@@ -267,7 +269,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             using (var memoryStream = new MemoryStream())
             {
                 fileStream.Value.CopyTo(memoryStream);
-                fileStream.Value.Close(); // se agrega por las dudas, para verificar.
+                //fileStream.Value.Close(); // innecesario al estar dentro de un bloque using
                 return memoryStream.ToArray();
             }
         }

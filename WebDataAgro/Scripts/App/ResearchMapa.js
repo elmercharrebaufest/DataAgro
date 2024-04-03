@@ -55,6 +55,7 @@ markers = L.markerClusterGroup({
 });
 
 $(document).ready(function () {
+    buscadorPorId();
     busquedaFiltrada();
 });
 
@@ -80,9 +81,9 @@ document.getElementById("CampanaId").addEventListener("change", function () {
     busquedaFiltrada();
 });
 
-document.getElementById("ResearchId").addEventListener("change", function () {
-    busquedaFiltrada();
-});
+//document.getElementById("ResearchId").addEventListener("change", function () {
+//    busquedaFiltrada();
+//});
 
 document.getElementById("AgrupadoId").addEventListener("change", function () {
     busquedaFiltrada();
@@ -258,7 +259,7 @@ function updateMarkers() {
     }
 
     map.addLayer(markers);
-    
+
     //L.marker([51.5, -0.09]).addTo(map).bindPopup("I am a green leaf.");
     //L.marker([51.495, -0.083]).addTo(map).bindPopup("I am a red leaf.");
     //L.marker([51.49, -0.1]).addTo(map).bindPopup("I am an orange leaf.");
@@ -407,4 +408,20 @@ function createCarousel() {
 
     });
     lightbox.init();
+}
+
+function buscadorPorId() {
+    var researchId = JSON.parse(document.getElementById("ResearchId").getAttribute("data-researchId"));
+    $("#ResearchId").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: researchId.map(function (id) {
+            return { text: id.Text.toString(), value: id.Value };
+        }),
+        optionLabel: "Todos",
+        filter: "contains",
+        change: function () {
+            busquedaFiltrada();
+        }
+    });
 }
