@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
+using Newtonsoft.Json;
 using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Controllers
@@ -56,6 +57,7 @@ namespace WebDataAgro.Controllers
             var idListItems = ids.Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = false });
 
             ViewBag.ResearchId = idListItems;
+            ViewBag.ResearchIdJson = JsonConvert.SerializeObject(idListItems);
         }
     }
 }

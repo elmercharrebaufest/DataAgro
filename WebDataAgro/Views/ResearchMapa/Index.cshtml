@@ -26,16 +26,21 @@
 <div id="filter-panel" class="leaflet-control">
     <button id="filter-button">Filtros</button>
     <div id="filter-form" style="display: none;">
-        <label for="GranoId">Material:</label>
-        @Html.DropDownList("GranoId", new SelectList(ViewBag.Material, "Value", "Text"), "Todos", new { @class = "jform-control" })
-
-        <label for="CampanaId">Campaña:</label>
-        @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Todas", new { @class = "jform-control" })
+        <div>
+            <label>Material:</label>
+            @Html.DropDownList("GranoId", new SelectList(ViewBag.Material, "Value", "Text"), "Todos", new { @class = "form-control" })
+        </div>
         <br />
-        
-        <label for="ResearchId">ID:</label>
-        @Html.DropDownList("ResearchId", new SelectList(ViewBag.ResearchId, "Value", "Text"), "Todos", new { @class = "multiselect" })
-
+        <div>
+            <label>Campaña:</label>
+            @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Todas", new { @class = "form-control" })
+        </div>
+        <br />
+        <div>
+            <label>ID del registro:</label>
+            <input id="ResearchId" name="ResearchId" class="form-control filtroBusquedaPorId" data-researchId="@ViewBag.ResearchIdJson" />
+            @*@Html.DropDownList("ResearchId", new SelectList(ViewBag.ResearchId, "Value", "Text"), "Todos", new { @class = "multiselect" })*@
+        </div>
         <br />
         <label for="AgrupadoId">Agrupado:</label>
         <input type="checkbox" id="AgrupadoId" name="AgrupadoId" checked />
