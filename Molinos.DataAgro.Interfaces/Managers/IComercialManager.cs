@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
@@ -32,5 +33,6 @@ namespace Molinos.DataAgro.Interfaces
         List<Comercial> ListarComercialesOyTNorte();
         List<ComercialQry> ListarComercialesAsignanNegocios();
         List<Comercial> ListarComercialesRecibirSugerenciaFAQ();
+        DataSourceResult TraerComercialesProveedorReporte(int proveedorId, DataSourceRequest request);
     }
 }

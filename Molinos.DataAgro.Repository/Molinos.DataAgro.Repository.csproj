@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsultasEF\BusquedaContactosComercial.cs" />
+    <Compile Include="ConsultasEF\BusquedaContactosComercialReporte.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosAlmacenamiento.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosProduccion.cs" />
     <Compile Include="ConsultasEF\BusquedaLocalidades.cs" />

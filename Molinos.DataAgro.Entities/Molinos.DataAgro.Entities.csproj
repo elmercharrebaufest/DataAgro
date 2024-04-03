@@ -209,6 +209,7 @@
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />
     <Compile Include="Dto\PuestoApoderadoDto.cs" />
+    <Compile Include="Dto\ReporteProveedores.cs" />
     <Compile Include="Dto\ReporteLocalidades.cs" />
     <Compile Include="Dto\ReporteSojaEPADto.cs" />
     <Compile Include="Dto\ResearchCoeficienteCultivoDto.cs" />

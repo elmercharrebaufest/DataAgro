@@ -255,3 +255,8 @@ function CargarViewModel(id) {
         }
     }
 }
+
+
+function descargaReporteProveedorComerciales() {
+    window.location = '/AdministracionProveedor/ReporteProveedorComerciales?IdProveedor=' + $("#buscadorResult").val();
+}

@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Test.Controllers
             rolManagerMock = new Mock<IRolManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             comercialManagerMock = new Mock<IComercialManager>();
-            target = new AdministracionProveedorController(rolManagerMock.Object, proveedorManagerMock.Object, comercialManagerMock.Object);
+            target = new AdministracionProveedorController(rolManagerMock.Object, proveedorManagerMock.Object, comercialManagerMock.Object, null);
         }
 
         [Test]
