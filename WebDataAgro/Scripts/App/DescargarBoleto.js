@@ -20,7 +20,7 @@
         },
         height: 400,
         //resizable: true,
-        toolbar: [{ template: kendo.template($("#template").html()) }],
+        //toolbar: [{ template: kendo.template($("#template").html()) }],
         pageable: false,
         columns: [
             {
@@ -44,6 +44,13 @@
     }).data("kendoGrid");
 
     IniciarListaBoletos();
+
+    $("#filtrogrilla").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("table tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
 });
 
 function IniciarListaBoletos() {
