@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         public void SincronizarDatosResearch()
         {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            
+
             try
             {
                 using (ClientContext context = new ClientContext(urlResearch))
@@ -181,7 +181,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                         break;
                                 }
 
-                                itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 2, MidpointRounding.AwayFromZero);
+                                itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 0, MidpointRounding.AwayFromZero); //el rendimiento se muestra solo en su parte entera
                             }
 
                             //string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
