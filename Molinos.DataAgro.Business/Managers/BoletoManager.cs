@@ -134,7 +134,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
-                            if(consultaBoleto.Generado != "") logger.Info($"Boleto.Generado = {consultaBoleto.Generado} -- contrato SAP {itemNegocio.ContratoSAP}");
+                            if (consultaBoleto.Generado != "") logger.Info($"Boleto.Generado = {consultaBoleto.Generado} -- contrato SAP {itemNegocio.ContratoSAP}");
                             error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El boleto ya se encuentra generado en SAP."));
                         }
                     }
@@ -374,7 +374,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
                     //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
                     clausula.Orden = orden++;
-                    result.Add(clausula); 
+                    result.Add(clausula);
                 }
             }
             return result.OrderBy(x => x.Orden).ToList();
@@ -597,8 +597,8 @@ namespace Molinos.DataAgro.Business.Managers
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
-                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"),"5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""),seccionSio);
+                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""), seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
@@ -658,7 +658,7 @@ namespace Molinos.DataAgro.Business.Managers
                     mensaje = $"No se pudo generar el boleto para el contrato por su estado: {motivoStatus}";
                     logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
                 }
-                else if(string.IsNullOrEmpty(res.Status))
+                else if (string.IsNullOrEmpty(res.Status))
                 {
                     // contrato en slip
                     mensaje = $"No se pudo generar el boleto para el contrato por su estado: slip";
@@ -708,14 +708,19 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
         {
-            int negocio = tipoNegocio == 1 ? (int)EnumTipoNegocio.A_PRECIO : (int)EnumTipoNegocio.FIJACION;
             var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var fechaHasta = hasta==""?DateTime.Now:DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var lista = negocio == (int)EnumTipoNegocio.A_PRECIO ?
-                repositorio.Listar<Negocio>(x => x.TipoNegocioId == negocio && !string.IsNullOrEmpty(x.ContratoSAP) && (x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta)) :
-                negocio == (int)EnumTipoNegocio.FIJACION ? repositorio.Listar<Negocio>(x => x.TipoNegocioId == negocio && !string.IsNullOrEmpty(x.ContratoSAP) && (x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta) && x.Cantidad >= 10000000 && (x.BoletoVentaId == 2 || x.BoletoVentaId == 3)) :
-                new List<Negocio>();
-            return lista.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
+            var fechaHasta = hasta == "" ? DateTime.Today : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var listaNegocios = new List<Negocio>();
+            if (tipoNegocio == 1)
+            {
+                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
+            }
+            else
+            {
+                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000000 && (x.BoletoVentaId == 2 || x.BoletoVentaId == 3));
+            }
+
+            return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
         }
     }
 
