@@ -16,10 +16,7 @@
                 var data = grid.dataItem(this);
                 $("#Name").val(data.Name);
                 $("#Name").data("kendoAutoComplete").trigger("change");
-                
             });
-
-
         },
         height: 400,
         //resizable: true,
@@ -27,20 +24,19 @@
         pageable: false,
         columns: [
             {
-
                 field: "Name", title: "Nombre", template: function (dataItem) {
                     return "<label  style=' color: black'> <strong>" + dataItem.Nombre + "</strong></label>"
                 }
             },
             {
-                field: "LastWriteTime", title: "Fecha Modificación", template: function (dataItem) {
+                field: "LastWriteTime", title: "Fecha de Modificación", template: function (dataItem) {
                     let fecha = moment(dataItem.FechaUltimaEscritura, 'YYYY/MM/DD HH:mm').format("DD/MM/YYYY HH:mm");
                     return "<label  style=' color: black'> <strong>" + fecha + "</strong></label>"
                 }
             },
             {
                 field: "Download", title: "Descargar", template: function (dataItem) {
-                    return '<a onclick="DescargarPDF(\'' + dataItem.Nombre +'\')"> Descargar </a>'
+                    return '<a onclick="DescargarPDF(\'' + dataItem.Nombre + '\')"> Descargar </a>'
                     //return '<a href="Url.Action("DescargarArchivoBoleto","Boleto", new { log = \''+ dataItem.Nombre +'\' })">Descargar</a>'
                 }
             }
@@ -49,17 +45,17 @@
 
     IniciarListaBoletos();
 });
+
 function IniciarListaBoletos() {
     BlockUi('Consultando...');
     setTimeout(function () { ArmarGrillaBoletosDescargados(); }, 1000);
-
     setTimeout(function () { $.unblockUI() }, 1000);
 }
+
 function ArmarGrillaBoletosDescargados() {
 
-
     var grid = $("#grid").data("kendoGrid");
-    
+
     var boletos = MSExecuteOnServer("/Boleto/ListarBoletos", {});
     //consultarBonificacionAfijar(contratos);
 
