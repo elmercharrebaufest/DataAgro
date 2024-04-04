@@ -1,6 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -21,13 +20,13 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class BoletoController : Controller
     {
-        private IBoletoManager mobjBoletoManager;
+        private readonly IBoletoManager boletoManager;
         private readonly IReportesManager reportesManager;
         private readonly string _logDir;
 
-        public BoletoController(IBoletoManager oBoletoManager, IReportesManager reportesManager)
+        public BoletoController(IBoletoManager boletoManager, IReportesManager reportesManager)
         {
-            this.mobjBoletoManager = oBoletoManager;
+            this.boletoManager = boletoManager;
             this.reportesManager = reportesManager;
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
@@ -50,7 +49,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new ContratoModel_prueba
                 {
-                    Datos = mobjBoletoManager.TraerDatosCombo(tipoNegocioId)
+                    Datos = boletoManager.TraerDatosCombo(tipoNegocioId)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
@@ -76,7 +75,7 @@ namespace WebDataAgro.Controllers
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }
-            var boletos = mobjBoletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
+            var boletos = boletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
             //var boletos = new BoletoGeneradoDto { ContratoSAP = "000036363", Generado = true };
             return new JsonResult()
             {
@@ -87,7 +86,7 @@ namespace WebDataAgro.Controllers
 
         private void CompletarVista()
         {
-            var tipoNegocio = mobjBoletoManager.TraerDatosCombo(null);
+            var tipoNegocio = boletoManager.TraerDatosCombo(null);
             var tiposListItems = tipoNegocio.tiponegocio.Select(
                     x => new SelectListItem
                     {
@@ -107,7 +106,10 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult ListarBoletos()
         {
-            var boletos = Directory.GetFiles(_logDir)
+            List<BoletoArchivoDto> boletos = new List<BoletoArchivoDto>();
+            if (Directory.Exists(_logDir))
+            {
+                boletos = Directory.GetFiles(_logDir)
                 .Where(path => path.EndsWith(".pdf"))
                 .Select(path => new FileInfo(path))
                 .Select(file => new BoletoArchivoDto
@@ -119,6 +121,7 @@ namespace WebDataAgro.Controllers
                 })
                 .OrderByDescending(x => x.Nombre)
                 .ToList();
+            }
 
             return Json(boletos);
         }
@@ -133,8 +136,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ObtenerDownloadKey(oParamBusqueda filtro)
         {
-
-            var identif = mobjBoletoManager.ObtenerIdentDescarga();
+            var identif = boletoManager.ObtenerIdentDescarga();
 
             return Json(Util.GetDownloadKey(identif));
         }
@@ -144,7 +146,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                Byte[] fileBytes = mobjBoletoManager.BoletoEnByte(_logDir + "\\" + nombre);
+                Byte[] fileBytes = boletoManager.BoletoEnByte(_logDir + "\\" + nombre);
 
                 if (fileBytes == null)
                 {
@@ -166,7 +168,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjBoletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
+                Data = boletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
             };
         }
     }

@@ -439,7 +439,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 
             Assert.IsTrue(result.HayErrores);
-            Assert.AreEqual(5, result.Errores.Count);
+            Assert.AreEqual(6, result.Errores.Count);
         }
         [Test]
         public void TraerTodoResearchAvanceSiembraOk()

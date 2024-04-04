@@ -54,20 +54,27 @@ function AsignarDatos() {
 
 
 function ValidarGenerarBoletos() {
-
     var contratoDesde = $("#ContratoSAPId").val();
     if (contratoDesde == "") {
         MensErr("El campo Negocio no puede estar vacío");
         $.unblockUI();
         return false;
     }
-
-
     return true;
 }
 
 $("body").on("click", "#filtrarBoletos", function () {
-    FiltrarBoletos();
+        FiltrarBoletos();
+});
+
+$("body").on("change", "#desde", function () {
+    if ($("#desde").val()=='') {
+        $("#hasta").prop("disabled", true);
+        $("#filtrarBoletos").prop("disabled", true);
+    } else {
+        $("#hasta").removeAttr('disabled');
+        $("#filtrarBoletos").removeAttr('disabled');
+    }
 });
 
 function FiltrarBoletos() {

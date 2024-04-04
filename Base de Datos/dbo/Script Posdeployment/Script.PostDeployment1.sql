@@ -464,7 +464,11 @@ IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Vainas por
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Largo de la espiga (granos)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Largo de la espiga (granos)'); END
 IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos alrededor') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos alrededor'); END
 
---Puesto Apoderado(Roles Apoderados)
+--PuestoApoderado
 IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Presidente') BEGIN insert into PuestoApoderado (Descripcion) values ('Presidente'); END
 IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Apoderado') BEGIN insert into PuestoApoderado (Descripcion) values ('Apoderado'); END
 IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN insert into PuestoApoderado (Descripcion) values ('Otros'); END
+
+--TipoDeCambio
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END
