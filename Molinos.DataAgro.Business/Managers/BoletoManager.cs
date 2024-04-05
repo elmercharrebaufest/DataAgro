@@ -717,7 +717,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000000 && (x.BoletoVentaId == 2 || x.BoletoVentaId == 3));
+                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000000);
             }
 
             return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
