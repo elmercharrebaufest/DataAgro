@@ -633,20 +633,25 @@ namespace Molinos.DataAgro.Business.Managers
                 var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
                 if (contrato != null)
                 {
-                    if (contrato.Cantidad < (kilosDisponibles))
+                    if (contrato.Cantidad < kilosDisponibles)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por su cantidad de kilos.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por cantidad no disponible.");
+                        mensaje = "No se pudo generar el boleto para la fijación por su cantidad menor a 10 toneladas.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por cantidad menor a 10 toneladas.");
                     }
-                    if (contrato.Canje == true)
+                    if (contrato.Canje != true)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por tener canje.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por tener Canje.");
+                        mensaje = "No se pudo generar el boleto para la fijación por no ser de canje.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no ser de canje.");
+                    }
+                    if (contrato.BoletoVentaId != 2 && contrato.BoletoVentaId != 3)
+                    {
+                        mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no tener tilde de boleto físico o carta oferta.");
                     }
                 }
                 else
                 {
-                    mensaje = "No se encontró el contrato para la fijación seleccionada";
+                    mensaje = "No se encontró el contrato para la fijación seleccionada.";
                 }
             }
             else
@@ -660,9 +665,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (string.IsNullOrEmpty(res.Status))
                 {
-                    // contrato en slip
-                    mensaje = $"No se pudo generar el boleto para el contrato por su estado: slip";
-                    logger.Debug($"No se pudo generar el boleto por tener status vacío - ContratoSAP: {negocio.ContratoSAP}");
+                    mensaje = $"No se pudo generar el boleto para el contrato por estar en slip.";
+                    logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {negocio.ContratoSAP}");
                 }
             }
             return mensaje;
@@ -713,11 +717,11 @@ namespace Molinos.DataAgro.Business.Managers
             var listaNegocios = new List<Negocio>();
             if (tipoNegocio == 1)
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
+                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
             }
             else
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000000 && (x.BoletoVentaId == 2 || x.BoletoVentaId == 3));
+                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000);
             }
 
             return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
