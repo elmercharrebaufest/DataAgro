@@ -544,7 +544,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         .cls_clausulas_font {
-             font-size: 5.0px !important;
+             font-size: 9.0px !important;
         }
 
         .espacio {
