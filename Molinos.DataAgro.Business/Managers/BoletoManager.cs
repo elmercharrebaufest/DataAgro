@@ -628,9 +628,9 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var mensaje = "";
             var kilosDisponibles = 10000;
+            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
             if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
             {
-                var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
                 if (contrato != null)
                 {
                     if (contrato.Cantidad < kilosDisponibles)
@@ -668,6 +668,11 @@ namespace Molinos.DataAgro.Business.Managers
                     mensaje = $"No se pudo generar el boleto para el contrato por estar en slip.";
                     logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {negocio.ContratoSAP}");
                 }
+            }
+            if (contrato!=null && contrato.BoletoVentaId == 1)
+            {
+                mensaje = "No se pudo generar el boleto por tener tilde de Confirma.";
+                logger.Debug($"No se pudo generar el boleto para el negocio {negocio.ContratoSAP} por tener tilde de Confirma.");
             }
             return mensaje;
         }
@@ -713,7 +718,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
         {
             var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var fechaHasta = hasta == "" ? DateTime.Today : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var fechaHasta = hasta == "" ? DateTime.Now : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1);
             var listaNegocios = new List<Negocio>();
             if (tipoNegocio == 1)
             {
@@ -721,7 +726,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaDesde >= fechaDesde && x.FechaHasta <= fechaHasta && x.Cantidad >= 10000);
+                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000);
             }
 
             return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
