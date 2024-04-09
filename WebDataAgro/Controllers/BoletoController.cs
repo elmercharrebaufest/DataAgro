@@ -171,5 +171,26 @@ namespace WebDataAgro.Controllers
                 Data = boletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
             };
         }
+
+        public ActionResult ListarContratos(List<int> listaContratoSap, int negocio)
+        {
+            listaContratoSap.Sort();
+            if (listaContratoSap.First().Equals(0) || listaContratoSap.First() > listaContratoSap.Last())
+            {
+                return new JsonResult()
+                {
+                    Data = ""
+                };
+            }
+
+            int contratoDesde = listaContratoSap.First();
+            int contratoHasta = listaContratoSap.Last();
+
+
+            return new JsonResult()
+            {
+                Data = boletoManager.FiltrarNegociosNumeroSAP(contratoDesde, contratoHasta, negocio)
+            };
+        }
     }
 }

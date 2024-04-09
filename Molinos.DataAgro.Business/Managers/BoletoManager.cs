@@ -726,6 +726,23 @@ namespace Molinos.DataAgro.Business.Managers
 
             return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
         }
+
+        public List<string> FiltrarNegociosNumeroSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
+        {
+            var listaNegocios = new List<Negocio>();
+            if (tipoNegocio == 1)
+            {
+                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true);
+            }
+            else
+            {
+                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.Cantidad >= 10000);
+            }
+
+            List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
+            codigos.Sort();
+            return codigos;
+        }
     }
 
 }

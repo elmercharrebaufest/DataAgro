@@ -21,13 +21,13 @@
                 @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control", @id = "tipoId" })
             </div>
             <div class="col-xs-12 col-md-3">
-                @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%", @id = "ContratoSAPId" })
+                @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%", @id = "GeneraBoletoContratoSAPId" })
             </div>
             <div class="col-xs-12 col-md-3">
-                @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+                @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "GeneraBoletoContratoSAPHastaId" })
             </div>
             <div class="col-xs-12 col-md-1">
-                <button type="button" id="abrirPopUpCargarValores" title="Ver Negocios" class="k-button k-button-icontext fa fa-list" style="height:34px; text-align: left"></button>
+                <button type="button" id="abrirGeneraBoletoPopUpCargarValores" title="Ver Negocios" class="k-button k-button-icontext fa fa-list" style="height:34px; text-align: left"></button>
                 <div class="modal fade in" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
                 </div>
             </div>
