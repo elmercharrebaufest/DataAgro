@@ -643,7 +643,7 @@ namespace Molinos.DataAgro.Business.Managers
                         mensaje = "No se pudo generar el boleto para la fijación por no ser de canje.";
                         logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no ser de canje.");
                     }
-                    if (contrato.BoletoVentaId != 2 && contrato.BoletoVentaId != 3)
+                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
                     {
                         mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta.";
                         logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no tener tilde de boleto físico o carta oferta.");
@@ -669,7 +669,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {negocio.ContratoSAP}");
                 }
             }
-            if (contrato!=null && contrato.BoletoVentaId == 1)
+            if (contrato != null && contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 mensaje = "No se pudo generar el boleto por tener tilde de Confirma.";
                 logger.Debug($"No se pudo generar el boleto para el negocio {negocio.ContratoSAP} por tener tilde de Confirma.");
