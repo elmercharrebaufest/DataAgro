@@ -5354,7 +5354,7 @@ namespace Molinos.DataAgro.Test.Managers
                 CondicionDePagoFijacionVentaId = 1,
 
             };
-            var pendiente = new CcPpPerndienteAplicarDto()
+            var pendiente = new CcPpPendienteAplicarDto()
             {
                 Centro = "034560",
                 Material = "034560",
@@ -5408,7 +5408,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Material, string>(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("034560");
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<Contrato>() { new Contrato { Cantidad = 1000 } });
-            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
+            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPendienteAplicarDto>() { pendiente });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -5465,7 +5465,7 @@ namespace Molinos.DataAgro.Test.Managers
                 CondicionDePagoFijacionVentaId = 1,
 
             };
-            var pendiente = new CcPpPerndienteAplicarDto()
+            var pendiente = new CcPpPendienteAplicarDto()
             {
                 Centro = "034560",
                 Material = "034560",
@@ -5484,7 +5484,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Material, string>(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("30209034560");
             repositorioMock.Setup(y => y.Obtener<Centro, string>(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, string>>>())).Returns("30209034560");
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });
-            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
+            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPendienteAplicarDto>() { pendiente });
             var resultado = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false);
 
         }

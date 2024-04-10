@@ -19,8 +19,8 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -30,54 +30,54 @@ namespace Molinos.DataAgro.Agent
 
             return prefix + cuit.Remove(cuit.Length - 1).Remove(0, 2);
         }
-        public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        public List<CcPpPendienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 if (req.Proveedor == "20043159381")
                 {
-                    return new List<CcPpPerndienteAplicarDto>();
+                    return new List<CcPpPendienteAplicarDto>();
                 }
-                return new List<CcPpPerndienteAplicarDto>() { new CcPpPerndienteAplicarDto() {
+                return new List<CcPpPendienteAplicarDto>() { new CcPpPendienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 500,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
-                    FechaIngreso = "08-08-2020",
-                    FechaNeto = "08-08-2020",
-                    FechaIngresoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaIngresoString = "08-08-2020",
+                    FechaNetoString = "08-08-2020",
+                    FechaIngresoDate = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoDate = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                 },
-                new CcPpPerndienteAplicarDto() {
+                new CcPpPendienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 30000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
-                    FechaIngreso = "06-06-2020",
-                    FechaNeto = "06-06-2020",
-                    FechaIngresoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaNetoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaIngresoString = "06-06-2020",
+                    FechaNetoString = "06-06-2020",
+                    FechaIngresoDate = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoDate = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Warrant = true,
                     Sustentable = false
                 },
-                new CcPpPerndienteAplicarDto() {
+                new CcPpPendienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 30000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
-                    FechaIngreso = "07-07-2020",
-                    FechaNeto = "07-07-2020",
-                    FechaIngresoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaNetoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaIngresoString = "07-07-2020",
+                    FechaNetoString = "07-07-2020",
+                    FechaIngresoDate = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoDate = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Sustentable = true,
                     Canje = true
-                } }.OrderBy(a => a.FechaIngresoFecha).ToList();
+                } }.OrderBy(a => a.FechaIngresoDate).ToList();
             }
             else
             {
@@ -100,23 +100,23 @@ namespace Molinos.DataAgro.Agent
                     };
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR(rq);
-                    var listaccpp = new List<CcPpPerndienteAplicarDto>();
+                    var listaccpp = new List<CcPpPendienteAplicarDto>();
                     if (valor.EX_SALIDA != null)
                     {
                         listaccpp = valor.EX_SALIDA.Select(item =>
-                            new CcPpPerndienteAplicarDto()
+                            new CcPpPendienteAplicarDto()
                             {
                                 AgenteCompra = item.AGENTE_COMPRA,
                                 Cantidad = item.CANTIDAD,
                                 CartasPorte = item.CCPP,
                                 Centro = centro.Descripcion,
                                 Corredor = item.CORREDOR,
-                                FechaIngreso = item.FECHA_INGRESO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
-                                FechaNeto = item.FECHA_NETO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                FechaIngresoString = item.FECHA_INGRESO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                FechaNetoString = item.FECHA_NETO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
                                 Material = material.Descripcion,
                                 Proveedor = item.PROVEEDOR,
-                                FechaIngresoFecha = item.FECHA_INGRESO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                FechaNetoFecha = item.FECHA_NETO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                FechaIngresoDate = item.FECHA_INGRESO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                FechaNetoDate = item.FECHA_NETO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                                 Almacen = item.ALMACEN,
                                 Canje = item.CANJE == "X",
                                 CD = item.CD_CG == "X",
@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Agent
                                 Contrato = item.CONTRATO ?? "",
                                 KgContrato = item.KILOS_CONT,
                                 EPA = item.EPA == "X"
-                            }).OrderBy(a => a.FechaIngresoFecha).ToList();
+                            }).OrderBy(a => a.FechaIngresoDate).ToList();
                     }
                     return listaccpp;
                 }
@@ -137,6 +137,5 @@ namespace Molinos.DataAgro.Agent
                 }
             }
         }
-
     }
 }

@@ -1139,7 +1139,7 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public ActionResult ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        public ActionResult ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req)
         {
             return new JsonResult()
             {
