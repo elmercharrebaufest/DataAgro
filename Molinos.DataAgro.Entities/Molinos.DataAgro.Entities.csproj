@@ -267,7 +267,7 @@
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
-    <Compile Include="Dto\CcPpPerndienteAplicarDto.cs" />
+    <Compile Include="Dto\CcPpPendienteAplicarDto.cs" />
     <Compile Include="Dto\HabilitacionPagoDiferidoDto.cs" />
     <Compile Include="Dto\ProveedorAltaDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />

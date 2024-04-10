@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Interfaces
 
         TipoNegocio DevolverNamespaceNegocio(int tipo);
         Resultado AnularContratoCarga(int contratoId, string motivoRechazo);
-        List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
+        List<CcPpPendienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req);
         string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda, string typeOfRate = "M");
         List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
         List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
         bool Tiene2doCondicionalAsociado(int contratoId);
         int DevolverMilisegundos();
-        CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
+        CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
         List<ExcelValidatorResumeItem> AltaMasivaContratos(DataSet dsExcel, string contratoAcuerdo, int ComercialId);
         List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId);
         void ActualizarEstadoDeContratos();

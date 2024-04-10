@@ -1278,12 +1278,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ListarCartasDePortePendienteAplicarTest()
         {
 
-            contratoManagerMock.Setup(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>())).Returns(new List<CcPpPerndienteAplicarDto>());
-            var result = target.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>());
+            contratoManagerMock.Setup(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>())).Returns(new List<CcPpPendienteAplicarDto>());
+            var result = target.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
@@ -1496,7 +1496,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ObtenerDatosMercaderiaEnDepositoTest()
         {
             contratoManagerMock.Setup(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(new CcPpPerndienteAplicarDto());
+                .Returns(new CcPpPendienteAplicarDto());
             var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false) as JsonResult;
             contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
             Assert.NotNull(result);

@@ -1,10 +1,8 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class CcPpPerndienteAplicarDto
+    public class CcPpPendienteAplicarDto
     {
         public string Proveedor { get; set; }
         public string Corredor { get; set; }
@@ -13,10 +11,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public string Centro { get; set; }
         public decimal Cantidad { get; set; }
-        public string FechaNeto { get; set; }
-        public string FechaIngreso { get; set; }
-        public DateTime? FechaNetoFecha { get; set; }
-        public DateTime? FechaIngresoFecha { get; set; }
+        public string FechaNetoString { get; set; }
+        public string FechaIngresoString { get; set; }
+        public DateTime? FechaNetoDate { get; set; } //fecha de la carta de porte
+        public DateTime? FechaIngresoDate { get; set; } //fecha de ingreso del camión. Normalmente es igual a la fecha neto, pero puede no serlo
         public string Almacen { get; set; }
         public bool Canje { get; set; }
         public bool CD { get; set; }
@@ -26,9 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Region { get; set; }
         public string Contrato { get; set; }
         public decimal KgContrato { get; set; }
-        public decimal CantidadDisponible {get; set;}
+        public decimal CantidadDisponible { get; set; }
         public decimal CantidadTotal { get; set; }
     }
 }
-
-

@@ -5,9 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Caching;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -45,14 +42,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var token = new TokenPrimary();
                 var url = $"AuthToken/AuthToken?nombreUsuario={user}&password={pass}";
 
-
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(urlBase);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = client.PostAsJsonAsync(
-                    url, new { }).Result;
+                HttpResponseMessage response = client.PostAsJsonAsync(url, new { }).Result;
                 response.EnsureSuccessStatusCode();
                 var res = response.Content.ReadAsAsync<dynamic>().Result;
                 var jObject = JObject.Parse(res.ToString());
@@ -74,7 +69,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             try
             {
                 var fecha = dia.ToString("yyyyMMdd");
-
                 var token = ReuseToken();
                 //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
@@ -103,9 +97,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     //}
-                    List<AgenteCompra> lista = new List<AgenteCompra>();
+                    List<AgenteCompra> listaAgenteCompra = new List<AgenteCompra>();
                     var operadores = repositorio.Listar<Operador>();
-                    lista = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61).Select(a => new AgenteCompra
+                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61).Select(a => new AgenteCompra
                     {
                         TipoNegocioId = 5,
                         Cantidad = ObtenerCantidad(a),
@@ -118,6 +112,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
                         MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
                         Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
+                        DolarExportador = EsDolarExportador(a.Instrument[0]),
                         CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
                         Operador = ObtenerOperador(a.RootParties, operadores),
                         TipoAgenteCompraId = 1, //MAT
@@ -126,23 +121,23 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
                     var materiales = repositorio.Listar<Material>();
-                    //logger.Debug($"Primera lista AgenteCompra: {lista.ToJson()}");
-                    foreach (var item in lista)
+                    
+                    foreach (var item in listaAgenteCompra)
                     {
                         item.Material = materiales.Where(x => x.MaterialId == item.MaterialId).SingleOrDefault();
                         item.OperadorId = item.Operador.Id;
                         item.FechaDesde = new DateTime(int.Parse(item.Posicion.Substring(3, 4)), int.Parse(item.Posicion.Substring(0, 2)), 1);
                         item.FechaHasta = item.FechaDesde.AddMonths(1).AddDays(-1);
                     }
-                    logger.Debug($"Lista final AgenteCompra: {lista.ToJson()}");
-                    return lista;
+                    logger.Debug($"Lista negocios AgenteCompra API: {listaAgenteCompra.Select(a => new { a.MaterialId, a.Operador.Descripcion, a.Cantidad, a.Precio, a.MonedaId, a.DolarExportador, a.CampanaId }).ToJson()}");
+                    return listaAgenteCompra;
                 }
 
                 return null;
             }
             catch (Exception e)
             {
-                logger.Error("Error ObtenerNegocios: ", e.Message);
+                logger.Error("Error ObtenerNegocios MAT: ", e.Message);
                 throw;
             }
         }
@@ -174,9 +169,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
                 var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
                 int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
-                if (materialId == 2 && mes == 12)                
+                if (materialId == 2 && mes == 12)
                     anio += 1;
-                
+
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
                 return campaña ?? 0;
             }
@@ -222,7 +217,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
             }
             return materialId;
+        }
 
+        private bool EsDolarExportador(TradeCaptureReportInstrument tradeCaptureReportInstrument)
+        {
+            bool esExportador = tradeCaptureReportInstrument.SecurityID.StartsWith("MAI.EXP") || tradeCaptureReportInstrument.SecurityID.StartsWith("SOJ.EXP");
+            return esExportador;
         }
 
         private TradeCaptureReportResult GetTradeCaptureReport(TokenPrimary token, string desde, string hasta)
@@ -241,6 +241,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             TradeCaptureReportResult result = JsonConvert.DeserializeObject<TradeCaptureReportResult>(jObject.ToString());
             return result;
         }
+
         private SecurityListResult SecurityList(TokenPrimary token/*, string cFICode*/)
         {
             //var url = $"/PreTrade/SecurityList?cFICode={cFICode}";
@@ -264,20 +265,17 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
-
                 var token = ReuseToken();
                 //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
                 {
                     throw new Exception(token.ErrorMessage + ", " + token.ErrorDescription);
                 }
-                // Create a new token
+
                 logger.Debug($"Obteniendo cotizaciones...");
                 MarketDataResult result = MarketData(token, fecha.ToString("yyyyMMdd"));
                 if (result.Code == "200")
                 {
-
-
                     return result;
                 }
 
@@ -285,8 +283,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug($"Error obtener token");
-                logger.Error(e.Message);
+                logger.Error("Error ObtenerCotizacion ", e.Message);
                 throw;
             }
         }

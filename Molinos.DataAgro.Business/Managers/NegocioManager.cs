@@ -179,28 +179,28 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var negociosMAT = clientePrimaryAPI.ObtenerNegocios(fecha);
-                var negociosAgenteId = repositorio.Listar<Negocio, int>(x => x.Id, x => x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5)).ToList();
-                logger.Debug("negociosAgenteId DA: " + negociosAgenteId.ToJson());
-                var negociosDA = repositorio.Listar<AgenteCompra>(x =>
-                    negociosAgenteId.Contains(x.Id));
-                //x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5));
+                var negociosConAgenteId = repositorio.Listar<Negocio, int>(x => x.Id, x => x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5)).ToList();
+                var negociosDA = repositorio.Listar<AgenteCompra>(x => negociosConAgenteId.Contains(x.Id));
+                var negociosDAJson = negociosDA.Select(a => new { a.Id, a.ComercialId, a.Fecha, a.Cantidad, a.Precio, a.MaterialId, a.MonedaId, a.DolarExportador, a.OperadorId, a.EstadoId }).ToJson();
+                logger.Debug("Lista negocios AgenteCompra DataAgro: " + negociosDAJson);
 
-                var negociosDAJson = negociosDA.Select(a => new { a.Id, a.ComercialId, a.Fecha, a.EstadoId, a.Cantidad, a.Precio, a.MaterialId, a.TipoNegocioId, a.FechaOperacion, a.OperadorId }).ToList().ToJson();
-                logger.Debug("negociosDAJson DA: " + negociosDAJson);
-                var agrupadoMAT = negociosMAT.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
-                var agrupadoDA = negociosDA.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
+                var agrupadoMAT = negociosMAT.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId, item.DolarExportador });
+                var agrupadoDA = negociosDA.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId, item.DolarExportador });
                 var listaMAT = new List<AgenteCompra>();
                 var listaDA = new List<AgenteCompra>();
+                List<string> errores = new List<string>();
+
                 foreach (var mat in agrupadoMAT)
                 {
                     var negocio = new AgenteCompra()
                     {
                         MaterialId = mat.Key.MaterialId,
                         Material = mat.First().Material,
+                        DolarExportador = mat.Key.DolarExportador,
                         MonedaId = mat.Key.MonedaId,
                         Posicion = mat.Key.Posicion,
                         Operador = mat.First().Operador,
-                        OperadorId = mat.First().OperadorId,
+                        OperadorId = mat.Key.OperadorId,
                         PrecioPonderado = mat.Sum(x => x.Precio * (decimal)Math.Abs(x.Cantidad)) / mat.Sum(x => (decimal)Math.Abs(x.Cantidad))
                     };
                     listaMAT.Add(negocio);
@@ -211,46 +211,83 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         MaterialId = dataAgro.Key.MaterialId,
                         Material = dataAgro.First().Material,
+                        DolarExportador = dataAgro.Key.DolarExportador == true,
                         MonedaId = dataAgro.Key.MonedaId,
                         Posicion = dataAgro.Key.Posicion,
                         Operador = dataAgro.First().Operador,
-                        OperadorId = dataAgro.First().OperadorId,
+                        OperadorId = dataAgro.Key.OperadorId,
                         PrecioPonderado = dataAgro.Sum(x => x.Precio * (decimal)Math.Abs(x.Cantidad)) / dataAgro.Sum(x => (decimal)Math.Abs(x.Cantidad))
                     };
                     listaDA.Add(negocio);
                 }
-                List<string> errores = new List<string>();
+
                 foreach (var item in listaMAT)
                 {
-                    var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-                    var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-                    var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
-                    if (elem != null)
-                    {
-                        if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
-                        {
-                            errores.Add("Diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
-                                " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")) + " y en MAT: " + item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")));
-                        }
+                    double cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                    double cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
 
-                        if (cantidadDA != cantidadMAT)
+                    if (item.DolarExportador.Value)
+                    {
+                        cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                        if (elem != null)
                         {
-                            errores.Add("Diferencia en los kilos totales de negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
-                                " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + cantidadDA.ToString("N", new CultureInfo("es-AR")) + " Kg. y en MAT: " + cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg.");
+                            if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
+                            {
+                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} EXPORTADOR para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))} y en MAT: {item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))}");
+                            }
+
+                            if (cantidadDA != cantidadMAT)
+                            {
+                                errores.Add($"• Diferencia en los kilos totales de negocios de {elem.Material.Descripcion} en {elem.MonedaId} EXPORTADOR para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {cantidadDA.ToString("N", new CultureInfo("es-AR"))} Kg. y en MAT: {cantidadMAT.ToString("N", new CultureInfo("es-AR"))} Kg.");
+                            }
+                        }
+                        else
+                        {
+                            errores.Add($"• No se encontraron en Data Agro negocios de {item.Material.Descripcion} en {item.MonedaId} EXPORTADOR para la posición {item.Posicion} y operador {item.Operador.Descripcion}, pero figuran {cantidadMAT.ToString("N", new CultureInfo("es-AR"))} Kg. en el MAT.");
                         }
                     }
                     else
                     {
-                        errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran " + cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg. en el MAT.");
+                        var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                        if (elem != null)
+                        {
+                            if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
+                            {
+                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))} y en MAT: {item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))}");
+                            }
+
+                            if (cantidadDA != cantidadMAT)
+                            {
+                                errores.Add($"• Diferencia en los kilos totales de negocios de {elem.Material.Descripcion} en {elem.MonedaId} para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {cantidadDA.ToString("N", new CultureInfo("es-AR"))} Kg. y en MAT: {cantidadMAT.ToString("N", new CultureInfo("es-AR"))} Kg.");
+                            }
+                        }
+                        else
+                        {
+                            errores.Add($"• No se encontraron en Data Agro negocios de {item.Material.Descripcion} en {item.MonedaId} para la posición {item.Posicion} y operador {item.Operador.Descripcion}, pero figuran {cantidadMAT.ToString("N", new CultureInfo("es-AR"))} Kg. en el MAT.");
+                        }
                     }
                 }
                 foreach (var item in listaDA)
                 {
-                    var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-                    var elem = listaMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
-                    if (elem == null)
+                    if (item.DolarExportador.Value)
                     {
-                        errores.Add("No se encontraron en el MAT negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran " + cantidadDA.ToString("N", new CultureInfo("es-AR")) + " Kg. en Data Agro.");
+                        var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        var elem = listaMAT.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                        if (elem == null)
+                        {
+                            errores.Add($"• No se encontraron en el MAT negocios de {item.Material.Descripcion} en {item.MonedaId} EXPORTADOR para la posición {item.Posicion} y operador {item.Operador.Descripcion}, pero figuran {cantidadDA.ToString("N", new CultureInfo("es-AR"))} Kg. en Data Agro.");
+                        }
+                    }
+                    else
+                    {
+                        var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        var elem = listaMAT.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                        if (elem == null)
+                        {
+                            errores.Add($"• No se encontraron en el MAT negocios de {item.Material.Descripcion} en {item.MonedaId} para la posición {item.Posicion} y operador {item.Operador.Descripcion}, pero figuran {cantidadDA.ToString("N", new CultureInfo("es-AR"))} Kg. en Data Agro.");
+                        }
                     }
                 }
                 foreach (var negocio in negociosDA)
@@ -266,7 +303,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (errores.Count == 0)
                 {
                     var asunto = "No hay diferencias entre Data Agro y posición MATBA - " + fecha.ToString("dd/MM/yyyy");
-                    errores.Add("No se encontraron diferencias entre Data Agro y posición MATBA.");
+                    errores.Add("• No se encontraron diferencias entre Data Agro y posición MATBA.");
                     EnviarMailMATPrimay(asunto, errores);
                 }
                 else
@@ -276,8 +313,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.GuardarCambios();
             }
-            catch
+            catch (Exception e)
             {
+                logger.Error("Error MigrarContratosPrimary: ", e.Message);
                 var asunto = "Error al obtener la posición MATBA - " + fecha.ToString("dd/MM/yyyy");
                 List<string> errores = new List<string>
                 {
@@ -286,7 +324,6 @@ namespace Molinos.DataAgro.Business.Managers
                 EnviarMailMATPrimay(asunto, errores);
                 throw;
             }
-
         }
 
         private void EnviarMailMATPrimay(string asunto, List<string> cuerpo)

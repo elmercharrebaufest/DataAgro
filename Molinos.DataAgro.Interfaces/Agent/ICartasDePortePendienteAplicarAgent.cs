@@ -5,6 +5,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface ICartasDePortePendienteAplicarAgent
     {
-        List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
+        List<CcPpPendienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req);
     }
 }

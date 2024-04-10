@@ -179,11 +179,9 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void MigrarContratosPrimaryOk()
         {
-            var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } } };
-            var negociosDA = new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } };
-            var listaMAT = negociosMAT;
-            var listaDA = negociosMAT;
-
+            var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 }, DolarExportador = true } };
+            var negociosDA = new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 }, DolarExportador = true };
+            
             clientePrimaryAPIAgentMock.Setup(mock => mock.ObtenerNegocios(It.IsAny<DateTime>())).Returns(negociosMAT);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AgenteCompra> { negociosDA });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");

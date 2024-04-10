@@ -2212,7 +2212,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
                 var materialCodigo = materiales.Where(x => x.MaterialId == contratoPorProvCorr.First().MaterialId).Single().Codigo;
 
-                var pendienteDto = new CcPpPerndienteAplicarDto()
+                var pendienteDto = new CcPpPendienteAplicarDto()
                 {
                     Centro = centroCodigo,
                     Material = materialCodigo,
