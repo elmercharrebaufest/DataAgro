@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.EnviarBoleto {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -51,6 +51,8 @@ namespace Molinos.DataAgro.Agent.EnviarBoleto {
         private string iM_ID_DOC_CONFIRMAField;
         
         private string iM_ID_LOTE_CONFIRMAField;
+        
+        private string iM_TIPO_BOLETOField;
         
         private string iM_VERSIONField;
         
@@ -176,6 +178,18 @@ namespace Molinos.DataAgro.Agent.EnviarBoleto {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string IM_TIPO_BOLETO {
+            get {
+                return this.iM_TIPO_BOLETOField;
+            }
+            set {
+                this.iM_TIPO_BOLETOField = value;
+                this.RaisePropertyChanged("IM_TIPO_BOLETO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
         public string IM_VERSION {
             get {
                 return this.iM_VERSIONField;
@@ -197,7 +211,7 @@ namespace Molinos.DataAgro.Agent.EnviarBoleto {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

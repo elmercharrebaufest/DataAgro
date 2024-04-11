@@ -87,7 +87,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 FechaGeneracion = DateTime.Now,
                                 //TipoNegocioDetalleId = itemNegocio.TipoNegocioId,
                                 ContratoSAP = itemNegocio.ContratoSAP,
-                                FijacionSAP = itemNegocio.FijacionSAP
+                                FijacionSAP = itemNegocio.FijacionSAP,
+                                TipoBoletoId = itemNegocio.BoletoId.Value
                             };
                             logger.Debug("Enviando boleto" + tempBoleto.ToString());
                             var resultado = oEnviarBoletoAgent.Enviar(tempBoleto);
