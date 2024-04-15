@@ -16,13 +16,13 @@ namespace Molinos.DataAgro.Test.Controllers
     public class ProvinciaControllerTest
     {
         private ProvinciaController target;
-        private Mock<IProvinciaManager>provinciaManagerMock;
+        private Mock<IProvinciaManager> provinciaManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();            
+            this.serializer = new JavaScriptSerializer();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
             provinciaManagerMock = new Mock<IProvinciaManager>();
@@ -38,7 +38,8 @@ namespace Molinos.DataAgro.Test.Controllers
             { new ProvinciaIni{
                 ProvinciaId = 1,
                 Nombre = "A"
-            }}});
+            }}
+            });
             var result = target.Aplicar(new AbmProvinciaParam { ProvinciaId = 1 });
 
             Assert.NotNull(result);
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":1,\"Nombre\":\"A\",\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":1,\"Nombre\":\"A\",\"HabilitadoVenta\":false,\"Inscripto\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -74,7 +75,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var provincia = new Provincia
             {
                 ProvinciaId = 1,
-                Nombre ="A"
+                Nombre = "A"
             };
             provinciaManagerMock.Setup(x => x.GrabarProvincia(provincia)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             var result = target.Grabar(provincia);
@@ -83,7 +84,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false,\"Inscripto\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -91,7 +92,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarCondicionTest()
         {
             provinciaManagerMock.Setup(x => x.EliminarProvincia(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmProvinciaParam { ProvinciaId = 1});
+            var result = target.Eliminar(new AbmProvinciaParam { ProvinciaId = 1 });
 
             Assert.NotNull(result);
 
@@ -110,7 +111,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false,\"Inscripto\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

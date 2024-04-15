@@ -1,5 +1,4 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -48,12 +47,12 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             reportesManagerMock.Setup(x => x.TraerDatosIniciales(GlobalVariables.IdActiveDirectory)).Returns(new DatosInicialesReportes
             {
-                mat = new List<MaterialesQry>(){new MaterialesQry()},
-                camp = new List<CampañaQry>(){new CampañaQry()},
-                come = new List<ComercialQry>(){new ComercialQry()},
-                estic = new List<EstadoICQry>(){new EstadoICQry()},
-                provs = new List<ProvinciaQry>() { new ProvinciaQry()},
-                segm = new List<SegmentacionQry>() { new SegmentacionQry()}
+                mat = new List<MaterialesQry>() { new MaterialesQry() },
+                camp = new List<CampañaQry>() { new CampañaQry() },
+                come = new List<ComercialQry>() { new ComercialQry() },
+                estic = new List<EstadoICQry>() { new EstadoICQry() },
+                provs = new List<ProvinciaQry>() { new ProvinciaQry() },
+                segm = new List<SegmentacionQry>() { new SegmentacionQry() }
             });
             var result = target.TraerDatosCombo();
 
@@ -61,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"CampañaId\":0,\"Descripcion\":null}],\"segm\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"CampañaId\":0,\"Descripcion\":null}],\"segm\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Inscripto\":false,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -70,7 +69,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerComprasBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>(){ new ResultComprasBarrasReportes() { MasCl100 = 1} });
+            reportesManagerMock.Setup(x => x.TraerComprasBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl100 = 1 } });
             var result = target.TraerDatosReporteComprasBarra(reportes);
 
             Assert.NotNull(result);
@@ -113,9 +112,9 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerDatosReporteComprasComprasTortaTest()
         {
-            var reportes = new ParamReportes() { ComercialActual = 1,Indicadores = "compras", Grafico = "mapa" };
+            var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "compras", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerComprasTorta(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1,Grano=1 } });
+            reportesManagerMock.Setup(x => x.TraerComprasTorta(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -224,7 +223,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
             reportesManagerMock.Setup(x => x.TransformarFiltros(reportes)).Returns(reportes);
             reportesManagerMock.Setup(x => x.TraerComprasMapaExportacion(reportes, It.IsAny<List<int>>())).Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini() { Cuit = "1", Comercial = "A" } });
-            var result = target.ExportarIndicadores(reportes) ;
+            var result = target.ExportarIndicadores(reportes);
             var model = result.Result as JsonResult;
             Assert.NotNull(result);
 
