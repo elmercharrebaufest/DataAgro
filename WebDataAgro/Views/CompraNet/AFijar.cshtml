@@ -2,7 +2,7 @@
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
     var canje = PermisosHelper.Is(PermisosDataAgro.ModificarCanje);
     var prestamoDevolucion = PermisosHelper.Is(PermisosDataAgro.ModificarPrestamoDevolucion);
-    ViewBag.Title = "CompraNet";
+    ViewBag.Title = "A Fijar";
 }
 
 <script>
@@ -123,7 +123,7 @@
 
         </div>
         <div class="row marginCero clearfix campo col-xs-12 noPadding observacionTercero">
-            <strong style="float:left">Observaci&oacute;n: </strong>
+            <strong style="float:left">Observaciones: </strong>
             <span id="visualizar_observacionTercero"></span>
         </div>
     </div>
@@ -134,7 +134,7 @@
                 <label>Corredor</label>
             </div>
             <div class="col-md-4 col-sm-5">
-                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
                 <div id="buscadorCorredorResult"></div>
             </div>
         </div>
@@ -143,7 +143,7 @@
                 <label id="proveedorLabel">Proveedor</label>
             </div>
             <div class="col-sm-4">
-                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
                 <div id="buscadorResult"></div>
                 <label id="mensaje" style="color:#ff5175; font-size: 12px"></label>
             </div>
@@ -372,7 +372,16 @@
                 <img id="errcampanaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-
+    </div>
+    <div class="row" id="dolarExportadorDiv" hidden>
+        <div class="col-sm-2 ">
+            <label>Dolar Exportador</label>
+        </div>
+        <div class="col-sm-5 col-md-4">
+            <div>
+                <input id="dolarExportadorId" class="campo-input-input" data-bind="checked:Parametros.dolarExportador, disabled: isControlDisabled" type="checkbox" style="margin: 12px 0 0;">
+            </div>
+        </div>
     </div>
     <div id="ContratoDiv" hidden class="noFason noAgente noAcuerdo row">
         <div class="col-sm-2 ">
@@ -696,7 +705,7 @@
             </div>
 
         </div>
-        
+
     </div>
     <div class="row fechahastaOriginalDiv" hidden>
         <div class="col-sm-2 " data-toggle="tooltip" data-placement="top" id="fechaTooltip">
@@ -753,7 +762,7 @@
 
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
-            <label>Observaci&oacute;n</label>
+            <label>Observaciones</label>
         </div>
         <div id="observacionDiv" class="col-sm-10 col-md-9">
             <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>
@@ -1337,7 +1346,6 @@
     }
 
     .disabledDay {
-        /* adding some CSS to match the normal days styling */
         display: block;
         overflow: hidden;
         min-height: 22px;
@@ -1348,15 +1356,16 @@
     }
 </style>
 
-@*Modal Apertura Precio*@
 @Html.Partial("ModalAperturaPrecio")
 
 @Html.Partial("_ModalCCPPPendienteAplicar")
+
 @Html.Partial("ModalConfirmarBolsa")
 
 @Html.Partial("_ModalObtenerCapacidadProductivaPendiente")
 
 @Html.Partial("ModalConfirmarBonificacion")
+
 @Html.Partial("ModalServicios")
-<!-- Modal Cupos con Descarga -->
+
 @Html.Partial("_ModalCuposConDescarga")

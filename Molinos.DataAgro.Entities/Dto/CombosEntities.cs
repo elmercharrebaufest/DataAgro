@@ -101,6 +101,8 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int Provinciaid;
         public string Nombre;
+        public bool Inscripto { get; set; }
+
         public int Orden { get; set; }
     }
     public class MonedaQry
@@ -212,6 +214,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class CentroQry
     {
         public int Id;
+        public int ProvinciaId;
         public string Descripcion;
         public string CodigoSap;
     }

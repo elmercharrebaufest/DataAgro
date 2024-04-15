@@ -44,6 +44,7 @@ function CrearResultadosDataSource(datos) {
                 fields: {
                     ProvinciaId: { type: "number", editable: false },
                     Nombre: { type: "string", editable: false },
+                    Inscripto: { type: "boolean", editable: false },
                 }
             }
         },
@@ -191,6 +192,7 @@ function UpdateViewModel(model) {
     var provincia = {
         "ProvinciaId": model.Provincia.ProvinciaId,
         "Nombre": model.Provincia.Nombre,
+        "Inscripto": model.Provincia.Inscripto,
     };
 
     viewModel.set("Provincia", provincia);
@@ -265,6 +267,7 @@ function Grabar() {
         "ObjectState": objectstate,
         "ProvinciaId": viewModel.get("Provincia.ProvinciaId"),
         "Nombre": viewModel.get("Provincia.Nombre"),
+        "Inscripto": viewModel.get("Provincia.Inscripto"),
     };
 
     var result = MSExecuteOnServer('/Provincia/Grabar', datos);

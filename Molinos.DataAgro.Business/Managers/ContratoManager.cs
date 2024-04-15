@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
             var datosCombo = new DatosIniContrato();
             var hoy = DateTime.Now;
 
-            datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden }, null, 0, "Orden");
+            datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
 
             datosCombo.loc = new List<LocalidadQry>();
 
@@ -193,7 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.Bolsa = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
 
-            var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion }, x => x.CargaNegocios == true);
+            var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
             datosCombo.Destino = destinos.Where(x => x.Id == 1).ToList();
             datosCombo.Destino.AddRange(destinos.Where(x => x.Id != 1).OrderBy(x => x.Descripcion).ToList());
             datosCombo.Condicion = repositorio.Listar<CondicionFijacion, CondicionFijacionQry>(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion }, x => x.Habilitado);
@@ -618,10 +618,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.FechaDesde.Year == 1)
             {
                 oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacío.");
-            }
-            if (oParam.FechaHasta.Year == 1)
-            {
-                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
             if (oParam.FechaHasta.Year == 1)
             {
@@ -2218,7 +2214,17 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error("No se pudo ValidarComprasDiferencial", ex);
                 }
             }
+            
+            var provs = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
+            var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
 
+            var procedencia = provs.Find(x => x.Provinciaid == oContrato.ProvinciaId);
+            var destino = provs.Find(p => p.Provinciaid == destinos.Find(x => x.Id == oContrato.DestinoId).ProvinciaId);
+
+            if (!procedencia.Inscripto && !destino.Inscripto)
+            {
+                EnviarMailImpuestos(oContrato, procedencia.Nombre, destino.Nombre);
+            }
             return oEntityErrors;
         }
 
@@ -4741,6 +4747,48 @@ namespace Molinos.DataAgro.Business.Managers
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), contrato, contratoSave));
 
             logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailproveedor + ". Contrato SAP:" + contrato.ContratoSAP);
+        }
+
+        private void EnviarMailImpuestos(Contrato contrato, string procedencia, string destino)
+        {
+            var lista = new List<string>();
+            var email = "";
+
+            logger.Debug("Enviando mail a Impuestos " + email);
+
+            var comercialRegistrado = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == contrato.ComercialId, x => new ComercialDto()
+            {
+                Email = x.Email
+            });
+
+            List<string> emailComerciales = new List<string> { "Florencia.Somma@molinosagro.com.ar", "Anabela.Chuvicio@molinosagro.com.ar", "Mariaeugenia.Ferreyro@molinosagro.com.ar", comercialRegistrado.Email };
+
+            var subject = "Contrato negocio Molinos Agro S.A. – Impuestos";
+
+            mailManager.EnviarMail(contrato.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contrato, procedencia, destino));
+
+            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailComerciales[0] + ". Contrato SAP:" + contrato.ContratoSAP);
+        }
+        private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = "";
+            htmlBody += "En el presente mail, se detalla la creacion de un nuevo contrato de negocio con Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "Las siguientes ubicaciones no estan registradas en MOA: <br /><br />  ";
+            htmlBody += "Origen: " + procedencia +  " <br /><br />  ";
+            htmlBody += "Destino:" + destino + " <br /><br />  " ;
+
+            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  Molinos Agro S.A." +
+            "<br /> <br />  Saludos Cordiales" +
+            " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+            @"<img src='cid:" + res.ContentId + @"'/>" +
+            "<br /> <br /> www.molinosagro.com.ar";
+
+
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
         }
 
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, Contrato contratoSave)

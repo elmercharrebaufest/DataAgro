@@ -11,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public int Orden { get; set; }
         public bool HabilitadoVenta { get; set; }
+        public bool Inscripto { get; set; }
 
         public Provincia()
         {
