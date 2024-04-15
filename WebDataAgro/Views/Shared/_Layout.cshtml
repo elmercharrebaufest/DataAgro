@@ -337,6 +337,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AbmProvincia))
+                                {
+                                    <li>
+                                        <a href="~/Provincia" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Provincias
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
                                 {
                                     <li>

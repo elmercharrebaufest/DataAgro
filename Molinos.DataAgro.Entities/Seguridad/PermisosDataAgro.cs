@@ -376,5 +376,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
         GenerarBoleto = 900,
 
+
+        //Provincias
+        [Display(ResourceType = typeof(Text), Name = "ABMProvincia")]
+        AbmProvincia = 950,
     }
 }

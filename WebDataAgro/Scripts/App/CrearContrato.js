@@ -3631,7 +3631,19 @@ function GrabarContrato(nuevoContrato) {
                     listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
                 }
 
-                result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d = objeto.oParam.DestinoId).ProvinciaId).Inscripto;
+                var procedenciaInscriptaObj = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == objeto.oParam.ProvinciaId);
+
+                if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
+
+                    Confirma('Localidad Procedecia o Localidad Destino no esta incripta en MOA. ¿ Confirma el contrato ?',
+                        function (dialogItself) {
+                            grabarContrato(objeto);
+                        });
+                }
+                else {
+                    result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                }
             }
         }
 
@@ -3678,6 +3690,39 @@ function GrabarContrato(nuevoContrato) {
     }
     $.unblockUI();
 }
+
+function grabarContrato(objeto) {
+    result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
+            $.unblockUI();
+        }
+        else {
+            if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
+                var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
+                var primero = siguientesObj.shift();
+                editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
+            } else {
+                if (result.ListaCupos != undefined && result.ListaCupos.length > 0) {
+                    detenerIntervalo();
+                    LiberarPantalla();
+                    dataTabla = [];
+                    mostrarResultados(result);
+                    $.unblockUI();
+
+                    $("#resultadoCupo").on('hidden.bs.modal', function () {
+                        window.location.href = window.location.origin + "/CompraNet";
+                    });
+                } else {
+                    window.location.href = window.location.origin + "/CompraNet";
+                }
+            }
+        }
+    }
+}
+
 
 function editarContrato(id, tipoId, siguientes) {
     window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
