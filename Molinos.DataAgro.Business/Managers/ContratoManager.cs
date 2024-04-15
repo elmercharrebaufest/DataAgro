@@ -623,10 +623,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
-            if (oParam.FechaHasta.Year == 1)
-            {
-                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
-            }
 
             if (oParam.TipoNegocioId == 0)
             {

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "CompraNet";
+    ViewBag.Title = "Crear Contrato";
 }
 
 <script>
@@ -35,7 +35,7 @@
                 <label>Corredor</label>
             </div>
             <div class="col-md-4 col-sm-5">
-                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" value="@ViewBag.Corredor" />
+                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" value="@ViewBag.Corredor" />
                 <div id="buscadorCorredorResult"></div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <label id="proveedorLabel">Proveedor</label>
             </div>
             <div class="col-sm-4">
-                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" value="@ViewBag.Proveedor" />
+                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" value="@ViewBag.Proveedor" />
                 <div id="buscadorResult"></div>
             </div>
         </div>
