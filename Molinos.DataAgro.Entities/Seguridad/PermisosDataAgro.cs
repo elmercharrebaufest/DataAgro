@@ -380,5 +380,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Provincias
         [Display(ResourceType = typeof(Text), Name = "ABMProvincia")]
         AbmProvincia = 950,
+        [Display(ResourceType = typeof(Text), Name = "Mail_Impuestos")]
+        MailImpuestos = 960,
     }
 }

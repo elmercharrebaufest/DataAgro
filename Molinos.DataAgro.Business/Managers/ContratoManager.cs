@@ -2221,7 +2221,7 @@ namespace Molinos.DataAgro.Business.Managers
             var procedencia = provs.Find(x => x.Provinciaid == oContrato.ProvinciaId);
             var destino = provs.Find(p => p.Provinciaid == destinos.Find(x => x.Id == oContrato.DestinoId).ProvinciaId);
 
-            if (!procedencia.Inscripto && !destino.Inscripto)
+            if (!procedencia.Inscripto || !destino.Inscripto)
             {
                 EnviarMailImpuestos(oContrato, procedencia.Nombre, destino.Nombre);
             }
@@ -4761,9 +4761,12 @@ namespace Molinos.DataAgro.Business.Managers
                 Email = x.Email
             });
 
-            List<string> emailComerciales = new List<string> { "Florencia.Somma@molinosagro.com.ar", "Anabela.Chuvicio@molinosagro.com.ar", "Mariaeugenia.Ferreyro@molinosagro.com.ar", comercialRegistrado.Email };
+            List<Comercial> comercialesImpuestos = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
 
-            var subject = "Contrato negocio Molinos Agro S.A. – Impuestos";
+            List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
+            //new List<string> { "Florencia.Somma@molinosagro.com.ar", "Anabela.Chuvicio@molinosagro.com.ar", "Mariaeugenia.Ferreyro@molinosagro.com.ar", comercialRegistrado.Email };
+
+            var subject = "Nuevo negocio con jurisdicción no inscripta";
 
             mailManager.EnviarMail(contrato.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contrato, procedencia, destino));
 
@@ -4774,7 +4777,8 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla la creacion de un nuevo contrato de negocio con Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail se informa la creación de un contrato de "+ oContrato.Cantidad + " Kg de " + repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion + " con procedencia o destino en una jurisdicción donde MOA no está inscripto.: <br /><br />  ";
+
             htmlBody += "Las siguientes ubicaciones no estan registradas en MOA: <br /><br />  ";
             htmlBody += "Origen: " + procedencia +  " <br /><br />  ";
             htmlBody += "Destino:" + destino + " <br /><br />  " ;
