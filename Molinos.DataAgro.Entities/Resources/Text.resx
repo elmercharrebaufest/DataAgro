@@ -905,14 +905,11 @@
     <value>Configuración Localidades</value>
   </data>
   <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
-        <value>Recibir Mail Sugerencia FAQ</value>
-    </data>
-  <data name="Mapa_Research" xml:space="preserve">
-        <value>Mapa Research</value>
-    </data>
+    <value>Recibir Mail Sugerencia FAQ</value>
+  </data>
   <data name="Mail_SolExt_Pendientes" xml:space="preserve">
-        <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
-    </data>
+    <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
+  </data>
   <data name="Divisa_USD" xml:space="preserve">
     <value>Dólar Americano</value>
   </data>
@@ -927,5 +924,11 @@
   </data>
   <data name="Proveedor_Apoderados" xml:space="preserve">
     <value>Proveedor Apoderados</value>
+  </data>
+  <data name="ABMProvincia" xml:space="preserve">
+    <value>Alta Baja Modificacion Provincia</value>
+  </data>
+  <data name="Mail_Impuestos" xml:space="preserve">
+    <value>Recibir Mails de Jurisdicciones no Inscriptas</value>
   </data>
 </root>

@@ -61,6 +61,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alta Baja Modificacion Provincia.
+        /// </summary>
+        public static string ABMProvincia {
+            get {
+                return ResourceManager.GetString("ABMProvincia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Actualizar ALV CompraNet.
         /// </summary>
         public static string ActualizarCompraNet {
@@ -1443,6 +1452,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Mail_Hedge {
             get {
                 return ResourceManager.GetString("Mail_Hedge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mails de Jurisdicciones no Inscriptas.
+        /// </summary>
+        public static string Mail_Impuestos {
+            get {
+                return ResourceManager.GetString("Mail_Impuestos", resourceCulture);
             }
         }
         
