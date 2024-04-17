@@ -2214,7 +2214,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error("No se pudo ValidarComprasDiferencial", ex);
                 }
             }
-            
+
             var provs = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
             var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
 
@@ -4764,7 +4764,6 @@ namespace Molinos.DataAgro.Business.Managers
             List<Comercial> comercialesImpuestos = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
 
             List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
-            //new List<string> { "Florencia.Somma@molinosagro.com.ar", "Anabela.Chuvicio@molinosagro.com.ar", "Mariaeugenia.Ferreyro@molinosagro.com.ar", comercialRegistrado.Email };
 
             var subject = "Nuevo negocio con jurisdicción no inscripta";
 
@@ -4777,18 +4776,15 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += "En el presente mail se informa la creación de un contrato de "+ oContrato.Cantidad + " Kg de " + repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion + " con procedencia o destino en una jurisdicción donde MOA no está inscripto.: <br /><br />  ";
+            htmlBody += "En el presente mail se informa la creación de un contrato de " + oContrato.Cantidad + " Kg de " + repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion + " con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
 
-            htmlBody += "Las siguientes ubicaciones no estan registradas en MOA: <br /><br />  ";
-            htmlBody += "Origen: " + procedencia +  " <br /><br />  ";
-            htmlBody += "Destino:" + destino + " <br /><br />  " ;
+            htmlBody += "Origen: " + procedencia + " <br /><br />  ";
+            htmlBody += "Destino: " + destino + " <br />";
 
-            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  Molinos Agro S.A." +
-            "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
             " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
             @"<img src='cid:" + res.ContentId + @"'/>" +
             "<br /> <br /> www.molinosagro.com.ar";
-
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
