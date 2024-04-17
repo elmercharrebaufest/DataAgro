@@ -1,16 +1,11 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
@@ -27,7 +22,7 @@ namespace Molinos.DataAgro.Business
             Repositorio = repositorio;
         }
 
-        public virtual ResultadoClausula DevolverClausulas(TClausula comando) { return new ResultadoClausula();  }
+        public virtual ResultadoClausula DevolverClausulas(TClausula comando) { return new ResultadoClausula(); }
 
 
         public ResultadoClausula DevolverClausulas(Clausula comando)
@@ -44,7 +39,7 @@ namespace Molinos.DataAgro.Business
                 catch (Exception e)
                 {
                     Thread.Sleep(count * 1500);
-                    Log.Error(String.Format("Ocurrió un error el ejecutar el Clausula - Intento numero:" + count), e);
+                    Log.Error(String.Format("Ocurrió un error al ejecutar la Clausula - Intento número:" + count), e);
                     if (++count == maxTries)
                     {
                         throw;
