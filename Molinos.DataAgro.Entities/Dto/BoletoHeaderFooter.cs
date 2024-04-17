@@ -1,23 +1,20 @@
 ﻿using iTextSharp.text;
-using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
     public class BoletoHeaderFooter : PdfPageEventHelper
     {
-        private BasicoContrato basico;
+        private readonly BasicoContrato basico;
         private PdfContentByte cb;
-        private List<PdfTemplate> templates;
+        private readonly List<PdfTemplate> templates;
         int pagenumber = 1;
+
         public BoletoHeaderFooter(BasicoContrato basico)
         {
-            this.templates = new List<PdfTemplate>();
+            templates = new List<PdfTemplate>();
             this.basico = basico;
         }
 
@@ -36,7 +33,7 @@ namespace Molinos.DataAgro.Entities.Dto
             templates.Add(templateM);
 
             int pageN = writer.CurrentPageNumber;
-            String pageText = "";
+            string pageText = "";
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             float len = bf.GetWidthPoint(pageText, 10);
             cb.BeginText();
@@ -44,7 +41,7 @@ namespace Molinos.DataAgro.Entities.Dto
             cb.SetTextMatrix(document.PageSize.Width - document.RightMargin - 20, 10); // colocamos el texto en la posicion que queremos
             cb.ShowText(pageText);
             cb.EndText();
-            cb.AddTemplate(templateM, 10, 10);//posicion dond ese agrega el template
+            cb.AddTemplate(templateM, 10, 10); // posicion donde se agrega el template
         }
 
         public override void OnCloseDocument(PdfWriter writer, Document document)
@@ -102,11 +99,7 @@ namespace Molinos.DataAgro.Entities.Dto
                     item.ShowText(text);
                     item.EndText();
                 }
-
-
             }
-
         }
     }
-   
 }

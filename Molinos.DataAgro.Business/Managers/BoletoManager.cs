@@ -269,7 +269,8 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add("dataagro@molinosagro.com.ar");
                 logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
             }
-            var subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial + " - Contrato Nro. " + contrato;
+            var subject = boletoDescripcion == "Físico" ? "Boleto Físico" : boletoDescripcion;
+            subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + contrato;
 
             mailManager.EnviarMail(comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), pdf, nombrePDF + ".pdf");
         }
@@ -518,7 +519,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_008 {
             font-family: Arial,serif;
-            font-size: 10.0px;
+            font-size: 12px;
             color: rgb(0,0,0);
             font-weight: normal;
             font-style: normal;
@@ -544,8 +545,13 @@ namespace Molinos.DataAgro.Business.Managers
             text-decoration: none
         }
 
-        .cls_clausulas_font {
-             font-size: 9.0px !important;
+        .cls_clausulas {
+             font-family: Arial,serif;
+             color: rgb(0,0,0);
+             font-size: 10px;
+             text-align: justify; 
+             line-height: 1.2; 
+             margin-top: 0px;
         }
 
         .espacio {
@@ -559,7 +565,8 @@ namespace Molinos.DataAgro.Business.Managers
         }
         .cls_012 {
             font-family: Arial,serif;
-            font-size: 6px;
+            font-size: 12px;
+            color: rgb(0,0,0);
             text-align: justify;
         }
         
@@ -595,20 +602,19 @@ namespace Molinos.DataAgro.Business.Managers
                     "<div class=\"espacio\"></div><div style=\"\" class=\"\"><span class=\"cls_006\">NÚMERO DE SIO GRANOS " + numeroSio + "</span></div><div class=\"espacio\"></div><div class=\"espacio\"></div>";
 
                 xHtml = string.Format(xHtml,
-                     stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
+                     stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
-                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
+                     titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""), seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
-                var corredor = basico.CorredorId > 0 ? ($"<tr><td><b> Contrato N°: {basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3)}</b> <br />" +
-                $"<b>Comprador: {basico.RazonSocialCorredor}</b><br /><b> CUIT: {basico.CUITCorredor} </b> </td></tr>") : "";
+                var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {basico.CUITCorredor} </b> </td></tr>" : "";
                 xHtml = string.Format(xHtml,
-                stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
-                basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
+                stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
+                basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""), basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
