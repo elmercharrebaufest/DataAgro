@@ -583,12 +583,12 @@
                 <input id="precioTotalApertura" style="width:100%; margin:0" readonly />
             </div>
         </div>
-        <div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion " hidden>
+        @*<div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
             <div id="chequeElectronicoId" class="acuerdo" hidden>
                 <label>Echeq</label>
                 <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
             </div>
-        </div>
+        </div>*@
     </div>
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente noAcuerdo ampliar ">
@@ -980,11 +980,11 @@
                 <label style="width:120px">Compensación</label>
                 <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
             </div>
-            <div class="col-sm-2 " id="chequeElectronicoDiv" hidden>
+            @*<div class="col-sm-2 " id="chequeElectronicoDiv">
                 <label>Echeq</label>
                 <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
             </div>
-
+            *@
         </div>
 
         <div class="row ocultar noAcuerdo">
