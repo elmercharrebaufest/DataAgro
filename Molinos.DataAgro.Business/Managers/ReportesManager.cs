@@ -725,38 +725,38 @@ namespace Molinos.DataAgro.Business.Managers
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
 
             var hedgeMat = new List<HedgeMaterialDto>();
-            if (fechaDesde == fechaHasta)
+            fechaDesde = fechaDesde.Date;
+            fechaHasta = fechaHasta.Date;
+            hedgeMat.AddRange(repositorio.Listar<HedgeMaterial, HedgeMaterialDto>(x => new HedgeMaterialDto
             {
-                fechaDesde = fechaDesde.Date;
-                hedgeMat.AddRange(repositorio.Listar<HedgeMaterial, HedgeMaterialDto>(x => new HedgeMaterialDto
-                {
-                    MaterialId = x.MaterialId,
-                    TipoHedgeMaterialId = x.TipoHedgeMaterialId,
-                    Cantidad = x.Cantidad
-                }, x => materialId.Contains(x.MaterialId) && DbFunctions.TruncateTime(x.Fecha) == fechaDesde));
-            }
+                MaterialId = x.MaterialId,
+                TipoHedgeMaterialId = x.TipoHedgeMaterialId,
+                Cantidad = x.Cantidad
+            }, x => materialId.Contains(x.MaterialId) &&
+            DbFunctions.TruncateTime(x.Fecha) >= fechaDesde &&
+            DbFunctions.TruncateTime(x.Fecha) <= fechaHasta));
             return hedgeMat;
         }
         public HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true)
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var obj = new HedgeCargaObjetivoDto();
-            if (fechaDesde == fechaHasta)
-            {
-                fechaDesde = fechaDesde.Date;
-                var objetivos = repositorio.Listar<HedgeObjetivo>(x => materialId.Contains(x.MaterialId) && DbFunctions.TruncateTime(x.Fecha) == fechaDesde);
-                var cumplidosContratos = repositorio.Listar<Contrato>(x =>
-                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde &&
-                x.CampanaId <= x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
-                var cumplidosFijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
-                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde &&
-                x.CampanaId <= x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
+            fechaDesde = fechaDesde.Date;
+            fechaHasta = fechaHasta.Date;
+            var objetivos = repositorio.Listar<HedgeObjetivo>(x => materialId.Contains(x.MaterialId) && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta);
+            var cumplidosContratos = repositorio.Listar<Contrato>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && 
+            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && 
+            DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta &&
+            x.CampanaId <= x.Material.CampaniaTableroId && 
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
 
-                obj.PricingObjetivo = objetivos.Where(x => x.TipoObjetivoId == 1).Sum(x => x.Cantidad);
-                obj.RemitirObjetivo = objetivos.Where(x => x.TipoObjetivoId == 2).Sum(x => x.Cantidad);
-                obj.PricingCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad) + cumplidosFijaciones.Sum(x => (decimal)x.Cantidad);
-                obj.RemitirCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad);
-            }
+            var cumplidosFijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
+            materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.CampanaId <= x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
+
+            obj.PricingObjetivo = objetivos.Where(x => x.TipoObjetivoId == 1).Sum(x => x.Cantidad);
+            obj.RemitirObjetivo = objetivos.Where(x => x.TipoObjetivoId == 2).Sum(x => x.Cantidad);
+            obj.PricingCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad) + cumplidosFijaciones.Sum(x => (decimal)x.Cantidad);
+            obj.RemitirCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad);
             return obj;
         }
         public HedgeCargaObjetivoDto TraerUltimoHedgeObjetivo()
@@ -780,38 +780,37 @@ namespace Molinos.DataAgro.Business.Managers
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
 
             var obj = new HedgeTCPromedioDto();
-            if (fechaDesde == fechaHasta)
-            {
-                fechaDesde = fechaDesde.Date;
-                var objetivos = repositorio.Listar<HedgeTC>(x => DbFunctions.TruncateTime(x.Fecha) == fechaDesde);
-                var contratos = repositorio.Listar<Contrato>(x =>
-                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoAgenteCompraId == null &&
-                x.AnulaYReemplazaContratoId == null && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde && x.MonedaId == "ARP  " &&
-                x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) /*&& x.Canje != true*/)
-                    .Sum(x => x.Precio);
-                var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
-                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde &&
-                x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
-                !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true) && x.Canje != true)
-                    .Sum(x => x.Precio);
-                var fason = repositorio.Listar<Fason>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) == fechaDesde && x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Precio);
 
-                if (objetivos != null)
+            fechaDesde = fechaDesde.Date;
+            var objetivos = repositorio.Listar<HedgeTC>(x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta);
+            var contratos = repositorio.Listar<Contrato>(x =>
+            materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoAgenteCompraId == null &&
+            x.AnulaYReemplazaContratoId == null && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
+            DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && x.MonedaId == "ARP  " &&
+            x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) /*&& x.Canje != true*/)
+                .Sum(x => x.Precio);
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
+            materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
+            !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true) && x.Canje != true)
+                .Sum(x => x.Precio);
+            var fason = repositorio.Listar<Fason>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Precio);
+
+            if (objetivos != null)
+            {
+                decimal sumProd = 0;
+                decimal total = 0;
+                foreach (var hT in objetivos)
                 {
-                    decimal sumProd = 0;
-                    decimal total = 0;
-                    foreach (var hT in objetivos)
-                    {
-                        sumProd += hT.TipoCambio * hT.HedgePesos;
-                        total += hT.HedgePesos;
-                    }
-                    if (total != 0)
-                    {
-                        obj.PromedioTC = sumProd / total;
-                    }
-                    obj.TotalTC = objetivos.Sum(x => x.HedgePesos) - contratos - fijaciones - fason;
+                    sumProd += hT.TipoCambio * hT.HedgePesos;
+                    total += hT.HedgePesos;
                 }
+                if (total != 0)
+                {
+                    obj.PromedioTC = sumProd / total;
+                }
+                obj.TotalTC = objetivos.Sum(x => x.HedgePesos) - contratos - fijaciones - fason;
             }
+            
             return obj;
         }
         public List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId)
