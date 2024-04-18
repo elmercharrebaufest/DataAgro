@@ -1171,7 +1171,6 @@ function InicializarElementos() {
                     //$("#dolarizadoFechaId").val("");
 
                 }
-
             } else {
                 $("#CapacidadProductivaPendienteDiv").hide();
                 //if (!$("#pesificadoId").is(":checked")) {

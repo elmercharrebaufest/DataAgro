@@ -396,11 +396,18 @@ function InicializarElementos() {
                     $("#consignatarioId").prop("checked", false);
                 }
             }
+            if ($("#clasificacion").val() == '1') {  //SI ES PRODUCTOR
+                if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
+                    $("#chequeElectronicoDiv").hide();  //OCULTAR
+                } else {
+                    $("#chequeElectronicoDiv").show(); //MOSTRAR
+                }
+            }
             if ($("#buscadorCorredor").val() == "") {
                 $("#porcentajeComisionDiv").hide();
                 $("#contCorredorId").val("");
                 $("#contCorredorDiv").hide();
-                $("#pagoDirectoDiv").hide();
+                $("#pagoDirectoDiv").hide(); 
                 $("#pagoDirectoId").prop("checked", false);
                 if (!$("#dolarizadoId").is(":checked") && $("#precioMonedaId").val() == "USDM " && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
                     $("#dolarizadoExpressDiv").show();
@@ -1285,8 +1292,13 @@ function InicializarElementos() {
                     $("#dolarizadoFechaId").val("");
 
                 }
-
+                if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
+                    $("#chequeElectronicoDiv").hide();  //OCULTAR
+                } else {
+                    $("#chequeElectronicoDiv").show(); //MOSTRAR
+                }
             } else {
+                $("#chequeElectronicoDiv").hide();
                 $("#CapacidadProductivaPendienteDiv").hide();
 
                 //FechaCierta
