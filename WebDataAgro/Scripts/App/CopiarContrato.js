@@ -968,27 +968,31 @@ function ObtenerDatos(error) {
 }
 
 function RedireccionarNegocio(url, tipoId, obj) {
-    var form = document.createElement("form");
-    var element1 = document.createElement("input");
-    var element2 = document.createElement("input");
-    var siguiente = document.createElement("input");
-    var negocioId = document.createElement("input");
-    form.method = "POST";
-    form.action = url;
-    element1.value = tipoId;
-    element1.name = "tipoId";
-    element2.value = JSON.stringify(obj);
-    element2.name = "obj";
-    siguiente.value = Siguientes.replace(/(&quot\;)/g, "\"");
-    siguiente.name = "siguientes";
-    negocioId.value = Id;
-    negocioId.name = "Id";
-    form.appendChild(element1);
-    form.appendChild(element2);
-    form.appendChild(siguiente);
-    form.appendChild(negocioId);
-    document.body.appendChild(form);
-    form.submit();
+    if (tipoId!='') {
+        var form = document.createElement("form");
+        var element1 = document.createElement("input");
+        var element2 = document.createElement("input");
+        var siguiente = document.createElement("input");
+        var negocioId = document.createElement("input");
+        form.method = "POST";
+        form.action = url;
+        element1.value = tipoId;
+        element1.name = "tipoId";
+        element2.value = JSON.stringify(obj);
+        element2.name = "obj";
+        siguiente.value = Siguientes.replace(/(&quot\;)/g, "\"");
+        siguiente.name = "siguientes";
+        negocioId.value = Id;
+        negocioId.name = "Id";
+        form.appendChild(element1);
+        form.appendChild(element2);
+        form.appendChild(siguiente);
+        form.appendChild(negocioId);
+        document.body.appendChild(form);
+        form.submit();
+    } else {
+        $.unblockUI();
+    }
 }
 
 function InicializarDatos() {
