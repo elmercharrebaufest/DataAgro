@@ -4738,14 +4738,15 @@ namespace Molinos.DataAgro.Business.Managers
 
                             if (!cupoEliminar.HayError)
                             {
-                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+                                var cupoLog = ObtenerCupo(c.Id, repo);
+                                logmanager.LogCambiosDataAgro(cupoLog, TipoAccionLogDataAgro.Eliminar);
 
                                 var cuposOk = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
-                                    Proveedor = c.Proveedor.RazonSocial,
-                                    Material = c.Material.Descripcion,
-                                    ZonaCupo = c.ZonaCupo.Descripcion,
+                                    Proveedor = cupoLog.Proveedor,
+                                    Material = cupoLog.Material,
+                                    ZonaCupo = cupoLog.ZonaCupo,
                                     ComercialId = c.ComercialId,
                                     ProveedorId = c.ProveedorId
                                 };
