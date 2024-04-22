@@ -99,7 +99,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     List<AgenteCompra> listaAgenteCompra = new List<AgenteCompra>();
                     var operadores = repositorio.Listar<Operador>();
-                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61).Select(a => new AgenteCompra
+                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61 && a.TrdRptStatus == "0").Select(a => new AgenteCompra
                     {
                         TipoNegocioId = 5,
                         Cantidad = ObtenerCantidad(a),
