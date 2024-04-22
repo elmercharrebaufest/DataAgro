@@ -407,7 +407,7 @@ function InicializarElementos() {
                 $("#porcentajeComisionDiv").hide();
                 $("#contCorredorId").val("");
                 $("#contCorredorDiv").hide();
-                $("#pagoDirectoDiv").hide(); 
+                $("#pagoDirectoDiv").hide();
                 $("#pagoDirectoId").prop("checked", false);
                 if (!$("#dolarizadoId").is(":checked") && $("#precioMonedaId").val() == "USDM " && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
                     $("#dolarizadoExpressDiv").show();
@@ -3606,7 +3606,7 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
-    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2) {
+    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
         if (cantidadCamiones > 0) {
@@ -3633,11 +3633,9 @@ function GrabarContrato(nuevoContrato) {
             MensErr("El contrato madre es obligatorio al fijar el convenio");
             $.unblockUI();
         } else {
-
             if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarCostoFinanciero").modal('show');
             } else {
-
                 var objeto = {
                     oParam: nuevoContrato,
                     listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
@@ -3648,13 +3646,16 @@ function GrabarContrato(nuevoContrato) {
 
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
 
-                    Confirma('Localidad Procedecia o Localidad Destino no esta incripta en MOA. ¿ Confirma el contrato ?',
+                    Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
                         function (dialogItself) {
                             grabarContrato(objeto);
                         });
                 }
                 else {
-                    result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                    if (nuevoContrato.TipoNegocioId == 6) {
+                        result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
+                    } else
+                        result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                 }
             }
         }
@@ -3663,14 +3664,12 @@ function GrabarContrato(nuevoContrato) {
         //LiberarPantalla();
         /*dataTabla = [];*/
 
+    } else if (nuevoContrato.TipoNegocioId == 3) {
+        result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 5) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 6) {
-        result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);
-    } else {
-        result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     }
 
     if (result != null) {
@@ -3734,7 +3733,6 @@ function grabarContrato(objeto) {
         }
     }
 }
-
 
 function editarContrato(id, tipoId, siguientes) {
     window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
@@ -4496,7 +4494,7 @@ function CargarDatosEditar(contrato, hijo) {
         } else {
             InicializarEditarContratoApertura();
             //if (Number($("#precioId").val().replace(',', '.')) > 0) {
-            GuardarAperturaDePrecio();
+            //GuardarAperturaDePrecio();
             //}
         }
 

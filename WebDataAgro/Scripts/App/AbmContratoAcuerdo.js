@@ -14,11 +14,10 @@ $(document).ready(function () {
     CrearViewModel();
     AsignarBotones();
     InicializarBusquedaInicial();
-
 });
 
 function InicializarElementos() {
-    
+
     $("#butEliminar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Eliminar.png")
     });
@@ -126,7 +125,7 @@ function InicializarElementos() {
         }
 
     });
-       
+
     $("#comercialId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
@@ -286,10 +285,10 @@ function InicializarDatos() {
 }
 
 function AsignarDatos() {
-    viewModel.set("MaterialCombo", datosIniAbmContratoAcuerdo.Datos.material);
-    viewModel.set("ComercialCombo", datosIniAbmContratoAcuerdo.Datos.comercial);
-    viewModel.set("DestinoCombo", datosIniAbmContratoAcuerdo.Datos.destino);
-    viewModel.set("MonedaCombo", datosIniAbmContratoAcuerdo.Datos.moneda);
+    viewModel.set("MaterialCombo", datosIniAbmContratoAcuerdo.Datos.Material);
+    viewModel.set("ComercialCombo", datosIniAbmContratoAcuerdo.Datos.Comercial);
+    viewModel.set("DestinoCombo", datosIniAbmContratoAcuerdo.Datos.Destino);
+    viewModel.set("MonedaCombo", datosIniAbmContratoAcuerdo.Datos.Moneda);
 }
 
 function ObtenerFechaFormato() {
@@ -379,12 +378,12 @@ function CreateGridContratoAcuerdo() {
                 },
 
                 template: function (dataItem) {
-                    if (dataItem.EstadoId == 1 ) {
+                    if (dataItem.EstadoId == 1) {
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
                             botonConfirmadoTilde(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend');
-                    } 
+                    }
                     if (dataItem.EstadoId == 2) {
                         return '<div class="status confirmado">Confirmado</div>' +
                             botonPendiente(dataItem, 'fa-pencil conf') +
@@ -690,7 +689,7 @@ function Grabar() {
             corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitCorredor[0], corredor: true });
         }
     }
-    
+
     var datos = {
         "ObjectState": objectstate,
         "Id": viewModel.get("ContratoAcuerdo.Id"),
@@ -794,9 +793,8 @@ function ModificarPorId(id) {
     }
 }
 
-
 function EliminarConId(id) {
-    Confirma('¿ Confirma la eliminación de este registro ?',
+    Confirma('¿Confirma la eliminación de este registro?',
         function (dialogItself) {
             EjecutarEliminarConId(id);
             dialogItself.close();
@@ -823,10 +821,8 @@ function EjecutarEliminarConId(id) {
     }
 }
 
-
-
 function ConfirmarConId(id) {
-    Confirma('¿ Esta seguro de confirmar este contrato ?',
+    Confirma('¿Está seguro de confirmar este contrato?',
         function (dialogItself) {
             EjecutarConfirmarConId(id);
             dialogItself.close();
@@ -857,7 +853,7 @@ function recargarGrilla() {
 }
 
 function ConfirmarMasivo() {
-    Confirma('¿ Esta seguro de confirmar los contratos seleccionados ?',
+    Confirma('¿Está seguro de confirmar los contratos seleccionados?',
         function (dialogItself) {
             EjecutarConfirmarMasivo();
             dialogItself.close();

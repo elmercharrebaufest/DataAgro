@@ -1,5 +1,4 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -13,7 +12,7 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ContratoAcuerdoController : Controller
     {
-        private IContratoAcuerdoManager mobjContratoAcuerdoManager;
+        private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
 
         public ContratoAcuerdoController(IContratoAcuerdoManager oContratoAcuerdoManager)
         {
@@ -23,12 +22,12 @@ namespace WebDataAgro.Controllers
         public ActionResult Index()
         {
             string ActionView = "";
-            
+
             ViewBag.ComercialId = GlobalVariables.ComercialId;
 
             return View(ActionView);
         }
-        
+
         public ActionResult Cancelar()
         {
             return new JsonResult()
@@ -59,10 +58,8 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
         public ActionResult Confirmar(AbmOperadorParam oParam)
         {
-            
             return new JsonResult()
             {
                 Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(oParam.Id, GlobalVariables.ComercialId),
@@ -70,14 +67,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
-
         public ActionResult Grabar(ContratoAcuerdo oContratoAcuerdo)
         {
             var model = new AbmContratoAcuerdoResult();
-
             var entityErrors = mobjContratoAcuerdoManager.GrabarAcuerdo(oContratoAcuerdo);
-            model.Errores = entityErrors.Errores;           
+            model.Errores = entityErrors.Errores;
 
             return new JsonResult()
             {

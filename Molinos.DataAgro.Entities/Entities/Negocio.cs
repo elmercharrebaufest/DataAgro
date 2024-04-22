@@ -12,23 +12,23 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int MaterialId { get; set; } // MaterialId
-        public int TipoNegocioId { get; set; } // TipoNegocioId
-        public double Cantidad { get; set; } // Cantidad
-        public decimal Precio { get; set; } // Precio
-        public int? CampanaId { get; set; } // CampañaId
+        public int MaterialId { get; set; }
+        public int TipoNegocioId { get; set; }
+        public double Cantidad { get; set; }
+        public decimal Precio { get; set; }
+        public int? CampanaId { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime FechaDesde { get; set; } // FechaDesde
+        public DateTime FechaDesde { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime FechaHasta { get; set; } // FechaHasta
-        public int? ProveedorId { get; set; } // ProveedorId
-        public string MonedaId { get; set; } // MonedaId (length: 5)
+        public DateTime FechaHasta { get; set; }
+        public int? ProveedorId { get; set; }
+        public string MonedaId { get; set; } // (length: 5)
         [JsonConverter(typeof(SinHora))]
-        public DateTime Fecha { get; set; } // Fecha
-        public int? GrupoCompra { get; set; } // GrupoCompra
-        public int? ComercialId { get; set; } // ComercialId
+        public DateTime Fecha { get; set; }
+        public int? GrupoCompra { get; set; }
+        public int? ComercialId { get; set; }
         public int? DiasPesificado { get; set; } // Dias_Pesificado
-        public bool? TrigoEspecial { get; set; } // TrigoEspecial
+        public bool? TrigoEspecial { get; set; }
         public int EstadoId { get; set; } // Estado (length: 50)
         public string UsuarioId { get; set; } // UsuarioId (length: 100)
         public string ContratoSAP { get; set; }
@@ -64,7 +64,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaConfirmacion { get; set; }
         public int? UsuarioConfirmadorId { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime FechaOperacion { get; set; } // FechaOperacion
+        public DateTime FechaOperacion { get; set; }
 
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaCierta { get; set; }
@@ -91,9 +91,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public string UsuarioTercero { get; set; }
         public bool? Virtual { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
+        public DateTime? FechaDesdeSustentable { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
+        public DateTime? FechaHastaSustentable { get; set; }
         public bool? TarifaAConvenir { get; set; }
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
@@ -125,6 +125,43 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProveedorComisionistaId { get; set; }
         public double? CantidadDeposito { get; set; }
         public bool? ConfirmadoSAP { get; set; }
+        [JsonConverter(typeof(SinHora))]
+        public DateTime FechaEntrega { get; set; }
+        public int? ProvinciaId { get; set; }
+        public int? LocalidadId { get; set; }
+        public bool? Base { get; set; }
+        public bool? NoInformaSio { get; set; }
+        public int ClasificacionId { get; set; }
+        public int? CantidadCamiones { get; set; }
+        public bool? Consignatario { get; set; }
+        public bool? PlanCanje { get; set; }
+        public bool? PagoDirectoVendedor { get; set; }
+        public bool? EstablecimientoPropio { get; set; }
+        public int? BoletoId { get; set; }
+        public int? BolsaId { get; set; }
+        public bool? MercsDeposito { get; set; }
+        public decimal? PorcentajeComision { get; set; }
+        public string ContratoVendedor { get; set; }
+        public string ContratoCorredor { get; set; }
+        public bool? SelCargoVendedor { get; set; }
+        public bool? SelCargoMOA { get; set; }
+        public bool? Madre { get; set; }
+        public string ContratoMadre { get; set; }
+        public int? ZonaId { get; set; }
+        public bool? Compensacion { get; set; }
+        public int? NivelTarifaId { get; set; }
+        public decimal? TarifaFlete { get; set; }
+        public bool? EsFason { get; set; }
+        public decimal? PorcentajeDePago { get; set; }
+        public string CaratulaExtension { get; set; }
+        public bool? Sustentable { get; set; }
+        public decimal? ImporteSustentable { get; set; } // Importe_Sustentable
+        public string MonedaSustentableId { get; set; } // MonedaId_Sustentable 
+        public bool? EPA { get; set; }
+        public int? SustentableTipoDBId { get; set; }
+        public bool? ConDescarga { get; set; }
+        public bool? DolarExportador { get; set; }
+        public int? TipoDeCambioId { get; set; }
 
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaHastaOriginal { get; set; }
@@ -200,7 +237,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("BoletoVentaId")]
         public virtual BoletoVenta BoletoVenta { get; set; }
 
-        [ForeignKey("ProveedorComisionistaId")]      
+        [ForeignKey("ProveedorComisionistaId")]
         public virtual Proveedor ProveedorComisionista { get; set; } // ProveedorId
 
         [InverseProperty("Negocio")]
@@ -215,9 +252,34 @@ namespace Molinos.DataAgro.Entities.Entities
             Ampliaciones = 0;
             Pizarra = false;
         }
-        public bool? DolarExportador { get; set; }
-        public int? TipoDeCambioId { get; set; }
         [ForeignKey("TipoDeCambioId")]
         public virtual TipoDeCambio TipoDeCambio { get; set; }
+
+        [ForeignKey("SustentableTipoDBId")]
+        public virtual TipoDB SustentableTipoDB { get; set; }
+
+        [ForeignKey("ProvinciaId")]
+        public virtual Provincia Provincia { get; set; }
+
+        [ForeignKey("LocalidadId")]
+        public virtual Localidad Localidad { get; set; }
+
+        [ForeignKey("MonedaSustentableId")]
+        public virtual Moneda MonedaSustentable { get; set; } // MonedaId_Sustentable
+
+        [ForeignKey("ClasificacionId")]
+        public virtual ClasificacionCompraNet Clasificacion { get; set; }//ClasificacionId
+
+        [ForeignKey("BoletoId")]
+        public virtual BoletoCompraNet Boleto { get; set; }
+
+        [ForeignKey("BolsaId")]
+        public virtual BolsaCompraNet Bolsa { get; set; }
+
+        [ForeignKey("ZonaId")]
+        public virtual Zona Zona { get; set; }
+
+        [ForeignKey("NivelTarifaId")]
+        public virtual NivelTarifa NivelTarifa { get; set; }
     }
 }

@@ -287,7 +287,7 @@ function CargarCopiaContrato(contratoId, tipo) {
                     $("#contratoAReemplazarId").val("");
                     $("#contratoAReemplazarId").click();
                 }, 300);
-                MensErr("El contrato aún no ha sido confirmado en SAP y no tiene número de SIO, intente editarlo desde la pantalla de CompraNet");
+                MensErr("El contrato aún no ha sido confirmado en SAP y no tiene número de SIO. Intente editarlo desde la pantalla de CompraNet.");
                 return;
             } else if (status.NumeroSio > 0) {
                 setTimeout(function () {
@@ -295,7 +295,7 @@ function CargarCopiaContrato(contratoId, tipo) {
                     $("#contratoAReemplazarId").val("");
                     $("#contratoAReemplazarId").click();
                 }, 300);
-                MensErr("El contrato tiene número de SIO Granos, en caso de querer continuar esta anulación, por favor comunicarse con administración");
+                MensErr("El contrato tiene número de SIO Granos. En caso de querer continuar esta anulación, por favor comunicarse con administración.");
                 return;
             } else {
                 contratoCopia.DescripcionOperacionAnterior = "Anula y reemplaza " + contratoCopia.ContratoSAP;
@@ -838,8 +838,8 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 6) {
         obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
     }
+    obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
     if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 4) {
-        obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
         if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
             obj.MotivoOperacionAnterior = "Otro";
             obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
@@ -864,7 +864,6 @@ function ObtenerDatos(error) {
 
     if (obj.TipoNegocioId == 5) {
         obj.FechaOperacion = $("#fechaOperacionAgenteId").val() == null || $("#fechaOperacionAgenteId").val() == undefined || $("#fechaOperacionAgenteId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionAgenteId").val();
-
     }
 
     if ($("#canjeId").is(":checked") == true) {
@@ -904,7 +903,6 @@ function ObtenerDatos(error) {
     obj.CamaraId = $("#camaraListado").val();
     obj.ComisionAFavorId = $("#comisionAFavorListado").val();
     obj.PorcentajeComisionVenta = $("#porcentajeComisionVentaId").val();
-
 
     if ($("#LocalidadVenta").val() != "" && $("#LocalidadVenta").val() != null) {
         var localidadVentaAux = $("#LocalidadVenta").val().split('(');
@@ -968,7 +966,7 @@ function ObtenerDatos(error) {
 }
 
 function RedireccionarNegocio(url, tipoId, obj) {
-    if (tipoId!='') {
+    if (tipoId != '') {
         var form = document.createElement("form");
         var element1 = document.createElement("input");
         var element2 = document.createElement("input");
