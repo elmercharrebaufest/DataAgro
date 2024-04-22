@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -30,7 +26,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public int EstadoId { get; set; }
         public string Moneda { get; set; }
         public string MonedaId { get; set; }
-        public bool? ChequeElectronico { get; set; }
-
+        public int? ProvinciaId { get; set; }
+        public int? LocalidadId { get; set; }
+        //public bool? ChequeElectronico { get; set; }
+        public bool? Sustentable { get; set; }
+        public decimal? ImporteSustentable { get; set; }
+        public string MonedaSustentableId { get; set; }  
+        public bool? EPA { get; set; }
+        public int? SustentableTipoDBId { get; set; }
+        public bool? ConDescarga { get; set; }
+        public bool? MercsDeposito { get; set; }
+        public bool? Consignatario { get; set; }
+        public bool? PlanCanje { get; set; }
     }
 }

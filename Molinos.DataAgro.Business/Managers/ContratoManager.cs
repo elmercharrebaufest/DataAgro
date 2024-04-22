@@ -1673,6 +1673,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+        
         private GrabarContratoResult ValidarCantidadAcuerdoTolerancia(Contrato oContratoSave, Contrato oContrato, GrabarContratoResult oEntityErrors)
         {
             if (oContratoSave.ContratoAcuerdoId != null && oContratoSave.ContratoAcuerdoId > 0)
@@ -1698,6 +1699,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        
         public GrabarContratoResult GrabarContrato(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -2120,8 +2122,6 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Agregar(oContratoSave);
             }
 
-
-
             if (aperturasExistentes != null)
             {
                 foreach (var aperturaExistente in aperturasExistentes)
@@ -2166,8 +2166,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (x.CantidadCupo > 0)
                     {
                         cupoNuevo.FleteProcedencia = false;
-                        List<DiaCupo> listDiaCupo = new List<DiaCupo>();
-                        listDiaCupo.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo });
+                        List<DiaCupo> listDiaCupo = new List<DiaCupo>() { new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo } };
 
                         cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo, false);
 
@@ -2178,8 +2177,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (x.CantidadFlete > 0)
                     {
                         cupoNuevo.FleteProcedencia = true;
-                        List<DiaCupo> listDiaFlete = new List<DiaCupo>();
-                        listDiaFlete.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete });
+                        List<DiaCupo> listDiaFlete = new List<DiaCupo> { new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete } };
 
                         cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete, false);
 
@@ -2215,20 +2213,20 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            var provs = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
+            var provincias = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
             var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
 
-            var procedencia = provs.Find(x => x.Provinciaid == oContrato.ProvinciaId);
-            var destino = provs.Find(p => p.Provinciaid == destinos.Find(x => x.Id == oContrato.DestinoId).ProvinciaId);
+            var procedencia = provincias.Find(x => x.Provinciaid == oContrato.ProvinciaId);
+            var destino = provincias.Find(p => p.Provinciaid == destinos.Find(x => x.Id == oContrato.DestinoId).ProvinciaId);
 
             if (!procedencia.Inscripto || !destino.Inscripto)
             {
-                EnviarMailImpuestos(oContrato, procedencia.Nombre, destino.Nombre);
+                EnviarMailImpuestos(oContratoSave, procedencia.Nombre, destino.Nombre);
             }
             return oEntityErrors;
         }
 
-        public Cupo TransformarContratoACupo(Contrato contrato)
+        private Cupo TransformarContratoACupo(Contrato contrato)
         {
             var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == contrato.ProveedorId, x => x.CUIT);
             var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == contrato.ComercialId);
@@ -2239,11 +2237,11 @@ namespace Molinos.DataAgro.Business.Managers
             var cupoNuevo = new Cupo
             {
                 Id = 0,
-                ProveedorId = contrato.CorredorId.Value == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
+                ProveedorId = contrato.CorredorId == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
                 MaterialId = contrato.MaterialId,
                 FechaIngreso = contrato.FechaEntrega,
                 CentroId = contrato.DestinoId.Value,
-                FleteProcedencia = contrato.FleteACargo == "true" ? true : false,
+                FleteProcedencia = contrato.FleteACargo == "true",
                 Calidad = contrato.MaterialId == 3 ? contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica" : "",
                 Observaciones = contrato.Observacion,
                 Fason = contrato.EsFason,
@@ -4769,7 +4767,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             mailManager.EnviarMail(contrato.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contrato, procedencia, destino));
 
-            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailComerciales[0] + ". Contrato SAP:" + contrato.ContratoSAP);
+            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailComerciales + ". Contrato SAP:" + contrato.ContratoSAP);
         }
         private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
         {

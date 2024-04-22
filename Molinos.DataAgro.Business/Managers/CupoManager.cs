@@ -22,10 +22,7 @@ using System.Net.Mime;
 using System.Text;
 using OfficeOpenXml;
 using System.IO;
-using Molinos.DataAgro.Agent;
 using System.Text.RegularExpressions;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Net;
 
@@ -101,7 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                     cupo.ComercialCreador = comercialCreador;
                 }
 
-                var negocio = repositorio.Obtener<Contrato>(cupo.NegocioId);
+                var negocio = repositorio.Obtener<Negocio>(cupo.NegocioId);
                 if (negocio != null)
                 {
                     cupo.Sustentable = negocio.Sustentable;
@@ -162,7 +159,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                                 try
                                 {
-
                                     using (var transaction = new System.Transactions.TransactionScope())
                                     {
                                         var listaCupos = new List<string>();
@@ -170,7 +166,6 @@ namespace Molinos.DataAgro.Business.Managers
                                         var cuposConSap = new List<Cupo>();
                                         if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                                         {
-
                                             try
                                             {
                                                 // cupos para Vicentin en CupoExterno
@@ -273,8 +268,6 @@ namespace Molinos.DataAgro.Business.Managers
                                                 }
                                             }
 
-
-
                                             if (listaCupos.Count < d.Cantidad.Value)
                                             {
                                                 error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
@@ -371,7 +364,6 @@ namespace Molinos.DataAgro.Business.Managers
                         logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id, null), TipoAccionLogDataAgro.Modificar);
                         if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
                         return error;
-
                     }
                 }
                 return error;

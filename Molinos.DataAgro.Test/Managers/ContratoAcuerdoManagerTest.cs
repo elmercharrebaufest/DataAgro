@@ -1,7 +1,5 @@
 ﻿using Autofac.Extras.NLog;
-using KendoGridBinder;
 using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -9,25 +7,20 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Molinos.DataAgro.Test.Mock;
-using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
-using System.Web.Script.Serialization;
+using System;
+using Moq;
 
 namespace Molinos.DataAgro.Test.Managers
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Test")]
     [TestFixture]
     public class ContratoAcuerdoManagerTest
     {
@@ -36,8 +29,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
-        private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
         private Mock<IConfiguracionManager> configuracionManagermock;
+        private Mock<ICupoManager> cupoManagermock;
 
         [SetUp]
         public void SetUp()
@@ -47,11 +40,11 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
-            validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
             configuracionManagermock = new Mock<IConfiguracionManager>();
+            cupoManagermock = new Mock<ICupoManager>();
 
-            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object, 
-            diasHabilesAgentMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object, configuracionManagermock.Object);
+            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object, diasHabilesAgentMock.Object, logDataAgroManagerMock.Object, 
+                configuracionManagermock.Object, cupoManagermock.Object);
         }
         [Test]
         public void BorrarAcuerdoTest()
@@ -259,7 +252,7 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void GrabarAcuerdoOkTest()
+        public void GrabarAcuerdoSinCuposConDescargaOkTest()
         {
             var acuerdo = new ContratoAcuerdo
             {
@@ -328,11 +321,10 @@ namespace Molinos.DataAgro.Test.Managers
 
                   }
               });
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>()))
-             .Returns(1);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, double>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<double>() { 10.0, 11.0 });
-
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, double>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<double>() { 10.0, 11.0});
+
 
             var resultado = target.GrabarAcuerdo(acuerdo);
 
@@ -459,10 +451,10 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<MonedaQry>() { new MonedaQry { MonedaId = "a", Descripcion = "a" } });
             var resultado = target.TraerDatosCombo();
 
-            Assert.AreEqual(1, resultado.comercial.Count);
-            Assert.AreEqual(1, resultado.material.Count);
-            Assert.AreEqual(1, resultado.moneda.Count);
-            Assert.AreEqual(1, resultado.destino.Count);
+            Assert.AreEqual(1, resultado.Comercial.Count);
+            Assert.AreEqual(1, resultado.Material.Count);
+            Assert.AreEqual(1, resultado.Moneda.Count);
+            Assert.AreEqual(1, resultado.Destino.Count);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialQry>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Centro, CentroQry>>>(), It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Comercial, ComercialQry>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

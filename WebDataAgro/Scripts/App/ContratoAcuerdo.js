@@ -254,10 +254,7 @@ function InicializarElementos() {
             $("#datosContrato").hide();
             $("#pagoCbuInput").val("");
             $("#pagoCbu").val("");
-            if ($("#tipoId").val() == "6") {
-                $("#dolarizadoExpressDiv").hide();
 
-            }
             InicializarBordesRojos();
         },
         select: function (e) {
@@ -435,6 +432,10 @@ function InicializarElementos() {
                 $("#pagoCbu").val("");
                 $("#pagoCbuId").hide();
                 $("#pagoCbuInput").val("");
+            }
+            if ($("#tipoId").val() == "6" && ($("#corredorId").val() != "" || $("#buscadorCorredor").val() != "")) {
+                $("#dolarizadoExpressDiv").hide();
+                $("#porcentajeComision").data("kendoNumericTextBox").value(1);
             }
             $("#buscadorProveedor").val("");
             $("#contratoId").val("");
@@ -645,6 +646,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+
     $("#tipoId").kendoDropDownList({
         optionLabel: "SELECCIONE UN TIPO DE NEGOCIO...",
         dataTextField: "Descripcion",
@@ -722,6 +724,9 @@ function InicializarElementos() {
                 precioRojo.removeClass("required-border");
                 $("#ocultarAperturaBtn").show();
                 $("#conDescargaDiv").show();
+                if ($("#corredorId").val() || $("#buscadorCorredor").val() != "") {
+                    $("#porcentajeComision").data("kendoNumericTextBox").value(1);
+                }
             }
             if (this.value() == 4) { // FASON
                 document.title = "Fasón";
@@ -1267,7 +1272,7 @@ function InicializarElementos() {
                     var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#proveedorId").val() });
                     CargarAutomaticamenteLaComision(compraNet);
                 }
-                if ($("#buscadorCorredor").val() != "") {
+                if ($("#corredorId").val() != "" || $("#buscadorCorredor").val() != "") {
                     $("#porcentajeComision").data("kendoNumericTextBox").value(1);
                 }
             } else {
@@ -1628,18 +1633,18 @@ function InicializarElementos() {
     });
 
     $("#porcentajeComision").kendoNumericTextBox({
-        change: function () {
-            if (this.value() == 0 && $("#buscadorCorredor").val() != "") {
-                MensAlerta("El porcentaje de comisión se completó con valor en 0");
-            }
-        },
         culture: "es-AR",
         format: "n2",
         spinners: false,
         decimals: 2,
         value: 1,
         min: 0,
-        max: 100
+        max: 100,
+        change: function () {
+            if (this.value() == 0 && ($("#corredorId").val() != "" || $("#buscadorCorredor").val() != "")) {
+                MensAlerta("El porcentaje de comisión se completó con valor en 0");
+            }
+        }
     });
 
     $("#valorEspecialesId").kendoNumericTextBox({
@@ -3498,7 +3503,7 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
-    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2) {
+    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
         if (cantidadCamiones > 0) {
@@ -3525,17 +3530,18 @@ function GrabarContrato(nuevoContrato) {
             MensErr("El contrato madre es obligatorio al fijar el convenio");
             $.unblockUI();
         } else {
-
             if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarCostoFinanciero").modal('show');
             } else {
-
                 var objeto = {
                     oParam: nuevoContrato,
                     listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
                 }
 
-                result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                if (nuevoContrato.TipoNegocioId == 6) {
+                    result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
+                } else
+                    result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
             }
         }
 
@@ -3543,14 +3549,12 @@ function GrabarContrato(nuevoContrato) {
         //LiberarPantalla();
         /*dataTabla = [];*/
 
+    } else if (nuevoContrato.TipoNegocioId == 3) {
+        result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 5) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 6) {
-        result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);
-    } else {
-        result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     }
 
     if (result != null) {
@@ -4831,7 +4835,7 @@ function GuardarAperturaDePrecio() {
         }
     };
 
-    if (validarGuardarApertura(precioPactado)) { //no llamarlo al entrar a esta pantalla desde otro tipo de negocio
+    if (validarGuardarApertura(precioPactado)) {
         if (AperturaPrecioPorcentajeDeComision != null && AperturaPrecioPorcentajeDeComision != '') {
             var num = Number(AperturaPrecioPorcentajeDeComision.replace(',', '.'));
             if ($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() > num) {

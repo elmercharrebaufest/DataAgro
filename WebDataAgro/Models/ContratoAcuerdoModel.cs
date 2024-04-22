@@ -1,8 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WebDataAgro.Models
 {
@@ -15,19 +12,19 @@ namespace WebDataAgro.Models
 
         public ContratoAcuerdoModel_prueba()
         {
-            this.Datos = new DatosIniComboContratoAcuerdo();
+            Datos = new DatosIniComboContratoAcuerdo();
         }
     }
+
     public class ResultIniContratoAcuerdoModel : Resultado
     {
         public List<ContratoAcuerdoIni> Datos { get; set; }
 
         public ResultIniContratoAcuerdoModel()
         {
-            this.Datos = new List<ContratoAcuerdoIni>();
+            Datos = new List<ContratoAcuerdoIni>();
         }
     }
-
 
     public class AbmContratoAcuerdoResult : Resultado
     {
@@ -35,8 +32,7 @@ namespace WebDataAgro.Models
 
         public AbmContratoAcuerdoResult()
         {
-            this.ContratoAcuerdo = new ContratoAcuerdoDto();
+            ContratoAcuerdo = new ContratoAcuerdoDto();
         }
     }
-
 }
