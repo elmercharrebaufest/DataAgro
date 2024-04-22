@@ -2714,10 +2714,14 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     cd === "true" && pagoDirectoVendedor === "true" ? $("#visualizar_pago").text("CD y Pago Directo Vendedor") : cd === "true" ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined" ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
 
-    if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
+    if (desdeFijacion != "null" && hastaFijacion != "null") {
+        $("#desdeHastaFijacionDivVisualizar").show();
+        $("#condicionFijacionDivVisualisar").hide();
+        $("#visualizar_desdeHastaFijacion").text(desdeFijacion + " - " + hastaFijacion);
+    } else if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
-    } else {
+    } else{
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
         $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
     }
