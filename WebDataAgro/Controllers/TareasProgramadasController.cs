@@ -175,7 +175,8 @@ namespace WebDataAgro.Controllers
             {
                 dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
             }
-            negocioManager.MigrarContratosPrimary(dia);
+            if (!(dia.DayOfWeek == DayOfWeek.Saturday || dia.DayOfWeek == DayOfWeek.Sunday))
+                negocioManager.MigrarContratosPrimary(dia);
             logger.Info("FIN MigrarContratosPrimary");
             return Content("ok");
         }
