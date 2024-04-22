@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IComercialManager oComercial;
         private readonly ITipoDeCambioAgent tipoDeCambio;
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IContratosAPesificarAgent pesificarAgent;
         private readonly IMailManager mailManager;
         private readonly IHttpContextManager httpContextManager;
@@ -612,7 +612,7 @@ namespace Molinos.DataAgro.Business.Managers
                 BahiaBlanca = (x.Destino.CodigoSap == "1168") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
-            && (x.TipoNegocioId == 2 || (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1)) 
+            && (x.TipoNegocioId == 2 || (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1))
             //&& x.Venta != true 
             && x.AnulaYReemplazaContratoId == null &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
@@ -727,14 +727,15 @@ namespace Molinos.DataAgro.Business.Managers
             var hedgeMat = new List<HedgeMaterialDto>();
             fechaDesde = fechaDesde.Date;
             fechaHasta = fechaHasta.Date;
-            hedgeMat.AddRange(repositorio.Listar<HedgeMaterial, HedgeMaterialDto>(x => new HedgeMaterialDto
+            var hedgeLista = repositorio.Listar<HedgeMaterial, HedgeMaterialDto>(x => new HedgeMaterialDto
             {
                 MaterialId = x.MaterialId,
                 TipoHedgeMaterialId = x.TipoHedgeMaterialId,
                 Cantidad = x.Cantidad
             }, x => materialId.Contains(x.MaterialId) &&
             DbFunctions.TruncateTime(x.Fecha) >= fechaDesde &&
-            DbFunctions.TruncateTime(x.Fecha) <= fechaHasta));
+            DbFunctions.TruncateTime(x.Fecha) <= fechaHasta);
+            if (hedgeLista != null) hedgeMat.AddRange(hedgeLista);
             return hedgeMat;
         }
         public HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true)
@@ -744,19 +745,20 @@ namespace Molinos.DataAgro.Business.Managers
             fechaDesde = fechaDesde.Date;
             fechaHasta = fechaHasta.Date;
             var objetivos = repositorio.Listar<HedgeObjetivo>(x => materialId.Contains(x.MaterialId) && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta);
-            var cumplidosContratos = repositorio.Listar<Contrato>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && 
-            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && 
+            var cumplidosContratos = repositorio.Listar<Contrato>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
+            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
             DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta &&
-            x.CampanaId <= x.Material.CampaniaTableroId && 
+            x.CampanaId <= x.Material.CampaniaTableroId &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
 
             var cumplidosFijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
             materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.CampanaId <= x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
 
-            obj.PricingObjetivo = objetivos.Where(x => x.TipoObjetivoId == 1).Sum(x => x.Cantidad);
-            obj.RemitirObjetivo = objetivos.Where(x => x.TipoObjetivoId == 2).Sum(x => x.Cantidad);
-            obj.PricingCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad) + cumplidosFijaciones.Sum(x => (decimal)x.Cantidad);
-            obj.RemitirCumplido = cumplidosContratos.Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad);
+            obj.PricingObjetivo = objetivos != null ? objetivos.Where(x => x.TipoObjetivoId == 1).Sum(x => x.Cantidad) : 0;
+            obj.RemitirObjetivo = objetivos != null ? objetivos.Where(x => x.TipoObjetivoId == 2).Sum(x => x.Cantidad) : 0;
+            obj.PricingCumplido = cumplidosContratos != null ? cumplidosContratos.Where(x => x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad) + cumplidosFijaciones.Sum(x => (decimal)x.Cantidad) : 0;
+            obj.RemitirCumplido = cumplidosContratos != null ? cumplidosContratos.Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2).Sum(x => (decimal)x.Cantidad) : 0;
+
             return obj;
         }
         public HedgeCargaObjetivoDto TraerUltimoHedgeObjetivo()
@@ -810,7 +812,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 obj.TotalTC = objetivos.Sum(x => x.HedgePesos) - contratos - fijaciones - fason;
             }
-            
+
             return obj;
         }
         public List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId)
@@ -2713,20 +2715,20 @@ namespace Molinos.DataAgro.Business.Managers
             ReporteLocalidadesModel result = new ReporteLocalidadesModel();
 
             var localidades = repositorio.ListarConsulta(new TraerLocalidades());
-            
+
 
             foreach (var local in localidades)
             {
 
-                    result.tablero.Add(new ReporteLocalidades
-                    {
-                        Nombre = local.Localidad,
-                        CodLocalidad = local.CodLocalidad,
-                        PartidoId = (int)local.PartidoId,
-                        Descripcion = local.Partido,
-                        NombreProvincia = local.Provincia,
-                        ProvinciaId = local.ProvinciaId
-                    }); 
+                result.tablero.Add(new ReporteLocalidades
+                {
+                    Nombre = local.Localidad,
+                    CodLocalidad = local.CodLocalidad,
+                    PartidoId = (int)local.PartidoId,
+                    Descripcion = local.Partido,
+                    NombreProvincia = local.Provincia,
+                    ProvinciaId = local.ProvinciaId
+                });
             }
 
             return result;
@@ -3662,8 +3664,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "<tr style=\"text-align: center\">";
                     htmlBody += $"<td {td}> {item.Proveedor} </td>";
-                    htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
-                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "") } </td>";
+                    htmlBody += $"<td {td}> {Split(item.Contrato.TrimStart('0'))} </td>";
+                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "")} </td>";
                     htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                     htmlBody += "</tr>";
                 }
@@ -3692,9 +3694,9 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var item in corredor.AgrupracionPesificados)
                 {
                     htmlBody += "<tr style=\"text-align: center\">";
-                    htmlBody += $"<td {td}> { item.Proveedor} </td>";
-                    htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
-                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "") } </td>";
+                    htmlBody += $"<td {td}> {item.Proveedor} </td>";
+                    htmlBody += $"<td {td}> {Split(item.Contrato.TrimStart('0'))} </td>";
+                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "")} </td>";
                     //htmlBody += $"<td {td}> {Math.Round((item.CantidadAgrupada / 1000), 3).ToString("00.000", CultureInfo.CreateSpecificCulture("da-DK"))} </td>"; // en toneladas
                     htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                     htmlBody += "</tr>";
@@ -3736,9 +3738,9 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var item in corredor.AgrupracionPesificados)
                 {
                     htmlBody += "<tr style=\"text-align: center\">";
-                    htmlBody += $"<td {td}> { item.Proveedor} </td>";
-                    htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
-                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "") } </td>";
+                    htmlBody += $"<td {td}> {item.Proveedor} </td>";
+                    htmlBody += $"<td {td}> {Split(item.Contrato.TrimStart('0'))} </td>";
+                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "")} </td>";
                     //htmlBody += $"<td {td}> {Math.Round((item.CantidadAgrupada / 1000), 3).ToString("00.000", CultureInfo.CreateSpecificCulture("da-DK"))} </td>"; // en toneladas
                     htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                     htmlBody += "</tr>";
