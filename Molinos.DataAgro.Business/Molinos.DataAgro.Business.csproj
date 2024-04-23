@@ -374,6 +374,9 @@
     <Content Include="Templates\BoletoFisicoBuenosAires.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\CartaOfertaSinCorredor.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Templates\CartaOferta.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

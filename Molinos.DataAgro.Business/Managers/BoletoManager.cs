@@ -452,7 +452,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
+                return basico.CorredorId==0? 
+                    Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOfertaSinCorredor.html"):
+                    Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
             }
 
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
@@ -510,7 +512,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_006 {
             font-family: Arial,serif;
-            font-size: 11.1px;
+            font-size: 10px; 
             color: rgb(0,0,0);
             font-weight: normal;
             font-style: normal;
@@ -550,7 +552,7 @@ namespace Molinos.DataAgro.Business.Managers
              color: rgb(0,0,0);
              font-size: 10px;
              text-align: justify; 
-             line-height: 1.2; 
+             line-height: 1.15; 
              margin-top: 0px;
         }
 
