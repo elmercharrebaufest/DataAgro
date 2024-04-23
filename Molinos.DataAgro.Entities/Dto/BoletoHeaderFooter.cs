@@ -1,5 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Molinos.DataAgro.Entities.Common.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -37,7 +38,7 @@ namespace Molinos.DataAgro.Entities.Dto
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             float len = bf.GetWidthPoint(pageText, 10);
             cb.BeginText();
-            cb.SetFontAndSize(bf, 10);
+            cb.SetFontAndSize(bf, 9);
             cb.SetTextMatrix(document.PageSize.Width - document.RightMargin - 20, 10); // colocamos el texto en la posicion que queremos
             cb.ShowText(pageText);
             cb.EndText();
@@ -50,54 +51,57 @@ namespace Molinos.DataAgro.Entities.Dto
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             foreach (PdfTemplate item in templates)
             {
-                item.BeginText();
-                item.SetFontAndSize(bf, 10);
-                item.SetTextMatrix(document.PageSize.Width - document.RightMargin - 30, 0);
-                item.ShowText(pagenumber++ + " / " + (writer.PageNumber));
-                item.EndText();
-                if (pagenumber - 1 != writer.PageNumber)
+                if (basico.BoletoContratoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)//Si no es Carta oferta
                 {
-                    var text = "_______________";
                     item.BeginText();
-                    item.SetFontAndSize(bf, 10);
-                    item.SetTextMatrix(80, 30);
-                    item.ShowText(text);
+                    item.SetFontAndSize(bf, 9);
+                    item.SetTextMatrix(document.PageSize.Width - document.RightMargin - 30, 0);
+                    item.ShowText(pagenumber++ + " / " + (writer.PageNumber));
                     item.EndText();
-                    text = "Firma Comprador";
-                    item.BeginText();
-                    item.SetFontAndSize(bf, 10);
-                    item.SetTextMatrix(80, 20);
-                    item.ShowText(text);
-                    item.EndText();
-
-                    if (basico.CorredorId > 0)
+                    if (pagenumber - 1 != writer.PageNumber)
                     {
-                        text = "______________";
+                        var text = "_______________";
                         item.BeginText();
-                        item.SetFontAndSize(bf, 10);
-                        item.SetTextMatrix(230, 30);
+                        item.SetFontAndSize(bf, 9);
+                        item.SetTextMatrix(80, 30);
                         item.ShowText(text);
                         item.EndText();
-                        text = "Firma Corredor";
+                        text = "Firma Comprador";
                         item.BeginText();
-                        item.SetFontAndSize(bf, 10);
-                        item.SetTextMatrix(230, 20);
+                        item.SetFontAndSize(bf, 9);
+                        item.SetTextMatrix(80, 20);
+                        item.ShowText(text);
+                        item.EndText();
+
+                        if (basico.CorredorId > 0)
+                        {
+                            text = "______________";
+                            item.BeginText();
+                            item.SetFontAndSize(bf, 9);
+                            item.SetTextMatrix(230, 30);
+                            item.ShowText(text);
+                            item.EndText();
+                            text = "Firma Corredor";
+                            item.BeginText();
+                            item.SetFontAndSize(bf, 9);
+                            item.SetTextMatrix(230, 20);
+                            item.ShowText(text);
+                            item.EndText();
+                        }
+
+                        text = "______________";
+                        item.BeginText();
+                        item.SetFontAndSize(bf, 9);
+                        item.SetTextMatrix(430, 30);
+                        item.ShowText(text);
+                        item.EndText();
+                        text = "Firma Vendedor";
+                        item.BeginText();
+                        item.SetFontAndSize(bf, 9);
+                        item.SetTextMatrix(430, 20);
                         item.ShowText(text);
                         item.EndText();
                     }
-
-                    text = "______________";
-                    item.BeginText();
-                    item.SetFontAndSize(bf, 10);
-                    item.SetTextMatrix(430, 30);
-                    item.ShowText(text);
-                    item.EndText();
-                    text = "Firma Vendedor";
-                    item.BeginText();
-                    item.SetFontAndSize(bf, 10);
-                    item.SetTextMatrix(430, 20);
-                    item.ShowText(text);
-                    item.EndText();
                 }
             }
         }
