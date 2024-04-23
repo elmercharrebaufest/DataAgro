@@ -290,9 +290,9 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ActualizarMailProveedor()
         {
-            logger.Info("INICIO EnviarMailSugerenciasPendientesPorComercial");
+            logger.Info("INICIO ActualizarMailProveedor");
             proveedorManager.GrabarMailProveedor();
-            logger.Info("FIN EnviarMailSugerenciasPendientesPorComercial");
+            logger.Info("FIN ActualizarMailProveedor");
             return Content("ok");
         }
 
