@@ -2030,7 +2030,7 @@ function InicializarElementos() {
             }
         },
         change: function () {
-            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit.Contrato, esEdicion);
+            var typeOfRate = ObtenerTypeOfRate($("#tipoId").val(), $("#precioMonedaId").val(), $("#AgenteCompraId").val(), contratoEdit, esEdicion);
             valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val(), typeOfRate: typeOfRate });
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();
@@ -4434,7 +4434,6 @@ function AbrirModalAperturaDePrecio() {
 }
 
 function CalcularPrecioTotalApertura() {
-    console.log(ObtenerDescuentoPorFecha());
     if ($("#pizarraId").is(':checked')) {
         $("#totalApertura").text("");
         return null;
