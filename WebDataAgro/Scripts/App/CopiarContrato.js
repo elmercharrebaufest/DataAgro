@@ -614,7 +614,7 @@ function ObtenerDatos(error) {
     obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val();
     obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
     obj.PrecioNeto = $("#precioTotalApertura").val();
-    obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
+    obj.FechaEntrega = (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 6) ? $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val()) : null;
     obj.CampanaId = $("#campanaId").val();
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
@@ -636,7 +636,6 @@ function ObtenerDatos(error) {
     }
     if (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2") {
         obj.PorcentajeDePago = $("#porcentajeDePagoId").data("kendoNumericTextBox").value();
-
     }
 
     obj.ComercialId = $("#comercialId").val();
@@ -655,11 +654,11 @@ function ObtenerDatos(error) {
     obj.EPA = $("#epaId").is(":checked") ? true : false;
     obj.SustentableTipoDBId = $("#selectSustenTipoDB").val();
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
-    obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
+    obj.PorcentajeComision = $("#porcentajeComision").val() != "" && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 6) ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.EstadoId = $("#estado").val() == "" ? $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 && obj.TipoNegocioId != 6 ? "1" : "2" : $("#estado").val();
     obj.Observacion = $("#observacionId").val();
-    obj.ClasificacionId = $("#clasificacion").val() == null || $("#clasificacion").val() == undefined || $("#clasificacion").val() == "" ? 0 : $("#clasificacion").val();
+    obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
     obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
     if (obj.TipoNegocioId == 6) {
@@ -675,7 +674,7 @@ function ObtenerDatos(error) {
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
-    obj.Consignatario = $("#consignatarioId").is(":checked") ? true : false;
+    obj.Consignatario = $("#consignatarioId").is(":checked") && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 6) ? true : false;
     obj.CD = $("#CDId").is(":checked") ? true : false;
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
@@ -687,26 +686,29 @@ function ObtenerDatos(error) {
     obj.DolarizadoExpress = $("#tipoId").val() == "1" ? false : $("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
     obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
 
-    if ($("#boletoConfirmaId").is(':checked')) {
-        obj.BoletoId = 1;
-        obj.BolsaId = $("#bolsaConfirmaId").val();
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 6) {
+        if ($("#boletoConfirmaId").is(':checked')) {
+            obj.BoletoId = 1;
+            obj.BolsaId = $("#bolsaConfirmaId").val();
+        }
+        else if ($("#boletoFisicoId").is(':checked')) {
+            obj.BoletoId = 2;
+            obj.BolsaId = $("#bolsaFisicoId").val();
+        }
+        else if ($("#boletoCartaId").is(':checked')) {
+            obj.BoletoId = 4;
+            obj.BolsaId = $("#bolsaCartaId").val();
+        }
+        else if ($("#boletoNingunoId").is(':checked')) {
+            obj.BoletoId = 3;
+            obj.BolsaId = 0;
+        }
+        else if ($("#sinBoletoId").is(':checked')) {
+            obj.BoletoId = 5;
+            obj.BolsaId = 0;
+        }
     }
-    else if ($("#boletoFisicoId").is(':checked')) {
-        obj.BoletoId = 2;
-        obj.BolsaId = $("#bolsaFisicoId").val();
-    }
-    else if ($("#boletoCartaId").is(':checked')) {
-        obj.BoletoId = 4;
-        obj.BolsaId = $("#bolsaCartaId").val();
-    }
-    else if ($("#boletoNingunoId").is(':checked')) {
-        obj.BoletoId = 3;
-        obj.BolsaId = 0;
-    }
-    else if ($("#sinBoletoId").is(':checked')) {
-        obj.BoletoId = 5;
-        obj.BolsaId = 0;
-    }
+
     var proveedorId;
     var corredorId;
     if ($("#buscadorProveedor").val() != "") {
@@ -838,14 +840,14 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 6) {
         obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
     }
-    obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
-    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 4) {
-        if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2 || obj.TipoNegocioId == 6 || obj.TipoNegocioId == 4) {
+        obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
+        if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "" && $('#descripcionMotivoAnterior').val() != "") {
             obj.MotivoOperacionAnterior = "Otro";
             obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         } else {
             $("#motivoOperacionAnteriorId").val($('#motivoAnterior').data("kendoDropDownList").text());
-            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+            obj.MotivoOperacionAnterior = $('#motivoAnterior').data("kendoDropDownList").value() != "" ? $("#motivoOperacionAnteriorId").val() : null;
             obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         }
     }

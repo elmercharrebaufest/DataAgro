@@ -1162,7 +1162,7 @@ namespace Molinos.DataAgro.Business
                 Id = 0,
                 ProveedorId = contrato.CorredorId == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
                 MaterialId = contrato.MaterialId,
-                FechaIngreso = contrato.FechaEntrega,
+                FechaIngreso = contrato.FechaEntrega.Value,
                 CentroId = contrato.DestinoId.Value,
                 FleteProcedencia = contrato.FleteACargo == "true",
                 Calidad = contrato.MaterialId == 3 ? contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica" : "",

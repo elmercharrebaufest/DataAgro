@@ -126,12 +126,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public double? CantidadDeposito { get; set; }
         public bool? ConfirmadoSAP { get; set; }
         [JsonConverter(typeof(SinHora))]
-        public DateTime FechaEntrega { get; set; }
+        public DateTime? FechaEntrega { get; set; }
         public int? ProvinciaId { get; set; }
         public int? LocalidadId { get; set; }
         public bool? Base { get; set; }
         public bool? NoInformaSio { get; set; }
-        public int ClasificacionId { get; set; }
+        public int? ClasificacionId { get; set; }
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
