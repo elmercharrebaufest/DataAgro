@@ -476,7 +476,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion);
                 detalle.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
                 detalle.FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd");
-                detalle.FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd");
+                detalle.FECHA_ENTREGA = contrato.FechaEntrega.Value.ToString("yyyy-MM-dd");
                 detalle.FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd");
                 detalle.FECHA_LIMITE = fechaDolarizadoString;
                 detalle.GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "";

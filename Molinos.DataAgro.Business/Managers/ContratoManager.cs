@@ -611,7 +611,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacío.");
             }
-            if (oParam.FechaEntrega.Year == 1)
+            if (!oParam.FechaEntrega.HasValue || oParam.FechaEntrega.Value.Year == 1)
             {
                 oErrorMessages.Error("FechaEntrega", "El campo 'Fecha de Entrega' no debe estar vacío.");
             }
@@ -2239,7 +2239,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = 0,
                 ProveedorId = contrato.CorredorId == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
                 MaterialId = contrato.MaterialId,
-                FechaIngreso = contrato.FechaEntrega,
+                FechaIngreso = contrato.FechaEntrega.Value,
                 CentroId = contrato.DestinoId.Value,
                 FleteProcedencia = contrato.FleteACargo == "true",
                 Calidad = contrato.MaterialId == 3 ? contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica" : "",
@@ -5804,7 +5804,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Cantidad = negocio.Cantidad;
             bc.Precio = negocio.Precio;
             bc.PrecioPlazo = negocio.TipoNegocioId == 1 ? negocio.HastaFijacion.Value.ToString("dd-MM-yyyy") : negocio.Precio.ToString();
-            bc.FechaEntrega = negocio is Contrato ? (negocio as Contrato).FechaEntrega.Date : (DateTime?)null;
+            bc.FechaEntrega = negocio is Contrato ? (negocio as Contrato).FechaEntrega.Value.Date : (DateTime?)null;
             bc.CampanaId = negocio.CampanaId ?? 0;
             bc.FechaDesde = negocio.FechaDesde.Date;
             bc.FechaHasta = negocio.FechaHasta.Date;

@@ -316,7 +316,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.COSECHA = contrato.Campana.Descripcion;
                 rq2.IM_CONTRATO.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
                 rq2.IM_CONTRATO.FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd");
-                rq2.IM_CONTRATO.FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd");
+                rq2.IM_CONTRATO.FECHA_ENTREGA = contrato.FechaEntrega.Value.ToString("yyyy-MM-dd");
                 rq2.IM_CONTRATO.FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd");
                 rq2.IM_CONTRATO.FECHA_LIMITE = fechaDolarizadoString;
                 rq2.IM_CONTRATO.GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "";
