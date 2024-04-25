@@ -611,7 +611,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacío.");
             }
-            if (!oParam.FechaEntrega.HasValue || oParam.FechaEntrega.Value.Year == 1)
+            if (!oParam.FechaEntrega.HasValue)
             {
                 oErrorMessages.Error("FechaEntrega", "El campo 'Fecha de Entrega' no debe estar vacío.");
             }
