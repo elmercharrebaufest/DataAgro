@@ -76,6 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
                             error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, mensaje));
                             continue;
                         }
+
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
                         if (consultaBoleto.Generado == "" || consultaBoleto.Generado.Equals("X")) // probar casos anulados
                         {

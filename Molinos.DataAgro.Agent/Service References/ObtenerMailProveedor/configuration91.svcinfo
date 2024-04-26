@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="szI4lrOth9iaqyXs0nEEi66Wqbsq2SzW0sY3hlCFGB4=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="HRuBg7BYGvq6sC2Vipn3pAybPn2OwTy8XltyeuqDUZc=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_OBTENER_MAILSBinding">
       <properties>

@@ -1,11 +1,7 @@
-﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Transactions;
-using Molinos.DataAgro.Entities.Helpers;
 using System.Linq;
 using Molinos.DataAgro.Entities.Entities;
 
@@ -31,9 +27,23 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
+            var basicosContratos = queryContratos.Where(x => contratos.Contains(x.Negocio) && x.Estado == 5);
+            //usar direcciones fiscales de SAP
+            List<MailProveedor> direccionesSap = contexto.Set<MailProveedor>()
+                            .Where(x => basicosContratos.Select(c => c.ProveedorId).Contains((int)x.ProveedorId)).ToList();
+            var bcList = basicosContratos.ToList();
+            foreach (var contrato in bcList)
+            {
+                var prov = direccionesSap.Find(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap));
+                contrato.ProveedorDireccion = prov?.DireccionSap;
+                contrato.ProveedorLocalidad = prov?.LocalidadSap;
+                contrato.ProveedorProvincia = prov?.ProvinciaSap;
+                contrato.ProveedorCP = prov?.CodigoPostalSap;
+            }
+
             //GridHelper.TruncateTime(request.Filter, ref queryContratos);
             //return queryContratos.Where(x => (!(string.IsNullOrEmpty( x.Negocio)) ? contratos.All(c => x.Negocio.Contains(c)) : contratos.All(c => x.ContratoSAP.Contains(c)))  && x.Estado == 5);
-            return queryContratos.Where(x=> contratos.Contains(x.Negocio) && x.Estado == 5);
+            return bcList.AsQueryable();
         }
 
         public virtual IQueryable<BasicoContrato> Ejecutar(DbContext contexto)
