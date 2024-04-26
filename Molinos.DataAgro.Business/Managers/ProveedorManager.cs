@@ -4838,25 +4838,27 @@ namespace Molinos.DataAgro.Business.Managers
         public void GrabarMailProveedor()
         {
             var proveedores = repositorio.Listar<Proveedor>();
-            var lista = mailProveedorAgent.Ejecutar(proveedores.Select(x => x.CUIT).ToList());
+            var listaDto = mailProveedorAgent.Ejecutar(proveedores.Select(x => x.CUIT).ToList());
             var entidades = new List<MailProveedor>();
             repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
             try
             {
-                if (lista != null && lista.Count > 0)
+                if (listaDto != null && listaDto.Count > 0)
                 {
-                    foreach (var item in lista)
+                    foreach (var item in listaDto)
                     {
                         if (!string.IsNullOrEmpty(item.Pesificado))
                         {
                             entidades.Add(new MailProveedor()
                             {
                                 Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
-                                ProveedorId = proveedores.Any(x => x.CUIT == item.Cuit) ?
-                                proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
+                                ProveedorId = proveedores.Any(x => x.CUIT == item.Cuit) ? proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null,
+                                DireccionSap = item.DireccionSap,
+                                LocalidadSap = item.LocalidadSap,
+                                ProvinciaSap = item.ProvinciaSap,
+                                CodigoPostalSap = item.CodigoPostalSap
                             });
                         }
-
                     }
                 }
                 repositorio.AgregarTodos(entidades);
@@ -4864,10 +4866,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("error GrabarMailProveedor");
-                logger.Error(e);
+                logger.Error("error GrabarMailProveedor", e);
             }
-
         }
 
         public void ActualizarProveedoresHome(int ProveedorId)

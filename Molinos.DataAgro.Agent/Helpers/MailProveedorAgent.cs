@@ -1,40 +1,36 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ObtenerMailProveedor;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class MailProveedorAgent : IMailProveedorAgent
     {
-        public MailProveedorAgent(ILogger logger, IRepositorio repositorio)
+        public MailProveedorAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+        
         public List<MailProveedorDto> Ejecutar(List<string> cuits)
         {
             try
             {
-                logger.Debug("ObtenerMailProveedor ");
+                logger.Debug("Obtener MailProveedor y direcciones SAP");
 
                 //var listaa = new List<ZMPES6280>() { new ZMPES6280 { CUIT = "30711160163" } };
 
                 var request = new Z_MPRFC_OBTENER_MAILS
                 {
-                    IM_CUIT = CrearLista(cuits).ToArray(),
-
+                    IM_CUIT = CrearLista(cuits).ToArray()
                 };
                 var agent = new SI_ZMPWS_DATAAGRO_OBTENER_MAILSClient();
 
@@ -51,6 +47,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         Cuit = item.CUIT,
                         Pesificado = (!(item.REMARK.ToUpper().Contains("BOLETO")  || 
                         item.REMARK.ToUpper().Contains("CUPO") || item.REMARK.ToUpper().Contains("NDNCDIFTC")) || item.FLGDEFAULT == "X" ) ? item.MAIL : "",
+                        DireccionSap = item.DIRECCION.DIRECCION,
+                        LocalidadSap = item.DIRECCION.LOCALIDAD,
+                        ProvinciaSap = item.DIRECCION.PROVINCIA,
+                        CodigoPostalSap = item.DIRECCION.CODIGO_POSTAL
                     });
                 }
                 logger.Debug(devolucion.ToXml());
@@ -63,7 +63,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error("Error comunicacion SAP", e);
                 throw e;
             }
-
         }
 
         private List<ZMPES6280> CrearLista(List<string> cuits)
