@@ -16,7 +16,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public ProcesadorClausulaDiecisiete(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto)
            : base(repositorio, log, estadoBoleto)
         {
-
         }
 
         public override ResultadoClausula DevolverClausulas(ClausulaDiecisiete clausula)
@@ -29,8 +28,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
                     $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
-                    $"{condiciones.FechaDesde} hasta {condiciones.FechaHasta} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
-                    $"{condiciones.Meins} de fijación mínima permitida es {condiciones.CantidadMinima} y la cantidad máxima permitida es {condiciones.CantidadMaxima}. " +
+                    $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
+                    $"{condiciones.Meins} de fijación mínima permitida es {NumeroConSeparadores(condiciones.CantidadMinima)} y la cantidad máxima permitida es {NumeroConSeparadores(condiciones.CantidadMaxima)}. " +
                     $"Únicamente a los efectos del impuesto de sellos las partes acuerdan que el precio de referencia corresponde a Pizarra Rosario.";
             }
             if (clausula.Basico.TipoNegocioId == 1 && (clausula.Basico.TipoPosicionCBOTId.HasValue && clausula.Basico.TipoPosicionCBOTId.Value == 3))
@@ -61,14 +60,25 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public string DevolverNumeroEnLetras(decimal numero)
         {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
+            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
+            var fraccion = numero - Math.Floor(numero);
             if (fraccion > 0)
             {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
+                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}";
             }
             return letras;
+        }
+
+        private string NumeroConSeparadores(decimal? numero)
+        {
+            var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
+            return numero.GetValueOrDefault().ToString("#,###.##", objNumberFormatInfo);
+        }
+
+        private string CorregirFormatoFecha(string cadena)
+        {
+            var date = DateTime.Parse(cadena);
+            return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
     }
 }

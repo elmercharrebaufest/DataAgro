@@ -388,7 +388,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 using (var stream = new MemoryStream())
                 {
-                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 100f))
+                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 10f))
                     {
                         string templateFilePath = ObtenerPath(basico);
 
@@ -452,8 +452,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                return basico.CorredorId==0? 
-                    Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOfertaSinCorredor.html"):
+                return basico.CorredorId == 0 ?
+                    Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOfertaSinCorredor.html") :
                     Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
             }
 
@@ -512,7 +512,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         .cls_006 {
             font-family: Arial,serif;
-            font-size: 10px; 
+            font-size: 10px;
             color: rgb(0,0,0);
             font-weight: normal;
             font-style: normal;
@@ -551,8 +551,8 @@ namespace Molinos.DataAgro.Business.Managers
              font-family: Arial,serif;
              color: rgb(0,0,0);
              font-size: 10px;
-             text-align: justify; 
-             line-height: 1.15; 
+             text-align: justify;
+             line-height: 1.15;
              margin-top: 0px;
         }
 
@@ -571,7 +571,7 @@ namespace Molinos.DataAgro.Business.Managers
             color: rgb(0,0,0);
             text-align: justify;
         }
-        
+
     </style>";
 
             if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.ROSARIO)
@@ -694,30 +694,39 @@ namespace Molinos.DataAgro.Business.Managers
                 case "A":
                     msje = "Con Anulación Automática";
                     break;
+
                 case "X":
                     msje = "Confirmado";
                     break;
+
                 case "F":
                     msje = "Liquidación Finalizada";
                     break;
+
                 case "C":
                     msje = "Cumplido";
                     break;
+
                 case "M":
                     msje = "Con Anulación Parcial";
                     break;
+
                 case "B":
                     msje = "Contrato Anulado Totalmente";
                     break;
+
                 case "K":
                     msje = "Cumplido en Camiones(no se usa)";
                     break;
+
                 case "T":
                     msje = "Contrato de Canje Cerrado(no se usa)";
                     break;
+
                 case "J":
                     msje = "Prefijación Cerrada(no se usa)";
                     break;
+
                 default:
                     break;
             }
@@ -758,5 +767,4 @@ namespace Molinos.DataAgro.Business.Managers
             return codigos;
         }
     }
-
 }
