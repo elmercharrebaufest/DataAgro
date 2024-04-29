@@ -336,6 +336,10 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCu
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYCinco',45 , 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSeis',46, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSiete',47 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYOcho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYOcho',48 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYNueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYNueve',49 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuenta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuenta',50 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYUno',51 , 1); END
 
 --EstadoHome
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Habilitado') BEGIN insert into EstadoHome (Descripcion, Color) values ('Habilitado', 'green'); END
