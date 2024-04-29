@@ -300,6 +300,7 @@ namespace Molinos.DataAgro.Business.Managers
                     repositorio.Agregar(item);
                 }
 
+                repositorio.GuardarCambios();
                 if (errores.Count == 0)
                 {
                     var asunto = "No hay diferencias entre Data Agro y posición MATBA - " + fecha.ToString("dd/MM/yyyy");
@@ -311,7 +312,6 @@ namespace Molinos.DataAgro.Business.Managers
                     var asunto = "Error - Diferencias entre Data Agro y posición MATBA - " + fecha.ToString("dd/MM/yyyy");
                     EnviarMailMATPrimay(asunto, errores);
                 }
-                repositorio.GuardarCambios();
             }
             catch (Exception e)
             {

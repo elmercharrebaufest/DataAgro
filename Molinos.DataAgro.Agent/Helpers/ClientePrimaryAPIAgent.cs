@@ -79,6 +79,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug($"Obteniendo negocios MAT...");
                 TradeCaptureReportResult result = GetTradeCaptureReport(token, fecha, fecha);
                 logger.Debug($"Resultado obtenido: {result.ToJson()}");
+                string jsonPruebaQA = "{\"Code\":\"200\",\"ErrorDescription\":null,\"ErrorMessage\":null,\"Status\":\"OK\",\"Value\":[" +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"MAI.ROS\\/ABR24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":273.0,\"LastQty\":10000.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-04-23\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937221,\"TradeNumber\":7937221,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"1\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"MAI.ROS\\/ABR24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":274.9,\"LastQty\":500.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-04-23\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937223,\"TradeNumber\":7937223,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"2\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"MAI.EXP\\/JUL24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":278.2,\"LastQty\":200.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-07-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937225,\"TradeNumber\":7937225,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"2\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"MAI.EXP\\/JUL24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":278.2,\"LastQty\":100.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-07-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937227,\"TradeNumber\":7937227,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"1\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"SOJ.EXP\\/MAY24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":299.1,\"LastQty\":1000.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-05-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937217,\"TradeNumber\":7937217,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"2\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"SOJ.EXP\\/MAY24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":299.2,\"LastQty\":2000.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-05-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937219,\"TradeNumber\":7937219,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"1\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"SOJ.ROS\\/MAY24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":296.0,\"LastQty\":1500.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-05-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937213,\"TradeNumber\":7937213,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"1\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}," +
+                    "{\"Currency\":\"USD\",\"ExecID\":null,\"Instrument\":[{\"CFICode\":\"FXXXSX\",\"SecurityID\":\"SOJ.ROS\\/MAY24\",\"SecurityIDSource\":\"H\"}],\"LastPx\":297.0,\"LastQty\":300.0,\"MarketID\":\"ROFX\",\"MarketSegmentID\":\"Rueda Electrónica\",\"OrderType\":1,\"RootParties\":[{\"RootPartyID\":\"830\",\"RootPartyIDSource\":\"D\",\"RootPartyRole\":\"14\"}],\"SettlCurrency\":\"Dólar\",\"SettlDate\":\"2024-05-24\",\"SettlType\":\"B\",\"TradeDate\":\"2024-04-05\",\"TradeID\":7937219,\"TradeNumber\":7937219,\"TransactTime\":\"2024-04-05T15:25:03\",\"TrdCapRptSideGrp\":[{\"Account\":\"97500\",\"Side\":\"2\"}],\"TrdRptStatus\":\"0\",\"TrdType\":61,\"VenueType\":\"R\"}]}";
+                result = JsonConvert.DeserializeObject<TradeCaptureReportResult>(jsonPruebaQA);
                 if (result.Code == "200")
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
@@ -107,11 +117,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                         Fecha = DateTime.ParseExact(a.TransactTime, "s", null),
                         FechaOperacion = DateTime.ParseExact(a.TransactTime, "s", null).Date,
                         MonedaId = a.Currency == "USD" ? "USDM " : "ARP  ",
-                        EstadoId = a.TrdRptStatus == "3" ? 6 : 2,
+                        EstadoId = a.TrdRptStatus == "3" ? 6 : 2, //TrdRptStatus 0: Definitiva. 3: Anulada. 4: Transitoria.
                         DestinoId = 1,
                         Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
                         MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
-                        Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
+                        Posicion = "04.2024",//ObtenerPosicion(instruments, a.Instrument[0]),
                         DolarExportador = EsDolarExportador(a.Instrument[0]),
                         CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
                         Operador = ObtenerOperador(a.RootParties, operadores),
@@ -121,7 +131,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
                     var materiales = repositorio.Listar<Material>();
-                    
+
                     foreach (var item in listaAgenteCompra)
                     {
                         item.Material = materiales.Where(x => x.MaterialId == item.MaterialId).SingleOrDefault();
@@ -173,11 +183,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     anio += 1;
 
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
-                return campaña ?? 0;
+                return campaña ?? 12;
             }
             else
             {
-                return 0;
+                return 12;
             }
         }
 
@@ -197,24 +207,39 @@ namespace Molinos.DataAgro.Agent.Helpers
         private int ObtenerMaterial(List<Instrument> instruments, TradeCaptureReportInstrument tradeCaptureReportInstrument)
         {
             int materialId = 0;
-            var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
-            if (item != null)
+            //var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
+            //if (item != null)
+            //{
+            //    switch (item.SecurityGroup)
+            //    {
+            //        case var s when item.SecurityGroup.Contains("MAI"):
+            //            materialId = 1; break;
+            //        case var s when item.SecurityGroup.Contains("TRI"):
+            //            materialId = 2; break;
+            //        case var s when item.SecurityGroup.Contains("SOJ"):
+            //            materialId = 3; break;
+            //        case var s when item.SecurityGroup.Contains("GIR"):
+            //            materialId = 4; break;
+            //        case var s when item.SecurityGroup.Contains("GIO"):
+            //            materialId = 5; break;
+            //        default:
+            //            break;
+            //    }
+            //}
+            switch (tradeCaptureReportInstrument.SecurityID)
             {
-                switch (item.SecurityGroup)
-                {
-                    case var s when item.SecurityGroup.Contains("MAI"):
-                        materialId = 1; break;
-                    case var s when item.SecurityGroup.Contains("TRI"):
-                        materialId = 2; break;
-                    case var s when item.SecurityGroup.Contains("SOJ"):
-                        materialId = 3; break;
-                    case var s when item.SecurityGroup.Contains("GIR"):
-                        materialId = 4; break;
-                    case var s when item.SecurityGroup.Contains("GIO"):
-                        materialId = 5; break;
-                    default:
-                        break;
-                }
+                case var s when tradeCaptureReportInstrument.SecurityID.Contains("MAI"):
+                    materialId = 1; break;
+                case var s when tradeCaptureReportInstrument.SecurityID.Contains("TRI"):
+                    materialId = 2; break;
+                case var s when tradeCaptureReportInstrument.SecurityID.Contains("SOJ"):
+                    materialId = 3; break;
+                case var s when tradeCaptureReportInstrument.SecurityID.Contains("GIR"):
+                    materialId = 4; break;
+                case var s when tradeCaptureReportInstrument.SecurityID.Contains("GIO"):
+                    materialId = 5; break;
+                default:
+                    break;
             }
             return materialId;
         }
