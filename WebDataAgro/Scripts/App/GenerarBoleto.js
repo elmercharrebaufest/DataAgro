@@ -30,9 +30,10 @@ function Filtrar() {
                 ObtenerBoletos: result
             }
             kendo.bind($("#ModalBoleto"), viewmodel);
-            $("#ModalBoleto").modal("show");
-            if (result.count == 0) {
-                MensInfo("Prueba")
+            if (result.length == 0) {
+                MensErr("No se generó ningún boleto.");
+            } else {
+                $("#ModalBoleto").modal("show");
             }
         }, 250);
     }
