@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         DestinoId = 1,
                         Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
                         MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
-                        Posicion = "04.2024",//ObtenerPosicion(instruments, a.Instrument[0]),
+                        Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
                         DolarExportador = EsDolarExportador(a.Instrument[0]),
                         CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
                         Operador = ObtenerOperador(a.RootParties, operadores),
@@ -183,11 +183,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     anio += 1;
 
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
-                return campaña ?? 12;
+                return campaña ?? 0;
             }
             else
             {
-                return 12;
+                return 0;
             }
         }
 
@@ -207,39 +207,24 @@ namespace Molinos.DataAgro.Agent.Helpers
         private int ObtenerMaterial(List<Instrument> instruments, TradeCaptureReportInstrument tradeCaptureReportInstrument)
         {
             int materialId = 0;
-            //var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
-            //if (item != null)
-            //{
-            //    switch (item.SecurityGroup)
-            //    {
-            //        case var s when item.SecurityGroup.Contains("MAI"):
-            //            materialId = 1; break;
-            //        case var s when item.SecurityGroup.Contains("TRI"):
-            //            materialId = 2; break;
-            //        case var s when item.SecurityGroup.Contains("SOJ"):
-            //            materialId = 3; break;
-            //        case var s when item.SecurityGroup.Contains("GIR"):
-            //            materialId = 4; break;
-            //        case var s when item.SecurityGroup.Contains("GIO"):
-            //            materialId = 5; break;
-            //        default:
-            //            break;
-            //    }
-            //}
-            switch (tradeCaptureReportInstrument.SecurityID)
+            var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
+            if (item != null)
             {
-                case var s when tradeCaptureReportInstrument.SecurityID.Contains("MAI"):
-                    materialId = 1; break;
-                case var s when tradeCaptureReportInstrument.SecurityID.Contains("TRI"):
-                    materialId = 2; break;
-                case var s when tradeCaptureReportInstrument.SecurityID.Contains("SOJ"):
-                    materialId = 3; break;
-                case var s when tradeCaptureReportInstrument.SecurityID.Contains("GIR"):
-                    materialId = 4; break;
-                case var s when tradeCaptureReportInstrument.SecurityID.Contains("GIO"):
-                    materialId = 5; break;
-                default:
-                    break;
+                switch (item.SecurityGroup)
+                {
+                    case var s when item.SecurityGroup.Contains("MAI"):
+                        materialId = 1; break;
+                    case var s when item.SecurityGroup.Contains("TRI"):
+                        materialId = 2; break;
+                    case var s when item.SecurityGroup.Contains("SOJ"):
+                        materialId = 3; break;
+                    case var s when item.SecurityGroup.Contains("GIR"):
+                        materialId = 4; break;
+                    case var s when item.SecurityGroup.Contains("GIO"):
+                        materialId = 5; break;
+                    default:
+                        break;
+                }
             }
             return materialId;
         }
