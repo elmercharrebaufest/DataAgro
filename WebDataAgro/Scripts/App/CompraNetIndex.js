@@ -925,7 +925,7 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                if (view[i].DestinoDescripcion != "S. Lorenzo" && view[i].DestinoDescripcion != "") {
+                if (view[i].DestinoDescripcion != "San Lorenzo" && view[i].DestinoDescripcion != "") {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("otroDestino");
                 } else if ((view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)

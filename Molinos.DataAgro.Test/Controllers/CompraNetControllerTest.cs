@@ -1535,7 +1535,7 @@ namespace Molinos.DataAgro.Test.Controllers
             row["Clasificacion"] = "Otros";
             row["Plan Canje"] = "";
             row["Consignatario"] = "";
-            row["Destino"] = "S. Lorenzo";
+            row["Destino"] = "San Lorenzo";
             row["Procedencia"] = "3";
             row["Provincia"] = "1";
             tableData.Rows.Add(row);

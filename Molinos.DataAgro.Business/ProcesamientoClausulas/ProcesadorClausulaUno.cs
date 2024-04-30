@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
 
             }
-            res.Texto += $"puesta sobre camión en: Planta {ReemplazarSanLorenzo(clausula.Basico.DestinoDescripcion)} " +
+            res.Texto += $"puesta sobre camión en: Planta {clausula.Basico.DestinoDescripcion} " +
                    $"Localidad {clausula.Basico.DestinoLocalidad}, de Provincia de {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
                    $"la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
             if (clausula.Basico.Consignatario == true)
@@ -117,11 +117,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
             return numero.GetValueOrDefault().ToString("#,###.##", objNumberFormatInfo);
-        }
-
-        private string ReemplazarSanLorenzo(string palabra)
-        {
-            return palabra.Equals("S. Lorenzo") ? "San Lorenzo" : palabra;
         }
     }
 }
