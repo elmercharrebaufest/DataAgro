@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         private string ReemplazarSanLorenzo(string palabra)
         {
-            return palabra.Equals("S. Lorenzo") ? "San Lorenzo o Ricardone" : palabra;
+            return palabra.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : palabra;
         }
     }
 }
