@@ -5,6 +5,7 @@ IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Santa Fe') BEGI
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Cordoba') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Cordoba','04'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Entre Ríos') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Entre Ríos','05'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bahía Blanca') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Bahía Blanca','07'); END
+IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Chaco') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Chaco','08'); END
 
 --BoletoCompraNet
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Confirma') BEGIN insert into BoletoCompraNet (Descripcion) values ('Confirma'); END
