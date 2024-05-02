@@ -389,7 +389,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 using (var stream = new MemoryStream())
                 {
-                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 10f))
+                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 100f))
                     {
                         string templateFilePath = ObtenerPath(basico);
 
@@ -556,7 +556,12 @@ namespace Molinos.DataAgro.Business.Managers
              line-height: 1.15;
              margin-top: 0px;
         }
-
+        .cls_clausulas.cls_clausulas_co {
+            font-size: 8px !important;
+        }
+        .cls_footer_co {
+            height:4em !important;
+        }
         .espacio {
             height: 10px;
             display: block;
@@ -571,6 +576,9 @@ namespace Molinos.DataAgro.Business.Managers
             font-size: 12px;
             color: rgb(0,0,0);
             text-align: justify;
+        }
+        .cls_pdt_1 {
+            height: 15px !important;
         }
 
     </style>";
