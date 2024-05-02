@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 {
                     Bolsa = new List<BolsaCompraNetQry>()
                     {
-                        new BolsaCompraNetQry { Descripcion = "Bs As", Id = 1 }                   
+                        new BolsaCompraNetQry { Descripcion = "Buenos Aires", Id = 1 }                   
                     },
                     Destino = new List<CentroQry>()
                     {
@@ -80,7 +80,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 {
                     Bolsa = new List<BolsaCompraNetQry>()
                     {
-                        new BolsaCompraNetQry { Descripcion = "Bs As", Id = 1 }                   
+                        new BolsaCompraNetQry { Descripcion = "Buenos Aires", Id = 1 }                   
                     },
                     Destino = new List<CentroQry>()
                     {
