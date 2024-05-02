@@ -389,7 +389,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 using (var stream = new MemoryStream())
                 {
-                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 100f))
+                    using (var document = new Document(PageSize.A4, 10f, 10f, 10f, 10f))
                     {
                         string templateFilePath = ObtenerPath(basico);
 
@@ -556,11 +556,6 @@ namespace Molinos.DataAgro.Business.Managers
              line-height: 1.15;
              margin-top: 0px;
         }
-        
-        .cls_clausulas.buenos-aires-cls {
-            font-size: 8px !important;
-        }
-
 
         .espacio {
             height: 10px;
