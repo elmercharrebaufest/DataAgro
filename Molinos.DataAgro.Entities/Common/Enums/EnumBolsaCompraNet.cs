@@ -8,5 +8,6 @@
         SANTA_FE = 4,
         CORDOBA = 5,
         ENTRE_RIOS = 6,
+        CHACO = 7,
     }
 }

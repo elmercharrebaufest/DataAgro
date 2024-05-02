@@ -1119,13 +1119,13 @@ function AsignarDatos() {
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
     var bolsaFisico = [];
     for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
-        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As" || datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Rosario")
+        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Buenos Aires" || datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Rosario")
             bolsaFisico.push(datosIniCrearContrato.Datos.Bolsa[i]);
     }
     viewModel.set("BolsaFisicoCombo", bolsaFisico);
     var bolsaCarta = [];
     for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
-        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As")
+        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Buenos Aires")
             bolsaCarta.push(datosIniCrearContrato.Datos.Bolsa[i]);
     }
     viewModel.set("BolsaCartaCombo", bolsaCarta);
