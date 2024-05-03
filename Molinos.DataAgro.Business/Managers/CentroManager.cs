@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Business
                     CargaCupos = x.CargaCupos,
                     NoPropio = x.NoPropio,
                     Orden = x.Orden,
+                    CodigoConfirma = x.CodigoConfirma,
                     CUIT = x.CUIT,
                     RazonSocial = x.RazonSocial
                     
@@ -76,6 +77,7 @@ namespace Molinos.DataAgro.Business
                 CargaCupos = x.CargaCupos,
                 NoPropio = x.NoPropio,
                 Orden = x.Orden,
+                CodigoConfirma = x.CodigoConfirma,
                 CUIT = x.CUIT,
                 RazonSocial = x.RazonSocial
             }) ?? new CentroDto();
@@ -107,6 +109,7 @@ namespace Molinos.DataAgro.Business
                 oCentroSave.CargaCupos = oCentro.CargaCupos;
                 oCentroSave.NoPropio = oCentro.NoPropio;
                 oCentroSave.Orden = oCentro.Orden;
+                oCentroSave.CodigoConfirma = oCentro.CodigoConfirma;
                 oCentroSave.CUIT = oCentro.CUIT;
                 oCentroSave.RazonSocial = oCentro.RazonSocial;
             }
