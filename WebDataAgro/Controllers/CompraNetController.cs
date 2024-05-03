@@ -1,22 +1,23 @@
-﻿using Autofac.Extras.NLog;
+﻿using static WebDataAgro.MvcApplication;
+using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
+using System;
 using System.IO;
-using Molinos.DataAgro.Entities.Helpers;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace WebDataAgro.Controllers
 {
@@ -43,6 +44,8 @@ namespace WebDataAgro.Controllers
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly ICentroManager centroManager;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly IReportesManager reportesManager;
+
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
@@ -54,7 +57,7 @@ namespace WebDataAgro.Controllers
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
             IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
             IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
-            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent)
+            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent, IReportesManager reportesManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -72,6 +75,7 @@ namespace WebDataAgro.Controllers
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
+            this.reportesManager = reportesManager;
             this.configuracionInternaManager = configuracionInternaManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.centroManager = centroManager;
@@ -140,11 +144,13 @@ namespace WebDataAgro.Controllers
             });
             return JsonConvert.DeserializeObject<T>(obj, settings);
         }
+
         public ActionResult ValidarModificarFinalizado(int? id)
         {
             var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : new EstadoSAPDto();
             return Json(resultado);
         }
+
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
         public ActionResult CrearContratoExterno(int? id, int? tipoId)
         {
@@ -232,8 +238,8 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        static readonly object _lockFinalizarContrato = new object();
 
+        static readonly object _lockFinalizarContrato = new object();
         public ActionResult FinalizarContrato(int contratoId)
         {
             lock (_lockFinalizarContrato)
@@ -311,6 +317,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
@@ -321,6 +328,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarAcuerdo(int fijacionDePrecioContratoId)
         {
@@ -330,6 +338,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarAgente(int fijacionDePrecioContratoId)
         {
@@ -339,6 +348,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarFason(int fijacionDePrecioContratoId)
         {
@@ -350,7 +360,6 @@ namespace WebDataAgro.Controllers
         }
 
         static readonly object _lockFinalizarFijacion = new object();
-
         public ActionResult FinalizarFijacion(int fijacionDePrecioContratoId)
         {
             lock (_lockFinalizarFijacion)
@@ -485,7 +494,6 @@ namespace WebDataAgro.Controllers
             var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
-
         }
 
         public ActionResult TraerCampanaPorMaterial(int? materialId)
@@ -645,6 +653,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerDatosDeContrato(int contratoId)
         {
             var model = mobjContratoManager.TraerDatosDeContrato(contratoId);
@@ -655,6 +664,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerAperturaPrecioPorContrato(int contratoId = 0, string tipo = "contrato")
         {
             List<AperturaPrecioDto> model;
@@ -688,6 +698,9 @@ namespace WebDataAgro.Controllers
                     MaxJsonLength = Int32.MaxValue
                 };
             }
+            if (copia.Venta == true && copia.TipoNegocioId == 2)
+                copia.Cantidad = Math.Abs(copia.Cantidad);
+
             return new JsonResult()
             {
                 Data = copia,
@@ -792,6 +805,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult GrabarAgente(AgenteCompra oParam)
         {
             if (oParam.ComercialCreadorId.HasValue && oParam.GrupoCompra == null)
@@ -806,19 +820,27 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult GrabarAcuerdo(ContratoAcuerdo oParam)
+        public ActionResult GrabarAcuerdo(ContratoAcuerdo oParam, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
-            if (oParam.ComercialCreadorId.HasValue && oParam.GrupoCompra == null)
+            if (oParam.Base == null) oParam.Base = false;
+            if (oParam.NoInformaSio == null) oParam.NoInformaSio = false;
+            if (oParam.TrigoEspecial == null) oParam.TrigoEspecial = false;
+            if (oParam.EsFason == null) oParam.EsFason = false;
+            if (oParam.ComercialId.HasValue)
             {
-                var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
+                var comercial = mobjComercialManager.TraerComercial(oParam.ComercialId.Value);
                 oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
             }
+            oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
+            GrabarAcuerdoResult model = mobjContratoAcuerdoManager.GrabarAcuerdo(oParam, listCupoConDescargaFechas);
+
             return new JsonResult()
             {
-                Data = mobjContratoAcuerdoManager.GrabarAcuerdo(oParam),
+                Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerFasonCompleto(int id)
         {
             return new JsonResult()
@@ -827,6 +849,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerAgenteCompleto(int id)
         {
             return new JsonResult()
@@ -835,6 +858,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerAcuerdoCompleto(int id)
         {
             return new JsonResult()
@@ -843,6 +867,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult FinalizarFason(int fasonId)
         {
             return new JsonResult()
@@ -851,6 +876,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult FinalizarAgente(int agenteId)
         {
             return new JsonResult()
@@ -859,6 +885,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult FinalizarAcuerdo(int acuerdoId)
         {
             return new JsonResult()
@@ -867,6 +894,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult GrabarAmpliacionFason(Fason oParam)
         {
             return new JsonResult()
@@ -875,6 +903,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult GrabarAmpliacionAgente(AgenteCompra oParam)
         {
             return new JsonResult()
@@ -994,14 +1023,13 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
-        public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion)
+        public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion, string typeOfRate = "M")
         {
             if (fechaOperacion == null || fechaOperacion == DateTime.Now.Date)
             {
                 fechaOperacion = DateTime.Now.Date;
             }
-            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value);
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value, typeOfRate);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
 
@@ -1119,9 +1147,10 @@ namespace WebDataAgro.Controllers
             };
 
         }
-        public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
+
+        public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda, string typeOfRate = "M")
         {
-            var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda);
+            var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda, typeOfRate);
             return new JsonResult()
             {
                 Data = String.IsNullOrEmpty(val) ? "" : val,
@@ -1130,7 +1159,7 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public ActionResult ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        public ActionResult ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req)
         {
             return new JsonResult()
             {
@@ -1149,7 +1178,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-    
+
 
         public JsonResult ObtenerCapacidadProductivaPendiente(int proveedorId)
         {
@@ -1214,9 +1243,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId)
+        public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId, string typeOfRate = "M")
         {
-            var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId);
+            var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId, typeOfRate);
             return new JsonResult()
             {
                 Data = result,
@@ -1254,7 +1283,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        
+
         public JsonResult EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId)
         {
             var estado = mobjContratoManager.EstaConfirmadoEnSAP(contratoSAP, TipoNegocioId);
@@ -1271,7 +1300,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public JsonResult ValidarCopiarContrato(int id)
         {
             var estado = mobjContratoManager.ValidarCopiarContrato(id);
@@ -1355,7 +1384,7 @@ namespace WebDataAgro.Controllers
 
                 if (fileSubido.ContentLength > 0)
                 {
-                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);                    
+                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
                     if (tipoAlta == "1")
                     {
                         var resultado = mobjContratoManager.AltaMasivaContratos(dsExcel, contratoAcuerdo, GlobalVariables.ComercialId);
@@ -1392,6 +1421,14 @@ namespace WebDataAgro.Controllers
                 return Json(new { Resume = errores, Resultado = false }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult ReporteLocalidades()
+        {
+            var model = reportesManager.ObtenerDatosReporteLocalidades();
+            return File(ExcelReporteCompleto.GenerarExcelLocalidades(model), "application/vnd.ms-excel");
+
+        }
+
 
         public JsonResult TraerServicios(int? materialId, int? centroId)
         {
@@ -1480,6 +1517,16 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = cuposDelNegocio,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica)
+        {
+            var result = mobjContratoManager.ObtenerTypeOfRate(tipoNegocioId, monedaId, tipoAgenteCompraId, fecha, modifica);
+            return new JsonResult()
+            {
+                Data = result,
                 MaxJsonLength = Int32.MaxValue
             };
         }

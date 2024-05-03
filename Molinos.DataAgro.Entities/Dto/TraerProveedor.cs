@@ -113,6 +113,12 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string Nombres { get; set; }
         public string Apellido { get; set; }
+        public string CuitApoderado { get; set; }
+        public bool? EsApoderado { get; set; }
+        public Nullable<int> PuestoApoderadoId { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
+
         public string Puesto { get; set; }
         public string Cargo { get; set; }
         public string Telefono1 { get; set; }

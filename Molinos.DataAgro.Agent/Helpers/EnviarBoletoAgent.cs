@@ -1,16 +1,12 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.EnviarBoleto;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Transactions;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -22,28 +18,25 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
         public string Enviar(BoletoGeneradoDto boleto)
         {
-            logger.Debug("Eviando negocio Nro: " + (string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.ContratoSAP : boleto.FijacionSAP));
+            logger.Debug("Enviando boleto del negocio Nro " + (string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.ContratoSAP : boleto.FijacionSAP));
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-
                 return "Se actualizan correctamente los datos";
             }
             try
             {
-
                 SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENEClient agent = new SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENEClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-
-                logger.Debug("Cargando contrato");
+                var boletoCompraNet = repositorio.Listar<BoletoCompraNet>();
                 var rq = new Z_MPRFC_ENVIAR_BOLETOS_GENE()
                 {
                     IM_CONTRATO = string.IsNullOrEmpty(boleto.FijacionSAP) && !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
@@ -56,7 +49,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_ESTADO_DOCUMENTO = "",
                     IM_ESTADO_LOTE = "",
                     IM_ID_DOC_CONFIRMA = "",
-                    IM_ID_LOTE_CONFIRMA = ""                      
+                    IM_ID_LOTE_CONFIRMA = "",
+                    IM_TIPO_BOLETO = boletoCompraNet.Find(x => x.Id == boleto.TipoBoletoId)?.Descripcion
                 };
                 logger.Debug(rq.ToXml());
 
@@ -77,7 +71,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();              
 
                 return devolucion.EX_MENSAJE;
-
 
             }
             catch (Exception e)

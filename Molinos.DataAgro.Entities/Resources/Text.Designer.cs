@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -57,6 +57,15 @@ namespace Molinos.DataAgro.Entities.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Baja Modificacion Provincia.
+        /// </summary>
+        public static string ABMProvincia {
+            get {
+                return ResourceManager.GetString("ABMProvincia", resourceCulture);
             }
         }
         
@@ -336,6 +345,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string AprobarCupo {
             get {
                 return ResourceManager.GetString("AprobarCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $.
+        /// </summary>
+        public static string ARP {
+            get {
+                return ResourceManager.GetString("ARP", resourceCulture);
             }
         }
         
@@ -637,7 +655,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Jefe Envio Mail Negocios Con Dia Anterior.
+        ///   Looks up a localized string similar to Jefe Envio Mail Negocios Con Día Anterior.
         /// </summary>
         public static string Configuraciones_JefeEnvioMailNegociosConDiaAnterior {
             get {
@@ -826,7 +844,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crear Negocios con fecha mayor la día anterior.
+        ///   Looks up a localized string similar to Crear Negocios con fecha mayor al día anterior.
         /// </summary>
         public static string Crear_Negocios_FechaMayorDiaAnterior {
             get {
@@ -858,15 +876,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Cupos_Acopios_SolicitudExtraordinaria {
             get {
                 return ResourceManager.GetString("Cupos_Acopios_SolicitudExtraordinaria", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Datos Research.
-        /// </summary>
-        public static string Datos_Research {
-            get {
-                return ResourceManager.GetString("Datos_Research", resourceCulture);
             }
         }
         
@@ -988,6 +997,33 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pesos.
+        /// </summary>
+        public static string Divisa_ARP {
+            get {
+                return ResourceManager.GetString("Divisa_ARP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dólar Americano.
+        /// </summary>
+        public static string Divisa_USD {
+            get {
+                return ResourceManager.GetString("Divisa_USD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eliminar Registro Research.
+        /// </summary>
+        public static string Eliminar_Registro_Research {
+            get {
+                return ResourceManager.GetString("Eliminar_Registro_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Envio Mail Negocios Anula y Reemplaza.
         /// </summary>
         public static string EnvioMailNegociosAnulaYReemplaza {
@@ -997,7 +1033,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Envio Mail a Negocios Con Dia Anterior en Fijaciones.
+        ///   Looks up a localized string similar to Enviar Mail de Negocios Con Día Anterior en Fijaciones.
         /// </summary>
         public static string EnvioMailNegociosConDiaAnteriorFijacion {
             get {
@@ -1285,7 +1321,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Habilitacion Boleto.
+        ///   Looks up a localized string similar to Habilitación Boleto.
         /// </summary>
         public static string Habilitacion_Boleto {
             get {
@@ -1420,6 +1456,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recibir Mails de Jurisdicciones no Inscriptas.
+        /// </summary>
+        public static string Mail_Impuestos {
+            get {
+                return ResourceManager.GetString("Mail_Impuestos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recibir Mail MAT.
         /// </summary>
         public static string Mail_MATPrimary {
@@ -1443,6 +1488,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Mail_SIO {
             get {
                 return ResourceManager.GetString("Mail_SIO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mail de Solicitudes Extraordinarias Pendientes.
+        /// </summary>
+        public static string Mail_SolExt_Pendientes {
+            get {
+                return ResourceManager.GetString("Mail_SolExt_Pendientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mapa Research.
+        /// </summary>
+        public static string Mapa_Research {
+            get {
+                return ResourceManager.GetString("Mapa_Research", resourceCulture);
             }
         }
         
@@ -1474,7 +1537,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mercaderia en Deposito.
+        ///   Looks up a localized string similar to Mercadería en Deposito.
         /// </summary>
         public static string MercaderiaEnDeposito {
             get {
@@ -1618,7 +1681,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificacion fijacion dolarizado express.
+        ///   Looks up a localized string similar to Modificar fijación dolarizado express.
         /// </summary>
         public static string ModificarDolarizadoExpress {
             get {
@@ -1627,7 +1690,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificacion fijacion dolarizado.
+        ///   Looks up a localized string similar to Modificar fijación dolarizado.
         /// </summary>
         public static string ModificarDolarizadoFinalizado {
             get {
@@ -1636,7 +1699,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Fijacion Virtual.
+        ///   Looks up a localized string similar to Modificar Fijación Virtual.
         /// </summary>
         public static string ModificarFijacionVirtual {
             get {
@@ -1645,7 +1708,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Limite Dolarizado.
+        ///   Looks up a localized string similar to Modificar Límite Dolarizado.
         /// </summary>
         public static string ModificarLimiteDolarizado {
             get {
@@ -1663,7 +1726,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Limite Pesificado Finalizado.
+        ///   Looks up a localized string similar to Modificar Límite Pesificado Finalizado.
         /// </summary>
         public static string ModificarLimitePesificadoFinalizado {
             get {
@@ -1681,7 +1744,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Razon Social.
+        ///   Looks up a localized string similar to Modificar Razón Social.
         /// </summary>
         public static string ModificarRazonSocial {
             get {
@@ -1717,7 +1780,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crear Negocios con Fecha Mayor al Dia Anterior en Fijaciones.
+        ///   Looks up a localized string similar to Crear Negocios con Fecha Mayor al Día Anterior en Fijaciones.
         /// </summary>
         public static string NegociosFechaMayorDiaAnteriorFijacion {
             get {
@@ -1915,6 +1978,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proveedor Apoderados.
+        /// </summary>
+        public static string Proveedor_Apoderados {
+            get {
+                return ResourceManager.GetString("Proveedor_Apoderados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Proveedor de ZonaPropia.
         /// </summary>
         public static string ProveedorZonaPropia {
@@ -1996,15 +2068,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reporte Research.
-        /// </summary>
-        public static string Reporte_Research {
-            get {
-                return ResourceManager.GetString("Reporte_Research", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Septiembre.
         /// </summary>
         public static string September {
@@ -2072,6 +2135,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to U$S.
+        /// </summary>
+        public static string USD {
+            get {
+                return ResourceManager.GetString("USD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ver Corredor Comercial.
         /// </summary>
         public static string Ver_Corredor_Comercial {
@@ -2095,6 +2167,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Ver_Mesa {
             get {
                 return ResourceManager.GetString("Ver_Mesa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Reporte Research.
+        /// </summary>
+        public static string Ver_Reporte_Research {
+            get {
+                return ResourceManager.GetString("Ver_Reporte_Research", resourceCulture);
             }
         }
         
@@ -2333,7 +2414,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Reporte Evolucion Fijacion.
+        ///   Looks up a localized string similar to Visualizar Reporte Evolución Fijación.
         /// </summary>
         public static string Visualizar_Reporte_Evolucion_Fijacion {
             get {
@@ -2369,7 +2450,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Anulacion En Reporte Cupo.
+        ///   Looks up a localized string similar to Visualizar Anulación En Reporte Cupos.
         /// </summary>
         public static string VisualizarAnulacionEnReporteCupo {
             get {

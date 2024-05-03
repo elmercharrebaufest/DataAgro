@@ -181,10 +181,12 @@ namespace WebDataAgro
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/Filtros.js",
                                          "~/Scripts/App/ReporteContrato.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/ReporteProveedores").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/Filtros.js",
                                          "~/Scripts/App/ReporteProveedores.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/Cupos").Include(
                              "~/Scripts/KendoExtensions.js",
                              "~/Scripts/App/Filtros.js",
@@ -203,10 +205,6 @@ namespace WebDataAgro
                            "~/Scripts/App/Filtros.js",
                             "~/Scripts/jquery.mask.js",
                            "~/Scripts/App/reportePrecioMoaPizarra.js"));
-            
-            bundles.Add(new ScriptBundle("~/bundles/Research").Include(
-                                       "~/Scripts/KendoExtensions.js",
-                                       "~/Scripts/App/Research.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/Log").Include(
                                        "~/Scripts/KendoExtensions.js",
@@ -223,12 +221,15 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/AbmRol").Include(
                                      "~/Scripts/KendoExtensions.js",
                                      "~/Scripts/App/AbmRol.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/ReporteCupo").Include(
-                             "~/Scripts/KendoExtensions.js",
-                             "~/Scripts/App/Filtros.js",
-                             "~/Scripts/App/ReporteCupo.js"));
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/Filtros.js",
+                                    "~/Scripts/App/ReporteCupo.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/AbmFormula").Include(
                                        "~/Scripts/App/AbmFormula.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/LogDataAgro").Include(
                                           "~/Scripts/KendoExtensions.js",
                                           "~/Scripts/App/Filtros.js",
@@ -240,41 +241,61 @@ namespace WebDataAgro
                              //"~/Scripts/KendoExtensions.js",
                              //"~/Scripts/App/Filtros.js",
                              "~/Scripts/App/ReporteEvolucionFijacion.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/Pesificado").Include(
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/App/Filtros.js",
                                        "~/Scripts/App/ReportePesificados.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/ReporteAfijarIndex").Include(
-                             "~/Scripts/KendoExtensions.js",
-                             "~/Scripts/App/Filtros.js",
-                             "~/Scripts/App/ReporteContratosAFijarPase.js"));
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/Filtros.js",
+                                    "~/Scripts/App/ReporteContratosAFijarPase.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/NegocioPesificacion").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/Filtros.js",
                                     "~/Scripts/App/NegocioPesificacion.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/Proveedor").Include(
                                     "~/Scripts/App/AgregarCorredor.js",
                                     "~/Scripts/App/agregarproveedor.js",
                                     "~/Scripts/App/agregarproveedoredit.js",
                                     "~/Scripts/App/ValidacionProveedor.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/ConfiguracionCupo").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/ConfiguracionCupo.js",
                                     "~/Scripts/jquery.unobtrusive-ajax.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/AdministracionCupo").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/AdministracionCupoGrilla.js",
                                     "~/Scripts/jquery.unobtrusive-ajax.js",
                                     "~/Scripts/bootstrap-toggle.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/SugerenciaCupo").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/SugerenciaCupo.js",
                                     "~/Scripts/App/SolicitudCupo.js",
                                     "~/Scripts/kendo/messages/kendo.messages.es-AR.min.js",
                                     "~/Scripts/jquery.unobtrusive-ajax.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/FAQ").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/FAQ.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/Research").Include(
+                                       "~/Scripts/KendoExtensions.js",
+                                       "~/Scripts/App/Research.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ResearchReporte").Include(
+                                         "~/Scripts/KendoExtensions.js",
+                                         "~/Scripts/App/Filtros.js",
+                                         "~/Scripts/App/ResearchReporte.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ResearchMapa").Include(
+                                       "~/Scripts/KendoExtensions.js"
+                                       //"~/Scripts/App/ResearchMapa.js"
+                                       ));
             bundles.IgnoreList.Clear();
         }
     }

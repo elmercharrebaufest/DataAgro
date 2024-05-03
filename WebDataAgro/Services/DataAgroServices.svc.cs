@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -179,6 +180,8 @@ namespace WebDataAgro.Services
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
                 var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP && x.EstadoId != 8);
+                if (contratoOriginal != null)
+                    contrato.TipoNegocioId = contratoOriginal.TipoNegocioId;
                 CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors, contratoSAP);
@@ -220,7 +223,7 @@ namespace WebDataAgro.Services
                 var c = contratoSAP.ContratoSAP.PadLeft(10, '0');
                 if (repositorio.Existe<Contrato>(x => x.ContratoSAP == c))
                 {
-                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en DataAgro"));
+                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en Data Agro."));
                     return oEntityErrors;
                 }
 
@@ -445,7 +448,7 @@ namespace WebDataAgro.Services
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" ? true : false;
+            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS" ? true : false;
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {
@@ -454,6 +457,10 @@ namespace WebDataAgro.Services
                 contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
                     contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 : contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? 1 :
                     contratoSAP.TipoNegocio == "VENTA" ? 1 : repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
+            }
+            if (contrato.Venta == true && contrato.TipoNegocioId == 2)
+            {
+                contrato.Cantidad = Math.Abs(contrato.Cantidad) * -1;
             }
             if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
             {
@@ -952,23 +959,23 @@ namespace WebDataAgro.Services
         {
             if (cupo.MaterialId == 0)
             {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Material' es invalido" });
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Material' es inválido." });
             }
             if (cupo.ProveedorId == 0)
             {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Proveedor' es invalido" });
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Proveedor' es inválido." });
             }
             if (cupo.CentroId == 0)
             {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Planta' es invalido" });
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Planta' es inválido." });
             }
             if (cupo.ZonaCupoId == 0)
             {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Zona' es invalido" });
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Zona' es inválido." });
             }
             if (cupo.ComercialId == null || cupo.ComercialId == 0)
             {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es inválido." });
             }
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
@@ -978,7 +985,7 @@ namespace WebDataAgro.Services
         {
             if (oParam.LocalidadId == 0)
             {
-                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Procedencia' es invalido" });
+                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Procedencia' es inválido." });
             }
             oErrorMessages.HayError = oErrorMessages.ListaErrores.Any();
             if (oParam.CorredorId != null && oParam.ProveedorId != null && oParam.CorredorId != 0 && oParam.ProveedorId != 0)
@@ -992,7 +999,7 @@ namespace WebDataAgro.Services
 
             if (oParam.CondicionalContratoId == null && !string.IsNullOrEmpty(contratoSAP.CondicionalContratoSAP))
             {
-                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'CondicionalContratoSAP' no es valido, no existe en DataAgro el contrato nro. " + contratoSAP.CondicionalContratoSAP });
+                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'CondicionalContratoSAP' no es válido. No existe en Data Agro el contrato nro. " + contratoSAP.CondicionalContratoSAP });
             }
         }
 
@@ -1094,12 +1101,12 @@ namespace WebDataAgro.Services
                     }
                     else
                     {
-                        resultado.ListaErrores.Add(new ErrorMessage("El cuit no tiene ninguno comercial asociado"));
+                        resultado.ListaErrores.Add(new ErrorMessage("El CUIT no tiene ningún comercial asociado."));
                     }
                 }
                 else
                 {
-                    resultado.ListaErrores.Add(new ErrorMessage("No se encontro el cuit"));
+                    resultado.ListaErrores.Add(new ErrorMessage("No se encontró el CUIT."));
                 }
 
 
@@ -1122,16 +1129,17 @@ namespace WebDataAgro.Services
             return oFacacop;
         }
 
-        public decimal TraerTipoDeCambio(DateTime? fecha, string moneda)
+        // Quienes usan este servicio? En que casos lo usan? Habría que avisarles que la RFC se modificó y devuelve de acuerdo al tipo de cambio (BLED u otro)
+        public decimal TraerTipoDeCambio(DateTime? fecha, string moneda, string typeOfRate)
         {
             if (string.IsNullOrEmpty(moneda))
             {
-                return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
+                return tipoDeCambioAgent.TraerTipoDeCambio(fecha, typeOfRate);
             }
             else
             {
                 moneda = moneda.Trim().ToUpper().PadRight(5, ' ');
-                return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda);
+                return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda, typeOfRate);
             }
         }
 
@@ -1264,7 +1272,32 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
+        public List<ApoderadoSapDto> ListarApoderadosPorProveedor(string cuit)
+        {
+            try
+            {
+                logger.Debug("ListarApoderadosPorProveedor " + cuit);
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+                //var apoderados = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado == true);
 
+                List<ApoderadoSapDto> listaApoderadosDto2 = repositorio.Listar<ContactoComercial, ApoderadoSapDto>(x => new ApoderadoSapDto
+                {
+                    Nombres = x.Nombres,
+                    Apellido = x.Apellido,
+                    CuitApoderado = x.CuitApoderado,
+                    Puesto = x.PuestoApoderado == null ? null : x.PuestoApoderado.Descripcion,
+                    FechaDesde = x.FechaDesde.HasValue ? (x.FechaDesde.Value.Year + "-" + ((x.FechaDesde.Value.Month < 10 ? "0" : "") + x.FechaDesde.Value.Month) + "-" + ((x.FechaDesde.Value.Day < 10 ? "0" : "") + x.FechaDesde.Value.Day)) : "",
+                    FechaHasta = x.FechaHasta.HasValue ? (x.FechaHasta.Value.Year + "-" + ((x.FechaHasta.Value.Month < 10 ? "0" : "") + x.FechaHasta.Value.Month) + "-" + ((x.FechaHasta.Value.Day < 10 ? "0" : "") + x.FechaHasta.Value.Day)) : "",
+                }, x => x.ProveedorId == proveedor.ProveedorId && x.EsApoderado == true).ToList();
+
+                return listaApoderadosDto2;
+            }
+            catch (Exception e)
+            {
+                logger.Debug(e);
+                throw;
+            }
+        }
         #endregion
     }
 }

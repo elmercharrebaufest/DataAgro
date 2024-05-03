@@ -10,25 +10,25 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class DatosIniComboContratoAcuerdo
     {
-        public List<MaterialQry> material { get; set; }
-        public List<ComercialQry> comercial { get; set; }
-        public List<CentroQry> destino { get; set; }
-        public List<MonedaQry> moneda { get; set; }
+        public List<MaterialQry> Material { get; set; }
+        public List<ComercialQry> Comercial { get; set; }
+        public List<CentroQry> Destino { get; set; }
+        public List<MonedaQry> Moneda { get; set; }
 
         public DatosIniComboContratoAcuerdo()
         {
-
-            material = new List<MaterialQry>();
-            destino = new List<CentroQry>();
-            comercial = new List<ComercialQry>();
-            moneda = new List<MonedaQry>();
-
+            Material = new List<MaterialQry>();
+            Destino = new List<CentroQry>();
+            Comercial = new List<ComercialQry>();
+            Moneda = new List<MonedaQry>();
         }
     }
+
     public class AbmContratoAcuerdoParam
     {
         public int Id { get; set; }
     }
+
     public class DataAbmContratoAcuerdo : Resultado
     {
         public ContratoAcuerdoDto ContratoAcuerdo { get; set; }

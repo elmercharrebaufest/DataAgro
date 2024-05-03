@@ -294,7 +294,8 @@ function botonConfirmadoTilde(dataItem, icono, esModalVisualizar) {
             "'" + dataItem.FasonId + "'" + ',' +
             "'" + mensaje + "'" + ',' +
             "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
-            "'" + dataItem.ServicioModificado + "'" +
+            "'" + dataItem.ServicioModificado + "'" + ',' +
+            "'" + dataItem.DolarExportador + "'" +
             ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
     } else {
         return "<div</div>";
@@ -499,7 +500,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CantidadDeposito + "'" + ',' +
         "'" + dataItem.FechaDolarizadoOriginalFormateado + "'" + ',' +
         "'" + dataItem.FechaHastaOriginalFormateado + "'" + ',' +
-        "'" + dataItem.ServicioModificado + "'" +
+        "'" + dataItem.ServicioModificado + "'" + ',' +
+        "'" + dataItem.DolarExportador + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -923,7 +925,7 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                if (view[i].DestinoDescripcion != "S. Lorenzo" && view[i].DestinoDescripcion != "") {
+                if (view[i].DestinoDescripcion != "San Lorenzo" && view[i].DestinoDescripcion != "") {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("otroDestino");
                 } else if ((view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)
@@ -1055,7 +1057,9 @@ function CreateGridInformeCompraNet() {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
-                }, template: "#=Material##if(Sustentable){#<br><br>##<i data-toggle='tooltip' title='Sustentable' class='fa fa-solid fa-leaf fa-2x'></i>#}##if(EPA){#<br><br>##<i data-toggle='tooltip' title='EPA' class='fa fa-pagelines fa-2x'></i>#}#"
+                }, template: "#=Material##if(Sustentable){#<br><br>##<i data-toggle='tooltip' title='Sustentable' class='fa fa-solid fa-leaf fa-2x'></i>#}##" +
+                    "if(EPA){#<br><br>##<i data-toggle='tooltip' title='EPA' class='fa fa-pagelines fa-2x'></i>#}##" +
+                    "if(DolarExportador){#<br><br>##<i data-toggle='tooltip' title='Dolar Exportador' class='glyphicon glyphicon-usd'></i>#}#"
             },
             {
                 field: "Cantidad", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
@@ -2237,7 +2241,7 @@ function ObtenerDatosModalConError() {
     Finalizar(objFinalizado);
 }
 
-function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId, acuerdoId, agenteId, fasonId, mensaje, posicion, servicioModificado) {
+function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId, acuerdoId, agenteId, fasonId, mensaje, posicion, servicioModificado, dolarExportador) {
     $(".modal-title-confirmadoTilde").empty();
 
     if (tipoId === '3') {
@@ -2262,6 +2266,11 @@ function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContra
         $(".calidadModificadaManual").show();
     } else {
         $(".calidadModificadaManual").hide();
+    }
+    if (dolarExportador == 'true') {
+        $("#visualizar_dolarExportador").show();
+    } else {
+        $("#visualizar_dolarExportador").hide();
     }
     $("#tipoNegocioModalConTilde").val(tipoId);
     $("#modalConfirmadoTilde").modal('show');
@@ -2365,7 +2374,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional, CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP,
     mailVenta, RazonsocialProveedorComisionista, minimo, maximo, ConDescarga,
-    ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito, dolarizadoOriginal, hastaOriginal, servicioModificado) {
+    ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito, dolarizadoOriginal, hastaOriginal, servicioModificado, dolarExportador) {
     
     var dataItem = {
         Id: id,
@@ -2388,6 +2397,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         Virtual: virtual,
         Proveedor: proveedor,
         ServicioModificado: servicioModificado,
+        DolarExportador: dolarExportador,
         Canje: Canje
     };
     $("#modalVisualizar").modal('show');
@@ -2704,10 +2714,14 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     cd === "true" && pagoDirectoVendedor === "true" ? $("#visualizar_pago").text("CD y Pago Directo Vendedor") : cd === "true" ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined" ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
 
-    if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
+    if (desdeFijacion != "null" && hastaFijacion != "null") {
+        $("#desdeHastaFijacionDivVisualizar").show();
+        $("#condicionFijacionDivVisualisar").hide();
+        $("#visualizar_desdeHastaFijacion").text(desdeFijacion + " - " + hastaFijacion);
+    } else if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
-    } else {
+    } else{
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
         $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
     }
@@ -3144,6 +3158,11 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
             $("#cuerpo-ver-descarga").append(fila);
         }
         $("#modalVerCuposConDescarga").modal('show');
+    }
+    if (dolarExportador === "true") {
+        $("#visualizar_dolarExportador").show();
+    } else {
+        $("#visualizar_dolarExportador").hide();
     }
 }
 

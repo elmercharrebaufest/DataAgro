@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new List<SugerenciaNoAceptada>());
 
             centroManagerMock.Setup(x => x.TraerTodoCentro())
-                .Returns(new ResultIniCentro() { Centro = new List<CentroIni>() { new CentroIni() { Descripcion = "S. Lorenzo" } } });
+                .Returns(new ResultIniCentro() { Centro = new List<CentroIni>() { new CentroIni() { Descripcion = "San Lorenzo" } } });
 
             var result = target.Index() as ViewResult;
             Assert.NotNull(result);

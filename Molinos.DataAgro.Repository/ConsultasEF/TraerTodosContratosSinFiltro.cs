@@ -124,8 +124,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         BolsaId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : null,
                         BoletoDescripcion = (contrato is Contrato) ? (contrato as Contrato).Boleto.Descripcion : "",
                         BolsaDescripcion = (contrato is Contrato) ? (contrato as Contrato).Bolsa.Descripcion : "",
-                        DesdeFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).DesdeFijacion) : null,
-                        HastaFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).HastaFijacion) : (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).HastaFijacion != null ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).HastaFijacion) : null,
+                        DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
+                        HastaFijacion = DbFunctions.TruncateTime(contrato.HastaFijacion),
                         CondicionFijacion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacionId : null,
                         CondicionFijacionDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacion.Descripcion : "",
                         ClasificacionId = (contrato is Contrato) ? (contrato as Contrato).ClasificacionId : (int?)null,
@@ -251,6 +251,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaHastaOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaOriginal) : "" : "",
                         ServicioModificado = (contrato is Contrato) ? (contrato as Contrato).Servicios.Any(x => x.Modificado == true) : false,
                         ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
+                        DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
                     };
 
                 return queryNegocios;
@@ -341,8 +342,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         BolsaId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : null,
                         BoletoDescripcion = (contrato is Contrato) ? (contrato as Contrato).Boleto.Descripcion : "",
                         BolsaDescripcion = (contrato is Contrato) ? (contrato as Contrato).Bolsa.Descripcion : "",
-                        DesdeFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).DesdeFijacion) : null,
-                        HastaFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).HastaFijacion) : null,
+                        DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
+                        HastaFijacion = DbFunctions.TruncateTime(contrato.HastaFijacion),
                         CondicionFijacion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacionId : null,
                         CondicionFijacionDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacion.Descripcion : "",
                         ClasificacionId = (contrato is Contrato) ? (contrato as Contrato).ClasificacionId : (int?)null,
@@ -419,6 +420,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
                         FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
                         ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
+                        DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
                     };
 
                 return queryNegocios;

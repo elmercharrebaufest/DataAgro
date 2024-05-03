@@ -11,6 +11,7 @@ using WebDataAgro.Models;
 using Molinos.DataAgro.Entities.Resources;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.Util;
+using Molinos.DataAgro.Entities.Entities;
 
 namespace WebDataAgro.Helpers.Excel
 {
@@ -1348,6 +1349,170 @@ namespace WebDataAgro.Helpers.Excel
             }
         }
 
+        public static byte[] GenerarExcelLocalidades(ReporteLocalidadesModel model)
+        {
+            //Create workbook
+            IWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = (XSSFSheet)workbook.CreateSheet("Localidades");
 
+
+            var stylebold = workbook.CreateCellStyle();
+            var fontBold = workbook.CreateFont();
+            fontBold.Boldweight = (short)FontBoldWeight.Bold;
+            stylebold.SetFont(fontBold);
+            var cellBorderStyleColumnTitles = workbook.CreateCellStyle();
+            cellBorderStyleColumnTitles.BorderBottom = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderTop = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderLeft = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderRight = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.Alignment = HorizontalAlignment.Center;
+            cellBorderStyleColumnTitles.FillForegroundColor = IndexedColors.White.Index;
+            cellBorderStyleColumnTitles.SetFont(fontBold);
+
+            var c = 0;
+            var r = 0;
+
+            var row = sheet.CreateRow(r); r++;
+
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+
+            var celda = sheet.GetRow(0).GetCell(0);
+
+            celda.SetCellValue("Cod. Localidad");
+            sheet.AutoSizeColumn(0);
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(1);
+            celda.SetCellValue("Nombre");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(2);
+            celda.SetCellValue("Provincia");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(3);
+            celda.SetCellValue("Partido");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(4);
+            celda.SetCellValue("Partido ID");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(5);
+            celda.SetCellValue("Provincia ID");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+
+            sheet.AutoSizeColumn(0);
+            sheet.AutoSizeColumn(1);
+            sheet.AutoSizeColumn(2);
+            sheet.AutoSizeColumn(3);
+            sheet.AutoSizeColumn(4);
+            sheet.AutoSizeColumn(5);
+
+
+            foreach (var localidad in model.tablero)
+            {
+                row = sheet.CreateRow(r); r++;
+
+                c = 0;
+                CrearCelda(row, c, localidad.CodLocalidad, null); c++;
+                CrearCelda(row, c, localidad.Nombre, null); c++;
+                CrearCelda(row, c, localidad.NombreProvincia, null); c++;
+                CrearCelda(row, c, localidad.Descripcion != null ? localidad.Descripcion.ToString() : "", null); c++;
+                CrearCelda(row, c, localidad.PartidoId.ToString(), null); c++;
+                CrearCelda(row, c, localidad.ProvinciaId.ToString(), null); c++;
+            }
+
+            using (var fileData = new MemoryStream())
+            {
+                workbook.Write(fileData);
+                return fileData.ToArray();
+            }
+        }
+
+
+        public static byte[] GenerarExcelProveedorComerciales(ReporteProveedoresModel model)
+        {
+            //Create workbook
+            IWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = (XSSFSheet)workbook.CreateSheet("Comerciales");
+
+
+            var stylebold = workbook.CreateCellStyle();
+            var fontBold = workbook.CreateFont();
+            fontBold.Boldweight = (short)FontBoldWeight.Bold;
+            stylebold.SetFont(fontBold);
+            var cellBorderStyleColumnTitles = workbook.CreateCellStyle();
+            cellBorderStyleColumnTitles.BorderBottom = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderTop = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderLeft = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderRight = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.Alignment = HorizontalAlignment.Center;
+            cellBorderStyleColumnTitles.FillForegroundColor = IndexedColors.White.Index;
+            cellBorderStyleColumnTitles.SetFont(fontBold);
+
+            var c = 0;
+            var r = 0;
+
+            var row = sheet.CreateRow(r); r++;
+
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+
+            var celda = sheet.GetRow(0).GetCell(0);
+
+            celda.SetCellValue("CUIT");
+            sheet.AutoSizeColumn(0);
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(1);
+            celda.SetCellValue("Razon Social");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(2);
+            celda.SetCellValue("Estado Home");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(3);
+            celda.SetCellValue("Estado");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(4);
+            celda.SetCellValue("Comercial Asignado");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+
+            sheet.AutoSizeColumn(0);
+            sheet.AutoSizeColumn(1);
+            sheet.AutoSizeColumn(2);
+            sheet.AutoSizeColumn(3);
+            sheet.AutoSizeColumn(4);
+
+
+            var estiloNegrita = workbook.CreateCellStyle();
+            estiloNegrita.BorderBottom = BorderStyle.Thin;
+            estiloNegrita.BorderTop = BorderStyle.Thin;
+            estiloNegrita.BorderLeft = BorderStyle.Thin;
+            estiloNegrita.BorderRight = BorderStyle.Thin;
+            estiloNegrita.SetFont(fontBold);
+            estiloNegrita.Alignment = HorizontalAlignment.Center;
+
+            foreach (var comercial in model.tablero)
+            {
+                row = sheet.CreateRow(r); r++;
+
+                c = 0;
+                CrearCelda(row, c, comercial.Cuit, estiloNegrita); c++;
+                CrearCelda(row, c, comercial.RazonSocial, estiloNegrita); c++;
+                CrearCelda(row, c, comercial.EstadoHome, estiloNegrita); c++;
+                CrearCelda(row, c, comercial.Estado, estiloNegrita); c++;
+                CrearCelda(row, c, comercial.ComercialAsignado, estiloNegrita); c++;
+            }
+
+            using (var fileData = new MemoryStream())
+            {
+                workbook.Write(fileData);
+                return fileData.ToArray();
+            }
+        }
     }
 }

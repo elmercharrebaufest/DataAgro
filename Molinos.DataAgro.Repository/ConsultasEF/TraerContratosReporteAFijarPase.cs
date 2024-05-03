@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha = contrato.Fecha,
                         FechaOperacion = DbFunctions.TruncateTime(contrato.FechaOperacion),
                         FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
-                        FechaEntrega = contrato.FechaEntrega,
+                        FechaEntrega = contrato.FechaEntrega.Value,
                         HastaFijacion = contrato.HastaFijacion,
                         Negocio = contrato.ContratoSAP,
                         ProveedorId = contrato.ProveedorId ?? 0,

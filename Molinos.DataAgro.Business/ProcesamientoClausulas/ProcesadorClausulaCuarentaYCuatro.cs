@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaCuarentaYCuatro clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == 2 && (clausula.Basico.ClasificacionContrato == "ACOPIADOR" || (clausula.Basico.CorredorId > 0 && clausula.Basico.Moneda == "USD")))
+            if (clausula.Basico.TipoNegocioId == 2 && (clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador || (clausula.Basico.CorredorId > 0 && clausula.Basico.Moneda == "USD")))
             {
                 res.Texto += "Toda vez que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas desde que la misma fuera entregada y " +
                     "aplicada, las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer el tipo de cambio a " +

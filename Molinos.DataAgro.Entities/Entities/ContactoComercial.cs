@@ -12,6 +12,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ProveedorId { get; set; }
         public string Apellido { get; set; }
         public string Nombres { get; set; }
+        public string CuitApoderado { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
+        public bool? EsApoderado { get; set; }
+        public int? PuestoApoderadoId{get;set;}
         public string Puesto { get; set; }
         public string Telefono1 { get; set; }
         public int? TipoTelefono1Id { get; set; }
@@ -32,11 +37,18 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
+        [ForeignKey("PuestoApoderadoId")]
+        public virtual PuestoApoderado PuestoApoderado { get; set; }
 
         public ContactoComercial()
         {
             Apellido = "";
             Nombres = "";
+            CuitApoderado = "";
+            FechaDesde = null;
+            FechaHasta = null;
+            EsApoderado = null;
+            PuestoApoderadoId = null;
             Puesto = "";
             Telefono1 = "";
             Telefono2 = "";

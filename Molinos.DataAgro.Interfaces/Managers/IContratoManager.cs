@@ -71,8 +71,8 @@ namespace Molinos.DataAgro.Interfaces
 
         TipoNegocio DevolverNamespaceNegocio(int tipo);
         Resultado AnularContratoCarga(int contratoId, string motivoRechazo);
-        List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
-        string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda);
+        List<CcPpPendienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req);
+        string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda, string typeOfRate = "M");
         List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
         List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
         List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
@@ -80,7 +80,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado ValidacionesAnulaYReemplaza(string contratoSap);
         List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero);
         List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int id);
-        decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda);
+        string ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica);
+        decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda, string typeOfRate = "M");
         Resultado GrabarNegociosAsociados(List<NegocioAsociadoDto> negocios, int contratoId, decimal precioPonderado);
         bool TieneAsociados(int contratoId);
         bool EsUnContratoAsociado(int negocioId);
@@ -91,7 +92,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
         bool Tiene2doCondicionalAsociado(int contratoId);
         int DevolverMilisegundos();
-        CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
+        CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
         List<ExcelValidatorResumeItem> AltaMasivaContratos(DataSet dsExcel, string contratoAcuerdo, int ComercialId);
         List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId);
         void ActualizarEstadoDeContratos();

@@ -9,7 +9,7 @@
 }
 <link rel="stylesheet" href="~/Content/generarboleto.css" />
 
-<div class="row" style="padding: 10px 10px 0px 10px !important;"><h3>Generación Boletos</h3></div>
+<div class="row" style="padding: 10px 10px 0px 10px !important;"><h3>Generación de Boletos</h3></div>
 <br />
 <div class="container">
     <div class="" id="GenerarBoletos">
@@ -17,27 +17,47 @@
             <div class="col-sm-2 col-md-1">
                 <label>Negocio</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control", @id = "tipoId" })
             </div>
-            <div class="col-xs-12 col-md-2">
-                @Html.TextBox("Negocio", "", new { placeholder = "Numero SAP", @class = "form-control", style = "width:100%", @id = "ContratoSAPId" })
+            <div class="col-xs-12 col-md-3">
+                @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%", @id = "GeneraBoletoContratoSAPId" })
             </div>
-            <div class="col-xs-12 col-md-2">
-                @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+            <div class="col-xs-12 col-md-3">
+                @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "GeneraBoletoContratoSAPHastaId" })
             </div>
-            <div class="col-xs-12 col-md-2" style="text-align: left">
-                <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px; text-align: left"></button>
+            <div class="col-xs-12 col-md-1">
+                <button type="button" id="abrirGeneraBoletoPopUpCargarValores" title="Ver Negocios" class="k-button k-button-icontext fa fa-list" style="height:34px; text-align: left"></button>
                 <div class="modal fade in" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
                 </div>
             </div>
             <div class="col-sm-5 col-md-2" style="text-align: end">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="mailId">
+                    <input class="form-check-input" type="checkbox" id="mailId" checked>
                     <label style="text-align: end" class="form-check-label ml-3" for="mailId">
                         Enviar Mail
                     </label>
                 </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-2 col-md-1">
+                <label>Fecha de confirmación</label>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" style="width:100%" type="date" id="desde">
+            </div>
+            <div class="col-sm-2 col-md-1">
+                <label>Hasta</label>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" style="width:100%" type="date" id="hasta" disabled>
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <button type="button" id="filtrarBoletos" title="Filtrar por fecha" class="k-button k-button-icontext fa fa-filter" style="height:34px; text-align:left" disabled></button>
             </div>
         </div>
         <br />

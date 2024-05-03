@@ -51,6 +51,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string OtrosIntereses { get; set; }
         public string Principal { get; set; }
         public string PrincipalCupo { get; set; }
+        public string EstadoHome { get; set; }
+        public string Estado { get; set; }
+        public string ComercialAsignado { get; set; }
     }
 
     public class DatosProduccionProveedor

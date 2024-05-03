@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
                 acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object,
-                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object, diasHabilesAgentMock.Object);
+                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object, diasHabilesAgentMock.Object, null);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
@@ -800,7 +800,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             acuerdoManagerMock.Verify(x => x.BorrarAcuerdo(It.IsAny<ContratoAcuerdo>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -888,17 +888,17 @@ namespace Molinos.DataAgro.Test.Controllers
                 a);
         }
         [Test]
-        public void ConfirmarAcuerdoTest()
+        public void GrabarAcuerdoSinCuposConDescargaTest()
         {
-            acuerdoManagerMock.Setup(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>()))
+            acuerdoManagerMock.Setup(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>(), null))
                 .Returns(new GrabarAcuerdoResult { AcuerdoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarAcuerdo(new ContratoAcuerdo());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            acuerdoManagerMock.Verify(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>()), Times.Once);
+            acuerdoManagerMock.Verify(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>(), null), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -928,7 +928,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             acuerdoManagerMock.Verify(x => x.FinalizarAcuerdo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1263,12 +1263,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ValidarCreditoTest()
         {
 
-            contratoManagerMock.Setup(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>())).Returns("");
+            contratoManagerMock.Setup(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>())).Returns("");
             var result = target.ValidarCredito("", 1, 1, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
@@ -1278,12 +1278,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ListarCartasDePortePendienteAplicarTest()
         {
 
-            contratoManagerMock.Setup(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>())).Returns(new List<CcPpPerndienteAplicarDto>());
-            var result = target.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>());
+            contratoManagerMock.Setup(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>())).Returns(new List<CcPpPendienteAplicarDto>());
+            var result = target.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPendienteAplicarDto>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
@@ -1496,7 +1496,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ObtenerDatosMercaderiaEnDepositoTest()
         {
             contratoManagerMock.Setup(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(new CcPpPerndienteAplicarDto());
+                .Returns(new CcPpPendienteAplicarDto());
             var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false) as JsonResult;
             contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
             Assert.NotNull(result);
@@ -1535,7 +1535,7 @@ namespace Molinos.DataAgro.Test.Controllers
             row["Clasificacion"] = "Otros";
             row["Plan Canje"] = "";
             row["Consignatario"] = "";
-            row["Destino"] = "S. Lorenzo";
+            row["Destino"] = "San Lorenzo";
             row["Procedencia"] = "3";
             row["Provincia"] = "1";
             tableData.Rows.Add(row);

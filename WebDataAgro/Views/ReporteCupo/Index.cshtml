@@ -28,9 +28,6 @@
     <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
 </div>
 
-
-
-
 <div id="filtrar" class="container collapse">
     <br />
     <div class="row">
@@ -69,7 +66,7 @@
             <label>Proveedor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorProveedor" name="ProveedorId" class="multiselect ocultarAnular" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect ocultarAnular" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
         </div>
 
         <div class="col-md-2">
@@ -182,6 +179,19 @@
             No: @Html.RadioButton("EPA", false, new { @class = "ocultarAnular" })
             <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Cumplimiento</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="CumplimientoId" name="Cumplimietno">
+            Sí: @Html.RadioButton("Cumplimiento", true, new { @class = "filtroBoleano ocultarAnular", @id = "Cumplimiento" })
+            No: @Html.RadioButton("Cumplimiento", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonCumplimiento()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
+
     </div>
     <br />
 

@@ -1,9 +1,7 @@
-﻿using Kendo.DynamicLinq;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Report;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,22 +10,24 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class BoletoController : Controller
     {
-        private IBoletoManager mobjBoletoManager;
+        private readonly IBoletoManager boletoManager;
         private readonly IReportesManager reportesManager;
         private readonly string _logDir;
 
-        public BoletoController(IBoletoManager oBoletoManager, IReportesManager reportesManager)
+        public BoletoController(IBoletoManager boletoManager, IReportesManager reportesManager)
         {
-            mobjBoletoManager = oBoletoManager;
-            reportesManager = reportesManager;
+            this.boletoManager = boletoManager;
+            this.reportesManager = reportesManager;
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
         public ActionResult Index()
@@ -49,7 +49,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new ContratoModel_prueba
                 {
-                    Datos = mobjBoletoManager.TraerDatosCombo(tipoNegocioId)
+                    Datos = boletoManager.TraerDatosCombo(tipoNegocioId)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
@@ -61,21 +61,21 @@ namespace WebDataAgro.Controllers
             CompletarVista();
             //List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
-            if (boleto.TipoNegocioId == 1)
+            if (boleto.TipoNegocioId == 1) // Contrato
             {
-                tipoNegocios.Add(1);
-                tipoNegocios.Add(2);
+                tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
+                tipoNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
             }
-            else
+            else // Fijación
             {
-                tipoNegocios.Add(3);
+                tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }
             List<string> contratos = new List<string>();
-            foreach(string itemContrato in boleto.ContratoSAP.Split(';').ToList())
+            foreach (string itemContrato in boleto.ContratoSAP.TrimEnd(';').Split(';').ToList())
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }
-            var boletos = mobjBoletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
+            var boletos = boletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
             //var boletos = new BoletoGeneradoDto { ContratoSAP = "000036363", Generado = true };
             return new JsonResult()
             {
@@ -83,9 +83,10 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         private void CompletarVista()
         {
-            var tipoNegocio = mobjBoletoManager.TraerDatosCombo(null);
+            var tipoNegocio = boletoManager.TraerDatosCombo(null);
             var tiposListItems = tipoNegocio.tiponegocio.Select(
                     x => new SelectListItem
                     {
@@ -105,8 +106,10 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult ListarBoletos()
         {
-
-            var boletos = Directory.GetFiles(_logDir)
+            List<BoletoArchivoDto> boletos = new List<BoletoArchivoDto>();
+            if (Directory.Exists(_logDir))
+            {
+                boletos = Directory.GetFiles(_logDir)
                 .Where(path => path.EndsWith(".pdf"))
                 .Select(path => new FileInfo(path))
                 .Select(file => new BoletoArchivoDto
@@ -118,7 +121,7 @@ namespace WebDataAgro.Controllers
                 })
                 .OrderByDescending(x => x.Nombre)
                 .ToList();
-
+            }
 
             return Json(boletos);
         }
@@ -133,8 +136,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ObtenerDownloadKey(oParamBusqueda filtro)
         {
-
-            var identif = mobjBoletoManager.ObtenerIdentDescarga();
+            var identif = boletoManager.ObtenerIdentDescarga();
 
             return Json(Util.GetDownloadKey(identif));
         }
@@ -144,7 +146,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                Byte[] fileBytes = mobjBoletoManager.BoletoEnByte(_logDir + "\\" + nombre);
+                Byte[] fileBytes = boletoManager.BoletoEnByte(_logDir + "\\" + nombre);
 
                 if (fileBytes == null)
                 {
@@ -153,14 +155,42 @@ namespace WebDataAgro.Controllers
                 else
                 {
                     //return Json(fileBytes); 
-                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf,nombre);
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, nombre);
                 }
             }
             catch (Exception)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+        }
 
+        public ActionResult FiltrarBoletos(string desde, string hasta, int negocio)
+        {
+            return new JsonResult()
+            {
+                Data = boletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
+            };
+        }
+
+        public ActionResult ListarContratos(List<int> listaContratoSap, int negocio)
+        {
+            listaContratoSap.Sort();
+            if (listaContratoSap.First().Equals(0) || listaContratoSap.First() > listaContratoSap.Last())
+            {
+                return new JsonResult()
+                {
+                    Data = ""
+                };
+            }
+
+            int contratoDesde = listaContratoSap.First();
+            int contratoHasta = listaContratoSap.Last();
+
+
+            return new JsonResult()
+            {
+                Data = boletoManager.FiltrarNegociosNumeroSAP(contratoDesde, contratoHasta, negocio)
+            };
         }
     }
 }

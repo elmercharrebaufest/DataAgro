@@ -651,8 +651,8 @@ function armarContacto() {
                 if (comerciales[i].Email3) {
                     emailComerciales.push('<a href="mailto: ' + comerciales[i].Email3 + '" target: "_blank"><i class="fa fa-envelope-o" aria-hidden="true"> ' + comerciales[i].Email3 + '</i></a>');
                 }
-
-                htmlComerciales += '<div class="contenedor-contacto-comercial">' +
+                var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
+                htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') +'">' +
                     '<div class="contenedor-contacto-comercial-titulo">' +
                     '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
                     '<span class="span-contacto-comercial"> ' +
@@ -672,15 +672,15 @@ function armarContacto() {
                     '<span class="contenedor-contacto-comercial-posicion-der">' +
                     (comerciales[i].Puesto ? comerciales[i].Puesto : "") +
                     '</span>' +
-                    '</div>' +
+                    '</div>' + (comerciales[i].EsApoderado == true ? etiquetaApoderado : "") +
                     '<div class="contenedor-contacto-comercial-telefonos">' +
                     (telComerciales.length > 0 ? telComerciales.join(" - ") : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-mails">' +
                     (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ") : "") +
-                    (comerciales[i].CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") +
-                    (comerciales[i].Cupo == true ? '<i title="Cupo" class="fa fa-truck"></i>' : "") +
-                    (comerciales[i].Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : "") +
+                    (comerciales[i].CompraNet == true ? '<i class="fa fa-check fa-lg" aria-hidden="true"></i>' : "") +
+                    (comerciales[i].Cupo == true ? '<i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") +
+                    (comerciales[i].Boleto == true ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-extras">' +
                     '<div class="row">' +

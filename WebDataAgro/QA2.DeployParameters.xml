@@ -36,6 +36,8 @@
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
+
+	<setParameter name="ActivarBLEND Key" value="No" />
 	
 	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
 

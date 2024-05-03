@@ -4,7 +4,6 @@ using Molinos.DataAgro.Agent.ContratosParaFijacionVirtual;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.SqlServer;
 using System.Configuration;
 using System.Linq;
 using Autofac.Extras.NLog;
@@ -22,8 +21,8 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -34,11 +33,9 @@ namespace Molinos.DataAgro.Agent
             var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var json = "{\"ARecibirSinPrecio\":\"98.000\",\"Anticipo\":false,\"Aperturas\":[{\"ConceptoAperturaPrecio\":\"Financiero\",\"ConceptoAperturaPrecioId\":1,\"FijacionId\":null,\"Id\":0,\"Importe\":120.0,\"Moneda\":\"USD\",\"MonedaId\":\"USDM\",\"Porcentaje\":0.0,\"contratoId\":null}],\"Calidad\":false,\"Calidades\":[],\"Campana\":\"19-20\",\"CampanaId\":8,\"Centro\":1,\"CentroDescripcion\":\"S. Lorenzo\",\"Cesion\":false,\"ChequeElectronico\":null,\"Clasificacion\":\"OTROS\",\"Color\":\"#26337b\",\"CondicionFijacionCod\":\"07\",\"CondicionFijacionDescripcion\":\"MERCADO MOA\",\"CondicionPagoCod\":\"04\",\"CondicionPagoDescripcion\":\"4 DÍAS HÁBILES DE FECHA DE FIJACIÓN\",\"ContratoId\":\"2699076\",\"DesdeEntrega\":\"23-04-2021\",\"FechaDesde\":\"23-04-2021\",\"FechaHasta\":\"23-05-2021\",\"FijacionSap\":null,\"Filtro\":\"2699076|2699076\",\"HastaEntrega\":\"23-05-2021\",\"ImporteAPrecio\":0.0,\"ImporteSobrePrecio\":12.0,\"KilosAplicados\":\"0\",\"KilosContrato\":\"98.000\",\"Virtual\":\"true\",\"KilosPendiente\":\"98.000\",\"MonedaAPrecio\":\"\",\"MonedaSobrePrecio\":\"USDM\",\"PagoDiferido\":false,\"PorcentajeAPrecio\":0.0,\"PorcentajeSobrePrecio\":0.0,\"Posicion\":\"04.2021\",\"RecibidoSinFijar\":\"0\"}";
+                var json = "{\"ARecibirSinPrecio\":\"98.000\",\"Anticipo\":false,\"Aperturas\":[{\"ConceptoAperturaPrecio\":\"Financiero\",\"ConceptoAperturaPrecioId\":1,\"FijacionId\":null,\"Id\":0,\"Importe\":120.0,\"Moneda\":\"USD\",\"MonedaId\":\"USDM\",\"Porcentaje\":0.0,\"contratoId\":null}],\"Calidad\":false,\"Calidades\":[],\"Campana\":\"19-20\",\"CampanaId\":8,\"Centro\":1,\"CentroDescripcion\":\"San Lorenzo\",\"Cesion\":false,\"ChequeElectronico\":null,\"Clasificacion\":\"OTROS\",\"Color\":\"#26337b\",\"CondicionFijacionCod\":\"07\",\"CondicionFijacionDescripcion\":\"MERCADO MOA\",\"CondicionPagoCod\":\"04\",\"CondicionPagoDescripcion\":\"4 DÍAS HÁBILES DE FECHA DE FIJACIÓN\",\"ContratoId\":\"2699076\",\"DesdeEntrega\":\"23-04-2021\",\"FechaDesde\":\"23-04-2021\",\"FechaHasta\":\"23-05-2021\",\"FijacionSap\":null,\"Filtro\":\"2699076|2699076\",\"HastaEntrega\":\"23-05-2021\",\"ImporteAPrecio\":0.0,\"ImporteSobrePrecio\":12.0,\"KilosAplicados\":\"0\",\"KilosContrato\":\"98.000\",\"Virtual\":\"true\",\"KilosPendiente\":\"98.000\",\"MonedaAPrecio\":\"\",\"MonedaSobrePrecio\":\"USDM\",\"PagoDiferido\":false,\"PorcentajeAPrecio\":0.0,\"PorcentajeSobrePrecio\":0.0,\"Posicion\":\"04.2021\",\"RecibidoSinFijar\":\"0\"}";
                 DatosFijacionDeContratoDto contrato = json.FromJson<DatosFijacionDeContratoDto>();
                 datosContratos.Add(contrato);
-
-
             }
             else
             {
@@ -75,7 +72,7 @@ namespace Molinos.DataAgro.Agent
                             ContratoId = contrato.CONTRNUM.TrimStart('0'),
                             KilosAplicados = ((double)contrato.KILOS_FIJADOS + cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             ARecibirSinPrecio = "0",
-                            RecibidoSinFijar = "0",                            
+                            RecibidoSinFijar = "0",
                             KilosPendiente = ((double)contrato.KILOS_A_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
@@ -135,7 +132,7 @@ namespace Molinos.DataAgro.Agent
                             contratoParaFijacion.PorcentajeSobrePrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
                             contratoParaFijacion.ImporteAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
                             contratoParaFijacion.MonedaAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
-                            contratoParaFijacion.PorcentajeAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;                          
+                            contratoParaFijacion.PorcentajeAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
                             contratoParaFijacion.Clasificacion = contratoDeBase.Proveedor.ClasificacionCompraNet.Descripcion;
                             var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contratoDeBase.Id);
 
@@ -155,7 +152,7 @@ namespace Molinos.DataAgro.Agent
                 catch (Exception e)
                 {
                     logger.Error("Error comunicacion SAP", e);
-                    throw e;
+                    throw;
                 }
             }
             return datosContratos.OrderBy(x => x.ContratoId).ToList();

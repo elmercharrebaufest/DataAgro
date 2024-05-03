@@ -31,7 +31,8 @@ namespace Molinos.DataAgro.Business
             oResult.Provincia = repositorio.Listar<Provincia, ProvinciaIni>(x => new ProvinciaIni()
             {
                 ProvinciaId = x.ProvinciaId,
-                Nombre = x.Nombre
+                Nombre = x.Nombre,
+                Inscripto = x.Inscripto,
             }, null, 0, "Nombre");
 
             return oResult;
@@ -40,7 +41,7 @@ namespace Molinos.DataAgro.Business
 
         public ProvinciaDto TraerProvincia(int intProvinciaId)
         {
-            return repositorio.Obtener<Provincia, ProvinciaDto>(x=>x.ProvinciaId == intProvinciaId, x=> new ProvinciaDto {ProvinciaId=x.ProvinciaId, Nombre=x.Nombre }) ?? new ProvinciaDto();
+            return repositorio.Obtener<Provincia, ProvinciaDto>(x=>x.ProvinciaId == intProvinciaId, x=> new ProvinciaDto {ProvinciaId=x.ProvinciaId, Nombre=x.Nombre, Inscripto = x.Inscripto }) ?? new ProvinciaDto();
         }
 
 
@@ -59,6 +60,7 @@ namespace Molinos.DataAgro.Business
             {
                 var oProvinciaSave = repositorio.Obtener<Provincia>(oProvincia.ProvinciaId);
                 oProvinciaSave.Nombre = oProvincia.Nombre;
+                oProvinciaSave.Inscripto = oProvincia.Inscripto;
             }
             else
             {

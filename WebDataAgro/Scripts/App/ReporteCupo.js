@@ -66,6 +66,7 @@ function InicializarCuposIndex() {
                     Sustentable: { type: "boolean" },
                     EPA: { type: "boolean" },
                     ConDescarga: { type: "boolean" },
+                    Cumplimiento: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
                     CTGFechaDesde: { type: "date" }
 
@@ -185,6 +186,7 @@ function InicializarCuposIndex() {
             { field: "Transportista", type: "string", width: 150 },
             { field: "Chofer", type: "string", width: 150 },
             { field: "MotivoRechazo", title: "Motivo de Rechazo", type: "string", width: 150 },
+            { field: "Cumplimiento", title: "Cumplimiento", type: "string", width: 150, template: function (dataItem) { return dataItem.Cumplimiento ? "Si" : "No"; } },
         ],
         pageable: {
             messages: {
@@ -215,7 +217,7 @@ function InicializarCuposIndex() {
             var templatesustentable = kendo.template(this.columns[10].template);
             var templateEPA = kendo.template(this.columns[11].template);
             var templateConDescarga = kendo.template(this.columns[12].template);
-            
+            var templateCumplimiento = kendo.template(this.columns[39].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -231,6 +233,9 @@ function InicializarCuposIndex() {
 
                 var dataitemConDescarga = { ConDescarga: row.cells[11].value };
                 row.cells[11].value = templateConDescarga(dataitemConDescarga);
+
+                var dataitemCumplimiento = { Cumplimiento: row.cells[38].value };
+                row.cells[38].value = templateCumplimiento(dataitemCumplimiento);
 
                 //la fecha en chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
@@ -350,6 +355,9 @@ function deseleccionarRadioButtonEPA() {
 }
 function deseleccionarRadioButtonConDescarga() {
     $('[name=ConDescarga]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonCumplimiento() {
+    $('[name=Cumplimiento]:checked').prop('checked', false);
 }
 
 function ConvertirFechaRegistroAString(filtros) {

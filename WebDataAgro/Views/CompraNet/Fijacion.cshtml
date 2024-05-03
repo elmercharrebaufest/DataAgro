@@ -1,10 +1,10 @@
 ﻿@{
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
-    ViewBag.Title = "CompraNet";
     var dolarizado = PermisosHelper.Is(PermisosDataAgro.ModificarDolarizadoExpress);
     var modificarDolarizadoFinalizado = PermisosHelper.Is(PermisosDataAgro.ModificarDolarizadoFinalizado);
     var modificarPesificadoFinalizado = PermisosHelper.Is(PermisosDataAgro.ModificarLimitePesificadoFinalizado);
     var fijacionVirtual = PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual);
+    ViewBag.Title = "Fijación";
 }
 <link rel="stylesheet" href="styles/kendo.default.min.css" />
 <script>
@@ -111,7 +111,7 @@
 
         </div>
         <div class="row marginCero clearfix campo col-xs-12 noPadding observacionTercero">
-            <strong style="float:left">Observaci&oacute;n: </strong>
+            <strong style="float:left">Observaciones: </strong>
             <span id="visualizar_observacionTercero"></span>
         </div>
     </div>
@@ -122,7 +122,7 @@
                 <label>Corredor</label>
             </div>
             <div class="col-md-4 col-sm-5">
-                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
                 <div id="buscadorCorredorResult"></div>
             </div>
         </div>
@@ -131,7 +131,7 @@
                 <label id="proveedorLabel">Proveedor</label>
             </div>
             <div class="col-sm-4">
-                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
                 <div id="buscadorResult"></div>
                 <label id="mensaje" style="color:#ff5175; font-size: 12px"></label>
             </div>
@@ -753,7 +753,7 @@
 
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
-            <label>Observaci&oacute;n</label>
+            <label>Observaciones</label>
         </div>
         <div id="observacionDiv" class="col-sm-10 col-md-9">
             <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>

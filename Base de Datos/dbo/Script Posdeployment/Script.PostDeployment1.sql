@@ -1,12 +1,11 @@
-﻿
---BolsaCompraNet
-IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bs As') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Bs As','01'); END
+﻿--BolsaCompraNet
+IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Buenos Aires') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Buenos Aires','01'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Rosario') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Rosario','02'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Santa Fe') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Santa Fe','03'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Cordoba') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Cordoba','04'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Entre Ríos') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Entre Ríos','05'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bahía Blanca') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Bahía Blanca','07'); END
-
+IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Chaco') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Chaco','08'); END
 
 --BoletoCompraNet
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Confirma') BEGIN insert into BoletoCompraNet (Descripcion) values ('Confirma'); END
@@ -21,11 +20,11 @@ IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Acopiad
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Otros') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Otros'); END
 
 --Centro
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'S. Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('S. Lorenzo', '1029'); END
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'Pergamino') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Pergamino', '1035'); END
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'Bandera') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Bandera', '1127'); END
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'La Cautiva') BEGIN insert into Centro(Descripcion,CodigoSap) values ('La Cautiva', '1126'); END
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'Lincoln') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Lincoln', '1036'); END
+--IF NOT EXISTS (select 1 from Centro where Descripcion = 'San Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('San Lorenzo', '1029'); END
+--IF NOT EXISTS (select 1 from Centro where Descripcion = 'Pergamino') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Pergamino', '1035'); END
+--IF NOT EXISTS (select 1 from Centro where Descripcion = 'Bandera') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Bandera', '1127'); END
+--IF NOT EXISTS (select 1 from Centro where Descripcion = 'La Cautiva') BEGIN insert into Centro(Descripcion,CodigoSap) values ('La Cautiva', '1126'); END
+--IF NOT EXISTS (select 1 from Centro where Descripcion = 'Lincoln') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Lincoln', '1036'); END
 
 --EstadoContrato
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Pendiente') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Pendiente', 1); END
@@ -222,7 +221,6 @@ IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3 and TipoNegoci
 IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (4,1, 3); END
 IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (5,1, 3); END
 
-
 --TipoPosicionCBOT
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'CBOT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('CBOT'); END
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'MAT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('MAT'); END
@@ -245,6 +243,7 @@ IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir 
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Liquidación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion) values ('A partir de la fecha de Liquidación', 1); END
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Fijación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion, CondicionPesificado) values ('A partir de la fecha de Fijación', 1, 1); END
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'Anteriores al pago') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionPesificado) values ('Anteriores al pago', 1); END
+
 --Configuracion
 Update Configuracion set RedespachoMaximoARP = isnull(RedespachoMaximoARP, 1000), RedespachoMaximoUSDM = isnull(RedespachoMaximoUSDM, 60)
 
@@ -257,10 +256,10 @@ IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Carta Oferta') BEG
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirmación de Negocio') BEGIN insert into BoletoVenta (Descripcion) values ('Confirmación de Negocio'); END
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'A Convenir') BEGIN insert into BoletoVenta (Descripcion) values ('A Convenir'); END
 
-
 --TipoAdministracionCupo
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Algoritmo') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Algoritmo'); END
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
+
 --TipoNegocioRangoConfirmacionAutomatica
 IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO Y FIJACION') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO Y FIJACION'); END
 IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO'); END
@@ -275,7 +274,6 @@ IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Comisionista') BE
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
 
 -- TipoNegocioDetalle
-
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR', 1); END
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR PASE', 1); END
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'CANJE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('CANJE', 1); END
@@ -292,7 +290,6 @@ IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION CA
 IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION PASE', 3); END
 
 -- Clausula
-
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaUno', 1, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDos', 2, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTres', 3, 1); END
@@ -340,7 +337,10 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCu
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYCinco',45 , 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSeis',46, 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSiete',47 , 1); END
-
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYOcho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYOcho',48 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYNueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYNueve',49 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuenta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuenta',50 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYUno',51 , 1); END
 
 --EstadoHome
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Habilitado') BEGIN insert into EstadoHome (Descripcion, Color) values ('Habilitado', 'green'); END
@@ -357,3 +357,123 @@ IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 Mater
 
 IF NOT EXISTS (select 1 from Rol where Descripcion = 'Recibir Sugerencia FAQ') BEGIN insert into Rol (Descripcion) values ('Recibir Sugerencia FAQ'); END
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END
+
+--ResearchCoeficienteCultivo
+IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Trigo') and Coeficiente='0.9') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Trigo'),'0.9'); END
+IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Maiz') and Coeficiente='0.9') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Maiz'),'0.9'); END
+IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Soja') and Coeficiente='0.9') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Soja'),'0.9'); END
+IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Girasol') and Coeficiente='0.8') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Girasol'),'0.8'); END
+
+--ResearchCondicion
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Excelente') BEGIN insert into ResearchCondicion (Descripcion) values('Excelente'); END
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Muy buena') BEGIN insert into ResearchCondicion (Descripcion) values('Muy buena'); END
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Buena') BEGIN insert into ResearchCondicion (Descripcion) values('Buena'); END
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Regular') BEGIN insert into ResearchCondicion (Descripcion) values('Regular'); END
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Mala') BEGIN insert into ResearchCondicion (Descripcion) values('Mala'); END
+IF NOT EXISTS (select 1 from ResearchCondicion where Descripcion = 'Muy mala') BEGIN insert into ResearchCondicion (Descripcion) values('Muy mala'); END
+
+--ResearchCondicionCultivo
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Excelente')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Trigo'),(select CondicionId from ResearchCondicion where Descripcion='Excelente'),'42'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Muy buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Trigo'),(select CondicionId from ResearchCondicion where Descripcion='Muy buena'),'40'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Trigo'),(select CondicionId from ResearchCondicion where Descripcion='Buena'),'36'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Regular')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Trigo'),(select CondicionId from ResearchCondicion where Descripcion='Regular'),'32'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Mala')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Trigo'),(select CondicionId from ResearchCondicion where Descripcion='Mala'),'26'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Soja') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Excelente')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Soja'),(select CondicionId from ResearchCondicion where Descripcion='Excelente'),'190'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Soja') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Muy buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Soja'),(select CondicionId from ResearchCondicion where Descripcion='Muy buena'),'180'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Soja') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Soja'),(select CondicionId from ResearchCondicion where Descripcion='Buena'),'160'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Soja') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Regular')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Soja'),(select CondicionId from ResearchCondicion where Descripcion='Regular'),'140'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Soja') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Mala')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Soja'),(select CondicionId from ResearchCondicion where Descripcion='Mala'),'120'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Excelente')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Maiz'),(select CondicionId from ResearchCondicion where Descripcion='Excelente'),'340'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Muy buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Maiz'),(select CondicionId from ResearchCondicion where Descripcion='Muy buena'),'320'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Buena')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Maiz'),(select CondicionId from ResearchCondicion where Descripcion='Buena'),'300'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Regular')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Maiz'),(select CondicionId from ResearchCondicion where Descripcion='Regular'),'265'); END
+IF NOT EXISTS (select 1 from ResearchCondicionCultivo where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and CondicionId=(select CondicionId from ResearchCondicion where Descripcion='Mala')) BEGIN insert into ResearchCondicionCultivo (MaterialId, CondicionId, Valor) values((select MaterialId from Material where Descripcion='Maiz'),(select CondicionId from ResearchCondicion where Descripcion='Mala'),'240'); END
+
+--ResearchHumedadSuelo
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Muy seco, grietas profundas') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Muy seco, grietas profundas'); END
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Seco, grietas pequeñas') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Seco, grietas pequeñas'); END
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Seco en superficie, pero aparece humedad en los primeros cm') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Seco en superficie, pero aparece humedad en los primeros cm'); END
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Humedo en superficie') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Húmedo en superficie'); END
+IF NOT EXISTS (select 1 from ResearchHumedadSuelo where Descripcion = 'Suelo saturado') BEGIN insert into ResearchHumedadSuelo (Descripcion) values('Suelo saturado'); END
+
+--ResearchEstadio
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Emergencia') BEGIN insert into ResearchEstadio (Descripcion) values ('Emergencia'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Desarrollo de hojas') BEGIN insert into ResearchEstadio (Descripcion) values ('Desarrollo de hojas'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Floración') BEGIN insert into ResearchEstadio (Descripcion) values ('Floración'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Llenado de granos') BEGIN insert into ResearchEstadio (Descripcion) values ('Llenado de granos'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Madurez') BEGIN insert into ResearchEstadio (Descripcion) values ('Madurez'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Cosecha') BEGIN insert into ResearchEstadio (Descripcion) values ('Cosecha'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Macollaje') BEGIN insert into ResearchEstadio (Descripcion) values ('Macollaje'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Encañazón') BEGIN insert into ResearchEstadio (Descripcion) values ('Encañazón'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Espiga embuchada') BEGIN insert into ResearchEstadio (Descripcion) values ('Espiga embuchada'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Inicio de Floración (R1)') BEGIN insert into ResearchEstadio (Descripcion) values ('Inicio de Floración (R1)'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Formación de vainas (R3)') BEGIN insert into ResearchEstadio (Descripcion) values ('Formación de vainas (R3)'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Llenado de granos (R5)') BEGIN insert into ResearchEstadio (Descripcion) values ('Llenado de granos (R5)'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Panojamiento') BEGIN insert into ResearchEstadio (Descripcion) values ('Panojamiento'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Polinización/Floración') BEGIN insert into ResearchEstadio (Descripcion) values ('Polinización/Floración'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Cuaje') BEGIN insert into ResearchEstadio (Descripcion) values ('Cuaje'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Grano Lechoso') BEGIN insert into ResearchEstadio (Descripcion) values ('Grano Lechoso'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Grano Pastoso') BEGIN insert into ResearchEstadio (Descripcion) values ('Grano Pastoso'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Dentición') BEGIN insert into ResearchEstadio (Descripcion) values ('Dentición'); END
+IF NOT EXISTS (select 1 from ResearchEstadio where Descripcion = 'Botón floral') BEGIN insert into ResearchEstadio (Descripcion) values ('Botón floral'); END
+
+--ResearchEstadioFenologico
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Emergencia')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Emergencia'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Macollaje')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Macollaje'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Encañazón')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Encañazón'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Espiga embuchada')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Espiga embuchada'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Floración')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Floración'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Madurez')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Madurez'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Trigo') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Cosecha')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Trigo'),(select EstadioId from ResearchEstadio where Descripcion='Cosecha'),'1'); END
+
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Emergencia')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Emergencia'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Inicio de Floración (R1)')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Inicio de Floración (R1)'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Formación de vainas (R3)')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Formación de vainas (R3)'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos (R5)')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos (R5)'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Madurez')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Madurez'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Soja') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Cosecha')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Soja'),(select EstadioId from ResearchEstadio where Descripcion='Cosecha'),'1'); END
+
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Emergencia')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Emergencia'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Panojamiento')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Panojamiento'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Polinización/Floración')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Polinización/Floración'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Cuaje')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Cuaje'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Grano Lechoso')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Grano Lechoso'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Grano Pastoso')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Grano Pastoso'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Dentición')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Dentición'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Madurez')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Madurez'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Maiz') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Cosecha')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Maiz'),(select EstadioId from ResearchEstadio where Descripcion='Cosecha'),'1'); END
+
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Emergencia')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Emergencia'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Desarrollo de hojas'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Botón floral')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Botón floral'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Floración')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Floración'),'0'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Llenado de granos'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Madurez')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Madurez'),'1'); END
+IF NOT EXISTS (select 1 from ResearchEstadioFenologico where MaterialId=(select MaterialId from Material where Descripcion='Girasol') and EstadioId=(select EstadioId from ResearchEstadio where Descripcion='Cosecha')) BEGIN insert into ResearchEstadioFenologico (MaterialId, EstadioId, ConRendimiento) values((select MaterialId from Material where Descripcion='Girasol'),(select EstadioId from ResearchEstadio where Descripcion='Cosecha'),'1'); END
+
+--ResearchTipoCarga
+IF NOT EXISTS (select 1 from ResearchTipoCarga where Descripcion = 'Completa') BEGIN insert into ResearchTipoCarga (Descripcion) values('Completa'); END
+IF NOT EXISTS (select 1 from ResearchTipoCarga where Descripcion = 'Express') BEGIN insert into ResearchTipoCarga (Descripcion) values('Express'); END
+
+--ResearchTipoMuestra
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en la hilera (1 m)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en la hilera (1 m)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Plantas en la hilera (1 m)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Plantas en la hilera (1 m)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Espigas en la hilera (10 mts)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Espigas en la hilera (10 mts)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Diámetro del Capítulo (cm)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Diámetro del Capítulo (cm)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos/espiga') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos/espiga'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Vainas por planta') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Vainas por planta'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Largo de la espiga (granos)') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Largo de la espiga (granos)'); END
+IF NOT EXISTS (select 1 from ResearchTipoMuestra where Descripcion = 'Granos alrededor') BEGIN insert into ResearchTipoMuestra (Descripcion) values('Granos alrededor'); END
+
+--PuestoApoderado
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Presidente') BEGIN insert into PuestoApoderado (Descripcion) values ('Presidente'); END
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Apoderado') BEGIN insert into PuestoApoderado (Descripcion) values ('Apoderado'); END
+IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN insert into PuestoApoderado (Descripcion) values ('Otros'); END
+
+--TipoDeCambio
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
+IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END

@@ -87,5 +87,7 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult BuscarDatosNegocioPesificacion(DataSourceRequest filtro, List<int> equipo);
         Resultado ConfigurarExcedente(int id, bool excedente,int comercialId);
        void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId, bool kgTotales, bool kgPesif);
+        ReporteLocalidadesModel ObtenerDatosReporteLocalidades();
+        ReporteProveedoresModel ObtenerDatosReporteProveedorComerciales(List<ComercialDto> comerciales);
     }
 }

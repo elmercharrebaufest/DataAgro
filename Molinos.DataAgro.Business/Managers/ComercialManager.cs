@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -7,6 +8,8 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -417,6 +420,15 @@ namespace Molinos.DataAgro.Business
         public List<Comercial> ListarComercialesRecibirSugerenciaFAQ()
         {
             return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Recibir_Mail_SugerenciaFAQ)));
+        }
+
+
+
+        public DataSourceResult TraerComercialesProveedorReporte(int proveedorId, DataSourceRequest request)
+        {
+            var comerciales = repositorio.ObtenerConsultaEscalar(new BusquedaContactosComercialReporte(request, proveedorId));
+
+            return comerciales;
         }
     }
 }

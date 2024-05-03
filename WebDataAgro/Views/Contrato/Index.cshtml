@@ -27,14 +27,14 @@
             <label>Corredor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorCorredor" name="CorredorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+            <input id="buscadorCorredor" name="CorredorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
         </div>
 
         <div class="col-md-2">
             <label>Proveedor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT o razón social" required="required" />
         </div>
     </div>
     <br />
@@ -267,6 +267,10 @@
         <div class="col-md-2">
             <label>Con Descarga</label>
             @Html.CheckBox("ConDescarga", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "ConDescargaId" })
+        </div>
+        <div class="col-md-2">
+            <label>Dolar Exportador</label>
+            @Html.CheckBox("DolarExportador", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "DolarExportadorId" })
         </div>
     </div>
 

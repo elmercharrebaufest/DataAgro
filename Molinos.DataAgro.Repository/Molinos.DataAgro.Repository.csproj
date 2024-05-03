@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsultasEF\BusquedaContactosComercial.cs" />
+    <Compile Include="ConsultasEF\BusquedaContactosComercialReporte.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosAlmacenamiento.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosProduccion.cs" />
     <Compile Include="ConsultasEF\BusquedaLocalidades.cs" />
@@ -124,7 +125,9 @@
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
+    <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
+    <Compile Include="ConsultasEF\TraerResearchPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerContratosReporteAFijarPase.cs" />
     <Compile Include="ConsultasEF\TraerExportarAllCapacidadProductiva.cs" />
     <Compile Include="ConsultasEF\TraerInformes.cs" />

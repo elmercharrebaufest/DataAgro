@@ -22,11 +22,9 @@ using System.Net.Mime;
 using System.Text;
 using OfficeOpenXml;
 using System.IO;
-using Molinos.DataAgro.Agent;
 using System.Text.RegularExpressions;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -100,7 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                     cupo.ComercialCreador = comercialCreador;
                 }
 
-                var negocio = repositorio.Obtener<Contrato>(cupo.NegocioId);
+                var negocio = repositorio.Obtener<Negocio>(cupo.NegocioId);
                 if (negocio != null)
                 {
                     cupo.Sustentable = negocio.Sustentable;
@@ -161,7 +159,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                                 try
                                 {
-
                                     using (var transaction = new System.Transactions.TransactionScope())
                                     {
                                         var listaCupos = new List<string>();
@@ -169,7 +166,6 @@ namespace Molinos.DataAgro.Business.Managers
                                         var cuposConSap = new List<Cupo>();
                                         if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                                         {
-
                                             try
                                             {
                                                 // cupos para Vicentin en CupoExterno
@@ -272,8 +268,6 @@ namespace Molinos.DataAgro.Business.Managers
                                                 }
                                             }
 
-
-
                                             if (listaCupos.Count < d.Cantidad.Value)
                                             {
                                                 error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
@@ -370,7 +364,6 @@ namespace Molinos.DataAgro.Business.Managers
                         logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id, null), TipoAccionLogDataAgro.Modificar);
                         if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
                         return error;
-
                     }
                 }
                 return error;
@@ -1085,6 +1078,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = cupo.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
                 if (proveedorContacto.Count == 0)
@@ -1273,7 +1271,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             //if ((cupo.Sustentable ?? false)==false && (cupo.EPA ?? false)==false)
             //{
-            htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "<br>" + (((bool)cupo.EPA && cupo.MaterialId == (int)EnumMateriales.SOJA) ? "<p> SOJA EPA: no se reciben camiones escalables chasis acoplado, ni bateas. Solamente escalables Tolva y camiones comunes</p></td></tr>" : "</td></tr>");
+
             //}
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
@@ -1614,7 +1613,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaExcel.Add(excel);
             }
             return listaExcel.OrderByDescending(x => x.Puntaje).ToList();
-        }      
+        }
         public List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion = null)
         {
             try
@@ -2205,7 +2204,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
                 var materialCodigo = materiales.Where(x => x.MaterialId == contratoPorProvCorr.First().MaterialId).Single().Codigo;
 
-                var pendienteDto = new CcPpPerndienteAplicarDto()
+                var pendienteDto = new CcPpPendienteAplicarDto()
                 {
                     Centro = centroCodigo,
                     Material = materialCodigo,
@@ -3215,7 +3214,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         foreach (var f in dias)
                         {
-                            if(f == d.Key)
+                            if (f == d.Key)
                             {
                                 dia.Diacupo.Add(new DiaCupo
                                 {
@@ -3232,7 +3231,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 });
                             }
                         }
-                       
+
                     }
                     lista.Add(dia);
                 }
@@ -3313,7 +3312,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -3676,7 +3675,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "</table>";
             htmlBody += "Motivo de rechazo: " + cupo.MotivoRechazo;
-            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -3874,7 +3873,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaSugerenciaPorComercial.Add(total);
 
             }
-            foreach (var sugerenciaPorComercial in listaSugerenciaPorComercial.GroupBy(a=>a.ComercialId))
+            foreach (var sugerenciaPorComercial in listaSugerenciaPorComercial.GroupBy(a => a.ComercialId))
             {
                 for (var dt = formula.CuposDesde; dt <= formula.CuposHasta; dt = dt.AddDays(1))
                 {
@@ -3891,7 +3890,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            
+
             repositorio.AgregarTodos(listaSugerenciaPorComercial);
         }
 
@@ -4739,14 +4738,15 @@ namespace Molinos.DataAgro.Business.Managers
 
                             if (!cupoEliminar.HayError)
                             {
-                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+                                var cupoLog = ObtenerCupo(c.Id, repo);
+                                logmanager.LogCambiosDataAgro(cupoLog, TipoAccionLogDataAgro.Eliminar);
 
                                 var cuposOk = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
-                                    Proveedor = c.Proveedor.RazonSocial,
-                                    Material = c.Material.Descripcion,
-                                    ZonaCupo = c.ZonaCupo.Descripcion,
+                                    Proveedor = cupoLog.Proveedor,
+                                    Material = cupoLog.Material,
+                                    ZonaCupo = cupoLog.ZonaCupo,
                                     ComercialId = c.ComercialId,
                                     ProveedorId = c.ProveedorId
                                 };
@@ -6806,7 +6806,7 @@ namespace Molinos.DataAgro.Business.Managers
                         formulaDatos.Add(new FormulaDtoExcel
                         {
                             Material = formula.Material,
-                            Criterio = hijo.Descripcion.Replace("Criterio",""),
+                            Criterio = hijo.Descripcion.Replace("Criterio", ""),
                             Puntuacion = Decimal.ToInt32(hijo.Puntuacion),
                             CuposDesde = formula.CuposDesde,
                             CuposHasta = formula.CuposHasta,
@@ -6882,7 +6882,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 };
             }
-           
+
 
         }
 
@@ -6934,6 +6934,49 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return cantidadCupo;
+        }
+
+        public void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha)
+        {
+            try
+            {
+                List<string> lineasCuerpoMail = new List<string>();
+                List<AdministracionCupo> solicitudesExtraordinariasList = repositorio.Listar<AdministracionCupo>(x => x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente);
+
+                if (solicitudesExtraordinariasList != null && solicitudesExtraordinariasList.Count > 0)
+                {
+                    var asunto = $"Solicitudes Extraordinarias pendientes";
+                    lineasCuerpoMail.Add($"Existen {solicitudesExtraordinariasList.Count} Solicitudes Extraordinarias en estado Pendiente");
+                    EnviarMailSolicitudesPendientes(asunto, lineasCuerpoMail);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error en tarea programada VerificarSolicitudesExtraordinariasPendientes: " + e);
+                throw;
+            }
+        }
+
+        private void EnviarMailSolicitudesPendientes(string asunto, List<string> cuerpo)
+        {
+            LinkedResource resource = new LinkedResource(httpContextManager.ObtenerPathLogoMail())
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
+            var destinatarios = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Mail_SolExt_Pendientes))).Select(x => x.IdActiveDirectory).ToList();
+            List<string> copia = new List<string> { ConfigurationManager.AppSettings["EmailSoporte"] };
+            string htmlBody = "";
+            foreach (var mensaje in cuerpo)
+            {
+                htmlBody += mensaje + "<br /><br />";
+            }
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + resource.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(resource);
+            mailManager.EnviarMail(destinatarios, asunto, "", copia, alternateView);
         }
     }
 }

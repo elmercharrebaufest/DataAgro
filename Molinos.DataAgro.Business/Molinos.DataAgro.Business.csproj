@@ -275,13 +275,17 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCuatro.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYDos.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYOcho.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSiete.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYTres.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYUno.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuatro.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYNueve.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuenta.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiecinueve.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDieciocho.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDieciseis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYUno.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiecisiete.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiez.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDoce.cs" />
@@ -368,6 +372,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\BoletoFisicoBuenosAires.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\CartaOfertaSinCorredor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\CartaOferta.html">

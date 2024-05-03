@@ -51,7 +51,7 @@
     </script>
 
     <!--Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+    @*<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>*@
 
 </head>
 @{
@@ -167,7 +167,7 @@
                                 {
                                     <li>
                                         <a href="/ReporteCupo/Index" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Reporte Cupos
+                                            <i class="icon-bar-chart"></i> Reporte de Cupos
                                         </a>
                                     </li>
                                 }
@@ -334,6 +334,14 @@
                                     <li>
                                         <a href="~/Comercial" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Usuarios
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AbmProvincia))
+                                {
+                                    <li>
+                                        <a href="~/Provincia" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Provincias
                                         </a>
                                     </li>
                                 }
@@ -640,25 +648,34 @@
                         </li>
                     }
 
-                    @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch) || PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
+                    @if (PermisosHelper.Is(PermisosDataAgro.VerReporteResearch))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Research <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="research">
-                                @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
+                                @*@if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
                                 {
                                     <li>
                                         <a href="~/Research" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Datos Research
                                         </a>
                                     </li>
-                                }
+                                }*@
 
-                                @if (PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
+                                @if (PermisosHelper.Is(PermisosDataAgro.VerReporteResearch))
                                 {
                                     <li>
-                                        <a href="~/ReporteResearch" class="nav-link misreporteslink">
+                                        <a href="~/ResearchReporte" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Research
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.MapaResearch))
+                                {
+                                    <li>
+                                        <a href="~/ResearchMapa" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Mapa Research
                                         </a>
                                     </li>
                                 }

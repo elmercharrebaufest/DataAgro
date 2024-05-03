@@ -68,6 +68,48 @@
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\KendoGridBinder.2.0.0\lib\net45\KendoGridBinder.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Client.TranslationServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.Office.Client.TranslationServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.SharePoint.Tools, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.Office.SharePoint.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.Client.Tenant, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ProjectServer.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.ProjectServer.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.DocumentManagement, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Publishing, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.Publishing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search.Applications, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.Search.Applications.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Taxonomy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.Taxonomy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.UserProfiles, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.UserProfiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.WorkflowServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.24301.12000\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -125,9 +167,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Enums\EnumBoletoCompraNet.cs" />
+    <Compile Include="Common\Enums\EnumBolsaCompraNet.cs" />
+    <Compile Include="Common\Enums\EnumClasificacionCompraNet.cs" />
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
+    <Compile Include="Common\Enums\EnumStandarCalidad.cs" />
+    <Compile Include="Common\Enums\EnumMateriales.cs" />
+    <Compile Include="Common\Enums\EnumTipoDB.cs" />
+    <Compile Include="Common\Enums\EnumTipoDeCambio.cs" />
     <Compile Include="Common\Enums\EnumTipoNegocio.cs" />
     <Compile Include="Common\Enums\EnumTipoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
@@ -136,6 +185,7 @@
     <Compile Include="Common\Enums\EnumClasificacionNegocio.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\EnumNegocioTipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Common\Enums\EnumTipoPeriodoDB.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
@@ -143,6 +193,7 @@
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
+    <Compile Include="Dto\ApoderadoSapDto.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
     <Compile Include="Dto\CupoEliminarResult.cs" />
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
@@ -154,10 +205,23 @@
     <Compile Include="Dto\ManualesDto.cs" />
     <Compile Include="Dto\ManualesLogVisitas.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
+    <Compile Include="Dto\PartidoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />
+    <Compile Include="Dto\PuestoApoderadoDto.cs" />
+    <Compile Include="Dto\ReporteProveedores.cs" />
+    <Compile Include="Dto\ReporteLocalidades.cs" />
     <Compile Include="Dto\ReporteSojaEPADto.cs" />
+    <Compile Include="Dto\ResearchCoeficienteCultivoDto.cs" />
+    <Compile Include="Dto\ResearchCondicionCultivoDto.cs" />
+    <Compile Include="Dto\ResearchCondicionDto.cs" />
+    <Compile Include="Dto\ResearchDto.cs" />
+    <Compile Include="Dto\ResearchEstadioDto.cs" />
+    <Compile Include="Dto\ResearchEstadioFenologicoDto.cs" />
+    <Compile Include="Dto\ResearchHumedadSueloDto.cs" />
+    <Compile Include="Dto\ResearchTipoCargaDto.cs" />
+    <Compile Include="Dto\ResearchTipoMuestraDto.cs" />
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
@@ -204,7 +268,7 @@
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
-    <Compile Include="Dto\CcPpPerndienteAplicarDto.cs" />
+    <Compile Include="Dto\CcPpPendienteAplicarDto.cs" />
     <Compile Include="Dto\HabilitacionPagoDiferidoDto.cs" />
     <Compile Include="Dto\ProveedorAltaDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
@@ -385,6 +449,10 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYOcho.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYNueve.cs" />
+    <Compile Include="Entities\ClausulaCincuenta.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYUno.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
@@ -393,9 +461,20 @@
     <Compile Include="Entities\LogAnulacionContrato.cs" />
     <Compile Include="Entities\Manuales.cs" />
     <Compile Include="Entities\ManualesLogVisitas.cs" />
+    <Compile Include="Entities\PuestoApoderado.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
+    <Compile Include="Entities\Research.cs" />
+    <Compile Include="Entities\ResearchCoeficienteCultivo.cs" />
+    <Compile Include="Entities\ResearchCondicion.cs" />
+    <Compile Include="Entities\ResearchCondicionCultivo.cs" />
+    <Compile Include="Entities\ResearchEstadio.cs" />
+    <Compile Include="Entities\ResearchEstadioFenologico.cs" />
+    <Compile Include="Entities\ResearchHumedadSuelo.cs" />
+    <Compile Include="Entities\ResearchTipoCarga.cs" />
+    <Compile Include="Entities\ResearchTipoMuestra.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
+    <Compile Include="Entities\TipoDeCambio.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />
     <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />

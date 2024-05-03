@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -18,7 +17,6 @@ using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Test")]
     [TestFixture]
     public class ReportesManagerTest
     {
@@ -52,10 +50,10 @@ namespace Molinos.DataAgro.Test.Managers
             mailManager = new Mock<IMailManager>();
             httpContextManager = new Mock<IHttpContextManager>();
             httpContextManager.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
-            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, 
+            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object,
                 pesificarAgent.Object, mailManager.Object, httpContextManager.Object);
-            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
-            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(It.IsAny<DateTime>())).Returns(94);
+            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null, "M")).Returns(45);
+            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(It.IsAny<DateTime>(), "M")).Returns(94);
 
         }
 
@@ -661,7 +659,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Precio);
             Assert.AreEqual(1, result.Total);
         }
-        
+
         [Test]
         public void TraerToneladasSojaEPATest()
         {
@@ -747,17 +745,18 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);
         }
+
         [Test]
         public void TraerTodosHedgeMaterialTestError()
         {
-            var fecha = new DateTime(2018, 10, 26);
-            var fecha1 = new DateTime(2018, 10, 28);
+            var fecha = new DateTime(2024, 04, 16);
+            var fechaHasta = new DateTime(2024, 04, 26);
 
-            var result = target.TraerTodosHedgeMaterial(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
+            // excepción al llamar a Listar
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), DirOrden.Asc))
+            .Throws(new Exception("Exception"));
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            Assert.NotNull(result);
-            Assert.AreEqual(0, result.Count);
+            Assert.Throws<Exception>(() => target.TraerTodosHedgeMaterial(fecha, fechaHasta, new List<int>() { 1, 2, 3, 4, 5 }));
         }
         [Test]
         public void TraerHedgeObjetivoTestOk()
@@ -784,18 +783,17 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(5, result.RemitirObjetivo);
             Assert.AreEqual(5, result.RemitirCumplido);
         }
+
         [Test]
         public void TraerHedgeObjetivoTestError()
         {
-            var fecha = new DateTime(2018, 10, 26);
-            var fecha1 = new DateTime(2018, 10, 28);
+            var fecha = new DateTime(2024, 04, 16);
+            var fechaHasta = new DateTime(2024, 04, 26);
 
-            var result = target.TraerHedgeObjetivo(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<HedgeObjetivo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
+            .Throws(new Exception("Exception"));
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeObjetivo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            Assert.NotNull(result);
+            Assert.Throws<Exception>(() => target.TraerHedgeObjetivo(fecha, fechaHasta, new List<int>() { 1, 2, 3, 4, 5 }));
         }
         [Test]
         public void TraerTcPromedioTestOk()
@@ -823,20 +821,17 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(15, result.PromedioTC);
             Assert.AreEqual(15, result.TotalTC);
         }
+
         [Test]
         public void TraerTcPromedioTestError()
         {
-            var fecha = new DateTime(2018, 10, 26);
-            var fecha1 = new DateTime(2018, 10, 28);
+            var fecha = new DateTime(2024, 04, 16);
+            var fechaHasta = new DateTime(2024, 04, 26);
 
-            var result = target.TraerTcPromedio(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<HedgeTC, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
+            .Throws(new Exception("Exception"));
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeTC, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-
-            Assert.NotNull(result);
+            Assert.Throws<Exception>(() => target.TraerTcPromedio(fecha, fechaHasta, new List<int>() { 1, 2, 3, 4, 5 }));
         }
         [Test]
         public void TraerAgenteDeCompraTestOk()
@@ -856,17 +851,18 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Count);
         }
-        //[Test]
-        //public void TraerAgenteDeCompraTestError()
-        //{
-        //    var fecha = new DateTime(2018, 10, 26);
-        //    var fecha1 = new DateTime(2018, 10, 28);
 
-        //    var result = target.TraerAgenteDeCompra(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
+        [Test]
+        public void TraerAgenteDeCompraTestError()
+        {
+            var fecha = new DateTime(2024, 04, 16);
+            var fechaHasta = new DateTime(2024, 04, 26);
 
-        //    repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-        //    Assert.NotNull(result);
-        //}
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
+            .Throws(new Exception("Exception"));
+
+            Assert.Throws<Exception>(() => target.TraerAgenteDeCompra(fecha, fechaHasta, new List<int>() { 1, 2, 3, 4, 5 }));
+        }
         [Test]
         public void DetallePosicionTestOkMesAnio()
         {
@@ -1078,7 +1074,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                             .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
 
-            var result = target.DetallePosicionModalIds(ids, "",null);
+            var result = target.DetallePosicionModalIds(ids, "", null);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -1256,12 +1252,12 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
              .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<MailProveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-            .Returns(new List<MailProveedor>() { new MailProveedor { Pesificado = "aaa@baufest.com", Proveedor = new Proveedor { RazonSocial  = "ACA", }  } });
+            .Returns(new List<MailProveedor>() { new MailProveedor { Pesificado = "aaa@baufest.com", Proveedor = new Proveedor { RazonSocial = "ACA", } } });
             mailManager.Setup(x => x.GetEmailUserActiveDirectory("bmelgarej")).Returns("aaa@baufest.com");
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
              .Returns(new List<Negocio>() { new Negocio { ContratoSAP = "0002599447", Comercial = new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } } });
-            
+
             target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>(), true, false);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(),
                 It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

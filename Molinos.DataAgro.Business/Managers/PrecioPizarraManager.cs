@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -9,8 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -22,7 +21,7 @@ namespace Molinos.DataAgro.Business.Managers
         private IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent, 
+        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent,
             IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
@@ -31,9 +30,10 @@ namespace Molinos.DataAgro.Business.Managers
             this.clienteBolsaRosarioAPIAgent = clienteBolsaRosarioAPIAgent;
             this.diasHabilesAgent = diasHabilesAgent;
         }
-        public Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra)
+
+        public Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra, bool manual)
         {
-            var oEntityErrors = ValidarPrecioPizarra(precioPizarra);
+            var oEntityErrors = ValidarPrecioPizarra(precioPizarra, manual);
             if (oEntityErrors.HayError)
             {
                 return oEntityErrors;
@@ -58,7 +58,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             try
             {
                 repositorio.Agregar(precioPizarra);
@@ -77,20 +76,24 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        private Resultado ValidarPrecioPizarra(PrecioPizarra precioPizarra)
+        private Resultado ValidarPrecioPizarra(PrecioPizarra precioPizarra, bool manual)
         {
-            var precioMayorHasta = repositorio.ObtenerMayor<PrecioPizarra, DateTime>(x => x.MaterialId == precioPizarra.MaterialId, x => x.FechaHasta);
             var error = new Resultado();
             if (precioPizarra.MaterialId == 0) error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
             if (string.IsNullOrEmpty(precioPizarra.MonedaId)) error.Errores.Add(new ErrorMessage(400, "El campo Moneda no puede estar vacío"));
             if (precioPizarra.FechaHasta.CompareTo(precioPizarra.FechaDesde) == -1) error.Errores.Add(new ErrorMessage(400, "El campo Fecha Hasta no puede ser menor que el campo Fecha Desde"));
-            if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "El rango ingresado no puede ser menor que la fecha hasta del último registro " + precioMayorHasta.FechaHasta.ToString("dd/MM/yyyy")));
+
+            if (manual != true)
+            {
+                var precioMayorHasta = repositorio.ObtenerMayor<PrecioPizarra, DateTime>(x => x.MaterialId == precioPizarra.MaterialId, x => x.FechaHasta);
+                if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "El rango ingresado no puede ser menor que la fecha hasta del último registro " + precioMayorHasta.FechaHasta.ToString("dd/MM/yyyy")));
+            }
+
             if (precioPizarra.Precio == 0) error.Errores.Add(new ErrorMessage(400, "El campo Precio no puede estar vacío"));
             if (precioPizarra.ComercialId == null) error.Errores.Add(new ErrorMessage(400, "El campo Comercial no puede estar vacío"));
             if (precioPizarra.FechaDesde.CompareTo(DateTime.Today) >= 0) error.Errores.Add(new ErrorMessage(400, "El campo Fecha Desde no puede ser igual o mayor a la fecha del día"));
             return error;
         }
-
 
         public List<PrecioPizarraDto> TraerTodoPrecioPizarra()
         {
@@ -143,6 +146,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             });
         }
+
         public Resultado EliminarPizarra(int id)
         {
             var result = new Resultado();
@@ -177,6 +181,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
+
         public PrecioPizarraDto TraerPrecioPizarraPorId(int id)
         {
             return repositorio.Obtener<PrecioPizarra, PrecioPizarraDto>(x => x.Id == id, x => new PrecioPizarraDto
@@ -193,12 +198,14 @@ namespace Molinos.DataAgro.Business.Managers
             List<int> listIdMaterialesBCR = new List<int>();
             List<int> precioPizarraFiltrado;
             List<PrecioPizarra> precioPizarraFiltrado2;
-            // El parámetro fecha ya no se utilizará. Se requiere el "último día hábil"
-            var diaHabilAnterior = diasHabilesAgent.UltimoDiaHabil(DateTime.Now.Date);
+
+            DateTime fechaParam = manual == true ? fecha : DateTime.Now.Date;
+
+            var diaHabilAnterior = diasHabilesAgent.UltimoDiaHabil(fechaParam);
 
             string activeCreador = PermisosHelper.ObtenerUsuario();
             Comercial oComercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == activeCreador);
-            var listMateriales = repositorio.Listar<Material, int>(x => x.MaterialId, y => y.MaterialId != 5);
+            var listMateriales = repositorio.Listar<Material, int>(x => x.MaterialId, y => y.MaterialId != (int)EnumMateriales.GIRASOL_AO);
 
             if (manual)
             {
@@ -206,7 +213,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != 5 &&
+                precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != (int)EnumMateriales.GIRASOL_AO &&
                                                                                x.PizarraId == 1 &&
                                                                                x.FechaDesde == diaHabilAnterior).Select(x => x.MaterialId).ToList();
             }
@@ -216,15 +223,24 @@ namespace Molinos.DataAgro.Business.Managers
             // TRIGO PAN(1), MAÍZ(2), GIRASOL(20), SOJA(21)
             foreach (var p in listMateriales)
             {
-                listIdMaterialesBCR.Add(p == 1 ? 2 : p == 2 ? 1 : p == 3 ? 21 : 20);
+                listIdMaterialesBCR.Add(p == (int)EnumMateriales.MAIZ ? 2 : p == (int)EnumMateriales.TRIGO ? 1 : p == (int)EnumMateriales.SOJA ? 21 : 20);
             }
 
             listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(diaHabilAnterior, listIdMaterialesBCR.ToArray());
-
+            List<int> idsMaterialesNoGuardar = new List<int>();
             if (manual)
             {
                 foreach (var lpBCR in listaPreciosBCR)
                 {
+                    List<PrecioPizarra> precioPizarraFiltrado1 = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == lpBCR.id_MaterialDA &&
+                                                                                                        x.PizarraId == 1 &&
+                                                                                                        x.FechaDesde == diaHabilAnterior &&
+                                                                                                        x.Precio == (int)Math.Round(lpBCR.precio_Cotizacion)).ToList();
+                    if (precioPizarraFiltrado1.Count > 0) {
+                        idsMaterialesNoGuardar.Add(lpBCR.id_MaterialDA);
+                        continue;
+                    }
+
                     precioPizarraFiltrado2 = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == lpBCR.id_MaterialDA &&
                                                                                     x.PizarraId == 1 &&
                                                                                     x.FechaDesde == diaHabilAnterior &&
@@ -240,6 +256,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            listaPreciosBCR = listaPreciosBCR.Where(x => !idsMaterialesNoGuardar.Contains(x.id_MaterialDA)).ToList();
+
             Moneda oMoneda = repositorio.Obtener<Moneda>(x => x.Descripcion.Contains("ARP"));
             Pizarra oPizarra = repositorio.Obtener<Pizarra>(x => x.Descripcion.Contains("ROSARIO"));
 
@@ -254,12 +272,10 @@ namespace Molinos.DataAgro.Business.Managers
                 pp.FechaHasta = lp.fecha_Operacion_Pizarra;
                 pp.MonedaId = oMoneda.MonedaId;
                 pp.UnidadMedida = "TON";
-                //pp.ComercialId = oComercial.ComercialId;
                 pp.ComercialId = oComercial != null ? oComercial.ComercialId : repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId;
 
-                Resultado oEntityErrors = GrabarPrecioPizarra(pp);
+                Resultado oEntityErrors = GrabarPrecioPizarra(pp, manual);
             }
-
         }
     }
 }

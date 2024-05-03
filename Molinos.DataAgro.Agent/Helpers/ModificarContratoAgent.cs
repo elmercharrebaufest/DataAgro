@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ModificarContratoFinalizado;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -15,22 +16,23 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly IRepositorio repositorio;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly ILogger logger;
+        private readonly IFinalizarContratoAgent finalizarContratoAgent;
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent)
+        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent, IFinalizarContratoAgent finalizarContratoAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.diasHabilesAgent = diasHabilesAgent;
+            this.finalizarContratoAgent = finalizarContratoAgent;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string Modificar(Contrato contrato, Contrato contratoGuardado)
         {
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-
                 return "OK";
             }
             try
@@ -109,7 +111,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_DB = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         });
-
                     };
                 }
                 decimal? precioNetoSustentable = null;
@@ -278,7 +279,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 PORC = apertura.Porcentaje
                             });
                         }
-
                     }
                 }
 
@@ -317,7 +317,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                     }
                     );
-
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
 
@@ -345,8 +344,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Localidad obtenida");
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
-
-
 
                 logger.Debug("Cargando contrato");
                 var conModificado =
@@ -429,10 +426,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.CondicionalMonedaId != contrato.CondicionalMonedaId ||
                     contratoGuardado.CondicionalPrecio != contrato.CondicionalPrecio ||
                     contratoGuardado.CondicionalContratoId != contrato.CondicionalContratoId ||
-                    contratoGuardado.CondicionalCantidad != contrato.CondicionalCantidad
-
-                    ;
-
+                    contratoGuardado.CondicionalCantidad != contrato.CondicionalCantidad;
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
                     descuentosGenerales != null && descuentosGenerales.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
@@ -452,17 +446,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+
+                var cantidadAbsoluta = Math.Abs(contrato.Cantidad);
+
                 topesFijacion.Add(new ZMPES5280
                 {
                     FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
                     FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
                     HORAACT = "00:00:00",
                     CANT_MAX = contrato.TipoNegocioId == 1 ?
-                           contrato.Cantidad < 30000 ?
-                           Convert.ToDecimal(contrato.Cantidad) :
-                           (contrato.Cantidad >= 30000 && contrato.Cantidad <= 100000) ? 30000
+                           cantidadAbsoluta < 30000 ?
+                           Convert.ToDecimal(cantidadAbsoluta) :
+                           (cantidadAbsoluta >= 30000 && cantidadAbsoluta <= 100000) ? 30000
                            : Convert.ToDecimal(contrato.KgMaximo) : 0,
-                    CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
+                    CANT_MIN = contrato.TipoNegocioId == 1 ? cantidadAbsoluta < 30000 ? Convert.ToDecimal(cantidadAbsoluta) : 30000 : 0,
                     FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                     VALOR = "KG"
@@ -474,12 +471,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     repositorio.Obtener<Contrato, string>(x => x.Id == contrato.AnulaYReemplazaContratoId, x => x.ContratoSAP);
                 var detalle = new ZMPES5270();
 
-                detalle.CANTIDAD = Convert.ToDecimal(contrato.Cantidad);
+                detalle.CANTIDAD = Convert.ToDecimal(cantidadAbsoluta);
                 detalle.CONTR_DATAAGRO = contrato.Id.ToString();
                 detalle.COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion);
                 detalle.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
                 detalle.FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd");
-                detalle.FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd");
+                detalle.FECHA_ENTREGA = contrato.FechaEntrega.Value.ToString("yyyy-MM-dd");
                 detalle.FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd");
                 detalle.FECHA_LIMITE = fechaDolarizadoString;
                 detalle.GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "";
@@ -563,13 +560,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
                 detalle.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
                 detalle.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
-                detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
-                detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
-                detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
+                detalle.COND_PAGO = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";
+                detalle.PORC_MULTA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "10" : "";
+                detalle.PIZARRA = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
                 detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
-                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
-                    contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+
+                #region BLEND
+                detalle.CODIGO_TC = finalizarContratoAgent.DevolverTipoCambioSAP(contrato.TipoNegocioId, contrato.MonedaId, contrato.TipoAgenteCompraId, contrato.Fecha, true);
+                #endregion
+                logger.Info($"MODIFICA - NegocioId: {contrato.Id} - Contrato Nro: {contrato.ContratoSAP} - CODIGO_TC: {detalle.CODIGO_TC} - TipoDeCambioId: {contrato.TipoDeCambioId}");
+
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;
                 detalle.POSICION = CalcularPosicion(contrato.FechaDesde);
@@ -629,8 +630,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error("Error comunicacion SAP", e);
                 throw;
             }
-
         }
+
         private static decimal? PrecioNetoSustentableSobrePrecio(Contrato contrato, decimal? precioNetoSustentable)
         {
             decimal porcentajeComision = contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
@@ -647,6 +648,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             precioNetoSustentable = Math.Round(precioOriginal, 2);
             return precioNetoSustentable;
         }
+
         private string RellenarEspaciosSAP(string value, int stringLength)
         {
             if (value != null)
@@ -659,6 +661,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
+
         private string CalcularPosicion(DateTime fechaDesde)
         {
             var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(fechaDesde);

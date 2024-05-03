@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 
@@ -35,13 +36,18 @@ namespace WebDataAgro.Controllers
 
             });
         }
+
         public ActionResult ListaLogGrilla(string fechaString)
         {
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var logs = oLogManager.TraerTodoLog(fecha);
 
-            return Json(logs, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(logs, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            return jsonResult;
         }
+
         public List<LogModel> TransformarAModel(List<LogDto> logDto)
         {
             var lista = new List<LogModel>();

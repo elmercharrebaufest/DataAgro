@@ -11,11 +11,13 @@
     var modificarRazonSocial = PermisosHelper.Is(PermisosDataAgro.ModificarRazonSocial);
     var deshabilitarProveedor = PermisosHelper.Is(PermisosDataAgro.DeshabilitarProveedor);
     var ocultarCamposEditar = PermisosHelper.Is(PermisosDataAgro.OcultarCamposEditar);
+    var mostrarCamposApoderado = PermisosHelper.Is(PermisosDataAgro.ProveedorApoderados);
     if (global_asax.GlobalVariables.EsAdministrador)
     {
         modificarDatosCampos = false;
     }
 }
+<script>var tienePermisoApoderados = ConvertirStringABool('@mostrarCamposApoderado');</script>
 <script>
     var ProveedorId = '@ViewBag.ProveedorId';
     var modificarDatosCampos = ConvertirStringABool('@modificarDatosCampos');
@@ -131,7 +133,7 @@
             </div>
             <div class="formulario-campo campo-comisionista " @*id="comisionistaDiv"*@>
                 <span class="campo-span">Opera a través de</span>
-                @Html.TextBox("Comisionista", "", new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "k-textbox k-autocomplete w100 k-autocomplete-clearable k-state-default k-hidden", @style = "width:272px" })
+                @Html.TextBox("Comisionista", "", new { @placeholder = "Buscar por CUIT o razón social", @id = "buscadorProveedor", @class = "k-textbox k-autocomplete w100 k-autocomplete-clearable k-state-default k-hidden", @style = "width:272px" })
             </div>
         </div>
 
@@ -293,6 +295,68 @@
                         </div>
                     </div>
                 </div>
+                <div @(mostrarCamposApoderado ? "" : "hidden") class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Es Apoderado
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="value-contacto">
+                            <input type="checkbox" id="concom-esapoderado" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                    </div>
+                </div>
+                <div hidden class="row concom-form concom-puestoapoderadoDiv">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Puesto Apoderado (*)
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto concom-puestoapoderado">
+
+                        </div>
+                    </div>
+                </div>
+                <div hidden class="row concom-form concom-cuitDiv">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            DNI (*)
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="number" id="concom-cuit" />
+                        </div>
+                    </div>
+                </div>
+                <div hidden class="row concom-form concom-desdeDiv">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Desde (*)
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="date" id="concom-desde">
+                        </div>
+                    </div>
+                </div>
+                <div hidden class="row concom-form concom-hastaDiv">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Hasta (*)
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="date" id="concom-hasta">
+                        </div>
+                    </div>
+                </div>
                 <div class="row concom-form">
                     <div class="col-lg-5">
                         <div class="label-contacto">
@@ -429,12 +493,12 @@
                             <input type="checkbox" id="concom-principal" />
                         </div>
                     </div>
-                    <div class="col-lg-5" style="visibility: hidden;">
+                    <div class="col-lg-5">
                         <div class="label-contacto">
                             Boleto
                         </div>
                     </div>
-                    <div class="col-lg-1" style="visibility: hidden;">
+                    <div class="col-lg-1">
                         <div class="value-contacto">
                             <input type="checkbox" id="concom-boleto" />
                         </div>

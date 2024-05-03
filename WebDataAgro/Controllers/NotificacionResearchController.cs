@@ -79,7 +79,7 @@ namespace WebDataAgro.Controllers
                         Selected = false
                     }).OrderBy(x => x.Value);
             ViewBag.Campana = campanaListItems;
-            var research = researchManager.TraerResearch();
+            var research = researchManager.TraerTipoResearch();
             var researchListItems = research.Select(
                     x => new SelectListItem
                     {

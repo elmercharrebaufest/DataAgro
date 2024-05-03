@@ -46,7 +46,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         OcultarCamposEditar = 116,
         [Display(ResourceType = typeof(Text), Name = "ReasignarProveedorPantallaCupo")]
         ReasignarProveedorPantallaCupo = 117,
-        
+        [Display(ResourceType = typeof(Text), Name = "Proveedor_Apoderados")]
+        ProveedorApoderados = 118,
+
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -272,12 +274,14 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionLocalidad = 524,
 
         //Research
-        [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
-        DatosResearch = 601,
-        [Display(ResourceType = typeof(Text), Name = "Reporte_Research")]
-        ReporteResearch = 602,
+        [Display(ResourceType = typeof(Text), Name = "Mapa_Research")]
+        MapaResearch = 601,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Reporte_Research")]
+        VerReporteResearch = 602,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Research")]
         NotificacionesResearch = 603,
+        [Display(ResourceType = typeof(Text), Name = "Eliminar_Registro_Research")]
+        EliminarRegistroResearch = 604,
 
         //Cupos
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Cupos")]
@@ -344,6 +348,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         HabilitacionDeCupos = 730,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todas_Las_Sugerencias")]
         VerTodasLasSugerencias = 731,
+        [Display(ResourceType = typeof(Text), Name = "Mail_SolExt_Pendientes")]
+        Mail_SolExt_Pendientes = 740,
         //Cupo NO Propio
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CupoNoPropio")]
         Visualizar_CupoNoPropio = 732,
@@ -370,5 +376,11 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
         GenerarBoleto = 900,
 
+
+        //Provincias
+        [Display(ResourceType = typeof(Text), Name = "ABMProvincia")]
+        AbmProvincia = 950,
+        [Display(ResourceType = typeof(Text), Name = "Mail_Impuestos")]
+        MailImpuestos = 960,
     }
 }

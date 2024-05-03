@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Mapa Research";
+}
+
+@section Styles {
+    <link href="~/Content/ResearchMapa.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/ResearchMapa");
+
+    <link href="~/Content/LeaFlet/leaflet.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/MarkerCluster.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/photoswipe.css" rel="stylesheet" />
+    <link href="~/Content/LeaFlet/Control.FullScreen.css" rel="stylesheet" />
+
+    <script src="~/Scripts/LeaFlet/leaflet.js"></script>
+    <script src="~/Scripts/LeaFlet/leaflet.markercluster.js"></script>
+    <script src="~/Scripts/LeaFlet/Control.FullScreen.js"></script>
+
+    <script src="~/Scripts/App/ResearchMapa.js" type="module"></script>
+}
+
+<div id="filter-panel" class="leaflet-control">
+    <button id="filter-button">Filtros</button>
+    <div id="filter-form" style="display: none;">
+        <div>
+            <label>Material:</label>
+            @Html.DropDownList("GranoId", new SelectList(ViewBag.Material, "Value", "Text"), "Todos", new { @class = "form-control" })
+        </div>
+        <br />
+        <div>
+            <label>Campaña:</label>
+            @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Todas", new { @class = "form-control" })
+        </div>
+        <br />
+        <div>
+            <label>ID del registro:</label>
+            <input id="ResearchId" name="ResearchId" class="form-control filtroBusquedaPorId" data-researchId="@ViewBag.ResearchIdJson" />
+            @*@Html.DropDownList("ResearchId", new SelectList(ViewBag.ResearchId, "Value", "Text"), "Todos", new { @class = "multiselect" })*@
+        </div>
+        <br />
+        <label for="AgrupadoId">Agrupado:</label>
+        <input type="checkbox" id="AgrupadoId" name="AgrupadoId" checked />
+    </div>
+</div>
+<div id="map"></div>
+<div name="info-carousel" id="info-carousel" class="leaflet-popup-content"></div>

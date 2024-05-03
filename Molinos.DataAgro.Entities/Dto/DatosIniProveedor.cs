@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<BoletoCompraNetQry> BoleComNet { get; set; }
         public List<BolsaCompraNetQry> BolsComNet { get; set; }
         public List<ComercialDto> comercial { get; set; }
+        public List<PuestoApoderadoDto> tiposApoderados { get; set; }
         public DatosIniProveedor()
         {
             segm = new List<SegmentacionQry>();
@@ -37,6 +38,7 @@ namespace Molinos.DataAgro.Entities.Dto
             BoleComNet = new List<BoletoCompraNetQry>();
             BolsComNet = new List<BolsaCompraNetQry>();
             comercial = new List<ComercialDto>();
+            tiposApoderados = new List<PuestoApoderadoDto>();
         }
     }
 

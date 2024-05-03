@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -339,6 +340,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var oMensaje = new MailMessage();
 
                 oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
@@ -437,17 +443,22 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Send(oMensaje);
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
             }
         }
+
         public Resultado EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar)
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = oContrato.CorredorId.HasValue ? oContrato.CorredorId : oContrato.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
 
@@ -578,6 +589,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+                }
+
                 var id = oFijacionDePrecioContrato.CorredorId.HasValue ? oFijacionDePrecioContrato.CorredorId : oFijacionDePrecioContrato.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
 
@@ -686,7 +702,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
                 oCliente.Send(oMensaje);
-
 
                 return new Resultado();
             }
@@ -1001,7 +1016,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
             }
-            if( oContrato.TarifaAConvenir == true)
+            if (oContrato.TarifaAConvenir == true)
             {
                 htmlBody += "Negocio sustentable con tarifa a convenir antes de la entrega.<br />";
             }
@@ -1296,6 +1311,8 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
                 comercial = repositorio.Listar<Comercial, ComercialDto>(
                     x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido }),
+                tiposApoderados = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
+                    x => new PuestoApoderadoDto { Id = x.Id, Descripcion = x.Descripcion }),
             };
 
             return DatosCombo;
@@ -2280,6 +2297,11 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 Nombres = can.nombre,
                                 Apellido = can.apellido,
+                                CuitApoderado = can.cuit,
+                                FechaDesde = can.desde,
+                                FechaHasta = can.hasta,
+                                EsApoderado = can.esApoderado,
+                                PuestoApoderadoId = can.puestoApoderadoId,
                                 Cargo = can.cargo,
                                 FechaNacimiento = can.fechaNacimiento,
                                 Puesto = can.puesto,
@@ -2327,6 +2349,11 @@ namespace Molinos.DataAgro.Business.Managers
                         var mod = oParam.contactocomercial.Where(x => x.contactoComercialId == con.ContactoComercialId).First();
                         con.Apellido = mod.apellido;
                         con.Nombres = mod.nombre;
+                        con.CuitApoderado = mod.cuit;
+                        con.EsApoderado = mod.esApoderado;
+                        con.PuestoApoderadoId = mod.puestoApoderadoId;
+                        con.FechaDesde = mod.desde;
+                        con.FechaHasta = mod.hasta;
                         con.ProveedorId = (int)oParam.ProveedorId;
                         con.OtrosIntereses = mod.otrosIntereses;
                         con.Puesto = mod.puesto;
@@ -4811,25 +4838,27 @@ namespace Molinos.DataAgro.Business.Managers
         public void GrabarMailProveedor()
         {
             var proveedores = repositorio.Listar<Proveedor>();
-            var lista = mailProveedorAgent.Ejecutar(proveedores.Select(x => x.CUIT).ToList());
+            var listaDto = mailProveedorAgent.Ejecutar(proveedores.Select(x => x.CUIT).ToList());
             var entidades = new List<MailProveedor>();
             repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
             try
             {
-                if (lista != null && lista.Count > 0)
+                if (listaDto != null && listaDto.Count > 0)
                 {
-                    foreach (var item in lista)
+                    foreach (var item in listaDto)
                     {
                         if (!string.IsNullOrEmpty(item.Pesificado))
                         {
                             entidades.Add(new MailProveedor()
                             {
                                 Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
-                                ProveedorId = proveedores.Any(x => x.CUIT == item.Cuit) ?
-                                proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
+                                ProveedorId = proveedores.Any(x => x.CUIT == item.Cuit) ? proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null,
+                                DireccionSap = item.DireccionSap,
+                                LocalidadSap = item.LocalidadSap,
+                                ProvinciaSap = item.ProvinciaSap,
+                                CodigoPostalSap = item.CodigoPostalSap
                             });
                         }
-
                     }
                 }
                 repositorio.AgregarTodos(entidades);
@@ -4837,10 +4866,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("error GrabarMailProveedor");
-                logger.Error(e);
+                logger.Error("error GrabarMailProveedor", e);
             }
-
         }
 
         public void ActualizarProveedoresHome(int ProveedorId)

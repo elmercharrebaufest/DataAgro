@@ -228,6 +228,7 @@
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
     <Compile Include="Controllers\CamposSustentableReporteController.cs" />
+    <Compile Include="Controllers\ResearchReporteController.cs" />
     <Compile Include="Controllers\CupoNoPropioController.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosController.cs" />
     <Compile Include="Controllers\CompraNetTerceroController.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
     <Compile Include="Controllers\LogDataAgroController.cs" />
     <Compile Include="Controllers\ReporteProveedoresController.cs" />
+    <Compile Include="Controllers\ResearchMapaController.cs" />
     <Compile Include="Controllers\TerminosYCondicionesController.cs" />
     <Compile Include="Controllers\FormulaController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
@@ -414,6 +416,40 @@
     <Content Include="Content\bootstrap-toggle.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bulma.min.css" />
+    <Content Include="Content\LeaFlet\Control.FullScreen.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\icon-fullscreen.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\images\layers-2x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\images\layers.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\images\marker-icon-2x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\images\marker-icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\images\marker-shadow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\leaflet.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\MarkerCluster.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\MarkerCluster.Default.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\LeaFlet\photoswipe.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ResearchReporte.css" />
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
@@ -432,6 +468,7 @@
     <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
+    <Content Include="Content\ResearchMapa.css" />
     <Content Include="Content\Sugerencia.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
@@ -1038,6 +1075,8 @@
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AbmFechaFeriado.js" />
     <Content Include="Scripts\App\NegocioPesificacion.js" />
+    <Content Include="Scripts\App\ResearchMapa.js" />
+    <Content Include="Scripts\App\ResearchReporte.js" />
     <Content Include="Scripts\App\SolicitudCupo.js" />
     <Content Include="Scripts\App\AdministracionCupoGrilla.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
@@ -1909,11 +1948,21 @@
     <Content Include="Scripts\kendo\messages\kendo.messages.zh-HK.min.js" />
     <Content Include="Scripts\kendo\messages\kendo.messages.zh-TW.min.js" />
     <Content Include="Scripts\kendo\pako_deflate.min.js" />
+    <Content Include="Scripts\LeaFlet\Control.FullScreen.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\LeaFlet\leaflet.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\LeaFlet\leaflet.markercluster.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Mastersoft.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\jquery.multiselect.js" />
     <Content Include="Scripts\jquery.multiselect.filter.js" />
     <Content Include="Scripts\App\reportes.js" />
+    <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -2817,9 +2866,6 @@
     <Content Include="Views\CupoNoPropio\Index.cshtml" />
     <Content Include="Views\CupoNoPropio\ModalCrearCupoNoPropio.cshtml" />
     <Content Include="Views\CompraNet\AltaMasivaContratos.cshtml" />
-    <Content Include="Templates\AltaMasiva.xlsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\CompraNet\ModalServicios.cshtml" />
     <Content Include="Templates\AltaMasivaConvenio.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -2836,6 +2882,11 @@
     <Content Include="Views\Cupo\Disponibilidad.cshtml" />
     <Content Include="Views\FAQ\_ModalEnviarSugerencia.cshtml" />
     <Content Include="Views\Cache\Index.cshtml" />
+    <Content Include="Views\ResearchMapa\Index.cshtml" />
+    <Content Include="Views\ResearchReporte\Index.cshtml" />
+    <Content Include="Templates\AltaMasiva.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

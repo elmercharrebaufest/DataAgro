@@ -1,0 +1,83 @@
+﻿#map {
+    height: 100vh;
+}
+
+#info-carousel {
+    max-width: 100%;
+}
+
+#carousel-images {
+    width: 100%;
+}
+
+    #carousel-images img {
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+#info-carousel div {
+    display: inline-block;
+    width: 100%;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.pswp__zoom-level-indicator {
+    background: #136912;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: bold;
+    color: #fff;
+    height: auto;
+    align-self: center;
+    padding: 4px 6px 5px;
+    margin-right: 4px;
+}
+
+button.pswp__button--test-button {
+    background: #136912 !important;
+    font-size: 20px;
+    color: #fff;
+}
+
+button.pswp__button--rotate-button {
+    background-image: url(rotate2.png);
+    background-size: 100% 100%;
+    width: 44px;
+    height: 24px;
+    margin-top: 20px;
+}
+
+    button.pswp__button--rotate-button:hover {
+        background-image: url(rotate2.png);
+        background-size: 100% 100%;
+        width: 44px;
+        height: 24px;
+        margin-top: 20px;
+    }
+
+
+#filter-panel {
+    top: 10px;
+    right: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+#filter-button {
+    background: #0074D9;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#filter-form {
+    margin-top: 10px;
+}

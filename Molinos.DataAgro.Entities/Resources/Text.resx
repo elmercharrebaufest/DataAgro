@@ -270,9 +270,6 @@
   <data name="Cuit" xml:space="preserve">
     <value>CUIT</value>
   </data>
-  <data name="Datos_Research" xml:space="preserve">
-    <value>Datos Research</value>
-  </data>
   <data name="December" xml:space="preserve">
     <value>Diciembre</value>
   </data>
@@ -396,6 +393,9 @@
   <data name="Mail_SIO" xml:space="preserve">
     <value>Recibir Mail SIO</value>
   </data>
+  <data name="Mapa_Research" xml:space="preserve">
+    <value>Mapa Research</value>
+  </data>
   <data name="March" xml:space="preserve">
     <value>Marzo</value>
   </data>
@@ -483,14 +483,14 @@
   <data name="RazonSocial" xml:space="preserve">
     <value>Razón Social</value>
   </data>
+  <data name="Eliminar_Registro_Research" xml:space="preserve">
+    <value>Eliminar Registro Research</value>
+  </data>
   <data name="Reasignar_Flete" xml:space="preserve">
     <value>Reasignar Flete Procedencia</value>
   </data>
   <data name="Rechazar_Negocios" xml:space="preserve">
     <value>Rechazar Negocios</value>
-  </data>
-  <data name="Reporte_Research" xml:space="preserve">
-    <value>Reporte Research</value>
   </data>
   <data name="September" xml:space="preserve">
     <value>Septiembre</value>
@@ -506,6 +506,9 @@
   </data>
   <data name="Ver_Mesa" xml:space="preserve">
     <value>Ver Información de Mesa</value>
+  </data>
+  <data name="Ver_Reporte_Research" xml:space="preserve">
+    <value>Ver Reporte Research</value>
   </data>
   <data name="Ver_Solo_Corredores" xml:space="preserve">
     <value>Ver Solo Corredores</value>
@@ -719,7 +722,7 @@
     <value>Visualizar LogsDataAgro</value>
   </data>
   <data name="MercaderiaEnDeposito" xml:space="preserve">
-    <value>Mercaderia en Deposito</value>
+    <value>Mercadería en Deposito</value>
   </data>
   <data name="AprobarCupo" xml:space="preserve">
     <value>Aprobar Cupo</value>
@@ -728,10 +731,10 @@
     <value>Visualizar Reporte Rango Confirmación Automática</value>
   </data>
   <data name="Crear_Negocios_FechaMayorDiaAnterior" xml:space="preserve">
-    <value>Crear Negocios con fecha mayor la día anterior</value>
+    <value>Crear Negocios con fecha mayor al día anterior</value>
   </data>
   <data name="Configuraciones_JefeEnvioMailNegociosConDiaAnterior" xml:space="preserve">
-    <value>Jefe Envio Mail Negocios Con Dia Anterior</value>
+    <value>Jefe Envio Mail Negocios Con Día Anterior</value>
   </data>
   <data name="Error_Negocio" xml:space="preserve">
     <value>Debe agregar un negocio</value>
@@ -743,19 +746,22 @@
     <value>ExportAll Compra Detalle</value>
   </data>
   <data name="EnvioMailNegociosConDiaAnteriorFijacion" xml:space="preserve">
-    <value>Envio Mail a Negocios Con Dia Anterior en Fijaciones</value>
+    <value>Enviar Mail de Negocios Con Día Anterior en Fijaciones</value>
   </data>
   <data name="NegociosFechaMayorDiaAnteriorFijacion" xml:space="preserve">
-    <value>Crear Negocios con Fecha Mayor al Dia Anterior en Fijaciones</value>
+    <value>Crear Negocios con Fecha Mayor al Día Anterior en Fijaciones</value>
   </data>
   <data name="Configuracion_Feriado" xml:space="preserve">
     <value>Configuración Feriado</value>
   </data>
   <data name="Visualizar_Reporte_Evolucion_Fijacion" xml:space="preserve">
-    <value>Visualizar Reporte Evolucion Fijacion</value>
+    <value>Visualizar Reporte Evolución Fijación</value>
   </data>
   <data name="ModificarDolarizadoExpress" xml:space="preserve">
-    <value>Modificacion fijacion dolarizado express</value>
+    <value>Modificar fijación dolarizado express</value>
+  </data>
+  <data name="ModificarDolarizadoFinalizado" xml:space="preserve">
+    <value>Modificar fijación dolarizado</value>
   </data>
   <data name="ModificarCanje" xml:space="preserve">
     <value>Modificar Canje</value>
@@ -766,14 +772,11 @@
   <data name="VisualizarReporteDolarizado" xml:space="preserve">
     <value>Visualizar Reporte Dolarizado</value>
   </data>
-  <data name="ModificarDolarizadoFinalizado" xml:space="preserve">
-    <value>Modificacion fijacion dolarizado</value>
-  </data>
   <data name="ModificarVenta" xml:space="preserve">
     <value>Modificar Venta</value>
   </data>
   <data name="VisualizarAnulacionEnReporteCupo" xml:space="preserve">
-    <value>Visualizar Anulacion En Reporte Cupo</value>
+    <value>Visualizar Anulación En Reporte Cupos</value>
   </data>
   <data name="Error_BolsaRequerida" xml:space="preserve">
     <value>El campo Bolsa es requerido</value>
@@ -794,7 +797,7 @@
     <value>Visualizar Reporte PrecioMoa Pizarra</value>
   </data>
   <data name="ModificarRazonSocial" xml:space="preserve">
-    <value>Modificar Razon Social</value>
+    <value>Modificar Razón Social</value>
   </data>
   <data name="Error_Cantidad" xml:space="preserve">
     <value>El campo cantidad acuerdo no debe estar vacío</value>
@@ -806,7 +809,7 @@
     <value>No recibir Mail</value>
   </data>
   <data name="ModificarLimiteDolarizado" xml:space="preserve">
-    <value>Modificar Limite Dolarizado</value>
+    <value>Modificar Límite Dolarizado</value>
   </data>
   <data name="ModificarLimitePesificado" xml:space="preserve">
     <value>Modificar Límite Pesificado</value>
@@ -818,7 +821,7 @@
     <value>Logs Servidor</value>
   </data>
   <data name="ModificarLimitePesificadoFinalizado" xml:space="preserve">
-    <value>Modificar Limite Pesificado Finalizado</value>
+    <value>Modificar Límite Pesificado Finalizado</value>
   </data>
   <data name="VisualizarReportePagoDiferido" xml:space="preserve">
     <value>Visualizar Reporte Pago Diferido</value>
@@ -839,10 +842,7 @@
     <value>Confirmar Negocios Trigo</value>
   </data>
   <data name="ModificarFijacionVirtual" xml:space="preserve">
-    <value>Modificar Fijacion Virtual</value>
-  </data>
-  <data name="VisualizarReportePagoDiferido" xml:space="preserve">
-    <value>Visualizar Reporte Pago Diferido</value>
+    <value>Modificar Fijación Virtual</value>
   </data>
   <data name="ReasignarProveedorPantallaCupo" xml:space="preserve">
     <value>Reasignar Proveedor Pantalla Cupo</value>
@@ -856,15 +856,11 @@
   <data name="VisualizarReporteContratosAFijarPase" xml:space="preserve">
     <value>Visualizar Reporte Contratos A Fijar Pase</value>
   </data>
-
   <data name="Ver_Todas_Las_Sugerencias" xml:space="preserve">
     <value>Ver Todas Las Sugerencias</value>
   </data>
   <data name="ImporteSustentableEspecial" xml:space="preserve">
     <value>Importe Sustentable Especial</value>
-  </data>
-  <data name="Ver_Todas_Las_Sugerencias" xml:space="preserve">
-    <value>Ver Todas Las Sugerencias</value>
   </data>
   <data name="DescripcionRequerido" xml:space="preserve">
     <value>El campo Descripcion es requerido</value>
@@ -873,7 +869,7 @@
     <value>El campo Tipo de Negocio es requerido</value>
   </data>
   <data name="Habilitacion_Boleto" xml:space="preserve">
-    <value>Habilitacion Boleto</value>
+    <value>Habilitación Boleto</value>
   </data>
   <data name="GenerarBoleto" xml:space="preserve">
     <value>Generar Boleto</value>
@@ -886,9 +882,6 @@
   </data>
   <data name="ConfigurarExcedente" xml:space="preserve">
     <value>Configurar Excedente</value>
-  </data>
-  <data name="ActualizarCompraNet" xml:space="preserve">
-    <value>Actualizar ALV CompraNet</value>
   </data>
   <data name="Visualizar_CupoNoPropio" xml:space="preserve">
     <value>Visualizar Cupo No Propio</value>
@@ -911,7 +904,31 @@
   <data name="Configuracion_Localidad" xml:space="preserve">
     <value>Configuración Localidades</value>
   </data>
-    <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
-        <value>Recibir Mail Sugerencia FAQ</value>
-    </data>
+  <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
+    <value>Recibir Mail Sugerencia FAQ</value>
+  </data>
+  <data name="Mail_SolExt_Pendientes" xml:space="preserve">
+    <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
+  </data>
+  <data name="Divisa_USD" xml:space="preserve">
+    <value>Dólar Americano</value>
+  </data>
+  <data name="Divisa_ARP" xml:space="preserve">
+    <value>Pesos</value>
+  </data>
+  <data name="USD" xml:space="preserve">
+    <value>U$S</value>
+  </data>
+  <data name="ARP" xml:space="preserve">
+    <value>$</value>
+  </data>
+  <data name="Proveedor_Apoderados" xml:space="preserve">
+    <value>Proveedor Apoderados</value>
+  </data>
+  <data name="ABMProvincia" xml:space="preserve">
+    <value>Alta Baja Modificacion Provincia</value>
+  </data>
+  <data name="Mail_Impuestos" xml:space="preserve">
+    <value>Recibir Mails de Jurisdicciones no Inscriptas</value>
+  </data>
 </root>

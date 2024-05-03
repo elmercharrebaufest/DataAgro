@@ -10,7 +10,9 @@ namespace Molinos.DataAgro.Entities.Dto
     public class ProvinciaIni
     {
         public int ProvinciaId { get; set; }                  
-        public string Nombre { get; set; }                  
+        public string Nombre { get; set; }    
+        public bool Inscripto { get; set; }
+
     }
 
 }
