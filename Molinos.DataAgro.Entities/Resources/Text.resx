@@ -379,7 +379,7 @@
     <value>Junio</value>
   </data>
   <data name="Lista_Comercial" xml:space="preserve">
-    <value>Listar en Abm Comerciales</value>
+    <value>Listar en ABM Comerciales</value>
   </data>
   <data name="Lista_Comercial_CompraNet" xml:space="preserve">
     <value>Listar en Comercial CompraNet</value>
@@ -926,9 +926,9 @@
     <value>Proveedor Apoderados</value>
   </data>
   <data name="ABMProvincia" xml:space="preserve">
-    <value>Alta Baja Modificacion Provincia</value>
+    <value>ABM Provincias</value>
   </data>
   <data name="Mail_Impuestos" xml:space="preserve">
-    <value>Recibir Mails de Jurisdicciones no Inscriptas</value>
+    <value>Recibir Mail de Jurisdicciones no Inscriptas</value>
   </data>
 </root>

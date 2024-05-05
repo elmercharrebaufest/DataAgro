@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alta Baja Modificacion Provincia.
+        ///   Looks up a localized string similar to ABM Provincias.
         /// </summary>
         public static string ABMProvincia {
             get {
@@ -1420,7 +1420,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Listar en Abm Comerciales.
+        ///   Looks up a localized string similar to Listar en ABM Comerciales.
         /// </summary>
         public static string Lista_Comercial {
             get {
@@ -1456,7 +1456,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recibir Mails de Jurisdicciones no Inscriptas.
+        ///   Looks up a localized string similar to Recibir Mail de Jurisdicciones no Inscriptas.
         /// </summary>
         public static string Mail_Impuestos {
             get {

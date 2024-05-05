@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
@@ -340,7 +341,6 @@ namespace WebDataAgro.Services
             }
             logger.Debug("Alta de datos contrato");
 
-
             contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
             contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : contratoSAP.SinBoleto == "X" ? 5 : 3;
             contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
@@ -605,12 +605,15 @@ namespace WebDataAgro.Services
             }
             contrato.Pizarra = contratoSAP.Pizarra == "X";
 
-            foreach (var desc in contrato.Descuentos)
+            if (ConfigurationManager.AppSettings["SacarCeroSAP"] == "Si") //se borra este bloque si se confirma que la división ya no es necesaria. May24
             {
-                // los importes en USDM que llegan de sap tienen un 0 de mas
-                if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM")
+                foreach (var desc in contrato.Descuentos)
                 {
-                    desc.Importe = desc.Importe / 10;
+                    // los importes en USDM que llegan de sap tienen un 0 demás
+                    if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM")
+                    {
+                        desc.Importe = desc.Importe / 10;
+                    }
                 }
             }
         }
