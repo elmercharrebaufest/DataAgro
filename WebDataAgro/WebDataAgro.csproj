@@ -2775,7 +2775,7 @@
     <Content Include="Views\PrecioPizarra\_ListaPrecioPizarra.cshtml" />
     <Content Include="Views\Configuracion\Index.cshtml" />
     <Content Include="Views\Rol\Index.cshtml" />
-    <Content Include="Views\Rol\ModalLimite.cshtml" />
+    <Content Include="Views\Rol\ModalPermisos.cshtml" />
     <Content Include="Views\Home\ModalObjetivo.cshtml" />
     <Content Include="Views\Home\ModalObjetivoDetalle.cshtml" />
     <Content Include="Views\Home\BorrarCookie.cshtml" />

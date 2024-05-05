@@ -222,6 +222,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NegocioPesificado = 419,
         [Display(ResourceType = typeof(Text), Name = "Mail_MATPrimary")]
         MailMATPrimary = 420,
+        [Display(ResourceType = typeof(Text), Name = "Mail_Impuestos")]
+        MailImpuestos = 421,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
@@ -255,7 +257,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Constantes")]
         ConfiguracionConstantes = 515,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Roles_Permisos")]
-        ConfiguracionRolesPermisos = 516,      
+        ConfiguracionRolesPermisos = 516,
         [Display(ResourceType = typeof(Text), Name = "Administracion_Logs")]
         LogDataAgro = 517,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Feriado")]
@@ -272,6 +274,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfigurarExcedente = 523,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Localidad")]
         ConfiguracionLocalidad = 524,
+        [Display(ResourceType = typeof(Text), Name = "ABMProvincia")]
+        AbmProvincia = 525,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Mapa_Research")]
@@ -376,11 +380,5 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
         GenerarBoleto = 900,
 
-
-        //Provincias
-        [Display(ResourceType = typeof(Text), Name = "ABMProvincia")]
-        AbmProvincia = 950,
-        [Display(ResourceType = typeof(Text), Name = "Mail_Impuestos")]
-        MailImpuestos = 960,
     }
 }
