@@ -66,7 +66,7 @@ function CreateGridRol() {
             },
             {
                 field: "Id", title: " ", filterable: false, sortable: false, width: 75, template: function (dataItem) {
-                    return '<a data-toggle="tooltip" title="EditarRol" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
+                    return '<a data-toggle="tooltip" title="EditarRol" class="links-grid" onclick="Editar(' + dataItem.Id + ')">' +
                         '<span> <i class="fa fa-pencil"></i> </span ></a >' +
                     '<a data-toggle="tooltip" title="" class="" onclick="Eliminar(' + dataItem.Id + ')">' +
                     '<span> <i class="fa fa-trash" aria-hidden="true"></i> </span ></a >';
