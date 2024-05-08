@@ -185,6 +185,7 @@
     <Compile Include="Agent\IVisualizarCapacidadProductivaAgent.cs" />
     <Compile Include="Clausulas\IServicioClausulas.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />
+    <Compile Include="Managers\IConfirmaManager.cs" />
     <Compile Include="Managers\IBoletoManager.cs" />
     <Compile Include="Managers\ICapacidadProductivaManager.cs" />
     <Compile Include="Managers\ICupoNoPropioManager.cs" />

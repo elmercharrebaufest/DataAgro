@@ -196,6 +196,7 @@
   <ItemGroup>
     <Compile Include="Clausulas\ServicioClausulas.cs" />
     <Compile Include="Criterios\ServicioCriterios.cs" />
+    <Compile Include="Managers\ConfirmaManager.cs" />
     <Compile Include="Managers\BoletoManager.cs" />
     <Compile Include="Managers\CapacidadProductivaManager.cs" />
     <Compile Include="Managers\CupoNoPropioManager.cs" />

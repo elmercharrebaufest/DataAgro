@@ -194,6 +194,8 @@
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\ApoderadoSapDto.cs" />
+    <Compile Include="Dto\ConfirmaResult.cs" />
+    <Compile Include="Dto\ConfirmaGeneradoDto.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
     <Compile Include="Dto\CupoEliminarResult.cs" />
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
@@ -448,6 +450,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\Confirma.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
     <Compile Include="Entities\ClausulaCuarentaYOcho.cs" />
     <Compile Include="Entities\ClausulaCuarentaYNueve.cs" />
