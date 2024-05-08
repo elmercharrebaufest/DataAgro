@@ -1,0 +1,92 @@
+@{
+    ViewBag.Title = "Generar Confirma";
+}
+
+@section Scripts{
+    <script src="~/Scripts/App/Filtros.js"></script>
+    <script type="text/javascript" src="~/Scripts/App/GenerarConfirma.js"></script>
+}
+
+<div class="row" style="padding: 10px 10px 0px 10px !important;"><h3>Generación de Confirmas</h3></div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2 col-md-1">
+            <label>Tipo de Negocio</label>
+        </div>
+        <div class="col-sm-2">
+            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control" })
+        </div>
+        <div class="col-xs-12 col-md-3">
+            @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%" })
+        </div>
+        <div class="col-xs-12 col-md-3">
+            @Html.TextBox("NegocioHasta", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%" })
+        </div>
+        <div class="col-xs-12 col-md-1">
+            <button type="button" id="abrirPopUpCargarConfirmas" title="Ver Negocios" class="k-button k-button-icontext fa fa-list" style="height:34px; text-align: left"></button>
+            <div class="modal fade in" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+            </div>
+        </div>
+        <div class="col-sm-5 col-md-2" style="text-align: end">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="mailId" checked>
+                <label style="text-align: end" class="form-check-label ml-3" for="mailId">
+                    Enviar Mail
+                </label>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-2 col-md-1">
+            <label>Fecha de confirmación</label>
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control" style="width:100%" type="date" id="desde">
+        </div>
+        <div class="col-sm-2 col-md-1">
+            <label>Hasta</label>
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control" style="width:100%" type="date" id="hasta" disabled>
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <button type="button" id="filtrarConfirmas" title="Filtrar por fecha" class="k-button k-button-icontext fa fa-filter" style="height:34px; text-align:left" disabled></button>
+        </div>
+    </div>
+    <br />
+    <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
+        <div class="col-sm-5 col-md-10"></div>
+        <div class="col-sm-5 col-md-2">
+            <button type="button" id="filtrar" class="k-button k-button-icontext" style="height:34px" onclick="Generar()">
+                Generar Confirmas
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group my-4">
+
+    </div>
+</div>
+
+<style>
+    #filtrar {
+        height: 37px;
+        BACKGROUND: green;
+        background: #017940 !important;
+        color: white;
+        color: #fff;
+        padding: 4px;
+        border-radius: 5px !important;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .modal .confirmado-modal div {
+        background: #008e61 !important;
+        color: white;
+    }
+</style>

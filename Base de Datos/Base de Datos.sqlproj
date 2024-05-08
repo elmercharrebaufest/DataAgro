@@ -355,6 +355,7 @@
     <Build Include="dbo\Tables\ResearchAdjunto.sql" />
     <Build Include="dbo\Tables\PuestoApoderado.sql" />
     <Build Include="dbo\Tables\TipoDeCambio.sql" />
+    <Build Include="dbo\Tables\Confirma.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

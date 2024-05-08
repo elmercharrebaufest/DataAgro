@@ -228,6 +228,7 @@
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
     <Compile Include="Controllers\CamposSustentableReporteController.cs" />
+    <Compile Include="Controllers\ConfirmaController.cs" />
     <Compile Include="Controllers\ResearchReporteController.cs" />
     <Compile Include="Controllers\CupoNoPropioController.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosController.cs" />
@@ -1069,6 +1070,7 @@
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\FAQ.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
+    <Content Include="Scripts\App\GenerarConfirma.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
     <Content Include="Scripts\App\PanelAsociarNegocios.js" />
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
@@ -2887,6 +2889,7 @@
     <Content Include="Templates\AltaMasiva.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Confirma\GenerarConfirma.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
