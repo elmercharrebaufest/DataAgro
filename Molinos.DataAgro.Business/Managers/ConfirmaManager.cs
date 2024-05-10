@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             this.repositorio = repositorio;
             this.logger = logger;
+            this.status = status;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -63,7 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             codigos.Sort();
-            return codigos;
+            return codigos.FindAll(x => ValidarNegocio(x, tipoNegocio) == ""); ;
         }
 
         public List<string> ValidarNegocios(List<string> codigosSAP, int tipoNegocio)
@@ -93,14 +94,14 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000);
             }
-
-            return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
+            var result = listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
+            return result.FindAll(x => ValidarNegocio(x, tipoNegocio) == "");
         }
 
-        private string ValidarNegocio(string codigoSAP, int tipoNegocio)
+        public string ValidarNegocio(string codigoSAP, int tipoNegocio)
         {
             var mensaje = "";
-            /*var kilosDisponibles = 10000;
+            var kilosDisponibles = 10000;
             var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == codigoSAP);
             if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
             {
@@ -108,45 +109,40 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (contrato.Cantidad < kilosDisponibles)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
+                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por su cantidad menor a 10 toneladas.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
                     }
                     if (contrato.Canje != true)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por no ser de canje.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {codigoSAP} por no ser de canje.");
+                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por no ser de canje.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
                     }
                     if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {codigoSAP} por no tener tilde de boleto físico o carta oferta.");
+                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por no tener tilde de boleto físico o carta oferta.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de boleto físico o carta oferta.");
                     }
                 }
                 else
                 {
-                    mensaje = "No se encontró el contrato para la fijación seleccionada.";
+                    mensaje = $"No se encontró el contrato para la fijación {codigoSAP} seleccionada.";
                 }
             }
             else
             {
-                //var res = status.ValidarEstado(codigoSAP);
-                //if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
-                //{
-                //    string motivoStatus = StatusNegocioConfirma(res);
-                //    mensaje = $"No se pudo generar el boleto para el contrato por su estado: {motivoStatus}";
-                //    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {codigoSAP}");
-                //}
-                //else if (string.IsNullOrEmpty(res.Status))
-                //{
-                //    mensaje = $"No se pudo generar el boleto para el contrato por estar en slip.";
-                //    logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
-                //}
+                var res = status.ValidarEstado(codigoSAP);
+                if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
+                {
+                    string motivoStatus = StatusNegocioConfirma(res);
+                    mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por su estado: {motivoStatus}";
+                    logger.Debug($"No se puede generar el confirma por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {codigoSAP}");
+                }
+                else if (string.IsNullOrEmpty(res.Status))
+                {
+                    mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por estar en slip.";
+                    logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
+                }
             }
-            if (contrato != null && contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-            {
-                mensaje = "No se pudo generar el boleto por tener tilde de Confirma.";
-                logger.Debug($"No se pudo generar el boleto para el negocio {codigoSAP} por tener tilde de Confirma.");
-            }*/
             return mensaje;
         }
 

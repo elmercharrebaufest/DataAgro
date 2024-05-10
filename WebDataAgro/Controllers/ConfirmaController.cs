@@ -62,12 +62,20 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        //FiltrarNegociosPorFecha
-        public ActionResult FiltrarNegociosPorFecha(string desde, string hasta, int negocio)
+        public ActionResult ValidarNegocio(string codigoSAP, int tipoNegocio)
         {
             return new JsonResult()
             {
-                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
+                Data = confirmaManager.ValidarNegocio(codigoSAP, tipoNegocio)
+            };
+        }
+
+        //FiltrarNegociosPorFecha
+        public ActionResult FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
+        {
+            return new JsonResult()
+            {
+                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, tipoNegocio)
             };
         }
 
