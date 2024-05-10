@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Provincias";
+    ViewBag.Title = "Jurisdicciones Inscriptas";
 }
 
 @section Scripts {
@@ -7,48 +7,53 @@
 }
 
 
-<h3>Jurisdicciones Inscriptas</h3>
-<br />
-
 <div id="Abm">
-
     <div class="row">
+        <div class="col-md-4"></div>
         <div class="col-md-6">
-            <div id="gridIniProvincia" data-bind="source: Resultados" style="height:200px;"></div>
+            <h3>Jurisdicciones Inscriptas</h3>
         </div>
+        <br />
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-6">
+            <div id="gridIniProvincia" data-bind="source: Resultados" style="height:300px;"></div>
         </div>
+        <div class="col-md-4"></div>
     </div>
 
     <br />
 
     <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-2">
-            <label>Nombre</label>
+            <label>Nombre de jurisdicción</label>
         </div>
         <div class="col-md-4">
             <input id="Nombre" type="text" class="k-textbox" data-bind="value: Provincia.Nombre, disabled: isControlDisabled" maxlength="50" style="max-width:311px" />
             <img id="errNombre" src="~/Content/Images/error.png" style="display:none" />
         </div>
-        <div class="col-md-6">
-        </div>
+        <div class="col-md-4"></div>
     </div>
 
-    <div class="row">
+    <div class="row" style="display:flex; align-items:center;">
+        <div class="col-md-2"></div>
         <div class="col-md-2">
-            <label>Inscripto MOA</label>
+            <label>MOA está inscripto</label>
         </div>
         <div class="col-md-4">
             <input id="Inscripto" class="campo-input-input" data-bind="checked:Provincia.Inscripto, disabled: isControlDisabled" type="checkbox" />
-
             <img id="errNombre" src="~/Content/Images/error.png" style="display:none" />
         </div>
+        <div class="col-md-4"></div>
     </div>
 
     <br />
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
             <button id="butAgregar" class="k-button ms-marginTop" type="button" data-role="button" data-bind="disabled: isAddDisabled" hidden>Agregar</button>
             <button id="butGrabar" class="k-button ms-marginTop" type="button" data-role="button" data-bind="disabled: isControlDisabled" style="margin-left:15px;">Guardar</button>
             <button id="butEliminar" class="k-button ms-marginTop" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;" hidden>Eliminar</button>

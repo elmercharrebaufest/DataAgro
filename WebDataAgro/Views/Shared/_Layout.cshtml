@@ -67,7 +67,7 @@
 }
 <body id="theBody" class="">
 
-    <div class="navbar navbar-inverse" id="navbarPrincipal" @(ambientePruebas!=""? "style=background-color:steelblue;":"")>
+    <div class="navbar navbar-inverse" id="navbarPrincipal" @(ambientePruebas != "" ? "style=background-color:steelblue;" : "")>
         <div class="container-fluid">
             <div class="navbar-header ">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -90,7 +90,7 @@
 
             </div>
 
-            <div class="collapse navbar-collapse " id="myNavbar" @(ambientePruebas!=""? "style=background-color:steelblue;":"")>
+            <div class="collapse navbar-collapse " id="myNavbar" @(ambientePruebas != "" ? "style=background-color:steelblue;" : "")>
                 <div class=""></div>
                 <ul class="nav navbar-nav left">
                     @if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
@@ -116,13 +116,13 @@
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-                        {
-                            <li>
-                                <a href="/Cubproveedores" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                                </a>
-                            </li>
-                        }*@
+                                    {
+                                        <li>
+                                            <a href="/Cubproveedores" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                                            </a>
+                                        </li>
+                                    }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -654,13 +654,13 @@
                             <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Research <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="research">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
-                                {
-                                    <li>
-                                        <a href="~/Research" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Datos Research
-                                        </a>
-                                    </li>
-                                }*@
+                                    {
+                                        <li>
+                                            <a href="~/Research" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart"></i> Datos Research
+                                            </a>
+                                        </li>
+                                    }*@
 
                                 @if (PermisosHelper.Is(PermisosDataAgro.VerReporteResearch))
                                 {
@@ -706,14 +706,14 @@
                             <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boleto <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="boleto">
 
-                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
-                                {
-                                    <li>
-                                        <a href="~/Confirma" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Confirma
-                                        </a>
-                                    </li>
-                                }
+                                @*@if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                    {
+                                        <li>
+                                            <a href="~/Confirma" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart"></i> Confirma
+                                            </a>
+                                        </li>
+                                    }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                                 {
                                     <li>
