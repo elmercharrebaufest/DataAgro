@@ -588,7 +588,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var precio = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
-                    precio = basico.Moneda + " " + basico.PrecioNeto.ToString();
+                    var simboloMoneda = basico.Moneda == "ARP" ? "ARS" : basico.Moneda;
+                    precio = simboloMoneda + " " + basico.PrecioNeto?.ToString("N", new CultureInfo("es-AR"));
                 }
                 else
                 {
