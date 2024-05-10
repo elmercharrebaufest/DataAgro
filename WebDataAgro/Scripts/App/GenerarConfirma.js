@@ -1,9 +1,10 @@
-//Variables Globales
-var viewModel;
+//Inicializar
 
 $(document).ready(function () {
     inicializarPopUpContratoSap();
 });
+
+//Funcion Generar Confirma
 
 function Generar() {
     var confirma = {
@@ -14,7 +15,7 @@ function Generar() {
     var data = confirma;
     var result = MSExecuteOnServer(url, data);
     if (result.length == 0) {
-        MensErr("No se generó ningún boleto.");
+        MensErr("No se generó ningún Confirma.");
     } else {
         $("#ModalBoleto").modal("show");
     }
@@ -49,12 +50,20 @@ $("body").on("change", "#desde", function () {
     }
 });
 
+$("body").on("click", "#abrirPopUpCargarConfirmas", function () {
+    $("#popupcargarvalores").modal('toggle');
+});
 
-function modalcontratoGenerarConfirma() {
-    $("#abrirPopUpCargarConfirmas").click(function () {
-        $("#popupcargarvalores").modal('toggle');
-    });
-}
+$("#Negocio").bind("paste", function (e) {//En caso de Pegar Codigos
+    e.preventDefault();
+    if (e.originalEvent.clipboardData !== undefined) {
+        clipText = e.originalEvent.clipboardData.getData('text/plain');
+    } else {
+        clipText = window.clipboardData.getData('text');
+    }
+    $("#Negocio").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+    ActualizarTabla();
+});
 
 function ListarNegocios() {
     debugger
@@ -63,13 +72,18 @@ function ListarNegocios() {
     var hasta = $("#NegocioHasta").val();
     var lista = trimEnd($("#Negocio").val()).split(';');
     //Realizamos la consulta correspondiente
+    BlockUi("Consultando...");
     if (isNullOrWhitespace(hasta)) {
         let data = { listaCodigosSAP: lista, tipoNegocio: tipoNegocio };
         rechazados = MSExecuteOnServer('/Confirma/ValidarNegocios', data);
         if (rechazados.length > 0) {
             MensAlerta(rechazados);
+        } else {
+            ActualizarTabla();
+            $("#popUpCargarValores").modal('toggle');
+            $('#popUpCargarValores').modal('show');
         }
-        ActualizarTabla();
+        
     } else {
         let data = { desdeSAP: $("#Negocio").val(), hastaSAP: $("#NegocioHasta").val(), tipoNegocio: tipoNegocio };
         result = MSExecuteOnServer('/Confirma/ListarNegocios', data);
@@ -84,51 +98,32 @@ function ListarNegocios() {
                 $("#NegocioHasta").val("");
             }
             ActualizarTabla();
+            $("#popUpCargarValores").modal('toggle');
+            $('#popUpCargarValores').modal('show');
         }
     }
-    $("#popUpCargarValores").modal('toggle');
-    $('#popUpCargarValores').modal('show');
-}
-
-
-//Funciones Utiles
-function isNullOrWhitespace(input) {
-    return !input || !input.trim();
-}
-
-function trimEnd(cadena) {
-    return cadena.at(cadena.length - 1) == ';' ? cadena.slice(0, cadena.length - 1) : cadena;
+    $.unblockUI();
 }
 
 function inicializarPopUpContratoSap() {
-
     crearPopUp("Confirmas");
-
-    modalcontratoGenerarConfirma();
-
-
-    $("#Negocio").bind("paste", function (e) {
-        e.preventDefault();
-        if (e.originalEvent.clipboardData !== undefined) {
-            clipText = e.originalEvent.clipboardData.getData('text/plain');
-        } else {
-            clipText = window.clipboardData.getData('text');
-        }
-        $("#Negocio").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
-
-        ActualizarTabla();
-    });
+    $("#popupcargarvalores").modal('toggle'); //Mostrar/Ocultar Modal/PopUp Cargar Valores
 
     $(document).on("click", ".agregarContrato", function () {
-        //PENDIENTE: Se requiere agregar validacion contra el servicio del Codigo SAP aqui ingresado
-        let num = $("#nuevoNumContrato").val();
-        if (num.trim() != "" && num.trim() != null) {
-            let lista = trimEnd($("#Negocio").val()).split(';');
-            lista.push(num);
-            $("#Negocio").val(lista.join(';'));
-            $("#contratos-table").append('<tr><td>' + num + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" data-id="' + num + '" style="height: 34px;float: right" type="button"></button></td></tr></td></tr>');
-            $(".nuevoNumContrato").val('');
-            $(".nuevoNumContrato").focus();
+        let num = $("#nuevoNumContrato").val(); //recupera el numero ingresado
+        if (num.trim() != "" && num.trim() != null) { //validamos que no este vacio
+            let mensaje = ValidarNegocio(num); //validamos el codigo
+            if (mensaje == "") { //Válido 
+                let lista = trimEnd($("#Negocio").val()).split(';');
+                lista.push(num);
+                $("#Negocio").val(lista.join(';'));
+                $("#contratos-table").append('<tr><td>' + num + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" data-id="' + num + '" style="height: 34px;float: right" type="button"></button></td></tr></td></tr>');
+                $(".nuevoNumContrato").val('');
+                $(".nuevoNumContrato").focus();
+            } else { //Inválido
+                MensErr(mensaje);
+            }
+            
         }
     });
 
@@ -195,13 +190,12 @@ function ArmarTabla(contratos) {
     $("#contratos-table").append(tabla);
 }
 
-
 function FiltrarNegocios() {
     let fechaDesde = $("#desde").val();
     let fechaHasta = $("#hasta").val();
     let tipoNegocio = $("#TipoNegocioId").val();
     BlockUi("Consultando...");
-    var data = { desde: fechaDesde, hasta: fechaHasta, negocio: tipoNegocio };
+    var data = { desde: fechaDesde, hasta: fechaHasta, tipoNegocio: tipoNegocio };
     var result = MSExecuteOnServer('/Confirma/FiltrarNegociosPorFecha', data);
     $.unblockUI();
     if (result.length == 0) {
@@ -215,4 +209,22 @@ function FiltrarNegocios() {
         }
         ActualizarTabla();
     }
+}
+
+function ValidarNegocio(codigoSAP) {
+    let tipoNegocio = $("#TipoNegocioId").val();
+    BlockUi("Consultando...");
+    var data = { codigoSAP: codigoSAP, tipoNegocio: tipoNegocio };
+    var result = MSExecuteOnServer('/Confirma/ValidarNegocio', data);
+    $.unblockUI();
+    return result;
+}
+
+//Funciones Utiles
+function isNullOrWhitespace(input) {
+    return !input || !input.trim();
+}
+
+function trimEnd(cadena) {
+    return cadena.at(cadena.length - 1) == ';' ? cadena.slice(0, cadena.length - 1) : cadena;
 }
