@@ -341,7 +341,7 @@
                                 {
                                     <li>
                                         <a href="~/Provincia" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Provincias
+                                            <i class="icon-bar-chart"></i> Jurisdicciones Inscriptas
                                         </a>
                                     </li>
                                 }
@@ -705,6 +705,15 @@
                         <li class="dropdown">
                             <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boleto <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="boleto">
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                {
+                                    <li>
+                                        <a href="~/Confirma" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Confirma
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                                 {
                                     <li>
