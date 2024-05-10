@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void InicializarTest()
         {
-            centroManagerMock.Setup(x => x.TraerDatosIniciales()).Returns( new DatosIniAbmCentro()
+            centroManagerMock.Setup(x => x.TraerDatosIniciales()).Returns(new DatosIniAbmCentro()
             {
                 Centro = new List<CentroCombo>()
                     {
@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     }
             });
             var result = target.Inicializar();
-            
+
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"Acopio\":false,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"Acopio\":false,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -82,9 +82,9 @@ namespace Molinos.DataAgro.Test.Controllers
             centroManagerMock.Setup(x => x.TraerCentro(1)).Returns(new CentroDto
             {
                 Id = 1,
-                Descripcion= "A",
-                CodigoSap ="A"
-            }                            
+                Descripcion = "A",
+                CodigoSap = "A"
+            }
             );
             var result = target.CentroCombo(new AbmCentroParam { Id = 1 });
 
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -140,7 +140,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarCentroTest()
         {
             centroManagerMock.Setup(x => x.EliminarCentro(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmCentroParam {Id = 1});
+            var result = target.Eliminar(new AbmCentroParam { Id = 1 });
 
             Assert.NotNull(result);
 
@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -174,7 +174,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CUIT\":null,\"RazonSocial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false,\"NoPropio\":false,\"Orden\":null,\"CodigoConfirma\":null,\"CUIT\":null,\"RazonSocial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }
