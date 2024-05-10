@@ -5,9 +5,7 @@ using Molinos.DataAgro.Repository;
 using System;
 using Humanizer;
 using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -21,60 +19,62 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaOnce clausula)
         {
+            //SI ESTÁ SELECCIONADA BONIFICACIONES SOBRE PRECIO Y/O POR FUERA DE PRECIO
+
             var res = new ResultadoClausula();
 
-            var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-            var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+            var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+            var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
 
-            if (descuentoGeneralSobrePrecio.Porcentaje > 0)
+            if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
             {
-                res.Texto += $"Se bonificará sobre el precio el { descuentoGeneralSobrePrecio.Porcentaje }% por tonelada. ";
+                res.Texto += $"Se bonificará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio.Porcentaje < 0)
+            if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
             {
-                res.Texto += $"Se descontará sobre el precio el { descuentoGeneralSobrePrecio.Porcentaje }% por tonelada. ";
+                res.Texto += $"Se descontará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio.Importe > 0)
+            if (descuentoGeneralSobrePrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará sobre el precio el { descuentoGeneralSobrePrecio.Importe } { descuentoGeneralSobrePrecio.Moneda } " +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe) }) por tonelada. ";
+                res.Texto += $"Se bonificará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe} " +
+                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio.Importe < 0 && !clausula.Basico.TipoPosicionCBOTId.HasValue)
+            if (descuentoGeneralSobrePrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará sobre el precio el { descuentoGeneralSobrePrecio.Importe } { descuentoGeneralSobrePrecio.Moneda } " +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe) }) por tonelada. ";
+                res.Texto += $"Se descontará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe} " +
+                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
             }
 
 
-            if (descuentoGeneralFueraPrecio.Porcentaje > 0)
+            if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
             {
-                res.Texto += $"Se bonificará por fuera del precio el { descuentoGeneralFueraPrecio.Porcentaje }% por tonelada. ";
+                res.Texto += $"Se bonificará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
             }
-            if (descuentoGeneralFueraPrecio.Porcentaje < 0)
+            if (descuentoGeneralFueraPrecio?.Porcentaje < 0)
             {
-                res.Texto += $"Se descontará por fuera del precio el { descuentoGeneralFueraPrecio.Porcentaje }% por tonelada. ";
+                res.Texto += $"Se descontará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
             }
-            if (descuentoGeneralFueraPrecio.Importe > 0)
+            if (descuentoGeneralFueraPrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará por fuera del precio el { descuentoGeneralFueraPrecio.Importe } { descuentoGeneralFueraPrecio.Moneda }" +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe) }) por tonelada. ";
+                res.Texto += $"Se bonificará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {descuentoGeneralFueraPrecio.Importe}" +
+                    $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe)}) por tonelada. ";
             }
-            if (descuentoGeneralFueraPrecio.Importe < 0 && !clausula.Basico.TipoPosicionCBOTId.HasValue)
+            if (descuentoGeneralFueraPrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará por fuera del precio el { descuentoGeneralFueraPrecio.Importe } { descuentoGeneralFueraPrecio.Moneda }" +
+                res.Texto += $"Se descontará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {descuentoGeneralFueraPrecio.Importe}" +
                     $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe)}) por tonelada. ";
             }
             return res;
         }
 
-        public string DevolverNumeroEnLetras(decimal numero)
+        private string DevolverNumeroEnLetras(decimal numero)
         {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
+            numero = Math.Round(numero, 2);
+            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
+            var fraccion = numero - Math.Floor(numero);
             if (fraccion > 0)
             {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
+                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}";
             }
             return letras;
         }

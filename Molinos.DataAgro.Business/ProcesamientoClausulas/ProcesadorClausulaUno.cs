@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             }
             res.Texto += $"puesta sobre camión en: Planta {clausula.Basico.DestinoDescripcion} " +
-                   $"Localidad {clausula.Basico.DestinoLocalidad}, de Provincia de {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
+                   $"Localidad de {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
                    $"la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
             if (clausula.Basico.Consignatario == true)
             {
@@ -83,14 +83,14 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 foreach (var precio in clausula.Basico.PreciosPactados)
                 {
                     res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
-                        $" {precio.MonedaPactadoId} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)})";
+                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)})";
                 }
             }
 
             return res;
         }
 
-        public string DevolverNumeroEnLetras(decimal numero)
+        private string DevolverNumeroEnLetras(decimal numero)
         {
             numero = Math.Round(numero, 2);
             var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();

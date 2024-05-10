@@ -2,10 +2,6 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
 
@@ -21,26 +17,15 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaCuarentaYCuatro clausula)
         {
+            //SI EL CONTRATO A PRECIO ES DE ACOPIADOR O CON CORREDOR EN USDM
+
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == 2 && (clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador || (clausula.Basico.CorredorId > 0 && clausula.Basico.Moneda == "USD")))
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador || (clausula.Basico.CorredorId > 0) && clausula.Basico.Moneda == "USD"))
             {
-                res.Texto += "Toda vez que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas desde que la misma fuera entregada y " +
-                    "aplicada, las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer el tipo de cambio a " +
-                    "utilizar en los términos dispuestos en el presente boleto";
+                res.Texto += "Toda vez que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas desde que la misma fuera entregada y aplicada, " +
+                    "las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
             }
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }
