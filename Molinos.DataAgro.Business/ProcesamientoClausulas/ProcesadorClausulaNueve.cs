@@ -5,9 +5,7 @@ using Molinos.DataAgro.Repository;
 using System;
 using Humanizer;
 using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -21,26 +19,28 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaNueve clausula)
         {
+            //SI TIENEN INDICADA TARIFA DE FLETE (PUEDE SER CUALQUIER TIPO: POSIBLES VALORES: REAL, ESTIMADO PROVISORIO, ESTIMADO CONFIRMADO)
+
             var res = new ResultadoClausula();
 
-            if (!string.IsNullOrEmpty(clausula.Basico.NivelTarifa))
+            if (clausula.Basico.TarifaFlete.HasValue)
             {
-                res.Texto += $"Molinos Agro S. A. se hará cargo del traslado de la mercadería abonando una tarifa de $ { clausula.Basico.TarifaFlete }" +
-                    $"({DevolverNumeroEnLetras(clausula.Basico.TarifaFlete ?? 0) }) por tonelada, la cual se al momento de contratación del " +
-                    $"transporte será ajustada sobre la liquidación final o por medio de factura/nota de crédito. ";
+                res.Texto += $"Molinos Agro S. A. se hará cargo del traslado de la mercadería abonando una tarifa de $ {clausula.Basico.TarifaFlete?.ToString("N", new CultureInfo("es-AR"))}" +
+                    $"({DevolverNumeroEnLetras(clausula.Basico.TarifaFlete.Value)}) por tonelada, la cual se al momento de contratación del " +
+                    $"transporte será ajustada sobre la liquidación final o por medio de factura/nota de crédito.";
             }
 
             return res;
         }
 
-        public string DevolverNumeroEnLetras(decimal numero)
+        private string DevolverNumeroEnLetras(decimal numero)
         {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
+            numero = Math.Round(numero, 2);
+            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
+            var fraccion = numero - Math.Floor(numero);
             if (fraccion > 0)
             {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
+                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}";
             }
             return letras;
         }

@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ImporteRedespacho { get; set; }
         public decimal? ImporteComision { get; set; }
         public decimal? ImporteBonificacion { get; set; }
-        public decimal? PorcentajeBonificacion { get; set; }     
+        public decimal? PorcentajeBonificacion { get; set; }
         public bool? Compensacion { get; set; }
         public int? Acuerdo { get; set; }
         public string Rechazo { get; set; }
@@ -277,11 +277,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string SustentableTipoDB { get; set; }
         public bool? ConDescarga { get; set; }
         public bool? DolarExportador { get; set; }
+        public int? TipoDeCambioId { get; set; }
     }
 
     public class StoredPorContratoResult
     {
-        public List<BasicoContrato> BasicoContratoTraerPorFltro { get; set; }
-        public List<BasicoContrato> ReporteContratoContratoTraerPorFltro { get; set; }
+        public List<BasicoContrato> BasicoContratoTraerPorFiltro { get; set; }
+        public List<BasicoContrato> ReporteContratoContratoTraerPorFiltro { get; set; }
     }
 }

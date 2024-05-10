@@ -2,10 +2,6 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
 
@@ -21,8 +17,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaTreintaYCinco clausula)
         {
+            //SI EL CONTRATO CORRESPONDE A CANJE y es a fijar
+
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje == true)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
                 res.Texto += $"Se deja expresa constancia que entre el Comprador y el personal dependiente y/o contratado y/o subcontratado y/o eventual del " +
                     $"Vendedor (en adelante, el {"Personal del Vendedor"}) no existe relación de dependencia y/o contratación de ninguna naturaleza. " +
@@ -35,19 +33,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     "la causa de dicho reclamo; y (ii) terceros, por daños causados a sus bienes y/o personas, por el Personal del Vendedor y/o por el Vendedor, " +
                     "aún involuntariamente.";
             }
+
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }

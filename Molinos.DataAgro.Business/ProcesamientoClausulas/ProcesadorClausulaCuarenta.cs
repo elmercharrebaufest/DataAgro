@@ -2,12 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -21,6 +16,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaCuarenta clausula)
         {
+            //EL MATERIAL ES MAIZ, SOJA, GIRASOL O SORGO
+            //EL MATERIAL ES TRIGO O CEBADA (misma cláusula)
             var res = new ResultadoClausula();
             res.Texto += $"Por Resolución SENASA nro. 149/2018, vigente a partir del 05/11/18, está prohibido el uso de Diclorvos (DDVP) y Triclorfon, en todas las " +
                  $"etapas de la cadena granaría, incluyendo las instalaciones para su almacenamiento. El remitente de la mercadería declara que la mercadería no fue " +
@@ -28,21 +25,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
                  $"del medio de transporte de la mercadería, se detectaran al momento de la descarga resultados positivos de alguna de las sustancias prohibidas antes " +
                  $"mencionadas, la mercadería podrá ser rechazada dándose por incumplido el contrato de compra, con las sanciones e indemnizaciones que correspondan. " +
                  $"Si el resultado del análisis positivo se conociera a posteriori de su descarga, en los términos indicados anteriormente, el remitente será " +
-                 $"sancionado con una multa de U$S 20 (VEINTE Dolar Americano) por tonelada. En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las " +
+                 $"sancionado con una multa de U$S 20 (VEINTE dólares americanos) por tonelada. En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las " +
                  $"entregas de la mercadería realizadas el 1 de marzo de 2019.";
+
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }

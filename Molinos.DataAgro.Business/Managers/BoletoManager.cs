@@ -597,15 +597,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var titulo = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta para cereales y oleaginosos";
+                    titulo = "Boleto de compra venta para cereales y oleaginosos";
                 }
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje != true)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta de granos a fijar precio";
+                    titulo = "Boleto de compra venta de granos a fijar precio";
                 }
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje == true)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
+                    titulo = "Boleto de compra venta con pago en especie";
                 }
                 var numeroSio = status.ValidarEstado(basico.ContratoSAP).NumeroSio;
                 string seccionSio = basico.CorredorId > 0 ?
@@ -614,29 +614,28 @@ namespace Molinos.DataAgro.Business.Managers
 
                 xHtml = string.Format(xHtml,
                      stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
-                     basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
-                     precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
+                     basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad.ToString("N", new CultureInfo("es-AR")),
+                     precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", FormatoCuit(basico.Cuit), (basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : ""),
                      titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""), seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
-                var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {basico.CUITCorredor} </b> </td></tr>" : "";
+                var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {FormatoCuit(basico.CUITCorredor)} </b> </td></tr>" : "";
                 xHtml = string.Format(xHtml,
                 stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
-                basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
+                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""), basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                //var localidad = reposi
                 string clausulasNumeradas = "";
                 for (int i = 1; i <= clausulas.Count; i++)
                 {
                     clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
                 }
-                xHtml = String.Format(xHtml, stylesHtml, DateTime.Now.ToString("dd/MM/yyyy"), basico.ContratoSAP, basico.Proveedor, basico.Cuit, basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
-                    , basico.Corredor, basico.CUITCorredor, clausulasNumeradas);
+                xHtml = String.Format(xHtml, stylesHtml, DateTime.Now.ToString("dd/MM/yyyy"), basico.ContratoSAP, basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
+                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas);
                 return xHtml;
             }
             return xHtml;
@@ -774,6 +773,16 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             codigos.Sort();
             return codigos;
+        }
+
+        private string FormatoCuit(string cuit)
+        {
+            if (cuit.Length == 11)
+            {
+                cuit = $"{cuit.Substring(0, 2)}-{cuit.Substring(2, 8)}-{cuit.Substring(10, 1)}";
+            }
+
+            return cuit;
         }
     }
 }
