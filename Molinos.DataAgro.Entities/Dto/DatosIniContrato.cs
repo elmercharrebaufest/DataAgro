@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public List<MonedaQry> moneda { get; set; }
         public List<TipoNegocioQry> tiponegocio { get; set; }
+        public List<ClaseNegocioQry> clasenegocio { get; set; }
         public List<MaterialQry> material { get; set; }
         public List<ProvinciaQry> prov { get; set; }
         public List<LocalidadQry> loc { get; set; }
@@ -52,6 +53,7 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             moneda = new List<MonedaQry>();
             tiponegocio = new List<TipoNegocioQry>();
+            clasenegocio = new List<ClaseNegocioQry>();
             material = new List<MaterialQry>();
             prov = new List<ProvinciaQry>();
             loc = new List<LocalidadQry>();

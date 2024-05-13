@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using NPOI.Util;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,7 +12,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
@@ -43,53 +46,81 @@ namespace WebDataAgro.Controllers
         public ActionResult GenerarConfirma(ConfirmaGeneradoDto confirma)
         {
             CargarSeleccionables();
+            List<string> contratos = new List<string>();
+            foreach (string itemContrato in confirma.ContratoSAP.TrimEnd(';').Split(';').ToList())
+            {
+                contratos.Add(itemContrato.PadLeft(10, '0'));
+            }
+            var boletos = confirmaManager.GrabarConfirma(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, GlobalVariables.EquipoReal);
+            CargarSeleccionables();
             return View();
         }
 
-        public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int tipoNegocio)
+        public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int claseNegocio)
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, tipoNegocio)
+                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio)
             };
         }
 
-        public ActionResult ListarNegocios(int desdeSAP, int hastaSAP, int tipoNegocio)
+        public ActionResult ListarNegocios(int desdeSAP, int hastaSAP, int claseNegocio)
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, tipoNegocio)
+                Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, claseNegocio)
             };
         }
 
-        public ActionResult ValidarNegocio(string codigoSAP, int tipoNegocio)
+        public ActionResult ValidarNegocio(string codigoSAP, int claseNegocio)
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ValidarNegocio(codigoSAP, tipoNegocio)
+                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio)
             };
         }
 
-        //FiltrarNegociosPorFecha
-        public ActionResult FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
+        public ActionResult FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio)
         {
             return new JsonResult()
             {
-                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, tipoNegocio)
+                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, claseNegocio)
             };
+        }
+
+        public ActionResult DescargarArchivoConfirma(string confirma)
+        {
+            try
+            {
+                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(confirma);
+
+                if (fileBytes == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    //return Json(fileBytes); 
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml, "TestConfirma.xml");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
         }
 
         private void CargarSeleccionables()
         {
             var datosCombos = confirmaManager.TraerDatosCombos();
-            var tiposListItems = datosCombos.tiponegocio.Select(
+            var claseListItems = datosCombos.clasenegocio.Select(
                     x => new SelectListItem
                     {
                         Text = x.Descripcion,
-                        Value = x.TipoNegocioId.ToString(),
+                        Value = x.ClaseNegocioId.ToString(),
                         Selected = false
                     }).OrderBy(x => x.Value);
-            ViewBag.TipoNegocio = tiposListItems;
+            ViewBag.ClaseNegocio = claseListItems;
         }
     }
 }

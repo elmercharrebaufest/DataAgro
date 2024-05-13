@@ -130,6 +130,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TipoNegocioId;
         public string Descripcion;
     }
+    public class ClaseNegocioQry
+    {
+        public int ClaseNegocioId;
+        public string Descripcion;
+    }
     public class EstadoICQry
     {
         public int EstadoInformeId { get; set; }

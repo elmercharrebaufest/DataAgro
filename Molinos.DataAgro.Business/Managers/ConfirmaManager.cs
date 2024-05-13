@@ -26,6 +26,12 @@ using iTextSharp.tool.xml.css;
 using Molinos.DataAgro.Entities.Common.Enums;
 using System.Globalization;
 using System.ServiceModel.Channels;
+using Molinos.DataAgro.Agent.Helpers;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
+using System.Xml.Linq;
+using System.Xml;
+using System.Web.Mvc;
+using Molinos.DataAgro.Entities.Helpers;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -45,9 +51,34 @@ namespace Molinos.DataAgro.Business.Managers
         public DatosIniContrato TraerDatosCombos()
         {
             var datosCombo = new DatosIniContrato();
-            datosCombo.tiponegocio.Add(new TipoNegocioQry { TipoNegocioId = 1, Descripcion = "Contrato" });
-            datosCombo.tiponegocio.Add(new TipoNegocioQry { TipoNegocioId = 2, Descripcion = "Fijación" });
+            datosCombo.clasenegocio.Add(new ClaseNegocioQry { ClaseNegocioId = 1, Descripcion = "Contrato" });
+            datosCombo.clasenegocio.Add(new ClaseNegocioQry { ClaseNegocioId = 2, Descripcion = "Fijación" });
             return datosCombo;
+        }
+
+        public ConfirmaResult GrabarConfirma(int claseNegocio, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo)
+        {
+            var error = new ConfirmaResult { confirma = new Confirma() };
+            try
+            {
+                foreach(var contrato in contratos)
+                {
+                    var negocio = repositorio.Obtener<Negocio>(contrato);
+                    var esValido = ValidarNegocio(contrato, negocio.TipoNegocioId)==""?true:false;
+                    if (esValido)
+                    {
+                        
+                        var nuevoConfirma = new Confirma();
+                    }
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                error.Errores.Add(new ErrorMessage(400, e.Message));
+            }
+            return error;
         }
 
         public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
@@ -191,6 +222,37 @@ namespace Molinos.DataAgro.Business.Managers
                     break;
             }
             return msje;
+        }
+
+        public byte[] ConfirmaEnByte(string codigoSAP)
+        {
+            //var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
+            //Parte temporal, no queda en la version final
+            var confirma = new Confirma();
+            confirma.FechaGeneracion = DateTime.Now;
+            //cargarle por seters los datos que necesites mostrar
+
+            //Fin de carga de Setters
+            XmlDocument doc = new XmlDocument(); //Documento XML
+            MemoryStream ms = new MemoryStream(); //Memory Stream
+            var xmlString = new StringBuilder(); //String Builder
+            var xmlWriter = XmlWriter.Create(xmlString, new XmlWriterSettings { Indent = true }); //Incializa Writer
+
+            //Inicia formateo del XML
+            xmlWriter.WriteStartElement("LoteDocumentos"); //Abre LoteDocumentos
+                xmlWriter.WriteStartElement("name");
+                    xmlWriter.WriteAttributeString("firstName", confirma.FechaGeneracion.ToString());
+                    xmlWriter.WriteAttributeString("lastName", confirma.FechaGeneracion.ToString());
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteElementString("email", confirma.FechaGeneracion.ToString());
+                xmlWriter.WriteElementString("age", confirma.FechaGeneracion.ToString());
+            xmlWriter.WriteEndElement(); //Fin LoteDocumentos
+            //Fin Formateo del XML
+            xmlWriter.Flush(); //Limpia memoria
+            doc.LoadXml(xmlString.ToString()); //Carga en el documento lo escrito en el String
+            doc.Save(ms); //Guarda el Documento en el Stream
+            byte[] bytes = ms.ToArray(); //Devuelve el documento
+            return bytes;
         }
     }
 }
