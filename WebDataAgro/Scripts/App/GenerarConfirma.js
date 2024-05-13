@@ -9,7 +9,7 @@ $(document).ready(function () {
 function Generar() {
     var confirma = {
         ContratoSAP: $("#Negocio").val(),
-        TipoNegocioId: $("#TipoNegocioId").val()
+        ClaseNegocioId: $("#ClaseNegocioId").val()
     };
     var url = '/Confirma/GenerarConfirma';
     var data = confirma;
@@ -68,13 +68,13 @@ $("#Negocio").bind("paste", function (e) {//En caso de Pegar Codigos
 function ListarNegocios() {
     debugger
     //Obtenemos parametros
-    var tipoNegocio = $("#TipoNegocioId").val();
+    var claseNegocio = $("#ClaseNegocioId").val();
     var hasta = $("#NegocioHasta").val();
     var lista = trimEnd($("#Negocio").val()).split(';');
     //Realizamos la consulta correspondiente
     BlockUi("Consultando...");
     if (isNullOrWhitespace(hasta)) {
-        let data = { listaCodigosSAP: lista, tipoNegocio: tipoNegocio };
+        let data = { listaCodigosSAP: lista, claseNegocio: claseNegocio };
         rechazados = MSExecuteOnServer('/Confirma/ValidarNegocios', data);
         if (rechazados.length > 0) {
             MensAlerta(rechazados);
@@ -85,7 +85,7 @@ function ListarNegocios() {
         }
         
     } else {
-        let data = { desdeSAP: $("#Negocio").val(), hastaSAP: $("#NegocioHasta").val(), tipoNegocio: tipoNegocio };
+        let data = { desdeSAP: $("#Negocio").val(), hastaSAP: $("#NegocioHasta").val(), claseNegocio: claseNegocio };
         result = MSExecuteOnServer('/Confirma/ListarNegocios', data);
 
         if (result.length == 0) {
@@ -193,9 +193,9 @@ function ArmarTabla(contratos) {
 function FiltrarNegocios() {
     let fechaDesde = $("#desde").val();
     let fechaHasta = $("#hasta").val();
-    let tipoNegocio = $("#TipoNegocioId").val();
+    let claseNegocio = $("#ClaseNegocioId").val();
     BlockUi("Consultando...");
-    var data = { desde: fechaDesde, hasta: fechaHasta, tipoNegocio: tipoNegocio };
+    var data = { desde: fechaDesde, hasta: fechaHasta, claseNegocio: claseNegocio };
     var result = MSExecuteOnServer('/Confirma/FiltrarNegociosPorFecha', data);
     $.unblockUI();
     if (result.length == 0) {
@@ -212,9 +212,9 @@ function FiltrarNegocios() {
 }
 
 function ValidarNegocio(codigoSAP) {
-    let tipoNegocio = $("#TipoNegocioId").val();
+    let claseNegocio = $("#ClaseNegocioId").val();
     BlockUi("Consultando...");
-    var data = { codigoSAP: codigoSAP, tipoNegocio: tipoNegocio };
+    var data = { codigoSAP: codigoSAP, claseNegocio: claseNegocio };
     var result = MSExecuteOnServer('/Confirma/ValidarNegocio', data);
     $.unblockUI();
     return result;

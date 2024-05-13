@@ -14,7 +14,7 @@
             <label>Tipo de Negocio</label>
         </div>
         <div class="col-sm-2">
-            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control" })
+            @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control" })
         </div>
         <div class="col-xs-12 col-md-3">
             @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%" })
@@ -33,6 +33,7 @@
                 <label style="text-align: end" class="form-check-label ml-3" for="mailId">
                     Servicio Confirma
                 </label>
+                @Html.ActionLink("DescargarConfirma","DescargarArchivoConfirma")
             </div>
         </div>
     </div>

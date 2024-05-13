@@ -5,6 +5,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class ConfirmaGeneradoDto
     {
         public string ContratoSAP { get; set; }
-        public int TipoNegocioId { get; set; }
+        public int ClaseNegocioId { get; set; }
+        public bool IsWebService {  get; set; }
     }
 }
