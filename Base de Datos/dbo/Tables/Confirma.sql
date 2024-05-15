@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY (1, 1), 
 	[NegocioId] INT NOT NULL, 
-    [IsWebService] INT NOT NULL, 
+    [IsWebService] BIT NOT NULL, 
     [FechaGeneracion] DATETIME NOT NULL , 
     [ComercialId] INT NOT NULL, 
     CONSTRAINT [FK_Confirma_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [Negocio]([Id]),
