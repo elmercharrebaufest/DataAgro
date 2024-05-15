@@ -251,14 +251,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                     DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
                     TipoDeCambioId = contrato.TipoDeCambioId,
-                    PreciosPactados = (contrato as Contrato).PrecioPactado != null ? (contrato as Contrato).PrecioPactado.Select(e => new PrecioPactadosDto
-                    {
-                        FechaDesde = SqlFunctions.DateName("day", e.FechaDesde) + "/" + SqlFunctions.DatePart("month", e.FechaDesde) + "/" + SqlFunctions.DateName("year", e.FechaDesde),
-                        FechaHasta = SqlFunctions.DateName("day", e.FechaHasta) + "/" + SqlFunctions.DatePart("month", e.FechaHasta) + "/" + SqlFunctions.DateName("year", e.FechaHasta),
-                        MonedaPactadoDesc = e.MonedaPactadoId ?? "",
-                        MonedaPactadoId = e.MonedaPactadoId ?? "",
-                        Precio = e.Precio
-                    }).ToList() : new List<PrecioPactadosDto>()
                 };
 
                 return queryNegocios;
@@ -429,15 +421,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
                         ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                         DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
-                        TipoDeCambioId = contrato.TipoDeCambioId,
-                        PreciosPactados = (contrato as Contrato).PrecioPactado != null ? (contrato as Contrato).PrecioPactado.Select(e => new PrecioPactadosDto
-                        {
-                            FechaDesde = SqlFunctions.DateName("day", e.FechaDesde) + "/" + SqlFunctions.DatePart("month", e.FechaDesde) + "/" + SqlFunctions.DateName("year", e.FechaDesde),
-                            FechaHasta = SqlFunctions.DateName("day", e.FechaHasta) + "/" + SqlFunctions.DatePart("month", e.FechaHasta) + "/" + SqlFunctions.DateName("year", e.FechaHasta),
-                            MonedaPactadoDesc = e.MonedaPactadoId ?? "",
-                            MonedaPactadoId = e.MonedaPactadoId ?? "",
-                            Precio = e.Precio
-                        }).ToList() : new List<PrecioPactadosDto>()
+                        TipoDeCambioId = contrato.TipoDeCambioId
                     };
 
                 return queryNegocios;

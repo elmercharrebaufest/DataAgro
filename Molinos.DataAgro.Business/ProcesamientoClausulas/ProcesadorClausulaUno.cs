@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 foreach (var precio in clausula.Basico.PreciosPactados)
                 {
                     res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
-                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)})";
+                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)}),";
                 }
             }
 

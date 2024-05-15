@@ -28,17 +28,34 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
             var basicosContratos = queryContratos.Where(x => contratos.Contains(x.Negocio) && x.Estado == 5);
-            //usar direcciones fiscales de SAP
+
             List<MailProveedor> direccionesSap = contexto.Set<MailProveedor>()
-                            .Where(x => basicosContratos.Select(c => c.ProveedorId).Contains((int)x.ProveedorId)).ToList();
+                .Where(x => basicosContratos.Select(c => c.ProveedorId).Contains((int)x.ProveedorId)).ToList();
+            List<PrecioPactado> precios = contexto.Set<PrecioPactado>()
+                .Where(x => basicosContratos.Select(c => c.Id).Contains(x.ContratoId)).ToList();
             var bcList = basicosContratos.ToList();
             foreach (var contrato in bcList)
             {
+                //usar direcciones fiscales de SAP
                 var prov = direccionesSap.Find(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap));
                 contrato.ProveedorDireccion = prov?.DireccionSap;
                 contrato.ProveedorLocalidad = prov?.LocalidadSap;
                 contrato.ProveedorProvincia = prov?.ProvinciaSap;
                 contrato.ProveedorCP = prov?.CodigoPostalSap;
+                //guardar precios pactados
+                if (precios.Count > 0)
+                {
+                    contrato.PreciosPactados = precios.Where(x => x.ContratoId == contrato.Id)?.Select(e => new PrecioPactadosDto
+                    {
+                        ContratoId = e.ContratoId,
+                        FechaDesde = e.FechaDesde?.ToString("dd/MM/yyyy"),
+                        FechaHasta = e.FechaHasta?.ToString("dd/MM/yyyy"),
+                        MonedaPactadoDesc = e.MonedaPactado.Descripcion ?? "",
+                        MonedaPactadoId = e.MonedaPactadoId ?? "",
+                        Precio = e.Precio,
+                        Porcentaje = e.Porcentaje
+                    }).ToList();
+                }
             }
 
             //GridHelper.TruncateTime(request.Filter, ref queryContratos);

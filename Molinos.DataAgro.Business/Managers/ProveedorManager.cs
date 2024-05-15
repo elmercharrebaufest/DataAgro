@@ -574,8 +574,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
 
-                logger.Debug("Se envió email del contrato ID " + oContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Contrato SAP:" + oContrato.ContratoSAP);
                 oCliente.Send(oMensaje);
+                logger.Debug("Se envió email del contrato ID " + oContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Contrato SAP: " + oContrato.ContratoSAP);
 
                 return new Resultado();
             }
@@ -700,8 +700,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
                 oCliente.Send(oMensaje);
+                logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
 
                 return new Resultado();
             }
