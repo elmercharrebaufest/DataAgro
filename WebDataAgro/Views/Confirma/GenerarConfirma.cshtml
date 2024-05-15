@@ -33,7 +33,6 @@
                 <label style="text-align: end" class="form-check-label ml-3" for="mailId">
                     Servicio Confirma
                 </label>
-                @Html.ActionLink("DescargarConfirma","DescargarArchivoConfirma")
             </div>
         </div>
     </div>
@@ -66,10 +65,7 @@
             </button>
         </div>
     </div>
-
-    <div class="form-group my-4">
-
-    </div>
+    
 </div>
 
 <style>
@@ -90,3 +86,5 @@
         color: white;
     }
 </style>
+
+@Html.Partial("ModalConfirmaGenerado")

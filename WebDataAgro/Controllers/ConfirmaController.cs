@@ -49,11 +49,14 @@ namespace WebDataAgro.Controllers
             List<string> contratos = new List<string>();
             foreach (string itemContrato in confirma.ContratoSAP.TrimEnd(';').Split(';').ToList())
             {
-                contratos.Add(itemContrato.PadLeft(10, '0'));
+                contratos.Add(itemContrato);
             }
-            var boletos = confirmaManager.GrabarConfirma(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, GlobalVariables.EquipoReal);
-            CargarSeleccionables();
-            return View();
+            var confirmas = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService);
+            return new JsonResult()
+            {
+                Data = confirmas.confirmasGenerados,
+                MaxJsonLength = Int32.MaxValue
+            };
         }
 
         public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int claseNegocio)
@@ -88,11 +91,12 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult DescargarArchivoConfirma(string confirma)
-        {
+        public ActionResult DescargarConfirma(string codigoSAP)
+        {   //confirma20211021_0002670442
+            var nombreArchivo = "confirma"+DateTime.Now.Year.ToString()+DateTime.Now.Month.ToString()+DateTime.Now.Day.ToString()+"_000"+codigoSAP+".xml";
             try
             {
-                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(confirma);
+                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(codigoSAP);
 
                 if (fileBytes == null)
                 {
@@ -101,7 +105,7 @@ namespace WebDataAgro.Controllers
                 else
                 {
                     //return Json(fileBytes); 
-                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml, "TestConfirma.xml");
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml,nombreArchivo);
                 }
             }
             catch (Exception)

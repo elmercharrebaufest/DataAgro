@@ -6,6 +6,11 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string ContratoSAP { get; set; }
         public int ClaseNegocioId { get; set; }
+        public int NegocioId { get; set; }
+        public int ComercialId { get; set; }
+        public bool Generado { get; set; }
+        public DateTime FechaGeneracion {  get; set; }
+        public string FechaGeneracionFormateada { get { return FechaGeneracion.ToShortDateString(); } }
         public bool IsWebService {  get; set; }
     }
 }

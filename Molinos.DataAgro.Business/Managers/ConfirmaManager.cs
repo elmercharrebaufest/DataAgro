@@ -56,29 +56,40 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public ConfirmaResult GrabarConfirma(int claseNegocio, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo)
+        public ConfirmaResult GrabarConfirmas(int claseNegocio,int ComercialId, List<string> contratos, bool usarWebConfirma)
         {
-            var error = new ConfirmaResult { confirma = new Confirma() };
+            var result = new ConfirmaResult();
             try
             {
                 foreach(var contrato in contratos)
                 {
-                    var negocio = repositorio.Obtener<Negocio>(contrato);
-                    var esValido = ValidarNegocio(contrato, negocio.TipoNegocioId)==""?true:false;
-                    if (esValido)
+                    var negocio = repositorio.ObtenerPrimero<Negocio>(x=>x.ContratoSAP==contrato);
+                    //var esValido = ValidarNegocio(contrato, negocio.TipoNegocioId)==""?true:false;  //IMPLEMENTAR VALIDACION
+                    var esValido = true;
+                    if (esValido && negocio!=null)
                     {
-                        
-                        var nuevoConfirma = new Confirma();
+                        var tempConfirma = new ConfirmaGeneradoDto();
+                        tempConfirma.FechaGeneracion=DateTime.Now;
+                        tempConfirma.NegocioId=negocio.Id;
+                        tempConfirma.ComercialId=ComercialId;
+                        tempConfirma.IsWebService=usarWebConfirma;
+                        tempConfirma.ContratoSAP=contrato;
+                        tempConfirma.Generado = true;
+                        var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+                        //Agregar a Servicio Confirma
+                        //result.confirmas.Add(nuevoConfirma);
+                        result.confirmasGenerados.Add(tempConfirma);
                     }
                     
                 }
+                repositorio.GuardarCambios();
             }
             catch (Exception e)
             {
                 logger.Error(e);
-                error.Errores.Add(new ErrorMessage(400, e.Message));
+                result.Errores.Add(new ErrorMessage(400, e.Message));
             }
-            return error;
+            return result;
         }
 
         public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
@@ -397,5 +408,15 @@ namespace Molinos.DataAgro.Business.Managers
             return bytes;
         }
 
+        private static Confirma ConvertirDtoAEntidad(ConfirmaGeneradoDto tempConfirma)
+        {
+            return new Confirma
+            {
+                NegocioId = tempConfirma.NegocioId,
+                ComercialId = tempConfirma.ComercialId,
+                FechaGeneracion = tempConfirma.FechaGeneracion,
+                IsWebService = tempConfirma.IsWebService,
+            };
+        }
     }
 }
