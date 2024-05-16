@@ -32,8 +32,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 res.Texto += $" Las Partes establecen que, para el caso que al momento de la entrega se constate que la mercadería entregada no cumple con los requisitos de soja SUSTENTABLE, el precio convenido será bonificado en la cantidad de $ {clausula.Basico.Importe_Sustentable?.ToString("N", new CultureInfo("es-AR"))} (pesos {DevolverNumeroEnLetras((decimal)clausula.Basico.Importe_Sustentable)}) por tonelada de soja no SUSTENTABLE, a favor del Comprador. Dicha bonificación será descontada al momento del pago de cada una de las liquidaciones parciales y/o finales según corresponda.”";
             }
-            // EL MATERIAL ES SOJA Y ES SUSTENTABLE SIN TARIFA
-            else if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA && (bool)clausula.Basico.Sustentable && clausula.Basico.MonedaId_Sustentable == null && clausula.Basico.SustentableTipoDBId == null)
+            // EL MATERIAL ES SOJA Y ES SUSTENTABLE SIN TARIFA (o EPA)
+            else if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA && ((bool)clausula.Basico.Sustentable || (bool)clausula.Basico.EPA) && clausula.Basico.MonedaId_Sustentable == null && clausula.Basico.SustentableTipoDBId == null)
             {
                 res.Texto = $"Al precio convenido se le adicionará la tarifa que corresponda por tonelada de soja sustentable / EPA entregada, siempre que la entrega de la mercadería fijada haya sido recibida dentro de los plazos de entrega y recibos pautados en el presente Boleto. La tarifa será fijada entre ambas partes y comunicada en oportunidad de recibo de mercadería.";
             }
