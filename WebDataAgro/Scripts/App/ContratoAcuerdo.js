@@ -865,6 +865,7 @@ function InicializarElementos() {
                 $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
                 $("#sustentableId").prop('checked', false);
                 $("#epaId").prop('checked', false);
+                $("#divSustentableSinTarifa").hide();
             }
             if ($("#material").val() === "2" && $("#tipoId").val() === "4") {
                 $("#fasonEspecial").show();
@@ -5762,7 +5763,7 @@ function HayTarifaAConvenir() {
 
         $(".tarifaAConvenirDiv").addClass("disabled").prop("disabled", true);
 
-        MensAlerta("Se está creando un contrato sustentable con tarifa a convenir fuera de precio.");
+        MensAlerta("Se está creando un contrato con tarifa a convenir fuera de precio.");
     } else {
         $(".tarifaAConvenirDiv").removeClass("disabled").prop("disabled", false);
         $("#sustentablePrecioId").removeClass("disabled").prop("disabled", false);
@@ -6324,15 +6325,17 @@ function EPATipoDB() {
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value(monedaContrato);
         $("#divSustentableSinTarifa").hide();
+        $("#tarifaAConvenirId").prop("checked", false);
         MostrarCcPpPendientesAplicar();
     } else if ($("#selectSustenTipoDB").val() == 2) { //fuera de precio
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
-        if ($("#sustentableId").is(":checked")) $("#divSustentableSinTarifa").show();
+        $("#divSustentableSinTarifa").show();
         MostrarCcPpPendientesAplicar();
     } else {
         $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
         $("#divSustentableSinTarifa").hide();
+        $("#tarifaAConvenirId").prop("checked", false);
         MostrarCcPpPendientesAplicar();
     }
 }

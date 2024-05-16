@@ -1018,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.TarifaAConvenir == true)
             {
-                htmlBody += "Negocio sustentable con tarifa a convenir antes de la entrega.<br />";
+                htmlBody += $"Negocio {(oContrato.Sustentable == true ? "sustentable" : "EPA")} con tarifa a convenir antes de la entrega.<br />";
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1037,7 +1037,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
+                htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
             }
             htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +

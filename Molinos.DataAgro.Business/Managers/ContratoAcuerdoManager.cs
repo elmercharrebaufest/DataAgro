@@ -616,7 +616,6 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "El campo 'Campaña' no debe estar vacío");
             }
-
             if (oContratoAcuerdo.Precio < 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
@@ -741,6 +740,66 @@ namespace Molinos.DataAgro.Business
                 if (oContratoAcuerdo.Descuentos.Any(a => a.TipoPeriodoDBId == 2 && (a.FechaDesde < oContratoAcuerdo.FechaDesde || a.FechaDesde > oContratoAcuerdo.FechaHasta || a.FechaHasta < oContratoAcuerdo.FechaDesde || a.FechaHasta > oContratoAcuerdo.FechaHasta)))
                 {
                     oEntityErrors.Error("Descuentos", "No se puede cargar descuento o bonificación por Fecha de Entrega fuera del rango de Entrega.");
+                }
+            }
+
+            if ((oContratoAcuerdo.Sustentable.HasValue && oContratoAcuerdo.Sustentable.Value) || (oContratoAcuerdo.EPA.HasValue && oContratoAcuerdo.EPA.Value))
+            {
+                if (oContratoAcuerdo.MaterialId != 3)
+                {
+                    oEntityErrors.Error("SustentableEPA", "Sustentable/EPA solo está habilitado para el material Soja.");
+                }
+                if (oContratoAcuerdo.MercsDeposito == true && oContratoAcuerdo.SustentableTipoDBId.HasValue && oContratoAcuerdo.SustentableTipoDBId.Value == 2)
+                {
+                    if (!oContratoAcuerdo.FechaDesdeSustentable.HasValue || oContratoAcuerdo.FechaDesdeSustentable.Value == null)
+                    {
+                        oEntityErrors.Error("SustentableEPA", "Debe indicar la fecha 'Desde' de sustentable/EPA.");
+                    }
+                    if (!oContratoAcuerdo.FechaHastaSustentable.HasValue || oContratoAcuerdo.FechaHastaSustentable.Value == null)
+                    {
+                        oEntityErrors.Error("SustentableEPA", "Debe indicar la fecha 'Hasta' de sustentable/EPA.");
+                    }
+                    if (oContratoAcuerdo.FechaDesdeSustentable.HasValue && oContratoAcuerdo.FechaHastaSustentable.HasValue
+                        && oContratoAcuerdo.FechaHastaSustentable.Value < oContratoAcuerdo.FechaDesdeSustentable.Value)
+                    {
+                        oEntityErrors.Error("SustentableEPA", "Debe indicar un rango de fechas válido para sustentable/EPA.");
+                    }
+                }
+                if (oContratoAcuerdo.EPA.GetValueOrDefault())
+                {
+                    if (oContratoAcuerdo.ImporteSustentable.HasValue && oContratoAcuerdo.ImporteSustentable.Value > 0)
+                    {
+                        if (string.IsNullOrEmpty(oContratoAcuerdo.MonedaSustentableId))
+                        {
+                            oEntityErrors.Error("EPA", "Debe indicar la moneda para EPA.");
+                        }
+                    }
+                    else if (oContratoAcuerdo.TarifaAConvenir != true)
+                    {
+                        oEntityErrors.Error("EPA", "Debe indicar la tarifa para EPA o tildar 'Tarifa a Convenir'.");
+                    }
+                    if (!oContratoAcuerdo.SustentableTipoDBId.HasValue)
+                    {
+                        oEntityErrors.Error("EPA", "Debe indicar si el importe para EPA es sobre el precio o por fuera del precio.");
+                    }
+                }
+                if (oContratoAcuerdo.Sustentable.GetValueOrDefault())
+                {
+                    if (oContratoAcuerdo.ImporteSustentable.HasValue && oContratoAcuerdo.ImporteSustentable.Value > 0)
+                    {
+                        if (string.IsNullOrEmpty(oContratoAcuerdo.MonedaSustentableId))
+                        {
+                            oEntityErrors.Error("Sustentable", "Debe indicar la moneda para Sustentable.");
+                        }
+                    }
+                    else if (oContratoAcuerdo.TarifaAConvenir != true)
+                    {
+                        oEntityErrors.Error("Sustentable", "Debe indicar la tarifa sustentable o tildar 'Tarifa a Convenir'.");
+                    }
+                    if (!oContratoAcuerdo.SustentableTipoDBId.HasValue)
+                    {
+                        oEntityErrors.Error("Sustentable", "Debe indicar si el importe sustentable es sobre el precio o por fuera del precio.");
+                    }
                 }
             }
             var conf = configuracionManager.TraerConfiguraciones();

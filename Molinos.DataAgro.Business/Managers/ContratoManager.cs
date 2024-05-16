@@ -775,7 +775,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "Se debe completar la Posición con el concepto Basis");
                 }
 
-
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != null && oParam.TipoPosicionCBOTId != 3)
                 {
                     oErrorMessages.Error("", "Se debe completar el campo posición con CBOT o MAT");
@@ -824,12 +823,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
             }
-            if (((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value)) && oParam.MaterialId != 3)
-            {
-                oErrorMessages.Error("SustentableEPA", "Sustentable/EPA solo está habilitado para el material Soja.");
-            }
+
             if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
+                if (oParam.MaterialId != 3)
+                {
+                    oErrorMessages.Error("SustentableEPA", "Sustentable/EPA solo está habilitado para el material Soja.");
+                }
                 if (oParam.MercsDeposito == true && oParam.SustentableTipoDBId.HasValue && oParam.SustentableTipoDBId.Value == 2)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
@@ -846,23 +846,18 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("SustentableEPA", "Debe indicar un rango de fechas válido para sustentable/EPA.");
                     }
                 }
-
                 if (oParam.EPA.GetValueOrDefault())
                 {
-                    if (oParam.ImporteSustentable.HasValue)
+                    if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value > 0)
                     {
-                        if (oParam.ImporteSustentable.Value <= 0)
-                        {
-                            oErrorMessages.Error("EPA", "La tarifa para EPA debe ser mayor a cero.");
-                        }
                         if (string.IsNullOrEmpty(oParam.MonedaSustentableId))
                         {
                             oErrorMessages.Error("EPA", "Debe indicar la moneda para EPA.");
                         }
                     }
-                    else
+                    else if (oParam.TarifaAConvenir != true)
                     {
-                        oErrorMessages.Error("EPA", "Debe indicar la tarifa para EPA.");
+                        oErrorMessages.Error("EPA", "Debe indicar la tarifa para EPA o tildar 'Tarifa a Convenir'.");
                     }
                     if (!oParam.SustentableTipoDBId.HasValue)
                     {
@@ -871,13 +866,16 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (oParam.Sustentable.GetValueOrDefault())
                 {
-                    if (!oParam.ImporteSustentable.HasValue && oParam.TarifaAConvenir != true)
+                    if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value > 0)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar la tarifa de sustentable o tildar 'Tarifa a Convenir'.");
+                        if (string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                        {
+                            oErrorMessages.Error("Sustentable", "Debe indicar la moneda para Sustentable.");
+                        }
                     }
-                    if (oParam.ImporteSustentable.HasValue && string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                    else if (oParam.TarifaAConvenir != true)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar la moneda para Sustentable.");
+                        oErrorMessages.Error("Sustentable", "Debe indicar la tarifa sustentable o tildar 'Tarifa a Convenir'.");
                     }
                     if (!oParam.SustentableTipoDBId.HasValue)
                     {
@@ -1118,7 +1116,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             if (!validacionesMinimas)
             {
                 if (oParam.PagoCBU != null)
@@ -1281,11 +1278,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.ContratoCorredor != null && oParam.ContratoCorredor.Length > 10)
             {
-                oErrorMessages.Error("ContratoCorredor", "El número de contrato corredor no puede ser más largo que 10 caracteres.");
+                oErrorMessages.Error("ContratoCorredor", "El número de contrato corredor no puede superar los 10 caracteres.");
             }
             if (oParam.ContratoVendedor != null && oParam.ContratoVendedor.Length > 10)
             {
-                oErrorMessages.Error("ContratoVendedor", "El número de contrato vendedor no puede ser más largo que 10 caracteres.");
+                oErrorMessages.Error("ContratoVendedor", "El número de contrato vendedor no puede superar los 10 caracteres.");
             }
             if (oParam.AnulaYReemplazaContratoId != null && string.IsNullOrEmpty(oParam.MotivoReemplazo))
             {
@@ -1515,13 +1512,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oParam.Observacion != null && oParam.Observacion.Length > 120)
+            
+            if (oParam.Insumo != null && oParam.Insumo.Length > 250)
             {
-                oErrorMessages.Error("Observacion", "El campo Observacion no puede ser mas lago de 120 caracteres.");
-            }
-            if (oParam.Insumo != null && oParam.Insumo.Length > 78)
-            {
-                oErrorMessages.Error("Observacion", "El campo Insumo no debe superar los 79 caracteres.");
+                oErrorMessages.Error("Insumo", "El campo Insumo no debe superar los 250 caracteres.");
             }
 
             if (oParam.Condicional == true)
@@ -1608,7 +1602,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.TipoPosicionCBOTId == 3 && oParam.BoletoId == 5)
             {
-                oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
+                oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE.");
             }
 
             //if (oParam.TipoNegocioId == 2 && oParam.TipoAgenteCompraId != null)
@@ -1673,7 +1667,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
-        
+
         private GrabarContratoResult ValidarCantidadAcuerdoTolerancia(Contrato oContratoSave, Contrato oContrato, GrabarContratoResult oEntityErrors)
         {
             if (oContratoSave.ContratoAcuerdoId != null && oContratoSave.ContratoAcuerdoId > 0)
@@ -1699,7 +1693,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        
+
         public GrabarContratoResult GrabarContrato(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -1889,7 +1883,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MonedaSustentableId = oContrato.MonedaSustentableId;
             oContratoSave.FechaDesdeSustentable = oContrato.FechaDesdeSustentable;
             oContratoSave.FechaHastaSustentable = oContrato.FechaHastaSustentable;
-            oContratoSave.TarifaAConvenir = oContrato.Sustentable == true ? oContrato.TarifaAConvenir : false;
+            oContratoSave.TarifaAConvenir = oContrato.TarifaAConvenir;
             oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
@@ -3322,6 +3316,7 @@ namespace Molinos.DataAgro.Business.Managers
                 SustentableTipoDB = x.SustentableTipoDB != null ? x.SustentableTipoDB.Descripcion : "",
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
+                TarifaAConvenir = x.TarifaAConvenir,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
@@ -3525,7 +3520,6 @@ namespace Molinos.DataAgro.Business.Managers
                 KgMinimo = x.KgMinimo ?? 0,
                 KgMaximo = x.KgMaximo ?? 0,
                 ProveedorComisionistaId = x.ProveedorComisionistaId,
-                TarifaAConvenir = x.TarifaAConvenir,
                 FechaDolarizadoOriginalFormateado = x.FechaDolarizadoOriginal != null ? SqlFunctions.DateName("day", x.FechaDolarizadoOriginal).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizadoOriginal.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizadoOriginal) : "",
