@@ -5802,7 +5802,7 @@ function RechazarCostoFinanciero() {
     BlockUi('Guardando...');
     var objeto = ObtenerDatos(error);
     if (!error) {
-        var result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+        var result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
                 MensErr(result.Errores[0].Message);
