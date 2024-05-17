@@ -115,12 +115,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PlanCanje = (contrato is Contrato) ? (contrato as Contrato).PlanCanje : false,
                     CD = (contrato is Contrato) ? (contrato as Contrato).CD : null,
                     Warrant = (contrato is Contrato) ? (contrato as Contrato).Warrant : null,
-                    PagoDirectoVendedor = (contrato is Contrato) ? (contrato as Contrato).PagoDirectoVendedor : null,
+                    PagoDirectoVendedor = contrato.PagoDirectoVendedor,
                     EstablecimientoPropio = (contrato is Contrato) ? (contrato as Contrato).EstablecimientoPropio : null,
-                    BoletoId = (contrato is Contrato) ? (contrato as Contrato).BoletoId : null,
-                    BolsaId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : null,
-                    BoletoDescripcion = (contrato is Contrato) ? (contrato as Contrato).Boleto.Descripcion : "",
-                    BolsaDescripcion = (contrato is Contrato) ? (contrato as Contrato).Bolsa.Descripcion : "",
+                    BoletoId = contrato.BoletoId,
+                    BolsaId = contrato.BolsaId,
+                    BoletoDescripcion = contrato.Boleto.Descripcion ?? "",
+                    BolsaDescripcion = contrato.Bolsa.Descripcion ?? "",
                     DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
                     HastaFijacion = DbFunctions.TruncateTime(contrato.HastaFijacion),
                     CondicionFijacion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacionId : null,
@@ -171,8 +171,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     OcultarEnTablero = contrato.OcultarEnTablero,
                     FechaCierta = DbFunctions.TruncateTime(contrato.FechaCierta) ?? null,
                     EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false,
-                    PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
-                    FechaOperacion = DbFunctions.TruncateTime((contrato as Negocio).FechaOperacion),
+                    PorcentajeDePago = contrato.PorcentajeDePago,
+                    FechaOperacion = DbFunctions.TruncateTime(contrato.FechaOperacion),
                     MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
                     DescripcionOperacionAnterior = contrato.DescripcionOperacionAnterior,
                     UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null ? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido : "Automática",
@@ -251,6 +251,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                     DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
                     TipoDeCambioId = contrato.TipoDeCambioId,
+                    Madre = contrato.Madre,
+                    ContratoMadre = contrato.ContratoMadre
                 };
 
                 return queryNegocios;
@@ -335,12 +337,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PlanCanje = (contrato is Contrato) ? (contrato as Contrato).PlanCanje : false,
                         CD = (contrato is Contrato) ? (contrato as Contrato).CD : null,
                         Warrant = (contrato is Contrato) ? (contrato as Contrato).Warrant : null,
-                        PagoDirectoVendedor = (contrato is Contrato) ? (contrato as Contrato).PagoDirectoVendedor : null,
+                        PagoDirectoVendedor = contrato.PagoDirectoVendedor,
                         EstablecimientoPropio = (contrato is Contrato) ? (contrato as Contrato).EstablecimientoPropio : null,
-                        BoletoId = (contrato is Contrato) ? (contrato as Contrato).BoletoId : null,
-                        BolsaId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : null,
-                        BoletoDescripcion = (contrato is Contrato) ? (contrato as Contrato).Boleto.Descripcion : "",
-                        BolsaDescripcion = (contrato is Contrato) ? (contrato as Contrato).Bolsa.Descripcion : "",
+                        BoletoId = contrato.BoletoId,
+                        BolsaId = contrato.BolsaId,
+                        BoletoDescripcion = contrato.Boleto.Descripcion ?? "",
+                        BolsaDescripcion = contrato.Bolsa.Descripcion ?? "",
                         DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
                         HastaFijacion = DbFunctions.TruncateTime(contrato.HastaFijacion),
                         CondicionFijacion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacionId : null,
@@ -384,8 +386,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         OcultarEnTablero = contrato.OcultarEnTablero,
                         FechaCierta = DbFunctions.TruncateTime(contrato.FechaCierta) ?? null,
                         EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false,
-                        PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
-                        FechaOperacion = DbFunctions.TruncateTime((contrato as Negocio).FechaOperacion),
+                        PorcentajeDePago = contrato.PorcentajeDePago,
+                        FechaOperacion = DbFunctions.TruncateTime(contrato.FechaOperacion),
                         MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
                         DescripcionOperacionAnterior = contrato.DescripcionOperacionAnterior,
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null ? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido : "Automática",
@@ -421,7 +423,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
                         ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                         DolarExportador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).DolarExportador.HasValue ? (contrato as AgenteCompra).DolarExportador.Value : false : false,
-                        TipoDeCambioId = contrato.TipoDeCambioId
+                        TipoDeCambioId = contrato.TipoDeCambioId,
+                        Madre = contrato.Madre,
+                        ContratoMadre = contrato.ContratoMadre
                     };
 
                 return queryNegocios;
