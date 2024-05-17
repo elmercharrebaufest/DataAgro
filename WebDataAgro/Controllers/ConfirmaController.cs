@@ -91,7 +91,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult DescargarConfirma(string codigoSAP)
+        public ActionResult DescargarArchivoConfirma(string codigoSAP)
         {   //confirma20211021_0002670442
             var nombreArchivo = "confirma"+DateTime.Now.Year.ToString()+DateTime.Now.Month.ToString()+DateTime.Now.Day.ToString()+"_000"+codigoSAP+".xml";
             try

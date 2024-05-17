@@ -16,7 +16,7 @@ function Generar() {
         MensErr("No se generó ningún Confirma.");
     } else {
         CargarTablaModal(result);
-        $("#ModalBoleto").modal("show");
+        $("#ModalConfirma").modal("show");
     }
 }
 
@@ -194,7 +194,7 @@ function CargarTablaModal(contratos) {
     $("#tabla-cap-pendientes").empty();
     var tabla = '';
     for (var i = 0; i < contratos.length; i++) {
-        tabla += '<tr><td>' + contratos[i].ContratoSAP + '</td><td>' + contratos[i].FechaGeneracionFormateada + '</td><td>' + (contratos[i].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>') + '</td><td>' + (contratos[i].IsWebService ? ('<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>') : ('<a href="/Confirma/DescargarConfirma?codigoSAP=' + contratos[i].ContratoSAP + '" class="k-button k-button-icontext" style="height: 34px;text-align: center"><i class="fa fa-download generado" style="text-align: center"></i></a>')) + '</td></tr>';
+        tabla += '<tr><td>' + contratos[i].ContratoSAP + '</td><td>' + contratos[i].FechaGeneracionFormateada + '</td><td>' + (contratos[i].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>') + '</td><td>' + (contratos[i].IsWebService ? ('<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>') : ('<a href="/Confirma/DescargarArchivoConfirma?codigoSAP=' + contratos[i].ContratoSAP + '" class="k-button k-button-icontext" style="height: 34px;text-align: center"><i class="fa fa-download generado" style="text-align: center"></i></a>')) + '</td></tr>';
     }
     $("#tabla-cap-pendientes").append(tabla);
 }
