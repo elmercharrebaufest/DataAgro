@@ -771,12 +771,8 @@ function ObtenerDatos(error) {
     if ($("#hijoId").is(":checked")) {
         obj.Madre = false;
     } else {
-        if (obj.TipoNegocioId == 2 || obj.TipoNegocioId == 3) {
+        if (obj.TipoNegocioId == 2 || obj.TipoNegocioId == 3 || obj.TipoNegocioId == 6) {
             obj.FechaCierta = $("#fechaCiertaId").val();
-        }
-        if (obj.TipoNegocioId == 6) {
-            obj.FechaCierta = $("#fechaCiertaAcuerdo").val();
-
         }
     } if ($("#fasonIdCheck").is(":checked")) {
         obj.EsFason = true;
