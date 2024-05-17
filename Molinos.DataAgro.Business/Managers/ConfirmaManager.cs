@@ -32,6 +32,10 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Web.Mvc;
 using Molinos.DataAgro.Entities.Helpers;
+using System.Data.Entity;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using Org.BouncyCastle.Utilities;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -185,6 +189,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
                 }
             }
+            //Agregar Validacion ANTI BOLETO Y CARTA OFERTA
             return mensaje;
         }
 
@@ -237,10 +242,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         public byte[] ConfirmaEnByte(string codigoSAP)
         {
-            //var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
+            //Constantes
+            const string B = "0001";
+            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
             //Parte temporal, no queda en la version final
-            var confirma = new Confirma();
             confirma.FechaGeneracion = DateTime.Now;
+
+            var estadoSAP = status.ValidarEstado(confirma.Negocio.ContratoSAP);
+            var esFijacionContratoConvenio = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && confirma.Negocio.Madre == true;
             //cargarle por seters los datos que necesites mostrar
 
             //Fin de carga de Setters
@@ -252,7 +261,7 @@ namespace Molinos.DataAgro.Business.Managers
             //Inicia formateo del XML
             xmlWriter.WriteStartElement("LoteDocumentos"); //Abre LoteDocumentos
                 xmlWriter.WriteStartElement("Lote"); // NODO lote
-                    xmlWriter.WriteAttributeString("EmpresaPresentante", confirma.ComercialId.ToString());
+                    xmlWriter.WriteElementString("EmpresaPresentante", "30715118773");
 
                     /// ITEMS - codigo Identificador del ítem para el cliente
                     #region ITEMS
@@ -261,7 +270,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ///ItemInfo
                         xmlWriter.WriteStartElement("ItemInfo");
 
-                            xmlWriter.WriteElementString("Workflow", string.Empty);
+                            xmlWriter.WriteElementString("Workflow", confirma.Negocio.CorredorId>0?"4":"7");
 
                         xmlWriter.WriteEndElement(); //Fin ItemInfo
 
@@ -273,9 +282,9 @@ namespace Molinos.DataAgro.Business.Managers
                             xmlWriter.WriteStartElement("CabeceraDocumento");
 
                                 //Bolsa - CodLista "Identificador de la Bolsa (valores tabulados) 
-                                xmlWriter.WriteElementString("Bolsa", string.Empty);
+                                xmlWriter.WriteElementString("Bolsa", confirma.Negocio.BolsaId.ToString());
                                 //TipoDocumento - CodLista = 3 
-                                xmlWriter.WriteElementString("TipoDocumento", string.Empty);
+                                xmlWriter.WriteElementString("TipoDocumento", confirma.Negocio.Canje==true?"17":(confirma.Negocio.TipoNegocioId==(int)EnumTipoNegocio.A_PRECIO?"1":(confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "3" : "")));
 
                             xmlWriter.WriteEndElement();
                             //Fin cabeceraDocumento
@@ -286,92 +295,111 @@ namespace Molinos.DataAgro.Business.Managers
 
                                 /// Partes - Hay un nodo <Parte> por cada empresa que forma parte del contrato -
                                 xmlWriter.WriteStartElement("Partes");
-                                    // parte
+                                    // parte Vendedor
                                     xmlWriter.WriteStartElement("Parte");
-                                        xmlWriter.WriteElementString("CodLista", string.Empty);
-                                        xmlWriter.WriteElementString("NroContratoInterno", string.Empty);
-                                        xmlWriter.WriteElementString("CUIT", string.Empty);
+                                        xmlWriter.WriteElementString("CodLista", "1");
+                                        xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoSAP);
+                                        xmlWriter.WriteElementString("CUIT", confirma.Negocio.Proveedor.CUIT);
                                     xmlWriter.WriteEndElement();
-                                    //fin parte
+                                    //fin parte Vendedor
+                                    // parte Comprador
+                                    xmlWriter.WriteStartElement("Parte");
+                                        xmlWriter.WriteElementString("CodLista", "3");
+                                        xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoSAP);
+                                        xmlWriter.WriteElementString("CUIT", "30715118773");
+                                    xmlWriter.WriteEndElement();
+                                    //fin parte Comprador
+                                    if(confirma.Negocio.CorredorId>0){
+                                    // parte Corredor si corresponde
+                                    xmlWriter.WriteStartElement("Parte");
+                                        xmlWriter.WriteElementString("CodLista", "2");
+                                        xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoSAP);
+                                        xmlWriter.WriteElementString("CUIT", confirma.Negocio.Corredor.CUIT);
+                                    xmlWriter.WriteEndElement();
+                                    //fin parte Corredor si corresponde
+                                    }
                                 xmlWriter.WriteEndElement();
                                 //Fin Partes
                                 // DetalleContrato
                                 xmlWriter.WriteStartElement("DetalleContrato");
                                     //  Comisión del corredor a cargo del comprador (en contratos con intervención del corredor)
-                                    xmlWriter.WriteElementString("ComisionPorComprador", string.Empty);
+                                    xmlWriter.WriteElementString("ComisionPorComprador", confirma.Negocio.PorcentajeComision.ToString());
                                     // CodLista - dentificador del Producto (valores tabulados) 
-                                    xmlWriter.WriteElementString("Producto", string.Empty);
-                                    xmlWriter.WriteElementString("DescAdicional", string.Empty);
-                                    xmlWriter.WriteElementString("FechaConcertacion", string.Empty);
+                                    xmlWriter.WriteElementString("Producto", confirma.Negocio.MaterialId==(int)EnumMateriales.TRIGO? "1" : (confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : (confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : (confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "21" : ""))));
+                                    xmlWriter.WriteElementString("DescAdicional", confirma.Negocio.Canje==true?"INSUMO":"");//PREGUNTAR
+                                    xmlWriter.WriteElementString("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString());
                                     //CodLista  Identificador de la Cosecha del producto (valores tabulados)
-                                    xmlWriter.WriteElementString("Cosecha", string.Empty);
+                                    xmlWriter.WriteElementString("Cosecha", confirma.Negocio.Campana.Descripcion);
                                     //CodLista  Identificador de la Unidad de medida en que se expresan las cantidades del contrato
-                                    xmlWriter.WriteElementString("UnidadMedida", string.Empty);
+                                    xmlWriter.WriteElementString("UnidadMedida", "K");
                                     xmlWriter.WriteElementString("CantidadDesde", string.Empty);
                                     xmlWriter.WriteElementString("CantidadHasta", string.Empty);
                                     // CodLista="Identificador del método de ajuste de la cantidad si en el contrato se expresa cantidad desde=hasta
                                     xmlWriter.WriteElementString("Ajuste", string.Empty);
                                     xmlWriter.WriteElementString("CantCamiones", string.Empty);
                                     //  CodLista="Identificador de la moneda del contrato (valores tabulados)
-                                    xmlWriter.WriteElementString("Moneda", string.Empty);
-                                    xmlWriter.WriteElementString("MontoImponible", string.Empty);
+                                    xmlWriter.WriteElementString("Moneda", confirma.Negocio.Moneda.Descripcion);
+                                    xmlWriter.WriteElementString("MontoImponible", confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ?confirma.Negocio.Monto.ToString():"" );
 
                                     //Calidad
                                     xmlWriter.WriteStartElement("DetalleContrato");
                                         // CodLista="Identificador de la calidad del producto (valores tabulados) "
-                                        xmlWriter.WriteElementString("CondicionesCalidad", string.Empty);
+                                        xmlWriter.WriteElementString("CondicionesCalidad", (confirma.Negocio.StandardDeCalidad.Id==(int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad.Id == (int)EnumStandarCalidad.ESPECIAL) ?"1":(confirma.Negocio.StandardDeCalidad.Id==(int)EnumStandarCalidad.FABRICA?"4":""));
                                         xmlWriter.WriteElementString("OtrasCondicionesCalidad", string.Empty);
                                     xmlWriter.WriteEndElement();
                                     //Fin Calidad
                                     // CodLista="Identificador del medio de transporte en que se translada el producto (valores tabulados) "
-                                    xmlWriter.WriteElementString("MedioTransporte", string.Empty);
+                                    xmlWriter.WriteElementString("MedioTransporte", "C");
 
                                     // Entregas
                                     xmlWriter.WriteStartElement("Entregas");
-                                        xmlWriter.WriteElementString("EntregaDesde", string.Empty);
+                                        xmlWriter.WriteElementString("EntregaDesde", confirma.Negocio.FechaEntrega.ToString());
                                         xmlWriter.WriteElementString("EntregaHasta", string.Empty);
                                     xmlWriter.WriteEndElement();
                                     //Fin Entregas
             
                                     // Origen
                                     xmlWriter.WriteStartElement("Origen");
-                                        xmlWriter.WriteElementString("LocalidadOrigen", string.Empty);
-                                        xmlWriter.WriteElementString("ProvinciaOrigen", string.Empty);
+                                        xmlWriter.WriteElementString("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad);
+                                        xmlWriter.WriteElementString("ProvinciaOrigen", confirma.Negocio.Provincia.Orden.ToString());
                                     xmlWriter.WriteEndElement();
                                     //Fin Origen
 
                                     // CodLista="Identificador del puerto destino del producto (valores tabulados) "
-                                    xmlWriter.WriteElementString("Destino", string.Empty);
+                                    xmlWriter.WriteElementString("Destino", confirma.Negocio.Destino.CodigoConfirma.ToString());
 
                                     // Pagos
                                     xmlWriter.WriteStartElement("Origen");
-                                        xmlWriter.WriteElementString("FechaCondicionPago", string.Empty);
-                                        xmlWriter.WriteElementString("LugarPago", string.Empty);
-                                        xmlWriter.WriteElementString("PagoAOrdenDe", string.Empty);
-                                        xmlWriter.WriteElementString("PorcPago", string.Empty);
+                                        xmlWriter.WriteElementString("FechaCondicionPago", confirma.Negocio.Canje == true ?"": (esFijacionContratoConvenio ? "4 días hábiles de fecha de fijación" : (!(confirma.Negocio.PagoDiferido == true) ?"Días de diferimiento contra mercadería entregada": (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (confirma.Negocio.Warrant==true ? "Pago contra warrant" : (confirma.Negocio.CD == true ? "Pago contra CD" : "72 hrs contra mercadería entregada")) : ""))));
+                                        xmlWriter.WriteElementString("LugarPago", "Buenos Aires");
+                                        xmlWriter.WriteElementString("PagoAOrdenDe", confirma.Negocio.CorredorId>0?(confirma.Negocio.PagoDirectoVendedor == true ?"1":"2") :"");
+                                        xmlWriter.WriteElementString("PorcPago", confirma.Negocio.PorcentajeDePago.ToString());
                                     xmlWriter.WriteEndElement();
                                     //Fin Pagos
 
                                     // Fijacion
                                     xmlWriter.WriteStartElement("Origen");
-                                        xmlWriter.WriteElementString("FijMinima", string.Empty);
-                                        xmlWriter.WriteElementString("UnidadMedidaFijacion", string.Empty);
-                                        xmlWriter.WriteElementString("FijPeriodo", string.Empty);
-                                        xmlWriter.WriteElementString("FijFecDesde", string.Empty);
-                                        xmlWriter.WriteElementString("FijFecHasta", string.Empty);
-                                        xmlWriter.WriteElementString("PorcMultaIncumplimiento", string.Empty);
-                                        xmlWriter.WriteElementString("ComunicacionFijacion", string.Empty);
+                                        xmlWriter.WriteElementString("FijMinima", string.Empty);//Preguntar
+                                        xmlWriter.WriteElementString("UnidadMedidaFijacion", "K");
+                                        xmlWriter.WriteElementString("FijPeriodo", "1");
+                                        xmlWriter.WriteElementString("FijFecDesde", confirma.Negocio.DesdeFijacion.ToString());
+                                        xmlWriter.WriteElementString("FijFecHasta", confirma.Negocio.HastaFijacion.ToString());
+                                        xmlWriter.WriteElementString("PorcMultaIncumplimiento", "010");
+                                        xmlWriter.WriteElementString("ComunicacionFijacion", confirma.Negocio.PagoDirectoVendedor == true ?"2":"1");
                                     xmlWriter.WriteEndElement();
                                     //Fin Fijacion
 
-                                    xmlWriter.WriteElementString("ProduccionVendedor", string.Empty);
+                                    xmlWriter.WriteElementString("ProduccionVendedor", confirma.Negocio.ClasificacionId==(int)EnumClasificacionCompraNet.Productor?(confirma.Negocio.PagoDirectoVendedor == true ?"1":"4"):(confirma.Negocio.Consignatario==true?"5": "2"));
                                     xmlWriter.WriteElementString("DecisionPagoVoluntario", string.Empty);
-                                    xmlWriter.WriteElementString("TipoOperacion", string.Empty);
-                                    xmlWriter.WriteElementString("OperacionExentaImpSantaFe", string.Empty);
+                                    xmlWriter.WriteElementString("APrecio", confirma.Negocio.TipoNegocioId==(int)EnumTipoNegocio.A_PRECIO?"1":"");
+                                    xmlWriter.WriteElementString("TipoOperacion", "1");
+                                    xmlWriter.WriteElementString("DecisionDeclaraPrecioUnit", confirma.Negocio.Canje == true ?"0":"");
+                                    xmlWriter.WriteElementString("DecisionDeclaraCantidad", confirma.Negocio.Canje == true ?"0":"");
+                                   // xmlWriter.WriteElementString("OperacionExentaImpSantaFe", string.Empty);
 
                                     // SioGranos
                                     xmlWriter.WriteStartElement("Origen");
-                                        xmlWriter.WriteElementString("NumeroDeclaracion", string.Empty);
+                                        xmlWriter.WriteElementString("NumeroDeclaracion", estadoSAP.NumeroSio.ToString());
                                     xmlWriter.WriteEndElement();
                                     //Fin SioGranos
 
@@ -396,8 +424,6 @@ namespace Molinos.DataAgro.Business.Managers
                     xmlWriter.WriteEndElement(); 
                     //Fin Items
                     #endregion
-                xmlWriter.WriteElementString("email", confirma.FechaGeneracion.ToString());
-                xmlWriter.WriteElementString("age", confirma.FechaGeneracion.ToString());
                 xmlWriter.WriteEndElement(); //Fin NODO lote
             xmlWriter.WriteEndElement(); //Fin LoteDocumentos
             //Fin Formateo del XML
