@@ -925,6 +925,7 @@ function InicializarElementos() {
                 for (var i = 0; i < iteraciones; i++) {
                     viewModel.Calidades.pop();
                 }
+                $("#material").val() === "1" || $("#material").val() === "2" ? $("#condicionFijacionId").data("kendoDropDownList").value("5") : $("#condicionFijacionId").data("kendoDropDownList").value("7");
             }
             if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
@@ -2238,7 +2239,7 @@ function InicializarElementos() {
 
     $('#tipoId').change(function () {
         if ($('#tipoId').val() == 1) {
-            $("#condicionFijacionId").data("kendoDropDownList").value("7");
+            $("#material").val() === "1" || $("#material").val() === "2" ? $("#condicionFijacionId").data("kendoDropDownList").value("5") : $("#condicionFijacionId").data("kendoDropDownList").value("7");
             $("#fechaDesdeTopeId").val(date);
             $("#fechaHastaTopeId").val(datehasta);
             //LimpiarDescuentos();
