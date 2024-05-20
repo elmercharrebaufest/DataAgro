@@ -44,12 +44,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly IStatusContratoAgent status;
+        private readonly IEnviarBoletoAgent oEnviarBoletoAgent;
+        private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
 
-        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status)
+        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status,IEnviarBoletoAgent oEnviarBoletoAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
             this.status = status;
+            this.oConsultarEstadoBoletoAgent = oConsultarEstadoBoletoAgent;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -60,69 +63,76 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public ConfirmaResult GrabarConfirmas(int claseNegocio,int ComercialId, List<string> contratos, bool usarWebConfirma)
+        public ConfirmaResult GrabarConfirmas(int claseNegocio,int ComercialId, List<string> codigos, bool usarWebConfirma, List<int>equipo)
         {
-            var result = new ConfirmaResult();
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
+            var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
+            var resultado = new ConfirmaResult();
             try
             {
                 foreach (var contrato in contratos)
                 {
-                    var tempConfirma = new ConfirmaGeneradoDto();
-                    var negocio = repositorio.ObtenerPrimero<Negocio>(x => x.ContratoSAP == contrato);
-                    if (negocio != null)
+
+                    //VALIDA NEGOCIO
+                    var mensaje = ValidarNegocio(contrato.ContratoSAP, claseNegocio);
+                    var esValido = mensaje == "" ? true : false;
+                    if (!esValido)
                     {
-                        //VALIDA NEGOCIO
-                        var mensaje = ValidarNegocio(contrato, claseNegocio);
-                        var esValido = mensaje == "" ? true : false;
-                        if (esValido)
-                        {
-                            //PRECARGAR CONFIRMA GENERADO DTO
-                            tempConfirma.FechaGeneracion = DateTime.Now;
-                            tempConfirma.NegocioId = negocio.Id;
-                            tempConfirma.ComercialId = ComercialId;
-                            tempConfirma.IsWebService = usarWebConfirma;
-                            tempConfirma.ContratoSAP = contrato;
-                            tempConfirma.Mensaje = string.Empty;
-                            tempConfirma.Generado = true;//Dependiente del siguiente bloque Linea temporal
+                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, mensaje));
+                        continue;
+                    }
 
-                            //ENVIAR CONFIRMA A RFC
-                            logger.Debug("Enviando confirma" + tempConfirma.ToString());
-                            //var resultado = oEnviarBoletoAgent.Enviar(tempBoleto);
-                            //var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-                            //Agregar a Servicio Confirma
-                            //result.confirmas.Add(nuevoConfirma);
-
-                            //if (resultado == "Se actualizan correctamente los datos")
-                            //{
+                    //CONSULTAR EXISTE CONFIRMA/BOLETO A RFC
+                    var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.Negocio : "");
+                    if (consultaConfirma.Generado == "" || consultaConfirma.Anulado.Equals("X")) // probar casos anulados
+                    { //Consulta: El Boleto/Confirma no existe o no esta generado en SAP???
+                        //PRECARGAR CONFIRMA GENERADO DTO
+                        var tempConfirma = new ConfirmaGeneradoDto() {
+                            NegocioId = contrato.Id,
+                            Version = "0",
+                            ComercialId = ComercialId,
+                            FechaGeneracion = DateTime.Now,
+                            ContratoSAP = contrato.ContratoSAP,
+                            FijacionSAP = contrato.FijacionSAP,
+                            TipoBoletoId = contrato.BoletoId.GetValueOrDefault(),
+                            IsWebService = usarWebConfirma,
+                            Mensaje = string.Empty,
+                            Generado = true
+                         };
+                        //Enviando Confirma a RFC como BoletoGeneradoDto
+                        logger.Debug("Enviando confirma" + tempConfirma.ToString());
+                        var res = oEnviarBoletoAgent.Enviar(ConfirmaABoletoDto(tempConfirma));
+                        if (res == "Se actualizan correctamente los datos")
+                        { //Generado exitosamente en RFC
+                            //Se Almacena en DB el nuevo Confirma
                             var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-                            //validar guardado exitoso en db
+                            resultado.confirmasGenerados.Add(tempConfirma);
                         }
                         else
                         {
-                            tempConfirma.FechaGeneracion = default(DateTime);
-                            tempConfirma.IsWebService = false;
-                            tempConfirma.ContratoSAP = contrato;
-                            tempConfirma.Generado = false;
-                            tempConfirma.Mensaje = $"{mensaje}";
+                            resultado.confirmasGenerados.Add(DevolverDto(contrato, false, res));
                         }
-
-                    } else {
-                        tempConfirma.FechaGeneracion = default(DateTime);
-                        tempConfirma.IsWebService = false;
-                        tempConfirma.ContratoSAP = contrato;
-                        tempConfirma.Generado = false;
-                        tempConfirma.Mensaje = $"No se encontró el negocio seleccionado con codigo SAP {contrato}.";
                     }
-                    result.confirmasGenerados.Add(tempConfirma);
+                    else
+                    {
+                        logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.ContratoSAP}");
+                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP."));
+                    }
                 }
+                //Se impactan los cambios en DB
                 repositorio.GuardarCambios();
             }
             catch (Exception e)
             {
                 logger.Error(e);
-                result.Errores.Add(new ErrorMessage(400, e.Message));
+                resultado.Errores.Add(new ErrorMessage(400, e.Message));
             }
-            return result;
+            return resultado;
+        }
+
+        private BoletoGeneradoDto ConvertirConfirmaBoleto(BasicoContrato negocio)
+        {
+            throw new NotImplementedException();
         }
 
         public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
@@ -191,6 +201,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     mensaje = $"No se puede generar el confirma {codigoSAP} por no ser de canje.";
                     logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
+                }
+                //Validar que corresponda la clase de negocio
+                if (tiposNegocios.Contains(negocio.TipoNegocioId))
+                {
+                    mensaje = $"No se puede generar el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.";
+                    logger.Debug($"No se puede generar el confirma el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.");
                 }
                 //Validar que tenga tilde CONFIRMA
                 if (negocio.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
@@ -492,6 +508,61 @@ namespace Molinos.DataAgro.Business.Managers
             var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
             var nombreArchivo = "confirma" + confirma.FechaGeneracion.Year.ToString() + confirma.FechaGeneracion.Month.ToString() + confirma.FechaGeneracion.Day.ToString() + "_000" + codigoSAP + ".xml";
             return nombreArchivo;
+        }
+
+        private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios, List<int> tipoNegocios)
+        {
+            List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
+            List<BasicoContrato> negociosFiltrados = new List<BasicoContrato>();
+            foreach (var negocio in negocios)
+            {
+                foreach (var tipo in tipoNegocioDetalles)
+                {
+                    if (tipo.Descripcion == negocio.TipoNegocio)
+                    {
+                        logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
+                        {
+                            negociosFiltrados.Add(negocio);
+                        }
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
+                        {
+                            negociosFiltrados.Add(negocio);
+                        }
+                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
+                        {
+                            negociosFiltrados.Add(negocio);
+                        }
+                    }
+                }
+            }
+            return negociosFiltrados;
+        }
+
+        private static ConfirmaGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, string mensaje)
+        {
+            return new ConfirmaGeneradoDto
+            {
+                ContratoSAP = Convert.ToInt64(itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : itemNegocio.ContratoSAP).ToString(),
+                Generado = generado,
+                Mensaje = mensaje,
+                FechaGeneracion = default(DateTime),
+                IsWebService = false,
+            };
+        }
+
+        private static BoletoGeneradoDto ConfirmaABoletoDto(ConfirmaGeneradoDto tempConfirma)
+        {
+            return new BoletoGeneradoDto
+            {
+                NegocioId = tempConfirma.NegocioId,
+                Version = 0,
+                ComercialId = tempConfirma.ComercialId,
+                FechaGeneracion = tempConfirma.FechaGeneracion,
+                ContratoSAP = tempConfirma.ContratoSAP,
+                FijacionSAP = tempConfirma.FijacionSAP,
+                TipoBoletoId = tempConfirma.TipoBoletoId
+            };
         }
     }
 }
