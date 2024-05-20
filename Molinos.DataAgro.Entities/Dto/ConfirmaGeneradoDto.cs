@@ -10,7 +10,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }
         public bool Generado { get; set; }
         public DateTime FechaGeneracion {  get; set; }
-        public string FechaGeneracionFormateada { get { return FechaGeneracion.ToShortDateString(); } }
+        public string FechaGeneracionFormateada { get { return FechaGeneracion== default(DateTime)?"":FechaGeneracion.ToShortDateString(); } }
         public bool IsWebService {  get; set; }
+        public string Mensaje { get; set; }
     }
 }

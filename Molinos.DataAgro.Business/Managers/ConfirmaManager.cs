@@ -65,26 +65,55 @@ namespace Molinos.DataAgro.Business.Managers
             var result = new ConfirmaResult();
             try
             {
-                foreach(var contrato in contratos)
+                foreach (var contrato in contratos)
                 {
-                    var negocio = repositorio.ObtenerPrimero<Negocio>(x=>x.ContratoSAP==contrato);
-                    //var esValido = ValidarNegocio(contrato, negocio.TipoNegocioId)==""?true:false;  //IMPLEMENTAR VALIDACION
-                    var esValido = true;
-                    if (esValido && negocio!=null)
+                    var tempConfirma = new ConfirmaGeneradoDto();
+                    var negocio = repositorio.ObtenerPrimero<Negocio>(x => x.ContratoSAP == contrato);
+                    if (negocio != null)
                     {
-                        var tempConfirma = new ConfirmaGeneradoDto();
-                        tempConfirma.FechaGeneracion=DateTime.Now;
-                        tempConfirma.NegocioId=negocio.Id;
-                        tempConfirma.ComercialId=ComercialId;
-                        tempConfirma.IsWebService=usarWebConfirma;
-                        tempConfirma.ContratoSAP=contrato;
-                        tempConfirma.Generado = true;
-                        var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-                        //Agregar a Servicio Confirma
-                        //result.confirmas.Add(nuevoConfirma);
-                        result.confirmasGenerados.Add(tempConfirma);
+                        //VALIDA NEGOCIO
+                        var mensaje = ValidarNegocio(contrato, claseNegocio);
+                        var esValido = mensaje == "" ? true : false;
+                        if (esValido)
+                        {
+                            //PRECARGAR CONFIRMA GENERADO DTO
+                            tempConfirma.FechaGeneracion = DateTime.Now;
+                            tempConfirma.NegocioId = negocio.Id;
+                            tempConfirma.ComercialId = ComercialId;
+                            tempConfirma.IsWebService = usarWebConfirma;
+                            tempConfirma.ContratoSAP = contrato;
+                            tempConfirma.Mensaje = string.Empty;
+                            tempConfirma.Generado = true;//Dependiente del siguiente bloque Linea temporal
+
+                            //ENVIAR CONFIRMA A RFC
+                            logger.Debug("Enviando confirma" + tempConfirma.ToString());
+                            //var resultado = oEnviarBoletoAgent.Enviar(tempBoleto);
+                            //var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+                            //Agregar a Servicio Confirma
+                            //result.confirmas.Add(nuevoConfirma);
+
+                            //if (resultado == "Se actualizan correctamente los datos")
+                            //{
+                            var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+                            //validar guardado exitoso en db
+                        }
+                        else
+                        {
+                            tempConfirma.FechaGeneracion = default(DateTime);
+                            tempConfirma.IsWebService = false;
+                            tempConfirma.ContratoSAP = contrato;
+                            tempConfirma.Generado = false;
+                            tempConfirma.Mensaje = $"{mensaje}";
+                        }
+
+                    } else {
+                        tempConfirma.FechaGeneracion = default(DateTime);
+                        tempConfirma.IsWebService = false;
+                        tempConfirma.ContratoSAP = contrato;
+                        tempConfirma.Generado = false;
+                        tempConfirma.Mensaje = $"No se encontró el negocio seleccionado con codigo SAP {contrato}.";
                     }
-                    
+                    result.confirmasGenerados.Add(tempConfirma);
                 }
                 repositorio.GuardarCambios();
             }
@@ -113,12 +142,12 @@ namespace Molinos.DataAgro.Business.Managers
             return codigos.FindAll(x => ValidarNegocio(x, tipoNegocio) == ""); ;
         }
 
-        public List<string> ValidarNegocios(List<string> codigosSAP, int tipoNegocio)
+        public List<string> ValidarNegocios(List<string> codigosSAP, int claseNegocio)
         {
             List<string> rechazados = new List<string>();
             foreach (var itemNegocio in codigosSAP)
             {
-                var mensaje = ValidarNegocio(itemNegocio, tipoNegocio);
+                var mensaje = ValidarNegocio(itemNegocio, claseNegocio);
                 if (!string.IsNullOrEmpty(mensaje))
                 {
                     rechazados.Add(mensaje);
@@ -127,12 +156,12 @@ namespace Molinos.DataAgro.Business.Managers
             return rechazados;
         }
 
-        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
+        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio)
         {
             var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var fechaHasta = hasta == "" ? DateTime.Now : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1);
             var listaNegocios = new List<Negocio>();
-            if (tipoNegocio == 1)
+            if (claseNegocio == 1)
             {
                 listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
             }
@@ -141,41 +170,35 @@ namespace Molinos.DataAgro.Business.Managers
                 listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000);
             }
             var result = listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            return result.FindAll(x => ValidarNegocio(x, tipoNegocio) == "");
+            return result.FindAll(x => ValidarNegocio(x, claseNegocio) == "");
         }
 
-        public string ValidarNegocio(string codigoSAP, int tipoNegocio)
+        public string ValidarNegocio(string codigoSAP, int claseNegocio)
         {
+            var tiposNegocios = ConvertirClaseNegocioATiposNegocios(claseNegocio);
             var mensaje = "";
             var kilosDisponibles = 10000;
-            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == codigoSAP);
-            if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
+            var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == codigoSAP);
+            
+            if (negocio != null)
             {
-                if (contrato != null)
+                if (negocio.Cantidad < kilosDisponibles)
                 {
-                    if (contrato.Cantidad < kilosDisponibles)
-                    {
-                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
-                    }
-                    if (contrato.Canje != true)
-                    {
-                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por no ser de canje.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
-                    }
-                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
-                    {
-                        mensaje = $"No se puede generar el confirma para la fijación {codigoSAP} por no tener tilde de boleto físico o carta oferta.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de boleto físico o carta oferta.");
-                    }
+                    mensaje = $"No se puede generar el confirma {codigoSAP} por su cantidad menor a 10 toneladas.";
+                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
                 }
-                else
+                if (negocio.Canje != true)
                 {
-                    mensaje = $"No se encontró el contrato para la fijación {codigoSAP} seleccionada.";
+                    mensaje = $"No se puede generar el confirma {codigoSAP} por no ser de canje.";
+                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
                 }
-            }
-            else
-            {
+                //Validar que tenga tilde CONFIRMA
+                if (negocio.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
+                {
+                    mensaje = $"No se puede generar el confirma {codigoSAP} por no tener tilde de confirma.";
+                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de boleto físico o carta oferta.");
+                }
+                //Validar estado del contrato
                 var res = status.ValidarEstado(codigoSAP);
                 if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
@@ -189,7 +212,11 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
                 }
             }
-            //Agregar Validacion ANTI BOLETO Y CARTA OFERTA
+            else
+            {
+                mensaje = $"No se encontró el negocio {codigoSAP} seleccionado.";
+            }
+            
             return mensaje;
         }
 
@@ -344,7 +371,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     //Calidad
                                     xmlWriter.WriteStartElement("DetalleContrato");
                                         // CodLista="Identificador de la calidad del producto (valores tabulados) "
-                                        xmlWriter.WriteElementString("CondicionesCalidad", (confirma.Negocio.StandardDeCalidad.Id==(int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad.Id == (int)EnumStandarCalidad.ESPECIAL) ?"1":(confirma.Negocio.StandardDeCalidad.Id==(int)EnumStandarCalidad.FABRICA?"4":""));
+                                        xmlWriter.WriteElementString("CondicionesCalidad", (confirma.Negocio.StandardDeCalidad?.Id==(int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.ESPECIAL) ?"1":(confirma.Negocio.StandardDeCalidad?.Id==(int)EnumStandarCalidad.FABRICA?"4":""));
                                         xmlWriter.WriteElementString("OtrasCondicionesCalidad", string.Empty);
                                     xmlWriter.WriteEndElement();
                                     //Fin Calidad
@@ -443,6 +470,28 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaGeneracion = tempConfirma.FechaGeneracion,
                 IsWebService = tempConfirma.IsWebService,
             };
+        }
+
+        private List<int> ConvertirClaseNegocioATiposNegocios(int claseNegocio)
+        {
+            var tiposNegocios = new List<int>();
+            if (claseNegocio == 1) // Contrato
+            {
+                tiposNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
+                tiposNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
+            }
+            else // Fijación
+            {
+                tiposNegocios.Add((int)EnumTipoNegocio.FIJACION);
+            }
+            return tiposNegocios;
+        }
+
+        public string GenerarNombreArchivoConfirma(string codigoSAP)
+        {
+            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
+            var nombreArchivo = "confirma" + confirma.FechaGeneracion.Year.ToString() + confirma.FechaGeneracion.Month.ToString() + confirma.FechaGeneracion.Day.ToString() + "_000" + codigoSAP + ".xml";
+            return nombreArchivo;
         }
     }
 }
