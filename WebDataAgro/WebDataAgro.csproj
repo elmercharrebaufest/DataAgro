@@ -2890,6 +2890,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Confirma\GenerarConfirma.cshtml" />
+    <Content Include="Views\Confirma\ModalConfirmaGenerado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

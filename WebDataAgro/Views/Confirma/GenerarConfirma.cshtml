@@ -14,7 +14,7 @@
             <label>Tipo de Negocio</label>
         </div>
         <div class="col-sm-2">
-            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control" })
+            @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control" })
         </div>
         <div class="col-xs-12 col-md-3">
             @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%" })
@@ -65,10 +65,7 @@
             </button>
         </div>
     </div>
-
-    <div class="form-group my-4">
-
-    </div>
+    
 </div>
 
 <style>
@@ -89,3 +86,5 @@
         color: white;
     }
 </style>
+
+@Html.Partial("ModalConfirmaGenerado")
