@@ -13,5 +13,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaGeneracionFormateada { get { return FechaGeneracion== default(DateTime)?"":FechaGeneracion.ToShortDateString(); } }
         public bool IsWebService {  get; set; }
         public string Mensaje { get; set; }
+        public string Version { get; set; }
+        public string FijacionSAP { get; set; }
+        public int TipoBoletoId { get; set; }
     }
 }
