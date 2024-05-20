@@ -32,7 +32,6 @@ namespace WebDataAgro.Controllers
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
-            //_logDir = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
         }
         
         [HttpGet]
@@ -46,11 +45,8 @@ namespace WebDataAgro.Controllers
         public ActionResult GenerarConfirma(ConfirmaGeneradoDto confirma)
         {
             CargarSeleccionables();
-            List<string> contratos = new List<string>();
-            foreach (string itemContrato in confirma.ContratoSAP.TrimEnd(';').Split(';').ToList())
-            {
-                contratos.Add(itemContrato);
-            }
+            List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
+            
             var confirmas = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService);
             return new JsonResult()
             {
@@ -92,8 +88,9 @@ namespace WebDataAgro.Controllers
         }
 
         public ActionResult DescargarArchivoConfirma(string codigoSAP)
-        {   //confirma20211021_0002670442
-            var nombreArchivo = "confirma"+DateTime.Now.Year.ToString()+DateTime.Now.Month.ToString()+DateTime.Now.Day.ToString()+"_000"+codigoSAP+".xml";
+        {
+
+            var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
             try
             {
                 Byte[] fileBytes = confirmaManager.ConfirmaEnByte(codigoSAP);
