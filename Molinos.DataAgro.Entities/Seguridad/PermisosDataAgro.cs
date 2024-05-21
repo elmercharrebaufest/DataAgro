@@ -379,6 +379,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Boletos
         [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
         GenerarBoleto = 900,
+        //Confirma
+        [Display(ResourceType = typeof(Text), Name = "Confirma")]
+        Confirma = 920,
 
     }
 }

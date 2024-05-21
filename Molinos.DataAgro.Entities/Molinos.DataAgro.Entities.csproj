@@ -194,6 +194,7 @@
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\ApoderadoSapDto.cs" />
+    <Compile Include="Dto\ConfirmaArchivoDto.cs" />
     <Compile Include="Dto\ConfirmaResult.cs" />
     <Compile Include="Dto\ConfirmaGeneradoDto.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />

@@ -32,8 +32,16 @@ namespace WebDataAgro.Controllers
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
+            _logDir = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
+
         }
-        
+
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public ActionResult GenerarConfirma()
         {
@@ -111,6 +119,19 @@ namespace WebDataAgro.Controllers
             }
         }
 
+        public ActionResult ListarConfirmas()
+        {
+            List<ConfirmaArchivoDto> confirmas = confirmaManager.ListarConfirmas();
+
+            var json = new JsonResult()
+            {
+                Data = confirmas,
+                MaxJsonLength = Int32.MaxValue,
+            };
+            json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return json;
+        }
+
         private void CargarSeleccionables()
         {
             var datosCombos = confirmaManager.TraerDatosCombos();
@@ -122,6 +143,25 @@ namespace WebDataAgro.Controllers
                         Selected = false
                     }).OrderBy(x => x.Value);
             ViewBag.ClaseNegocio = claseListItems;
+        }
+
+        private string GetFriendlyFileSize(long lengthInBytes)
+        {
+            var kb = Math.Round(lengthInBytes / 1024d);
+            var groupSeparator = NumberFormatInfo.CurrentInfo.NumberGroupSeparator;
+            var friendly = kb.ToString("N0").Replace(groupSeparator, " ") + " KB";
+            return friendly;
+        }
+
+
+        public ActionResult ObtenerDownloadKey(oParamBusqueda filtro)
+        {
+            DateTime oNow = DateTime.Now;
+            string strFechaHora = oNow.ToString("yyyyMMddHHmmss");
+            string strTicks = oNow.Ticks.ToString();
+            string identif = strFechaHora + strTicks;
+
+            return Json(Util.GetDownloadKey(identif));
         }
     }
 }
