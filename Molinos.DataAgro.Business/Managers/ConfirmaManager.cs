@@ -564,5 +564,19 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoBoletoId = tempConfirma.TipoBoletoId
             };
         }
+        public List<ConfirmaArchivoDto> ListarConfirmas()
+        {
+            return repositorio.Listar<Confirma, ConfirmaArchivoDto>
+                (a => new ConfirmaArchivoDto { 
+                    Id = a.Id, 
+                    NegocioId = a.NegocioId,
+                    ComercialId = a.ComercialId,
+                    Nombre = ("confirma" + a.FechaGeneracion.Year.ToString() + a.FechaGeneracion.Month.ToString() + a.FechaGeneracion.Year.ToString() + a.FechaGeneracion.Day.ToString() + "_000" +  a.Negocio.ContratoSAP + ".xml"), 
+                    FechaGeneracion = a.FechaGeneracion.Day +"/"+ a.FechaGeneracion.Month + "/" + a.FechaGeneracion.Year,
+                    IsWebService = a.IsWebService,
+                    ContratoSAP = a.Negocio.ContratoSAP,
+                }, null, 0, null, Entities.Helpers.DirOrden.Asc)
+                .Where(c => !c.IsWebService).ToList();
+        }
     }
 }
