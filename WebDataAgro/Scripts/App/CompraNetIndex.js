@@ -405,7 +405,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.NoInformaSIO + "'" + ',' +
         "'" + dataItem.CalidadDescripcion + "'" + ',' +
         "'" + dataItem.Estado + "'" + ',' +
-        "'" + htmlEncode(dataItem.Observacion) + "'" + ',' +
+        "'" + (dataItem.Observacion == '' ? "" + "'" + ',' : htmlEncode(dataItem.Observacion.replace(/["]/g, '``')) + "'" + ',') +
         "'" + dataItem.Moneda + "'" + ',' +
         "'" + dataItem.Moneda_Sustentable + "'" + ',' +
         "'" + dataItem.DestinoId + "'" + ',' +
@@ -473,7 +473,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
         "'" + dataItem.ProveedorCreador + "'" + ',' +
         "'" + dataItem.Cesion + "'" + ',' +
-        "'" + htmlEncode(dataItem.MotivoReemplazo == null ? "" : dataItem.MotivoReemplazo) + "'" + ',' +
+        "'" + (dataItem.MotivoReemplazo == null ? "" + "'" + ',' : htmlEncode(dataItem.MotivoReemplazo.replace(/["]/g, '``')) + "'" + ',') +
         "'" + dataItem.AnulaYReemplazaContratoSAP + "'" + ',' +
         "'" + dataItem.ObligatoriedadBonificacionDesc + "'" + ',' +
         "'" + dataItem.Condicional + "'" + ',' +

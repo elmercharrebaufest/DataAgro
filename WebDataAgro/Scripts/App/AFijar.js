@@ -925,6 +925,7 @@ function InicializarElementos() {
                 for (var i = 0; i < iteraciones; i++) {
                     viewModel.Calidades.pop();
                 }
+                $("#material").val() === "1" || $("#material").val() === "2" ? $("#condicionFijacionId").data("kendoDropDownList").value("5") : $("#condicionFijacionId").data("kendoDropDownList").value("7");
             }
             if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
@@ -2237,7 +2238,7 @@ function InicializarElementos() {
 
     $('#tipoId').change(function () {
         if ($('#tipoId').val() == 1) {
-            $("#condicionFijacionId").data("kendoDropDownList").value("7");
+            $("#material").val() === "1" || $("#material").val() === "2" ? $("#condicionFijacionId").data("kendoDropDownList").value("5") : $("#condicionFijacionId").data("kendoDropDownList").value("7");
             $("#fechaDesdeTopeId").val(date);
             $("#fechaHastaTopeId").val(datehasta);
             //LimpiarDescuentos();
@@ -3870,10 +3871,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#precioMonedaAFijarId").data("kendoDropDownList").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 1; }).MonedaId);
         $("#precioMonedaAFijarId").data("kendoDropDownList").trigger("change");
         InsertarAperturasViewModel();
-        //asdasd
     }
-
-
 
     //MostrarTablaPrecioPactado();
     if (contrato.StandardCalidadId == 2) {
@@ -4048,8 +4046,8 @@ function CargarDatosEditar(contrato, hijo) {
         $(".sustentableDiv").show();
         if (contrato.MercsDeposito == true) {
             $(".fechaHastaSustentableDiv").show();
-            $("#fechaDesdeSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaDesde_SustentableFormateado)));
-            $("#fechaHastaSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaHasta_SustentableFormateado)));
+            $("#fechaDesdeSustentableId").val(contrato.FechaDesde_SustentableFormateado);
+            $("#fechaHastaSustentableId").val(contrato.FechaHasta_SustentableFormateado);
         }
         if (contrato.TarifaAConvenir == true) {
             $("#tarifaAConvenirId").prop("checked", true);
