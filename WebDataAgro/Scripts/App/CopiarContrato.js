@@ -1131,10 +1131,9 @@ function MostrarCcPpPendientesAplicar() {
             $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
             $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
             MensInfo("No hay cartas de porte pendientes de aplicar");
-        } else {
-            $("#fechaDesdeSustentableId").val(lista[0].FechaIngreso);
+        } else if ($("#fechaDesdeSustentableId").val() == '') {
+            $("#fechaDesdeSustentableId").val(lista[0].FechaIngresoString);
             $("#fechaHastaSustentableId").val($("#fechaHastaId").val());
-
         }
         //var viewmodel = {
         //    CcPpPendientes: lista
