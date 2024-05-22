@@ -4375,6 +4375,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.Sustentable = contrato.Sustentable;
             contratoSave.EPA = contrato.EPA;
             contratoSave.SustentableTipoDBId = contrato.SustentableTipoDBId;
+            contratoSave.FechaDesdeSustentable = contrato.FechaDesdeSustentable;
+            contratoSave.FechaHastaSustentable = contrato.FechaHastaSustentable;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;

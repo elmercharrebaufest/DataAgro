@@ -3872,10 +3872,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#precioMonedaAFijarId").data("kendoDropDownList").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 1; }).MonedaId);
         $("#precioMonedaAFijarId").data("kendoDropDownList").trigger("change");
         InsertarAperturasViewModel();
-        //asdasd
     }
-
-
 
     //MostrarTablaPrecioPactado();
     if (contrato.StandardCalidadId == 2) {
@@ -4050,8 +4047,8 @@ function CargarDatosEditar(contrato, hijo) {
         $(".sustentableDiv").show();
         if (contrato.MercsDeposito == true) {
             $(".fechaHastaSustentableDiv").show();
-            $("#fechaDesdeSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaDesde_SustentableFormateado)));
-            $("#fechaHastaSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaHasta_SustentableFormateado)));
+            $("#fechaDesdeSustentableId").val(contrato.FechaDesde_SustentableFormateado);
+            $("#fechaHastaSustentableId").val(contrato.FechaHasta_SustentableFormateado);
         }
         if (contrato.TarifaAConvenir == true) {
             $("#tarifaAConvenirId").prop("checked", true);
