@@ -3514,8 +3514,8 @@ function CargarDatosEditar(contrato, hijo) {
     $("#buscadorProveedor").trigger("change");
 
     if (contrato.FechaOperacionFormateado != null) {
-        $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
-        //$("#fechaFijacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+        $("#fechaOperacionId").val(contrato.FechaOperacionFormateado);
+        //$("#fechaFijacionId").val(contrato.FechaOperacionFormateado);
 
     } else {
         $("#fechaOperacionId").val("");
@@ -3581,10 +3581,10 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaFijacionMotivoDiv").hide();
     }
 
-    $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
-    $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
-    //$("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
-    //$("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
+    $("#fechaDesdeId").val(contrato.FechaDesdeFormateado);
+    $("#fechaHastaId").val(contrato.FechaHastaFormateado);
+    //$("#fechaCiertaId").val(contrato.FechaCiertaFormateado);
+    //$("#fechaCiertaAcuerdo").val(contrato.FechaCiertaFormateado);
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
 
@@ -3644,7 +3644,7 @@ function CargarDatosEditar(contrato, hijo) {
     //if (contrato.Dolarizado) {
     //    $("#dolarizadoId").prop("checked", true);
     //    $("#dolarizadoDiv").show();
-    //    $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+    //    $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
     //}
 
     //if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
@@ -3706,7 +3706,7 @@ function CargarDatosEditar(contrato, hijo) {
     //if (contrato.DolarizadoExpress == true) {
     //    $("#dolarizadoExpressDiv").show();
     //    $("#dolarizadoDiv").show();
-    //    $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+    //    $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
     //    $("#dolarizadoExpressId").prop("checked", true);
     //    //$("#chequeElectronicoDiv").hide();
     //    //$("#pagoCbuDiv").hide();
@@ -4006,17 +4006,17 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (!hijo) {
-        //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
+        //$("#fechaOperacionId").val(contrato.FechaFormateado);
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         //$("#tipoId").data("kendoDropDownList").trigger("change");
         if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
             if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-                $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
+                $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
             } else {
                 $("#fechaDesdeTopeId").val("");
             }
             if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-                $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
+                $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
             } else {
                 $("#fechaHastaTopeId").val("");
             }
@@ -4070,7 +4070,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#motivoAnterior").data("kendoDropDownList").readonly(true);
 
         var hoy = new Date();
-        var fechaContrato = FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado));
+        var fechaContrato = contrato.FechaOperacionFormateado;
         $("#fechaOperacionId").data("kendoDatePicker").setOptions({
             month: {
                 content: '# if((data.date.getFullYear() == ' + hoy.getFullYear()
