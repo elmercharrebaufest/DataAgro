@@ -26,13 +26,11 @@ namespace WebDataAgro.Controllers
     {
         private readonly IConfirmaManager confirmaManager;
         private readonly IReportesManager reportesManager;
-        private readonly string _logDir;
 
         public ConfirmaController(IConfirmaManager confirmaManager, IReportesManager reportesManager)
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
-            _logDir = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
 
         }
 
