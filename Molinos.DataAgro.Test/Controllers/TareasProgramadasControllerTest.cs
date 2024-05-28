@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      proveedorManagerMock.Object,
                                                      precioPizarraManagerMock.Object,
                                                      faqManagerMock.Object,
-                                                     researchManagerMock.Object);
+                                                     researchManagerMock.Object, null);
         }
 
         [Test]

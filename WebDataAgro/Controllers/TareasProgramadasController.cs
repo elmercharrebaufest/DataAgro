@@ -24,12 +24,13 @@ namespace WebDataAgro.Controllers
         private readonly IPrecioPizarraManager precioPizarraManager;
         private readonly IFAQManager faqManager;
         private readonly IResearchManager researchManager;
+        private readonly IConfirmaManager confirmaManager;
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
-            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager, IResearchManager researchManager)
+            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager, IResearchManager researchManager, IConfirmaManager confirmaManager)
 
         {
             this.logger = logger;
@@ -46,6 +47,7 @@ namespace WebDataAgro.Controllers
             this.precioPizarraManager = precioPizarraManager;
             this.faqManager = faqManager;
             this.researchManager = researchManager;
+            this.confirmaManager = confirmaManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -379,5 +381,14 @@ namespace WebDataAgro.Controllers
             logger.Info("FIN VerificarSolicitudesExtraordinariasPendientes");
             return Content("ok");
         }
+
+        public ActionResult EnviarMailConfirmas()
+        {
+            logger.Info("INICIO EnviarMailConfirmas");
+            confirmaManager.EnviarMailConfirmas();
+            logger.Info("FIN EnviarMailConfirmas");
+            return Content("ok");
+        }
+
     }
 }

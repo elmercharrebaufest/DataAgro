@@ -86,16 +86,3 @@ function DesacargaConfirma(codigoSAP) {
     }
     MSExecuteOnServerAsync('/Confirma/ObtenerDownloadKey', null, funcReturn, true);
 }
-
-function Prueba() {
-    BlockUi("Consultando...");
-    var data = {  };
-    result = MSExecuteOnServer('/Confirma/PruebaServiceMail', data);
-    $.unblockUI();
-    if (result.length == 0) {
-        MensAlerta("Sin Resultados");
-    } else {
-        MensAlerta("Finalizados");
-
-    }
-}
