@@ -1,10 +1,8 @@
 ﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Clausulas;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
@@ -14,29 +12,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.parser;
-using iTextSharp.tool.xml.pipeline.html;
-using iTextSharp.tool.xml.pipeline.end;
-using iTextSharp.tool.xml.pipeline.css;
-using iTextSharp.tool.xml.html;
-using iTextSharp.tool.xml.css;
 using Molinos.DataAgro.Entities.Common.Enums;
 using System.Globalization;
-using System.ServiceModel.Channels;
-using Molinos.DataAgro.Agent.Helpers;
-using Molinos.DataAgro.Agent.ScatoRepositorio;
-using System.Xml.Linq;
 using System.Xml;
-using System.Web.Mvc;
-using Molinos.DataAgro.Entities.Helpers;
-using System.Data.Entity;
-using System.Security.Cryptography;
-using System.Security.Policy;
-using Org.BouncyCastle.Utilities;
-using Molinos.DataAgro.Business.Clausulas;
+using Molinos.DataAgro.Interfaces.Clausulas;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -45,16 +24,20 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly IStatusContratoAgent status;
+        private readonly IMailManager mailManager;
+        private readonly IHttpContextManager httpContextManager;
         private readonly IEnviarBoletoAgent oEnviarBoletoAgent;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         private readonly IServicioClausulas servicioClausula;
 
-        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status,IEnviarBoletoAgent oEnviarBoletoAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IServicioClausulas servicioClausula)
+        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status,IEnviarBoletoAgent oEnviarBoletoAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula)
         {
             this.repositorio = repositorio;
             this.logger = logger;
             this.status = status;
             this.oConsultarEstadoBoletoAgent = oConsultarEstadoBoletoAgent;
+            this.mailManager = mailManager;
+            this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
         }
 
@@ -592,6 +575,90 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoBoletoId = tempConfirma.TipoBoletoId
             };
         }
+
+        // CORREOS
+        public string EnviarMailConfirmas()
+        {
+            List<string> correos = new List<string>() {  "dataagro@baufest.com" };
+            EnviarMailBoleto("molinos agro S.A.", correos);
+
+            return "ok";
+        }
+
+        private void EnviarMailBoleto(string razonSocial, List<string> emailproveedor)
+        {
+            var listaContratos = new List<string>();
+            var listaProvedoores = new List<string>();
+            var listaProvedooresContactos = new List<string>();
+            List<Confirma> confirmasRecientes = repositorio.Listar<Confirma>().Where(c => c.IsWebService && c.FechaGeneracion.ToShortDateString().Equals(DateTime.Now.ToShortDateString())).ToList();
+
+            if (confirmasRecientes.Count > 0)
+            {
+                if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
+                {
+                    listaProvedooresContactos.Add("dataagro@molinosagro.com.ar");
+                    logger.Debug("Enviando mail Confirma ");
+                }
+
+                string subject = "Confirmas Molinos Agro S.A.";
+
+                foreach (Confirma item in confirmasRecientes)
+                {
+
+                    if (!listaProvedoores.Contains(item.Negocio.Proveedor.CUIT))
+                        listaProvedoores.Add(item.Negocio.Proveedor.CUIT);
+
+                    var correoproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == ((item.Negocio.CorredorId != null && item.Negocio.CorredorId > 0 ) ? item.Negocio.CorredorId : item.Negocio.ProveedorId) && x.Boleto == true);
+
+                    listaProvedooresContactos.AddRange(correoproveedor);
+
+                    listaContratos.Add(item.Negocio.ContratoSAP);
+                }
+                mailManager.EnviarMail(emailproveedor, subject, "", listaProvedooresContactos, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), confirmasRecientes, listaProvedoores)); 
+            }
+        }
+
+        private AlternateView CuerpoMailBoleto(String filePath, List<Confirma> contratos, List<string> proveedores)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            string htmlBody = "";
+
+            htmlBody += "Estimado, le informamos que ya se encuentran subidos al sistema confirma los siguientes contratos: <br/><br/>";
+            foreach (string cuitProveedor in proveedores)
+            {
+                var contratosFiltradoProveedor = contratos.Where(c => c.Negocio.Proveedor.CUIT.Equals(cuitProveedor));
+
+                htmlBody += "Proveedor:  " + cuitProveedor + ".<br/>";
+
+
+                foreach (Confirma confirma in contratosFiltradoProveedor)
+                {
+                        htmlBody += "&emsp;Bolsa  " + confirma.Negocio.Bolsa.Descripcion + ".<br/>";
+                        htmlBody += "&emsp;&emsp;" + confirma.Negocio.ContratoSAP + " de Molinos Agro S.A.<br/>";
+                }
+            }
+            htmlBody += "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
+                "<br/><br/>Saludos Cordiales,<br/><br/>" +
+                "www.molinosagro.com.ar <br/>" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br/><br/>Molinos Agro S.A.<br/><br/><br/><br/>";
+            htmlBody += "<style> table, th, td{ }</style>";
+
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+
         public List<ConfirmaArchivoDto> ListarConfirmas()
         {
             return repositorio.Listar<Confirma, ConfirmaArchivoDto>

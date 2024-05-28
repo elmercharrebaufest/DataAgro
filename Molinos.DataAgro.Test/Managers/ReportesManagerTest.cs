@@ -1022,7 +1022,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, DetalleAgenteDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(
-                "{\"items\":[{\"Agente\":\"a\",\"Operador\":\"a\",\"Material\":\"A\",\"Posicion\":\"01.2019\",\"Cantidad\":1.0,\"Precio\":\"1,00\",\"Moneda\":\"A\",\"Fecha\":\"16/10/2018\",\"Comercial\":\"a\"}],\"total\":1}",
+                "{\"items\":[{\"Agente\":\"a\",\"Operador\":\"a\",\"Material\":\"A\",\"Posicion\":\"01.2019\",\"Cantidad\":1.0,\"Precio\":\"1.00\",\"Moneda\":\"A\",\"Fecha\":\"16/10/2018\",\"Comercial\":\"a\"}],\"total\":1}",
                 result);
         }
         [Test]

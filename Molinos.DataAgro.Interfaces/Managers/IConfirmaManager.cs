@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Interfaces
         ConfirmaResult GrabarConfirmas(int tipoNegocio,int ComercialId,List<string> contratos, bool usarWebService, List<int> equipo);
         byte[] ConfirmaEnByte(string confirma);
         string GenerarNombreArchivoConfirma(string codigoSAP);
+        string EnviarMailConfirmas();
         List<ConfirmaArchivoDto> ListarConfirmas();
 
     }
