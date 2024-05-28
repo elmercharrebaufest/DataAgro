@@ -4,6 +4,7 @@
     [Orden]		  INT	NULL,
     [HabilitadoVenta] BIT NOT NULL DEFAULT 0,
     [Inscripto] BIT NOT NULL DEFAULT 0,
+    [CodigoConfirma]      VARCHAR (50) NULL,
     CONSTRAINT [PK_Provincia] PRIMARY KEY CLUSTERED ([ProvinciaId] ASC)
 );
 
