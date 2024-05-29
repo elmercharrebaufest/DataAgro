@@ -17,5 +17,6 @@ namespace Molinos.DataAgro.Interfaces
         byte[] BoletoEnByte(string archivoUrl);
         List<string> FiltrarNegociosPorFecha(string desde, string hasta, int negocio);
         List<string> FiltrarNegociosNumeroSAP(int negocioDesde, int negocioHasta, int tipoNegocio);
+        bool ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos);
     }
 }
