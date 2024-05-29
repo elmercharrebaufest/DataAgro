@@ -23,6 +23,7 @@
         //toolbar: [{ template: kendo.template($("#template").html()) }],
         pageable: false,
         columns: [
+            { selectable: true, width: "35px" },
             {
                 field: "Name", title: "Nombre", template: function (dataItem) {
                     return "<label  style=' color: black'> <strong>" + dataItem.Nombre + "</strong></label>"
@@ -50,6 +51,10 @@
         $("table tbody tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
+    });
+
+    $("#cerrarBoletosReenvio").click(function () {
+        $(".modal").modal('hide');
     });
 });
 
@@ -88,4 +93,71 @@ function DescargarPDF(nombreArchivo) {
         }
     }
     MSExecuteOnServerAsync('/Boleto/ObtenerDownloadKey', null, funcReturn, true);
+}
+
+
+function ModalReenviarBoletos() {
+    $("#reenviarBoletos").show();
+    $("#cancelarBoletosReenvio").show();
+    $("#cerrarBoletosReenvio").hide();
+
+    $("#boletoEmailReenviado-modal").html('');
+
+    var boletosSeleccionados = SeleccionarElementos();
+    var numeroContratos = [];
+    if (boletosSeleccionados.length > 0) {
+        for (var i in boletosSeleccionados) {
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
+
+            numeroContratos.push(boletosSeleccionados[i].Nombre.split("_")[0])
+            $("#boletoEmailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + boletosSeleccionados[i].Nombre.split("_")[0] + '</div>' + loader + '</div>');
+        }
+
+    } else {
+        $("#boletoEmailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar boletos para reenviar.</div>');
+        $("#reenviarBoletos").hide();
+
+    }
+    $("#ModalReenviarBoletos").modal('show');
+}
+
+function ReenviarBoletosMails() {
+    BlockUi('Enviando...');
+    setTimeout(function () {
+        $("#reenviarBoletos").hide();
+        $("#cancelarBoletosReenvio").hide();
+        $("#cerrarBoletosReenvio").show();
+
+        var boletosSeleccionados = SeleccionarElementos();
+        var data = {};
+        var contratosBoletos = [];
+        var nombresArchivos = [];
+        for (var i in boletosSeleccionados) {
+            contratosBoletos.push(boletosSeleccionados[i].Nombre.split("_")[0])
+            nombresArchivos.push(boletosSeleccionados[i].Nombre)
+        }
+        data.contratosBoletos = contratosBoletos;
+        data.nombresArchivos = nombresArchivos;
+        $(".loader").show();
+        result = MSExecuteOnServer('/Boleto/ReenviarEmailBoletos', data);
+        $.unblockUI();
+        if (result == "Ok") {
+            $('#alert-msj').addClass('alert-success');
+            $('#alert-msj').removeClass('display-none');
+            $("#alert-msj").append('<div style="text-align:center">Boleto(s) reenviado(s).</div>');
+
+        }
+    }, 200);
+}
+
+function SeleccionarElementos() {
+    var grid = $("#grid").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        obj.push(selectedItem);
+    });
+    return obj;
 }

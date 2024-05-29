@@ -300,8 +300,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "En caso de ser un boleto de Bolsa de Rosario, si no se envía impreso en doble faz se observará debido a que no están autorizando el obleado.<br/>" +
                 "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
                 "<br/><br/>Saludos Cordiales,<br/><br/>" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br/><br/>Molinos Agro S.A.<br/><br/><br/><br/>" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
                 "www.molinosagro.com.ar";
             htmlBody += "<style> table, th, td{ }</style>";
 
@@ -774,6 +774,58 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             codigos.Sort();
             return codigos;
+        }
+
+        public bool ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos)
+        {
+            try
+            {
+                foreach (string numeroNegocio in listaContratos)
+                {
+                    var itemNegocio = repositorio.Obtener<Negocio>(n => n.ContratoSAP == ("000" + numeroNegocio));
+
+                    if (itemNegocio != null)
+                    {
+                        var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
+
+                        string _negocio = itemNegocio is ContratoAcuerdo ? itemNegocio.Id.ToString() : (itemNegocio is FijacionDePrecioContrato && (itemNegocio.EstadoId == (int)EnumEstadoContrato.Finalizado || itemNegocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (itemNegocio as FijacionDePrecioContrato).FijacionSAP : itemNegocio.ContratoSAP != "0" ? itemNegocio.ContratoSAP : "";
+
+                        string contratoSapPdf = archivos.Find(sap => sap.Contains(numeroNegocio));
+                        Byte[] fileBytes = BoletoEnByte(pathArchivos + "\\" + contratoSapPdf);
+
+                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio : "");
+
+
+                        var lista = new List<string>();
+                        string contrato = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio.Substring(_negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0');
+                        string razonSocial = (itemNegocio.Corredor != null) ? itemNegocio.Corredor.RazonSocial : itemNegocio.Proveedor.RazonSocial;
+                        string version = (Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1).ToString();
+
+
+                        var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(itemNegocio.Comercial.IdActiveDirectory);
+
+                        if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
+                        {
+                            lista.Add(comercialRegistrado);
+                            lista.Add("dataagro@molinosagro.com.ar");
+                            logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
+                        }
+                        var subject = itemNegocio.Boleto.Descripcion == "Físico" ? "Boleto Físico" : itemNegocio.Boleto.Descripcion;
+                        subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + numeroNegocio;
+
+                        mailManager.EnviarMail(itemNegocio.Comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), fileBytes, contratoSapPdf);
+                    }
+
+                }
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
 
         private string FormatoCuit(string cuit)

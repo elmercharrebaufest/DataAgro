@@ -164,6 +164,19 @@ namespace WebDataAgro.Controllers
             }
         }
 
+        public ActionResult ReenviarEmailBoletos(List<string> contratosBoletos, List<string> nombresArchivos)
+        {
+            try
+            {
+                boletoManager.ReenviarBoletos(contratosBoletos, nombresArchivos, _logDir);
+                return Json("Ok", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
         public ActionResult FiltrarBoletos(string desde, string hasta, int negocio)
         {
             return new JsonResult()

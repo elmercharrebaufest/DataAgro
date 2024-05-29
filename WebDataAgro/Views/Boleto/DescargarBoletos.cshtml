@@ -39,25 +39,28 @@
                 <input id="filtrogrilla" autocomplete="off" placeholder="Buscar..." title="Buscar..." class="k-input">
                 <i class="fa fa-search icon"></i>
             </span>
+            <button id="reenviarMailBoletosBtn" data-toggle="tooltip" class="float-right" onclick="ModalReenviarBoletos()">
+                <span>Reenviar</span>
+            </button>
         </div>
         @*<div class="input-icons">
-            <i class="fa fa-user icon"></i>
-            <input class="input-field" type="text" placeholder="Username">
-        </div>*@
+                <i class="fa fa-user icon"></i>
+                <input class="input-field" type="text" placeholder="Username">
+            </div>*@
         <div id="div1">
             <div id="grid"></div>
         </div>
 
         @*<script id="template" type="text/x-kendo-template">
 
-            <span class="k-textbox k-grid-search k-display-flex">
-                <input id="kinputsearch" autocomplete="off" placeholder="Buscar..." title="Buscar..." class="k-input"
-            onchange="FiltraTabla(this.value)">
-              <span class="k-input-icon">
-                <span class="k-icon k-i-search"></span>
-              </span>
-              </span>
-        </script>*@
+                <span class="k-textbox k-grid-search k-display-flex">
+                    <input id="kinputsearch" autocomplete="off" placeholder="Buscar..." title="Buscar..." class="k-input"
+                onchange="FiltraTabla(this.value)">
+                    <span class="k-input-icon">
+                    <span class="k-icon k-i-search"></span>
+                    </span>
+                    </span>
+            </script>*@
     </div>
     <iframe id="my_iframe" style="display:none;"></iframe>
     @*<table class="table table-striped table-hover">
@@ -81,6 +84,8 @@
                 </tbody>
         </table>*@
 </div>
+<!-- Modal Reenviar Boletos-->
+@Html.Partial("_ModalReenviarBoletos")
 <style>
 
 
