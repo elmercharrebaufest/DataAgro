@@ -180,6 +180,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         PreAnularFijacion = 350,
         [Display(ResourceType = typeof(Text), Name = "OyT_Norte")]
         OyT_Norte = 351,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosSorgo")]
+        ConfirmarNegociosSorgo = 352,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

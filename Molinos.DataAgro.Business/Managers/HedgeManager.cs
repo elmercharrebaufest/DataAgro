@@ -415,6 +415,7 @@ namespace Molinos.DataAgro.Business
             }
             return res;
         }
+
         private ReporteCompraNetModel ObtenerDatosReporte(DateTime fechaDesde, DateTime fechaHasta, string centroId)
         {
             int idCentro = int.Parse(centroId);
@@ -442,6 +443,7 @@ namespace Molinos.DataAgro.Business
                 SojaEPA = reportesManager.TraerToneladasSojaEPA(fechaDesde, fechaHasta, idCentro),
             };
         }
+
         private List<HedgeMaterialModel> TransformarAModelHedge(List<HedgeMaterialDto> hedgeMat)
         {
             var lista = new List<HedgeMaterialModel>()
@@ -457,6 +459,7 @@ namespace Molinos.DataAgro.Business
             };
             return lista;
         }
+
         public ReporteCompraNetModel ObtenerDatosReporte()
         {
             var hoy = DateTime.Now.Date;
@@ -475,6 +478,7 @@ namespace Molinos.DataAgro.Business
                 SojaEPA = reportesManager.TraerToneladasSojaEPA(hoy, hoy),
             };
         }
+
         public string GenerarCuerpoMail(string observaciones)
         {
             var hoy = DateTime.Now.Date;
@@ -522,6 +526,7 @@ namespace Molinos.DataAgro.Business
                         case "Trigo": item.Orden = 3; break;
                         case "Girasol": item.Orden = 4; break;
                         case "Girasol AO": item.Orden = 5; break;
+                        case "Sorgo": item.Orden = 6; break;
                     }
                     p.Add(item);
                 }
@@ -573,6 +578,12 @@ namespace Molinos.DataAgro.Business
                             break;
                         case 52:
                             sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente)).ToString("N0");
+                            break;
+                        case 61:
+                            sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
+                            break;
+                        case 62:
+                            sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.NewAgente)).ToString("N0");
                             break;
                         default:
                             sumaPricing = "0";
@@ -642,6 +653,7 @@ namespace Molinos.DataAgro.Business
                         case "Trigo Calidad": item.Orden = 5; break;
                         case "Girasol": item.Orden = 6; break;
                         case "Girasol Alto Oleico": item.Orden = 7; break;
+                        case "Sorgo": item.Orden = 8; break;
                     }
                     toneladas.Add(item);
                 }
@@ -715,14 +727,14 @@ namespace Molinos.DataAgro.Business
                 var materialDesc = material.Material.Replace(" ", "").ToLower();
                 switch (materialDesc)
                 {
-                    case "soja": color = "background: #99CC00"; break;
-                    case "maiz": color = "background: #ffcc99"; break;
-                    case "trigocalidad": color = "background: #99ccff"; break;
-                    case "trigogrado2": color = "background: #6ae6be"; break;
-                    case "trigocámara": color = "background: #9999FF"; break;
-                    case "girasol": color = "background: #d360d4"; break;
-                    case "girasolaltooleico": color = "background: #f4c1f7"; break;
-
+                    case "soja": color = "background: #99CC00"; break; //verde lima
+                    case "maiz": color = "background: #ffcc99"; break; //naranja claro
+                    case "trigocalidad": color = "background: #99ccff"; break; //celeste
+                    case "trigogrado2": color = "background: #6ae6be"; break; //verde claro
+                    case "trigocámara": color = "background: #9999FF"; break; //lila
+                    case "girasol": color = "background: #d360d4"; break; //rosa
+                    case "girasolaltooleico": color = "background: #f4c1f7"; break; //rosa claro
+                    case "sorgo": color = "background: #63EEDA"; break; //cian
                 }
 
                 tablaMaterial = "font-family: Arial, Helvetica, sans-serif; width: 100%; text-align: center; border-collapse: collapse;";
@@ -733,7 +745,6 @@ namespace Molinos.DataAgro.Business
 
                 if (suma > 0)
                 {
-
                     htmlBody += $@"<table style='{tablaMaterial}' id='" + material.Material.Replace(" ", "") + @"' class='" + material.Material.Replace(" ", "").ToLower() + $@"'>
                      <thead>
                         <tr style='{theadTr}'><td style='{td}' colspan = '" + ((suma + pond) + 1) + "'> " + material.Material.ToUpper() + $@" </td></tr>
@@ -746,8 +757,8 @@ namespace Molinos.DataAgro.Business
                     htmlBody += pondPesos > 0 ? $"<td style='{td}' rowspan = '2'>Precio $</td>" : "";
                     htmlBody += totalDolares != 0 ? $"<td style='{td}' rowspan = '2' class=''>Ton.USD</td>" : "";
                     htmlBody += pondDolares > 0 ? $"<td style='{td}' rowspan = '2'>Precio USD</td>" : "";
-
                     htmlBody += "</tr>";
+
                     htmlBody += $"<tr style='{theadTr}' class='titulosPosicion'>";
                     htmlBody += dispFijacion ? $"<td style='{td}'>Disponible</td>" : "";
                     htmlBody += forwFijacion ? $"<td style='{td}'>Forward</td>" : "";
@@ -834,7 +845,6 @@ namespace Molinos.DataAgro.Business
                                 $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + ((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1]) + "</td>" +
                                 $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + agente.Operador.Sum(x => x.Cantidad).ToString("N0") + "</td>" +
                                 $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + agente.PrecioPonderado.ToString("N2") + "</td>";
-
 
                     foreach (var op in Model.AgenteCompras.ListaOperadores)
                     {
@@ -973,6 +983,7 @@ namespace Molinos.DataAgro.Business
 
             return htmlBody;
         }
+
         public void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial)
         {
             var dia = Dia();

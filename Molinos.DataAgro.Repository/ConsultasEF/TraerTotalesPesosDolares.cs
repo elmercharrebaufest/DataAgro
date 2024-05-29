@@ -1,6 +1,4 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -9,10 +7,8 @@ using Molinos.DataAgro.Entities.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Reflection;
 using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
@@ -50,13 +46,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                  && ((contrato is Contrato && (contrato as Contrato).AnulaYReemplazaContratoId == null) || !(contrato is Contrato))
                  //&& ((contrato is Contrato && (contrato as Contrato).Venta != true) || !(contrato is Contrato))
                  && ((contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId != 3) || !(contrato is FijacionDePrecioContrato))
-                 && (
-                !corredor ? (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                 && (!corredor ? (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) :
-                    (corredor &&
-                    (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
-                    corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
-                    )
+                    (corredor && (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                    corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0))))
                 select new TotalPesosDolares()
                 {
                     Id = contrato.Id,
@@ -87,7 +80,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         : (contrato.MonedaId == "USDM " ?
                         (contrato is Contrato) && (contrato as Contrato).Condicional == true ?
                         (contrato as Contrato).AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
-                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)(contrato as Contrato).AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)contrato.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
                         /*calculo sin % */(double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
                         :
                         contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
@@ -95,18 +88,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0)
                         : (contrato.MonedaId == "ARP  " ?
                         (contrato is Contrato) && (contrato as Contrato).Condicional == true ?
-                        (contrato as Contrato).AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
-                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)(contrato as Contrato).AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        contrato.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)contrato.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
                         /*calculo sin % */(double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
                         :
                         contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
-                    TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
-                    TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
-                    TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
-                    TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
-                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0,
+                    TotalMaiz = contrato.MaterialId == (int)EnumMateriales.MAIZ ? contrato.Cantidad : 0,
+                    TotalTrigo = contrato.MaterialId == (int)EnumMateriales.TRIGO ? contrato.Cantidad : 0,
+                    TotalSoja = contrato.MaterialId == (int)EnumMateriales.SOJA ? contrato.Cantidad : 0,
+                    TotalGirasol = contrato.MaterialId == (int)EnumMateriales.GIRASOL ? contrato.Cantidad : 0,
+                    TotalGirasolAlto = contrato.MaterialId == (int)EnumMateriales.GIRASOL_AO ? contrato.Cantidad : 0,
+                    TotalSorgo = contrato.MaterialId == (int)EnumMateriales.SORGO ? contrato.Cantidad : 0,
                     ContratoSAP = contrato.ContratoSAP,
-                    ContratoCorredor = (contrato is Contrato) ? (contrato as Contrato).ContratoCorredor : "",
+                    ContratoCorredor = contrato.ContratoCorredor ?? "",
                 };
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);
@@ -122,7 +116,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                               TotalMaiz = g.Sum(x => Math.Round(x.TotalMaiz / 1000)),
                               TotalTrigo = g.Sum(x => Math.Round(x.TotalTrigo / 1000)),
                               TotalGirasol = g.Sum(x => Math.Round(x.TotalGirasol / 1000)),
-                              TotalGirasolAlto = g.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
+                              TotalGirasolAlto = g.Sum(x => Math.Round(x.TotalGirasolAlto / 1000)),
+                              TotalSorgo = g.Sum(x => Math.Round(x.TotalSorgo / 1000))
                           };
             var result3 = result2.SingleOrDefault();
             if (result3 == null)
@@ -135,7 +130,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalMaiz = (double)0,
                     TotalTrigo = (double)0,
                     TotalGirasol = (double)0,
-                    TotalGirasolAlto = (double)0
+                    TotalGirasolAlto = (double)0,
+                    TotalSorgo = (double)0
                 };
             }
             var result4 = new TotalPesosDolares
@@ -147,6 +143,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 TotalTrigo = result3.TotalTrigo,
                 TotalGirasol = result3.TotalGirasol,
                 TotalGirasolAlto = result3.TotalGirasolAlto,
+                TotalSorgo = result3.TotalSorgo
             };
             return result4;
         }

@@ -94,7 +94,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
@@ -117,7 +117,7 @@ function CargarGrillaConfig() {
                 }, title: "Tipo Negocio", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
-            },           
+            },
             {
                 field: "Cantidad", type: "number", title: "Cantidad (Tn)", template: function (dataItem) {
                     return kendo.toString(dataItem.Cantidad, "##,#.##").replace(/,/g, ".");

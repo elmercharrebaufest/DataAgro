@@ -1021,11 +1021,10 @@ namespace Molinos.DataAgro.Test.Controllers
                     TotalPesos = 1,
                     TotalSoja = 1,
                     TotalTrigo = 1,
+                    TotalSorgo = 1,
                     ContratoSAP = "a",
                     ContratoCorredor = "a"
-
                 });
-
 
             var result = target.BuscarTotales(new Kendo.DynamicLinq.Filter());
             Assert.NotNull(result);
@@ -1033,7 +1032,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerTotalesPesosDolares(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1,\"Id\":0,\"ComercialCreadorId\":1,\"ContratoSAP\":\"a\",\"ContratoCorredor\":\"a\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1,\"TotalSorgo\":1,\"Id\":0,\"ComercialCreadorId\":1,\"ContratoSAP\":\"a\",\"ContratoCorredor\":\"a\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

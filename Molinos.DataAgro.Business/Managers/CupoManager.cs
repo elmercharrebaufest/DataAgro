@@ -5421,7 +5421,7 @@ namespace Molinos.DataAgro.Business.Managers
                             };
                             repositorio.Agregar(solicitudCupo);
                         }
-                        listaSolicitudesGeneradas.Add("La solicitud para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy") + " se genero correctamente.");
+                        listaSolicitudesGeneradas.Add("La solicitud para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy") + " se generó correctamente.");
                     }
                 }
                 result.ListaCupos.Clear();
@@ -6755,6 +6755,15 @@ namespace Molinos.DataAgro.Business.Managers
             workSheet4.Cells[1, 2].Value = "Razón Social";
             workSheet4.Column(2).AutoFit();
             ArmarAgrupacionExcel(workSheet4, girasol);
+            //Sorgo
+            var workSheet5 = excel.Workbook.Worksheets.Add("Sorgo");
+            var sorgo = DevolverSugerenciasAgrupadas(oDatos, formulas).Where(x => x.Material == "Sorgo").ToList();
+            workSheet5.Cells[2, 1].LoadFromCollection(sorgo, false);
+            workSheet5.Cells[1, 1].Value = "Material";
+            workSheet5.Column(1).AutoFit();
+            workSheet5.Cells[1, 2].Value = "Razón Social";
+            workSheet5.Column(2).AutoFit();
+            ArmarAgrupacionExcel(workSheet5, sorgo);
 
             var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Negocios");
             workSheet9.Cells[1, 1].LoadFromCollection(oDatos, true);

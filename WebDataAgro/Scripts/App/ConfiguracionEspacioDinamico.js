@@ -233,7 +233,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
@@ -332,7 +332,7 @@ function CrearTablaFechaHasta() {
 
     for (var i = 0; i <= diffDays; i++) {
 
-        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input min="0" id="cantidad' + i +'"  name="Dias[' + i + '].Cantidad" class="cantidad-masiva" value="' + $("#cantidad").data('kendoNumericTextBox').value() + '"/></td></tr>';
+        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input min="0" id="cantidad' + i + '"  name="Dias[' + i + '].Cantidad" class="cantidad-masiva" value="' + $("#cantidad").data('kendoNumericTextBox').value() + '"/></td></tr>';
         $("#carga-cupos-table").append(fila);
         var newdate = kendo.parseDate(date1);
 
@@ -346,8 +346,8 @@ function CrearTablaFechaHasta() {
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min: 0, 
-        step:0
+        min: 0,
+        step: 0
     });
 
     $("#cancelar-carga").click(function () {

@@ -231,35 +231,56 @@
                                 sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Select(mes => mes.ListNewAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
 
                                 break;
+                            case 61:
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
+
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Select(mes => mes.ListDispAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Select(mes => mes.ListFrwAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+
+                                break;
+                            case 62:
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.NewAgente)).ToString("N0");
+
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 6).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Select(mes => mes.ListNewAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+
+                                break;
                             default:
                                 sumaPricing = "0";
                                 break;
                         }
-                <tr>
-                    <td>@datos.Material</td>
-                    <td>@datos.Campania</td>
+                        <tr>
+                            <td>@datos.Material</td>
+                            <td>@datos.Campania</td>
 
-                    <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">
-                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
-                            @(Model.PricingCampania.Any(x => x.SanLorenzo != 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
-                        </a>
-                    </td>
-                    <td class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">
-                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
-                            @(Model.PricingCampania.Any(x => x.Acopio != 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
-                        </a>
-                    </td>
-                    <td class="@(Model.PricingCampania.Any(x => x.BahiaBlanca != 0) ? "" : "hide")">
-                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.BahiaBlancaIds)')">
-                            @(Model.PricingCampania.Any(x => x.BahiaBlanca != 0 && x.Id == datos.Id) ? datos.BahiaBlanca.ToString("N0") : "")
-                        </a>
-                    </td>
-                    <td>
-                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds)')">
-                            <b> @sumaPricing</b>
-                        </a>
-                    </td>
-                </tr>
+                            <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
+                                    @(Model.PricingCampania.Any(x => x.SanLorenzo != 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
+                                </a>
+                            </td>
+                            <td class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
+                                    @(Model.PricingCampania.Any(x => x.Acopio != 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
+                                </a>
+                            </td>
+                            <td class="@(Model.PricingCampania.Any(x => x.BahiaBlanca != 0) ? "" : "hide")">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.BahiaBlancaIds)')">
+                                    @(Model.PricingCampania.Any(x => x.BahiaBlanca != 0 && x.Id == datos.Id) ? datos.BahiaBlanca.ToString("N0") : "")
+                                </a>
+                            </td>
+                            <td>
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds)')">
+                                    <b> @sumaPricing</b>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 </table>
             </div>
@@ -576,8 +597,8 @@
                                 </td>
                                 <td>
                                     @*<a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','','')">
-                                        @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
-                                    </a>*@
+                                            @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
+                                        </a>*@
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', '')">
                                         @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
                                     </a>
@@ -640,42 +661,42 @@
                             <td class="@(pondPesos != 0 ? "" : "hide")">
                                 @(material.PosicionKilos.Count() > 0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoPesos) > 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoPesos > 0).Count() > 0 ?
 (material.PosicionKilos.Sum(x => x.PrecioPonderadoPesos) / material.PosicionKilos.Where(x => x.PrecioPonderadoPesos > 0).Count()).Value.ToString("N0") : "")
-                        </td>
-                        <th class="@(totalDolares != 0 ? "" : "hide")">
-                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'USDM ')">
-                                @totalDolares.ToString("N0")
-                            </a>
-                        </th>
-                        <td class="@(totalDolares != 0 ? "" : "hide")">
-                            @(material.PosicionKilos.Count() > 0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) > 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count() > 0 ?
+                            </td>
+                            <th class="@(totalDolares != 0 ? "" : "hide")">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'USDM ')">
+                                    @totalDolares.ToString("N0")
+                                </a>
+                            </th>
+                            <td class="@(totalDolares != 0 ? "" : "hide")">
+                                @(material.PosicionKilos.Count() > 0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) > 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count() > 0 ?
                       (material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) / material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count()).Value.ToString("N2") : "")
-                        </td>
-                        <td></td>
-                        <td>
-                            @{
-                                var list = material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList();
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                list.AddRange(material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
-                                var matToltalIds = String.Join(",", list);
+                            </td>
+                            <td></td>
+                            <td>
+                                @{
+                                    var list = material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList();
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    var matToltalIds = String.Join(",", list);
 
-                                var matTotal = material.PosicionKilos.Sum(y => y.DispFijac) + material.PosicionKilos.Sum(y => y.FrwFijac) + material.PosicionKilos.Sum(y => y.NewFijac) + material.PosicionKilos.Sum(y => y.DispAFijar) + material.PosicionKilos.Sum(y => y.FrwAFijar) + material.PosicionKilos.Sum(y => y.NewAFijar)
-                                    + material.PosicionKilos.Sum(y => y.DispAPrecio) + material.PosicionKilos.Sum(y => y.FrwAPrecio) + material.PosicionKilos.Sum(y => y.NewAPrecio);
-                            }
-                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@matToltalIds')">
-                                @matTotal.ToString("N0")
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    }
+                                    var matTotal = material.PosicionKilos.Sum(y => y.DispFijac) + material.PosicionKilos.Sum(y => y.FrwFijac) + material.PosicionKilos.Sum(y => y.NewFijac) + material.PosicionKilos.Sum(y => y.DispAFijar) + material.PosicionKilos.Sum(y => y.FrwAFijar) + material.PosicionKilos.Sum(y => y.NewAFijar)
+                                        + material.PosicionKilos.Sum(y => y.DispAPrecio) + material.PosicionKilos.Sum(y => y.FrwAPrecio) + material.PosicionKilos.Sum(y => y.NewAPrecio);
+                                }
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@matToltalIds')">
+                                    @matTotal.ToString("N0")
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
         <div class="table-responsive col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count != 0 ? "" : "hide")">
             <table id="agenteCompras" class="table-condensed">
                 <tr class="titulos agente">

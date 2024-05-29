@@ -349,7 +349,7 @@ namespace Molinos.DataAgro.Business.Managers
             xmlWriter.WriteStartElement("DetalleContrato");
 
             xmlWriter.WriteElementString("Producto",string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : (confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : (confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : (confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "21" : ""))));
+            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "21" : "");
             xmlWriter.WriteElementString("DescAdicional", confirma.Negocio.Canje == true ? "INSUMO" : "");
             xmlWriter.WriteElementString("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy"));
             xmlWriter.WriteElementString("Cosecha",string.Empty);

@@ -155,7 +155,7 @@ function CargarGrilla() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 95, attributes: {
                     "class": "mobile-xs"
@@ -820,7 +820,7 @@ function ListarRespuesta(result) {
         }
     } else {
         $("#modalSolicitudExtraordinaria").modal("hide");
-        MensInfo("La solicitud se genero correctamente.");
+        MensInfo("La solicitud se generó correctamente.");
         //click panel de solicitudes y reresh de grilla
     }
     if (result.ListaCupos != null && result.ListaCupos.length == 0 &&

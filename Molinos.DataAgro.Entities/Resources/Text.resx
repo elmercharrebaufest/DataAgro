@@ -841,6 +841,9 @@
   <data name="ConfirmarNegociosTrigo" xml:space="preserve">
     <value>Confirmar Negocios Trigo</value>
   </data>
+	<data name="ConfirmarNegociosSorgo" xml:space="preserve">
+    <value>Confirmar Negocios Sorgo</value>
+  </data>
   <data name="ModificarFijacionVirtual" xml:space="preserve">
     <value>Modificar Fijación Virtual</value>
   </data>

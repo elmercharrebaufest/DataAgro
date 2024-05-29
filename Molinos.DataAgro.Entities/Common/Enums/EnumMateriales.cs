@@ -7,5 +7,6 @@
         SOJA = 3,
         GIRASOL = 4,
         GIRASOL_AO = 5,
+        SORGO = 6
     }
 }

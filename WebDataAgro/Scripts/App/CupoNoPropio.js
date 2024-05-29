@@ -257,7 +257,7 @@ function ModificarDisponible(id) {
         errores = errores.concat(result.ListaErrores);
     }
     if (errores.length == 0) {
-        MensInfo("Se grabo correctamente.");
+        MensInfo("Se guardó correctamente.");
     } else {
         ShowErrorMessages(errores);
     }

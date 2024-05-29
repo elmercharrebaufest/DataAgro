@@ -31,7 +31,7 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, 
+        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager,
             ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
         {
             this.centroManager = centroManager;
@@ -191,7 +191,14 @@ namespace WebDataAgro.Controllers
                         if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
                         {
                             if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol alto oleico para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 6:
+                        if (ConfigurationManager.AppSettings["CupoSorgoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de sorgo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
                         }
                         break;
                 }
@@ -290,7 +297,7 @@ namespace WebDataAgro.Controllers
             if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
-            
+
             if (cupoNuevo.CentroId == 1)
             {
                 switch (cupoNuevo.MaterialId)
@@ -327,7 +334,14 @@ namespace WebDataAgro.Controllers
                         if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
                         {
                             if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol alto oleico para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 6:
+                        if (ConfigurationManager.AppSettings["CupoSorgoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de sorgo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
                         }
                         break;
                 }
@@ -366,7 +380,7 @@ namespace WebDataAgro.Controllers
                     return Json(new { Result = cupo, Error = error, irA = "/Cupo/CrearCupoTercero" });
 
                 }
-                return Json(new { Result = cupo, Error = error, irA= "" });
+                return Json(new { Result = cupo, Error = error, irA = "" });
             }
             if (siguientes != null && siguientes.Count != 0)
             {
@@ -392,7 +406,7 @@ namespace WebDataAgro.Controllers
             {
                 centros.Centro = centros.Centro.Where(x => x.CodigoSap == "1029" || x.CodigoSap == "1600").ToList();
             }
-            centros.Centro = centros.Centro.OrderBy(x=>x.Orden).ToList();
+            centros.Centro = centros.Centro.OrderBy(x => x.Orden).ToList();
             var listaCentro = new List<SelectListItem>();
             foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Orden))
             {
