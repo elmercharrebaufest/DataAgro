@@ -244,7 +244,7 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                     contratoParaFijacion.DesdeEntrega = DateTime.Parse(contrato.ENTREGA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
                     contratoParaFijacion.HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                    contratoParaFijacion.Calidad = (((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X")) ? true : false;
+                    contratoParaFijacion.Calidad = ((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X");
                     contratoParaFijacion.Campana = contrato.COSECHA;
                     contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault() != null ?
                         campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault().CampañaId : 0;

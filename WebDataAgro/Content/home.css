@@ -72,8 +72,8 @@
     vertical-align: top;
 }
 
-.contenedor-principal-miscontactos-detalle:hover {
-        background-color:#ddd;
+    .contenedor-principal-miscontactos-detalle:hover {
+        background-color: #ddd;
     }
 
 .contenedor-principal-miscontactos-detalle-titulo {
@@ -211,12 +211,12 @@
     margin-bottom: 10px;
 }
 
-cont-agend-det{
-    display:inline;
+cont-agend-det {
+    display: inline;
 }
 
-contenedor-principal-miscontactos-grupo{
-    display:inline-block;
+contenedor-principal-miscontactos-grupo {
+    display: inline-block;
 }
 
 .contenedor-segundo-filtro-campo select {
@@ -235,25 +235,25 @@ contenedor-principal-miscontactos-grupo{
     margin-left: 7px;
 }
 
-    .contenedor-segundo-filtro-campo input {
-        vertical-align: top;
-    }
+.contenedor-segundo-filtro-campo input {
+    vertical-align: top;
+}
 
-    .contenedor-segundo-filtro-campo div,
-    .contenedor-segundo-filtro-campo label {
+.contenedor-segundo-filtro-campo div,
+.contenedor-segundo-filtro-campo label {
+    color: #b8b8b8;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+    cursor: pointer;
+    display: block;
+    padding-left: 15px !important;
+}
+
+    .contenedor-segundo-filtro-campo div b,
+    .contenedor-segundo-filtro-campo label b {
         color: #b8b8b8;
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 5px;
-        cursor: pointer;
-        display: block;
-        padding-left: 15px !important;
     }
-
-        .contenedor-segundo-filtro-campo div b,
-        .contenedor-segundo-filtro-campo label b {
-            color: #b8b8b8;
-        }
 
 
 
@@ -277,6 +277,7 @@ contenedor-principal-miscontactos-grupo{
     font-weight: bold;
     color: #757575;
 }
+
 .lista-contactos-estadoHome-titulo {
     font-size: 14px;
     font-weight: bold;
@@ -367,9 +368,8 @@ contenedor-principal-miscontactos-grupo{
     display: none;
 }
 
-
-.lista-contacto-no-operable {    
-    float:right;
+.lista-contacto-no-operable {
+    float: right;
     background-color: rgb(247, 247, 247);
     border-color: rgb(235, 235, 235);
     border-width: 1px;
@@ -400,7 +400,6 @@ contenedor-principal-miscontactos-grupo{
     padding: 5px 10px;
 }
 
-
 .cont-agend-det:hover,
 .cont-alta-det:hover,
 .cont-op-det:hover,
@@ -418,10 +417,10 @@ contenedor-principal-miscontactos-grupo{
     border: 2px solid #017940;
 }
 
-.miscontactos-selected,
-.miscontactos-selected:hover {
-    background-color: #e6e6e6;
-}
+    .miscontactos-selected,
+    .miscontactos-selected:hover {
+        background-color: #e6e6e6;
+    }
 
 
 .absoluto-mt20 {
@@ -580,7 +579,6 @@ button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all span:nth-child(ev
     font-weight: bold;
 }
 
-
 .carouselHome-titulo,
 .carouselHome-descripcion {
     font-size: 13px;
@@ -596,7 +594,6 @@ button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all span:nth-child(ev
     .carouselHome-descripcion:not(:last-of-type) {
         border-bottom: 1px solid #333;
     }
-
 
 div#carouselHome {
     margin-top: 20px;
@@ -639,9 +636,6 @@ span.glyphicon.glyphicon-chevron-right {
         height: 18px;
     }
 
-
-
-
 .carouselHome-contacto-contenedor {
     border: 1px solid#333;
     border-bottom-left-radius: 3px !important;
@@ -676,7 +670,6 @@ span.glyphicon.glyphicon-chevron-right {
     border-bottom: 1px solid #333;
 }
 
-
 .carouselHome-contacto-contenedor a:last-of-type > .linea-carouselHome:last-of-type {
     border-bottom: none;
 }
@@ -685,10 +678,9 @@ span.glyphicon.glyphicon-chevron-right {
     padding: 50px;
 }
 
-.highlighted{
-    background-color:blue;
+.highlighted {
+    background-color: blue;
 }
-
 
 .contactos {
     display: inline-block;
@@ -828,8 +820,8 @@ span.glyphicon.glyphicon-chevron-right {
     }
 }
 
-.span-display{
-    display:inline-block;
+.span-display {
+    display: inline-block;
 }
 
 .btn-color {
@@ -839,18 +831,20 @@ span.glyphicon.glyphicon-chevron-right {
     margin-top: 7px;
     border-radius: 8px !important;
     padding: 1px 5px;
-    vertical-align:baseline;
+    vertical-align: baseline;
 }
-#form-objetivo .row{
-    margin-top:5px;
+
+#form-objetivo .row {
+    margin-top: 5px;
 }
 
 #GrabarObjetivo.myBtn, #CancelarObjetivo.myBtn {
     color: #787878;
     border: 1px solid #dbdbdb;
     background-color: #fff;
-    padding:5px 10px;
+    padding: 5px 10px;
 }
+
 .myBtn {
     width: 100%;
     text-decoration: none;
@@ -874,7 +868,6 @@ span.glyphicon.glyphicon-chevron-right {
         background: #017940;
         border-color: #017940;
     }
-
 
 .modal .modal-header {
     padding: 6px;
@@ -922,6 +915,7 @@ span.glyphicon.glyphicon-chevron-right {
     margin-top: 0.8rem !important;
     margin-right: 0.5rem;
 }
+
 .modal .status div {
     font-size: 12px;
     text-align: left;
@@ -932,19 +926,22 @@ span.glyphicon.glyphicon-chevron-right {
     font-weight: 700;
 }
 
-#objetivo-modal{
-    z-index:1010;
+#objetivo-modal {
+    z-index: 1010;
 }
-.modal-backdrop{
-    z-index:1000;
+
+.modal-backdrop {
+    z-index: 1000;
 }
 
 .listado {
     margin-bottom: 15px;
 }
+
 .container {
     max-width: -webkit-fill-available;
 }
+
 .modal-body {
     max-height: 350px;
     overflow: auto;
@@ -953,48 +950,54 @@ span.glyphicon.glyphicon-chevron-right {
 .comercial-objetivo {
     color: #017940;
     font-weight: bold;
-    text-decoration: none!important;
+    text-decoration: none !important;
 }
+
     .comercial-objetivo:hover, .comercial-objetivo:focus {
         color: #017940;
         font-weight: bold;
         text-decoration: none !important;
     }
+
 .comercial-listado {
     background: rgb(222, 222, 222);
     border-radius: 3px !important;
     padding: 0px 10px;
     cursor: pointer;
 }
+
 .tabla-home {
     width: 100% !important;
 }
 
-.deshabilitado{
-    cursor:default !important;
+.deshabilitado {
+    cursor: default !important;
 }
 
 .danger {
     color: crimson;
     font-size: 18px;
 }
+
     .danger:hover {
         color: crimson;
         text-decoration: none;
     }
 
-.alert{
-    text-align:center;
-    padding:5px;
-    border-radius:4px !important;
-    margin-bottom:0px;
+.alert {
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px !important;
+    margin-bottom: 0px;
 }
+
 .boton-eliminar {
     border: 1px solid #c09853;
     border-radius: 5px !important;
     cursor: pointer;
     padding: 3px 25px;
 }
+
     .boton-eliminar:hover {
         border: 1px solid #c09853;
         border-radius: 5px !important;
@@ -1025,5 +1028,10 @@ span.glyphicon.glyphicon-chevron-right {
 
 .GirasolAO {
     background: rgb(153, 153, 255, 0.5) !important;
+    color: #424242;
+}
+
+.Sorgo {
+    background: rgb(99, 238, 218, 0.5) !important;
     color: #424242;
 }

@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Business
     public class MaterialManager : IMaterialManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public MaterialManager(ILogger logger, IRepositorio repositorio)
         {
@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Business
                     CampaniaTablero = x.CampaniaTablero.Descripcion,
                     CampaniaTableroId = x.CampaniaTableroId ?? 0,
                     IVA = x.IVA                     
-                }, null, 0, "Descripcion")
+                }, x => x.Descripcion != "Girasol AO", 0, "Descripcion") //el Alto Oleico no se usa
             };
         }
         

@@ -215,7 +215,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
@@ -363,6 +363,10 @@ function CargarGrillaConfig() {
                 if (view[i].Material == "Girasol AO") {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
                         .addClass("girasolAO");
+                }
+                if (view[i].Material == "Sorgo") {
+                    grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
+                        .addClass("sorgo");
                 }
             }
         },

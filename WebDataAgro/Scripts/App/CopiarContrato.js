@@ -813,7 +813,7 @@ function ObtenerDatos(error) {
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
         if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
         else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
-        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 1;
+        else if (obj.MaterialId == 1 || obj.MaterialId == 2 || obj.MaterialId == 6) obj.StandardDeCalidadId = 1;
     } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
         obj.StandardDeCalidadId = 3;
     } else if (viewModel.Calidades.length > 0) {

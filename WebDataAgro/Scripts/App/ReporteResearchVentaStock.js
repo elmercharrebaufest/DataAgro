@@ -63,7 +63,7 @@ function CreateGrid() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
@@ -132,7 +132,7 @@ function CreateGrid() {
             e.workbook.fileName = "Reporte Venta Stock " + stringFecha + ".xlsx";
             var sheet = e.workbook.sheets[0];
             for (var i = 1; i < sheet.rows.length; i++) {
-                var row = sheet.rows[i];                
+                var row = sheet.rows[i];
                 var operacionFecha = row.cells[8].value;
                 operacionFecha.setHours(operacionFecha.getHours() + 1);
                 row.cells[8].value = operacionFecha;

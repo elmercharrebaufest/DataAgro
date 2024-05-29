@@ -30,6 +30,7 @@ var confirmarNegociosSoja;
 var confirmarNegociosTrigo;
 var confirmarNegociosGirasol;
 var confirmarNegociosGirasolAO;
+var confirmarNegociosSorgo;
 var esVirtual;
 var asociarNegocios;
 var asociados = [];
@@ -64,6 +65,7 @@ $(document).ready(function () {
     confirmarNegociosTrigo = ConvertirStringABool(confirmarNegociosTrigo);
     confirmarNegociosGirasol = ConvertirStringABool(confirmarNegociosGirasol);
     confirmarNegociosGirasolAO = ConvertirStringABool(confirmarNegociosGirasolAO);
+    confirmarNegociosSorgo = ConvertirStringABool(confirmarNegociosSorgo);
     esVirtual = ConvertirStringABool(esVirtual);
     asociarNegocios = ConvertirStringABool(asociarNegocios);
     preanularFijacion = ConvertirStringABool(preanularFijacion);
@@ -332,7 +334,8 @@ function puedeConfirmarNegocio(dataItem) {
             || (dataItem.MaterialId == 2 && confirmarNegociosTrigo)
             || (dataItem.MaterialId == 3 && confirmarNegociosSoja)
             || (dataItem.MaterialId == 4 && confirmarNegociosGirasol)
-            || (dataItem.MaterialId == 5 && confirmarNegociosGirasolAO))
+            || (dataItem.MaterialId == 5 && confirmarNegociosGirasolAO)
+            || (dataItem.MaterialId == 6 && confirmarNegociosSorgo))
     );
 }
 
@@ -565,7 +568,7 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
         if (esModalVisualizar == true) {
             cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
         }
-        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true ) {
+        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
 
             var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
             if (kilospendientesFijacion.KilosPendientes > 0) {
@@ -578,7 +581,7 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
                     "'" + dataItem.TipoNegocioId + "'" + ',' +
                     "'" + kilospendientesFijacion.KilosPendientes + "'" +
                     ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
-            }else {
+            } else {
                 return '<div></div>';
             }
         } else if ((dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) || (dataItem.ContratoId != null && dataItem.ContratoId != 0)) {
@@ -1051,7 +1054,8 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                    }, {
+                        Material: "Sorgo"
                     }]
                 }, width: 60, minResizableWidth: 60, attributes: {
                     "class": "mobile-xs"
@@ -1500,7 +1504,7 @@ function BuscarTotales() {
         $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n0"));
 
         //Cargar Toneladas de Materiales
-        var total = totales.TotalSoja + totales.TotalMaiz + totales.TotalTrigo + totales.TotalGirasol + totales.TotalGirasolAlto;
+        var total = totales.TotalSoja + totales.TotalMaiz + totales.TotalTrigo + totales.TotalGirasol + totales.TotalGirasolAlto + totales.TotalSorgo;
         //Soja
         if (totales.TotalSoja != 0) {
             $("#totalSoja").show();
@@ -1518,7 +1522,7 @@ function BuscarTotales() {
         //Trigo
         if (totales.TotalTrigo != 0) {
             $("#totalTrigo").show();
-            $("#toneladastrigo").text(kendo.toString(totales.TotalTrigo, "n0"));
+            $("#toneladasTrigo").text(kendo.toString(totales.TotalTrigo, "n0"));
         } else {
             $("#totalTrigo").hide();
         }
@@ -1535,6 +1539,13 @@ function BuscarTotales() {
             $("#toneladasGirasolAlto").text(kendo.toString(totales.TotalGirasolAlto, "n0"));
         } else {
             $("#totalGirasolAlto").hide();
+        }
+        //Sorgo
+        if (totales.TotalSorgo != 0) {
+            $("#totalSorgo").show();
+            $("#toneladasSorgo").text(kendo.toString(totales.TotalSorgo, "n0"));
+        } else {
+            $("#totalSorgo").hide();
         }
         //Total
         if (total != 0) {
@@ -2375,7 +2386,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional, CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP,
     mailVenta, RazonsocialProveedorComisionista, minimo, maximo, ConDescarga,
     ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito, dolarizadoOriginal, hastaOriginal, servicioModificado, dolarExportador) {
-    
+
     var dataItem = {
         Id: id,
         Estado: Estado,
@@ -2660,7 +2671,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
 
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
-    
+
     if (EPA == "true") {
         if (SustentableTipoDBId == 1) {
             $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
@@ -2721,7 +2732,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     } else if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
-    } else{
+    } else {
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
         $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
     }
@@ -2974,7 +2985,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
     }
     compensacion === "true" || compensacion === true ? $("#compensacionVisualizar").show() : $("#compensacionVisualizar").hide();
-    if (rechazo != "null") {
+    if (rechazo != "") {
         $(".rechazo").show();
         $("#visualizar_rechazo").text(rechazo);
     } else {
@@ -3055,7 +3066,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
 
     if (obligatoriedad == "true") {
         $("#obligatorioDiv").show();
-        $("#obligatorioId").text("Si");       
+        $("#obligatorioId").text("Si");
     } else {
         if (fechaCierta != "null") {
             if (obligatoriedad == "false") {
@@ -3144,7 +3155,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         //---Para ver el segundo modal por encima del de visualizar---//
         var segundoModal = document.getElementById("modalVerCuposConDescarga");
         segundoModal.style.zIndex = parseInt($("#modalVisualizar").css("z-index")) + 1;
-        
+
         $("#cuerpo-ver-descarga").empty();
         var fila = '';
         for (var i = 0; i < cuposConDescarga.length; i++) {
@@ -3221,7 +3232,7 @@ function visualizacionRowSimple(div, span) {
         $("#" + div).hide();
     } else {
         $("#" + div).show();
-    } 
+    }
 }
 
 function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado) {

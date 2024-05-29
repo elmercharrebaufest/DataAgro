@@ -62,6 +62,7 @@ function InicializarDatos() {
         Trigo: [],
         Maiz: [],
         Girasol: [],
+        Sorgo: [],
     });
     for (var i = 0; i < datosCompra.length; i++) {
 
@@ -87,6 +88,7 @@ function InicializarDatos() {
     var maiz = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
     var trigo = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
     var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
+    var sorgo = datosCompra.filter(function (x) { return (x.Material == "Sorgo") });
 
     if (soja.length > 0) {
         $("#mostrarSoja").show();
@@ -104,10 +106,15 @@ function InicializarDatos() {
         $("#mostrarGir").show();
         $("#girCampania").text(girasol[0].Campana);
     }
+    if (sorgo.length > 0) {
+        $("#mostrarSorgo").show();
+        $("#sorgoCampania").text(sorgo[0].Campana);
+    }
     viewModel.set("Soja", soja);
     viewModel.set("Trigo", trigo);
     viewModel.set("Maiz", maiz);
     viewModel.set("Girasol", girasol);
+    viewModel.set("Sorgo", sorgo);
     BorrarFilasVacias();
     pagina = 1;
     $(".lista-contactos-general").empty();
@@ -1189,6 +1196,7 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
         Trigo: [],
         Maiz: [],
         Girasol: [],
+        Sorgo: [],
     });
     for (var i = 0; i < datosCompra.length; i++) {
 
@@ -1214,6 +1222,7 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
     var maiz = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
     var trigo = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
     var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
+    var sorgo = datosCompra.filter(function (x) { return (x.Material == "Sorgo") });
 
     if (soja.length > 0) {
         $("#mostrarSoja").show();
@@ -1231,10 +1240,15 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
         $("#mostrarGir").show();
         $("#girCampania").text(girasol[0].Campana);
     }
+    if (sorgo.length > 0) {
+        $("#mostrarSorgo").show();
+        $("#sorgoCampania").text(sorgo[0].Campana);
+    }
     viewModel.set("Soja", soja);
     viewModel.set("Trigo", trigo);
     viewModel.set("Maiz", maiz);
     viewModel.set("Girasol", girasol);
+    viewModel.set("Sorgo", sorgo);
 
     ArmarCamapaña(result.Campaña);
     ArmarObjetivo(result.Objetivo.Objetivos, result.Campaña);

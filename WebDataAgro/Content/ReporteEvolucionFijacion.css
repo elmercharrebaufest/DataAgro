@@ -8,7 +8,6 @@
     display: none !important;
 }
 
-
 .tablem {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -37,36 +36,43 @@
     .tablem th {
         /*padding-top: 12px;
             padding-bottom: 12px;*/
-        text-align: center;        
+        text-align: center;
         border: 1px solid black;
     }
+
 .TOTAL {
-    background-color: transparent;
     color: black;
+    background-color: transparent;
 }
+
 .SOJA {
-    background: rgb(153, 204, 0)!important;
     color: white;
+    background: rgb(153, 204, 0) !important;
 }
 
 .MAIZ {
     color: white;
-    background: rgb(255, 204, 153)!important;
+    background: rgb(255, 204, 153) !important;
 }
 
 .TRIGO {
     color: white;
-    background: rgb(153, 153, 255)!important;
+    background: rgb(153, 153, 255) !important;
 }
 
 .GIRASOL {
     color: white;
-    background: rgb(211, 96, 212)!important;
+    background: rgb(211, 96, 212) !important;
 }
 
 .GIRASOLAO {
     color: white;
-    background: rgb(244, 193, 247)!important;
+    background: rgb(244, 193, 247) !important;
+}
+
+.SORGO {
+    color: white;
+    background: rgb(99, 238, 218) !important;
 }
 
 .scrollInside {
@@ -81,6 +87,7 @@
 .k-header > .k-grid-filter, .k-header > .k-header-column-menu {
     margin: -.5em -0.0em -.4em 0;
 }
+
 .k-datepicker {
     width: 100%;
 }

@@ -423,22 +423,26 @@ namespace Molinos.DataAgro.Business
                 Propio = (bool)x.Propio ? "X" : String.Empty
             }, x => x.InformeComercial.InformeComercialId == InformeId);
 
-            //// Maiz
+            // Maiz
             var TonMaiz = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 1));
-            //// Soja
-            var TonSoja = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 3));
 
-            //// Trigo
+            // Trigo
             var TonTrigo = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 2));
 
-            //// Girasol
+            // Soja
+            var TonSoja = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 3));
+
+            // Girasol
             var TonGira = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 4));
 
-            //// Girasol Alto
+            // Girasol Alto
             var TonGiraAlto = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 5));
 
-            datos.ToneladasTodo = "Maiz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
-                " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol A. O. " + TonGiraAlto.ToString("N2") + " Tn. ";
+            // Sorgo
+            var TonSorgo = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 6));
+
+            datos.ToneladasTodo = "Maíz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
+                " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Sorgo " + TonSorgo.ToString("N2") + " Tn. / Girasol A. O. " + TonGiraAlto.ToString("N2") + " Tn. ";
 
             var oRptAlmacenamientoInfo = repositorio.Listar<InformeComercialAlmacenamiento, InformeComercialAcopiadores>(x => new InformeComercialAcopiadores()
             {
@@ -806,7 +810,7 @@ namespace Molinos.DataAgro.Business
                 resultado.Error("EnviarCapacidadProductivaSAP", "Error al enviar informes a SAP: " + e.Message);
                 logger.Error(e);
             }
-           
+
             repositorio.GuardarCambios();
             return resultado;
         }

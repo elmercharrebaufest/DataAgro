@@ -38,6 +38,7 @@
     var confirmarNegociosTrigo = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegociosTrigo);
     var confirmarNegociosGirasol = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegociosGirasol);
     var confirmarNegociosGirasolAO = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegociosGirasolAO);
+    var confirmarNegociosSorgo = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegociosSorgo);
     var fijacionVirtual = PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual);
     var asociarNegocios = PermisosHelper.Is(PermisosDataAgro.AsociarNegocio);
     var noDefault = PermisosHelper.Is(PermisosDataAgro.ActualizarCompraNet);
@@ -73,6 +74,7 @@
     confirmarNegociosTrigo = '@confirmarNegociosTrigo';
     confirmarNegociosGirasol = '@confirmarNegociosGirasol';
     confirmarNegociosGirasolAO = '@confirmarNegociosGirasolAO';
+    confirmarNegociosSorgo = '@confirmarNegociosSorgo';
     esVirtual = '@fijacionVirtual';
     asociarNegocios = '@asociarNegocios';
     actualizacionMs = '@ViewBag.Actualizacion';
@@ -112,7 +114,7 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Soja</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasSoja"></span>TN.</strong>
+                            <strong><span id="toneladasSoja"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -120,7 +122,7 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Maiz</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasMaiz"></span>TN.</strong>
+                            <strong><span id="toneladasMaiz"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -128,7 +130,7 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Trigo</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladastrigo"></span>TN.</strong>
+                            <strong><span id="toneladasTrigo"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -136,7 +138,7 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasGirasol"></span>TN.</strong>
+                            <strong><span id="toneladasGirasol"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -144,7 +146,15 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol AO</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasGirasolAlto"></span>TN.</strong>
+                            <strong><span id="toneladasGirasolAlto"></span> TN.</strong>
+                        </div>
+                    </div>
+                </div>
+                <div id="totalSorgo" class="col-xs-12 col-sm-2 noPadding" hidden>
+                    <div>
+                        <span class="col-md-12 col-xs-5 noPadding"><strong>Sorgo</strong></span>
+                        <div class="col-md-12 col-xs-7 noPadding">
+                            <strong><span id="toneladasSorgo"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -152,7 +162,7 @@
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Total</strong></span>
                         <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasMaterial"></span>TN.</strong>
+                            <strong><span id="toneladasMaterial"></span> TN.</strong>
                         </div>
                     </div>
                 </div>
@@ -359,7 +369,7 @@
             </div>
             <div class="modal-footer" id="footer-verConDescarga">
                 <button type="button" class="myBtn btn" id="copiar-cupos-btn">Copiar Cupos <i class="fa fa-copy"></i></button>
-                <button type="button" class="myBtn btn" data-dismiss="modal" >Cerrar</button>
+                <button type="button" class="myBtn btn" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

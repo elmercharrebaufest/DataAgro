@@ -120,7 +120,7 @@ function CargarEventos() {
         }
 
         if (errores.length == 0) {
-            MensInfo("Se grabo correctamente.");
+            MensInfo("Se guardó correctamente.");
             location.reload();
         } else {
             //alert(errores.join());
@@ -368,8 +368,8 @@ function CargarEventos() {
             $.unblockUI();
             mostrarResultados(resultados);
             if (resultados.ListaErrores.length == 0) {
-                cuposCreados(["La devolución se realizó correctamente."],null);
-            }            
+                cuposCreados(["La devolución se realizó correctamente."], null);
+            }
         }, 250);
         $("#cuerpo-devolver-sugerencias").empty();
     });
@@ -499,7 +499,7 @@ function mostrarResultado(result) {
         }
     }
     if (errores.length == 0) {
-        MensInfoReload("Se grabo correctamente.");
+        MensInfoReload("Se guardó correctamente.");
     } else {
         ShowErrorMessages(errores);
     }

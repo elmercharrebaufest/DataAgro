@@ -52,13 +52,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     string nombresMateriales = "";
                     List<Material> materiales = repositorio.Listar<Material>();
-                    for (int i = 0; i < arrIdMateriales.Length; i++) {
+                    for (int i = 0; i < arrIdMateriales.Length; i++)
+                    {
                         int codMatBCR = arrIdMateriales[i];
                         int codMatDA = codMatBCR == 1 ? 2 : codMatBCR == 2 ? 1 : codMatBCR == 21 ? 3 : 4;
-                        nombresMateriales += (nombresMateriales == "" ? "" : ", ") + materiales.Find( x => x.MaterialId == codMatDA).Descripcion;
+                        nombresMateriales += (nombresMateriales == "" ? "" : ", ") + materiales.Find(x => x.MaterialId == codMatDA).Descripcion;
                     }
 
-                    logger.Debug($"Se traerán los precios pizarra del día {fecha.ToString("yyyy-MM-dd")} para los materiales {nombresMateriales}");
+                    logger.Debug($"Se traerán los precios pizarra del día {fecha:yyyy-MM-dd} para los materiales {nombresMateriales}");
                     for (int i = 0; i < arrIdMateriales.Length; i++)
                     {
                         int idMaterial = arrIdMateriales[i];
@@ -75,7 +76,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                         foreach (DataBCR p in result2.data)
                         {
-                            p.id_MaterialDA = idMaterial == 1 ? 2 : idMaterial == 2 ? 1 : idMaterial == 20 ? 4 : 3;
+                            p.id_MaterialDA = idMaterial == 1 ? 2 : idMaterial == 2 ? 1 : idMaterial == 20 ? 4 : idMaterial == 3 ? 6 : 3;
                             p.fecha_Operacion_Pizarra = p.fecha_Operacion_Pizarra.Date;
                             logger.Debug("Precio Pizarra - ID Material: " + p.id_MaterialDA + " - Fecha Op.: " + p.fecha_Operacion_Pizarra + " - Precio: " + p.precio_Cotizacion);
                             listPrecios.Add(p);
@@ -87,11 +88,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug($"Error al Consultar Precios Pizarra");
-                logger.Error(e.Message);
+                logger.Error("Error al Consultar Precios Pizarra", e.Message);
                 throw;
             }
         }
     }
-
 }

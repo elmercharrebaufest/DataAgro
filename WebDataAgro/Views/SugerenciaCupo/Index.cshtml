@@ -84,7 +84,7 @@
         vertical-align: middle;
     }
 
-    .material1 {
+    .material1 { /*Maíz*/
         border-left: 12px rgb(255, 204, 153) solid !important;
         border-collapse: separate !important;
         height: 45px;
@@ -100,7 +100,7 @@
         line-height: 45px;
     }
 
-    .material3 {
+    .material3 { /*Soja*/
         border-left: 12px rgb(153, 204, 0) solid !important;
         border-collapse: separate !important;
         height: 45px;
@@ -108,8 +108,16 @@
         line-height: 45px;
     }
 
-    .material4, .material5 {
+    .material4, .material5 { /*Girasol*/
         border-left: 12px rgb(211, 96, 212) solid !important;
+        border-collapse: separate !important;
+        height: 45px;
+        vertical-align: middle;
+        line-height: 45px;
+    }
+
+    .material6 { /*Sorgo*/
+        border-left: 12px rgb(99, 238, 218) solid !important;
         border-collapse: separate !important;
         height: 45px;
         vertical-align: middle;
@@ -290,12 +298,16 @@
                                 <input type="radio" class="form-check-input" name="materialId" @(materialId == 4 ? "checked" : "") value="4"> Girasol
                             </label>
                         </div>
-                        <div class="form-check-inline">
+                        @*<div class="form-check-inline">
                             <label class="form-check-label">
                                 <input type="radio" class="form-check-input" name="materialId" @(materialId == 5 ? "checked" : "") value="5"> Girasol AO
                             </label>
+                        </div>*@
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 6 ? "checked" : "") value="6"> Sorgo
+                            </label>
                         </div>
-
                     </div>
                     <div class="float-left margen-15">
                         <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:240px" type="text" placeholder="Buscar por CUIT o razón social" required="required" />

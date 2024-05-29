@@ -1,6 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -33,6 +31,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public double TotalSoja { get; set; }
         public double TotalGirasol { get; set; }
         public double TotalGirasolAlto { get; set; }
+        public double TotalSorgo { get; set; }
         public int Id { get; set; }
         public int? ComercialCreadorId { get; set; }
         public string ContratoSAP { get; set; }

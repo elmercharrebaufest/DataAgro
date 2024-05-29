@@ -59,12 +59,12 @@ $(document).ready(function () {
 
     reordenarPorEstadoCupo();
 
-   
+
 
 
 });
 
-function InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType) {   
+function InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType) {
     console.log(textField, valueField, url, columna, serverFiltering, filterType);
     $("#" + columna).kendoMultiSelect({
         placeholder: "Seleccione " + columna + "...",
@@ -102,16 +102,16 @@ function InicializarMultiSelect(textField, valueField, url, columna, serverFilte
 function InicializarCuposIndex() {
     var Centros = JSON.parse(document.getElementById('Centros').getAttribute('data-value'));
     var estados = new Array();
-       estados = [
-            { EstadoCupo: "Sin CTG" },
-            { EstadoCupo: "Activado" },
-            { EstadoCupo: "Arribado" },
-            { EstadoCupo: "Descargado" },
-            { EstadoCupo: "Anulado" },
-            { EstadoCupo: "Disponible" },
-            { EstadoCupo: "Sin STOP" },
-           { EstadoCupo: "Error STOP" },
-           { EstadoCupo: "Rechazado" } ];
+    estados = [
+        { EstadoCupo: "Sin CTG" },
+        { EstadoCupo: "Activado" },
+        { EstadoCupo: "Arribado" },
+        { EstadoCupo: "Descargado" },
+        { EstadoCupo: "Anulado" },
+        { EstadoCupo: "Disponible" },
+        { EstadoCupo: "Sin STOP" },
+        { EstadoCupo: "Error STOP" },
+        { EstadoCupo: "Rechazado" }];
 
     var estadoExterno = new Array();
     estadoExterno = [
@@ -123,11 +123,11 @@ function InicializarCuposIndex() {
         { EstadoCupo: "Anulado" },
         { EstadoCupo: "Disponible" },
         { EstadoCupo: "Error STOP" },
-        { EstadoCupo: "Rechazado" } ];
+        { EstadoCupo: "Rechazado" }];
 
 
     var defaultFilter = [
-        { field: "FechaIngreso", operator: "gte", value: new Date()},
+        { field: "FechaIngreso", operator: "gte", value: new Date() },
     ];
     var ds = {
         transport: {
@@ -190,22 +190,22 @@ function InicializarCuposIndex() {
         //,
         //filter: defaultFilter
     };
-    $("#pageSize").kendoDropDownList();    
+    $("#pageSize").kendoDropDownList();
 
-    $("#gridCupo").kendoGrid({        
+    $("#gridCupo").kendoGrid({
         dataSource: ds,
-        dataBound: function () {           
+        dataBound: function () {
             $("td:has(div.statusexterno)").attr('id', 'border-turquoise');
             var grid = $("#gridCupo").data("kendoGrid");
             if (externo) {
                 grid.hideColumn("ZonaCupo");
-            }  
+            }
             var view = grid.dataSource.view();
             for (var i = 0; i < view.length; i++) {
                 if (view[i].FleteProcedencia) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("flete-procedencia");
-                }                
+                }
                 for (var j = 0; j < filasSeleccionadas.length; j++) {
                     if (filasSeleccionadas[j].Id == view[i].Id) {
                         grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
@@ -222,7 +222,7 @@ function InicializarCuposIndex() {
             }
         },
         columns: [
-            { selectable: true, width: 40},
+            { selectable: true, width: 40 },
             {
                 field: "FechaIngreso", title: externo ? "Fecha de Cupo" : "Ingreso", type: "date", width: 80, format: _DefaultDateTemplate,
                 template: function (dataItem) {
@@ -234,7 +234,7 @@ function InicializarCuposIndex() {
                 }
 
             },
-            
+
 
             { field: "CupoSap", title: "Cupo", type: "string", width: 130 },
             {
@@ -247,7 +247,7 @@ function InicializarCuposIndex() {
                         { MaterialNombre: "Trigo" },
                         { MaterialNombre: "Soja" },
                         { MaterialNombre: "Girasol" },
-                        { MaterialNombre: "Girasol AO" }],
+                        { MaterialNombre: "Sorgo" }],
                     itemTemplate: function (e) {
                         return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.MaterialNombre#'/><span>#= data.MaterialNombre|| data.all #</span></label></span><br>";
                     }
@@ -357,10 +357,10 @@ function InicializarCuposIndex() {
                                     botonRechazarCupo(dataItem, 'fa-trash sto') +
                                     botonAceptarCupo(dataItem, 'fa-check pend sto')
                             } else {
-                                 descripcion = '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                                descripcion = '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                                     botonAceptarCupo(dataItem, 'fa-check pend sto')
                             }
-                         
+
                         } else {
                             descripcion = '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                                 botonModificar(dataItem, 'fa-pencil sto') +
@@ -456,7 +456,7 @@ function InicializarCuposIndex() {
 
     if ($("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width() < 100) {
         $("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width(100);
-        $("#gridCupo .k-grid-content").find("colgroup col").eq(4).width(100);       
+        $("#gridCupo .k-grid-content").find("colgroup col").eq(4).width(100);
     }
     //$("#gridCupo .k-grid-content").css({
     //    "overflow-y": "scroll"
@@ -501,7 +501,7 @@ function InicializarCuposIndex() {
         serverFiltering = serverFiltering == null ? true : serverFiltering;
         filterType = filterType == null ? "starswith" : filterType;
 
-        $(element).replaceWith('<select id="' + columna+'"></select>');
+        $(element).replaceWith('<select id="' + columna + '"></select>');
         InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType);
 
         setTimeout(function () {
@@ -686,7 +686,7 @@ function botonModificar(dataItem, icono) {
             "'" + dataItem.Id + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else if (modificarCentro == true && dataItem.ZonaCupoSap == "OIC" ||
-        modificarNorte == true && dataItem.ZonaCupoSap == "OIN" ||       
+        modificarNorte == true && dataItem.ZonaCupoSap == "OIN" ||
         modificarRosario == true && dataItem.ZonaCupoSap == "CRO" ||
         modificarBsAs == true && dataItem.ZonaCupoSap == "CBA" ||
         modificarSur == true && dataItem.ZonaCupoSap == "OIS" ||
@@ -798,15 +798,15 @@ function AnularSeleccionados() {
         var selectedItem = grid.dataItem(row);
         if ((selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7 ||
             selectedItem.EstadoCupoId == 8) && (anularCentro && selectedItem.ZonaCupoSap == "OIC" ||
-            anularNorte && selectedItem.ZonaCupoSap == "OIN" ||
-            anularRosario && selectedItem.ZonaCupoSap == "CRO" ||
-            anularBsAs && selectedItem.ZonaCupoSap == "CBA" ||
-            anularSur && selectedItem.ZonaCupoSap == "OIS" ||
-            anularOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
-            anularOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
-            anularOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
-            anularOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
-            anularOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || anularCupo)) {
+                anularNorte && selectedItem.ZonaCupoSap == "OIN" ||
+                anularRosario && selectedItem.ZonaCupoSap == "CRO" ||
+                anularBsAs && selectedItem.ZonaCupoSap == "CBA" ||
+                anularSur && selectedItem.ZonaCupoSap == "OIS" ||
+                anularOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
+                anularOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
+                anularOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
+                anularOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
+                anularOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || anularCupo)) {
             obj.push(selectedItem.CupoSap);
             borrar.push(selectedItem.Id);
         }
@@ -860,15 +860,15 @@ function ModificarSeleccionados() {
         var selectedItem = grid.dataItem(row);
         if ((selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 8) &&
             (modificarCentro && selectedItem.ZonaCupoSap == "OIC" ||
-            modificarNorte  && selectedItem.ZonaCupoSap == "OIN" ||
-            modificarRosario  && selectedItem.ZonaCupoSap == "CRO" ||
-            modificarBsAs && selectedItem.ZonaCupoSap == "CBA" ||
-            modificarSur && selectedItem.ZonaCupoSap == "OIS" ||
-            modificarOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
-            modificarOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
-            modificarOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
-            modificarOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
-            modificarOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || modificarCupo))
+                modificarNorte && selectedItem.ZonaCupoSap == "OIN" ||
+                modificarRosario && selectedItem.ZonaCupoSap == "CRO" ||
+                modificarBsAs && selectedItem.ZonaCupoSap == "CBA" ||
+                modificarSur && selectedItem.ZonaCupoSap == "OIS" ||
+                modificarOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
+                modificarOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
+                modificarOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
+                modificarOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
+                modificarOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || modificarCupo))
             obj.push(selectedItem.Id);
     });
     if (obj.length == 0) {
@@ -924,21 +924,21 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridCupo').data("kendoGrid");
     if (!$("#cupoPropiosDiv").hasClass("selected")) {
-        var currentFilters =  { filters: [], logic: 'and' };        
+        var currentFilters = { filters: [], logic: 'and' };
         grilla.dataSource.filter(currentFilters);
         var fecha = new Date();
         var ayer = new Date(fecha.getTime() - 24 * 60 * 60 * 1000);
         addOrRemoveFilter(grilla, "FechaIngreso", "gte", ayer);
         addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
         $("#cupoPropiosDiv").addClass("selected");
-        $("#cupoPropio").addClass("selected").removeClass("varios");        
+        $("#cupoPropio").addClass("selected").removeClass("varios");
     } else {
         addOrRemoveFilter(grilla, "FechaIngreso", "gte", "");
         addOrRemoveFilter(grilla, "ComercialId", "eq", "");
         $("#cupoPropiosDiv").removeClass("selected");
         $("#cupoPropio").addClass("varios").removeClass("selected");
     }
-    recargarGrilla();   
+    recargarGrilla();
 }
 
 function addOrRemoveFilter(grid, field, operator, value) {
@@ -989,26 +989,26 @@ function addOrRemoveFilter(grid, field, operator, value) {
     }
     dataSource.filter(filters);
 }
-function HabilitarAltaCupoExterno (){
+function HabilitarAltaCupoExterno() {
     $("#crearCupo").hide()
     var habilitaciones = MSExecuteOnServer('/Cupo/TraerTodasHabilitacionesActivas');
     if (materialDisponible) {
         $("#crearCupo").show();
 
-    } 
-        var habilitacionesPorMaterial = MSExecuteOnServer('/Cupo/TraerTodoMaterialRetirado');
+    }
+    var habilitacionesPorMaterial = MSExecuteOnServer('/Cupo/TraerTodoMaterialRetirado');
 
-        var table = '<tr>';
-        for (var i = 0; i < habilitacionesPorMaterial.length; i++) {
-            table += '<th class="col-xs-2">' + habilitacionesPorMaterial[i].DescripcionMaterial + '</th>';
-        }
-        table += '</tr>';
-        for (i = 0; i < habilitacionesPorMaterial.length; i++) {
-            table += '<td>';
-            table += '<span class="precio">' + habilitacionesPorMaterial[i].Descripcion; + '</span><br/>';
-            table += '</td>';
-        }
-        $("#tabla-cupo").html(table);
+    var table = '<tr>';
+    for (var i = 0; i < habilitacionesPorMaterial.length; i++) {
+        table += '<th class="col-xs-2">' + habilitacionesPorMaterial[i].DescripcionMaterial + '</th>';
+    }
+    table += '</tr>';
+    for (i = 0; i < habilitacionesPorMaterial.length; i++) {
+        table += '<td>';
+        table += '<span class="precio">' + habilitacionesPorMaterial[i].Descripcion; + '</span><br/>';
+        table += '</td>';
+    }
+    $("#tabla-cupo").html(table);
 
 
 }
@@ -1029,7 +1029,7 @@ function ModalRechazarCupoConMotivo() {
     var result;
     objConfirmado.Id = $("#cupoId").val();
     result = MSExecuteOnServer('/Cupo/RechazarCupo', objConfirmado);
-       
+
 
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
@@ -1040,7 +1040,7 @@ function ModalRechazarCupoConMotivo() {
 }
 
 function ModalRechazar(id) {
-    
+
     $("#cupoId").val(id);
     $("#motivo-rechazo").val("");
     $("#motivo-rechazo").show();
@@ -1118,7 +1118,7 @@ function setPageSize() {
     var grid = $("#gridCupo").data("kendoGrid");
     grid.dataSource.pageSize($("#pageSize").val());
     grid.refresh();
-}  
+}
 
 function AddFilters(grid, field, operator, values) {
     var filtros = { logic: 'or', filters: [] };
@@ -1165,5 +1165,5 @@ function removerFiltros(grid, field, operator, value) {
     }
     dataSource.filter(filters);
 }
-   
+
 

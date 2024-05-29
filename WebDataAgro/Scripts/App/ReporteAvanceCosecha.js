@@ -62,13 +62,13 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
-            { field: "Campania", title: "Campaña"},
+            { field: "Campania", title: "Campaña" },
             { field: "Avance", title: "Avance %" },
-            { field: "Rendimiento", title: "Rendimiento (Tn)"},
+            { field: "Rendimiento", title: "Rendimiento (Tn)" },
             { field: "RangoDesde", title: "Rango Desde Tn." },
             { field: "RangoHasta", title: "Rango Hasta Tn." },
             { field: "Comercial", title: "Comercial" },

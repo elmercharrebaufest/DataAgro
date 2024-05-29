@@ -1,7 +1,6 @@
-﻿
-var datosCompra;
+﻿var datosCompra;
 
-function ArmarTablaCompra(result, materiales, campanias) {  
+function ArmarTablaCompra(result, materiales, campanias) {
     datosCompra = result;
     viewModel = kendo.observable({
         Compra: []
@@ -32,25 +31,20 @@ function ArmarTablaCompra(result, materiales, campanias) {
             material += '<option> ' + materiales[i] + ' </option>'
         }
     }
-    $('#MaterialId').append(
-        material
-    );
-  
+    $('#MaterialId').append(material);
+
     if (campanias.length > 0) {
         for (var j = 0; j < campanias.length; j++) {
             campania += '<option>' + campanias[j] + ' </option>'
         }
     }
 
-    $('#CampaniaId').append(
-        campania
-    );
+    $('#CampaniaId').append(campania);
     $('.Maiz td').css('background-color', 'cornsilk');
     $('.Trigo td').css('background-color', 'cornsilk');
     $('.Soja td').css('background-color', 'lightcyan');
     $('.Girasol td').css('background-color', 'lightcyan');
-
-
+    $('.Sorgo td').css('background-color', 'cornsilk');
 }
 
 function FiltrarCampos() {
@@ -62,12 +56,12 @@ function FiltrarCampos() {
     $('.Trigo td').css('background-color', 'cornsilk');
     $('.Soja td').css('background-color', 'lightcyan');
     $('.Girasol td').css('background-color', 'lightcyan');
+    $('.Sorgo td').css('background-color', 'cornsilk');
 }
 
 function BorrarFilasVacias() {
     var $filasEncabezado = $("#tabla tr:not('.encabezado')");
     Remover($filasEncabezado);
-
 }
 
 function Remover($filasEncabezado) {
@@ -98,9 +92,6 @@ function Remover($filasEncabezado) {
                 $(".Material." + material)[1].remove();
                 $(".Campana." + material)[1].remove();
             }
-
         }
     }
-
-
 }

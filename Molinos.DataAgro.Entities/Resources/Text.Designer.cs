@@ -772,6 +772,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Sorgo.
+        /// </summary>
+        public static string ConfirmarNegociosSorgo {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosSorgo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmar Negocios Trigo.
         /// </summary>
         public static string ConfirmarNegociosTrigo {

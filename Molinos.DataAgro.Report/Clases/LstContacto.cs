@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Report
 {
     public class LstContacto
     {
-        private IReportesManager reportesManager;
+        private readonly IReportesManager reportesManager;
 
         public LstContacto(IReportesManager reportesManager)
         {
@@ -91,7 +91,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet.Column(i).AutoFit();
                 };
@@ -128,7 +127,6 @@ namespace Molinos.DataAgro.Report
 
             return identif;
         }
-
 
         public string GenerarExcelExportAll(ExportAll oDatos)
         {
@@ -189,7 +187,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet.Column(i).AutoFit();
                 };
@@ -291,7 +288,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet2.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet2.Column(i).AutoFit();
                 };
@@ -308,7 +304,7 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-            
+
             workSheet2.Cells[1, 1].Value = "CUIT";
             workSheet2.Column(1).AutoFit();
 
@@ -326,7 +322,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet3.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet3.Column(i).AutoFit();
                 };
@@ -382,7 +377,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet4.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet4.Column(i).AutoFit();
                 };
@@ -419,7 +413,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet5.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet5.Column(i).AutoFit();
                 };
@@ -468,15 +461,12 @@ namespace Molinos.DataAgro.Report
 
                     for (var i = 1; i <= cantColumns; i++)
                     {
-
                         if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                         {
                             workSheet6.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                         }
                         workSheet6.Column(i).AutoFit();
                     };
-
 
                     j = 1;
                     while (workSheet6.Cells[1, j].Value != null)
@@ -489,7 +479,6 @@ namespace Molinos.DataAgro.Report
 
                         j++;
                     }
-
 
                     workSheet6.Cells[1, 1].Value = "CUIT";
                     workSheet6.Column(1).AutoFit();
@@ -528,7 +517,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet7.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet7.Column(i).AutoFit();
                 };
@@ -564,7 +552,6 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet8.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
                     }
                     workSheet8.Column(i).AutoFit();
                 };
@@ -608,7 +595,10 @@ namespace Molinos.DataAgro.Report
             var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
             workSheet12.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Trigo").ToList(), true);
 
-            //Compra Soja
+            var workSheet13_1 = excel.Workbook.Worksheets.Add("Detalle Sorgo");
+            workSheet13_1.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Sorgo").ToList(), true);
+
+            //Detalle Soja
 
             if (compraCampanaActual.Count > 0)
             {
@@ -638,7 +628,7 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-            //Maiz
+            //Detalle Maíz
             if (compraCampanaActual.Count > 0)
             {
                 oPropRow = compraCampanaActual[0].GetType().GetProperties();
@@ -667,7 +657,7 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-
+            //Detalle Girasol
             if (compraCampanaActual.Count > 0)
             {
                 oPropRow = compraCampanaActual[0].GetType().GetProperties();
@@ -696,7 +686,7 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-
+            //Detalle Trigo
             if (compraCampanaActual.Count > 0)
             {
                 oPropRow = compraCampanaActual[0].GetType().GetProperties();
@@ -725,7 +715,36 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
+            //Detalle Sorgo
+            if (compraCampanaActual.Count > 0)
+            {
+                oPropRow = compraCampanaActual[0].GetType().GetProperties();
 
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet13_1.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet13_1.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet13_1.Cells[1, j].Value != null)
+            {
+                workSheet13_1.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet13_1.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet13_1.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+            //Situación Compra
             var situacion = oDatos.Situacion;
             if (situacion.Count() > 0)
             {
@@ -803,7 +822,7 @@ namespace Molinos.DataAgro.Report
             for (int i = 1; i < 10; i++)
             {
                 workSheet15.Column(i).AutoFit();
-                if (i>3) workSheet15.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                if (i > 3) workSheet15.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
             }
 
             j = 1;
