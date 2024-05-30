@@ -7,6 +7,18 @@ $(document).ready(function () {
 
     $('#menuproveedor').hide();
     inicializarPopUpConratoSap();
+
+    $('#GeneraBoletoContratoSAPId').on('keypress', function (event) {
+        if (event.which === 32) {
+            event.preventDefault();
+        }
+    });
+
+    $('#GeneraBoletoContratoSAPHastaId').on('keypress', function (event) {
+        if (event.which === 32) {
+            event.preventDefault();
+        }
+    });
 });
 
 
@@ -74,7 +86,8 @@ $("#GeneraBoletoContratoSAPId").bind("paste", function (e) {
     } else {
         clipText = window.clipboardData.getData('text');
     }
-    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r|\s)/gm, ";"));
+    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/\s+/g, ';'));
 
     GeneraBoletoCambioVariosContratos();
 });
@@ -198,6 +211,7 @@ function inicializarPopUpConratoSap() {
             clipText = window.clipboardData.getData('text');
         }
         $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+        $("#GeneraBoletoContratoSAPId").val(clipText.replace(/\s+/g, ';'));
 
         GeneraBoletoCambioVariosContratos();
     });
