@@ -354,6 +354,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         HabilitacionDeCupos = 730,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todas_Las_Sugerencias")]
         VerTodasLasSugerencias = 731,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt")]
+        VincularNegocioConSolExt = 735,
         [Display(ResourceType = typeof(Text), Name = "Mail_SolExt_Pendientes")]
         Mail_SolExt_Pendientes = 740,
         //Cupo NO Propio
