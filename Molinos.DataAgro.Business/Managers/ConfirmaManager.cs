@@ -188,7 +188,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
                 }
                 //Validar que corresponda la clase de negocio
-                if (tiposNegocios.Contains(negocio.TipoNegocioId))
+                if (!tiposNegocios.Contains(negocio.TipoNegocioId))
                 {
                     mensaje = $"No se puede generar el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.";
                     logger.Debug($"No se puede generar el confirma el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.");
@@ -385,8 +385,8 @@ namespace Molinos.DataAgro.Business.Managers
             #region Origen
             xmlWriter.WriteStartElement("Origen");
                 xmlWriter.WriteElementString("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad);
-                xmlWriter.WriteElementString("ProvinciaOrigen", confirma.Negocio.Provincia.Orden.ToString());
-                xmlWriter.WriteAttributeString("CodLista", "B"); //Consultar CodLista de Provincia Origen de que depende?
+                xmlWriter.WriteElementString("ProvinciaOrigen", string.Empty);
+                xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Provincia.CodigoConfirma);
             xmlWriter.WriteEndElement();
             #endregion Origen
             xmlWriter.WriteElementString("Destino",string.Empty);
