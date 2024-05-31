@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
 
             }
-            res.Texto += $", puesta sobre camión en: Planta {clausula.Basico.DestinoDescripcion} " +
+            res.Texto += $", puesta sobre camión en: Planta {DevolverRicardone(clausula.Basico.DestinoDescripcion)} " +
                    $"Localidad de {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
                    $"la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
             if (clausula.Basico.Consignatario == true)
@@ -126,6 +126,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
             return numero.GetValueOrDefault().ToString("#,###.##", objNumberFormatInfo);
+        }
+
+        private string DevolverRicardone(string cadena)
+        {
+            return cadena == "San Lorenzo" ? "San Lorenzo o Ricardone" : cadena;
         }
     }
 }
