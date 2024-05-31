@@ -1512,7 +1512,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            
+
             if (oParam.Insumo != null && oParam.Insumo.Length > 250)
             {
                 oErrorMessages.Error("Insumo", "El campo Insumo no debe superar los 250 caracteres.");
@@ -4759,22 +4759,21 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
 
-            var subject = "Nuevo negocio con jurisdicción no inscripta";
+            var subject = $"Nuevo negocio (ID {contrato.Id}) con jurisdicción no inscripta";
 
             mailManager.EnviarMail(contrato.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contrato, procedencia, destino));
 
             logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailComerciales + ". Contrato SAP:" + contrato.ContratoSAP);
         }
+
         private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += "En el presente mail se informa la creación de un contrato de " + oContrato.Cantidad + " Kg de " + repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion + " con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
-
+            htmlBody += $"En el presente mail se informa la creación del contrato (ID {oContrato.Id}) de {oContrato.Cantidad} Kg de {repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
             htmlBody += "Origen: " + procedencia + " <br /><br />  ";
             htmlBody += "Destino: " + destino + " <br />";
-
             htmlBody += "<br /> <br />  Saludos Cordiales" +
             " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
             @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -4782,6 +4781,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
+
             return alternateView;
         }
 
