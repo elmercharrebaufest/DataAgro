@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             else
             {
                 res.Texto = $"Los señores {clausula.Basico.RazonSocialProveedor} (en adelante el vendedor) domiciliados en {clausula.Basico.ProveedorDireccion} de {clausula.Basico.ProveedorLocalidad}, " +
-                $"{clausula.Basico.ProveedorProvincia}, CP {clausula.Basico.ProveedorCP}, {(String.IsNullOrEmpty(clausula.Basico.ContratoCorredor) ? "" : " por intermedio de " + clausula.Basico.RazonSocialCorredor)}" +
+                $"{clausula.Basico.ProveedorProvincia}, CP {clausula.Basico.ProveedorCP}, {(!string.IsNullOrEmpty(clausula.Basico.RazonSocialCorredor) ? " por intermedio de " + clausula.Basico.RazonSocialCorredor : "")}" +
                 $" entregan a Molinos Agro S.A. domiciliado en Bouchard 680 piso 12° de la Ciudad de Buenos Aires (en adelante el comprador),";
             }
             res.Texto += $" la cantidad de {clausula.Basico.Cantidad.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} kg. " +
