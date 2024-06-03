@@ -19,8 +19,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //MIENTRAS ESTÉN VIGENTES LOS DNU COVID
 
             var res = new ResultadoClausula();
-            //res.Texto += "Dada la circunstancia excepcional que se está viviendo en virtud del dictado del Decreto de Necesidad y Urgencia Nº 297/2020, que estableció " +
-            //    "el aislamiento social preventivo y obligatorio, el contrato se envía en PDF por mail a la Bolsa de Cereales para su registro y consecuente cobro del Impuesto de Sellos.";
+            res.Texto += "Dada la circunstancia excepcional que se está viviendo en virtud del dictado del Decreto de Necesidad y Urgencia Nº 297/2020, que estableció " +
+            "el aislamiento social preventivo y obligatorio, el contrato se envía en PDF por mail a la Bolsa de Cereales para su registro y consecuente cobro del Impuesto de Sellos.";
             return res;
         }
     }
