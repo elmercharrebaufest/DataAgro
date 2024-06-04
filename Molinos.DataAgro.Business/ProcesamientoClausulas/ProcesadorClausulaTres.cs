@@ -7,6 +7,7 @@ using Humanizer;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
+using System.Diagnostics.Contracts;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -31,7 +32,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 }
                 if ((clausula.Basico.TipoNegocioId == 3 && clausula.Basico.Canje == true) || clausula.Basico.TipoNegocioId == 1)
                 {
-                    res.Texto += clausula.Basico.CondicionFijacionDescripcion;
+                    res.Texto += "4 DÍAS HÁBILES DE FECHA DE FIJACIÓN";
                 }
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
@@ -75,7 +76,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 //SI EL NEGOCIO ES FIJACIÓN DISPONIBLE DE UN CONTRATO DE CANJE O ES UN NEGOCIO A FIJAR O NEGOCIO CONVENIO
                 if (esFijacionDeContratoCanje || esAFijarSinCanje || esConvenio)
                 {
-                    res.Texto += $", {clausula.Basico.CondicionFijacionDescripcion}, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato.";
+                    res.Texto += $", 4 DÍAS HÁBILES DE FECHA DE FIJACIÓN, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato.";
                 }
             }
             return res;
