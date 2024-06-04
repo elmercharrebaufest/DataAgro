@@ -49,6 +49,8 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             base.OnCloseDocument(writer, document);
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            BaseFont bfBold = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+
             foreach (PdfTemplate item in templates)
             {
                 if (basico.BoletoContratoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)//Si no es Carta oferta
@@ -68,7 +70,7 @@ namespace Molinos.DataAgro.Entities.Dto
                         item.EndText();
                         text = "Firma Comprador";
                         item.BeginText();
-                        item.SetFontAndSize(bf, 9);
+                        item.SetFontAndSize(bfBold, 9);
                         item.SetTextMatrix(80, 20);
                         item.ShowText(text);
                         item.EndText();
@@ -83,7 +85,7 @@ namespace Molinos.DataAgro.Entities.Dto
                             item.EndText();
                             text = "Firma Corredor";
                             item.BeginText();
-                            item.SetFontAndSize(bf, 9);
+                            item.SetFontAndSize(bfBold, 9);
                             item.SetTextMatrix(230, 20);
                             item.ShowText(text);
                             item.EndText();
@@ -97,7 +99,7 @@ namespace Molinos.DataAgro.Entities.Dto
                         item.EndText();
                         text = "Firma Vendedor";
                         item.BeginText();
-                        item.SetFontAndSize(bf, 9);
+                        item.SetFontAndSize(bfBold, 9);
                         item.SetTextMatrix(430, 20);
                         item.ShowText(text);
                         item.EndText();
