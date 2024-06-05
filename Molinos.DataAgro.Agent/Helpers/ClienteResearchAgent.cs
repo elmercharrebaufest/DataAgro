@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     List<ResearchCondicionCultivo> listaCondicionCultivo = repositorio.Listar<ResearchCondicionCultivo>();
                     int contadorAgregados = 0;
 
-                    foreach (ListItem item in itemsResearch)
+                    foreach (ListItem item in itemsResearch.ToList())
                     {
                         Resultado resultado = new Resultado();
                         try
@@ -194,33 +194,23 @@ namespace Molinos.DataAgro.Agent.Helpers
                             if (adjuntos.Any())
                             {
                                 itemData.Attachments = true;
-                                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+
+                                foreach (var adjunto in adjuntos)
                                 {
+                                    string nombre = adjunto["FileLeafRef"].ToString();
+                                    string rutaAdjunto = adjunto["FileRef"].ToString();
+
+                                    ClientResult<Stream> fileStream = web.GetFileByServerRelativeUrl(rutaAdjunto).OpenBinaryStream();
+                                    context.ExecuteQuery();
+                                    byte[] imageBytes = DownloadImageFromSharePoint(fileStream);
+
+                                    string blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, itemData.IdPowerApp.ToString() + "/" + nombre, imageBytes);
+
                                     itemData.Adjuntos.Add(new ResearchAdjunto()
                                     {
-                                        Path = "/Content/Images/MolinosAgro.png",
-                                        Nombre = "MolinosAgro.png",
+                                        Path = blobUri,
+                                        Nombre = nombre,
                                     });
-                                }
-                                else
-                                {
-                                    foreach (var adjunto in adjuntos)
-                                    {
-                                        string nombre = adjunto["FileLeafRef"].ToString();
-                                        string rutaAdjunto = adjunto["FileRef"].ToString();
-
-                                        ClientResult<Stream> fileStream = web.GetFileByServerRelativeUrl(rutaAdjunto).OpenBinaryStream();
-                                        context.ExecuteQuery();
-                                        byte[] imageBytes = DownloadImageFromSharePoint(fileStream);
-
-                                        string blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, itemData.IdPowerApp.ToString() + "/" + nombre, imageBytes);
-
-                                        itemData.Adjuntos.Add(new ResearchAdjunto()
-                                        {
-                                            Path = blobUri,
-                                            Nombre = nombre,
-                                        });
-                                    }
                                 }
                             }
 
@@ -234,15 +224,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 repositorio.Agregar(itemData);
                                 contadorAgregados++;
-                                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
-                                {
-                                    logger.Info($"Simula eliminar en SharePoint el registro {itemData.IdPowerApp}");
-                                }
-                                else
-                                {
-                                    item.DeleteObject();
-                                    context.ExecuteQuery();
-                                }
+                                //if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") //Santiago Barbarotta pide borrar al sincronizar también en QA (04/06/24)
+                                //{
+                                //    logger.Info($"Simula eliminar en SharePoint el registro {itemData.IdPowerApp}");
+                                //}
+                                //else
+                                //{
+                                item.DeleteObject();
+                                context.ExecuteQuery();
+                                //}
                             }
                         }
                         catch (Exception e)
@@ -269,7 +259,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             using (var memoryStream = new MemoryStream())
             {
                 fileStream.Value.CopyTo(memoryStream);
-                //fileStream.Value.Close(); // innecesario al estar dentro de un bloque using
                 return memoryStream.ToArray();
             }
         }
