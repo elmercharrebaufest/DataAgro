@@ -122,12 +122,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                             itemData.Coeficiente = item["Coeficiente"] is double coeficiente ? coeficiente : (double?)null;
                             itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                             itemData.CapitulosGirasol = item["CapitulosGirasol"] is double capGirasol ? capGirasol : (double?)null;
-                            itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta : (DateTime?)null;
+                            itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta.ToLocalTime() : (DateTime?)null;
                             itemData.Rendimiento = item["rendimiento"] is double rendim ? rendim : (double?)null;
                             itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
                             itemData.EstadoConectividad = item["estadoConectividad"] is string estadoConec ? estadoConec : "";
                             itemData.IdPowerApp = item["ID"] is int id ? id : (int?)null;
-                            itemData.FechaModificacion = item["Modified"] is DateTime fecha ? fecha : (DateTime?)null;
+                            itemData.FechaModificacion = item["Modified"] is DateTime fecha ? fecha.ToLocalTime() : (DateTime?)null;
                             FieldUserValue autor = new FieldUserValue();
                             autor = (FieldUserValue)item["Author"];
                             itemData.Author = autor.Email;
@@ -295,12 +295,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Coeficiente = item["Coeficiente"],
                 Campaña = item["Campa_x00f1_a"],
                 CapitulosGirasol = item["CapitulosGirasol"],
-                FechaAlta = item["Created"],
+                FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta.ToLocalTime() : (DateTime?)null,
                 Rendimiento = item["rendimiento"],
                 TipoCarga = item["tipoCarga"],
                 EstadoConectividad = item["estadoConectividad"],
                 IdPowerApp = item["ID"],
-                FechaModificacion = item["Modified"],
+                FechaModificacion = item["Modified"] is DateTime fechaMod ? fechaMod.ToLocalTime() : (DateTime?)null,
                 Author = item["Author"],
                 Editor = item["Editor"],
                 Attachments = item["Attachments"],
