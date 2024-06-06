@@ -706,12 +706,12 @@ namespace Molinos.DataAgro.Business
             var centro = repositorio.Obtener<Centro>(x => x.Id == oContratoAcuerdo.DestinoId);
             if (oContratoAcuerdo.Venta != true)
             {
-                if (oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho
-                && (x.Importe != 0 || x.Porcentaje != 0)) && centro.ValidaRedespacho != false)
+                if (centro?.ValidaRedespacho != false && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho
+                && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oEntityErrors.Error("Descuentos", "Se debe completar Redespacho en Acopios");
                 }
-                if (centro.ValidaRedespacho == false && oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
+                if (centro?.ValidaRedespacho == false && oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
                 {
                     oEntityErrors.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                 }
