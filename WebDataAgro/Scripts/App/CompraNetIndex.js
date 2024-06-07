@@ -1649,7 +1649,10 @@ function Finalizar(finalizarContratoFijacion) {
             if (ExistsErrorMessages(result.Errores)) {
                 MensErr(result.Errores[0].Message);
             } else {
+                result = MSExecuteOnServer('/CompraNet/EnviarMailImpuestos', finalizarContratoFijacion);
+
                 recargarGrilla();
+
             }
         }
     }

@@ -104,5 +104,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado LiberarPantalla(PantallaEnUsoDto oParam);
         List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId);
         List<CupoDto> TraerCuposConDescarga(int contratoId);
+        void EnviarMailImpuestos(int contratoId);
+
     }
 }
