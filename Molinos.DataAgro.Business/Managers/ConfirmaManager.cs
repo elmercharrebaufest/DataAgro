@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
+            this.oEnviarBoletoAgent = oEnviarBoletoAgent;
         }
 
         public DatosIniContrato TraerDatosCombos()
