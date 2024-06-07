@@ -1,9 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using Molinos.DataAgro.Entities.Resources;
 
 namespace WebDataAgro.Models
@@ -37,7 +33,7 @@ namespace WebDataAgro.Models
         public int RedespachoMaximoARP { get; set; }
         public int ToleranciaPaseMax { get; set; }
         public int ToleranciaPaseMin { get; set; }
-        public decimal ImporteSustentableEspecial { get;  set; }
+        public decimal ImporteSustentableEspecial { get; set; }
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
         public int AlgoritmoProcMaxSugerenciasProveedorDia { get; set; }
         public int Actualizacion { get; set; }
@@ -46,5 +42,6 @@ namespace WebDataAgro.Models
         public int MinutosCronometroConDescarga { get; set; }
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
+        public bool ExigirNegocioEnSolExt { get; set; }
     }
 }
