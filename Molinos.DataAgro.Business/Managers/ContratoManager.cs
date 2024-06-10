@@ -4765,11 +4765,7 @@ namespace Molinos.DataAgro.Business.Managers
                 mailManager.EnviarMail(contratoDB.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contratoDB, procedencia.Nombre, destino.Nombre));
 
                 logger.Debug("Se envió email del contrato ID " + contratoDB.Id + " a " + emailComerciales + ". Contrato SAP:" + contratoDB.ContratoSAP);
-
-                return true;
-
             }
-            return false;
         }
 
         private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
