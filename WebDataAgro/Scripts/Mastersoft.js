@@ -45,7 +45,7 @@ function MSHideLoading(htmlloading) {
 
 
 function MSExecuteOnServer(url, datos, onCallBack) {
-    
+
     var respuesta = null;
 
     //alert(MSGetUrl(url));
@@ -147,11 +147,11 @@ function MSRedirectURLOnServer(url, datos) {
         url: MSGetUrl(url),
         type: 'POST',
         data: kendo.stringify(datos),
-        contentType: "application/json; charset=utf-8", 
+        contentType: "application/json; charset=utf-8",
         success: function (data) {
             if (data) {
                 respuesta = data;
-              
+
             }
         },
         error: function (error) {
@@ -217,7 +217,7 @@ function MensErr(mensaje) {
     BootstrapDialog.show({
         title: 'Error',
         cssClass: 'error-dialog modal-superior',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
@@ -235,13 +235,13 @@ function MensInfo(mensaje) {
 
     BootstrapDialog.show({
         title: 'Mensaje',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
             cssClass: 'k-button',
             action: function (dialogItself) {
-                dialogItself.close();               
+                dialogItself.close();
             }
         }]
     });
@@ -250,7 +250,7 @@ function MensInfo(mensaje) {
 function MensAlerta(mensaje) {
     BootstrapDialog.confirm({
         title: 'Alerta',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
         closable: false, // <-- Default value is false
         draggable: false, // <-- Default value is false
@@ -261,7 +261,7 @@ function MensAlerta(mensaje) {
 
     BootstrapDialog.show({
         title: 'Alerta',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         draggable: true,
         type: BootstrapDialog.TYPE_WARNING,
         buttons: [{
@@ -278,7 +278,7 @@ function MensInfoReload(mensaje) {
 
     BootstrapDialog.show({
         title: 'Mensaje',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
@@ -293,10 +293,10 @@ function MensInfoReload(mensaje) {
 
 
 function Confirma(mensaje, fncallback) {
-       
+
     BootstrapDialog.show({
         title: 'Confirmación',
-        message: "\n"+mensaje,
+        message: "\n" + mensaje,
         draggable: true,
         buttons: [{
             label: 'Aceptar',
@@ -304,7 +304,7 @@ function Confirma(mensaje, fncallback) {
             action: function (dialogItself) {
                 dialogItself.close();
                 fncallback();
-            } 
+            }
         }, {
             label: 'Cancelar',
             cssClass: 'k-button',
@@ -390,20 +390,16 @@ function ShowValidationMessages(viewModel, arrayDeErrores) {
 
 
 function ShowTooltipMessages(prefix, arrayDeErrores) {
-
     var mensaje = "";
     var aviso = "";
 
     for (var i = 0; i < arrayDeErrores.length; i++) {
-
         if (arrayDeErrores[i].Source.length > 0 && arrayDeErrores[i].Source != "aviso") {
-
-            $("#" + prefix + arrayDeErrores[i].Source).css("display", "inline");;
+            $("#" + prefix + arrayDeErrores[i].Source).css("display", "inline");
 
             var myTooltip = $("#" + prefix + arrayDeErrores[i].Source).data("kendoTooltip");
 
             if (myTooltip == null || typeof (myTooltip) == 'undefined') {
-
                 $("#" + prefix + arrayDeErrores[i].Source).kendoTooltip({
                     content: arrayDeErrores[i].Message,
                     position: "bottom"
@@ -413,9 +409,8 @@ function ShowTooltipMessages(prefix, arrayDeErrores) {
                 myTooltip.options.content = arrayDeErrores[i].Message;
                 myTooltip.refresh();
             }
-
         }
-        else if(arrayDeErrores[i].Source == "aviso") {
+        else if (arrayDeErrores[i].Source == "aviso") {
             aviso = arrayDeErrores[i].Message;
         }
         else {
@@ -447,7 +442,7 @@ function EmptyValue(data) {
     if (typeof (data) == 'boolean') {
         return false;
     }
-    
+
     if (typeof (data) == 'undefined' || data === null) {
         return true;
     }
@@ -568,15 +563,14 @@ function AsignarRangoFecha(dropdownid, index, viewModel, identificadorDesde, ide
 
 
 function InitMaskedDatePicker() {
-
     var kendo = window.kendo,
-          ui = kendo.ui,
-          Widget = ui.Widget,
-          proxy = $.proxy,
-          CHANGE = "change",
-          PROGRESS = "progress",
-          ERROR = "error",
-          NS = ".generalInfo";
+        ui = kendo.ui,
+        Widget = ui.Widget,
+        proxy = $.proxy,
+        CHANGE = "change",
+        PROGRESS = "progress",
+        ERROR = "error",
+        NS = ".generalInfo";
 
     var MaskedDatePicker = Widget.extend({
         init: function (element, options) {
@@ -584,13 +578,13 @@ function InitMaskedDatePicker() {
             Widget.fn.init.call(this, element, options);
 
             $(element).kendoMaskedTextBox({ mask: that.options.dateOptions.mask || "00/00/0000" })
-            .kendoDatePicker({
-                format: that.options.dateOptions.format || "dd/MM/yyyy",
-                parseFormats: that.options.dateOptions.parseFormats || ["dd/MM/yyyy", "dd/MM/yy"]
-            })
-            .closest(".k-datepicker")
-            .add(element)
-            .removeClass("k-textbox");
+                .kendoDatePicker({
+                    format: that.options.dateOptions.format || "dd/MM/yyyy",
+                    parseFormats: that.options.dateOptions.parseFormats || ["dd/MM/yyyy", "dd/MM/yy"]
+                })
+                .closest(".k-datepicker")
+                .add(element)
+                .removeClass("k-textbox");
 
             that.element.data("kendoDatePicker").bind("change", function () {
                 that.trigger(CHANGE);
@@ -601,7 +595,7 @@ function InitMaskedDatePicker() {
             dateOptions: {}
         },
         events: [
-          CHANGE
+            CHANGE
         ],
         destroy: function () {
             var that = this;
@@ -621,24 +615,19 @@ function InitMaskedDatePicker() {
     });
 
     ui.plugin(MaskedDatePicker);
-
 }
 
 
 function ValidDate(errores, id) {
-
     if ($("#" + id).data("kendoMaskedTextBox").value().length != 0) {
-
         if ($("#" + id).data("kendoDatePicker").value() == null) {
             errores.push({ Message: "Este campo debe ser una fecha valida", Source: id });
         }
     }
-
 }
 
 
 function ValidDateNoEmpty(errores, id) {
-
     if ($("#" + id).data("kendoMaskedTextBox").value().length == 0) {
         errores.push({ Message: "Esta fecha no debe ser vacía", Source: id });
     }
@@ -649,15 +638,22 @@ function ValidDateNoEmpty(errores, id) {
 
 
 function AddIncorectMessage(errores) {
-
     errores.push({ Message: "Datos incorrectos, verifique el mensaje de error en cada campo", Source: "" });
-
 }
 
 function BlockUi(mensaje) {
-    $.blockUI({ blockMsgClass: 'alertBox', message: '<h3>' + mensaje +'</h3>' });
+    $.blockUI({ blockMsgClass: 'alertBox', message: '<h3>' + mensaje + '</h3>' });
 }
 
 function ConvertirStringABool(valor) {
-    return valor == "True" ? true : valor == "False" ? false : valor;    
+    return valor == "True" ? true : valor == "False" ? false : valor;
 }
+
+const Materiales = {
+    MAIZ: 1,
+    TRIGO: 2,
+    SOJA: 3,
+    GIRASOL: 4,
+    GIRASOL_AO: 5,
+    SORGO: 6
+};

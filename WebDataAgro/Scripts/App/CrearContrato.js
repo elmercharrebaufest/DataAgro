@@ -800,7 +800,7 @@ function InicializarElementos() {
                 RemoverFondosGrises();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Fasón");
-                if ($("#material").val() === "2") {
+                if ($("#material").val() == Materiales.TRIGO) {
                     $("#fasonEspecial").show();
                 }
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
@@ -819,7 +819,7 @@ function InicializarElementos() {
                 $("#pizarraDiv").prop("checked", false);
                 $("#fechaOperacionDiv").show();
 
-                if ($("#material").val() === "1" || $("#material").val() === "3") { // SOJA o MAIZ
+                if ($("#material").val() == Materiales.MAIZ || $("#material").val() == Materiales.SOJA) {
                     $("#dolarExportadorDiv").show();
                 } else {
                     $("#dolarExportadorDiv").hide();
@@ -948,7 +948,7 @@ function InicializarElementos() {
                     viewModel.Calidades.pop();
                 }
             }
-            if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
+            if ($("#material").val() == Materiales.SOJA && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
                 $(".sojaEpa").show();
             } else {
@@ -961,12 +961,12 @@ function InicializarElementos() {
                 $("#epaId").prop('checked', false);
                 $("#divSustentableSinTarifa").hide();
             }
-            if ($("#material").val() === "2" && $("#tipoId").val() === "4") {
+            if ($("#material").val() == Materiales.TRIGO && $("#tipoId").val() === "4") {
                 $("#fasonEspecial").show();
             } else {
                 $("#fasonEspecial").hide();
             }
-            if (($("#material").val() === "1" || $("#material").val() === "3") && $("#tipoId").val() === "5") { // (SOJA o MAIZ) y AGENTE DE COMPRAS
+            if (($("#material").val() == Materiales.MAIZ || $("#material").val() == Materiales.SOJA) && $("#tipoId").val() === "5") { // AGENTE DE COMPRAS
                 $("#dolarExportadorDiv").show();
             } else {
                 $("#dolarExportadorDiv").hide();
@@ -981,7 +981,7 @@ function InicializarElementos() {
                 var cuit = cuitAux[1].split(')');
                 var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
-                if (($("#material").val() === "4" || $("#material").val() === "5") && $("#tipoId").val() == "2") {
+                if (($("#material").val() == Materiales.GIRASOL || $("#material").val() == Materiales.GIRASOL_AO) && $("#tipoId").val() == "2") {
                     if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
                         $("#tipoPeriodoDBId").data("kendoDropDownList").value("1");
                         $("#TipoDBId").data("kendoDropDownList").value("2");
@@ -3076,7 +3076,7 @@ function CambioCalidades(calidades) {
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }
-    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
+    } if ($("#material").val() == Materiales.GIRASOL_AO && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").hide();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
@@ -3204,7 +3204,7 @@ function windowsResize() {
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == "3") {
+        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == Materiales.SOJA) {
         for (var i = 0; i < calidadGrano.length; i++) {
             if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
                 calidadGrano.splice(i);
@@ -3220,7 +3220,7 @@ function CargarCalidadPorMaterial(value) {
     } else {
         $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
     }
-    if ($("#material").val() == 2) {
+    if ($("#material").val() == Materiales.TRIGO) {
         $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
     }
     CambioCalidades();
@@ -3530,7 +3530,7 @@ function AsignarDatos() {
 
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#comercialFijacionId").data("kendoDropDownList")) $("#comercialFijacionId").data("kendoDropDownList").value(comercialId);
-    if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");
+    if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value(Materiales.SOJA.toString());
     if ($("#sustentableMonedaId").data("kendoDropDownList")) $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
     if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
@@ -3819,7 +3819,7 @@ function validarDescuento(descuento) {
     }
     if (descuento.TipoDBId == "2") {
         var porcentajeNum = parseFloat(descuento.Porcentaje == 0 ? 0 : descuento.Porcentaje.replace(',', '.'));
-        if (($("#material").val() == "4" || $("#material").val() == "5") && (porcentajeNum > 1 || porcentajeNum < 0)) {
+        if (($("#material").val() == Materiales.GIRASOL || $("#material").val() == Materiales.GIRASOL_AO) && (porcentajeNum > 1 || porcentajeNum < 0)) {
             errores.push("El porcentaje debe estar entre 0% y 1%");
         }
     }
@@ -3846,7 +3846,7 @@ function validarDescuento(descuento) {
 }
 
 function AgregarCalidades() {
-    if ($("#material").val() == 3 &&
+    if ($("#material").val() == Materiales.SOJA &&
         $("#valorEspecialesId").val() === ""
         && $("#porcentajeDesdeId").val() === ""
         && $("#porcentajeHastaId").val() === "") {
@@ -5909,7 +5909,7 @@ function VisualizarFechaCierta() {
 
 function EsconderCalidadSiHaySojaYCalidadEspecial() {
     if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == "3") {
+        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == Materiales.SOJA) {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
@@ -6173,7 +6173,7 @@ function ValidarComisionEnCentro() {
 }
 function BorrarComisionSiEsAcopio() {
     //$("#porcentajeComision").data("kendoNumericTextBox").value(0);
-    if ($("#material").val() === "4" || $("#material").val() === "5") {
+    if ($("#material").val() == Materiales.GIRASOL || $("#material").val() == Materiales.GIRASOL_AO) {
         $("#PorcentajeDescuentoId").val("");
         for (var i = 0; i < viewModel.Descuentos.length; i++) {
             if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
@@ -6197,7 +6197,7 @@ function BorrarComisionSiEsAcopio() {
     InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 }
 function CargarAutomaticamenteLaComision(compraNet) {
-    if (($("#material").val() === "4" || $("#material").val() === "5") && $("#tipoId").val() == "2") {
+    if (($("#material").val() == Materiales.GIRASOL || $("#material").val() == Materiales.GIRASOL_AO) && $("#tipoId").val() == "2") {
         if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
             $("#tipoPeriodoDBId").data("kendoDropDownList").value("1");
             $("#TipoDBId").data("kendoDropDownList").value("2");
