@@ -23,6 +23,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
+
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ContratoManager : IContratoManager
@@ -4739,7 +4740,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (contratoDB != null && contratoDB.EstadoId == 5)
             {
-
                 var lista = new List<string>();
                 var email = "";
 
@@ -4754,7 +4754,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
 
-                var subject = $"Nuevo negocio con jurisdicción no inscripta: {contratoDB.ContratoSAP.Substring('0')}";
+                var subject = $"Nuevo negocio con jurisdicción no inscripta: {contratoDB.ContratoSAP.TrimStart('0')}";
 
                 var provincias = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
                 var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
@@ -4773,11 +4773,11 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += $"En el presente mail se informa la creación del contrato numero {oContrato.ContratoSAP.Substring('0')} de {oContrato.Cantidad} Kg de {repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
-            htmlBody += "Contrato: " + oContrato.ContratoSAP + " <br /><br />  ";
+            htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
+
             htmlBody += "Origen: " + procedencia + " <br /><br />  ";
             htmlBody += "Destino: " + destino + " <br />";
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
             " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
             @"<img src='cid:" + res.ContentId + @"'/>" +
             "<br /> <br /> www.molinosagro.com.ar";
