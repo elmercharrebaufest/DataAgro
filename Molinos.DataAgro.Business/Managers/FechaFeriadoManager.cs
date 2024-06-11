@@ -6,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
@@ -90,7 +91,8 @@ namespace Molinos.DataAgro.Business
             {
                 Id = x.Id,
                 Feriado = x.Feriado
-            }, null, 0, "Feriado");
+            }, null, 0, "Feriado")
+            .OrderByDescending(x => x.Feriado).ToList();
 
             return result;
         }

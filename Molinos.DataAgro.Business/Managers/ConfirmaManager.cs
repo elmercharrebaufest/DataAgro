@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
+            this.oEnviarBoletoAgent = oEnviarBoletoAgent;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -49,8 +50,9 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public ConfirmaResult GrabarConfirmas(int claseNegocio,int ComercialId, List<string> codigos, bool usarWebConfirma, List<int>equipo)
+        public ConfirmaResult GrabarConfirmas(int claseNegocio,int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo)
         {
+            var codigos = AgregarCeros(codigosSap);
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             var resultado = new ConfirmaResult();
@@ -80,7 +82,7 @@ namespace Molinos.DataAgro.Business.Managers
                             ContratoSAP = contrato.ContratoSAP,
                             FijacionSAP = contrato.FijacionSAP,
                             TipoBoletoId = contrato.BoletoId.GetValueOrDefault(),
-                            IsWebService = usarWebConfirma,
+                            IsWebService = usarWebServiceConfirma,
                             Mensaje = string.Empty,
                             Generado = true
                          };
@@ -170,54 +172,67 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string ValidarNegocio(string codigoSAP, int claseNegocio)
         {
+            var codigoSAPcompleto = codigoSAP.PadLeft(10, '0');
             var tiposNegocios = ConvertirClaseNegocioATiposNegocios(claseNegocio);
             var mensaje = "";
-            var kilosDisponibles = 10000;
-            var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == codigoSAP);
-            
+            var kilosMinimos = 10000;
+            var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == codigoSAPcompleto);
+
             if (negocio != null)
             {
-                if (negocio.Cantidad < kilosDisponibles)
-                {
-                    mensaje = $"No se puede generar el confirma {codigoSAP} por su cantidad menor a 10 toneladas.";
-                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
-                }
-                if (negocio.Canje != true)
-                {
-                    mensaje = $"No se puede generar el confirma {codigoSAP} por no ser de canje.";
-                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
-                }
                 //Validar que corresponda la clase de negocio
                 if (!tiposNegocios.Contains(negocio.TipoNegocioId))
                 {
                     mensaje = $"No se puede generar el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.";
                     logger.Debug($"No se puede generar el confirma el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.");
+                    return mensaje;
                 }
+
+                if (negocio.TipoNegocioId==(int)EnumTipoNegocio.FIJACION) //FIJACION
+                {
+                    if (negocio.Cantidad < kilosMinimos)
+                    {
+                        mensaje = $"No se puede generar el confirma {codigoSAP} por su cantidad menor a 10 toneladas.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
+                        return mensaje;
+                    }
+                    if (negocio.Canje != true)
+                    {
+                        mensaje = $"No se puede generar el confirma {codigoSAP} por no ser de canje.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
+                        return mensaje;
+                    }
+
+                }else{ //CONTRATO
+                    //Validar estado del contrato
+                    var res = status.ValidarEstado(codigoSAP);
+                    if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
+                    {
+                        string motivoStatus = StatusNegocioConfirma(res);
+                        mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por su estado: {motivoStatus}";
+                        logger.Debug($"No se puede generar el confirma por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {codigoSAP}");
+                        return mensaje;
+                    }
+                    else if (string.IsNullOrEmpty(res.Status))
+                    {
+                        mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por estar en slip.";
+                        logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
+                        return mensaje;
+                    }
+                }
+
                 //Validar que tenga tilde CONFIRMA
                 if (negocio.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
                 {
                     mensaje = $"No se puede generar el confirma {codigoSAP} por no tener tilde de confirma.";
-                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de boleto físico o carta oferta.");
-                }
-                //Validar estado del contrato
-                var res = status.ValidarEstado(codigoSAP);
-                if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
-                {
-                    string motivoStatus = StatusNegocioConfirma(res);
-                    mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por su estado: {motivoStatus}";
-                    logger.Debug($"No se puede generar el confirma por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {codigoSAP}");
-                }
-                else if (string.IsNullOrEmpty(res.Status))
-                {
-                    mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por estar en slip.";
-                    logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
+                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de confirma.");
+                    return mensaje;
                 }
             }
             else
             {
                 mensaje = $"No se encontró el negocio {codigoSAP} seleccionado.";
             }
-            
             return mensaje;
         }
 
@@ -733,6 +748,16 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var date = DateTime.Parse(cadena);
             return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        }
+
+        private List<string> AgregarCeros(List<string> lista)
+        {
+            var result = new List<string>();
+            foreach (var item in lista)
+            {
+                result.Add(item.PadLeft(10, '0'));
+            }
+            return result;
         }
     }
 }

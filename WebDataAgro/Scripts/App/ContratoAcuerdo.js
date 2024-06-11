@@ -2964,6 +2964,12 @@ function CambioCalidades(calidades) {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").hide();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+    }
+    else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
+        $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
+    }
+    else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+        $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
     } else {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");

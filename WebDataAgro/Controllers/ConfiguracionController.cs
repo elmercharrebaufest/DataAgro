@@ -51,21 +51,23 @@ namespace WebDataAgro.Controllers
                 MinutosCronometroConDescarga = conf != null ? conf.MinutosCronometroConDescarga : 0,
                 CantidadMaximaDiasNegocioConDescarga = conf != null ? conf.CantidadMaximaDiasNegocioConDescarga : 0,
                 PorcentajeVolumenNegocioConDescarga = conf != null ? conf.PorcentajeVolumenNegocioConDescarga : 0,
+                ExigirNegocioEnSolExt = conf?.ExigirNegocioEnSolExt ?? false,
             });
         }
+
         [HttpPost]
         public ActionResult GuardarPesificacionDolarizado(ConfiguracionModel configuracion)
         {
             var configuracionGrabada = configuracionManager.GrabarFechaPesificacionDolarizado(TransformarAEntidad(configuracion));
-           
-            if (configuracionGrabada.HayError || !ModelState.IsValid )
+
+            if (configuracionGrabada.HayError || !ModelState.IsValid)
             {
                 foreach (var e in configuracionGrabada.Errores)
                 {
                     ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
-                }                
+                }
             }
-            return View("Index",configuracion);
+            return View("Index", configuracion);
         }
 
         private Configuracion TransformarAEntidad(ConfiguracionModel configuracion)
@@ -100,7 +102,9 @@ namespace WebDataAgro.Controllers
                 MinutosCronometroConDescarga = configuracion.MinutosCronometroConDescarga,
                 CantidadMaximaDiasNegocioConDescarga = configuracion.CantidadMaximaDiasNegocioConDescarga,
                 PorcentajeVolumenNegocioConDescarga = configuracion.PorcentajeVolumenNegocioConDescarga,
+                ExigirNegocioEnSolExt = configuracion.ExigirNegocioEnSolExt,
             };
+
             return entidad;
         }
     }

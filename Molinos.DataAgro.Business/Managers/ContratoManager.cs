@@ -23,6 +23,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
+
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ContratoManager : IContratoManager
@@ -2207,16 +2208,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            var provincias = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
-            var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
-
-            var procedencia = provincias.Find(x => x.Provinciaid == oContrato.ProvinciaId);
-            var destino = provincias.Find(p => p.Provinciaid == destinos.Find(x => x.Id == oContrato.DestinoId).ProvinciaId);
-
-            if (!procedencia.Inscripto || !destino.Inscripto)
-            {
-                EnviarMailImpuestos(oContratoSave, procedencia.Nombre, destino.Nombre);
-            }
             return oEntityErrors;
         }
 
@@ -4743,27 +4734,38 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailproveedor + ". Contrato SAP:" + contrato.ContratoSAP);
         }
 
-        private void EnviarMailImpuestos(Contrato contrato, string procedencia, string destino)
+        public void EnviarMailImpuestos(int contratoId)
         {
-            var lista = new List<string>();
-            var email = "";
+            Contrato contratoDB = repositorio.Obtener<Contrato>(contratoId);
 
-            logger.Debug("Enviando mail a Impuestos " + email);
-
-            var comercialRegistrado = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == contrato.ComercialId, x => new ComercialDto()
+            if (contratoDB != null && contratoDB.EstadoId == 5)
             {
-                Email = x.Email
-            });
+                var lista = new List<string>();
+                var email = "";
 
-            List<Comercial> comercialesImpuestos = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
+                logger.Debug("Enviando mail a Impuestos " + email);
 
-            List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
+                var comercialRegistrado = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == contratoDB.ComercialId, x => new ComercialDto()
+                {
+                    Email = x.Email
+                });
 
-            var subject = $"Nuevo negocio (ID {contrato.Id}) con jurisdicción no inscripta";
+                List<Comercial> comercialesImpuestos = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
 
-            mailManager.EnviarMail(contrato.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contrato, procedencia, destino));
+                List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
 
-            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailComerciales + ". Contrato SAP:" + contrato.ContratoSAP);
+                var subject = $"Nuevo negocio con jurisdicción no inscripta: {contratoDB.ContratoSAP.TrimStart('0')}";
+
+                var provincias = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
+                var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
+
+                var procedencia = provincias.Find(x => x.Provinciaid == contratoDB.ProvinciaId);
+                var destino = provincias.Find(p => p.Provinciaid == destinos.Find(x => x.Id == contratoDB.DestinoId).ProvinciaId);
+
+                mailManager.EnviarMail(contratoDB.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contratoDB, procedencia.Nombre, destino.Nombre));
+
+                logger.Debug("Se envió email del contrato ID " + contratoDB.Id + " a " + emailComerciales + ". Contrato SAP:" + contratoDB.ContratoSAP);
+            }
         }
 
         private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
@@ -4771,10 +4773,11 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += $"En el presente mail se informa la creación del contrato (ID {oContrato.Id}) de {oContrato.Cantidad} Kg de {repositorio.Obtener<Material>(m => m.MaterialId == oContrato.MaterialId).Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
+            htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
+
             htmlBody += "Origen: " + procedencia + " <br /><br />  ";
             htmlBody += "Destino: " + destino + " <br />";
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
             " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
             @"<img src='cid:" + res.ContentId + @"'/>" +
             "<br /> <br /> www.molinosagro.com.ar";

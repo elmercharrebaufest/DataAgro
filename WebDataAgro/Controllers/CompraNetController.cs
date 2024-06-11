@@ -1530,5 +1530,19 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        static readonly object _lockEmailImpuestos = new object();
+        public ActionResult EnviarMailImpuestos(int contratoId)
+        {
+            lock (_lockFinalizarContrato)
+            {
+                mobjContratoManager.EnviarMailImpuestos(contratoId);
+                return new JsonResult()
+                {
+                    Data = new GrabarContratoResult(),
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
+        }
     }
 }
