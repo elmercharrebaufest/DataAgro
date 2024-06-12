@@ -913,6 +913,9 @@
   <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
     <value>Recibir Mail Sugerencia FAQ</value>
   </data>
+  <data name="Vincular_Negocio_Con_SolExt" xml:space="preserve">
+    <value>Vincular Solicitud Extraordinaria con Negocio</value>
+  </data>
   <data name="Mail_SolExt_Pendientes" xml:space="preserve">
     <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>
   </data>
