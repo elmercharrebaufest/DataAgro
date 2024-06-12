@@ -2252,6 +2252,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vincular Solicitud Extraordinaria con Negocio.
+        /// </summary>
+        public static string Vincular_Negocio_Con_SolExt {
+            get {
+                return ResourceManager.GetString("Vincular_Negocio_Con_SolExt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visualizar CompraNet.
         /// </summary>
         public static string Visualizar_CompraNet {
