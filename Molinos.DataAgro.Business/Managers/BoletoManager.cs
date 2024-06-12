@@ -635,7 +635,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
                 }
-                xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd/MM/yyyy"), basico.ContratoSAP.TrimStart('0'), basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
+                xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd.MM.yyyy"), basico.ContratoSAP.TrimStart('0'), basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
                     , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas);
                 return xHtml;
             }
