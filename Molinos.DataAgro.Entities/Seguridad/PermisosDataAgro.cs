@@ -288,6 +288,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NotificacionesResearch = 603,
         [Display(ResourceType = typeof(Text), Name = "Eliminar_Registro_Research")]
         EliminarRegistroResearch = 604,
+        [Display(ResourceType = typeof(Text), Name = "Sincronizar_Research")]
+        SincronizarResearch = 605,
 
         //Cupos
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Cupos")]
