@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -19,8 +20,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //MIENTRAS ESTÉN VIGENTES LOS DNU COVID
 
             var res = new ResultadoClausula();
-            res.Texto += "Dada la circunstancia excepcional que se está viviendo en virtud del dictado del Decreto de Necesidad y Urgencia Nº 297/2020, que estableció " +
-            "el aislamiento social preventivo y obligatorio, el contrato se envía en PDF por mail a la Bolsa de Cereales para su registro y consecuente cobro del Impuesto de Sellos.";
+            res.Texto += "";
+            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
+            {
+                res.Texto += "A los fines de cumplir con normas legales e impositivas, el vendedor/corredor se encuentra obligado a remitir al comprador el original del presente boleto, debidamente suscripto, a efectos de su presentación en la Bolsa de Cereales.";
+            }
             return res;
         }
     }

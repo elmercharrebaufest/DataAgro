@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             // MIENTRAS ESTÉN VIGENTES LOS DNU COVID
 
             var res = new ResultadoClausula();
-            res.Texto += "En atención a lo establecido precedentemente, una vez levantado el aislamiento social preventivo y obligatorio, el contrato/boleto será entregado en original.";
+            res.Texto += "";
             return res;
         }
     }

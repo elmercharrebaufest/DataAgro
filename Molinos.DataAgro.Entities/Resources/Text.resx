@@ -484,7 +484,10 @@
     <value>Razón Social</value>
   </data>
   <data name="Eliminar_Registro_Research" xml:space="preserve">
-    <value>Eliminar Registro Research</value>
+    <value>Eliminar Registros Research</value>
+  </data>
+  <data name="Sincronizar_Research" xml:space="preserve">
+    <value>Sincronizar Datos Research</value>
   </data>
   <data name="Reasignar_Flete" xml:space="preserve">
     <value>Reasignar Flete Procedencia</value>

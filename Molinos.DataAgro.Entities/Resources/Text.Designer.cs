@@ -1033,7 +1033,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Eliminar Registro Research.
+        ///   Looks up a localized string similar to Eliminar Registros Research.
         /// </summary>
         public static string Eliminar_Registro_Research {
             get {
@@ -2100,6 +2100,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Servicio_Auth {
             get {
                 return ResourceManager.GetString("Servicio_Auth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sincronizar Datos Research.
+        /// </summary>
+        public static string Sincronizar_Research {
+            get {
+                return ResourceManager.GetString("Sincronizar_Research", resourceCulture);
             }
         }
         

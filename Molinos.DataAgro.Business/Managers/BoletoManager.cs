@@ -25,6 +25,9 @@ using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.css;
 using Molinos.DataAgro.Entities.Common.Enums;
 using System.Globalization;
+using System.Drawing.Imaging;
+using System.Net.Http;
+using System.Reflection;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -78,6 +81,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
+
                         if (consultaBoleto.Generado == "" || consultaBoleto.Generado.Equals("X")) // probar casos anulados
                         {
                             var tempBoleto = new BoletoGeneradoDto
@@ -394,6 +398,16 @@ namespace Molinos.DataAgro.Business.Managers
                         string templateFilePath = ObtenerPath(basico);
 
                         var templateString = System.IO.File.ReadAllText(templateFilePath);
+
+
+                        string imagePath = Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)) + @"\Molinos.DataAgro.Business\Resources\bolsarosariologo.png";
+
+                        // Convertir la imagen a Base64
+                        string base64Image = ImageToBase64(imagePath, ImageFormat.Png);
+
+                        // Reemplazar el marcador de posición con la imagen en Base64
+                        templateString = templateString.Replace("{BOLSAROSARIO_LOGO_URL}", $"data:image/png;base64,{base64Image}");
+
 
                         var xHtml = templateString;
                         xHtml = CompletarHtml(basico, clausulas, boleto, xHtml, false);
@@ -836,6 +850,19 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return cuit;
+        }
+
+        private string ImageToBase64(string imagePath, ImageFormat format)
+        {
+            using (System.Drawing.Image image = System.Drawing.Image.FromFile(imagePath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, format);
+                    byte[] imageBytes = ms.ToArray();
+                    return Convert.ToBase64String(imageBytes);
+                }
+            }
         }
     }
 }
