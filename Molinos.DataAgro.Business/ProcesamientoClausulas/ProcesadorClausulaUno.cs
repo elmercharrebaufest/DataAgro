@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaUno clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+            if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 res.Texto = "El VENDEDOR vende al COMPRADOR";
             }
