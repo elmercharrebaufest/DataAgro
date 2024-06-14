@@ -400,15 +400,6 @@ namespace Molinos.DataAgro.Business.Managers
                         var templateString = System.IO.File.ReadAllText(templateFilePath);
 
 
-                        string imagePath = Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)) + @"\Molinos.DataAgro.Business\Resources\bolsarosariologo.png";
-
-                        // Convertir la imagen a Base64
-                        string base64Image = ImageToBase64(imagePath, ImageFormat.Png);
-
-                        // Reemplazar el marcador de posición con la imagen en Base64
-                        templateString = templateString.Replace("{BOLSAROSARIO_LOGO_URL}", $"data:image/png;base64,{base64Image}");
-
-
                         var xHtml = templateString;
                         xHtml = CompletarHtml(basico, clausulas, boleto, xHtml, false);
 

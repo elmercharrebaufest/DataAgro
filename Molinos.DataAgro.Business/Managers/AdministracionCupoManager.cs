@@ -4,14 +4,12 @@ using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -20,7 +18,7 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class AdministracionCupoManager : IAdministracionCupoManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ICupoManager cupoManager;
         private readonly IMailManager mailManager;
@@ -44,6 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerAdministracionCupoExcedente(request, comercialId));
         }
+        
         public AdministracionCupoDto TraerAdministracionCupo(int id)
         {
             return repositorio.Obtener<AdministracionCupo, AdministracionCupoDto>(x => x.Id == id, x => new AdministracionCupoDto
@@ -52,26 +51,23 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha
             });
         }
+        
         public CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, int cantidadOriginal, int cantidadFleteOriginal, string active, string motivo)
         {
             try
             {
-                bool activarLogDebug = false;
-                if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
-                {
-                    activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
-                }
-
+                bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] != null && ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+                
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
                 if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.Pendiente)
                 {
-                    resultado.Error("Solicitud", "La solicitud no puede ser editada. No se encuentra en estado pendiente");
+                    resultado.Error("Solicitud", "La solicitud no puede ser editada porque no se encuentra en estado pendiente");
                     return resultado;
                 }
                 if (solicitud.CantidadCupo != cantidadOriginal || solicitud.CantidadFleteProcedencia != cantidadFleteOriginal)
                 {
-                    resultado.Error("Solicitud", $"- La solicitud con fecha { solicitud.Fecha.ToString("dd-MM-yyyy") }, proveedor { solicitud.Proveedor.RazonSocial } y destino {solicitud.Centro.Descripcion} no puede ser confirmada/aceptada porque ha sido editada por el usuario.<br /><br />");
+                    resultado.Error("Solicitud", $"- La solicitud con fecha {solicitud.Fecha.ToString("dd-MM-yyyy")}, proveedor {solicitud.Proveedor.RazonSocial} y destino {solicitud.Centro.Descripcion} no puede ser confirmada/aceptada porque ha sido editada por el usuario.<br /><br />");
                     return resultado;
                 }
 
@@ -119,14 +115,14 @@ namespace Molinos.DataAgro.Business.Managers
                         Fason = false,
                         Destinatario = solicitud.SugerenciaCupo.Destinatario,
                         FechaGeneracion = DateTime.Now,
-                        Observaciones = null,//---
-                        CupoSap = "",//---
-                        FleteProcedencia = false,//---
-                        EstadoCupoId = 1,//---
-                        CupoStop = null,//---
-                        CreacionStop = "",//---
-                        ErrorStop = "",//---
-                        NegocioId = solicitud.SugerenciaCupo.NegocioId,
+                        Observaciones = null,
+                        CupoSap = "",
+                        FleteProcedencia = false,
+                        EstadoCupoId = 1,
+                        CupoStop = null,
+                        CreacionStop = "",
+                        ErrorStop = "",
+                        NegocioId = solicitud.NegocioId ?? solicitud.SugerenciaCupo.NegocioId,
                         ConfiguracionEspacioDinamicoId = solicitud.SugerenciaCupo.ConfiguracionEspacioDinamicoId,
                         TipoNegocioId = solicitud.SugerenciaCupo.TipoNegocioId,
                         ConDescarga = solicitud.ConDescarga,
@@ -194,14 +190,14 @@ namespace Molinos.DataAgro.Business.Managers
                         Fason = solicitud.Fason ?? false,
                         Destinatario = solicitud.Destinatario,
                         FechaGeneracion = DateTime.Now,
-                        Observaciones = null,//---
-                        CupoSap = "",//---
-                        FleteProcedencia = false,//---
-                        EstadoCupoId = 1,//---
-                        CupoStop = null,//---
-                        CreacionStop = "",//---
-                        ErrorStop = "",//---
-                        NegocioId = null,
+                        Observaciones = null,
+                        CupoSap = "",
+                        FleteProcedencia = false,
+                        EstadoCupoId = 1,
+                        CupoStop = null,
+                        CreacionStop = "",
+                        ErrorStop = "",
+                        NegocioId = solicitud.NegocioId,
                         ConfiguracionEspacioDinamicoId = null,
                         TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
                         AdministracionCupoId = administracionId,
@@ -241,7 +237,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (resultado.ListaCupos.Count > 0)
                         solicitud.Motivo = motivo;
-                    if (resultado.ListaCupos.Count > 0) { 
+                    if (resultado.ListaCupos.Count > 0)
+                    {
                         if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
                         EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
                         if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");

@@ -496,7 +496,9 @@
     <Content Include="Content\Images\agro.png" />
     <Content Include="Content\Images\agro2.png" />
     <Content Include="Content\Images\bolsacereales.png" />
-    <Content Include="Content\Images\bolsarosario.png" />
+    <Content Include="Content\Images\bolsarosario.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\buscar-proveedor.png" />
     <Content Include="Content\Images\calendario.png" />
     <Content Include="Content\Images\cme.png" />

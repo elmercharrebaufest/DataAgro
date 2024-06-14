@@ -25,6 +25,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Net;
+using KendoGridBinder.Extensions;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -83,11 +84,8 @@ namespace Molinos.DataAgro.Business.Managers
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias, bool validarDisponibilidad = true)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
-            bool activarLogDebug = false;
-            if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
-            {
-                activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
-            }
+            bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] != null && ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+            
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
@@ -5212,12 +5210,24 @@ namespace Molinos.DataAgro.Business.Managers
             var result = new CupoResult();
             try
             {
+                Configuracion datosConfiguracion = repositorio.Obtener<Configuracion>(1);
                 var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == solicitud.CentroId.ToString(), x => x.Id);
                 var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
                 var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
+                int? negocioAsociado = null;
+                if (!string.IsNullOrEmpty(solicitud.ContratoSAP))
+                {
+                    solicitud.ContratoSAP = solicitud.ContratoSAP.PadLeft(10, '0');
+                    negocioAsociado = repositorio.Obtener<Negocio>(x => x.ContratoSAP == solicitud.ContratoSAP).Id;
+                } else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value)
+                {
+                    result.Error("VincularNegocio", "Debe vincular la solicitud a un negocio completando el campo 'N° de Contrato'.");
+                    return result;
+                }
+
                 if (zona == null)
                 {
-                    result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
+                    result.Error("Zona", "El comercial seleccionado no tiene una zona cupo asignada.");
                     return result;
                 }
 
@@ -5231,7 +5241,6 @@ namespace Molinos.DataAgro.Business.Managers
                     result.Errores = resultado.Errores;
                     return result;
                 }
-                //var configuracion = repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == solicitud.MaterialId && x.Centro.CodigoSap == solicitud.CentroId.ToString() && x.Fecha == solicitud.Fecha.Date);
 
                 string active = PermisosHelper.ObtenerUsuario();
                 var creadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
@@ -5254,7 +5263,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var configuracion = repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == solicitud.MaterialId && x.Centro.CodigoSap == solicitud.CentroId.ToString() && x.Fecha == itemDias.Fecha);
                         if (configuracion == null)
                         {
-                            result.Error("Configuracion", "No hay cupera creada para el dia " + itemDias.Fecha.ToString("dd/MM/yyyy"));
+                            result.Error("Configuracion", "No hay cupera creada para el día " + itemDias.Fecha.ToString("dd/MM/yyyy"));
                             return result;
                         }
                         listaConfiguraciones.Add(configuracion);
@@ -5264,12 +5273,6 @@ namespace Molinos.DataAgro.Business.Managers
                 if (string.IsNullOrEmpty(solicitud.Destinatario))
                     solicitud.Destinatario = "30715118773";
 
-
-                //if (configuracion == null)
-                //{
-                //    result.Error("Configuracion", "No hay cupera creada para el dia seleccionado.");
-                //    return result;
-                //}
                 List<string> listaSolicitudesGeneradas = new List<string>();
                 foreach (var itemConfiguracion in listaConfiguraciones)
                 {
@@ -5277,24 +5280,24 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         Cupo cupo = new Cupo
                         {
-                            ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
+                            ProveedorId = solicitud.ProveedorId ?? solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
                             CentroId = centro,
                             MaterialId = solicitud.MaterialId,
                             FechaIngreso = solicitud.Fecha,
                             ZonaCupoId = zona.Id,
                             ComercialId = solicitud.ComercialId,
                             Calidad = solicitud.Calidad,
-                            Fason = solicitud.Fason.HasValue ? solicitud.Fason.Value : false,
+                            Fason = solicitud.Fason ?? false,
                             Destinatario = solicitud.Destinatario,
                             FechaGeneracion = DateTime.Now,
-                            Observaciones = null,//---
-                            CupoSap = "",//---
-                            FleteProcedencia = solicitud.CantidadFleteProcedencia > 0,//---
-                            EstadoCupoId = 1,//---
-                            CupoStop = null,//---
-                            CreacionStop = "",//---
-                            ErrorStop = "",//---
-                            NegocioId = null,
+                            Observaciones = null,
+                            CupoSap = "",
+                            FleteProcedencia = solicitud.CantidadFleteProcedencia > 0,
+                            EstadoCupoId = 1,
+                            CupoStop = null,
+                            CreacionStop = "",
+                            ErrorStop = "",
+                            NegocioId = negocioAsociado,
                             ConfiguracionEspacioDinamicoId = null,
                             TipoNegocioId = 7,
                             ConDescarga = solicitud.ConDescarga,
@@ -5325,12 +5328,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = solicitud.CantidadFleteProcedencia, Fecha = solicitud.Fecha } });
                             }
                         }
-                        //foreach(string itemCupo in result.ListaCupos)
-                        //{
-                        //    listaSolicitudesGeneradas.Add("Se generó el cupo " + itemCupo + " para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy"));
-                        //}
 
-                        listaSolicitudesGeneradas.Add("Cupo(s) generado(s) para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy"));
+                        listaSolicitudesGeneradas.Add($"Cupo(s) generado(s) para el {itemConfiguracion.Fecha:dd/MM/yyyy}");
                         if (result.HayError)
                         {
                             foreach (var err in result.Errores)
@@ -5359,11 +5358,9 @@ namespace Molinos.DataAgro.Business.Managers
                             AdministracionCupo solicitudItem = new AdministracionCupo
                             {
                                 Calidad = solicitud.Calidad,
-                                CantidadCupo = solicitud.CantidadCupo > 0 ? itemD.Cantidad.HasValue ? itemD.Cantidad.Value : 0 : 0,
-                                CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia > 0 ? itemD.Cantidad.HasValue ? itemD.Cantidad.Value : 0 : 0,
-                                //Centro = solicitud.Centro,
+                                CantidadCupo = solicitud.CantidadCupo > 0 ? itemD.Cantidad ?? 0 : 0,
+                                CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia > 0 ? itemD.Cantidad ?? 0 : 0,
                                 CentroId = solicitud.CentroId,
-                                //Comercial = solicitud.Comercial,
                                 ComercialCreadorId = solicitud.ComercialCreadorId,
                                 ComercialId = solicitud.ComercialId,
                                 ConDescarga = solicitud.ConDescarga,
@@ -5375,7 +5372,6 @@ namespace Molinos.DataAgro.Business.Managers
                                 FechaCreacion = solicitud.FechaCreacion,
                                 FechaDecision = solicitud.FechaDecision,
                                 Id = solicitud.Id,
-                                //Material = 
                                 MaterialId = solicitud.MaterialId,
                                 Observacion = solicitud.Observacion,
                                 ProveedorId = solicitud.ProveedorId,
@@ -5384,9 +5380,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
                                 EPA = solicitud.EPA,
+                                NegocioId = negocioAsociado,
                             };
-                            repositorio.Agregar(solicitudItem);
 
+                            repositorio.Agregar(solicitudItem);
                         }
                         else
                         {
@@ -5395,9 +5392,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Calidad = solicitud.Calidad,
                                 CantidadCupo = solicitud.CantidadCupo,
                                 CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia,
-                                //Centro = solicitud.Centro,
                                 CentroId = solicitud.CentroId,
-                                //Comercial = solicitud.Comercial,
                                 ComercialCreadorId = solicitud.ComercialCreadorId,
                                 ComercialId = solicitud.ComercialId,
                                 ConDescarga = solicitud.ConDescarga,
@@ -5409,7 +5404,6 @@ namespace Molinos.DataAgro.Business.Managers
                                 FechaCreacion = solicitud.FechaCreacion,
                                 FechaDecision = solicitud.FechaDecision,
                                 Id = solicitud.Id,
-                                //Material = 
                                 MaterialId = solicitud.MaterialId,
                                 Observacion = solicitud.Observacion,
                                 ProveedorId = solicitud.ProveedorId,
@@ -5431,12 +5425,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al GenerarSolicitudExtraordinaria");
-                logger.Error(e);
+                logger.Error("Error al GenerarSolicitudExtraordinaria: ", e);
                 result.Error("", "Ha ocurrido un error al generar la solicitud.");
                 return result;
             }
-
         }
 
         public List<MensajeCupoDto> MostrarDetalle(int comercialSeleccionado, string centro, int materialId)
@@ -6612,7 +6604,6 @@ namespace Molinos.DataAgro.Business.Managers
         //    return resultado;
         //}
 
-
         public void ActualizarCumplimientoCupos(DateTime ayer)
         {
             var hoy = ayer.AddDays(1);
@@ -6986,6 +6977,57 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(resource);
             mailManager.EnviarMail(destinatarios, asunto, "", copia, alternateView);
+        }
+
+        public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
+        {
+            List<NegocioParaSolicitarCupo> negocios = new List<NegocioParaSolicitarCupo>();
+            if (string.IsNullOrEmpty(contratoSap))
+            {
+                negocios = repositorio.Listar<Negocio, NegocioParaSolicitarCupo>(x => new NegocioParaSolicitarCupo
+                {
+                    NegocioId = x.Id,
+                    ContratoSAP = x.ContratoSAP,
+                    ProveedorId = (int)x.ProveedorId,
+                    RazonSocialProveedor = x.Proveedor.RazonSocial,
+                    EstadoNegocioId = x.EstadoId,
+                    EstadoNegocio = x.Estado.Descripcion,
+                    MaterialId = x.MaterialId,
+                    FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta
+                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId &&
+                (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
+            }
+            else
+            {
+                contratoSap = contratoSap.PadLeft(10, '0');
+                var negocio = repositorio.Obtener<Negocio, NegocioParaSolicitarCupo>(x => x.ContratoSAP == contratoSap && x.ProveedorId == proveedorId && x.MaterialId == materialId
+                && (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado),
+                    x => new NegocioParaSolicitarCupo
+                    {
+                        NegocioId = x.Id,
+                        ContratoSAP = x.ContratoSAP,
+                        ProveedorId = (int)x.ProveedorId,
+                        RazonSocialProveedor = x.Proveedor.RazonSocial,
+                        EstadoNegocioId = x.EstadoId,
+                        EstadoNegocio = x.Estado.Descripcion,
+                        MaterialId = x.MaterialId,
+                        FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta
+                    });
+                if (negocio != null) negocios.Add(negocio);
+            }
+
+            if (negocios.Any())
+            {
+                List<ContratoKgPendiente> negociosKg = negocios.Select(a => new ContratoKgPendiente { ContratoId = a.NegocioId, ContratoSAP = a.ContratoSAP }).ToList();
+                negociosKg = contratoKgPendienteAgent.Consultar(negociosKg);
+                foreach (var item in negocios)
+                {
+                    var kgPendientes = negociosKg.Find(a => a.ContratoSAP == item.ContratoSAP).KgPendiente;
+                    item.KgPendientes = kgPendientes;
+                    item.CuposSegunKg = (int)Math.Ceiling(kgPendientes / 30000d);
+                }
+            }
+            return negocios;
         }
     }
 }
