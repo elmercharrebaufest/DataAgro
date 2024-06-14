@@ -58,8 +58,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     context.Load(listAttachments);
                     context.ExecuteQuery(); //esto es lo que ejecuta lo que armamos antes, sin eso es como no hacer nada
 
-                    // a la lista/pagina le pedimos que nos traiga todos los items
-                    CamlQuery query = CamlQuery.CreateAllItemsQuery(); // aca se puede mejorar para filtrar los ya sinconinizados
+                    CamlQuery query = CamlQuery.CreateAllItemsQuery();
                     ListItemCollection itemsResearch = listResearch.GetItems(query);
                     ListItemCollection itemsAttachment = listAttachments.GetItems(query);
                     context.Load(itemsResearch);
@@ -184,10 +183,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 0, MidpointRounding.AwayFromZero); //el rendimiento se muestra solo en su parte entera
                             }
 
-                            //string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
-                            itemData.PromedioMuestraUno = Math.Round((double)itemData.PromedioMuestraUno, 2); //los decimales exactos son necesarios para el cálculo del rendimiento pero no para mostrarse luego
-                            itemData.PromedioMuestraDos = Math.Round((double)itemData.PromedioMuestraDos, 2);
-                            itemData.PromedioMuestraTres = Math.Round((double)itemData.PromedioMuestraTres, 2);
+                            itemData.PromedioMuestraUno = itemData.PromedioMuestraUno != null ? Math.Round((double)itemData.PromedioMuestraUno, 2) : (double?)null; //los decimales exactos son necesarios para el cálculo del rendimiento pero no para mostrarse luego
+                            itemData.PromedioMuestraDos = itemData.PromedioMuestraDos != null ? Math.Round((double)itemData.PromedioMuestraDos, 2) : (double?)null;
+                            itemData.PromedioMuestraTres = itemData.PromedioMuestraTres != null ? Math.Round((double)itemData.PromedioMuestraTres, 2) : (double?)null;
 
                             var adjuntos = itemsAttachment.Where(x => Convert.ToInt32(x["ID_Relevamiento"]) == Convert.ToInt32(item["ID"])).ToList();
 
@@ -224,15 +222,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 repositorio.Agregar(itemData);
                                 contadorAgregados++;
-                                //if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") //Santiago Barbarotta pide borrar al sincronizar también en QA (04/06/24)
-                                //{
-                                //    logger.Info($"Simula eliminar en SharePoint el registro {itemData.IdPowerApp}");
-                                //}
-                                //else
-                                //{
+
                                 item.DeleteObject();
                                 context.ExecuteQuery();
-                                //}
                             }
                         }
                         catch (Exception e)

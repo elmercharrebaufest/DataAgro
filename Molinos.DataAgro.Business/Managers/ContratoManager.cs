@@ -339,15 +339,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var sisa = new SISA();
                 if (oParam.ClasificacionId == 1)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == (int)EnumEstadoSisa.PRODUCTOR && x.SituacionCategoria == "AL");
                 }
                 else if (oParam.ClasificacionId == 2)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == (int)EnumEstadoSisa.ACOPIADOR && x.SituacionCategoria == "AL");
                 }
                 else if (oParam.ClasificacionId == 3)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.CodCategoria != 19 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != (int)EnumEstadoSisa.PRODUCTOR && x.CodCategoria != (int)EnumEstadoSisa.ACOPIADOR && x.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS && x.SituacionCategoria == "AL");
                 }
                 if (sisa != null)
                 {
@@ -363,7 +363,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA.");
                     }
-                    if (sisa.CodCategoria == 19)
+                    if (sisa.CodCategoria == (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS)
                     {
                         oErrorMessages.Error("ProveedorId", "No operable por categoría Operador de Derivados Granarios.");
                     }
@@ -375,7 +375,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (corredor != null)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 2 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == (int)EnumEstadoSisa.CORREDOR && x.SituacionCategoria == "AL");
 
                     if (sisa != null)
                     {
@@ -7106,15 +7106,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (clasificacion == 1)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == (int)EnumEstadoSisa.PRODUCTOR && x.SituacionCategoria == "AL");
                 }
                 else if (clasificacion == 2)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == (int)EnumEstadoSisa.ACOPIADOR && x.SituacionCategoria == "AL");
                 }
                 else if (clasificacion == 3)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.CodCategoria != 19 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != (int)EnumEstadoSisa.PRODUCTOR && x.CodCategoria != (int)EnumEstadoSisa.ACOPIADOR && x.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS && x.SituacionCategoria == "AL");
                 }
                 if (sisa != null)
                 {
@@ -7133,7 +7133,7 @@ namespace Molinos.DataAgro.Business.Managers
                         mensaje = "Proveedor No Operable por Situación Categoría BA";
                         return mensaje;
                     }
-                    if (sisa.CodCategoria == 19)
+                    if (sisa.CodCategoria == (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS)
                     {
                         mensaje = "No operable por categoría Operador de Derivados Granarios";
                     }

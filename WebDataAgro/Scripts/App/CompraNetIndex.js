@@ -2676,12 +2676,16 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
 
     if (EPA == "true") {
-        if (SustentableTipoDBId == 1) {
-            $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
+        if (tarifaAConvenir == "true") {
+            $("#visualizar_epaPrecio").text("Tarifa a Convenir");
+        } else {
+            if (SustentableTipoDBId == 1) {
+                $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
 
-        } else if (SustentableTipoDBId == 2) {
-            $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
-        } else $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+            } else if (SustentableTipoDBId == 2) {
+                $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
+            } else $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+        }
     } else {
         $("#visualizar_epaPrecio").text("null")
     }
