@@ -207,6 +207,7 @@
     <Compile Include="Dto\LogAnulacionContratoDto.cs" />
     <Compile Include="Dto\ManualesDto.cs" />
     <Compile Include="Dto\ManualesLogVisitas.cs" />
+    <Compile Include="Dto\NegocioParaSolicitarCupo.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
     <Compile Include="Dto\PartidoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
@@ -698,7 +699,7 @@
     <Compile Include="Dto\ReporteIndicadores.cs" />
     <Compile Include="Dto\ReporteProveedor.cs" />
     <Compile Include="Dto\RiesgoComercial.cs" />
-    <Compile Include="Dto\TraerContrato.cs" />
+    <Compile Include="Dto\BasicoContrato.cs" />
     <Compile Include="Dto\TraerProveedor.cs" />
     <Compile Include="Dto\BusquedaHome.cs" />
     <Compile Include="Dto\Home.cs" />
