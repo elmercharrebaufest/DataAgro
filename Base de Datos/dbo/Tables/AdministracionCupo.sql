@@ -23,6 +23,7 @@
     [Motivo] VARCHAR(2000) NULL, 
     [Sustentable] BIT NULL,
     [EPA] BIT NULL,
+    [NegocioId] INT NULL,
     CONSTRAINT [PK_AdministracionCupo] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_AdministracionCupo_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
     CONSTRAINT [FK_AdministracionCupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
@@ -31,5 +32,5 @@
     CONSTRAINT [FK_AdministracionCupo_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
     CONSTRAINT [FK_AdministracionCupo_TipoAdministracionCupo] FOREIGN KEY ([TipoAdministracionCupoId]) REFERENCES [dbo].[TipoAdministracionCupo] ([Id]),
     CONSTRAINT [FK_AdministracionCupo_Sugerencia] FOREIGN KEY ([SugerenciaCupoId]) REFERENCES [dbo].[SugerenciaCupo] ([Id]),
-	
+	CONSTRAINT [FK_AdministracionCupo_Negocio] FOREIGN KEY (NegocioId) REFERENCES [Negocio]([Id]),
 );

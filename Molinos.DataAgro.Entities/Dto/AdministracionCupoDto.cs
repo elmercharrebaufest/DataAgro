@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -17,7 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadFleteProcedencia { get; set; }
         public int CantidadDeCupoMax { get; set; }
         public int CantidadFleteProcedenciaMax { get; set; }
-        public int EstadoId { get; set; }       
+        public int EstadoId { get; set; }
         public int CentroId { get; set; }
         public int ZonaId { get; set; }
         public int MaterialId { get; set; }
@@ -50,5 +47,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadDeCupoOriginal { get; set; }
         public bool? Sustentable { get; set; }
         public bool? EPA { get; set; }
+        public string ContratoSAP { get; set; }
     }
 }

@@ -299,10 +299,10 @@
                             </label>
                         </div>
                         @*<div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 5 ? "checked" : "") value="5"> Girasol AO
-                            </label>
-                        </div>*@
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="materialId" @(materialId == 5 ? "checked" : "") value="5"> Girasol AO
+                                </label>
+                            </div>*@
                         <div class="form-check-inline">
                             <label class="form-check-label">
                                 <input type="radio" class="form-check-input" name="materialId" @(materialId == 6 ? "checked" : "") value="6"> Sorgo
@@ -750,7 +750,6 @@
 <script>
     var grupoSegmentacion = "";
     $("#CantidadCupoSE").kendoNumericTextBox({// al pasasrlo al js de solicitudCupo.js se rompe por mas que se ejecute en el document ready
-        optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
         culture: "es-AR",
         format: "n0",
         spinners: false,
@@ -787,7 +786,6 @@
 
             $("#ProveedorIdSE").val(e.dataItem.Id);
             grupoSegmentacion = e.dataItem.Grupo;
-            console.log(grupoSegmentacion);
         },
         dataSource: {
             severFiltering: true,

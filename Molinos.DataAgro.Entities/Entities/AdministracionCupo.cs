@@ -24,11 +24,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ComercialCreadorId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string Observacion { get; set; }
-
         public int? SugerenciaCupoId { get; set; }
+        public string Calidad { get; set; }
         public DateTime? FechaDecision { get; set; }
         public bool? ConDescarga { get; set; }
-
+        public string Motivo { get; set; }
+        public bool? Sustentable { get; set; }
+        public bool? EPA { get; set; }
+        public int? NegocioId { get; set; }
         [ForeignKey("SugerenciaCupoId")]
         public virtual SugerenciaCupo SugerenciaCupo { get; set; }
 
@@ -48,12 +51,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ZonaCupo Zona { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
-        public string Calidad { get; set; }
-        public string Motivo { get; set; }
-        public bool? Sustentable { get; set; }
-        public bool? EPA { get; set; }
+        [ForeignKey("NegocioId")]
+        public virtual Negocio Negocio { get; set; }
     }
 }
-
-
-

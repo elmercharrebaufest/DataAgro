@@ -1075,7 +1075,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CierreCupera, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<SugerenciaPorComercial>(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>()), Times.Once);
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<AdministracionCupo>>(), null), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -1086,6 +1086,36 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void VerificarSolicitudesExtraordinariasPendientesTest() {
             target.VerificarSolicitudesExtraordinariasPendientes(DateTime.Now);
+        }
+
+        [Test]
+        public void ListarNegociosParaSolicitarCupo_ConNroContrato()
+        {
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>()))
+                .Returns(new NegocioParaSolicitarCupo { ContratoSAP = "0002685378", ProveedorId = 1534, MaterialId = 3 });
+            contratoKgPendienteAgent.Setup(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()))
+                .Returns(new List<ContratoKgPendiente> { new ContratoKgPendiente { ContratoSAP = "0002685378", KgPendiente = 60000, ContratoId = 1 } });
+
+            var result = target.ListarNegociosParaSolicitarCupo("0002685378", 1534, 3, 0);
+
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>()), Times.Once);
+            contratoKgPendienteAgent.Verify(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ListarNegociosParaSolicitarCupo_SinNroContrato()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<NegocioParaSolicitarCupo>() { new NegocioParaSolicitarCupo { ContratoSAP = "0002685378", ProveedorId = 1534, MaterialId = 3 } });
+            contratoKgPendienteAgent.Setup(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()))
+                .Returns(new List<ContratoKgPendiente> { new ContratoKgPendiente { ContratoSAP = "0002685378", KgPendiente = 60000, ContratoId = 1 } });
+
+            var result = target.ListarNegociosParaSolicitarCupo(null, 1534, 3, 0);
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            contratoKgPendienteAgent.Verify(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()), Times.Once);
+            Assert.NotNull(result);
         }
     }
 }

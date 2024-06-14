@@ -518,6 +518,8 @@ function InicializarElementos() {
         change: function () {
             checkSoja();
             MostrarVisualizarStock();
+            $("#ContratoSE").data("kendoNumericTextBox").value('');
+            $("#gridContainer").hide();
         }
     });
     $("#CentroIdSE").kendoDropDownList({
@@ -535,7 +537,6 @@ function InicializarElementos() {
         filter: "contains",
         popup: {
             appendTo: $("#modalSolicitudExtraordinaria"),
-            //origin: "bottom right"
         }
     });
 
@@ -558,10 +559,7 @@ function InicializarElementos() {
         }
     });
 
-
-
     $("#FechaHastaSE").kendoDatePicker({
-        //min: kendo.parseDate($("#FechaSE").data("kendoDatePicker").value()),
         min: kendo.parseDate($("#FechaSE").val()),
         change: function () {
             CrearTablaFechaHasta();
@@ -594,6 +592,13 @@ function InicializarElementos() {
             $("#Sustentable").prop("checked", false);
         }
         MostrarVisualizarStock();
+    });
+
+    $("#ContratoSE").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "0:0",
+        spinners: false,
+        min: 0
     });
 }
 
@@ -655,6 +660,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     //$("#ComercialIdSE").data("kendoDropDownList").value('');
     $("#ObservacionSE").val('');
     $("#CantidadCupoSE").data("kendoNumericTextBox").value('');
+    $("#ContratoSE").data("kendoNumericTextBox").value('');
     $("#CuitES").val('');
     $("#FasonES").prop("checked", false);
     $("#FleteAcarreoES").prop("checked", false);
@@ -793,7 +799,8 @@ function grabarSolicitudExtraordinaria() {
             ConDescarga: $("#ConDescarga").is(':checked'),
             Sustentable: $("#Sustentable").is(':checked'),
             EPA: $("#EPA").is(':checked'),
-            Dias: dataTabla
+            Dias: dataTabla,
+            ContratoSAP: $("#ContratoSE").data("kendoNumericTextBox").value(),
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
         ListarRespuesta(result);
@@ -1076,6 +1083,69 @@ function stringToDate(_date, _format, _delimiter) {
     var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
     return formatedDate;
 }
-//stringToDate("17/9/2014", "dd/MM/yyyy", "/");
-//stringToDate("9/17/2014", "mm/dd/yyyy", "/")
-//stringToDate("9-17-2014", "mm-dd-yyyy", "-")
+
+function buscarContratoSE() {
+    var contratoSap = $("#ContratoSE").val();
+    var proveedorId = $("#ProveedorIdSE").val();
+    var materialId = $("#MaterialIdSE").data("kendoDropDownList").value();
+    var estadoId = $('input[name="estadoContrato"]:checked').val();
+
+    if (!proveedorId || !materialId) {
+        MensInfo("Elija un proveedor y material para buscar contratos.");
+        return;
+    }
+
+    $.ajax({
+        url: '/Cupo/ListarNegociosParaSolicitarCupo',
+        type: 'GET',
+        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId },
+        success: function (result) {
+            if (result && result.length > 0) {
+                $("#gridContainer").show();
+                $("#noResultsMessage").hide();
+                $("#grid").show().kendoGrid({
+                    dataSource: {
+                        data: result,
+                        schema: {
+                            model: {
+                                fields: {
+                                    ContratoSAP: { type: "string" },
+                                    NegocioId: { type: "number" },
+                                    RazonSocialProveedor: { type: "string" },
+                                    EstadoNegocio: { type: "string" },
+                                    KgPendientes: { type: "number" },
+                                    CuposSegunKg: { type: "number" },
+                                    FechaHasta: { type: "date" }
+                                }
+                            }
+                        }
+                    },
+                    height: 150,
+                    contentHeight: 150,
+                    scrollable: true,
+                    selectable: "row",
+                    columns: [
+                        { field: "NegocioId", title: "ID interno", width: 80, attributes: { style: "text-align: center;" } },
+                        { field: "ContratoSAP", title: "Contrato SAP", width: 110, attributes: { style: "text-align: center;" } },
+                        { field: "RazonSocialProveedor", title: "Proveedor", width: 150 },
+                        { field: "KgPendientes", title: "Kilos pend.", format: "{0:N2}", width: 100 },
+                        { field: "CuposSegunKg", title: "Cupos pend.", width: 100, attributes: { style: "text-align: center;" }, headerAttributes: { "title": "Cupos según kilos" } },
+                        { field: "FechaHasta", title: "Fecha Hasta", width: 100, format: "{0:dd/MM/yyyy}", attributes: { style: "text-align: center;" } },
+                        { field: "EstadoNegocio", title: "Estado", width: 90, attributes: { style: "text-align: center;" } }
+                    ],
+                    change: onSelect
+                });
+            } else {
+                $("#grid").hide();
+                $("#gridContainer").hide();
+                $("#noResultsMessage").show();
+                $("#ContratoSE").data("kendoNumericTextBox").value('');
+            }
+        }
+    });
+}
+
+function onSelect() {
+    var selectedData = this.dataItem(this.select());
+    $("#ContratoSE").data("kendoNumericTextBox").value(selectedData.ContratoSAP);
+}

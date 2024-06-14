@@ -711,5 +711,15 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        
+        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
+        {
+            return new JsonResult()
+            {
+                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId),
+                MaxJsonLength = Int32.MaxValue, 
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
     }
 }
