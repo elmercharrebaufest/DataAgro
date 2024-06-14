@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -43,14 +44,14 @@ namespace Molinos.DataAgro.Test.Managers
                     Id = 1, 
                     Categoria = "A", 
                     CBU = "1", 
-                    CodCategoria = 1, CUIT = "1", EstadoCuit = 1, FechaActCBU = fecha, FechaGeneracion = fecha, 
+                    CodCategoria = (int)EnumEstadoSisa.PRODUCTOR, CUIT = "1", EstadoCuit = 1, FechaActCBU = fecha, FechaGeneracion = fecha, 
                     FechaNotifDFECategoria = fecha, FechaNotifDFEEstado = fecha, FechaVigenciaCategoria = fecha, FechaVigenciaEstado = fecha,
                     Observaciones = "", RazonSocial = "A", SituacionCategoria = "A" } };
 
             repositorioMock.Setup(x => x.Listar<SISA>(null, 0, null, Entities.Helpers.DirOrden.Asc)).Returns(datos);
             var result = target.InsertarSISA(new List<SISA>(), new List<SISA>() { new SISA {
                 CUIT = "1",
-                CodCategoria = 1,
+                CodCategoria = (int)EnumEstadoSisa.PRODUCTOR,
                 FechaVigenciaCategoria = DateTime.Now.AddDays(1),
                 SituacionCategoria="A",
                 FechaVigenciaEstado= DateTime.Now.AddDays(1),

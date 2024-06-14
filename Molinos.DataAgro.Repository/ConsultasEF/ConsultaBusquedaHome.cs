@@ -106,19 +106,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             if (item.ClasificacionId == 1)
                             {
                                 sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria == 1 && s.SituacionCategoria == "AL"
+                                        where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.PRODUCTOR && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
                             else if (item.ClasificacionId == 2)
                             {
                                 sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria == 6 && s.SituacionCategoria == "AL"
+                                        where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.ACOPIADOR && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
                             else
                             {
                                 sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria != 1 && s.CodCategoria != 6 && s.CodCategoria != 19 && s.SituacionCategoria == "AL"
+                                        where s.CUIT == item.Cuit && s.CodCategoria != (int)EnumEstadoSisa.PRODUCTOR && s.CodCategoria != (int)EnumEstadoSisa.ACOPIADOR && s.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
                             if (sisa != null)
@@ -141,7 +141,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                     item.Color = "red";
                                     continue;
                                 }
-                                if (sisa.CodCategoria == 19)
+                                if (sisa.CodCategoria == (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS)
                                 {
                                     item.Estado = "No operable por categoría Operador de Derivados Granarios";
                                     item.Color = "red";
@@ -161,7 +161,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     {
                         var sisa = new SISA();
                         sisa = (from s in contexto.Set<SISA>()
-                                where s.CUIT == item.Cuit && s.CodCategoria == 2 && s.SituacionCategoria == "AL"
+                                where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.CORREDOR && s.SituacionCategoria == "AL"
                                 select s).FirstOrDefault();
 
                         if (sisa != null)

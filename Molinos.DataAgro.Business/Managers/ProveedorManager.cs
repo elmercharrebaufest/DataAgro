@@ -5018,7 +5018,7 @@ namespace Molinos.DataAgro.Business.Managers
             var sisa = new SISA();
             if (segmentacionId == 5 || segmentacionId == 7) // CORREDOR
             {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.CodCategoria == 2 && x.SituacionCategoria == "AL");
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.CodCategoria == (int)EnumEstadoSisa.CORREDOR && x.SituacionCategoria == "AL");
 
                 if (sisa != null)
                 {
@@ -5046,7 +5046,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             { // PROVEEDOR
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL" && x.CodCategoria != 19);
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL" && x.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS);
 
                 if (sisa != null)
                 {
