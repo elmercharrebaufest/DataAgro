@@ -88,5 +88,34 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<Configuracion>(1);
 
         }
+
+        public Resultado SetExigirNegocioEnSolExt(bool valor)
+        {
+            var resultado = new Resultado();
+            var config = TraerConfiguraciones();
+
+            if (config != null)
+            {
+                config.ExigirNegocioEnSolExt = valor;
+            }
+            else
+            {
+                resultado.Error("Error:E404", "Entidad Configuracion No Encontrada");
+            }
+
+            try
+            {
+                repositorio.GuardarCambios();
+                logger.Debug("Se guardó correctamente");
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("Error:E000", "Guardado incorrecto"+ex.Message);
+                logger.Error(ex);
+                throw;
+            }
+
+            return resultado;
+        }
     }
 }
