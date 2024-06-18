@@ -106,12 +106,11 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logger.Debug("Se guardó correctamente");
+                logger.Debug("ExigirNegocioEnSolExt se guardó correctamente con valor "+valor+".");
             }
             catch (Exception ex)
             {
-                resultado.Error("Error:E000", "Guardado incorrecto"+ex.Message);
-                logger.Error(ex);
+                resultado.Error("Error:E000", "Guardado incorrecto"+ex);
                 throw;
             }
 

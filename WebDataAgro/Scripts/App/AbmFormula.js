@@ -554,7 +554,6 @@ $("body").on("change", '#vincularSolicitudExtraordinaria', function () {
         valor: valor,
     }
     var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowErrorMessages(result.Errores);
