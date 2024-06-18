@@ -2333,7 +2333,7 @@ function InicializarElementos() {
             $("#chequeElectronicoInput").prop("checked", false);
         } else {
             if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
-                $("#chequeElectronicoId").show();
+                //$("#chequeElectronicoId").show();
             } if (!$("#compensacionId").is(":checked")) {
                 //$("#chequeElectronicoDiv").show();
             }
