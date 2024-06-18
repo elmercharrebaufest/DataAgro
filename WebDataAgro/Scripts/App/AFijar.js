@@ -1308,7 +1308,7 @@ function InicializarElementos() {
             if (this.value() == "") {
                 $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
                 if ($("#tipoId").val() == "6") {
-                    $("#chequeElectronicoId").show();
+                    //$("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
                 }
                 $("#buscadorProveedor").val("");
