@@ -49,7 +49,7 @@ namespace WebDataAgro.Controllers
 
         private void FillViewBag()
         {
-            var tipoNegocio = tipoNegocioManager.TraerTodoTipoNegocio().FindAll(x => x.Descripcion.Contains("A FIJAR") || x.Descripcion.Contains("A PRECIO") || x.Descripcion.Contains("ESPACIO"));
+            var tipoNegocio = tipoNegocioManager.TraerTodoTipoNegocio().FindAll(x => x.Descripcion.Contains("A FIJAR") || x.Descripcion.Contains("A PRECIO") || x.Descripcion.Contains("ESPACIO") || x.Descripcion.Contains("AGENTE DE COMPRAS"));
             
             var tipoNegocioListItems = tipoNegocio.Select(
                x => new SelectListItem
