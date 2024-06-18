@@ -400,7 +400,7 @@ function InicializarElementos() {
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
                 } else {
-                    $("#chequeElectronicoDiv").show(); //MOSTRAR
+                    //$("#chequeElectronicoDiv").show(); //MOSTRAR
                 }
             }
             if ($("#buscadorCorredor").val() == "") {
@@ -881,7 +881,7 @@ function InicializarElementos() {
                     $("#ocultarAperturaBtn").show();
                     $("#ocultarAperturaMoneda").removeClass("w100");
                     $("#ocultarAperturaMoneda").addClass("w70");
-                    $("#chequeElectronicoDiv").show();
+                    //$("#chequeElectronicoDiv").show();
                     $("#chequeElectronicoId").hide();
                     $("#pagoCbuDiv").show();
                     $("#pagoCbuId").hide();
@@ -1296,7 +1296,7 @@ function InicializarElementos() {
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
                 } else {
-                    $("#chequeElectronicoDiv").show(); //MOSTRAR
+                    //$("#chequeElectronicoDiv").show(); //MOSTRAR
                 }
             } else {
                 $("#chequeElectronicoDiv").hide();
@@ -1424,7 +1424,7 @@ function InicializarElementos() {
             if (this.value() == "") {
                 $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
                 if ($("#tipoId").val() == "6") {
-                    $("#chequeElectronicoId").show();
+                    //$("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
                 }
 
@@ -1433,7 +1433,7 @@ function InicializarElementos() {
             }
 
             if (this.value() == "" && ($("#tipoId").val() == "2")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
                 $("#pagoCbuDiv").show();
             }
             if (this.value() >= 1) {
@@ -2127,7 +2127,7 @@ function InicializarElementos() {
             $("#dolarizadoDiv").show();
             $("#dolarizadoExpressId").prop("checked", false);
             $("#pesificadoId").prop("checked", false);
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
 
@@ -2173,7 +2173,7 @@ function InicializarElementos() {
             if (!$("#compensacionId").is(":checked")) {
                 $("#pagoCbuDiv").show();
                 if (!$("#pagoDirectoId").is(":checked")) {
-                    $("#chequeElectronicoDiv").show();
+                    //$("#chequeElectronicoDiv").show();
                 }
             }
         }
@@ -2335,7 +2335,7 @@ function InicializarElementos() {
             if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
                 $("#chequeElectronicoId").show();
             } if (!$("#compensacionId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             }
 
         }
@@ -2633,7 +2633,7 @@ function InicializarElementos() {
         filter: "contains",
         change: function () {
             if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#chequeElectronicoInput").prop("checked", false);
@@ -2681,7 +2681,7 @@ function InicializarElementos() {
         filter: "contains",
         change: function () {
             if ($("#pagoCbuInput").val() == "") {
-                $("#chequeElectronicoId").show();
+                //$("#chequeElectronicoId").show();
             } else {
                 $("#chequeElectronicoId").hide();
                 $("#chequeElectronico").prop("checked", false);
@@ -5530,7 +5530,7 @@ function CalcularNetoFijacionConDescuentos() {
 function HayCompensacion() {
     if (!$("#compensacionId").is(":checked")) {
         if (!$("#pagoDirectoId").is(":checked")) {
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
         }
         if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
             $("#pagoCbuDiv").show();
@@ -5761,7 +5761,7 @@ function HayVenta() {
             $("#consignatarioDiv").show();
         }
         $(".compensacionDiv").show();
-        $("#chequeElectronicoDiv").show();
+        //$("#chequeElectronicoDiv").show();
         $("#pagoCbuDiv").show();
         $(".venta").hide();
         $(".datos-venta").hide();

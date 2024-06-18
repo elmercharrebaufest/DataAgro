@@ -1575,7 +1575,7 @@ function InicializarElementos() {
                 }
             }
             if (this.value() == "" && ($("#tipoId").val() == "2")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
                 $("#pagoCbuDiv").show();
             }
             if (this.value() >= 1) {
@@ -2163,7 +2163,7 @@ function InicializarElementos() {
             $("#dolarizadoDiv").show();
             //$("#dolarizadoExpressId").prop("checked", false);
             $("#pesificadoId").prop("checked", false);
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
             //$("#fechaCiertaDiv").hide();
@@ -2208,7 +2208,7 @@ function InicializarElementos() {
             if (!$("#compensacionId").is(":checked") && fijacionVirtual != true) {
                 $("#pagoCbuDiv").show();
                 if (!$("#pagoDirectoId").is(":checked")) {
-                    $("#chequeElectronicoDiv").show();
+                    //$("#chequeElectronicoDiv").show();
                 }
             }
         }
@@ -2351,7 +2351,7 @@ function InicializarElementos() {
             if (($("#tipoId").val() == '6' || $("#tipoId").val() == '3') && fijacionVirtual != true) {
                 $("#chequeElectronicoId").show();
             } if (!$("#compensacionId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             }
 
         }
@@ -2617,7 +2617,7 @@ function InicializarElementos() {
         filter: "contains",
         change: function () {
             if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#chequeElectronicoInput").prop("checked", false);
@@ -4790,7 +4790,7 @@ function CalcularNetoFijacionConDescuentos() {
 function HayCompensacion() {
     if (!$("#compensacionId").is(":checked")) {
         if (!$("#pagoDirectoId").is(":checked") && fijacionVirtual != true) {
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
         }
         if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked") && fijacionVirtual != true) {
             $("#pagoCbuDiv").show();
