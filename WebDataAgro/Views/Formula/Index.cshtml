@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Algoritmo de Cupos";
+    var vincularActivo = (bool)ViewBag.Vincular;
 }
 @section Scripts {
     @Scripts.Render("~/bundles/AbmFormula")
@@ -19,6 +20,15 @@
         <div class="col-sm-1">
             <input id="deshabilitar" class="campo-input-input" type="checkbox" onclick="Deshabilitar()" />
         </div>
+        @if (PermisosHelper.Is(PermisosDataAgro.VincularNegocioConSolExt))
+        {
+            <div class="col-sm-3">
+                <label>Vincular Solic. Extraord. con Negocio</label>
+            </div>
+            <div class="col-sm-1">
+                @Html.CheckBox("vincularSolicitudExtraordinaria", vincularActivo)
+            </div>
+        }
     </div>
     <div class="form-group row">
         <div class="col-md-2">

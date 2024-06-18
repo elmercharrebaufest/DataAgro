@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -13,6 +14,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -26,14 +28,16 @@ namespace WebDataAgro.Controllers
         private ICupoManager cupoManager;
         private readonly IHttpContextManager httpContextManager;
         private ITipoNegocioManager tipoNegocioManager;
+        private readonly IConfiguracionManager configuracionManager;
 
-        public FormulaController(IFormulaManager oFormulaManager, IMaterialManager materialManager, ICupoManager cupoManager, IHttpContextManager httpContextManager, ITipoNegocioManager tipoNegocioManager)
+        public FormulaController(IFormulaManager oFormulaManager, IMaterialManager materialManager, ICupoManager cupoManager, IHttpContextManager httpContextManager, ITipoNegocioManager tipoNegocioManager, IConfiguracionManager configuracionManager)
         {
             mobjFormulaManager = oFormulaManager;
             this.materialManager = materialManager;
             this.cupoManager = cupoManager;
             this.httpContextManager = httpContextManager;
             this.tipoNegocioManager = tipoNegocioManager;
+            this.configuracionManager = configuracionManager;
         }
 
         [Autorizacion(PermisosDataAgro.AlgoritimoDeCupos)]
@@ -55,6 +59,8 @@ namespace WebDataAgro.Controllers
                    Selected = false
                }).OrderBy(x => x.Text);
             ViewBag.TipoNegocio = tipoNegocioListItems;
+            var config = configuracionManager.TraerConfiguraciones();
+            ViewBag.Vincular = config.ExigirNegocioEnSolExt.GetValueOrDefault();
         }
 
         public ActionResult Inicializar(int? MaterialId)
@@ -232,6 +238,17 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = modelo,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult VincularSolicitudExtraordinaria(bool valor)
+        {
+            var resultado = configuracionManager.SetExigirNegocioEnSolExt(valor);
+
+            return new JsonResult()
+            {
+                Data = resultado,
                 MaxJsonLength = Int32.MaxValue
             };
         }

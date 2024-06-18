@@ -2,8 +2,6 @@
 var viewModel;
 var data = new Array();
 
-
-
 $(document).ready(function () {
 
     kendo.culture("es-AR");
@@ -547,3 +545,21 @@ function actualizarTiposNegociosExcluidos() {
 
     
 }
+
+$("body").on("change", '#vincularSolicitudExtraordinaria', function () {
+    let valor = $("#vincularSolicitudExtraordinaria").prop("checked");
+    $("#vincularSolicitudExtraordinaria").prop("checked", !valor);
+
+    var datos = {
+        valor: valor,
+    }
+    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowErrorMessages(result.Errores);
+        } else {
+            $("#vincularSolicitudExtraordinaria").prop("checked", valor);
+            MensInfo("Actualizacion exitosa");
+        }
+    }
+});

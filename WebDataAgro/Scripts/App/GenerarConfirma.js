@@ -65,7 +65,6 @@ $("#Negocio").bind("paste", function (e) {//En caso de Pegar Codigos
 });
 
 function ListarNegocios() {
-    debugger
     //Obtenemos parametros
     var claseNegocio = $("#ClaseNegocioId").val();
     var hasta = $("#NegocioHasta").val();
@@ -190,7 +189,6 @@ function ArmarTabla(contratos) {
 }
 
 function CargarTablaModal(contratos) {
-    debugger
     $("#tabla-cap-pendientes").empty();
     var tabla = '';
     for (var i = 0; i < contratos.length; i++) {
