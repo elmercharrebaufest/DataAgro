@@ -1,23 +1,12 @@
-﻿using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Seguridad;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
-using NPOI.Util;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml;
-using WebDataAgro.Atributos;
 using WebDataAgro.Core;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -34,13 +23,11 @@ namespace WebDataAgro.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult Index()
+        public ActionResult DescargarConfirma()
         {
             return View();
         }
 
-        [HttpGet]
         public ActionResult GenerarConfirma()
         {
             CargarSeleccionables();

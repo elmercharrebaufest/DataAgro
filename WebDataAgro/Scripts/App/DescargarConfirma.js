@@ -28,7 +28,7 @@ $(document).ready(function () {
                 }
             },
             {
-                field: "LastWriteTime", title: "Fecha de Generacion", template: function (dataItem) {
+                field: "LastWriteTime", title: "Fecha de Generación", template: function (dataItem) {
                     return "<label  style=' color: black'> <strong>" + dataItem.FechaGeneracion + "</strong></label>"
                 }
             },
