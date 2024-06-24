@@ -1731,7 +1731,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadCuposFletesPermitidos = Math.Ceiling(oContrato.Cantidad / 30000);
                 if (cantidadCuposFletesPermitidos < sumaCuposCargaMasiva)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage(400, "La cantidad de cupos/fletes ingresados se exceden respecto a los KG del Negocio."));
+                    oEntityErrors.Errores.Add(new ErrorMessage(400, "La cantidad de cupos/fletes ingresados se exceden respecto a los kilos del negocio."));
                 }
             }
 
@@ -2083,7 +2083,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.Servicios != null && oContrato.Servicios.Count > 0)
             {
-                logger.Debug($"GrabarServicioModificado() para: id {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
+                logger.Debug($"GrabarServicioModificado para ID {oContrato.Id}, proveedor {oContrato.ProveedorId}, destino {oContrato.DestinoId}, fecha-desde {oContrato.FechaDesde}, cantidad {oContrato.Cantidad}, comercial {oContrato.ComercialId}");
                 GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
 
                 oContrato.Servicios = oContrato.Servicios.Where(x => listaFiltradaServicioValor.Contains(x.ServicioValorId)).ToList();
@@ -2122,7 +2122,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContratoSave.FechaConfirmacion = DateTime.Now;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                logger.Debug("El contrato " + oContrato.Id + " se confirmo automaticamente por estar dentro de los rangos configurados");
+                logger.Debug("El contrato " + oContrato.Id + " se confirmó automaticamente por estar dentro de los rangos configurados");
             }
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
@@ -2310,7 +2310,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (!TieneAsociados(contratoId))
                 {
-                    oEntityErrors.Error("", "El contrato no se puede confirmar por que no tiene negocios asociados.");
+                    oEntityErrors.Error("", "El contrato no se puede confirmar porque no tiene negocios asociados.");
                     return oEntityErrors;
                 }
                 else
@@ -2319,7 +2319,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (cantidad < (oContratoSave.Cantidad - cantidadMinima))
                 {
-                    oEntityErrors.Error("", "El contrato no se puede confirmar porque no cumple la cantidad de tolerancia minima." +
+                    oEntityErrors.Error("", "El contrato no se puede confirmar porque no cumple la cantidad de tolerancia mínima." +
                         " Kg Contrato: " + oContratoSave.Cantidad.ToString("N0") + ". Kg Mínimo: " + (oContratoSave.Cantidad - cantidadMinima).ToString("N0"));
                     return oEntityErrors;
                 }
@@ -2400,7 +2400,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado))
                         {
-                            oEntityErrors.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
+                            oEntityErrors.Error("", "La cantidad del negocio es mayor al saldo disponible del acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
                         }
                         else
                         {
@@ -2445,7 +2445,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo de rechazo");
                 return oEntityErrors;
             }
 
@@ -2585,7 +2585,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oContratoSave.Fecha < diaAnterior)
                 {
-                    oEntityErrors.Error("", "Fecha del contrato debe ser la de hoy o día hábil anterior");
+                    oEntityErrors.Error("", "La fecha del contrato debe ser la de hoy o día hábil anterior");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
@@ -2711,7 +2711,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato ya tiene ContratoSAP asignado. Por favor, comunicarse con sistemas.");
                     negocioManager.EnviarMailErrorFinalizarNegocio(contratoId);
                 }
-                logger.Debug(" Error Intentando finalizar el contrato " + contratoId + " estado: " + oContratoSave.EstadoId);
+                logger.Debug(" Error intentando finalizar el contrato ID " + contratoId + " y estadoId " + oContratoSave.EstadoId);
             }
             //repositorio.GuardarCambios();
             return oEntityErrors;
@@ -2758,7 +2758,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo de rechazo");
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
@@ -3619,7 +3619,7 @@ namespace Molinos.DataAgro.Business.Managers
             string th = "<th style=\"border: 1px solid white; color: white; text-align:center; background-color: #017940; padding: 5px 0; width: 175px;\">";
             string td = "<td style=\"border: 1px solid white; color: black; text-align:center; background-color: #a4e751; padding: 5px 0; width: 175px;\">";
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detallan los negocios a Confirmar creados por el comercial " + nombreApellido + ": <br /><br />  ";
+            htmlBody += "En el presente mail se detallan los negocios a confirmar creados por el comercial " + nombreApellido + ": <br /><br />  ";
             htmlBody += "<table><tr>" + th + "PROVEEDOR</th>" + th + "CANTIDAD</th>" + th + "PRECIO</th>" + th + "FECHA DE CARGA</th>" + th + "COMERCIAL</th></tr>";
             foreach (var contrato in contratosPendientes)
             {
@@ -3633,7 +3633,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</table>";
             htmlBody += "<br /><br /> Por favor revisarlos a la brevedad." +
-                "<br /> <br />  Saludos Cordiales" +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -3645,14 +3645,13 @@ namespace Molinos.DataAgro.Business.Managers
         public void FinalizacionAutomatica(string idActiveDirectory)
         {
             var contratosConfirmados = repositorio.Listar<Contrato, int>(a => a.Id, x => x.EstadoId == 2 || x.EstadoId == 4);
-            logger.Debug("Contratos a Finalizar: " + contratosConfirmados.Count);
-            logger.Debug("Contratos a Finalizar Ids: " + String.Join(", ", contratosConfirmados));
+            logger.Debug($"{contratosConfirmados.Count} contratos a finalizar con los ID {String.Join(", ", contratosConfirmados)}");
             var oEntityErrors = new GrabarContratoResult();
             foreach (var id in contratosConfirmados)
             {
                 try
                 {
-                    logger.Debug("Finalizando contrato: " + id);
+                    logger.Debug("Finalizando contrato con ID " + id);
                     var error = FinalizarContrato(id, idActiveDirectory);
                 }
                 catch (Exception ex)
@@ -3749,7 +3748,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                result.Error("", "No existe Contrato Madre");
+                result.Error("", "No existe el Contrato Madre");
                 return result;
             }
         }
@@ -3759,7 +3758,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo de rechazo");
                 return oEntityErrors;
             }
             EliminarNegociosAsociados(oContrato.Id);
@@ -3845,7 +3844,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    logger.Debug($"No existen Administrativos para Informar SIO");
+                    logger.Debug($"No existen administrativos para informar SIO");
                     return;
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
@@ -3898,9 +3897,9 @@ namespace Molinos.DataAgro.Business.Managers
             res.ContentId = Guid.NewGuid().ToString();
             Comercial comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             string htmlBody = "";
-            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP.TrimStart('0') + " de  SIO Granos <br /><br />  ";
-            htmlBody += "<br /><br /> Por favor anularlos a la brevedad y comunicarse con " + comercial.Nombres + " " + comercial.Apellido +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "Por el presente mail se solicita anular el contrato " + contrato.ContratoSAP.TrimStart('0') + " de  SIO Granos. <br /><br />  ";
+            htmlBody += "<br /><br /> Por favor, anularlo a la brevedad y comunicarse con " + comercial.Nombres + " " + comercial.Apellido + "." +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4153,7 +4152,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP && x.EstadoId != 8);
             if (contratoSave == null || contratoSave.Id == 0)
             {
-                error.Error("Contrato", "No existe contrato en DataAgro");
+                error.Error("Contrato", "No existe el contrato en DataAgro");
                 return error;
             }
 
@@ -4297,7 +4296,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP && x.EstadoId != 8);
             if (contratoSave == null || contratoSave.Id == 0)
             {
-                error.Error("Contrato", "No existe contrato en DataAgro");
+                error.Error("Contrato", "No existe el contrato en DataAgro");
                 return error;
             }
 
@@ -4775,7 +4774,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla modificaciones en el negocio con Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail se detallan modificaciones en el negocio con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
             htmlBody += "<tr  style=\"background-color: #FFB3A7;\">" + th + "FECHA</th>" + Td(ref linea);
@@ -5162,7 +5161,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oContrato.ChequeElectronico == true)
             {
@@ -5170,12 +5169,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.PagoCBU != null)
             {
-                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
+                htmlBody += "Pago con CBU: " + oContrato.PagoCBU + " <br />";
             }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> En caso de ser necesario, comuníquese con  " + oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -5425,8 +5424,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error Anular ContratoSap");
-                    logger.Error(e);
+                    logger.Error("Error AnularContratoSAP ", e);
                     oEntityErrors.Error("", e.Message);
                 }
             }
@@ -5561,8 +5559,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error Alta Contrato Sap ");
-                logger.Error(e);
+                logger.Error("Error AltaContratoSAP ", e);
             }
             return error;
         }
@@ -5672,7 +5669,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo de rechazo");
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<Contrato>(id);
@@ -5715,10 +5712,10 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             var mail = "";
-            try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD" + e.Message); }
+            try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD " + e.Message); }
 
             var contacto = fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (!string.IsNullOrEmpty(mail) ? " (" + mail + ")." : ".") : "Mesa de Ayuda.";
-            var htmlBody = $"En el presente mail se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado <br />" +
+            var htmlBody = $"En el presente mail se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado. <br />" +
                 $"Motivo: <br />  {fijacion.MotivoRechazo} <br />" +
                 $"Ante cualquier consulta contactarse con {contacto}" +
                 "<br /> <br />  Saludos Cordiales," +
@@ -5995,7 +5992,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new Resultado();
             if (string.IsNullOrEmpty(motivoRechazo) || string.IsNullOrWhiteSpace(motivoRechazo))
             {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                oEntityErrors.Error("Rechazo", "Debe indicar el motivo de rechazo");
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
@@ -6409,7 +6406,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP);
             if (contratoSave == null || contratoSave.Id == 0)
             {
-                error.Error("Contrato", "No existe contrato en DataAgro");
+                error.Error("Contrato", "No existe el contrato en DataAgro");
                 return error;
             }
             logger.Debug("Actualizando cesion contrato en BD DataAgro id: " + contratoSave.Id);
@@ -6436,7 +6433,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (fijacionesDeAfijar.Count > 0)
             {
-                error.Error("Contrato A fijar", "El contrato A fijar seleccionado tiene hechas fijaciones, en caso de querer continuar con esta anulación, por favor comunicarse con administración");
+                error.Error("Contrato A fijar", "El contrato A fijar seleccionado tiene fijaciones hechas. En caso de querer continuar con esta anulación, por favor comunicarse con administración.");
                 return error;
             }
             return error;
@@ -6502,7 +6499,7 @@ namespace Molinos.DataAgro.Business.Managers
             var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
             lista.Add(comercialRegistrado);
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-            logger.Debug("Enviando mail a Comercial Venta" + email);
+            logger.Debug("Enviando mail a Comercial Venta " + email);
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
@@ -7591,11 +7588,11 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (dsExcel.Tables.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].Rows.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].TableName != "AltaMasiva")
                 {
@@ -7670,7 +7667,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contratos.Add(contrato);
                     }
                     contratos.ForEach(x => x.MotivoOperacionAnterior = "Alta Masiva Acuerdo.");
-                    validacionContratoFatal(contratos, acuerdo, resultValidation);
+                    ValidacionContratoFatal(contratos, acuerdo, resultValidation);
                     if (!resultValidation.IsValid)
                     {
                         List<ExcelValidatorResumeItem> erroresList = new List<ExcelValidatorResumeItem>();
@@ -7710,9 +7707,9 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -7721,19 +7718,13 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> errores = new List<string>();
             try
             {
-                //int ncontratoAcuerdo;
-                //BasicoContrato acuerdo = contratoAcuerdoManager.TraerAcuerdo(1);
-                //if (acuerdo.Id == 0)
-                //{
-                //    throw new Exception("El Acuerdo seleccionado no es valido.");
-                //}
                 if (dsExcel.Tables.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].Rows.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].TableName != "AltaMasiva")
                 {
@@ -7949,9 +7940,9 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -7984,7 +7975,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private void validacionContratoFatal(List<BasicoContrato> contratos, BasicoContrato acuerdo, ExcelValidatorResult resultValidation)
+        private void ValidacionContratoFatal(List<BasicoContrato> contratos, BasicoContrato acuerdo, ExcelValidatorResult resultValidation)
         {
             int i = 0;
             foreach (var item in contratos)
@@ -8770,7 +8761,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP)).ToList();
             if (contratos != null && contratos.Count > 0)
             {
-                logger.Debug("Cambiar estado de contratos: Count" + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
+                logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
                 var estados = status.ValidarEstados(contratos.Select(x => x.ContratoSAP).ToList());
                 foreach (var contrato in contratos)
                 {
@@ -8877,29 +8868,23 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> errores = new List<string>();
             try
             {
-                //int ncontratoAcuerdo;
-                //BasicoContrato acuerdo = contratoAcuerdoManager.TraerAcuerdo(1);
-                //if (acuerdo.Id == 0)
-                //{
-                //    throw new Exception("El Acuerdo seleccionado no es valido.");
-                //}
                 if (dsExcel.Tables.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].Rows.Count == 0)
                 {
-                    throw new Exception("El Archivo no contiene información.");
+                    throw new Exception("El archivo no contiene información.");
                 }
                 if (dsExcel.Tables[0].TableName != "AltaMasiva")
                 {
                     if (dsExcel.Tables[0].TableName == "Data")
                     {
-                        throw new Exception("El documento no contiene información de contratos.");
+                        throw new Exception("El archivo no contiene información de contratos.");
                     }
                     else
                     {
-                        throw new Exception("El documento no tiene el formato correcto. Utilice el Archivo Modelo");
+                        throw new Exception("El archivo no tiene el formato correcto. Utilice el Archivo Modelo.");
                     }
                 }
                 var materiales = mobjMaterialManager.TraerTodoMaterial();
@@ -8949,7 +8934,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
                             var ret = new ExcelValidatorItemResult();
-                            ret.Errors.Add("No se encontro un proveedor para ese cuit.");
+                            ret.Errors.Add("No se encontró un proveedor con ese CUIT.");
                             ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "CUIT Proveedor" };
                             excelValidatorRowResult.ItemsResult.Add(ret);
                             continue;
@@ -8966,7 +8951,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
                                 var ret = new ExcelValidatorItemResult();
-                                ret.Errors.Add("No se encontro un corredor para ese cuit.");
+                                ret.Errors.Add("No se encontró un corredor con ese CUIT.");
                                 ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "CUIT Proveedor" };
                                 excelValidatorRowResult.ItemsResult.Add(ret);
                                 continue;
@@ -9175,7 +9160,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             else
                             {
-                                logger.Debug($"Se esta creando el contrato {item.Id} con el alta masiva de MATBA");
+                                logger.Debug($"Se esta creando el contrato con ID {item.Id} con el alta masiva de MATBA");
                             }
                         }
                         return resultValidation.Resume.OrderBy(x => x.HasError).ToList();
@@ -9183,10 +9168,24 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
+        }
+
+        public GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+
+            ValidarConDescarga(oContrato, oEntityErrors);
+
+            if (oEntityErrors.Errores.Count > 0)
+            {
+                return oEntityErrors;
+            }
+
+            return oEntityErrors;
         }
 
         private Resultado ValidarConDescarga(Contrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
@@ -9214,11 +9213,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (fechasAmbos.Count() == 0)
                 {
-                    oErrorMessages.Error("FechaDesdeHasta", "El rango de entrega del Negocio imposibilita la configuración de Cupos Con Descarga.");
+                    oErrorMessages.Error("FechaDesdeHasta", "El rango de entrega del negocio imposibilita la configuración de Cupos Con Descarga.");
                 }
                 if (oParam.Cantidad == 0)
                 {
-                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar la cantidad de KG.");
+                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar la cantidad de kilos.");
                 }
                 if (oParam.ProveedorId <= 0)
                 {
@@ -9247,20 +9246,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oErrorMessages;
-        }
-
-        public GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato)
-        {
-            var oEntityErrors = new GrabarContratoResult();
-
-            ValidarConDescarga(oContrato, oEntityErrors, false);
-
-            if (oEntityErrors.Errores.Count > 0)
-            {
-                return oEntityErrors;
-            }
-
-            return oEntityErrors;
         }
 
         public Resultado ValidarPantallaEnUso(PantallaEnUsoDto pantallaEnUso)
@@ -9453,6 +9438,18 @@ namespace Molinos.DataAgro.Business.Managers
             string typeOfRate = codigoTC == "04" ? "Z" : "M";
 
             return typeOfRate;
+        }
+
+        public string ConsultarRangoPrecio(int materialId, string moneda, decimal precio)
+        {
+            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == materialId && x.MonedaId == moneda);
+
+            if (rangosPrecio != null && (precio < rangosPrecio.PrecioMinimo || precio > rangosPrecio.PrecioMaximo))
+            {
+                return ("Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+            }
+            else
+                return string.Empty;
         }
     }
 }

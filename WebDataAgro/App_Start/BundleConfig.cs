@@ -297,7 +297,7 @@ namespace WebDataAgro
                                        //"~/Scripts/App/ResearchMapa.js"
                                        ));
             bundles.Add(new ScriptBundle("~/bundles/GenerarBoletos").Include(
-                                       "~/Scripts/App/DescargarBoleto.js",
+                                       "~/Scripts/App/GenerarBoleto.js",
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/App/Filtros.js",
                                        "~/Scripts/moment.js"
