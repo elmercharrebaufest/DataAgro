@@ -8,17 +8,7 @@ function Rol(id, descripcion) {
         this.Id = id.Id;
         this.Descripcion = id.Descripcion;
     }
-    this.removeRol = function () {
-        viewModel.RolesSeleccionados.remove(this);
-
-        var select = $("#RolId").data("kendoDropDownList");
-        for (var i = 0; i <= select.dataSource.data().length; i++) {
-            var option = $("#RolId").data("kendoDropDownList").dataItem(i);
-            if (option.Id == this.Id) {
-                option.set("Disabled", false);
-            }
-        }
-    };
+    
 }
 
 function Comercial(id, descripcion) {
@@ -54,25 +44,6 @@ $(document).ready(function () {
 function InicializarElementos() {
     kendo.culture("es-AR");
 
-    $("#RolId").kendoDropDownList({
-        dataTextField: "Descripcion",
-        dataValueField: "Id",
-        optionLabel: "Seleccione el Rol...",
-        select: function (e) {
-            if (e.dataItem.Disabled) {
-                e.preventDefault();
-            }
-        },
-        template: kendo.template($("#template").html())
-
-    });
-
-
-    $("#RolId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            $("#RolId").data("kendoDropDownList").text("");
-        }
-    });
     $("#ComercialId").kendoDropDownList({
         dataTextField: "NombreCompleto",
         dataValueField: "ComercialId",
@@ -160,17 +131,6 @@ function CrearViewModel() {
         RolCombo: [],
         RolesSeleccionados: [],
 
-        addRol: function () {
-            if ($('#RolId option:selected').text() != "Seleccione el Rol...") {
-                this.RolesSeleccionados.push(new Rol($('#RolId option:selected').val(), $('#RolId option:selected').text()));
-                
-                var option = $("#RolId").data("kendoDropDownList").dataItem();
-                option.set("Disabled", true);
-
-                $("#RolId").data("kendoDropDownList").value("");
-            }
-        },
-
         ComercialCombo: [],
         ComercialesSeleccionados: [],
 
@@ -196,11 +156,6 @@ function LimpiarViewModel() {
     $("#comercial-proveedor").hide();
     $("#divBotones").hide();
     $("#buscadorResult").val("");
-    $("#RolId").data("kendoDropDownList").value("");    
-    var select = $("#RolId").data("kendoDropDownList");
-    for (var i = 0; i <= select.dataSource.data().length; i++) {
-        $("#RolId").data("kendoDropDownList").dataItem(i).set("Disabled", false);
-    }
 
     $("#ComercialId").data("kendoDropDownList").value("");
     var select = $("#ComercialId").data("kendoDropDownList");
@@ -226,20 +181,6 @@ function Grabar() {
 }
 function CargarViewModel(id) {
     var data = MSExecuteOnServer('/AdministracionProveedor/TraerDatosProveedor', { id });
-    if (data.roles) {
-        for (var i = 0; i < data.roles.length; i++) {
-            viewModel.RolesSeleccionados.push(new Rol(data.roles[i].Id, data.roles[i].Descripcion));
-
-            var select = $("#RolId").data("kendoDropDownList");
-            for (var j = 1; j <= select.dataSource.data().length; j++) {
-                var option = $("#RolId").data("kendoDropDownList").dataItem(j);
-                if (option.Id == data.roles[i].Id) {
-                    option.set("Disabled", true);
-                }
-            }
-        }
-    }
-
 
     if (data.comerciales) {
         for (var i = 0; i < data.comerciales.length; i++) {
