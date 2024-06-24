@@ -5,10 +5,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
@@ -27,6 +23,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHttpContextManager> httpContextoManagerMock;
         private JavaScriptSerializer serializer;
         private Mock<ITipoNegocioManager> tipoNegocioManagerMock;
+        private Mock<IConfiguracionManager> configuracionManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -37,7 +34,8 @@ namespace Molinos.DataAgro.Test.Controllers
             cupoManagerMock = new Mock<ICupoManager>();
             httpContextoManagerMock = new Mock<IHttpContextManager>();
             tipoNegocioManagerMock = new Mock<ITipoNegocioManager>();
-            target = new FormulaController(formulaManagerMock.Object, materialManagerMock.Object, cupoManagerMock.Object, httpContextoManagerMock.Object, tipoNegocioManagerMock.Object);
+            configuracionManagerMock = new Mock<IConfiguracionManager>();
+            target = new FormulaController(formulaManagerMock.Object, materialManagerMock.Object, cupoManagerMock.Object, httpContextoManagerMock.Object, tipoNegocioManagerMock.Object, configuracionManagerMock.Object);
         }
         [Test]
         public void InicializarTest()
