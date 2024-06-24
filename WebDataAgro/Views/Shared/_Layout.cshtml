@@ -703,17 +703,8 @@
                     @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                     {
                         <li class="dropdown">
-                            <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boleto <span class="caret"></span></a>
+                            <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boletos <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="boleto">
-
-                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
-                                {
-                                    <li>
-                                        <a href="~/Confirma" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Confirma
-                                        </a>
-                                    </li>
-                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                                 {
                                     <li>
@@ -727,6 +718,22 @@
                                     <li>
                                         <a href="~/Boleto/DescargarBoletos" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Descargar Boletos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                {
+                                    <li>
+                                        <a href="~/Confirma/GenerarConfirma" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Generar Confirma
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                {
+                                    <li>
+                                        <a href="~/Confirma/DescargarConfirma" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Descargar Confirma
                                         </a>
                                     </li>
                                 }

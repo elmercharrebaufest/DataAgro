@@ -1071,7 +1071,7 @@
     <Content Include="Scripts\App\CupoNoPropio.js" />
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\FAQ.js" />
-    <Content Include="Scripts\App\ConfirmaScripts.js" />
+    <Content Include="Scripts\App\DescargarConfirma.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\GenerarConfirma.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
@@ -2894,7 +2894,7 @@
     </Content>
     <Content Include="Views\Confirma\GenerarConfirma.cshtml" />
     <Content Include="Views\Confirma\ModalConfirmaGenerado.cshtml" />
-    <Content Include="Views\Confirma\Index.cshtml" />
+    <Content Include="Views\Confirma\DescargarConfirma.cshtml" />
     <Content Include="Views\Boleto\_ModalReenviarBoletos.cshtml" />
   </ItemGroup>
   <ItemGroup>

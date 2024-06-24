@@ -2059,7 +2059,7 @@ function InicializarElementos() {
             if (!$("#compensacionId").is(":checked")) {
                 $("#pagoCbuDiv").show();
                 if (!$("#pagoDirectoId").is(":checked")) {
-                    $("#chequeElectronicoDiv").show();
+                    //$("#chequeElectronicoDiv").show();
                 }
             }
         }
@@ -2565,7 +2565,7 @@ function InicializarElementos() {
         filter: "contains",
         change: function () {
             if ($("#pagoCbuInput").val() == "") {
-                $("#chequeElectronicoId").show();
+                //$("#chequeElectronicoId").show();
             } else {
                 $("#chequeElectronicoId").hide();
                 $("#chequeElectronico").prop("checked", false);
