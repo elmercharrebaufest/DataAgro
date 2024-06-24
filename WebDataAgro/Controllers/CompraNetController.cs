@@ -1531,6 +1531,17 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        public ActionResult ConsultaRangoPrecio(int materialId, string moneda, decimal precio)
+        {
+
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ConsultarRangoPrecio(materialId, moneda, precio),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
         static readonly object _lockEmailImpuestos = new object();
         public ActionResult EnviarMailImpuestos(int contratoId)
         {

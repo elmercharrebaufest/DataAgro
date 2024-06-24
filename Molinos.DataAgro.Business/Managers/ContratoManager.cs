@@ -9454,5 +9454,17 @@ namespace Molinos.DataAgro.Business.Managers
 
             return typeOfRate;
         }
+
+        public string ConsultarRangoPrecio(int materialId, string moneda, decimal precio)
+        {
+            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == materialId && x.MonedaId == moneda);
+
+            if (rangosPrecio != null && (precio < rangosPrecio.PrecioMinimo || precio > rangosPrecio.PrecioMaximo))
+            {
+                return ("Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+            }
+            else
+                return string.Empty;
+        }
     }
 }
