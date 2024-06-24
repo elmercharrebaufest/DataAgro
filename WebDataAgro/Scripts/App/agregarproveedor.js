@@ -2437,17 +2437,17 @@ function armarFuncionalidades() {
         }
 
         obj.telefonos = [];
-        if (($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) ||
+        if (!$("#concom-esapoderado").is(":checked") && ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) ||
             ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) ||
             ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val())) {
             if ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) {
                 if (((!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null") && ($("#concom-Telefono1").val() && $("#concom-Telefono1").val() !== "")) || (($("#concom-TipoTelefono1").val() && $("#concom-TipoTelefono1").val() !== "null") && (!$("#concom-Telefono1").val() && $("#concom-Telefono1").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el primer telefono");
+                    MensErr("El contacto comercial debe tener bien cargado el primer número de teléfono");
                     return false;
                 }
 
                 if (!validateNumber($("#concom-Telefono1").val())) {
-                    MensErr("El primer Telefono no es válido");
+                    MensErr("El primer número de teléfono no es válido");
                     return false;
                 }
 
@@ -2463,12 +2463,12 @@ function armarFuncionalidades() {
             }
             if ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) {
                 if (((!$("#concom-TipoTelefono2").val() || $("#concom-TipoTelefono2").val() === "null") && ($("#concom-Telefono2").val() && $("#concom-Telefono2").val() !== "")) || (($("#concom-TipoTelefono2").val() && $("#concom-TipoTelefono2").val() !== "null") && (!$("#concom-Telefono2").val() && $("#concom-Telefono2").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el segundo telefono");
+                    MensErr("El contacto comercial debe tener bien cargado el segundo número de teléfono");
                     return false;
                 }
 
                 if (!validateNumber($("#concom-Telefono2").val())) {
-                    MensErr("El segundo Telefono no es válido");
+                    MensErr("El segundo número de teléfono no es válido");
                     return false;
                 }
 
@@ -2484,19 +2484,19 @@ function armarFuncionalidades() {
             }
             if ($("#concom-Telefono2").val() > 0) {
                 if (!validateNumber($("#concom-Telefono2").val())) {
-                    MensErr("El Telefono no es válido");
+                    MensErr("El número de teléfono no es válido");
                     return false;
                 }
             }
 
             if ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val()) {
                 if (((!$("#concom-TipoTelefono3").val() || $("#concom-TipoTelefono3").val() === "null") && ($("#concom-Telefono3").val() && $("#concom-Telefono3").val() !== "")) || (($("#concom-TipoTelefono3").val() && $("#concom-TipoTelefono3").val() !== "null") && (!$("#concom-Telefono3").val() && $("#concom-Telefono3").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el tercer telefono");
+                    MensErr("El contacto comercial debe tener bien cargado el tercer número de télefono");
                     return false;
                 }
 
                 if (!validateNumber($("#concom-Telefono1").val())) {
-                    MensErr("El tercer Telefono no es válido");
+                    MensErr("El tercer número de teléfono no es válido");
                     return false;
                 }
 
