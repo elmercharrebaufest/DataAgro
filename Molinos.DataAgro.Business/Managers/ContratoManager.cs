@@ -9188,7 +9188,7 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        private Resultado ValidarConDescarga(Contrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
+        private Resultado ValidarConDescarga(Contrato oParam, Resultado oErrorMessages)
         {
             oParam.ConDescarga = oParam.ConDescarga == null ? false : oParam.ConDescarga; //no se debería hacer. Hay que corregir el front
 
