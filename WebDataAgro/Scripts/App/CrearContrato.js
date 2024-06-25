@@ -27,18 +27,19 @@ $(document).ready(function () {
     OcultarCamposAgente();
     $("#material").data("kendoDropDownList").trigger("change");
 
-    $('#precioId').change(function () {
+    $("#precioId").change(function () {
 
         var parametros = {
             materialId: $('select[id="material"]').val(),
             moneda: $("#precioMonedaId").val(),
-            precio: $('#precioId').val()
+            precio: $("#precioId").val()
         }
 
-
-        var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
-        if(result)
-            MensErr(result);
+        if (parametros.precio > 0) {
+            var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
+            if (result)
+                MensErr(result)
+        };
 
     });
 });
@@ -57,7 +58,18 @@ function InicializarBordesRojos() {
         }
     });
 
-    $("select.required-box, input.required-box").trigger("change");
+    if ($('#precioId').val() > 0) {
+        //var originalChangeEvent = $.data($('#precioId')[0], 'events').change[0].handler;
+
+        $('#precioId').off('change');
+
+        $("select.required-box, input.required-box").trigger("change");
+
+        $('#precioId').on('change', ComprobarRangoPrecio);
+    }
+    else {
+        $("select.required-box, input.required-box").trigger("change");
+    }
 }
 
 function InicializarFondosGrises() {
@@ -1673,19 +1685,6 @@ function InicializarElementos() {
         change: function () {
             validarCredito();
             CargarCampoMAT();
-            //if ($("#tipoId").val() == "6") {
-            //    if ($("#AgenteCompraId").val() == "") {
-            //        $("#chequeElectronicoId").show();
-            //        $("#pagoCbuId").show();
-            //    }
-            //    if ($("#precioId").val() != "" && $("#precioId").val() != "0") {
-            //        $("#fechaCiertaAcuerdoDiv").show();
-            //    } else {
-            //        $("#fechaCiertaAcuerdo").data("kendoDatePicker").value("");
-            //        $("#fechaCiertaAcuerdoDiv").hide();
-            //    }
-
-            //}
             EstablecerCostoFinanciero();
         }
     });
@@ -6552,4 +6551,18 @@ function ObtenerTypeOfRate(tipoNegocio, moneda, agenteDeCompra, contrato, esEdic
     }
 
     return typeOfRate;
+}
+
+function ComprobarRangoPrecio () {
+    var parametros = {
+        materialId: $('select[id="material"]').val(),
+        moneda: $("#precioMonedaId").val(),
+        precio: $("#precioId").val()
+    }
+
+    if (parametros.precio > 0) {
+        var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
+        if (result)
+            MensErr(result)
+    };
 }
