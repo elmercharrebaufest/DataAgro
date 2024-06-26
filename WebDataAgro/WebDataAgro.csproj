@@ -90,7 +90,6 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibs\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1043,6 +1042,7 @@
     <Content Include="Content\rol.css" />
     <Content Include="Content\SiteResponsive.css" />
     <Content Include="Content\w3.css" />
+    <Content Include="Libs\Kendo.DynamicLinq.dll" />
     <Content Include="parameters.xml">
       <SubType>Designer</SubType>
     </Content>
