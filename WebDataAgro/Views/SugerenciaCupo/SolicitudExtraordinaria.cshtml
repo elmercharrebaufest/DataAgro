@@ -99,29 +99,15 @@
                             <i class="fa fa-search"></i>
                         </span>
                     </div>
-                    @*<div class="col-sm-4 input-group">
-                            <input type="text" id="ContratoSE" class="form-control" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="buscarContratoSE()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>*@
-                    @*<div class="col-sm-4 input-group">
-                            <input type="text" class="form-control" maxlength="10" id="ContratoSE">
-                            <div class="input-group-addon">
-                                <button class="btn btn-outline-secondary" type="button" onclick="buscarContratoSE()"><i class="fa fa-search"></i></button>
-                            </div>
-                        </div>*@
                     <div class="col-sm-6">
                         <label class="radio-inline">
-                            <input type="radio" name="estadoContrato" value="5"> Finalizado
+                            <input type="radio" name="estadoContrato" value="5" onchange="buscarContratoSE()" checked> Finalizado
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="estadoContrato" value="2"> Confirmado
+                            <input type="radio" name="estadoContrato" value="2" onchange="buscarContratoSE()"> Confirmado
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="estadoContrato" value="0" checked> Ambos
+                            <input type="radio" name="estadoContrato" value="0" onchange="buscarContratoSE()"> Ambos
                         </label>
                     </div>
                 </div>
@@ -129,7 +115,7 @@
                 <div id="gridContainer" style="display: none;">
                     <div id="grid"></div>
                 </div>
-                <div id="noResultsMessage" style="display: none;">
+                <div id="noResultsMessage" style="display: none; margin-top: 15px;">
                     No se encontraron resultados
                 </div>
                 <br>

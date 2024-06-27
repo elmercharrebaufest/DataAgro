@@ -7027,7 +7027,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CuposSegunKg = (int)Math.Ceiling(kgPendientes / 30000d);
                 }
             }
-            return negocios;
+            return negocios.OrderByDescending(x => x.FechaHasta).ToList();
         }
     }
 }

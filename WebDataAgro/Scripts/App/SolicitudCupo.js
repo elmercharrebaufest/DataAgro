@@ -1124,6 +1124,7 @@ function buscarContratoSE() {
                     contentHeight: 150,
                     scrollable: true,
                     selectable: "row",
+                    sortable: true,
                     columns: [
                         { field: "NegocioId", title: "ID interno", width: 80, attributes: { style: "text-align: center;" } },
                         { field: "ContratoSAP", title: "Contrato SAP", width: 110, attributes: { style: "text-align: center;" } },
