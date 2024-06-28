@@ -172,7 +172,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string ValidarNegocio(string codigoSAP, int claseNegocio)
         {
-            var codigoSAPcompleto = codigoSAP.PadLeft(10, '0');
+            var codigoSAPcompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
             var tiposNegocios = ConvertirClaseNegocioATiposNegocios(claseNegocio);
             var mensaje = "";
             var kilosMinimos = 10000;
