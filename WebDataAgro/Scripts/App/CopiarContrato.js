@@ -1181,14 +1181,13 @@ function comenzarCarga() {
     function updateCountdown() {
         var minutes = Math.floor(time / 60);
         let seconds = time % 60;
-        //console.log("minutes: " + minutes + " - seconds: " + seconds)
 
         if (minutes == 0 && seconds == 0) {
             detenerIntervalo();
             LiberarPantalla();
             dataTabla = [];
             $("#modalCargarCuposConDescarga").modal("hide");
-            MensErr("El tiempo ha terminado. Debe configurar nuevamente los Cupos con Descarga.");
+            MensErr("El tiempo ha terminado. Debe configurar nuevamente los Cupos con Descarga.\n\n");
         }
 
         seconds = seconds < 10 ? '0' + seconds : seconds;
@@ -1275,22 +1274,39 @@ function AbrirConDescarga() {
 }
 
 function EsConDescarga() {
-
     if ($("#conDescargaId").is(":checked") == false) {
         $("#btnConDescarga").hide();
         detenerIntervalo();
         LiberarPantalla();
         if (dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0)) {
             dataTabla = [];
-            MensAlerta("La configuración de Cupos con Descarga se ha reestablecido.");
+            MensAlerta("La configuración de Cupos con Descarga se ha reestablecido.\n\n");
         }
         return;
     }
 
-    if ($('#buscadorProveedor').val() == "" || $('#fechaDesdeId').val() == "" || $('#fechaHastaId').val() == "") {
+    if ($('#buscadorProveedor').val() == "") {
         $("#conDescargaId").prop("checked", false);
         $("#btnConDescarga").hide();
-        MensErr("Los siguientes campos son obligatorios: CUIT, Fecha Desde y Fecha Hasta.");
+        MensErr("Es obligatorio elegir un proveedor para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#fechaDesdeId').val() == "" || $('#fechaHastaId').val() == "") {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio ingresar las fechas desde y hasta para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#cantidadId').val() == 0 || $('#cantidadId').val() == "") {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio ingresar una cantidad de kilos para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#comercialId').val() == null) {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio elegir un comercial para configurar cupos con descarga.\n\n");
         return;
     }
 
@@ -1371,12 +1387,12 @@ function guardarCuposConDescarga() {
     }
 
     if (superaCuposMaximoDia) {
-        MensErr("La cantidad de cupos/fletes para uno de los días supera la cantidad disponible en su zona.");
+        MensErr("La cantidad de cupos para uno de los días supera la cantidad disponible en su zona.\n\n");
         return;
     }
     var cantidadCuposFletesPermitidos = Math.ceil($("#cantidadId").val() / 30000);
     if (cantidadTotalCuposFletes > cantidadCuposFletesPermitidos) {
-        MensErr("La cantidad de cupos/fletes ingresados se exceden respecto a los KG del Negocio.");
+        MensErr("La cantidad de cupos ingresados se excede con respecto a los kilos del negocio.\n\n");
         return;
     }
 

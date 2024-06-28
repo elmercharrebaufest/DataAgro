@@ -24,7 +24,7 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CompraNetController : Controller
     {
-        private readonly IHomeManager mobjHomeManager;
+        private readonly IHomeManager homeManager;
         private readonly ICompraNetManager mobjCompraNetManager;
         private readonly IContratoManager mobjContratoManager;
         private readonly IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
@@ -34,13 +34,14 @@ namespace WebDataAgro.Controllers
         private readonly IMaterialManager mobjMaterialManager;
         private readonly IProveedorManager mobjProveedorManager;
         private readonly IOperadorManager mobjOperadorManager;
-        private readonly ILogger mobjLogger;
+        private readonly ILogger logger;
         private readonly INegocioManager mobjNegocioManager;
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private readonly IConfiguracionManager mobjConfiguracionManager;
+        //private readonly IContrato2Manager contratoMediator;
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly ICentroManager centroManager;
         private readonly IDiasHabilesAgent diasHabilesAgent;
@@ -55,11 +56,11 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
-            IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
-            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent, IReportesManager reportesManager)
+            IConfiguracionInternaManager oConfiguracionInternaManager, IConfiguracionManager configuracionManager,
+            IOperadorManager oOperadorManager, INegocioManager oNegocioManager, //IContrato2Manager oContratoMediator,
+            ITipoDeCambioAgent oTipoDeCambioAgent, ICentroManager oCentroManager, IDiasHabilesAgent oDiasHabilesAgent, IReportesManager oReportesManager)
         {
-            mobjHomeManager = oHomeManager;
+            homeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
             mobjCompraNetManager = oCompraNetManager;
             mobjContratoManager = oContratoManager;
@@ -69,17 +70,18 @@ namespace WebDataAgro.Controllers
             mobjProveedorManager = oProveedorManager;
             mobjOperadorManager = oOperadorManager;
             mobjLocalidadManager = ojLocalidadManager;
-            mobjLogger = oLogger;
+            logger = oLogger;
             mobjFasonManager = oFasonManager;
             mobjAgenteManager = oAgenteManager;
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
-            this.reportesManager = reportesManager;
-            this.configuracionInternaManager = configuracionInternaManager;
-            this.tipoDeCambioAgent = tipoDeCambioAgent;
-            this.centroManager = centroManager;
-            this.diasHabilesAgent = diasHabilesAgent;
+            reportesManager = oReportesManager;
+            configuracionInternaManager = oConfiguracionInternaManager;
+            //contratoMediator = oContratoMediator;
+            tipoDeCambioAgent = oTipoDeCambioAgent;
+            centroManager = oCentroManager;
+            diasHabilesAgent = oDiasHabilesAgent;
         }
 
         //-----------------------------------------------------
@@ -875,7 +877,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoAcuerdoManager.TraerAcuerdo(id),
+                Data = mobjNegocioManager.TraerAcuerdo(id),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -1477,11 +1479,11 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public ActionResult ControlesAccesoConDescarga(Contrato oParam)
+        public ActionResult ControlesAccesoConDescarga(Negocio oParam)
         {
             oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
 
-            GrabarContratoResult model = mobjContratoManager.ControlesAccesoConDescarga(oParam);
+            Resultado model = mobjNegocioManager.ControlesAccesoConDescarga(oParam);
 
             return new JsonResult()
             {

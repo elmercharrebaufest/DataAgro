@@ -1505,6 +1505,8 @@ function InicializarElementos() {
             var precioNeto = $("#precioTotalApertura").data("kendoNumericTextBox").value();
             CalcularImporteDeOperacion(precioNeto, $("#cantidadId").val());
             ValidarCantidad();
+            $("#conDescargaId").prop("disabled", false);
+            if ($("#conDescargaId").is(":checked") == true) $("#btnConDescarga").show();
         }
     });
 
@@ -3504,19 +3506,19 @@ function GrabarContrato(nuevoContrato) {
         if (cantidadCamiones > 0) {
             var cantidadCamionesNecesarios = Math.ceil(cantidad / 30000);
             if (cantidadCamiones > cantidadCamionesNecesarios) {
-                MensErr("La cantidad de camiones ingresados es mayor a la necesaria");
+                MensErr("La cantidad de camiones ingresados es mayor a la necesaria.");
                 $.unblockUI();
                 return;
             }
             if (cantidadCamiones < cantidadCamionesNecesarios) {
-                MensErr("La cantidad de camiones ingresados es menor a la necesaria");
+                MensErr("La cantidad de camiones ingresados es menor a la necesaria.");
                 $.unblockUI();
                 return;
             }
         }
 
-        if ($("#conDescargaId").is(":checked") == true && !dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0)) {
-            MensErr("No hay Cupos y/o Fletes con Descarga configurados.");
+        if ($("#conDescargaId").is(":checked") == true && !dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0) && Id == "") {
+            MensErr("No hay cupos o fletes con descarga configurados.\n\n");
             $.unblockUI();
             return;
         }

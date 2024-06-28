@@ -39,7 +39,6 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
         private readonly IDiferencialManager diferencialManager;
-        private readonly IContratoAcuerdoManager contratoAcuerdoManager;
         private readonly IFinalizarContratoAgent oFinalizarContratoAgent;
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
@@ -70,24 +69,18 @@ namespace Molinos.DataAgro.Business.Managers
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
             ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
             ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
-            IComercialManager oMSComercialManager,
-            IPushNotificationManager oMSNotification,
-            IDiferencialManager diferencialManager,
-            IContratoAcuerdoManager contratoAcuerdoManager,
-            IFinalizarContratoAgent oFinalizarContratoAgent,
-            IDiasHabilesAgent oDiasHabilesAgent,
-            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
+            IComercialManager oMSComercialManager, IPushNotificationManager oMSNotification,
+            IDiferencialManager diferencialManager, IFinalizarContratoAgent oFinalizarContratoAgent,
+            IDiasHabilesAgent oDiasHabilesAgent, IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status,
-            ILogDataAgroManager logDataAgroManager,
-            IValidarDocProcPagoAgent validarPagoAgente,
-            IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
-            ICartasDePortePendienteAplicarAgent ccppAgent,
-            IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
-            ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent,
-            INegocioManager negocioManager, IContratosParaFijacionAgent contratosParaFijacionAgent, IConfiguracionInternaManager configuracionInternaManager,
+            IMailManager mailManager, IStatusContratoAgent status, ILogDataAgroManager logDataAgroManager,
+            IValidarDocProcPagoAgent validarPagoAgente, IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
+            ICartasDePortePendienteAplicarAgent ccppAgent, IHttpContextManager httpContextManager,
+            IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
+            ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent, INegocioManager negocioManager,
+            IContratosParaFijacionAgent contratosParaFijacionAgent, IConfiguracionInternaManager configuracionInternaManager,
             ICentroManager centroManager, ICupoManager cupoManager)
         {
             this.logger = logger;
@@ -101,7 +94,6 @@ namespace Molinos.DataAgro.Business.Managers
             mobjTipoNegocioManager = oMSTipoNegocioManager;
             mobjNotification = oMSNotification;
             this.diferencialManager = diferencialManager;
-            this.contratoAcuerdoManager = contratoAcuerdoManager;
             this.oFinalizarContratoAgent = oFinalizarContratoAgent;
             this.oDiasHabilesAgent = oDiasHabilesAgent;
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
@@ -1683,18 +1675,6 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult GrabarContrato(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             var oEntityErrors = new GrabarContratoResult();
-
-            var listaServicioValor = repositorio.Listar<ServicioValor>();
-            List<int> listaFiltradaServicioValor = new List<int>();
-            if (listaServicioValor != null)
-            {
-                List<ServicioValor> listaFiltrada = listaServicioValor
-                    .Where(x => x.MaterialId == oContrato.MaterialId && x.CentroId == oContrato.DestinoId)
-                    .ToList();
-
-                listaFiltrada.ForEach(x => listaFiltradaServicioValor.Add(x.Id));
-            }
-
             Validar(oContrato, oEntityErrors, false);
 
             if (oEntityErrors.Errores.Count > 0)
@@ -1702,10 +1682,35 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
 
+            var listaServicioValor = repositorio.Listar<ServicioValor>();
+            List<int> listaFiltradaServicioValor = new List<int>();
+            if (listaServicioValor != null)
+            {
+                List<ServicioValor> listaFiltrada = listaServicioValor
+                    .Where(x => x.MaterialId == oContrato.MaterialId && x.CentroId == oContrato.DestinoId).ToList();
+
+                listaFiltrada.ForEach(x => listaFiltradaServicioValor.Add(x.Id));
+            }
+
+            var oContratoSave = new Contrato();
+            if (oContrato.Id > 0) oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+            double kilosParametro = oContrato.Cantidad;
+
             Cupo cupoNuevo = null;
+            if (oContrato.ConDescarga == true)
+            {
+                oEntityErrors.Errores = negocioManager.ControlesAccesoConDescarga(oContrato).Errores;
+                if (oEntityErrors.Errores.Count > 0) return oEntityErrors;
+            }
+
             if (listCupoConDescargaFechas != null)
             {
-                cupoNuevo = TransformarContratoACupo(oContrato); // TransformarAEntidad
+                if (oContrato.Id > 0 && kilosParametro > oContratoSave.Cantidad)
+                {
+                    var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id);
+                    oContrato.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
+                }
+                cupoNuevo = negocioManager.TransformarContratoACupo(oContrato);
 
                 int sumaCuposCargaMasiva = 0;
                 bool cargaMasiva = listCupoConDescargaFechas != null && listCupoConDescargaFechas.Count() > 0;
@@ -1731,8 +1736,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadCuposFletesPermitidos = Math.Ceiling(oContrato.Cantidad / 30000);
                 if (cantidadCuposFletesPermitidos < sumaCuposCargaMasiva)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage(400, "La cantidad de cupos/fletes ingresados se exceden respecto a los kilos del negocio."));
+                    string mensaje = oContrato.Id == 0 || kilosParametro == oContratoSave.Cantidad ? ".\n\n" : " que aún no tienen cupos.\n\n";
+                    oEntityErrors.Errores.Add(new ErrorMessage(400, "La cantidad de cupos ingresada se excede con respecto a los kilos del negocio" + mensaje));
                 }
+
+                oContrato.Cantidad = kilosParametro;
             }
 
             if (oEntityErrors.Errores.Count > 0)
@@ -1740,7 +1748,6 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
 
-            var oContratoSave = new Contrato();
             List<DescuentoBonificacion> descuentosExistentes = null;
             List<Calidad> calidadesExistentes = null;
             List<AperturaPrecio> aperturasExistentes = null;
@@ -1750,7 +1757,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContrato.Id != 0)
             {
-                oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
                 if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
                 {
                     var result = validarPagoAgente.ValidarEstado(oContratoSave.ContratoSAP, "");
@@ -2067,10 +2073,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var servExistente in serviciosExistentes)
                 {
-                    //if (oContrato.Servicios == null || oContrato.Servicios.Any(x => x.Id == servExistente.Id))
-                    //{
                     repositorio.Remover(servExistente);
-                    //}
                 }
             }
             if (oContrato.Servicios != null)
@@ -2188,44 +2191,11 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("No se pudo ValidarComprasDiferencial", ex);
+                    logger.Error("No se pudo ValidarComprasDiferencial en GrabarContrato", ex);
                 }
             }
 
             return oEntityErrors;
-        }
-
-        private Cupo TransformarContratoACupo(Contrato contrato)
-        {
-            var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == contrato.ProveedorId, x => x.CUIT);
-            var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == contrato.ComercialId);
-            var comercialId = contrato.ComercialId;
-            var grupoDeCompras = comercial.GrupoDeCompras.Descripcion;
-            var zonaComercial = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).First();
-
-            var cupoNuevo = new Cupo
-            {
-                Id = 0,
-                ProveedorId = contrato.CorredorId == null ? contrato.ProveedorId.Value : contrato.CorredorId.Value,
-                MaterialId = contrato.MaterialId,
-                FechaIngreso = contrato.FechaEntrega.Value,
-                CentroId = contrato.DestinoId.Value,
-                FleteProcedencia = contrato.FleteACargo == "true",
-                Calidad = contrato.MaterialId == 3 ? contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica" : "",
-                Observaciones = contrato.Observacion,
-                Fason = contrato.EsFason,
-                Destinatario = "30715118773",
-                ComercialId = comercialId,
-                FechaGeneracion = DateTime.Now,
-                NegocioId = contrato.Id,
-                ZonaCupoId = zonaComercial.Id,
-                ConDescarga = contrato.ConDescarga,
-                Sustentable = contrato.Sustentable,
-                EPA = contrato.EPA,
-                ComercialCreadorId = contrato.ComercialCreadorId,
-            };
-
-            return cupoNuevo;
         }
 
         private bool ConfirmacionAutomatica(Contrato contrato)
@@ -7581,7 +7551,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     throw new Exception("Debe seleccionar el contrato acuerdo.");
                 }
-                BasicoContrato acuerdo = contratoAcuerdoManager.TraerAcuerdo(ncontratoAcuerdo);
+                BasicoContrato acuerdo = negocioManager.TraerAcuerdo(ncontratoAcuerdo);
                 if (acuerdo.Id == 0)
                 {
                     throw new Exception("El Acuerdo seleccionado no es valido.");
@@ -9174,79 +9144,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato)
-        {
-            var oEntityErrors = new GrabarContratoResult();
 
-            ValidarConDescarga(oContrato, oEntityErrors);
-
-            if (oEntityErrors.Errores.Count > 0)
-            {
-                return oEntityErrors;
-            }
-
-            return oEntityErrors;
-        }
-
-        private Resultado ValidarConDescarga(Contrato oParam, Resultado oErrorMessages)
-        {
-            oParam.ConDescarga = oParam.ConDescarga == null ? false : oParam.ConDescarga; //no se debería hacer. Hay que corregir el front
-
-            if ((bool)oParam.ConDescarga)
-            {
-                var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
-                var hoy = DateTime.Now.Date;
-                var fechaLimite = hoy.AddDays(diasParametro);
-
-                var fechasConDescarga = new List<DateTime>();
-                var fechasEntrega = new List<DateTime>();
-
-                for (var dt = hoy; dt <= fechaLimite; dt = dt.AddDays(1))
-                {
-                    fechasConDescarga.Add(dt);
-                }
-                for (var dt = oParam.FechaDesde; dt <= oParam.FechaHasta; dt = dt.AddDays(1))
-                {
-                    fechasEntrega.Add(dt);
-                }
-                var fechasAmbos = fechasEntrega.Intersect(fechasConDescarga);
-
-                if (fechasAmbos.Count() == 0)
-                {
-                    oErrorMessages.Error("FechaDesdeHasta", "El rango de entrega del negocio imposibilita la configuración de Cupos Con Descarga.");
-                }
-                if (oParam.Cantidad == 0)
-                {
-                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar la cantidad de kilos.");
-                }
-                if (oParam.ProveedorId <= 0)
-                {
-                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar el proveedor.");
-                }
-
-                if (oParam.ComercialId == null)
-                {
-                    oErrorMessages.Error("Zona", "Debe seleccionar un comercial.");
-                }
-                else
-                {
-                    var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == oParam.ComercialId).First().GrupoDeCompras.Descripcion;
-                    var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
-                    if (zona == null)
-                    {
-                        oErrorMessages.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
-                    }
-                }
-
-                //var fechaMaxima = DateTime.Now.Date.AddDays(cantidadMaximaDiasNegocioConDescarga - 1);
-                //if (oParam.FechaHasta > fechaMaxima)
-                //{
-                //    oErrorMessages.Error("FechaDesdeHasta", "La Fecha Desde supera el máximo establecido según parámetro.");
-                //}
-            }
-
-            return oErrorMessages;
-        }
 
         public Resultado ValidarPantallaEnUso(PantallaEnUsoDto pantallaEnUso)
         {

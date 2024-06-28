@@ -559,7 +559,7 @@ $("body").on("change", '#vincularSolicitudExtraordinaria', function () {
             ShowErrorMessages(result.Errores);
         } else {
             $("#vincularSolicitudExtraordinaria").prop("checked", valor);
-            MensInfo("Actualizacion exitosa");
+            MensInfo("Actualización exitosa.");
         }
     }
 });
