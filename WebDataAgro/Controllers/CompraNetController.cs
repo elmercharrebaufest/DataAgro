@@ -410,6 +410,10 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarFijacion(FijacionDePrecioContrato oParam)
         {
+            if (oParam.PorcentajeComision.HasValue)
+            {
+                oParam.PorcentajeComision = 0;
+            }
             var model = new GrabarFijacionResult();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -799,6 +803,10 @@ namespace WebDataAgro.Controllers
                 var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
                 oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
             }
+            if (oParam.PorcentajeComision.HasValue)
+            {
+                oParam.PorcentajeComision = 0;
+            }
             return new JsonResult()
             {
                 Data = mobjFasonManager.GrabarFason(oParam),
@@ -812,6 +820,10 @@ namespace WebDataAgro.Controllers
             {
                 var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
                 oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
+            }
+            if (oParam.PorcentajeComision.HasValue)
+            {
+                oParam.PorcentajeComision = 0;
             }
             return new JsonResult()
             {

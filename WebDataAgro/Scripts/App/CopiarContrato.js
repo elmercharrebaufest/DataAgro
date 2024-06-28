@@ -654,7 +654,7 @@ function ObtenerDatos(error) {
     obj.EPA = $("#epaId").is(":checked") ? true : false;
     obj.SustentableTipoDBId = $("#selectSustenTipoDB").val();
     obj.DiasPesificado = obj.TipoNegocioId != "3" ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
-    obj.PorcentajeComision = $("#porcentajeComision").val() != "" && (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2" || obj.TipoNegocioId == "6") ? $("#porcentajeComision").val() : 0;
+    obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.EstadoId = $("#estado").val() == "" ? $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != "4" && obj.TipoNegocioId != "5" && obj.TipoNegocioId != "6" ? "1" : "2" : $("#estado").val();
     obj.Observacion = $("#observacionId").val();
