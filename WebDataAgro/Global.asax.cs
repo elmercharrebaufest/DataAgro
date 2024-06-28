@@ -247,7 +247,7 @@ namespace WebDataAgro
             MailMessage oMensaje = new MailMessage
             {
                 From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]),
-                Subject = "ERROR " + (ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "PRODUCCION" : "PRUEBA") + " TIME OUT DATAAGRO DB",
+                Subject = (ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "Producción" : "Pruebas QA") + " - TIME OUT ERROR DATAAGRO DB",
                 Body = filterContext.Message + ":<br>" + filterContext.StackTrace,
                 IsBodyHtml = true
             };
@@ -260,5 +260,4 @@ namespace WebDataAgro
         }
 
     }
-
 }
