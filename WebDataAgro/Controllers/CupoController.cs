@@ -13,6 +13,7 @@ using static WebDataAgro.MvcApplication;
 using Kendo.DynamicLinq;
 using System.Globalization;
 using System.Configuration;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -53,6 +54,7 @@ namespace WebDataAgro.Controllers
             ViewBag.comercialId = GlobalVariables.ComercialId;
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
             ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
+            CargarFiltros();
             return View();
         }
 
@@ -720,6 +722,35 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue, 
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
+        }
+
+        private void CargarFiltros()
+        {
+            var esExterno = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
+            var proveedores = proveedorManager.ListarProveedorTodos(string.Empty);
+            ViewBag.Proveedores = proveedores.Select(
+                x => new SelectListItem
+                {
+                    Text = x.RazonSocial,
+                    Value = x.ProveedorId.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value);
+            var material = materialManager.TraerTodoMaterial();
+            ViewBag.Materiales = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            var estados = cupoManager.TraerTodoLosEstados();
+            ViewBag.Estados = estados.Select(
+               x => new SelectListItem
+               {
+                   Text = esExterno? (x.Id == (int)EnumEstadoCupo.SinCTG ? "Aceptado":(x.Id == (int)EnumEstadoCupo.SinSTOP ? "Pendiente": x.Descripcion)): x.Descripcion,
+                   Value = x.Id.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
         }
     }
 }
