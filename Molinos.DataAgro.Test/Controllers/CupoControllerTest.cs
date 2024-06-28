@@ -55,6 +55,11 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new ResultIniZonaCupo { ZonaCupo = new List<ZonaCupoIni>() { new ZonaCupoIni { Id = 1, Descripcion = "a" } } });
             comercialManagerMock.Setup(y => y.TraerComercial(It.IsAny<int>()))
                 .Returns(new ComercialDto { Nombres = "a", Apellido = "a", ComercialId = 1 });
+            proveedorManagerMock.Setup(y => y.ListarProveedorTodos(It.IsAny<String>()))
+                .Returns(new List<ProveedorDto> (){ new ProveedorDto { ProveedorId = 1, RazonSocial = "a" } } );
+            cupoManagerMock.Setup(y => y.TraerTodoLosEstados())
+                .Returns(new List<EstadoCupoDto>() { new EstadoCupoDto { Id = 1, Descripcion = "a" } });
+
             HttpContext.Current.Session["equipo"] = new List<int>() { 1, 2 };
             HttpContext.Current.Session["equipoReal"] = new List<int>() { 1, 2 };
             HttpContext.Current.Session["comercialId"] = 1;
@@ -64,9 +69,6 @@ namespace Molinos.DataAgro.Test.Controllers
         public void IndexTest()
         {
             var result = target.Index() as ViewResult;
-
-            Assert.NotNull(result);
-
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
