@@ -176,6 +176,7 @@
     <Compile Include="Common\Enums\EnumEstadoSisa.cs" />
     <Compile Include="Common\Enums\EnumStandarCalidad.cs" />
     <Compile Include="Common\Enums\EnumMateriales.cs" />
+    <Compile Include="Common\Enums\EnumEstadoCupo.cs" />
     <Compile Include="Common\Enums\EnumTipoDB.cs" />
     <Compile Include="Common\Enums\EnumTipoDeCambio.cs" />
     <Compile Include="Common\Enums\EnumTipoNegocio.cs" />

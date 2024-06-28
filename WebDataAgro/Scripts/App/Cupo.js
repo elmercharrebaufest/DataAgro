@@ -20,6 +20,8 @@ var externo;
 var materialDisponible;
 
 $(document).ready(function () {
+    inicializarMultiSelectFiltros();
+
     anularCupo = ConvertirStringABool(anularCupo);
     modificarCupo = ConvertirStringABool(modificarCupo);
     modificarCentro = ConvertirStringABool(modificarCentro);
@@ -39,10 +41,10 @@ $(document).ready(function () {
     materialDisponible = ConvertirStringABool(materialDisponible);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
-    $("#demo").on("hide.bs.collapse", function () {
+    $("#Filtros").on("hide.bs.collapse", function () {
         $(".btn").html('<span class="icono"><i class="fa fa-plus-square-o" aria-hidden="true"></i></span>');
     });
-    $("#demo").on("show.bs.collapse", function () {
+    $("#Filtros").on("show.bs.collapse", function () {
         $(".btn").html('<span class="icono"><i class="fa fa-minus-square-o" aria-hidden="true"></i></span>');
     });
     if (externo) {
@@ -265,7 +267,7 @@ function InicializarCuposIndex() {
                 }, width: 130, template: "#=Centro#",
             },
             {
-                field: "Calidad", type: "string", title: "Calidad", minResizableWidth: 100, width: 150, editable: function (dataItem) {
+                field: "Calidad", type: "string", title: "Calidad", width: 70, editable: function (dataItem) {
                     return false;
                 }, filterable: {
                     multi: true, dataSource: [{
@@ -277,48 +279,11 @@ function InicializarCuposIndex() {
             },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
             //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
-            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 130, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
-            //{ field: "Hora", title: "Hora", type: "date", width: 150 },
             {
-                field: "ZonaCupo", title: "Zona", type: "string", width: 120,
+                field: "EstadoCupo", type: "string", title: "Estado",
                 filterable: {
                     multi: true,
-
-                    dataSource: [
-                        { ZonaCupo: "CORREDOR BS AS" },
-                        { ZonaCupo: "CORREDOR ROSARIO" },
-                        { ZonaCupo: "Fasones CAGSA/MOLCA, YPF y AMAGGI" },
-                        { ZonaCupo: "MAT-ROFEX" },
-                        { ZonaCupo: "ORIG INTERIOR CENTRO" },
-                        { ZonaCupo: "ORIG INTERIOR NORTE" },
-                        { ZonaCupo: "ORIG INTERIOR SUR" },
-                        { ZonaCupo: "PRODUCCION PROPIA" },
-                        { ZonaCupo: "REDESPACHOS" },
-                        { ZonaCupo: "SOLIDARIDAD" }],
-                    itemTemplate: function (e) {
-
-                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.ZonaCupo#'/><span>#= data.ZonaCupo|| data.all #</span></label></span><br>";
-                        //return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.codigoSap == 0 ? null : data.codigoSap #'/><span class='multiFilter'>#= data.ZonaCupo || data.all #</span></label></span><br>";
-                    }
-                },
-            },
-            {
-                field: "FleteProcedencia", title: "Flete", type: "string", width: 60, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
-            },
-            {
-                field: "Sustentable", title: "Sustentable", type: "string", width: 60, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; }
-            },
-            {
-                field: "EPA", title: "EPA", type: "string", width: 60, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; }
-            },
-            //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
-            { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
-            { field: "EstadoOrden", type: "number", hidden: true },
-            {
-                field: "EstadoCupo", title: "Estado",
-                filterable: {
-                    multi: true,
-                    dataSource: externo ? estadoExterno : estados
+                    dataSource: externo? estadoExterno: estados
                 },
 
                 width: 110,
@@ -384,7 +349,47 @@ function InicializarCuposIndex() {
 
                 }
             },
+            //{ field: "Hora", title: "Hora", type: "date", width: 150 },
+            {
+                field: "ZonaCupo", title: "Zona", type: "string", width: 120,
+                filterable: {
+                    multi: true,
 
+                    dataSource: [
+                        { ZonaCupo: "CORREDOR BS AS" },
+                        { ZonaCupo: "CORREDOR ROSARIO" },
+                        { ZonaCupo: "Fasones CAGSA/MOLCA, YPF y AMAGGI" },
+                        { ZonaCupo: "MAT-ROFEX" },
+                        { ZonaCupo: "ORIG INTERIOR CENTRO" },
+                        { ZonaCupo: "ORIG INTERIOR NORTE" },
+                        { ZonaCupo: "ORIG INTERIOR SUR" },
+                        { ZonaCupo: "PRODUCCION PROPIA" },
+                        { ZonaCupo: "REDESPACHOS" },
+                        { ZonaCupo: "SOLIDARIDAD" }],
+                    itemTemplate: function (e) {
+
+                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.ZonaCupo#'/><span>#= data.ZonaCupo|| data.all #</span></label></span><br>";
+                        //return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.codigoSap == 0 ? null : data.codigoSap #'/><span class='multiFilter'>#= data.ZonaCupo || data.all #</span></label></span><br>";
+                    }
+                },
+            },
+            {
+                field: "FleteProcedencia", title: "Flete", type: "string", width: 60, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
+            },
+            {
+                field: "Sustentable", title: "Sustentable", type: "string", width: 60, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; }
+            },
+            {
+                field: "EPA", title: "EPA", type: "string", width: 60, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; }
+            },
+            //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
+            { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
+            { field: "EstadoOrden", type: "number", hidden: true },
+           
+            { field: "CartaPorte", title: "Carta Porte", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "CuitOrigen", title: "Cuit Origen", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 130, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
 
         ],
         filterMenuInit: function (e) {
@@ -1064,19 +1069,30 @@ function AceptarCupo(id) {
 
 function Filtrar() {
     var grid = $('#gridCupo').data('kendoGrid');
-    var currentFilters = grid.dataSource.filter();
     let filtroSap = TraerFiltrosConValores();
-    currentFilters = { filters: [], logic: 'and' };
+
     if (filtroSap.filter != null) {
         //-----------------------------------------
-        currentFilters.filters = currentFilters.filters.filter(function (x) {
-            return x.field != 'CupoSap' && x.field != undefined
-        });
         var contratoSapFilters = { logic: 'and', filters: [] };
 
-        contratoSapFilters.filters.push({ field: 'CupoSap', operator: 'contains', value: filtroSap.filter.filters[0].value });
-        currentFilters.filters.push(contratoSapFilters);
-        grid.dataSource.filter(currentFilters);
+        for (var i = 0; i < filtroSap.filter.filters.length; i += 1) {
+            let item = filtroSap.filter.filters[i];
+            if (item.field == 'CupoSap') contratoSapFilters.filters.push({ field: 'CupoSap', operator: 'contains', value: item.value });
+            //Filtro Ingreso
+            if (item.field == 'FechaIngreso' && item.operator == 'gte') contratoSapFilters.filters.push({ field: 'FechaIngreso', operator: 'gte', value: item.value });
+            if (item.field == 'FechaIngreso' && item.operator == 'lte') contratoSapFilters.filters.push({ field: 'FechaIngreso', operator: 'lte', value: item.value });
+            //Filtro Registro
+            if (item.field == 'FechaRegistro' && item.operator == 'gte') contratoSapFilters.filters.push({ field: 'FechaRegistro', operator: 'gte', value: item.value });
+            if (item.field == 'FechaRegistro' && item.operator == 'lte') contratoSapFilters.filters.push({ field: 'FechaRegistro', operator: 'lte', value: item.value });
+            //EPA y Sustentable
+            if (item.field == 'Sustentable') contratoSapFilters.filters.push({ field: 'Sustentable', operator: item.operator, value: item.value });
+            if (item.field == 'EPA') contratoSapFilters.filters.push({ field: 'EPA', operator: item.operator, value: item.value });
+
+            if (item.field == null) {
+                contratoSapFilters.filters.push(item);
+            }
+        }
+        grid.dataSource.filter(contratoSapFilters);
     } else {
         BorrarFiltro();
     }
@@ -1085,6 +1101,15 @@ function Filtrar() {
 
 function BorrarFiltro() {
     $("#CupoSAPId").val("");
+    $('#EstadoCupoId').data("kendoMultiSelect").value([]);
+    $("#MaterialId").data("kendoMultiSelect").value([]);
+    $("#ProveedorId").data("kendoMultiSelect").value([]);
+    $("#FechaIngresoDesdeId").val("");
+    $("#FechaIngresoHastaId").val("");
+    $("#FechaRegistroDesdeId").val("");
+    $("#FechaRegistroHastaId").val("");
+    deseleccionarRadioButtonEPA();
+    deseleccionarRadioButtonSustentable();
     var grid = $('#gridCupo').data('kendoGrid');
     var dataSource = grid.dataSource;
     var filters = null;
@@ -1166,4 +1191,49 @@ function removerFiltros(grid, field, operator, value) {
     dataSource.filter(filters);
 }
 
+function inicializarMultiSelectFiltros() {
+    $("#MaterialId").kendoMultiSelect({
+        open: function (e) { $("#MaterialId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    CrearMultiSelectFiltro("#ProveedorId", "Proveedor", "ProveedorId", "/ReporteCupo/BuscarProveedor");
+
+    $("#EstadoCupoId").kendoMultiSelect({
+        open: function (e) { $("#EstadoCupoId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    $("#FechaIngresoDesdeId").kendoDatePicker({
+        value: new Date(),
+        weekNumber: true
+    });
+
+    $("#FechaIngresoHastaId").kendoDatePicker({
+        value: new Date(),
+        
+        weekNumber: true
+    });
+
+    $("#FechaRegistroDesdeId").kendoDatePicker({
+        weekNumber: true
+    });
+
+    $("#FechaRegistroHastaId").kendoDatePicker({
+        weekNumber: true
+    });
+}
+
+function deseleccionarRadioButtonSustentable() {
+    $('[name=Sustentable]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonEPA() {
+    $('[name=EPA]:checked').prop('checked', false);
+}
 

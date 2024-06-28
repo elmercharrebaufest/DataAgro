@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         private Mock<IConfiguracionManager> configuracionManagermock;
         private Mock<ICupoManager> cupoManagermock;
+        private Mock<INegocioManager> negocioManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -42,9 +43,10 @@ namespace Molinos.DataAgro.Test.Managers
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             configuracionManagermock = new Mock<IConfiguracionManager>();
             cupoManagermock = new Mock<ICupoManager>();
+            negocioManagerMock = new Mock<INegocioManager>();
 
             target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object, diasHabilesAgentMock.Object, logDataAgroManagerMock.Object,
-                configuracionManagermock.Object, cupoManagermock.Object);
+                configuracionManagermock.Object, cupoManagermock.Object, negocioManagerMock.Object);
         }
         [Test]
         public void BorrarAcuerdoTest()
@@ -388,7 +390,16 @@ namespace Molinos.DataAgro.Test.Managers
             };
 
             repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
-                .Returns(new ContratoAcuerdo { Id = 10, Precio = 10, Cantidad = 10, ComercialCreadorId = 1, DestinoId = 1, MaterialId = 1, MonedaId = "a", FechaHasta = new DateTime(2019, 08, 08),
+                .Returns(new ContratoAcuerdo
+                {
+                    Id = 10,
+                    Precio = 10,
+                    Cantidad = 10,
+                    ComercialCreadorId = 1,
+                    DestinoId = 1,
+                    MaterialId = 1,
+                    MonedaId = "a",
+                    FechaHasta = new DateTime(2019, 08, 08),
                     Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -444,16 +455,6 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void TraerAcuerdoTest()
-        {
-            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()))
-                .Returns(new BasicoContrato { Id = 10 });
-            var resultado = target.TraerAcuerdo(1);
-
-            Assert.AreEqual(10, resultado.Id);
-            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()), Times.Once);
-        }
-        [Test]
         public void TraerDatosCombo()
         {
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialQry>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -475,6 +476,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Comercial, ComercialQry>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Moneda, MonedaQry>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
+
         [Test]
         public void TraerTodoContratoAcuerdoTest()
         {
@@ -487,6 +489,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.ContratoAcuerdo.Count);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, ContratoAcuerdoIni>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
+
         [Test]
         public void ObtenerContratoAcuerdoParaAsociarTest()
         {
@@ -497,6 +500,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.Id = 1);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, ContratoAcuerdoDto>>>()), Times.Once);
         }
+
         [Test]
         public void ConfirmarContratoAcuerdoTest()
         {
@@ -508,6 +512,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+
         [Test]
         public void FinalizarAcuerdoErrorFinalizadoTest()
         {
@@ -523,6 +528,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
+
         [Test]
         public void FinalizarAcuerdoErrorRechazadoTest()
         {
@@ -538,6 +544,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
+
         [Test]
         public void AnularAcuerdosTest()
         {
