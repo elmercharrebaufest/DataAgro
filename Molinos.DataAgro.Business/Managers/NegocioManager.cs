@@ -594,6 +594,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DesdeFijacionFormateado = x.DesdeFijacion.HasValue ? DbFunctions.Right("0" + x.DesdeFijacion.Value.Day, 2) + "-" + DbFunctions.Right("0" + x.DesdeFijacion.Value.Month, 2) + "-" + x.DesdeFijacion.Value.Year : "",
                 HastaFijacionFormateado = x.HastaFijacion.HasValue ? DbFunctions.Right("0" + x.HastaFijacion.Value.Day, 2) + "-" + DbFunctions.Right("0" + x.HastaFijacion.Value.Month, 2) + "-" + x.HastaFijacion.Value.Year : "",
                 Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue ? DbFunctions.Right("0" + x.FechaDolarizado.Value.Day, 2) + "-" + DbFunctions.Right("0" + x.FechaDolarizado.Value.Month, 2) + "-" + x.FechaDolarizado.Value.Year : "",
+                FechaDolarizadoOriginalFormateado = x.FechaDolarizadoOriginal.HasValue ? DbFunctions.Right("0" + x.FechaDolarizadoOriginal.Value.Day, 2) + "-" + DbFunctions.Right("0" + x.FechaDolarizadoOriginal.Value.Month, 2) + "-" + x.FechaDolarizadoOriginal.Value.Year : "",
                 FechaCierta = x.FechaCierta,
                 FechaCiertaFormateado = x.FechaCierta.HasValue ? DbFunctions.Right("0" + x.FechaCierta.Value.Day, 2) + "-" + DbFunctions.Right("0" + x.FechaCierta.Value.Month, 2) + "-" + x.FechaCierta.Value.Year : "",
                 FechaDesde_Sustentable = x.FechaDesdeSustentable,

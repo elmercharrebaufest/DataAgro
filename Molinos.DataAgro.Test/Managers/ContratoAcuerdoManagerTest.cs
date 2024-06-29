@@ -523,7 +523,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.FinalizarAcuerdo(1);
 
             Assert.That(resultado.HayError);
-            Assert.AreEqual("El Acuerdo ya se encuentra Finalizado", resultado.Errores[0].Message);
+            Assert.AreEqual("El acuerdo ya se encuentra finalizado.\n\n", resultado.Errores[0].Message);
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -539,7 +539,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.FinalizarAcuerdo(1);
 
             Assert.That(resultado.HayError);
-            Assert.AreEqual("El Acuerdo ya ha sido Rechazado", resultado.Errores[0].Message);
+            Assert.AreEqual("El acuerdo ya se encuentra rechazado.\n\n", resultado.Errores[0].Message);
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);

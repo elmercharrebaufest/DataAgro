@@ -60,6 +60,11 @@
         }
     }
 
+    if ($("#boleto-compranet").val() === 'null') {
+        MensErr("El Tipo de Boleto es obligatorio.");
+        return false;
+    }
+
     return true;
 }
 
