@@ -2,6 +2,7 @@
 var dataTabla = [];
 var stockDisponible = true;
 //var stockInsuficiente = false;
+var negocioIdSE, contratoSapSE, kgPendientes, cuposSegunKg;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -800,7 +801,10 @@ function grabarSolicitudExtraordinaria() {
             Sustentable: $("#Sustentable").is(':checked'),
             EPA: $("#EPA").is(':checked'),
             Dias: dataTabla,
-            ContratoSAP: $("#ContratoSE").data("kendoNumericTextBox").value(),
+            ContratoSAP: contratoSapSE,
+            NegocioId: negocioIdSE,
+            KgPendientes: kgPendientes,
+            CuposSegunKg: cuposSegunKg
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
         ListarRespuesta(result);
@@ -1089,6 +1093,7 @@ function buscarContratoSE() {
     var proveedorId = $("#ProveedorIdSE").val();
     var materialId = $("#MaterialIdSE").data("kendoDropDownList").value();
     var estadoId = $('input[name="estadoContrato"]:checked').val();
+    contratoSapSE = null; negocioIdSE = null; kgPendientes = 0; cuposSegunKg = 0;
 
     if (!proveedorId || !materialId) {
         MensInfo("Elija un proveedor y material para buscar contratos.");
@@ -1148,5 +1153,10 @@ function buscarContratoSE() {
 
 function onSelect() {
     var selectedData = this.dataItem(this.select());
-    $("#ContratoSE").data("kendoNumericTextBox").value(selectedData.ContratoSAP);
+    contratoSapSE = selectedData.ContratoSAP;
+    negocioIdSE = selectedData.NegocioId;
+    kgPendientes = selectedData.KgPendientes;
+    cuposSegunKg = selectedData.CuposSegunKg;
+    var mostrar = contratoSapSE || negocioIdSE;
+    $("#ContratoSE").data("kendoNumericTextBox").value(mostrar);
 }

@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
             bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] != null && ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
-            
+
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
@@ -5214,12 +5214,32 @@ namespace Molinos.DataAgro.Business.Managers
                 var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == solicitud.CentroId.ToString(), x => x.Id);
                 var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
                 var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
-                int? negocioAsociado = null;
+                Negocio negocioAsociado = new Negocio();
                 if (!string.IsNullOrEmpty(solicitud.ContratoSAP))
                 {
                     solicitud.ContratoSAP = solicitud.ContratoSAP.PadLeft(10, '0');
-                    negocioAsociado = repositorio.Obtener<Negocio>(x => x.ContratoSAP == solicitud.ContratoSAP).Id;
-                } else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value)
+                    negocioAsociado = repositorio.Obtener<Negocio>(x => x.ContratoSAP == solicitud.ContratoSAP && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
+                    if (negocioAsociado.ConfirmadoSAP == true && solicitud.CantidadCupo > solicitud.CuposSegunKg)
+                    {
+                        result.Error("ValidarCantidad", $"Los cupos solicitados superan lo permitido según los kilos pendientes del contrato:\n {solicitud.KgPendientes:N2} kg --> {solicitud.CuposSegunKg} cupos.");
+                        return result;
+                    }
+                    else if (negocioAsociado.ConfirmadoSAP != true && solicitud.CantidadCupo > Math.Ceiling(negocioAsociado.Cantidad / 30000d))
+                    {
+                        result.Error("ValidadCantidad", $"Los cupos solicitados superan lo permitido según los kilos del contrato:\n {negocioAsociado.Cantidad:N2} kg --> {Math.Ceiling(negocioAsociado.Cantidad / 30000d)} cupos.");
+                        return result;
+                    }
+                }
+                else if (solicitud.NegocioId.HasValue)
+                {
+                    negocioAsociado = repositorio.Obtener<Negocio>(solicitud.NegocioId);
+                    if (solicitud.CantidadCupo > Math.Ceiling(negocioAsociado.Cantidad / 30000d))
+                    {
+                        result.Error("ValidadCantidad", $"Los cupos solicitados superan lo permitido según los kilos del contrato:\n {negocioAsociado.Cantidad:N2} kg --> {Math.Ceiling(negocioAsociado.Cantidad / 30000d)} cupos.");
+                        return result;
+                    }
+                }
+                else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value)
                 {
                     result.Error("VincularNegocio", "Debe vincular la solicitud a un negocio completando el campo 'N° de Contrato'.");
                     return result;
@@ -5251,7 +5271,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var configuracion = repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == solicitud.MaterialId && x.Centro.CodigoSap == solicitud.CentroId.ToString() && x.Fecha == solicitud.Fecha.Date);
                     if (configuracion == null)
                     {
-                        result.Error("Configuracion", "No hay cupera creada para el dia seleccionado.");
+                        result.Error("Configuracion", "No hay cupera creada para el día seleccionado.");
                         return result;
                     }
                     listaConfiguraciones.Add(configuracion);
@@ -5297,7 +5317,7 @@ namespace Molinos.DataAgro.Business.Managers
                             CupoStop = null,
                             CreacionStop = "",
                             ErrorStop = "",
-                            NegocioId = negocioAsociado,
+                            NegocioId = negocioAsociado.Id,
                             ConfiguracionEspacioDinamicoId = null,
                             TipoNegocioId = 7,
                             ConDescarga = solicitud.ConDescarga,
@@ -5380,7 +5400,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
                                 EPA = solicitud.EPA,
-                                NegocioId = negocioAsociado,
+                                NegocioId = negocioAsociado.Id,
                             };
 
                             repositorio.Agregar(solicitudItem);
@@ -6994,7 +7014,7 @@ namespace Molinos.DataAgro.Business.Managers
                     EstadoNegocio = x.Estado.Descripcion,
                     MaterialId = x.MaterialId,
                     FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta
-                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId &&
+                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 &&
                 (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
             }
             else
@@ -7026,8 +7046,9 @@ namespace Molinos.DataAgro.Business.Managers
                     item.KgPendientes = kgPendientes;
                     item.CuposSegunKg = (int)Math.Ceiling(kgPendientes / 30000d);
                 }
+                if (string.IsNullOrEmpty(contratoSap)) negocios = negocios.Where(n => n.KgPendientes > 0 || n.FechaHasta >= DateTime.Today).OrderByDescending(x => x.FechaHasta).ToList();
             }
-            return negocios.OrderByDescending(x => x.FechaHasta).ToList();
+            return negocios;
         }
     }
 }

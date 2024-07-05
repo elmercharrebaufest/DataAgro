@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ComercialId { get; set; }
         public DateTime Fecha { get; set; }
         public int CantidadCupo { get; set; }
-        public int CantidadDeCupo { get; set; }
+        public int CantidadDeCupo { get; set; } //es igual al anterior?
         public int CantidadFleteProcedencia { get; set; }
         public int CantidadDeCupoMax { get; set; }
         public int CantidadFleteProcedenciaMax { get; set; }
@@ -48,5 +48,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Sustentable { get; set; }
         public bool? EPA { get; set; }
         public string ContratoSAP { get; set; }
+        public double KgPendientes { get; set; }
+        public int CuposSegunKg { get; set; }
     }
 }
