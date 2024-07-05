@@ -266,7 +266,7 @@ namespace WebDataAgro.Services
             var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
 
             contratoOriginal = contratoOriginal ?? new Contrato();
-            logger.Debug("Alta de descuentos");
+            logger.Debug("CrearProyeccionContrato - Alta de descuentos");
 
             var descuentos = new List<DescuentoBonificacion>();
             var preciosPactados = new List<PrecioPactado>();
@@ -307,7 +307,7 @@ namespace WebDataAgro.Services
                 }
             }
 
-            logger.Debug("Alta contrato Apertura");
+            logger.Debug("CrearProyeccionContrato - Alta de apertura");
 
             var aperturas = new List<AperturaPrecio>();
             var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
@@ -323,15 +323,11 @@ namespace WebDataAgro.Services
                 var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
                 if (!((contratoSAP.EPA == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == 4))
                 {
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+                    aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Importe = aper.Importe;
+                    aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).MonedaId = aper.Moneda;
+                    aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Porcentaje = aper.Porcentaje;
                 }
             }
-            //foreach (var item in aperturas.Where(a => string.IsNullOrEmpty(a.MonedaId)))
-            //{
-            //    item.MonedaId
-            //}
             if (esActualizar)
             {
                 if (contratoOriginal.AperturaPrecio != null && contratoOriginal.AperturaPrecio.Count() == 0 && !aperturas.Any(a => a.Importe != 0 || a.Porcentaje != 0))
@@ -339,7 +335,8 @@ namespace WebDataAgro.Services
                     aperturas = new List<AperturaPrecio>();
                 }
             }
-            logger.Debug("Alta de datos contrato");
+
+            logger.Debug("CrearProyeccionContrato - Alta del contrato");
 
             contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
             contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : contratoSAP.SinBoleto == "X" ? 5 : 3;
@@ -361,7 +358,7 @@ namespace WebDataAgro.Services
             contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
             contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
-            contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
+            contrato.Dolarizado = contratoSAP.DolarizadoExpress != "X" && !string.IsNullOrEmpty(contratoSAP.FechaLimite);
             contrato.DolarizadoCorredor = false;
             if (contrato.CorredorId.HasValue && contrato.Dolarizado == true)
             {
@@ -380,16 +377,12 @@ namespace WebDataAgro.Services
                 var fechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaOperacion = fechaOperacion;
                 contrato.MotivoOperacionAnterior = fechaOperacion.Date < fechaCreacion.Date ? "Cargado desde SAP" : "";
-
-            }
-            contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-            if (!esActualizar)
-            {
                 var hora = DateTime.ParseExact(contratoSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
                 TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
                 contrato.Fecha = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.Fecha = contrato.Fecha.Add(time);
             }
+            contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
 
@@ -443,21 +436,19 @@ namespace WebDataAgro.Services
             if (!esActualizar)
             {
                 contrato.Canje = contratoSAP.Canje == "X";
-                contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? true : false;
-            }
-            contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
-            contrato.Insumo = contratoSAP.Insumo;
-            contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS" ? true : false;
-            contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
-            if (!esActualizar)
-            {
+                contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION";
                 contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
                 contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
                 contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
                     contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 : contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? 1 :
                     contratoSAP.TipoNegocio == "VENTA" ? 1 : repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
             }
+            contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
+            contrato.Insumo = contratoSAP.Insumo;
+            contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
+            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS";
+            contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
+
             if (contrato.Venta == true && contrato.TipoNegocioId == 2)
             {
                 contrato.Cantidad = Math.Abs(contrato.Cantidad) * -1;
@@ -477,14 +468,14 @@ namespace WebDataAgro.Services
                 if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x => x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
                 {
                     contrato.SustentableTipoDBId = 1;
-                    contrato.ImporteSustentable = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Importe;
-                    contrato.MonedaSustentableId = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Moneda;
+                    contrato.ImporteSustentable = contratoSAP.Apertura.Find(x => x.Concepto == "BO")?.Importe;
+                    contrato.MonedaSustentableId = contratoSAP.Apertura.Find(x => x.Concepto == "BO")?.Moneda;
                 }
                 else if (contratoSAP.DescuentoBonificaciones != null && contratoSAP.DescuentoBonificaciones.Any()) //es Fuera de Precio
                 {
                     contrato.SustentableTipoDBId = 2;
-                    contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().Importe;
-                    contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().MonedaDB;
+                    contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.Find(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B")?.Importe;
+                    contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.Find(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B")?.MonedaDB;
                 }
             }
             else
@@ -520,11 +511,12 @@ namespace WebDataAgro.Services
                     {
                         if (esActualizar)
                         {
-                            if (contratoOriginal.Calidad != null && contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                            Calidad quality = contratoOriginal.Calidad.FirstOrDefault(a => a.CalidadEspecialId == calidad.CalidadEspecialId);
+                            if (contratoOriginal.Calidad != null && quality != null)
                             {
-                                calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeDesde;
-                                calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeHasta;
-                                calidad.Valor = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().Valor;
+                                calidad.PorcentajeDesde = quality.PorcentajeDesde;
+                                calidad.PorcentajeHasta = quality.PorcentajeHasta;
+                                calidad.Valor = quality.Valor;
                             }
                         }
                         else
@@ -533,7 +525,6 @@ namespace WebDataAgro.Services
                             calidad.PorcentajeHasta = null;
                             calidad.Valor = 2;
                         }
-
                     }
                     else
                     {
@@ -547,11 +538,11 @@ namespace WebDataAgro.Services
                 {
                     if (esActualizar)
                     {
-                        if (contratoOriginal.Calidad != null && contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                        if (contratoOriginal.Calidad != null && contratoOriginal.Calidad.FirstOrDefault(a => a.CalidadEspecialId == calidad.CalidadEspecialId) != null)
                         {
-                            calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeDesde;
-                            calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeHasta;
-                            calidad.Valor = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().Valor;
+                            calidad.Valor = contratoOriginal.Calidad.FirstOrDefault(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).Valor;
+                            calidad.PorcentajeDesde = contratoOriginal.Calidad.FirstOrDefault(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).PorcentajeDesde;
+                            calidad.PorcentajeHasta = contratoOriginal.Calidad.FirstOrDefault(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).PorcentajeHasta;
                         }
                     }
                 }

@@ -1041,7 +1041,7 @@ function CreateGridInformeCompraNet() {
                     ]
                 }, title: "Tipo", width: 80, minResizableWidth: 80, attributes: {
                     "class": "mobile-sm text-center"
-                }, template: "#=TipoNegocio##if(AnulaYReemplazaContratoId != null){#<br><br>##<i class='fa fa-recycle fa-2x'></i>#}##if(ConDescarga){#<br><br>##<i class='fa fa-truck fa-2x'></i>#}#"
+                }, template: "#=TipoNegocio##if(AnulaYReemplazaContratoId != null){#<br><br>##<i title='Anula y reemplaza' class='fa fa-recycle fa-2x'></i>#}##if(ConDescarga){#<br><br>##<i title='Con descarga' class='fa fa-truck fa-2x'></i>#}#"
             },
             {
                 field: "Material", title: "Mat.", type: "string", filterable: {

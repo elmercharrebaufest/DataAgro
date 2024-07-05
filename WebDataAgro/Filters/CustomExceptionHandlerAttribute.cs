@@ -1,6 +1,4 @@
-﻿
-using Molinos.DataAgro.Entities.Helpers;
-using NLog;
+﻿using NLog;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -35,7 +33,6 @@ namespace WebDataAgro.Filters
                 if (filterContext.Exception is SqlException && (filterContext.Exception as SqlException).Number == -2)
                 {
                     EnviarMailTimeOut(filterContext);
-
                 }
             }
             catch (Exception)
@@ -70,7 +67,7 @@ namespace WebDataAgro.Filters
             MailMessage oMensaje = new MailMessage
             {
                 From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]),
-                Subject = "ERROR " + (ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "PRODUCCION" : "PRUEBA") + " TIME OUT DATAAGRO DB",
+                Subject = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1" ? "Pruebas QA" : "Producción") + " - TIME OUT ERROR DATAAGRO DB",
                 Body = filterContext.Exception.Message + "<br>" + filterContext.Exception.StackTrace,
                 IsBodyHtml = true
             };
