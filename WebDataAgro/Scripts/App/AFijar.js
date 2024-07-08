@@ -1707,13 +1707,21 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaHastaOriginalId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaHastaOriginalId").data('kendoDatePicker').enable(false);
@@ -1721,142 +1729,37 @@ function InicializarElementos() {
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())); }
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
-
-    //$("#dolarizadoFechaId").kendoDatePicker({
-    //    value: date,
-    //    format: "dd-MM-yyyy",
-    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
-    //});
-    //$("#fechaCiertaId").kendoDatePicker({
-    //    value: date,
-    //    format: "dd-MM-yyyy",
-    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-    //    change: function () {
-    //        if ($("#fechaCiertaId").val() == "") {
-    //            if ($("#precioMonedaId").val() == "ARP  ") {
-    //                $("#pagoDiferidoDiv").show();
-    //            }
-    //            if (!$("#dolarizadoExpressId").is(":checked") && $("#precioMonedaId").val() == "USDM ") {
-    //                $("#pagoDolarizadoDiv").show();
-    //                if ($("#clasificacion").val() == 1 && $("#tipoId").val() != "6") {
-    //                    $("#dolarizadoExpressDiv").show();
-
-    //                }
-    //            }
-
-    //        } else {
-    //            if (!$("#dolarizadoExpressId").is(":checked")) {
-    //                $("#dolarizadoFechaId").val("");
-    //            }
-    //            if (!$("#dolarizadoId").is(":checked")) {
-    //                $("#dolarizadoFechaId").val("");
-    //            }
-    //            $("#dolarizadoExpressDiv").hide();
-    //            $("#dolarizadoId").prop("checked", false);
-    //            $("#dolarizadoDiv").hide();
-    //            $("#dolarizadoExpressId").prop("checked", false);
-    //            $("#pagoDolarizadoDiv").hide();
-    //            $("#pagoDiferidoDiv").hide();
-    //        }
-    //    }
-    //});
-    //$("#fechaCiertaAcuerdo").kendoDatePicker({
-    //    value: date,
-    //    format: "dd-MM-yyyy",
-    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-    //    change: function () {
-    //        if ($("#fechaCiertaAcuerdo").val() == "") {
-    //            if ($("#precioMonedaId").val() == "USDM ") {
-    //                $("#pagoDolarizadoDiv").show();
-    //            } else {
-    //                $("#pagoDiferidoDiv").show();
-
-    //            }
-
-
-    //        } else {
-    //            $("#pagoDiferidoDiv").hide();
-    //            $("#dolarizadoId").attr("disabled", false);
-    //            $("#pagoDolarizadoDiv").hide();
-    //            $("#dolarizadoDiv").hide();
-    //            $("#dolarizadoFechaId").val("");
-    //        }
-    //    }
-    //});
-
-    //$("#fechaFijacionId").kendoDatePicker({
-    //    value: date,
-    //    format: "dd-MM-yyyy",
-    //    max: new Date(),
-    //    disableDates: function (i) {
-    //        var lstFechas = FechaFeriado();
-    //        if (i && typeof i == 'object') {
-    //            i = kendo.toString(i, "dd-MM-yyyy");
-    //        }
-    //        if (lstFechas.includes(i)) {
-    //            return true;
-    //        } else {
-    //            return false;
-    //        }
-    //    },
-    //    change: function () {
-    //        var hoy = new Date();
-    //        var anio = hoy.getFullYear();
-    //        var mes = hoy.getMonth();
-    //        var dia = hoy.getDate();
-    //        hoy = new Date(anio, mes, dia);
-    //        const diffTime = Math.abs(hoy - this.value());
-    //        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    //        if (this.value() < hoy) {
-    //            $("#fechaFijacionMotivoDiv").show();
-    //            if (diffDays > 1) {
-    //                //$("#noInformaSioId").prop("checked", true);
-    //                //$("#noInformaSioId").attr("disabled", true);
-    //            } else {
-    //                //$("#noInformaSioId").prop("checked", false);
-    //                //$("#noInformaSioId").attr("disabled", false);
-    //            }
-
-    //        } else {
-    //            $("#fechaFijacionMotivoDiv").hide();
-    //            $("#motivoOperacionAnteriorFijacion").val("");
-    //            //$("#noInformaSioId").attr("disabled", false);
-    //        }
-    //    },
-    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-    //    month: {
-    //        // template for dates in month view
-    //        content: '# if (data.date.getDay() == 0 || data.date.getDay() == 6) { #' +
-    //            '<div class="disabledDay">#= data.value #</div>' +
-    //            '# } else { #' +
-    //            '#= data.value #' +
-    //            '# } #'
-    //    },
-    //    open: function (e) {
-    //        $(".disabledDay").parent().removeClass("k-link") //removing this class makes the day unselectable
-    //        $(".disabledDay").parent().removeAttr("href") //this removes the hyperlink styling
-    //    },
-    //});
-    //if (!cargaFijacionAyer) {
-    //    var diaHabil = MSExecuteOnServer('/CompraNet/UltimoDiaHabil');
-    //    diaHabil = diaHabil.replace(/[^0-9 +]/g, '');
-    //    $("#fechaFijacionId").data("kendoDatePicker").min(new Date(parseInt(diaHabil)));
-    //}
 
     $("#fechaDesdeSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaHastaSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeId").val(date);

@@ -1764,17 +1764,29 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())); }
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({
@@ -1795,10 +1807,8 @@ function InicializarElementos() {
                     $("#pagoDolarizadoDiv").show();
                     if ($("#clasificacion").val() == 1 && $("#tipoId").val() != "6") {
                         $("#dolarizadoExpressDiv").show();
-
                     }
                 }
-
             } else {
                 if (!$("#dolarizadoExpressId").is(":checked")) {
                     $("#dolarizadoFechaId").val("");
@@ -1812,7 +1822,6 @@ function InicializarElementos() {
                 $("#dolarizadoExpressId").prop("checked", false);
                 $("#pagoDolarizadoDiv").hide();
                 $("#pagoDiferidoDiv").hide();
-
             }
 
             LimpiarCondicionDePago();
@@ -1837,10 +1846,7 @@ function InicializarElementos() {
                     $("#pagoDolarizadoDiv").show();
                 } else {
                     $("#pagoDiferidoDiv").show();
-
                 }
-
-
             } else {
                 $("#pagoDiferidoDiv").hide();
                 $("#dolarizadoId").attr("disabled", false);
@@ -1912,12 +1918,20 @@ function InicializarElementos() {
 
     $("#fechaDesdeSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaHastaSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeId").val(date);

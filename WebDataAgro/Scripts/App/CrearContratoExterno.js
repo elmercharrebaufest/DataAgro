@@ -803,6 +803,10 @@ function InicializarElementos() {
     $("#fechaDesdeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
@@ -810,7 +814,11 @@ function InicializarElementos() {
     });
     $("#fechaHastaId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     //$("#fechaOperacionId").kendoDatePicker({
@@ -1278,7 +1286,7 @@ function ObtenerDatos() {
     //    obj.PrecioNeto = precioN + ImporteSobrePrecio + desc;
     //    alert(obj.PrecioNeto);
     //} 
-   
+
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
     obj.FechaDesde = $("#fechaDesdeId").val();
@@ -1363,7 +1371,7 @@ function ObtenerDatos() {
         }
         obj.ProveedorCreadorId = corredorId;
     }
-    
+
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 
