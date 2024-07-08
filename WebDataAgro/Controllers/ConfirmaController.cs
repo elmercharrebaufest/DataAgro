@@ -86,7 +86,7 @@ namespace WebDataAgro.Controllers
             var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
             try
             {
-                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(codigoSAP);
+                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(codigoSAP, GlobalVariables.EquipoReal);
 
                 if (fileBytes == null)
                 {

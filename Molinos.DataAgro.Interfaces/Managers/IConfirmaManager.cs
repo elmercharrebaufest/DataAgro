@@ -17,8 +17,8 @@ namespace Molinos.DataAgro.Interfaces
         string ValidarNegocio(string codigoSAP, int tipoNegocio);
         List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio);
         ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo);
-        byte[] ConfirmaEnByte(string confirma);
         string GenerarNombreArchivoConfirma(string codigoSAP);
+        byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo);
         string EnviarMailConfirmas();
         List<ConfirmaArchivoDto> ListarConfirmas();
 

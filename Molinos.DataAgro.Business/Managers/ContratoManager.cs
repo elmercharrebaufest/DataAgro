@@ -613,6 +613,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
 
+            if (!diasHabilesAgent.EsDiaHabil(oParam.FechaHasta) || !diasHabilesAgent.EsDiaHabil(oParam.FechaDesde))
+            {
+                oErrorMessages.Error("FechaHasta", "Las fechas de entrega desde y hasta no pueden ser días inhábiles (fin de semana o feriado).\n");
+            }
             if (oParam.TipoNegocioId == 0)
             {
                 oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacío.");
@@ -939,7 +943,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Now.Date)
             {
-                oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al día de la fecha.");
+                oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al día de hoy.");
             }
             if (oParam.PorcentajeDePago == null || oParam.PorcentajeDePago.Value > 100 || oParam.PorcentajeDePago.Value < 0)
             {
@@ -972,7 +976,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oParam.FechaOperacion > DateTime.Now.Date)
                 {
-                    oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
+                    oErrorMessages.Error("FechaOperacion", "La fecha de operación tiene que ser menor o igual al día de hoy.");
                 }
                 else
                 {
@@ -987,12 +991,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
                                     && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
                                 {
-                                    oErrorMessages.Error("FechaOperacion", "La Fecha de Operación no puede ser anterior al último día hábil: " + diaAnterior.ToString("dd/MM/yyyy"));
+                                    oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser anterior al último día hábil: " + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
                                 if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Escriba el motivo por el cual la Fecha de Operación es anterior a hoy.");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Escriba el motivo por el cual la fecha de operación es anterior a hoy.");
                                 }
 
                                 if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
@@ -1004,13 +1008,13 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
                                     {
-                                        oErrorMessages.Error("NoInformaSio", "La Fecha de Operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
+                                        oErrorMessages.Error("NoInformaSio", "La fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                                     }
                                 }
                             }
                             if (oParam.FechaOperacion > contrato.Fecha.Date && oParam.Venta != true)
                             {
-                                oErrorMessages.Error("NoInformaSio", "La Fecha de Operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
+                                oErrorMessages.Error("NoInformaSio", "La fecha de operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
                             }
                         }
                         else
@@ -1022,12 +1026,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
                                     && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
                                 {
-                                    oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día hábil." + diaAnterior.ToString("dd/MM/yyyy"));
+                                    oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser anterior al ultimo día hábil." + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
                                 if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la Fecha Operación es anterior al día de la fecha.");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la fecha de operación es anterior al día de hoy.");
                                 }
 
                                 if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
@@ -2555,7 +2559,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oContratoSave.Fecha < diaAnterior)
                 {
-                    oEntityErrors.Error("", "La fecha del contrato debe ser la de hoy o día hábil anterior");
+                    oEntityErrors.Error("", "La fecha del contrato debe ser la de hoy o día hábil anterior.");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
@@ -7921,21 +7925,21 @@ namespace Molinos.DataAgro.Business.Managers
                 string indiceContrato = "Contrato corredor: " + item.ContratoCorredor + ". ";
                 if (item.MaterialId != acuerdo.MaterialId)
                 {
-                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Grano", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "El material no concuerda con el del acuerdo seleccionado. " } });
+                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Grano", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "El material no coincide con el del acuerdo seleccionado. " } });
                 }
                 if (item.CampanaId != acuerdo.CampanaId)
                 {
-                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Cosecha", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La cosecha no concuerda con el del acuerdo seleccionado. " } });
+                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Cosecha", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La cosecha no coincide con la del acuerdo seleccionado. " } });
                 }
                 if (item.FechaOperacion.Value.Date != acuerdo.FechaOperacion.Value.Date)
                 {
-                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha Operación", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha Operación no concuerda con el del acuerdo seleccionado. " } });
+                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha Operación", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha de Operación no coincide con la del acuerdo seleccionado. " } });
                 }
                 if (acuerdo.FechaDesde.HasValue)
                 {
                     if (item.FechaDesde.Value.Date != acuerdo.FechaDesde.Value.Date)
                     {
-                        excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha DesdeEntrega", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha Desde Entrega no concuerda con el del acuerdo seleccionado. " } });
+                        excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha DesdeEntrega", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha Desde Entrega no coincide con la del acuerdo seleccionado. " } });
                     }
                 }
                 else
@@ -7946,7 +7950,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (item.FechaEntrega.Value.Date != acuerdo.FechaHasta.Value.Date)
                     {
-                        excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha Vto. Entrega", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha Vto. Entrega no concuerda con el del acuerdo seleccionado. " } });
+                        excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Fecha Vto. Entrega", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "La Fecha Vto. Entrega no coincide con la del acuerdo seleccionado. " } });
                     }
                 }
                 else
@@ -7955,7 +7959,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (item.DestinoId != acuerdo.DestinoId)
                 {
-                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Destino", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "El Destino no concuerda con el del acuerdo seleccionado. " } });
+                    excelValidatorItemResults.Add(new ExcelValidatorItemResult { Item = new ExcelValidatorItem { Name = "Destino", ErrorType = ExcelValidationErrorType.Fatal }, Errors = new List<string> { indiceContrato + "El Destino no coincide con el del acuerdo seleccionado. " } });
                 }
                 if (excelValidatorItemResults.Count > 0)
                 {

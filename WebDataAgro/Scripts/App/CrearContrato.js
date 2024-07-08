@@ -1866,6 +1866,10 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
@@ -1892,17 +1896,29 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())); }
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({
@@ -1983,6 +1999,10 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         max: new Date(),
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         disableDates: function (i) {
             var lstFechas = FechaFeriado();
             if (i && typeof i == 'object') {
@@ -2040,12 +2060,20 @@ function InicializarElementos() {
 
     $("#fechaDesdeSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaHastaSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeId").val(date);
@@ -2547,10 +2575,8 @@ function InicializarElementos() {
                 var desde = new Date(values[1], parseInt(values[0]) - 1, 1);
                 var hasta = new Date(values[1], parseInt(values[0]), 0);
                 $("#fechaHastaId").val(hasta.getDate() + '-' + values[0] + '-' + values[1]);
-
             }
         }
-
     });
     $("#pizarraId").click(ClickEnPizarra);
 
@@ -4800,9 +4826,6 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.Condicional == true) {
-        //if (contrato.Estado == 5) {
-        //    $(".mostrarSiEscondicionalFinalizado").show();
-        //}
         var tieneAsociados = MSExecuteOnServer('/CompraNet/Tiene2doCondicionalAsociado', { contratoId: contrato.Id });
         if (tieneAsociados) {
             $("#condicionalId").attr("disabled", true);

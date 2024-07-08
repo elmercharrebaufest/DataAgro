@@ -1956,6 +1956,10 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
@@ -1964,17 +1968,29 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())); }
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({

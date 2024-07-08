@@ -16,6 +16,8 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using System.Globalization;
 using System.Xml;
 using Molinos.DataAgro.Interfaces.Clausulas;
+using System.Xml.Linq;
+using iTextSharp.tool.xml.html.head;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -283,221 +285,180 @@ namespace Molinos.DataAgro.Business.Managers
             return msje;
         }
 
-        public byte[] ConfirmaEnByte(string codigoSAP)
+        public byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo)
         {
-            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
-            var tempCodigo = confirma.Negocio.ContratoSAP;
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { tempCodigo }, false, new List<int>(), new List<int>()));
+            //Cargar Datos
+            var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
+            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == CodigoSapCompleto);
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, false, equipo, new List<int>()));
             var contrato = consulta.First();
-            //Parte temporal, no queda en la version final
-            confirma.FechaGeneracion = DateTime.Now;
-
+            //Calcular datos para el XML
             var estadoSAP = status.ValidarEstado(confirma.Negocio.ContratoSAP);
             var esFijacionContratoConvenio = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && confirma.Negocio.Madre == true;
-            //cargarle por seters los datos que necesites mostrar
-
-            //Fin de carga de Setters
-            XmlDocument doc = new XmlDocument(); //Documento XML
-            MemoryStream ms = new MemoryStream(); //Memory Stream
-            var xmlString = new StringBuilder(); //String Builder
-            var xmlWriter = XmlWriter.Create(xmlString, new XmlWriterSettings { Indent = true }); //Incializa Writer
-            //Calcular datos para el XML
-            var clausulas = ObtenerClausulas(contrato);
+            var esConvenio = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && confirma.Negocio.Madre == true;
+            var Partes = (confirma.Negocio.CorredorId > 0) ?
+                new[] { new { CodLista = "1", NroContratoInterno = confirma.Negocio.ContratoVendedor, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = confirma.Negocio.ContratoCorredor, CUIT = confirma.Negocio.Corredor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = confirma.Negocio.ContratoSAP, CUIT = "30715118773", Sucursal = string.Empty } }
+                : new[] { new { CodLista = "1", NroContratoInterno = confirma.Negocio.ContratoVendedor, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = confirma.Negocio.ContratoSAP, CUIT = "30715118773", Sucursal = string.Empty } };
             var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(codigoSAP, string.Empty);
             var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
+            var clausulas = ObtenerClausulas(contrato);
+            //Fin de carga de datos
+            MemoryStream ms = new MemoryStream(); //Memory Stream
             //Inicia formateo del XML
-            xmlWriter.WriteStartElement("Lote"); // NODO Lote
-            xmlWriter.WriteStartElement("Documento"); //Abre Nodo Documento
-            xmlWriter.WriteAttributeString("xmlns", "Documento");
+            var doc = new XDocument(
+                new XElement("Lote",
+                    new XElement("Documento",
             #region CabeceraDocumento
-            xmlWriter.WriteStartElement("CabeceraDocumento");
-                xmlWriter.WriteElementString("Bolsa",string.Empty); //Bolsa
-                    xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.BolsaId.ToString()); //CodLista "Identificador de la Bolsa (valores tabulados) 
-                xmlWriter.WriteElementString("TipoDocumento", string.Empty); //TipoDocumento
-                    xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Canje == true ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "3" : ""))); //TipoDocumento
-                xmlWriter.WriteElementString("Formulario", string.Empty); //Formulario version
-                    xmlWriter.WriteAttributeString("formversion", "1.04"); 
-            xmlWriter.WriteEndElement();
+                        new XElement("CabeceraDocumento",
+                            new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.BolsaId)),
+                            new XElement("TipoDocumento", new XAttribute("CodLista", confirma.Negocio.Canje == true ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
+                            new XElement("Formulario", new XAttribute("formversion", "1.04"))
+                        ),//Fin Nodo CabeceraDocumento
             #endregion CabeceraDocumento
-            #region Workflow
-            xmlWriter.WriteStartElement("UploadInfo");
-                xmlWriter.WriteElementString("Workflow", confirma.Negocio.CorredorId > 0 ? "4" : "7"); //Workflow depende de las partes
-            xmlWriter.WriteEndElement();
-            #endregion Workflow
-            xmlWriter.WriteStartElement("DetalleDocumento");
+                        new XElement("UploadInfo",
+                            new XElement("Workflow", confirma.Negocio.CorredorId > 0 ? "4" : "7")
+                        ),
+                        new XElement("DetalleDocumento",
             #region Partes
-            xmlWriter.WriteStartElement("Partes"); //Inicio Partes
-                // parte Vendedor
-                xmlWriter.WriteStartElement("Parte");
-                xmlWriter.WriteAttributeString("CodLista", "1"); //CodLista = 1 para Vendedor
-                    xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoVendedor);
-                    xmlWriter.WriteElementString("CUIT", confirma.Negocio.Proveedor.CUIT);
-                    xmlWriter.WriteElementString("Sucursal", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista", string.Empty);
-                xmlWriter.WriteEndElement();
-            //fin parte Vendedor
-            // parte Corredor si corresponde
-            if (confirma.Negocio.CorredorId > 0)
-            {
-                xmlWriter.WriteStartElement("Parte");
-                xmlWriter.WriteAttributeString("CodLista", "2");
-                xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoCorredor);
-                xmlWriter.WriteElementString("CUIT", confirma.Negocio.Corredor.CUIT);
-                xmlWriter.WriteElementString("Sucursal", string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", string.Empty);
-                xmlWriter.WriteEndElement();
-            }
-            //fin parte Corredor si corresponde
-            // parte Comprador
-            xmlWriter.WriteStartElement("Parte");
-            xmlWriter.WriteAttributeString("CodLista", "3");
-            xmlWriter.WriteElementString("NroContratoInterno", confirma.Negocio.ContratoSAP);
-            xmlWriter.WriteElementString("CUIT", "30715118773");
-            xmlWriter.WriteElementString("Sucursal", string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", string.Empty);
-            xmlWriter.WriteEndElement();
-            //fin parte Comprador
-            xmlWriter.WriteEndElement(); //Fin Partes
+                            //Inicio Nodo Partes
+                            new XElement("Partes",
+                                //Inicio Parte 
+                                Partes.Select(x =>
+                                    new XElement("Parte",
+                                        new XAttribute("CodLista", x.CodLista),
+                                        new XElement("NroContratoInterno", x.NroContratoInterno),
+                                        new XElement("CUIT", x.CUIT),
+                                        new XElement("Sucursal", new XAttribute("CodLista", string.Empty))
+                                    )
+                                )//Fin Nodo Parte
+                            ),//Fin Nodo Partes
             #endregion Partes
             #region DetalleContrato
-            // Inicio DetalleContrato
-            xmlWriter.WriteStartElement("DetalleContrato");
-
-            xmlWriter.WriteElementString("Producto",string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "21" : "");
-            xmlWriter.WriteElementString("DescAdicional", confirma.Negocio.Canje == true ? "INSUMO" : "");
-            xmlWriter.WriteElementString("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy"));
-            xmlWriter.WriteElementString("Cosecha",string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Campana.Descripcion);
-            xmlWriter.WriteElementString("UnidadMedida",string.Empty);
-            xmlWriter.WriteAttributeString("CodLista","K");
-            xmlWriter.WriteElementString("CantidadDesde", confirma.Negocio.KgMinimo.ToString());
-            xmlWriter.WriteElementString("CantidadHasta", confirma.Negocio.KgMaximo.ToString());
-            xmlWriter.WriteElementString("Ajuste", string.Empty);//Consultar siempre vacia?
-            xmlWriter.WriteAttributeString("CodLista", string.Empty);
-            xmlWriter.WriteElementString("CantCamiones", confirma.Negocio.CantidadCamiones.GetValueOrDefault().ToString());
-            xmlWriter.WriteElementString("Moneda", string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Moneda.Descripcion=="ARP"?"1":"2");
-            xmlWriter.WriteElementString("Precio", confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? confirma.Negocio.Precio.ToString() : "");
-            xmlWriter.WriteElementString("UnidadMedidaPrecio", string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", "T");
-            xmlWriter.WriteElementString("PorcComisionComprador", confirma.Negocio.PorcentajeComision.ToString());
+                            //Inicio DetalleContrato
+                            new XElement("DetalleContrato",
+                                new XElement("Producto", new XAttribute("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "21" : string.Empty)),
+                                new XElement("DescAdicional", confirma.Negocio.Canje == true ? "INSUMO" : ""),
+                                new XElement("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy")),
+                                new XElement("Cosecha", new XAttribute("CodLista", confirma.Negocio.Campana.CodigoSIO), string.Empty),
+                                new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
+                                new XElement("CantidadDesde", confirma.Negocio.KgMinimo),
+                                new XElement("CantidadHasta", confirma.Negocio.KgMaximo),
+                                new XElement("Ajuste", new XAttribute("CodLista", string.Empty), string.Empty),
+                                new XElement("CantCamiones", confirma.Negocio.CantidadCamiones),
+                                (confirma.Negocio.Canje == true || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ?new XElement("MontoImponible") :null),
+                                new XElement("Moneda", new XAttribute("CodLista", confirma.Negocio.Moneda is null ? string.Empty : (confirma.Negocio.Moneda.Descripcion == "ARP" ? "1" : "2")), string.Empty),
+                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", confirma.Negocio.Precio) : null),
+                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),//SOLO en A_PRECIO?
+                                (confirma.Negocio.CorredorId > 0 ? new XElement("PorcComisionComprador", confirma.Negocio.PorcentajeComision):null),
             #region Calidad
-            xmlWriter.WriteStartElement("Calidad");
-                xmlWriter.WriteElementString("CondicionesCalidad",string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.FABRICA ? "4" : ""));
-                xmlWriter.WriteElementString("OtrasCondicionesCalidad", string.Empty);
-            xmlWriter.WriteEndElement();
+                                new XElement("Calidad",
+                                    new XElement("CondicionesCalidad", new XAttribute("CodLista", (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.FABRICA ? "4" : ""))),
+                                    new XElement("OtrasCondicionesCalidad")
+                                ),
             #endregion Calidad
-            xmlWriter.WriteElementString("MedioTransporte", string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", "C");
+                                new XElement("MedioTransporte", new XAttribute("CodLista", "C")),
             #region Entregas
-            xmlWriter.WriteStartElement("Entregas");
-                xmlWriter.WriteElementString("EntregaDesde", confirma.Negocio.FechaDesde.ToString("dd/MM/yyyy"));
-                xmlWriter.WriteElementString("EntregaHasta", confirma.Negocio.FechaHasta.ToString("dd/MM/yyyy"));
-            xmlWriter.WriteEndElement();
+                                new XElement("Entregas",
+                                    new XElement("EmtregaDesde", confirma.Negocio.FechaDesde.ToString("dd/MM/yyyy")),
+                                    new XElement("EntregaHasta", confirma.Negocio.FechaHasta.ToString("dd/MM/yyyy"))
+                                ),
             #endregion Entregas
             #region Origen
-            xmlWriter.WriteStartElement("Origen");
-                xmlWriter.WriteElementString("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad);
-                xmlWriter.WriteElementString("ProvinciaOrigen", string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Provincia.CodigoConfirma);
-            xmlWriter.WriteEndElement();
+                                new XElement("Origen",
+                                    new XElement("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad),
+                                    new XElement("ProvinciaOrigen", new XAttribute("CodLista", confirma.Negocio.Provincia.CodigoConfirma))
+                                ),
             #endregion Origen
-            xmlWriter.WriteElementString("Destino",string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.Destino.CodigoConfirma.ToString());
-            xmlWriter.WriteAttributeString("CodPrv", "0000");
-            xmlWriter.WriteElementString("ProvinciaInstrumentacion", "0001");
-            xmlWriter.WriteAttributeString("CodLista", "B");
+                                new XElement("Destino", new XAttribute("CodLista", confirma.Negocio.Destino.CodigoConfirma.ToString()), new XAttribute("CodPrv", "0000")),
+            #region DecisionDeclara
+                                (confirma.Negocio.Canje == true ? new XElement("DecisionDeclaraPrecioUnit", new XAttribute("CodLista","0")) : null),
+                                (confirma.Negocio.Canje == true ? new XElement("DecisionDeclaraCantidad", new XAttribute("CodLista", "0")) : null),
+            #endregion DecisionDeclara
+                                new XElement("ProvinciaInstrumentacion", new XAttribute("CodLista", "B")),
             #region Pagos
-            if (confirma.Negocio.Canje != true)
-            {
-                xmlWriter.WriteStartElement("Pagos");
-                xmlWriter.WriteElementString("ProvinciaPago", string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", "B");
-                xmlWriter.WriteElementString("FechaCondicionPago", confirma.Negocio.Canje == true ? "" : (esFijacionContratoConvenio ? "4 días hábiles de fecha de fijación" : (!(confirma.Negocio.PagoDiferido == true) ? "Días de diferimiento contra mercadería entregada" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (confirma.Negocio.Warrant == true ? "Pago contra warrant" : (confirma.Negocio.CD == true ? "Pago contra CD" : "72 hrs contra mercadería entregada")) : ""))));
-                xmlWriter.WriteElementString("LugarPago", "BUENOS AIRES");
-                xmlWriter.WriteElementString("PagoAOrdenDe", string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "");
-                xmlWriter.WriteElementString("PorcPago", confirma.Negocio.PorcentajeDePago.ToString());
-                xmlWriter.WriteEndElement();
-            }
+                                    ((confirma.Negocio.Canje != true) ? new XElement("Pagos",
+                                        new XElement("ProvinciaPago", new XAttribute("CodLista", "B")),
+                                        new XElement("FechaCondicionPago", confirma.Negocio.Canje == true ? "" : (esFijacionContratoConvenio ? "4 días hábiles de fecha de fijación" : (!(confirma.Negocio.PagoDiferido == true) ? "Días de diferimiento contra mercadería entregada" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (confirma.Negocio.Warrant == true ? "Pago contra warrant" : (confirma.Negocio.CD == true ? "Pago contra CD" : "72 hrs contra mercadería entregada")) : "")))),
+                                        new XElement("LugarPago", "BUENOS AIRES"),
+                                        new XElement("PagoAOrdenDe", new XAttribute("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "")),
+                                        new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.ToString())
+                                    ) : null),
             #endregion Pagos
-            #region FIJACION
-            if (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
-            {
-                xmlWriter.WriteStartElement("Fijacion");
-                    xmlWriter.WriteElementString("FijMinima",condiciones.CantidadMinima.ToString());
-                    xmlWriter.WriteElementString("FijMaxima",condiciones.CantidadMaxima.ToString());
-                    xmlWriter.WriteElementString("UnidadMedidaFijacion",string.Empty);
-                    xmlWriter.WriteAttributeString("Caption", "K");
-                    xmlWriter.WriteAttributeString("CodLista", "K");
-                    xmlWriter.WriteElementString("FijPeriodo", "1");
-                    xmlWriter.WriteElementString("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde));
-                    xmlWriter.WriteElementString("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta));
-                    xmlWriter.WriteElementString("PorcMultaIncumplimiento", "010");
-                    xmlWriter.WriteElementString("ComunicacionFijacion", confirma.Negocio.PagoDirectoVendedor == true ? "2" : "1");
-                xmlWriter.WriteEndElement();
-            }
-            #endregion FIJACION
-            xmlWriter.WriteElementString("ProduccionVendedor", string.Empty);
-            xmlWriter.WriteAttributeString("CodLista", confirma.Negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "4") : (confirma.Negocio.Consignatario == true ? "5" : "2"));
+            #region Insumos
+                                    ((confirma.Negocio.Canje != true) ?new XElement("Insumos",
+                                        new XElement("Productos",
+                                            new XElement("Insumo",
+                                                new XElement("Producto", new XAttribute("CodLista","1")),
+                                                new XElement("DescAdicional","insumos"),
+                                                new XElement("Cantidad"),
+                                                new XElement("Precio"),
+                                                new XElement("UnidadMedida",new XAttribute("CodLista",string.Empty)),
+                                                new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", string.Empty))
+                                            )
+                                        ),
+                                        new XElement("Moneda",new XAttribute("CodLista",string.Empty)),
+                                        new XElement("PrecioTotal", confirma.Negocio.Monto),
+                                        new XElement("Factura"),
+                                        new XElement("PorcentajeGastos"),
+                                        new XElement("TipoCambioPesos"),
+                                        new XElement("LugarEntrega"),
+                                        new XElement("ProvinciaEntrega", confirma.Negocio.Destino.Localidad.Provincia.CodigoConfirma)
+                                    ):null),
+            #endregion Insumos
+            #region Fijacion
+                                    ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) ? new XElement("Fijacion",
+                                        new XElement("FijMinima", condiciones.CantidadMinima.ToString()),
+                                        new XElement("FijMaxima", condiciones.CantidadMaxima.ToString()),
+                                        new XElement("UnidadMedidaFijaacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K"), string.Empty),
+                                        new XElement("FijPeriodo", "1"),
+                                        new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
+                                        new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
+                                        new XElement("PorcMultaIncumplimiento", "010"),
+                                        new XElement("ComunicacionFijacion", new XAttribute("CodLista", confirma.Negocio.PagoDirectoVendedor == true ? "2" : "1"))
+                                    ) : null),
+            #endregion Fijacion
+                                new XElement("ProduccionVendedor", new XAttribute("CodLista", confirma.Negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "4") : (confirma.Negocio.Consignatario == true ? "5" : "2"))),
             #region APRECIO
-            if (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-            {
-                xmlWriter.WriteElementString("APrecio", string.Empty);
-                xmlWriter.WriteAttributeString("CodLista", "1");
-            }
+                                ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ?
+                                    new XElement("APrecio", new XAttribute("CodLista", "1"), string.Empty)
+                                : null),
             #endregion APRECIO
-            xmlWriter.WriteElementString("TipoOperacion", "1");
+                                new XElement("TipoOperacion", "1"),
             #region SioGranos
-            xmlWriter.WriteStartElement("SioGranos");
-                xmlWriter.WriteElementString("NumeroDeclaracion", estadoSAP.NumeroSio.ToString());
-                xmlWriter.WriteStartElement("DetalleDeclaracion");
-                    xmlWriter.WriteElementString("ModalidadOperacion", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista",string.Empty);
-                    xmlWriter.WriteElementString("EsCompradorFinal", string.Empty);
-                    xmlWriter.WriteElementString("ProvinciaDestino", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista",string.Empty);
-                    xmlWriter.WriteElementString("LocalidadDestino", string.Empty);
-                    xmlWriter.WriteElementString("LugarEntregaSIO", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista",string.Empty);
-                    xmlWriter.WriteElementString("CondicionPago", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista",string.Empty);
-                    xmlWriter.WriteElementString("OpcionFijacion", string.Empty);
-                    xmlWriter.WriteAttributeString("CodLista",string.Empty);
-                    xmlWriter.WriteElementString("Observaciones", string.Empty);
-                xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndElement();
-            #endregion SioGranos
-
-            xmlWriter.WriteEndElement(); //Fin DetalleContrato
+                                new XElement("SioGranos",
+                                    new XElement("NumeroDeclaracion", estadoSAP.NumeroSio.ToString()),
+                                    new XElement("DetalleDeclaracion",
+                                        new XElement("ModalidadOperacion", new XAttribute("CodLista", string.Empty), string.Empty),
+                                        new XElement("EsCompradorFinal", string.Empty),
+                                        new XElement("ProvinciaDestino", new XAttribute("CodLista", string.Empty), string.Empty),
+                                        new XElement("LocalidadDestino", string.Empty),
+                                        new XElement("LugarEntregaSIO", new XAttribute("CodLista", string.Empty), string.Empty),
+                                        new XElement("CondicionPago", new XAttribute("CodLista", string.Empty), string.Empty),
+                                        new XElement("OpcionFijacion", new XAttribute("CodLista", string.Empty), string.Empty),
+                                        new XElement("Observaciones", string.Empty)
+                                    )
+                                )
+            #endregion SioGrano
+                            ),//Fin DetalleContrato
             #endregion DetalleContrato
             #region ExtendedData
-            xmlWriter.WriteStartElement("ExtendedData");
-            xmlWriter.WriteElementString("ExtendedDataItem",string.Empty);
-            xmlWriter.WriteAttributeString("Caption", string.Empty);
-            xmlWriter.WriteAttributeString("DataName", string.Empty);
-            xmlWriter.WriteEndElement();
+                            new XElement("ExtendedData",
+                                new XElement("ExtendedDataItem", new XAttribute("Caption", string.Empty), new XAttribute("DataName", string.Empty), string.Empty)
+                            ),
             #endregion ExtendedData
             #region Clausulas
-            xmlWriter.WriteStartElement("Clausulas");
-            foreach (var clausula in clausulas)
-            {
-                xmlWriter.WriteStartElement("Clausula");
-                xmlWriter.WriteAttributeString("Orden", clausula.Orden.ToString());
-                    xmlWriter.WriteElementString("TextoClausula",clausula.Texto);
-                    xmlWriter.WriteElementString("TextoAdicionalClausula", string.Empty);
-                xmlWriter.WriteEndElement();
-            }
-            xmlWriter.WriteEndElement();
+                            new XElement("Clausulas",
+                                clausulas.Select(x => new XElement("Clausula", new XAttribute("Orden", string.Empty),
+                                    new XElement("TextoClausula", x.Texto),
+                                    new XElement("TextoAdicionalClausula", string.Empty)
+                                ))
+                            )
             #endregion Clausulas
-            xmlWriter.WriteEndElement(); //Fin DetalleDocumento
-            xmlWriter.WriteEndElement(); //Fin Nodo Documento
-            xmlWriter.WriteEndElement(); //Fin NODO Lote   
+                        )//Fin Detalle Documento
+                    )//Fin Nodo Documento
+                )//Fin Nodo Lote
+            );
             //Fin Formateo del XML
-            xmlWriter.Flush(); //Limpia memoria
-            doc.LoadXml(xmlString.ToString()); //Carga en el documento lo escrito en el String
             doc.Save(ms); //Guarda el Documento en el Stream
             byte[] bytes = ms.ToArray(); //Devuelve el documento
             return bytes;
@@ -531,7 +492,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string GenerarNombreArchivoConfirma(string codigoSAP)
         {
-            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == codigoSAP);
+            var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
+            var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == CodigoSapCompleto);
             var nombreArchivo = "confirma" + confirma.FechaGeneracion.Year.ToString() + confirma.FechaGeneracion.Month.ToString() + confirma.FechaGeneracion.Day.ToString() + "_000" + codigoSAP + ".xml";
             return nombreArchivo;
         }
