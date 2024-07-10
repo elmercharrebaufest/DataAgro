@@ -494,7 +494,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
             var confirma = repositorio.Obtener<Confirma>(x => x.Negocio.ContratoSAP == CodigoSapCompleto);
-            var nombreArchivo = "confirma" + confirma.FechaGeneracion.Year.ToString() + confirma.FechaGeneracion.Month.ToString() + confirma.FechaGeneracion.Day.ToString() + "_000" + codigoSAP + ".xml";
+            var adicional = string.Empty;
+            if (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
+            {
+                var fijacion= repositorio.Obtener<FijacionDePrecioContrato>(x => x.ContratoSAP == CodigoSapCompleto);
+                adicional += fijacion != null ? "_" + fijacion.FijacionSAP :string.Empty;
+            }
+            var nombreArchivo = "confirma" + confirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/",string.Empty) + "_" + CodigoSapCompleto +adicional+ ".xml";
             return nombreArchivo;
         }
 
