@@ -440,6 +440,7 @@ function InicializarElementos() {
                 if ($("#estado").val() !== "5") {
                     var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
                     LimpiarBoleto();
+
                     if (compraNet.BoletoCompraNetId !== null) {
                         if (compraNet.BoletoCompraNetId === 1) {
                             $("#boletoConfirmaId").prop("checked", true);
@@ -475,6 +476,7 @@ function InicializarElementos() {
                 }
                 SeleccionAutomaticaBolsa();
                 ValidarCorredor(e.dataItem.Id);
+                $("#corredorId").val(e.dataItem.Id);
             }
         },
         dataSource: {

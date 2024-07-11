@@ -661,7 +661,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
                     {
-                        oErrorMessages.Error("Precio", "Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                        oErrorMessages.Error("Precio", "Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo.ToString("N2") + " y Precio Máximo: " + rangosPrecio.PrecioMaximo.ToString("N2") + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
                     }
                 }
             }
@@ -941,7 +941,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Now.Date)
+            if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Today)
             {
                 oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al día de hoy.");
             }
@@ -974,7 +974,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (!validacionesMinimas)
             {
-                if (oParam.FechaOperacion > DateTime.Now.Date)
+                if (oParam.FechaOperacion > DateTime.Today)
                 {
                     oErrorMessages.Error("FechaOperacion", "La fecha de operación tiene que ser menor o igual al día de hoy.");
                 }
@@ -1019,7 +1019,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
-                            if (oParam.FechaOperacion < DateTime.Now.Date)
+                            if (oParam.FechaOperacion < DateTime.Today)
                             {
                                 var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
 
@@ -1836,7 +1836,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var confirmacionAutomatica = (oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion || (!PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oContrato.EstadoId == (int)EnumEstadoContrato.PreAprobacion && oContrato.Id > 0))
-                && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date;
+                && ConfirmacionAutomatica(oContrato) && DateTime.Today == oContrato.FechaOperacion.Date;
 
             if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue && oContrato.ProveedorCreadorId == null)
             {
@@ -3449,7 +3449,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
             }
 
-            var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Today;
             var contratosPendientes = repositorio.Listar<Negocio, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.Id,
@@ -3639,7 +3639,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo)
         {
-            var fechaHoy = DateTime.Now.Date;
+            var fechaHoy = DateTime.Today;
             return repositorio.Listar<Negocio, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.Id,
@@ -3866,7 +3866,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public BasicoContrato TraerContratoAcuerdoACopiar(int contratoId)
         {
-            var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Today;
             var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.Id,
@@ -4681,7 +4681,7 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
+            htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad:N0} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
 
             htmlBody += "Origen: " + procedencia + " <br /><br />  ";
             htmlBody += "Destino: " + destino + " <br />";
@@ -5577,7 +5577,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     GrabarServicioModificado(contrato.Servicios.ToList(), contrato.MaterialId, contrato.DestinoId ?? 0);
                 }
-                if (ConfirmacionAutomatica(contrato) && DateTime.Now.Date == contrato.FechaOperacion.Date)
+                if (ConfirmacionAutomatica(contrato) && DateTime.Today == contrato.FechaOperacion.Date)
                 {
                     contrato.FechaConfirmacion = DateTime.Now;
                     contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
@@ -6061,7 +6061,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.CampanaId = item.CampanaId;
                 contrato.FechaOperacion = item.FechaOperacion.Value;
                 contrato.Fecha = DateTime.Now;
-                if (item.FechaOperacion.Value.Date < DateTime.Now.Date)
+                if (item.FechaOperacion.Value.Date < DateTime.Today)
                 {
                     contrato.MotivoOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
                     contrato.DescripcionOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
@@ -7599,7 +7599,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.Observacion = ii.ToString().Trim();
                         contrato.ComercialCreadorId = ComercialId;
 
-                        if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Now.Date)
+                        if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Today)
                         {
                             contrato.MotivoOperacionAnterior = "Alta masiva";
                         }
@@ -9219,7 +9219,7 @@ namespace Molinos.DataAgro.Business.Managers
             ZonaCupo zonaComercial = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
 
             var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
-            var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Today;
             var fechaLimite = hoy.AddDays(diasParametro);
 
             List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId &&
@@ -9315,7 +9315,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (rangosPrecio != null && (precio < rangosPrecio.PrecioMinimo || precio > rangosPrecio.PrecioMaximo))
             {
-                return ("Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                return $"Precio fuera de Rango - Precio Mínimo: {rangosPrecio.PrecioMinimo:N2} y Precio Máximo: {rangosPrecio.PrecioMaximo:N2} para {rangosPrecio.Material.Descripcion} en {rangosPrecio.Moneda.Descripcion}";
             }
             else
                 return string.Empty;

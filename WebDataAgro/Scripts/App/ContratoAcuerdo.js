@@ -27,6 +27,7 @@ $(document).ready(function () {
     OcultarCamposAgente();
     $("#material").data("kendoDropDownList").trigger("change");
 });
+
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
 });
@@ -4975,6 +4976,17 @@ function InicializarAperturaDePrecios() {
                 VisualizarFechaCierta();
             }
         }
+        var parametros = {
+            materialId: $('select[id="material"]').val(),
+            moneda: $("#precioMonedaId").val(),
+            precio: $("#precioId").val()
+        }
+
+        if (parametros.precio > 0) {
+            var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
+            if (result)
+                MensErr(result)
+        };
     });
 
     $("#aperturaPrecioImporteFinancieroId").kendoNumericTextBox({
@@ -6387,4 +6399,18 @@ function ObtenerTypeOfRate(tipoNegocio, moneda, agenteDeCompra, contrato, esEdic
     }
 
     return typeOfRate;
+}
+
+function ComprobarRangoPrecio() {
+    var parametros = {
+        materialId: $('select[id="material"]').val(),
+        moneda: $("#precioMonedaId").val(),
+        precio: $("#precioId").val()
+    }
+
+    if (parametros.precio > 0) {
+        var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
+        if (result)
+            MensErr(result)
+    };
 }
