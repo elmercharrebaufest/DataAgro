@@ -26,23 +26,8 @@ $(document).ready(function () {
     AutocompleteProcedencia();
     OcultarCamposAgente();
     $("#material").data("kendoDropDownList").trigger("change");
-
-    $("#precioId").change(function () {
-
-        var parametros = {
-            materialId: $('select[id="material"]').val(),
-            moneda: $("#precioMonedaId").val(),
-            precio: $("#precioId").val()
-        }
-
-        if (parametros.precio > 0) {
-            var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
-            if (result)
-                MensErr(result)
-        };
-
-    });
 });
+
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
 });
@@ -5159,6 +5144,17 @@ function InicializarAperturaDePrecios() {
                 $("#precioMonedaId").data("kendoDropDownList").trigger("change");
             }
         }
+        var parametros = {
+            materialId: $('select[id="material"]').val(),
+            moneda: $("#precioMonedaId").val(),
+            precio: $("#precioId").val()
+        }
+
+        if (parametros.precio > 0) {
+            var result = MSExecuteOnServer('/CompraNet/ConsultaRangoPrecio', parametros);
+            if (result)
+                MensErr(result)
+        };
 
     });
 
