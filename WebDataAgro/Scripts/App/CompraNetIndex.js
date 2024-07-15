@@ -1632,13 +1632,13 @@ function ObtenerDatosModalFinalizado() {
 
 function Finalizar(finalizarContratoFijacion) {
     var result;
-    if ($("#tipoNegocioModalFinalizado").val() === "3") {
+    if ($("#tipoNegocioModalFinalizado").val() == TIPO_NEGOCIO.FIJACION) {
         result = MSExecuteOnServer('/CompraNet/FinalizarFijacion', finalizarContratoFijacion);
-    } else if ($("#tipoNegocioModalFinalizado").val() === "4") {
+    } else if ($("#tipoNegocioModalFinalizado").val() == TIPO_NEGOCIO.FASON) {
         result = MSExecuteOnServer('/CompraNet/FinalizarFason', finalizarContratoFijacion);
-    } else if ($("#tipoNegocioModalFinalizado").val() === "5") {
+    } else if ($("#tipoNegocioModalFinalizado").val() == TIPO_NEGOCIO.AGENTE_DE_COMPRAS) {
         result = MSExecuteOnServer('/CompraNet/FinalizarAgente', finalizarContratoFijacion);
-    } else if ($("#tipoNegocioModalFinalizado").val() === "6") {
+    } else if ($("#tipoNegocioModalFinalizado").val() == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
         result = MSExecuteOnServer('/CompraNet/FinalizarAcuerdo', finalizarContratoFijacion);
     } else {
         result = MSExecuteOnServer('/CompraNet/FinalizarContrato', finalizarContratoFijacion);
@@ -1649,10 +1649,11 @@ function Finalizar(finalizarContratoFijacion) {
             if (ExistsErrorMessages(result.Errores)) {
                 MensErr(result.Errores[0].Message);
             } else {
-                result = MSExecuteOnServer('/CompraNet/EnviarMailImpuestos', finalizarContratoFijacion);
+                if ($("#tipoNegocioModalFinalizado").val() != TIPO_NEGOCIO.FIJACION) {
+                    result = MSExecuteOnServer('/CompraNet/EnviarMailImpuestos', finalizarContratoFijacion);
+                }
 
                 recargarGrilla();
-
             }
         }
     }
