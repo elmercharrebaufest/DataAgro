@@ -43,7 +43,7 @@ namespace WebDataAgro.Controllers
             var confirmas = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
-                Data = confirmas.confirmasGenerados,
+                Data = confirmas,
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -52,7 +52,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio)
+                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio, GlobalVariables.EquipoReal)
             };
         }
 
@@ -60,7 +60,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, claseNegocio)
+                Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, claseNegocio, GlobalVariables.EquipoReal)
             };
         }
 
@@ -68,7 +68,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio)
+                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio, GlobalVariables.EquipoReal)
             };
         }
 
@@ -76,7 +76,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, claseNegocio)
+                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, claseNegocio, GlobalVariables.EquipoReal)
             };
         }
 

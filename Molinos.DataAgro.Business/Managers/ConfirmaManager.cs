@@ -18,6 +18,9 @@ using System.Xml;
 using Molinos.DataAgro.Interfaces.Clausulas;
 using System.Xml.Linq;
 using iTextSharp.tool.xml.html.head;
+using static iTextSharp.text.pdf.AcroFields;
+using System.Diagnostics.Contracts;
+using System.ServiceModel.Channels;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -63,7 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var contrato in contratos)
                 {
                     
-                    var mensaje = ValidarNegocio(contrato.ContratoSAP, claseNegocio);
+                    var mensaje = ValidarContrato(contrato, claseNegocio);
                     var esValido = mensaje == "" ? true : false;
                     if (!esValido)
                     {
@@ -72,7 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                     //CONSULTAR EXISTE CONFIRMA/BOLETO A RFC
-                    var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.Negocio : "");
+                    var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
                     if (consultaConfirma.Generado == "" || consultaConfirma.Anulado.Equals("X")) // probar casos anulados
                     { //Consulta: El Boleto/Confirma no existe o no esta generado en SAP???
                         //PRECARGAR CONFIRMA GENERADO DTO
@@ -124,29 +127,33 @@ namespace Molinos.DataAgro.Business.Managers
             throw new NotImplementedException();
         }
 
-        public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
+        public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int claseNegocio, List<int> equipo)
         {
-            var listaNegocios = new List<Negocio>();
-            if (tipoNegocio == 1)
+            var listaNegocios = new List<string>();
+            if (claseNegocio == 1)
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true);
+                var lista = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.EstadoId == 5);
+                listaNegocios = lista.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             }
             else
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.Cantidad >= 10000);
+                var lista = repositorio.Listar<FijacionDePrecioContrato>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.FijacionSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.Cantidad >= 10000 && x.EstadoId == 5);
+                listaNegocios=lista.Where(x => int.Parse(x.FijacionSAP) >= negocioDesde && int.Parse(x.FijacionSAP) <= negocioHasta).Select(x => x.FijacionSAP.TrimStart('0')).ToList();
             }
-
-            List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            codigos.Sort();
-            return codigos.FindAll(x => ValidarNegocio(x, tipoNegocio) == ""); ;
+            listaNegocios.Sort();
+            var result = listaNegocios.FindAll(x => ValidarNegocio(x, claseNegocio, equipo) == string.Empty);
+            return result;
         }
 
-        public List<string> ValidarNegocios(List<string> codigosSAP, int claseNegocio)
+        public List<string> ValidarNegocios(List<string> codigosSAP, int claseNegocio, List<int> equipo)
         {
+            var codigos = AgregarCeros(codigosSAP);
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
+            var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             List<string> rechazados = new List<string>();
-            foreach (var itemNegocio in codigosSAP)
+            foreach (var contrato in contratos)
             {
-                var mensaje = ValidarNegocio(itemNegocio, claseNegocio);
+                var mensaje = ValidarContrato(contrato, claseNegocio);
                 if (!string.IsNullOrEmpty(mensaje))
                 {
                     rechazados.Add(mensaje);
@@ -155,85 +162,98 @@ namespace Molinos.DataAgro.Business.Managers
             return rechazados;
         }
 
-        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio)
+        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio, List<int> equipo)
         {
             var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var fechaHasta = hasta == "" ? DateTime.Now : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1);
-            var listaNegocios = new List<Negocio>();
+            var listaNegocios = new List<string>();
             if (claseNegocio == 1)
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
+                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.EstadoId==5).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             }
             else
             {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000);
+                listaNegocios = repositorio.Listar<FijacionDePrecioContrato>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.FijacionSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000 && x.EstadoId == 5).Select(x => x.FijacionSAP.TrimStart('0')).ToList();
             }
-            var result = listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            return result.FindAll(x => ValidarNegocio(x, claseNegocio) == "");
+            listaNegocios.Sort();
+            var result = listaNegocios.FindAll(x => ValidarNegocio(x, claseNegocio, equipo) == string.Empty);
+            return result;
         }
 
-        public string ValidarNegocio(string codigoSAP, int claseNegocio)
+        public string ValidarNegocio(string codigoSAP, int claseNegocio, List<int> equipo)
         {
             var codigoSAPcompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
+            var mensaje = "";
+
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { codigoSAPcompleto }, false, equipo, new List<int>()));
+            var contrato = consulta.First();
+
+            mensaje += ValidarContrato(contrato, claseNegocio);
+            return mensaje;
+        }
+
+        private string ValidarContrato(BasicoContrato contrato, int claseNegocio)
+        {
             var tiposNegocios = ConvertirClaseNegocioATiposNegocios(claseNegocio);
             var mensaje = "";
             var kilosMinimos = 10000;
-            var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == codigoSAPcompleto);
 
-            if (negocio != null)
+            if (contrato != null)
             {
                 //Validar que corresponda la clase de negocio
-                if (!tiposNegocios.Contains(negocio.TipoNegocioId))
+                if (!tiposNegocios.Contains(contrato.TipoNegocioId))
                 {
-                    mensaje = $"No se puede generar el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.";
-                    logger.Debug($"No se puede generar el confirma el confirma {codigoSAP}. Ha seleccionado el tipo incorrecto.");
+                    mensaje = $"No se puede generar el confirma {contrato.ContratoSAP}. Ha seleccionado el tipo incorrecto.";
+                    logger.Debug($"No se puede generar el confirma el confirma {contrato.ContratoSAP}. Ha seleccionado el tipo incorrecto.");
                     return mensaje;
                 }
 
-                if (negocio.TipoNegocioId==(int)EnumTipoNegocio.FIJACION) //FIJACION
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) //FIJACION
                 {
-                    if (negocio.Cantidad < kilosMinimos)
+                    if (contrato.Cantidad < kilosMinimos)
                     {
-                        mensaje = $"No se puede generar el confirma {codigoSAP} por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por cantidad menor a 10 toneladas.");
+                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} por su cantidad menor a 10 toneladas.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.ContratoSAP} por cantidad menor a 10 toneladas.");
                         return mensaje;
                     }
-                    if (negocio.Canje != true)
+                    if (contrato.Canje != true)
                     {
-                        mensaje = $"No se puede generar el confirma {codigoSAP} por no ser de canje.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no ser de canje.");
+                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} por no ser de canje.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.ContratoSAP} por no ser de canje.");
                         return mensaje;
                     }
 
-                }else{ //CONTRATO
+                }
+                else
+                { //CONTRATO
                     //Validar estado del contrato
-                    var res = status.ValidarEstado(codigoSAP);
+                    var res = status.ValidarEstado(contrato.ContratoSAP);
                     if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                     {
                         string motivoStatus = StatusNegocioConfirma(res);
-                        mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por su estado: {motivoStatus}";
-                        logger.Debug($"No se puede generar el confirma por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {codigoSAP}");
+                        mensaje = $"No se puede generar el confirma con negocio {contrato.ContratoSAP} para el contrato por su estado: {motivoStatus}";
+                        logger.Debug($"No se puede generar el confirma por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {contrato.ContratoSAP}");
                         return mensaje;
                     }
                     else if (string.IsNullOrEmpty(res.Status))
                     {
-                        mensaje = $"No se puede generar el confirma con negocio {codigoSAP} para el contrato por estar en slip.";
-                        logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {codigoSAP}");
+                        mensaje = $"No se puede generar el confirma con negocio {contrato.ContratoSAP} para el contrato por estar en slip.";
+                        logger.Debug($"No se puede generar el confirma por tener status vacío (slip) - ContratoSAP: {contrato.ContratoSAP}");
                         return mensaje;
                     }
-                }
 
-                //Validar que tenga tilde CONFIRMA
-                if (negocio.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
-                {
-                    mensaje = $"No se puede generar el confirma {codigoSAP} por no tener tilde de confirma.";
-                    logger.Debug($"No se puede generar el confirma para la fijacion {codigoSAP} por no tener tilde de confirma.");
-                    return mensaje;
+                    // Validar que tenga tilde CONFIRMA
+                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
+                    {
+                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} por no tener tilde de confirma.";
+                        logger.Debug($"No se puede generar el confirma para el negocio {contrato.ContratoSAP} por no tener tilde de confirma.");
+                        return mensaje;
+                    }
                 }
             }
             else
             {
-                mensaje = $"No se encontró el negocio {codigoSAP} seleccionado.";
+                mensaje = $"No se encontró el negocio {contrato.ContratoSAP} seleccionado.";
             }
             return mensaje;
         }
