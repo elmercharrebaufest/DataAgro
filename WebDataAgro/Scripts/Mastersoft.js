@@ -657,3 +657,27 @@ const Materiales = {
     GIRASOL_AO: 5,
     SORGO: 6
 };
+
+const TIPO_NEGOCIO = {
+    A_FIJAR: 1,
+    A_PRECIO: 2,
+    FIJACION: 3,
+    FASON: 4,
+    AGENTE_DE_COMPRAS: 5,
+    CONTRATO_ACUERDO: 6,
+    ESPACIO_DINAMICO: 7
+}
+
+const ESTADO_CONTRATO = {
+    PENDIENTE: 1,
+    CONFIRMADO: 2,
+    OFERTA: 3,
+    CON_ERROR: 4,
+    FINALIZADO: 5,
+    RECHAZADO: 6,
+    RECONFIRMAR: 7,
+    ELIMINADO: 8,
+    PRE_APROBACION: 9,
+    PRE_ANULADO: 10,
+    RECONFIRMAR_FINALIZADO: 11
+}

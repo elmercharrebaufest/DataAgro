@@ -3675,7 +3675,7 @@ function GrabarContrato(nuevoContrato) {
                     listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
                 }
 
-                var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d = objeto.oParam.DestinoId).ProvinciaId).Inscripto;
+                var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d.Id == objeto.oParam.DestinoId).ProvinciaId).Inscripto;
                 var procedenciaInscriptaObj = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == objeto.oParam.ProvinciaId);
 
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
