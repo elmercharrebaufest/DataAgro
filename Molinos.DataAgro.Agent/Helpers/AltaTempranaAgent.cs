@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Agent
                     },
                     Consignatario = "SI",
                     PlanCanje = "SI",
-                    BoletoFisico = "NO",
+                    BoletoFisico = "SI",
 
                     PeticionBorradoGral = "",
                     PeticionBorradoSociedad = "",

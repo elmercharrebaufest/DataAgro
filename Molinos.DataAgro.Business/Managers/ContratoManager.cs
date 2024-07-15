@@ -4646,7 +4646,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             Contrato contratoDB = repositorio.Obtener<Contrato>(contratoId);
 
-            if (contratoDB != null && contratoDB.EstadoId == 5 && (!contratoDB.Provincia.Inscripto || !contratoDB.Destino.Localidad.Provincia.Inscripto))
+            if (contratoDB != null && contratoDB.EstadoId == (int)EnumEstadoContrato.Finalizado && (!contratoDB.Provincia.Inscripto || !contratoDB.Destino.Localidad.Provincia.Inscripto) && contratoDB.TipoNegocioId != (int)EnumTipoNegocio.FIJACION)
             {
                 var lista = new List<string>();
                 var email = "";
