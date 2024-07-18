@@ -40,10 +40,10 @@ namespace WebDataAgro.Controllers
             CargarSeleccionables();
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
             
-            var confirmas = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService, GlobalVariables.EquipoReal);
+            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
-                Data = confirmas,
+                Data = result,
                 MaxJsonLength = Int32.MaxValue
             };
         }
