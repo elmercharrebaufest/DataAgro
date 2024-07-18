@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerAdministracionCupoExcedente(request, comercialId));
         }
-        
+
         public AdministracionCupoDto TraerAdministracionCupo(int id)
         {
             return repositorio.Obtener<AdministracionCupo, AdministracionCupoDto>(x => x.Id == id, x => new AdministracionCupoDto
@@ -51,13 +51,13 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha
             });
         }
-        
+
         public CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, int cantidadOriginal, int cantidadFleteOriginal, string active, string motivo)
         {
             try
             {
                 bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] != null && ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
-                
+
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
                 if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.Pendiente)
@@ -349,7 +349,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla las solicitud aceptada por Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail se detalla la solicitud de cupos aceptada por Molinos Agro S.A: <br /><br />  ";
             if (!string.IsNullOrEmpty(solicitud.Motivo))
             {
                 htmlBody += $"Motivo de confirmación: {solicitud.Motivo} <br /><br />  ";
@@ -373,7 +373,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "(*)<strong> Cupos con flete procedencia </strong> <br />";
             }
             //"<br /><br /> En el caso que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -481,7 +481,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla las solicitud rechazada por Molinos Agro S.A: <br /> ";
+            htmlBody += "En el presente mail se detalla la solicitud de cupos rechazada por Molinos Agro S.A: <br /><br /> ";
             if (!string.IsNullOrEmpty(solicitud.Motivo))
             {
                 htmlBody += $"Motivo de rechazo: {solicitud.Motivo} <br /><br />  ";
@@ -494,7 +494,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "</table>";
             //"<br /><br /> En el caso que sea necesario, comuníquese con  " + (comercial.IdActiveDirectory != ""? (comercial.Nombres + " " + comercial.Apellido + (emailAdmin != "" && emailAdmin != null ? "(" + emailAdmin + ")." : ".")): "un administrador" )+
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
               " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
               @"<img src='cid:" + res.ContentId + @"'/>" +
               "<br /> <br /> www.molinosagro.com.ar";
