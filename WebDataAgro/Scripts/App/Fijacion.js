@@ -3461,10 +3461,16 @@ function AgregarCalidades() {
         }
         else {
             viewModel.Calidades.push(calidades);
-            $("#calidadesEspecialesId").val("");
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
             $("#porcentajeDesdeId").data("kendoNumericTextBox").value("");
             $("#porcentajeHastaId").data("kendoNumericTextBox").value("");
+
+            if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
+            }
+            else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
+            }
         }
         return err;
     }

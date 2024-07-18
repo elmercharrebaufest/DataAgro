@@ -557,7 +557,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new ConfirmaGeneradoDto
             {
-                ContratoSAP = Convert.ToInt64(itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : itemNegocio.ContratoSAP).ToString(),
+                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.ContratoSAP : itemNegocio.FijacionSAP,
                 Generado = generado,
                 Mensaje = mensaje,
                 FechaGeneracion = default(DateTime),
@@ -669,10 +669,10 @@ namespace Molinos.DataAgro.Business.Managers
                     Id = a.Id, 
                     NegocioId = a.NegocioId,
                     ComercialId = a.ComercialId,
-                    Nombre = ("confirma" + a.FechaGeneracion.Year.ToString() + a.FechaGeneracion.Month.ToString() + a.FechaGeneracion.Year.ToString() + a.FechaGeneracion.Day.ToString() + "_000" +  a.Negocio.ContratoSAP + ".xml"), 
+                    ContratoSAP = a.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (a.Negocio as FijacionDePrecioContrato).FijacionSAP : a.Negocio.ContratoSAP,
+                    Nombre = "confirma" + a.FechaGeneracion.Year + (a.FechaGeneracion.Month > 9 ? "" : "0") + a.FechaGeneracion.Month + (a.FechaGeneracion.Day > 9 ? "" : "0") + a.FechaGeneracion.Day + "_" + a.Negocio.ContratoSAP + (a.Negocio.TipoNegocioId==(int)EnumTipoNegocio.FIJACION?"_" +(a.Negocio as FijacionDePrecioContrato).FijacionSAP: string.Empty) + ".XML", 
                     FechaGeneracion = a.FechaGeneracion.Day +"/"+ a.FechaGeneracion.Month + "/" + a.FechaGeneracion.Year,
                     IsWebService = a.IsWebService,
-                    ContratoSAP = a.Negocio.ContratoSAP,
                 }, null, 0, null, Entities.Helpers.DirOrden.Asc)
                 .Where(c => !c.IsWebService).ToList();
         }

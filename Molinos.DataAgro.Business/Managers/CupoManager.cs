@@ -5400,7 +5400,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
                                 EPA = solicitud.EPA,
-                                NegocioId = negocioAsociado.Id,
+                                NegocioId = negocioAsociado.Id > 0 ? negocioAsociado.Id : (int?)null
                             };
 
                             repositorio.Agregar(solicitudItem);
@@ -5432,6 +5432,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
                                 EPA = solicitud.EPA,
+                                NegocioId = negocioAsociado.Id > 0 ? negocioAsociado.Id : (int?)null
                             };
                             repositorio.Agregar(solicitudCupo);
                         }
