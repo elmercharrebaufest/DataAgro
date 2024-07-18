@@ -657,7 +657,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("FechaFijacion", "Las fechas de fijación no pueden ser días inhábiles (fin de semana o feriado).\n\n");
                 }
             }
-            
+
             if (!validacionesMinimas)
             {
                 var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
@@ -789,18 +789,18 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
+            if ((oParam.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL && oParam.Calidad == null))
             {
                 oErrorMessages.Error("", "Se debe completar el campo Valor de Calidad.");
             }
             if (oParam.Calidad != null)
             {
-                var calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
+                var calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == (int)EnumCalidadEspecial.DAÑADOS);
                 if (calidad != null && calidad.PorcentajeHasta < 40)
                 {
                     oErrorMessages.Error("", "Debe completar el rango de Dañados.");
                 }
-                calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == 2);
+                calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == (int)EnumCalidadEspecial.GRANOS_VERDES);
                 if (calidad != null && calidad.PorcentajeHasta < 100)
                 {
                     oErrorMessages.Error("", "Debe completar el rango de Granos Verdes.");

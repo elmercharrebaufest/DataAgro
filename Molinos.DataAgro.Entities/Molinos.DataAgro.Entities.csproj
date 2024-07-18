@@ -169,6 +169,7 @@
   <ItemGroup>
     <Compile Include="Common\Enums\EnumBoletoCompraNet.cs" />
     <Compile Include="Common\Enums\EnumBolsaCompraNet.cs" />
+    <Compile Include="Common\Enums\EnumCalidadEspecial.cs" />
     <Compile Include="Common\Enums\EnumClasificacionCompraNet.cs" />
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
