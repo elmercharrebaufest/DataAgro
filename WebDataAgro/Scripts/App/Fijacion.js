@@ -1956,10 +1956,6 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        },
         change: function () {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
@@ -1968,11 +1964,7 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({

@@ -661,15 +661,15 @@ function ObtenerDatos(error) {
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
     obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
-    if (obj.TipoNegocioId == "6") {
-        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
-        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
-    } else if (obj.TipoNegocioId == "3") {
+    if (obj.TipoNegocioId == TIPO_NEGOCIO.FIJACION) {
         obj.DesdeFijacion = $("#fechaFijacionDesde").val() == null || $("#fechaFijacionDesde").val() == undefined || $("#fechaFijacionDesde").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionDesde").val();
         obj.HastaFijacion = $("#fechaFijacionHasta").val() == null || $("#fechaFijacionHasta").val() == undefined || $("#fechaFijacionHasta").val() == "" ? formatearFecha(maniana) : $("#fechaFijacionHasta").val();
-    } else {
+    } else if (obj.TipoNegocioId == TIPO_NEGOCIO.A_FIJAR) {
         obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val();
         obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
+    } else {
+        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
+        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
     }
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();

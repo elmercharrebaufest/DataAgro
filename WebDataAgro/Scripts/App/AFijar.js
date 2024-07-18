@@ -1709,21 +1709,13 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaHastaOriginalId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaHastaOriginalId").data('kendoDatePicker').enable(false);
@@ -1748,20 +1740,12 @@ function InicializarElementos() {
 
     $("#fechaDesdeSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaHastaSustentableId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        disableDates: function (date) {
-            var day = new Date(date).getDay();
-            return day === 0 || day === 6;
-        }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaDesdeId").val(date);

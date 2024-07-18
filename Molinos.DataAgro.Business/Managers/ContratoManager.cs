@@ -613,10 +613,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
 
-            if (!diasHabilesAgent.EsDiaHabil(oParam.FechaHasta) || !diasHabilesAgent.EsDiaHabil(oParam.FechaDesde))
-            {
-                oErrorMessages.Error("FechaHasta", "Las fechas de entrega desde y hasta no pueden ser días inhábiles (fin de semana o feriado).\n");
-            }
             if (oParam.TipoNegocioId == 0)
             {
                 oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacío.");
@@ -644,16 +640,24 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && oParam.BolsaId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
-                oErrorMessages.Error("BolsaCartaOfertaId", "La Bolsa debe ser Buenos Aires cuando el Boleto es 'Carta Oferta'.");
+                oErrorMessages.Error("BolsaCartaOfertaId", "La bolsa debe ser Buenos Aires cuando el boleto es 'Carta Oferta'.");
             }
             if (oParam.FechaDesde > oParam.FechaHasta)
             {
-                oErrorMessages.Error("FechaDesdeHasta", "'Fecha Desde' no puede ser mayor a 'Fecha Hasta'.");
+                oErrorMessages.Error("FechaDesdeHasta", "La 'Fecha Desde' no puede ser mayor a la 'Fecha Hasta'.\n");
             }
-            if (oParam.DesdeFijacion > oParam.HastaFijacion)
+            if (oParam.DesdeFijacion.HasValue && oParam.HastaFijacion.HasValue)
             {
-                oErrorMessages.Error("FechaDesdeHastaFijacion", "Fecha de Fijación inválida");
+                if (oParam.DesdeFijacion > oParam.HastaFijacion)
+                {
+                    oErrorMessages.Error("FechaDesdeHastaFijacion", "Las fechas de fijación no son válidas.\n");
+                }
+                if (!diasHabilesAgent.EsDiaHabil(oParam.DesdeFijacion.Value) || !diasHabilesAgent.EsDiaHabil(oParam.HastaFijacion.Value))
+                {
+                    oErrorMessages.Error("FechaFijacion", "Las fechas de fijación no pueden ser días inhábiles (fin de semana o feriado).\n\n");
+                }
             }
+            
             if (!validacionesMinimas)
             {
                 var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
