@@ -26,8 +26,8 @@
 
   <Target Name="CI">
 
-    <Message Text="*** Performing restoring ***" />
-    <CallTarget Targets="RestorePackages"/>
+    <!--<Message Text="*** Performing restoring ***" />
+    <CallTarget Targets="RestorePackages"/>-->
 
     <Message Text="*** Performing build ***" />
     <CallTarget Targets="Build"/>
