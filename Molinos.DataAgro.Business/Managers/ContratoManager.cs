@@ -1713,7 +1713,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (listCupoConDescargaFechas != null)
             {
-                if (oContrato.Id > 0 && kilosParametro > oContratoSave.Cantidad)
+                if (oContrato.Id > 0 && kilosParametro >= oContratoSave.Cantidad)
                 {
                     var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id);
                     oContrato.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
