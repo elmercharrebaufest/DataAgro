@@ -14,6 +14,7 @@ var cargaFijacionAyer;
 var esEdicion;
 var feriados = [];
 var boletoId;
+var cantidadEditar, fechaHastaEditar;;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -1506,8 +1507,13 @@ function InicializarElementos() {
             var precioNeto = $("#precioTotalApertura").data("kendoNumericTextBox").value();
             CalcularImporteDeOperacion(precioNeto, $("#cantidadId").val());
             ValidarCantidad();
-            $("#conDescargaId").prop("disabled", false);
-            if ($("#conDescargaId").is(":checked") == true) $("#btnConDescarga").show();
+            if ($("#conDescargaId").is(":checked") == true) {
+                if (cantidadEditar > this.value()) {
+                    this.value(cantidadEditar);
+                    MensErr("No se permite reducir la cantidad de kilos en negocios con descarga.\n\n");
+                }
+                else $("#btnConDescarga").show();
+            }
         }
     });
 
@@ -1765,7 +1771,16 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            if ($("#conDescargaId").is(":checked") == true) {
+                if (fechaHastaEditar != this.value()) {
+                    this.value(fechaHastaEditar);
+                    MensErr("No se permite modificar la fecha hasta en negocios con descarga.\n\n");
+                }
+                else $("#btnConDescarga").show();
+            }
+        }
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
@@ -4670,6 +4685,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#btnConDescarga").hide();
         if (contrato.Id > 0) {
             $("#conDescargaId").prop("disabled", true);
+            cantidadEditar = $("#cantidadId").data("kendoNumericTextBox").value();
+            fechaHastaEditar = $("#fechaHastaId").val();
         }
     }
 
