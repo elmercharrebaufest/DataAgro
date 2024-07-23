@@ -49,6 +49,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? EPA { get; set; }
         public string ContratoSAP { get; set; }
         public double KgPendientes { get; set; }
-        public int CuposSegunKg { get; set; }
+        public int CuposRestantes { get; set; }
     }
 }
