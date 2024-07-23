@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string EstadoNegocio {  get; set; }
         public int MaterialId { get; set; }
         public double KgPendientes { get; set; }
-        public int CuposSegunKg { get; set; }
+        public int CuposRestantes { get; set; }
         public DateTime FechaHasta { get; set; }
     }
 }

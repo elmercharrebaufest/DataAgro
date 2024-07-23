@@ -221,7 +221,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                 error.Errores.AddRange(errorSap.Errores);
                                                 continue;
                                             }
-                                            cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio) ? 1 : 8;
+                                            cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : cupo.Centro.NoPropio ? 1 : 8;
                                             foreach (var cupoSap in listaCupos)
                                             {
                                                 var nuevoCupo = (Cupo)cupo.Clone();
@@ -5219,9 +5219,9 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     solicitud.ContratoSAP = solicitud.ContratoSAP.PadLeft(10, '0');
                     negocioAsociado = repositorio.Obtener<Negocio>(x => x.ContratoSAP == solicitud.ContratoSAP && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
-                    if (negocioAsociado.ConfirmadoSAP == true && solicitud.CantidadCupo > solicitud.CuposSegunKg)
+                    if (negocioAsociado.ConfirmadoSAP == true && solicitud.CantidadCupo > solicitud.CuposRestantes)
                     {
-                        result.Error("ValidarCantidad", $"Los cupos solicitados superan lo permitido según los kilos pendientes del contrato:\n {solicitud.KgPendientes:N2} kg --> {solicitud.CuposSegunKg} cupos.");
+                        result.Error("ValidarCantidad", $"Los cupos solicitados superan lo permitido según los kilos pendientes ({solicitud.KgPendientes:N2} kg), las solicitudes pendientes y los cupos ya generados.\n Se puede pedir hasta {solicitud.CuposRestantes} cupos.");
                         return result;
                     }
                     else if (negocioAsociado.ConfirmadoSAP != true && solicitud.CantidadCupo > Math.Ceiling(negocioAsociado.Cantidad / 30000d))
@@ -7041,11 +7041,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 List<ContratoKgPendiente> negociosKg = negocios.Select(a => new ContratoKgPendiente { ContratoId = a.NegocioId, ContratoSAP = a.ContratoSAP }).ToList();
                 negociosKg = contratoKgPendienteAgent.Consultar(negociosKg);
+                List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue);
+                List<Cupo> cupos = repositorio.Listar<Cupo>(c => c.NegocioId.HasValue && c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP || 
+                    c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado);
                 foreach (var item in negocios)
                 {
+                    int solicitudesDelNegocio = solicitudesPendientes.Where(s => s.NegocioId == item.NegocioId).Sum(s => s.CantidadCupo);
+                    int cuposDelNegocio = cupos.Count(c => c.NegocioId == item.NegocioId);
                     var kgPendientes = negociosKg.Find(a => a.ContratoSAP == item.ContratoSAP).KgPendiente;
                     item.KgPendientes = kgPendientes;
-                    item.CuposSegunKg = (int)Math.Ceiling(kgPendientes / 30000d);
+                    item.CuposRestantes = Math.Max(0, (int)Math.Ceiling(kgPendientes / 30000d) - solicitudesDelNegocio - cuposDelNegocio);
                 }
                 if (string.IsNullOrEmpty(contratoSap)) negocios = negocios.Where(n => n.KgPendientes > 0 || n.FechaHasta >= DateTime.Today).OrderByDescending(x => x.FechaHasta).ToList();
             }
