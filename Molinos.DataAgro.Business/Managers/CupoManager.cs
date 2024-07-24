@@ -6988,7 +6988,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
         {
             List<NegocioParaSolicitarCupo> negocios = new List<NegocioParaSolicitarCupo>();
-            var solicitudesPendientes = new List<(int NegocioId, int CantidadCupo)>();
+            var solicitudesPendientes = new List<(int, int)>();
             List<int> cupos = new List<int>();
             if (string.IsNullOrEmpty(contratoSap))
             {
@@ -7042,7 +7042,7 @@ namespace Molinos.DataAgro.Business.Managers
                 negociosKg = contratoKgPendienteAgent.Consultar(negociosKg);
                 foreach (var item in negocios)
                 {
-                    int solicitudesDelNegocio = solicitudesPendientes.Where(s => s.NegocioId == item.NegocioId).Sum(s => s.CantidadCupo);
+                    int solicitudesDelNegocio = solicitudesPendientes.Where(s => s.Item1 == item.NegocioId).Sum(s => s.Item2);
                     int cuposDelNegocio = cupos.Count(c => c == item.NegocioId);
                     var kgPendientes = negociosKg.Find(a => a.ContratoSAP == item.ContratoSAP).KgPendiente;
                     item.KgPendientes = item.EstadoNegocioId == (int)EnumEstadoContrato.Finalizado ? kgPendientes : item.KgPendientes;
