@@ -6988,7 +6988,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
         {
             List<NegocioParaSolicitarCupo> negocios = new List<NegocioParaSolicitarCupo>();
-            var solicitudesPendientes = new List<(int, int)>();
+            var solicitudesPendientes = new List<Tuple<int, int>>();
             List<int> cupos = new List<int>();
             if (string.IsNullOrEmpty(contratoSap))
             {
@@ -7006,7 +7006,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
                 (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
 
-                solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.ProveedorId == proveedorId && s.MaterialId == materialId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue).Select(s => ((int)s.NegocioId, s.CantidadCupo)).ToList();
+                repositorio.Listar<AdministracionCupo>(s => s.ProveedorId == proveedorId && s.MaterialId == materialId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue)
+                    .ForEach(x => solicitudesPendientes.Add(new Tuple<int, int>((int)x.NegocioId, x.CantidadCupo)));
                 cupos = repositorio.Listar<Cupo>(c => c.ProveedorId == proveedorId && c.MaterialId == materialId && c.NegocioId.HasValue &&
                 (c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP || c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado)).Select(c => (int)c.NegocioId).ToList();
             }
@@ -7030,7 +7031,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (negocio != null)
                 {
                     negocios.Add(negocio);
-                    solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.NegocioId.HasValue && s.NegocioId == negocio.NegocioId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente).Select(s => ((int)s.NegocioId, s.CantidadCupo)).ToList();
+                    repositorio.Listar<AdministracionCupo>(s => s.NegocioId.HasValue && s.NegocioId == negocio.NegocioId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente)
+                        .ForEach(x => solicitudesPendientes.Add(new Tuple<int, int>((int)x.NegocioId, x.CantidadCupo)));
                     cupos = repositorio.Listar<Cupo>(c => c.NegocioId.HasValue && c.NegocioId == negocio.NegocioId && (c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP ||
                         c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado)).Select(c => (int)c.NegocioId).ToList();
                 }
