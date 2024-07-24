@@ -1565,8 +1565,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
             EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas));
-
-            //EnviarMail
         }
 
         public FormulaDto ObtenerFormulaDto(int material)
@@ -5215,29 +5213,16 @@ namespace Molinos.DataAgro.Business.Managers
                 var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
                 var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
                 Negocio negocioAsociado = new Negocio();
-                if (!string.IsNullOrEmpty(solicitud.ContratoSAP))
+                if (solicitud.NegocioId.HasValue)
                 {
-                    solicitud.ContratoSAP = solicitud.ContratoSAP.PadLeft(10, '0');
-                    negocioAsociado = repositorio.Obtener<Negocio>(x => x.ContratoSAP == solicitud.ContratoSAP && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
-                    if (negocioAsociado.ConfirmadoSAP == true && solicitud.CantidadCupo > solicitud.CuposRestantes)
+                    if (solicitud.CantidadCupo > solicitud.CuposRestantes)
                     {
-                        result.Error("ValidarCantidad", $"Los cupos solicitados superan lo permitido según los kilos pendientes ({solicitud.KgPendientes:N2} kg), las solicitudes pendientes y los cupos ya generados.\n Se puede pedir hasta {solicitud.CuposRestantes} cupos.");
+                        result.Error("ValidarCantidad", $"Los cupos solicitados superan lo permitido según los kilos pendientes ({solicitud.KgPendientes:N2} kg), las solicitudes pendientes y los cupos ya generados.\n" +
+                            (solicitud.CuposRestantes == 0 ? "No se pueden pedir más cupos para este negocio." : $"Se puede pedir hasta {solicitud.CuposRestantes} cupos."));
                         return result;
                     }
-                    else if (negocioAsociado.ConfirmadoSAP != true && solicitud.CantidadCupo > Math.Ceiling(negocioAsociado.Cantidad / 30000d))
-                    {
-                        result.Error("ValidadCantidad", $"Los cupos solicitados superan lo permitido según los kilos del contrato:\n {negocioAsociado.Cantidad:N2} kg --> {Math.Ceiling(negocioAsociado.Cantidad / 30000d)} cupos.");
-                        return result;
-                    }
-                }
-                else if (solicitud.NegocioId.HasValue)
-                {
-                    negocioAsociado = repositorio.Obtener<Negocio>(solicitud.NegocioId);
-                    if (solicitud.CantidadCupo > Math.Ceiling(negocioAsociado.Cantidad / 30000d))
-                    {
-                        result.Error("ValidadCantidad", $"Los cupos solicitados superan lo permitido según los kilos del contrato:\n {negocioAsociado.Cantidad:N2} kg --> {Math.Ceiling(negocioAsociado.Cantidad / 30000d)} cupos.");
-                        return result;
-                    }
+                    else
+                        negocioAsociado = repositorio.Obtener<Negocio>(x => x.Id == solicitud.NegocioId && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
                 }
                 else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value)
                 {
@@ -5317,7 +5302,7 @@ namespace Molinos.DataAgro.Business.Managers
                             CupoStop = null,
                             CreacionStop = "",
                             ErrorStop = "",
-                            NegocioId = negocioAsociado.Id,
+                            NegocioId = negocioAsociado.Id > 0 ? negocioAsociado.Id : (int?)null,
                             ConfiguracionEspacioDinamicoId = null,
                             TipoNegocioId = 7,
                             ConDescarga = solicitud.ConDescarga,
@@ -7003,6 +6988,8 @@ namespace Molinos.DataAgro.Business.Managers
         public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
         {
             List<NegocioParaSolicitarCupo> negocios = new List<NegocioParaSolicitarCupo>();
+            var solicitudesPendientes = new List<(int NegocioId, int CantidadCupo)>();
+            List<int> cupos = new List<int>();
             if (string.IsNullOrEmpty(contratoSap))
             {
                 negocios = repositorio.Listar<Negocio, NegocioParaSolicitarCupo>(x => new NegocioParaSolicitarCupo
@@ -7014,14 +7001,19 @@ namespace Molinos.DataAgro.Business.Managers
                     EstadoNegocioId = x.EstadoId,
                     EstadoNegocio = x.Estado.Descripcion,
                     MaterialId = x.MaterialId,
-                    FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta
-                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 &&
+                    FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta,
+                    KgPendientes = x.Cantidad
+                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
                 (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
+
+                solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.ProveedorId == proveedorId && s.MaterialId == materialId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue).Select(s => ((int)s.NegocioId, s.CantidadCupo)).ToList();
+                cupos = repositorio.Listar<Cupo>(c => c.ProveedorId == proveedorId && c.MaterialId == materialId && c.NegocioId.HasValue &&
+                (c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP || c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado)).Select(c => (int)c.NegocioId).ToList();
             }
             else
             {
                 contratoSap = contratoSap.PadLeft(10, '0');
-                var negocio = repositorio.Obtener<Negocio, NegocioParaSolicitarCupo>(x => x.ContratoSAP == contratoSap && x.ProveedorId == proveedorId && x.MaterialId == materialId
+                var negocio = repositorio.Obtener<Negocio, NegocioParaSolicitarCupo>(x => x.ContratoSAP == contratoSap && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION
                 && (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado),
                     x => new NegocioParaSolicitarCupo
                     {
@@ -7032,27 +7024,31 @@ namespace Molinos.DataAgro.Business.Managers
                         EstadoNegocioId = x.EstadoId,
                         EstadoNegocio = x.Estado.Descripcion,
                         MaterialId = x.MaterialId,
-                        FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta
+                        FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta,
+                        KgPendientes = x.Cantidad
                     });
-                if (negocio != null) negocios.Add(negocio);
+                if (negocio != null)
+                {
+                    negocios.Add(negocio);
+                    solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.NegocioId.HasValue && s.NegocioId == negocio.NegocioId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente).Select(s => ((int)s.NegocioId, s.CantidadCupo)).ToList();
+                    cupos = repositorio.Listar<Cupo>(c => c.NegocioId.HasValue && c.NegocioId == negocio.NegocioId && (c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP ||
+                        c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado)).Select(c => (int)c.NegocioId).ToList();
+                }
             }
 
             if (negocios.Any())
             {
                 List<ContratoKgPendiente> negociosKg = negocios.Select(a => new ContratoKgPendiente { ContratoId = a.NegocioId, ContratoSAP = a.ContratoSAP }).ToList();
                 negociosKg = contratoKgPendienteAgent.Consultar(negociosKg);
-                List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(s => s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue);
-                List<Cupo> cupos = repositorio.Listar<Cupo>(c => c.NegocioId.HasValue && c.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || c.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP || 
-                    c.EstadoCupoId == (int)EnumEstadoCupo.Disponible || c.EstadoCupoId == (int)EnumEstadoCupo.Activado || c.EstadoCupoId == (int)EnumEstadoCupo.Arribado);
                 foreach (var item in negocios)
                 {
                     int solicitudesDelNegocio = solicitudesPendientes.Where(s => s.NegocioId == item.NegocioId).Sum(s => s.CantidadCupo);
-                    int cuposDelNegocio = cupos.Count(c => c.NegocioId == item.NegocioId);
+                    int cuposDelNegocio = cupos.Count(c => c == item.NegocioId);
                     var kgPendientes = negociosKg.Find(a => a.ContratoSAP == item.ContratoSAP).KgPendiente;
-                    item.KgPendientes = kgPendientes;
-                    item.CuposRestantes = Math.Max(0, (int)Math.Ceiling(kgPendientes / 30000d) - solicitudesDelNegocio - cuposDelNegocio);
+                    item.KgPendientes = item.EstadoNegocioId == (int)EnumEstadoContrato.Finalizado ? kgPendientes : item.KgPendientes;
+                    item.CuposRestantes = Math.Max(0, (int)Math.Ceiling(item.KgPendientes / 30000d) - solicitudesDelNegocio - cuposDelNegocio);
                 }
-                if (string.IsNullOrEmpty(contratoSap)) negocios = negocios.Where(n => n.KgPendientes > 0 || n.FechaHasta >= DateTime.Today).OrderByDescending(x => x.FechaHasta).ToList();
+                if (string.IsNullOrEmpty(contratoSap)) negocios = negocios.Where(n => n.CuposRestantes > 0).OrderByDescending(x => x.FechaHasta).ToList();
             }
             return negocios;
         }

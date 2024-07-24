@@ -1104,14 +1104,17 @@ function buscarContratoSE() {
         MensInfo("Elija un proveedor y material para buscar contratos.");
         return;
     }
+    $("body").css("cursor", "wait");
+    $("#gridContainer").show();
+    $("#grid").html("<div class='loading-message'>Buscando...</div>").show();
 
     $.ajax({
         url: '/Cupo/ListarNegociosParaSolicitarCupo',
         type: 'GET',
         data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId },
         success: function (result) {
+            $("#grid").empty();
             if (result && result.length > 0) {
-                $("#gridContainer").show();
                 $("#noResultsMessage").hide();
                 $("#grid").show().kendoGrid({
                     dataSource: {
@@ -1152,6 +1155,9 @@ function buscarContratoSE() {
                 $("#noResultsMessage").show();
                 $("#ContratoSE").data("kendoNumericTextBox").value('');
             }
+        },
+        complete: function () {
+            $("body").css("cursor", "default");
         }
     });
 }
