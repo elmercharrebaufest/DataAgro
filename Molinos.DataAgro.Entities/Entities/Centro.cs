@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool CargaCupos { get; set; }
         public bool NoPropio { get; set; }
         public int? Orden { get; set; }
-        public int? CodigoConfirma { get; set; }
+        public string CodigoConfirma { get; set; }
         public string CUIT { get; set; }
         public string RazonSocial { get; set; }
 
