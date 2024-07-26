@@ -335,7 +335,7 @@ namespace Molinos.DataAgro.Business.Managers
             #region CabeceraDocumento
 
                         new XElement("CabeceraDocumento",
-                            new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.BolsaId)),
+                            new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.Bolsa.CodigoConfirma)),
                             new XElement("TipoDocumento", new XAttribute("CodLista", confirma.Negocio.Canje == true ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
                             new XElement("Formulario", new XAttribute("formversion", "1.04"))
                         ),//Fin Nodo CabeceraDocumento
@@ -800,7 +800,7 @@ namespace Molinos.DataAgro.Business.Managers
             var result = new List<string>();
             foreach (var item in lista)
             {
-                result.Add(item.PadLeft(10, '0'));
+                result.Add(item.TrimStart('0').PadLeft(10, '0'));
             }
             return result;
         }
