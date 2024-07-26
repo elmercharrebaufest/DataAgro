@@ -213,14 +213,15 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (contrato.Cantidad < kilosMinimos)
                     {
-                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.ContratoSAP} por cantidad menor a 10 toneladas.");
+                        mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por su cantidad menor a 10 toneladas.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
                         return mensaje;
                     }
-                    if (contrato.Canje != true)
+                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP);
+                    if (a_fijar.PlanCanje != true)
                     {
-                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} por no ser de canje.";
-                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.ContratoSAP} por no ser de canje.");
+                        mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por no ser de Plan Canje el A Fijar correspondiente.";
+                        logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por no ser de plan canje el A Fijar correspondiente.");
                         return mensaje;
                     }
                 }
