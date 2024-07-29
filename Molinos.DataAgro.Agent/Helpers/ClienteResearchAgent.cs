@@ -226,10 +226,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 var registroExistente = registrosEnDA.Find(x => x.Item2 == itemData.IdPowerApp);
                                 if (registroExistente != null)
                                 {
-                                    repositorio.Remover<Research>(registroExistente.Item1);
                                     var adjuntoExistente = adjuntosEnDA.Find(x => x.Item2 == registroExistente.Item1);
                                     if (adjuntoExistente != null)
                                         repositorio.Remover<ResearchAdjunto>(adjuntoExistente.Item1);
+                                    repositorio.Remover<Research>(registroExistente.Item1);
                                 }
 
                                 repositorio.Agregar(itemData);
