@@ -714,11 +714,11 @@ namespace WebDataAgro.Controllers
             };
         }
         
-        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
+        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa)
         {
             return new JsonResult()
             {
-                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId),
+                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId, sustentable, epa),
                 MaxJsonLength = Int32.MaxValue, 
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };

@@ -6985,7 +6985,7 @@ namespace Molinos.DataAgro.Business.Managers
             mailManager.EnviarMail(destinatarios, asunto, "", copia, alternateView);
         }
 
-        public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId)
+        public List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa)
         {
             List<NegocioParaSolicitarCupo> negocios = new List<NegocioParaSolicitarCupo>();
             var solicitudesPendientes = new List<Tuple<int, int>>();
@@ -7004,7 +7004,8 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta,
                     KgPendientes = x.Cantidad
                 }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
-                (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
+                    (sustentable ? x.Sustentable == true : epa ? x.EPA == true : x.Sustentable != true && x.EPA != true) &&
+                    (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
 
                 repositorio.Listar<AdministracionCupo>(s => s.ProveedorId == proveedorId && s.MaterialId == materialId && s.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && s.NegocioId.HasValue)
                     .ForEach(x => solicitudesPendientes.Add(new Tuple<int, int>((int)x.NegocioId, x.CantidadCupo)));
@@ -7015,6 +7016,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 contratoSap = contratoSap.PadLeft(10, '0');
                 var negocio = repositorio.Obtener<Negocio, NegocioParaSolicitarCupo>(x => x.ContratoSAP == contratoSap && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION
+                && (sustentable ? x.Sustentable == true : epa ? x.EPA == true : x.Sustentable != true && x.EPA != true)
                 && (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado),
                     x => new NegocioParaSolicitarCupo
                     {
