@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var tempConfirma = new ConfirmaGeneradoDto()
                         {
                             NegocioId = contrato.Id,
-                            Version = "0",
+                            Version = "01",
                             ComercialId = ComercialId,
                             FechaGeneracion = DateTime.Now,
                             ContratoSAP = contrato.ContratoSAP,
@@ -430,7 +430,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         new XElement("FechaCondicionPago", confirma.Negocio.Canje == true ? "" : (esFijacionContratoConvenio || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "4 días hábiles de fecha de fijación" : (!(confirma.Negocio.PagoDiferido == true) ? "Días de diferimiento contra mercadería entregada" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (confirma.Negocio.Warrant == true ? "Pago contra warrant" : (confirma.Negocio.CD == true ? "Pago contra CD" : "72 hrs contra mercadería entregada")) : "")))),
                                         new XElement("LugarPago", "BUENOS AIRES"),
                                         new XElement("PagoAOrdenDe", new XAttribute("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "1")),
-                                        new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.ToString().Replace(",", "."))
+                                        new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.HasValue? confirma.Negocio.PorcentajeDePago : null)
                                     ) : null),
 
             #endregion Pagos
@@ -462,8 +462,8 @@ namespace Molinos.DataAgro.Business.Managers
             #region Fijacion
 
                                     ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
-                                        new XElement("FijMinima", condiciones.CantidadMinima.ToString()),
-                                        new XElement("FijMaxima", condiciones.CantidadMaxima.ToString()),
+                                        new XElement("FijMinima", Convert.ToInt32(condiciones.CantidadMinima).ToString()),
+                                        new XElement("FijMaxima", Convert.ToInt32(condiciones.CantidadMaxima).ToString()),
                                         new XElement("UnidadMedidaFijacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K")),
                                         new XElement("FijPeriodo", "1"),
                                         new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
@@ -489,7 +489,7 @@ namespace Molinos.DataAgro.Business.Managers
             #region SioGranos
 
                                 new XElement("SioGranos",
-                                    new XElement("NumeroDeclaracion", estadoSAP.NumeroSio.ToString()),
+                                    new XElement("NumeroDeclaracion", estadoSAP.NumeroSio>0? estadoSAP.NumeroSio.ToString() :null ),
                                     new XElement("DetalleDeclaracion",
                                         new XElement("ModalidadOperacion", new XAttribute("CodLista", string.Empty)),
                                         new XElement("EsCompradorFinal"),
@@ -627,7 +627,7 @@ namespace Molinos.DataAgro.Business.Managers
             return new BoletoGeneradoDto
             {
                 NegocioId = tempConfirma.NegocioId,
-                Version = 0,
+                Version = 1,
                 ComercialId = tempConfirma.ComercialId,
                 FechaGeneracion = tempConfirma.FechaGeneracion,
                 ContratoSAP = tempConfirma.ContratoSAP,
