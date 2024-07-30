@@ -68,6 +68,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     string sasToken = azureAgent.GenerarTokenSAS();
                     CloudBlobContainer cloudBlobContainer = azureAgent.GenerarBlobContainer(sasToken);
 
+                    List<Tuple<int, int>> registrosEnDA = repositorio.Listar<Research>().Select(x => new Tuple<int, int>(x.Id, (int)x.IdPowerApp)).ToList();
+                    List<Tuple<int, int>> adjuntosEnDA = repositorio.Listar<ResearchAdjunto>().Select(x => new Tuple<int, int>(x.Id, x.ResearchId)).ToList();
+
                     List<Material> listaMateriales = repositorio.Listar<Material>();
                     List<ResearchEstadioDto> listaEstadioDto = repositorio.Listar<ResearchEstadio, ResearchEstadioDto>(x => new ResearchEstadioDto { EstadioId = x.EstadioId, Descripcion = x.Descripcion });
                     List<ResearchCondicionDto> listaCondicionDto = repositorio.Listar<ResearchCondicion, ResearchCondicionDto>(x => new ResearchCondicionDto { CondicionId = x.CondicionId, Descripcion = x.Descripcion });
@@ -220,11 +223,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
                             else
                             {
+                                var registroExistente = registrosEnDA.Find(x => x.Item2 == itemData.IdPowerApp);
+                                if (registroExistente != null)
+                                {
+                                    var adjuntoExistente = adjuntosEnDA.Find(x => x.Item2 == registroExistente.Item1);
+                                    if (adjuntoExistente != null)
+                                        repositorio.Remover<ResearchAdjunto>(adjuntoExistente.Item1);
+                                    repositorio.Remover<Research>(registroExistente.Item1);
+                                }
+
                                 repositorio.Agregar(itemData);
                                 contadorAgregados++;
-
-                                item.DeleteObject();
-                                context.ExecuteQuery();
                             }
                         }
                         catch (Exception e)

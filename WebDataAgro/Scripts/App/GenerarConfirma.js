@@ -13,7 +13,11 @@ function Generar() {
     var data = confirma;
     var result = MSExecuteOnServer(url, data);
     if (result.confirmasGenerados.length == 0) {
-        MensErr("No se generó ningún Confirma.");
+        if (result.HayError) {
+            result.ListaErrores.forEach(err => MensErr(err.Message));
+        } else {
+            MensErr("No se generó ningún Confirma.");
+        }
     } else {
         CargarTablaModal(result.confirmasGenerados);
         $("#ModalConfirma").modal("show");
