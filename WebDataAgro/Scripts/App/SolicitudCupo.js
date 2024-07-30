@@ -588,6 +588,7 @@ function InicializarElementos() {
             $("#EPA").prop("checked", false);
         }
         MostrarVisualizarStock();
+        buscarContratoSE();
     });
 
     $("#EPA").change(function () {
@@ -595,6 +596,7 @@ function InicializarElementos() {
             $("#Sustentable").prop("checked", false);
         }
         MostrarVisualizarStock();
+        buscarContratoSE();
     });
 
     $("#ContratoSE").kendoNumericTextBox({
@@ -1098,6 +1100,8 @@ function buscarContratoSE() {
     var proveedorId = $("#ProveedorIdSE").val();
     var materialId = $("#MaterialIdSE").data("kendoDropDownList").value();
     var estadoId = $('input[name="estadoContrato"]:checked').val();
+    var sustentable = $("#Sustentable").is(':checked');
+    var epa = $("#EPA").is(':checked');
     contratoSapSE = null; negocioIdSE = null; kgPendientes = 0; cuposRestantes = 0;
 
     if (!proveedorId || !materialId) {
@@ -1105,17 +1109,17 @@ function buscarContratoSE() {
         return;
     }
     $("body").css("cursor", "wait");
+    $("#noResultsMessage").hide();
     $("#gridContainer").show();
     $("#grid").html("<div class='loading-message'>Buscando...</div>").show();
 
     $.ajax({
         url: '/Cupo/ListarNegociosParaSolicitarCupo',
         type: 'GET',
-        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId },
+        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId, sustentable: sustentable, epa: epa },
         success: function (result) {
             $("#grid").empty();
             if (result && result.length > 0) {
-                $("#noResultsMessage").hide();
                 $("#grid").show().kendoGrid({
                     dataSource: {
                         data: result,

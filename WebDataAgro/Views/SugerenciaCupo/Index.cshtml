@@ -777,6 +777,8 @@
                 $("#buscadorProveedorSE").val($("#buscadorProveedorSE").val().split('|')[1]);
             }
             MostrarVisualizarStock();
+            $('#grid').empty();
+            $("#ContratoSE").data("kendoNumericTextBox").value('');
         },
         select: function (e) {
 

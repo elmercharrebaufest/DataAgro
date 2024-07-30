@@ -59,20 +59,12 @@
                     </div>
                 </div>
                 <div class="row" style="padding-top:8px !important;">
-                    <div class="col-xs-10 col-lg-2">
+                    <div class="col-sm-2">
                         <span>Cantidad de Cupos</span>
                     </div>
                     <div class="col-sm-4">
                         @Html.TextBox("CantidadCupoSE", "Cantidad cupo", new { @class = "w100" })
                     </div>
-                    <div class="col-xs-2">
-                        <span>Material</span>
-                    </div>
-                    <div class="col-sm-4">
-                        @Html.DropDownList("MaterialIdSE", ViewBag.MatLista as SelectList, "Seleccionar", new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col-xs-2">
                         <span>Destino</span>
                     </div>
@@ -80,12 +72,46 @@
                         @Html.DropDownList("CentroIdSE", ViewBag.CenLista as SelectList, "Seleccionar", new { @class = "form-control" })
 
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Material</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownList("MaterialIdSE", ViewBag.MatLista as SelectList, "Seleccionar", new { @class = "form-control" })
+                    </div>
                     <div id="calidadDivSE" hidden>
                         <div class="col-xs-2">
                             <span>Calidad</span>
                         </div>
                         <div class="col-sm-4">
                             @Html.DropDownList("CalidadIdSE", ViewBag.Calidad as SelectList, "Seleccionar", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="sustentableDivSE" hidden>
+                        <div class="col-xs-10 col-lg-2">
+                            <label style="margin-left: 0px !important">Sustentable</label>
+                        </div>
+                        <div class="col-xs-2 col-lg-1" style="padding-top:8px;" title="Soja sustentable">
+                            @Html.CheckBox("Sustentable")
+                        </div>
+                    </div>
+                    <div id="EPADivSE" hidden>
+                        <div class="col-xs-10 col-lg-2">
+                            <label style="margin-left: 0px !important">EPA</label>
+                        </div>
+                        <div class="col-xs-2 col-lg-1" style="padding-top:8px;" title="Soja EPA">
+                            @Html.CheckBox("EPA")
+                        </div>
+                    </div>
+                    <div id="stock" style="padding-top:8px;">
+                        <div class="col-sm-2">
+                            <span>Establecimiento</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
                         </div>
                     </div>
                 </div>
@@ -120,56 +146,29 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div>
-                        <div class="col-xs-10 col-lg-4">
-                            <label style="margin-left: 0px !important">Flete procedencia - Acarreo</label>
-                        </div>
-                        <div class="col-xs-1">
-                            @Html.CheckBox("FleteAcarreoES")
-                        </div>
+                    <div class="col-xs-10 col-lg-2">
+                        <label style="margin-left: 0px !important">Con Descarga</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.CheckBox("ConDescarga")
+                    </div>
+                    <div class="col-xs-10 col-lg-4">
+                        <label style="margin-left: 0px !important">Flete procedencia - Acarreo</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.CheckBox("FleteAcarreoES")
                     </div>
                     <div class="col-xs-10 col-lg-3">
                         <label>Fasón - Préstamo devolución</label>
                     </div>
-                    <div class="col-xs-4">
-                        <span style="height:34px"></span>
+                    <div class="col-xs-1">
                         @Html.CheckBox("FasonES")
-                        @Html.TextBox("CuitES", "", new { @class = "form-control", @style = "display:none; width: 90%;" })
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-10 col-lg-2">
-                        <label style="margin-left: 0px !important">Con Descarga</label>
-                    </div>
-                    <div class="col-xs-2">
-                        @Html.CheckBox("ConDescarga")
-                    </div>
-                    <div id="sustentableDivSE" hidden>
-                        <div class="col-xs-10 col-lg-2">
-                            <label style="margin-left: 0px !important">Sustentable</label>
-                        </div>
-                        <div class="col-xs-2">
-                            @Html.CheckBox("Sustentable")
-                        </div>
-                    </div>
-                    <div id="EPADivSE" hidden>
-                        <div class="col-xs-10 col-lg-2">
-                            <label style="margin-left: 0px !important">EPA</label>
-                        </div>
-                        <div class="col-xs-2">
-                            @Html.CheckBox("EPA")
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="padding-top:8px;">
-                    <div class="col-sm-4"></div>
-                    <div id="stock">
-                        <div class="col-sm-2">
-                            <span>Establecimiento</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
-                        </div>
+                    <div class="col-lg-8"></div>
+                    <div class="col-lg-4">
+                        @Html.TextBox("CuitES", "", new { @class = "form-control", @style = "display:none; width: 90%;" })
                     </div>
                 </div>
                 <br />
@@ -199,7 +198,6 @@
             <div class="modal-footer">
                 <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
                 <button type="button" title="Copiar como imagen" class="myBtn btn" id="copy_btn" onclick="copiarTablaEstablecimiento()"><i class="fa fa-copy"></i> Copiar</button>
-
             </div>
         </div>
     </div>
@@ -286,5 +284,4 @@
         font-size: 16px;
         padding: 20px;
     }
-
 </style>
