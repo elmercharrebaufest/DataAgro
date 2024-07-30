@@ -20,13 +20,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
 
             //SI EL CAMPO CODIGO_TC ES 02
-            if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA)
+            if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.MonedaId == "USDM ")
             {
                 res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
             }
             //SI EL CAMPO CODIGO_TC ES 04
-            else
-            if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND)
+            else if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND)
             {
                 res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio publicado por el MATBA ROFEX SA denominado “índice Dólar Exportación Matba Rofex”, " +
                     "del día de la pesificación, siempre que la comunicación de pesificación sea informada antes de las 13.00 horas. De comunicarse fuera del horario mencionado, se tomará el tipo de cambio del día siguiente al de la comunicación. " +
