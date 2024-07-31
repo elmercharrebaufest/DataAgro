@@ -2,13 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
-using System.Web.WebPages;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -22,11 +16,13 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaVeinte clausula)
         {
+            //SI EN EL CONTRATO CONTIENE CORREDOR
+
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.ContratoId > 0 && clausula.Basico.CorredorId > 0 && !clausula.Basico.CUITCorredor.IsEmpty())
+            if (clausula.Basico.CorredorId > 0 && !string.IsNullOrEmpty(clausula.Basico.CUITCorredor))
             {
-                res.Texto += $"Los señores {clausula.Basico.RazonSocialCorredor }, CUIT N° {clausula.Basico.CUITCorredor }, actúan en la presente operación en carácter de " +
+                res.Texto += $"Los señores {clausula.Basico.RazonSocialCorredor}, CUIT N° {FormatoCuit(clausula.Basico.CUITCorredor)}, actúan en la presente operación en carácter de " +
                     $"corredores quedando facultados por los vendedores para fijar el precio, facturar, recibir el pago, firmar recibos de mercadería, ampliaciones " +
                     $"y/o anulaciones y convenir eventuales prorrogas. El vendedor faculta al corredor a firmar en su nombre y representación toda la documentación " +
                     $"necesaria para la instrumentación o formalización del presente.";
@@ -35,16 +31,14 @@ namespace Molinos.DataAgro.Business.Procesamiento
             return res;
         }
 
-        public string DevolverNumeroEnLetras(decimal numero)
+        private string FormatoCuit(string cuit)
         {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
+            if (cuit.Length == 11)
             {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
+                cuit = $"{cuit.Substring(0, 2)}-{cuit.Substring(2, 8)}-{cuit.Substring(10, 1)}";
             }
-            return letras;
+
+            return cuit;
         }
     }
 }

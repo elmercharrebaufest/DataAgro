@@ -16,5 +16,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Mensaje { get; set; }
         public string FijacionSAP { get; set; }
         public DateTime FechaGeneracion { get; set; }
+        public bool IsConfirma { get; set; }
     }
 }

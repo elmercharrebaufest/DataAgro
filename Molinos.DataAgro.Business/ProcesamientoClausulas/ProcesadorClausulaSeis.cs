@@ -2,12 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -21,17 +16,19 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaSeis clausula)
         {
+            //CLAUSULA SIEMPRE PRESENTE
+
             var res = new ResultadoClausula();
 
-            res.Texto += $"El importe del sellado del presente Contrato como los honorarios de la Cámara Arbitral de la Bolsa de Cereales de { clausula.Basico.BolsaDescripcion }, " +
+            res.Texto += $"El importe del sellado del presente Contrato como los honorarios de la Cámara Arbitral de la Bolsa de Cereales de {clausula.Basico.BolsaDescripcion} " +
                  $"será abonado por: ";
-            if (clausula.Basico.SelCargoVendedor == true)
+            if (clausula.Basico.SelCargoVendedor == true) //SI TIENE TILDE EN SELLADO 100% A CARGO DEL VENDEDOR
             {
-                res.Texto += $"el vendedor ";
+                res.Texto += $"el vendedor."; 
             }
-            else if (clausula.Basico.SelCargoMOA == true)
+            else if (clausula.Basico.SelCargoMOA == true) //SI TIENE TILDE EN SELLADO 100% A CARGO DE MOA
             {
-                res.Texto += $"el comprador ";
+                res.Texto += $"el comprador.";
             }
             else
             {
@@ -39,18 +36,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
             }
 
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int CampañaId { get; set; }
         public string Descripcion { get; set; }
+        public string CodigoSIO { get; set; }
     }
 
     public partial class CampaniaDto

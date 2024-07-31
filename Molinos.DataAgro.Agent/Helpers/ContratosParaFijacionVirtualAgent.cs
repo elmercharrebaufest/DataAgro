@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Agent
 
         public List<DatosFijacionDeContratoDto> ObtenerContratosCanje(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
-            filtro = filtro == null ? "" : filtro;
+            filtro = filtro ?? "";
             var datosContratos = new List<DatosFijacionDeContratoDto>();
             var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Agent
                     logger.Debug(rq.ToXml());
                     CultureInfo provider = CultureInfo.InvariantCulture;
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE(rq);
-                    logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
+                    logger.Debug("Numero de contratos pendientes: " + devolucion.EX_SALIDA.Count());
                     var listaContratos = devolucion.EX_SALIDA.Where(x => x.CONTRNUM.StartsWith("000" + filtro.TrimStart('0')));
                     var calidadesEspeciales = repositorio.Listar<CalidadEspecial>();
                     var conceptoAperturas = repositorio.Listar<ConceptoAperturaPrecio>();
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Agent
                     foreach (var contrato in listaContratos)
                     {
                         var cantidad = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 3 && x.Virtual == true && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
-                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
+                        && x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
 
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
                         //var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<Negocio, double>(x => x.TipoNegocioId == 3 && x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Agent
                             contratoParaFijacion.ImporteAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
                             contratoParaFijacion.MonedaAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
                             contratoParaFijacion.PorcentajeAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
-                            contratoParaFijacion.Clasificacion = contratoDeBase.Proveedor.ClasificacionCompraNet.Descripcion;
+                            contratoParaFijacion.Clasificacion = contratoDeBase.Clasificacion.Descripcion;
                             var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contratoDeBase.Id);
 
                             if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP", e);
+                    logger.Error("Error comunicacion SAP en ContratosParaFijacionVirtualAgent ", e);
                     throw;
                 }
             }

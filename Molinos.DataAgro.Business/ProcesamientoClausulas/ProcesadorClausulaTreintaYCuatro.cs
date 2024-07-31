@@ -2,10 +2,6 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
 
@@ -21,8 +17,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaTreintaYCuatro clausula)
         {
+            //SI EL CONTRATO CORRESPONDE A CANJE y es a fijar
+
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje == true)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
                 res.Texto += $"El Vendedor declara y garantiza al Comprador que (i) a la fecha de la firma del presente Boleto, y (ii) al momento de la entrega de " +
                     $"la Mercadería, se encuentra debidamente inscripto en el Registro de Operadores de Granos. El presente Boleto estará sujeto a la emisión de la " +
@@ -30,19 +28,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     $"Comprador, inmediatamente, cualquier modificación que sufriera su registro, incluso su caducidad y/o suspensión, en el Registro de Operadores " +
                     $"de Granos.";
             }
+
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }

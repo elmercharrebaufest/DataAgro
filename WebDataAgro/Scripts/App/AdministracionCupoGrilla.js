@@ -143,7 +143,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 95, attributes: {
                     "class": "mobile-xs"
@@ -397,6 +397,7 @@ function CargarGrillaConfig() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
+
     function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {
         element.removeAttr("data-bind");
         columna = columna == null ? valueField : columna;
@@ -459,9 +460,7 @@ function CargarGrillaConfig() {
                 if (values.length === 0) {
                     addOrRemoveFilter(grilla, columna, "eq", null);
                 }
-                console.log(values);
             },
-
         });
     }
 }
@@ -489,10 +488,10 @@ function ModalAceptarSugerencia(id) {
     $("#CantidadDeCupoOriginal").val(solicitudSeleccionada[0].CantidadDeCupoOriginal);
     $("#solicitudId").val(id);
 }
+
 function ModalRechazarSugerencia(id) {
     $("#modalRechazarSolicitud").modal("show");
     $("#solicitudId").val(id);
-
 }
 function AceptarSolicitud() {
     var id = $("#solicitudId").val();
@@ -524,15 +523,13 @@ function AceptarSolicitud() {
                 errores = errores.concat(result.ListaErrores);
             }
             if (errores.length == 0) {
-                MensInfo("Se grabo correctamente.");
+                MensInfo("Se guardó correctamente.");
             } else {
                 ShowErrorMessages(errores);
             }
             recargarGrilla();
             $.unblockUI();
-        }
-        , 200);
-
+        }, 200);
 }
 
 
@@ -551,21 +548,18 @@ function RechazarSolicitud() {
             }
 
             if (errores.length == 0) {
-                MensInfo("Se grabo correctamente.");
+                MensInfo("Se guardó correctamente.");
             } else {
                 ShowErrorMessages(errores);
             }
             recargarGrilla();
             $.unblockUI();
-        }
-        , 200);
-
+        }, 200);
 }
+
 function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
     $('#resultadoCupo').modal('toggle');
-
-
 }
 
 function resultadoCupo() {
@@ -647,7 +641,6 @@ function AutoRecargarSolicitudes() {
             $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
         }
     }, 60000);
-
 }
 
 function Recargar() {
@@ -657,7 +650,6 @@ function Recargar() {
         $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
         $.unblockUI();
     }, 250);
-
 }
 
 function SeleccionarElementos() {
@@ -724,7 +716,6 @@ function AceptarMasivo() {
                 }
                 if (cuposGenerados.length > 0) {
                     cuposCreados(cuposGenerados);
-
                 }
                 if (errores.length > 0) {
                     errores.forEach(function (e) {
@@ -733,11 +724,7 @@ function AceptarMasivo() {
                     ShowErrorMessages(errores);
                 }
                 recargarGrilla();
-
             }
             $.unblockUI();
-        }
-        , 200);
-
-
+        }, 200);
 }

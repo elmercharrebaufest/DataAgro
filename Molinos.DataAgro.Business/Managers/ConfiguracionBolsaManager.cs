@@ -7,24 +7,18 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ConfiguracionBolsaManager : IConfiguracionBolsaManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-
-
-
 
         public ConfiguracionBolsaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            this.repositorio = repositorio;     
+            this.repositorio = repositorio;
         }
 
         public Resultado GrabarConfiguracionBolsa(ConfiguracionBolsa bolsa)
@@ -35,12 +29,12 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
             var error = new Resultado();
-           
+
             try
-            {             
+            {
                 if (bolsa.Id == 0)
                 {
-                repositorio.Agregar(bolsa);                   
+                    repositorio.Agregar(bolsa);
                 }
                 else
                 {
@@ -48,7 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
                     bolsaSave.ProvinciaId = bolsa.ProvinciaId;
                     bolsaSave.DestinoId = bolsa.DestinoId;
                     bolsaSave.BolsaId = bolsa.BolsaId;
-                    
+
                 }
                 repositorio.GuardarCambios();
             }
@@ -63,7 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(ConfiguracionBolsa bolsa)
         {
-            var errores = new Resultado();            
+            var errores = new Resultado();
             if (repositorio.Obtener<ConfiguracionBolsa>(x => x.ProvinciaId == bolsa.ProvinciaId && x.DestinoId == bolsa.DestinoId && x.Id != bolsa.Id) != null)
             {
                 errores.Error("cupo", "Esta configuración ya existe");
@@ -113,7 +107,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<ConfiguracionBolsa>(x => x.DestinoId == destinoId && x.ProvinciaId == ProvinciaId);
         }
-
 
     }
 }

@@ -2,11 +2,8 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
-using System;
-using Humanizer;
-using System.Globalization;
-using System.Linq;
 using Molinos.DataAgro.Interfaces;
+using System.Globalization;
 using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
@@ -21,24 +18,15 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaVeinticinco clausula)
         {
+            //SI EL CONTRATO CORRESPONDE A CANJE y es a fijar
+
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje == true)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
-                res.Texto += $"Detalle de los insumos a canjear {clausula.Basico.Insumo } - {clausula.Basico.Monto } {clausula.Basico.MonedaCanjeDescripcion }";
+                res.Texto += $"Detalle de los insumos a canjear {clausula.Basico.Insumo} - {clausula.Basico.MonedaCanjeDescripcion} {clausula.Basico.Monto?.ToString("N", new CultureInfo("es-AR"))}";
             }
+
             return res;
-        }
-
-        public string DevolverNumeroEnLetras(decimal numero)
-        {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";
-
-            }
-            return letras;
         }
     }
 }

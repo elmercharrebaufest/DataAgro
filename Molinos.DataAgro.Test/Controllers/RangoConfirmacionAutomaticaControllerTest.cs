@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
 using WebDataAgro.Models;
@@ -23,7 +24,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
+            serializer = new JavaScriptSerializer();
             comercialManagerMock = new Mock<IComercialManager>();
             rangoManagerMock = new Mock<IRangoConfirmacionAutomaticaManager>();
             target = new RangoConfirmacionAutomaticaController(comercialManagerMock.Object, rangoManagerMock.Object);
@@ -104,14 +105,14 @@ namespace Molinos.DataAgro.Test.Controllers
                 PrecioMinimo = 1
             };
             rangoManagerMock.Setup(x => x.TraerRango(1)).Returns(rangoPrecio);
-            var result = target.RangoCombo(new AbmRangoConfirmacionAutomaticaParam() { Id = 1});
+            var result = target.RangoCombo(new AbmRangoConfirmacionAutomaticaParam() { Id = 1 }) as JsonResult;
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"DesdeEntrega\":null,\"HastaEntrega\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \",\"TipoRangoId\":0,\"TipoRango\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<DataAbmRangoConfirmacionAutomatica>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.IsInstanceOf<DataAbmRangoConfirmacionAutomatica>(result.Data);
+            Assert.IsInstanceOf<RangoConfirmacionAutomaticaDto>(model.Rango);
         }
         [Test]
         public void AplicarRangoTest()
@@ -125,14 +126,14 @@ namespace Molinos.DataAgro.Test.Controllers
                 PrecioMinimo = 1
             };
             rangoManagerMock.Setup(x => x.TraerRango(1)).Returns(rangoPrecio);
-            var result = target.RangoCombo(new AbmRangoConfirmacionAutomaticaParam() { Id = 1 });
+            var result = target.RangoCombo(new AbmRangoConfirmacionAutomaticaParam() { Id = 1 }) as JsonResult;
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"DesdeEntrega\":null,\"HastaEntrega\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \",\"TipoRangoId\":0,\"TipoRango\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<DataAbmRangoConfirmacionAutomatica>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.IsInstanceOf<DataAbmRangoConfirmacionAutomatica>(result.Data);
+            Assert.IsInstanceOf<RangoConfirmacionAutomaticaDto>(model.Rango);
         }
 
         [Test]
@@ -147,21 +148,21 @@ namespace Molinos.DataAgro.Test.Controllers
                 PrecioMinimo = 1
             };
             rangoManagerMock.Setup(x => x.GrabarRangoConfirmacionAutomatica(rangoPrecio, It.IsAny<int>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Grabar(rangoPrecio);
+            var result = target.Grabar(rangoPrecio) as JsonResult;
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"DesdeEntrega\":null,\"HastaEntrega\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \",\"TipoRangoId\":0,\"TipoRango\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<DataAbmRangoConfirmacionAutomatica>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.IsInstanceOf<AbmRangoConfirmacionAutomaticaResult>(result.Data);
+            Assert.IsInstanceOf<RangoConfirmacionAutomaticaDto>(model.Rango);
         }
 
         [Test]
         public void EliminarRangoTest()
         {
             rangoManagerMock.Setup(x => x.EliminarRangoConfirmacionAutomatica(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmRangoParam { Id = 1});
+            var result = target.Eliminar(new AbmRangoParam { Id = 1 });
 
             Assert.NotNull(result);
 

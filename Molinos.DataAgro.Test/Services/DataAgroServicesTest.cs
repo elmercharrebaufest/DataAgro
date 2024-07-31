@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -586,7 +587,7 @@ namespace Molinos.DataAgro.Test.Services
               .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).
-              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = 1 });
+              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
             var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;
@@ -617,7 +618,7 @@ namespace Molinos.DataAgro.Test.Services
               .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).
-              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = 1 });
+              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
             var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;

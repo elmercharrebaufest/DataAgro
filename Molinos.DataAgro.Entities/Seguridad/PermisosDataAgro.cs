@@ -180,6 +180,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         PreAnularFijacion = 350,
         [Display(ResourceType = typeof(Text), Name = "OyT_Norte")]
         OyT_Norte = 351,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosSorgo")]
+        ConfirmarNegociosSorgo = 352,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
@@ -286,6 +288,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NotificacionesResearch = 603,
         [Display(ResourceType = typeof(Text), Name = "Eliminar_Registro_Research")]
         EliminarRegistroResearch = 604,
+        [Display(ResourceType = typeof(Text), Name = "Sincronizar_Research")]
+        SincronizarResearch = 605,
 
         //Cupos
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Cupos")]
@@ -352,6 +356,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         HabilitacionDeCupos = 730,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todas_Las_Sugerencias")]
         VerTodasLasSugerencias = 731,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt")]
+        VincularNegocioConSolExt = 735,
         [Display(ResourceType = typeof(Text), Name = "Mail_SolExt_Pendientes")]
         Mail_SolExt_Pendientes = 740,
         //Cupo NO Propio
@@ -379,6 +385,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Boletos
         [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
         GenerarBoleto = 900,
+        //Confirma
+        [Display(ResourceType = typeof(Text), Name = "Confirma")]
+        Confirma = 920,
 
     }
 }

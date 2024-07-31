@@ -58,8 +58,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     context.Load(listAttachments);
                     context.ExecuteQuery(); //esto es lo que ejecuta lo que armamos antes, sin eso es como no hacer nada
 
-                    // a la lista/pagina le pedimos que nos traiga todos los items
-                    CamlQuery query = CamlQuery.CreateAllItemsQuery(); // aca se puede mejorar para filtrar los ya sinconinizados
+                    CamlQuery query = CamlQuery.CreateAllItemsQuery();
                     ListItemCollection itemsResearch = listResearch.GetItems(query);
                     ListItemCollection itemsAttachment = listAttachments.GetItems(query);
                     context.Load(itemsResearch);
@@ -68,6 +67,9 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     string sasToken = azureAgent.GenerarTokenSAS();
                     CloudBlobContainer cloudBlobContainer = azureAgent.GenerarBlobContainer(sasToken);
+
+                    List<Tuple<int, int>> registrosEnDA = repositorio.Listar<Research>().Select(x => new Tuple<int, int>(x.Id, (int)x.IdPowerApp)).ToList();
+                    List<Tuple<int, int>> adjuntosEnDA = repositorio.Listar<ResearchAdjunto>().Select(x => new Tuple<int, int>(x.Id, x.ResearchId)).ToList();
 
                     List<Material> listaMateriales = repositorio.Listar<Material>();
                     List<ResearchEstadioDto> listaEstadioDto = repositorio.Listar<ResearchEstadio, ResearchEstadioDto>(x => new ResearchEstadioDto { EstadioId = x.EstadioId, Descripcion = x.Descripcion });
@@ -83,7 +85,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     List<ResearchCondicionCultivo> listaCondicionCultivo = repositorio.Listar<ResearchCondicionCultivo>();
                     int contadorAgregados = 0;
 
-                    foreach (ListItem item in itemsResearch)
+                    foreach (ListItem item in itemsResearch.ToList())
                     {
                         Resultado resultado = new Resultado();
                         try
@@ -122,12 +124,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                             itemData.Coeficiente = item["Coeficiente"] is double coeficiente ? coeficiente : (double?)null;
                             itemData.CampañaId = listaCampañaDto.FirstOrDefault(x => x.Descripcion == item["Campa_x00f1_a"]?.ToString())?.CampañaId;
                             itemData.CapitulosGirasol = item["CapitulosGirasol"] is double capGirasol ? capGirasol : (double?)null;
-                            itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta : (DateTime?)null;
+                            itemData.FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta.ToLocalTime() : (DateTime?)null;
                             itemData.Rendimiento = item["rendimiento"] is double rendim ? rendim : (double?)null;
                             itemData.TipoCargaId = listaTipoCargaDto.FirstOrDefault(x => x.Descripcion.ToUpper() == item["tipoCarga"]?.ToString().ToUpper())?.TipoCargaId;
                             itemData.EstadoConectividad = item["estadoConectividad"] is string estadoConec ? estadoConec : "";
                             itemData.IdPowerApp = item["ID"] is int id ? id : (int?)null;
-                            itemData.FechaModificacion = item["Modified"] is DateTime fecha ? fecha : (DateTime?)null;
+                            itemData.FechaModificacion = item["Modified"] is DateTime fecha ? fecha.ToLocalTime() : (DateTime?)null;
                             FieldUserValue autor = new FieldUserValue();
                             autor = (FieldUserValue)item["Author"];
                             itemData.Author = autor.Email;
@@ -184,43 +186,32 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 itemData.Rendimiento = Double.IsNaN(rendimiento) ? 0 : (double)Math.Round(rendimiento, 0, MidpointRounding.AwayFromZero); //el rendimiento se muestra solo en su parte entera
                             }
 
-                            //string json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
-                            itemData.PromedioMuestraUno = Math.Round((double)itemData.PromedioMuestraUno, 2); //los decimales exactos son necesarios para el cálculo del rendimiento pero no para mostrarse luego
-                            itemData.PromedioMuestraDos = Math.Round((double)itemData.PromedioMuestraDos, 2);
-                            itemData.PromedioMuestraTres = Math.Round((double)itemData.PromedioMuestraTres, 2);
+                            itemData.PromedioMuestraUno = itemData.PromedioMuestraUno != null ? Math.Round((double)itemData.PromedioMuestraUno, 2) : (double?)null; //los decimales exactos son necesarios para el cálculo del rendimiento pero no para mostrarse luego
+                            itemData.PromedioMuestraDos = itemData.PromedioMuestraDos != null ? Math.Round((double)itemData.PromedioMuestraDos, 2) : (double?)null;
+                            itemData.PromedioMuestraTres = itemData.PromedioMuestraTres != null ? Math.Round((double)itemData.PromedioMuestraTres, 2) : (double?)null;
 
                             var adjuntos = itemsAttachment.Where(x => Convert.ToInt32(x["ID_Relevamiento"]) == Convert.ToInt32(item["ID"])).ToList();
 
                             if (adjuntos.Any())
                             {
                                 itemData.Attachments = true;
-                                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+
+                                foreach (var adjunto in adjuntos)
                                 {
+                                    string nombre = adjunto["FileLeafRef"].ToString();
+                                    string rutaAdjunto = adjunto["FileRef"].ToString();
+
+                                    ClientResult<Stream> fileStream = web.GetFileByServerRelativeUrl(rutaAdjunto).OpenBinaryStream();
+                                    context.ExecuteQuery();
+                                    byte[] imageBytes = DownloadImageFromSharePoint(fileStream);
+
+                                    string blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, itemData.IdPowerApp.ToString() + "/" + nombre, imageBytes);
+
                                     itemData.Adjuntos.Add(new ResearchAdjunto()
                                     {
-                                        Path = "/Content/Images/MolinosAgro.png",
-                                        Nombre = "MolinosAgro.png",
+                                        Path = blobUri,
+                                        Nombre = nombre,
                                     });
-                                }
-                                else
-                                {
-                                    foreach (var adjunto in adjuntos)
-                                    {
-                                        string nombre = adjunto["FileLeafRef"].ToString();
-                                        string rutaAdjunto = adjunto["FileRef"].ToString();
-
-                                        ClientResult<Stream> fileStream = web.GetFileByServerRelativeUrl(rutaAdjunto).OpenBinaryStream();
-                                        context.ExecuteQuery();
-                                        byte[] imageBytes = DownloadImageFromSharePoint(fileStream);
-
-                                        string blobUri = azureAgent.GuardarImagenEnAzure(cloudBlobContainer, itemData.IdPowerApp.ToString() + "/" + nombre, imageBytes);
-
-                                        itemData.Adjuntos.Add(new ResearchAdjunto()
-                                        {
-                                            Path = blobUri,
-                                            Nombre = nombre,
-                                        });
-                                    }
                                 }
                             }
 
@@ -232,17 +223,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
                             else
                             {
+                                var registroExistente = registrosEnDA.Find(x => x.Item2 == itemData.IdPowerApp);
+                                if (registroExistente != null)
+                                {
+                                    var adjuntoExistente = adjuntosEnDA.Find(x => x.Item2 == registroExistente.Item1);
+                                    if (adjuntoExistente != null)
+                                        repositorio.Remover<ResearchAdjunto>(adjuntoExistente.Item1);
+                                    repositorio.Remover<Research>(registroExistente.Item1);
+                                }
+
                                 repositorio.Agregar(itemData);
                                 contadorAgregados++;
-                                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
-                                {
-                                    logger.Info($"Simula eliminar en SharePoint el registro {itemData.IdPowerApp}");
-                                }
-                                else
-                                {
-                                    item.DeleteObject();
-                                    context.ExecuteQuery();
-                                }
                             }
                         }
                         catch (Exception e)
@@ -269,7 +260,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             using (var memoryStream = new MemoryStream())
             {
                 fileStream.Value.CopyTo(memoryStream);
-                //fileStream.Value.Close(); // innecesario al estar dentro de un bloque using
                 return memoryStream.ToArray();
             }
         }
@@ -306,12 +296,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Coeficiente = item["Coeficiente"],
                 Campaña = item["Campa_x00f1_a"],
                 CapitulosGirasol = item["CapitulosGirasol"],
-                FechaAlta = item["Created"],
+                FechaAlta = item["Created"] is DateTime fechaAlta ? fechaAlta.ToLocalTime() : (DateTime?)null,
                 Rendimiento = item["rendimiento"],
                 TipoCarga = item["tipoCarga"],
                 EstadoConectividad = item["estadoConectividad"],
                 IdPowerApp = item["ID"],
-                FechaModificacion = item["Modified"],
+                FechaModificacion = item["Modified"] is DateTime fechaMod ? fechaMod.ToLocalTime() : (DateTime?)null,
                 Author = item["Author"],
                 Editor = item["Editor"],
                 Attachments = item["Attachments"],

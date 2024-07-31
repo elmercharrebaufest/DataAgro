@@ -220,10 +220,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             listMateriales = listMateriales.Where(x => !precioPizarraFiltrado.Contains(x)).ToList();
 
-            // TRIGO PAN(1), MAÍZ(2), GIRASOL(20), SOJA(21)
+            // TRIGO PAN(1), MAÍZ(2), SOJA(21), SORGO(3), GIRASOL(20)
             foreach (var p in listMateriales)
             {
-                listIdMaterialesBCR.Add(p == (int)EnumMateriales.MAIZ ? 2 : p == (int)EnumMateriales.TRIGO ? 1 : p == (int)EnumMateriales.SOJA ? 21 : 20);
+                listIdMaterialesBCR.Add(p == (int)EnumMateriales.MAIZ ? 2 : p == (int)EnumMateriales.TRIGO ? 1 : p == (int)EnumMateriales.SOJA ? 21 : p == (int)EnumMateriales.SORGO ? 3 : 20);
             }
 
             listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(diaHabilAnterior, listIdMaterialesBCR.ToArray());

@@ -25,6 +25,9 @@ using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.css;
 using Molinos.DataAgro.Entities.Common.Enums;
 using System.Globalization;
+using System.Drawing.Imaging;
+using System.Net.Http;
+using System.Reflection;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -78,6 +81,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
+
                         if (consultaBoleto.Generado == "" || consultaBoleto.Generado.Equals("X")) // probar casos anulados
                         {
                             var tempBoleto = new BoletoGeneradoDto
@@ -300,8 +304,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "En caso de ser un boleto de Bolsa de Rosario, si no se envía impreso en doble faz se observará debido a que no están autorizando el obleado.<br/>" +
                 "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
                 "<br/><br/>Saludos Cordiales,<br/><br/>" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br/><br/>Molinos Agro S.A.<br/><br/><br/><br/>" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
                 "www.molinosagro.com.ar";
             htmlBody += "<style> table, th, td{ }</style>";
 
@@ -394,6 +398,7 @@ namespace Molinos.DataAgro.Business.Managers
                         string templateFilePath = ObtenerPath(basico);
 
                         var templateString = System.IO.File.ReadAllText(templateFilePath);
+
 
                         var xHtml = templateString;
                         xHtml = CompletarHtml(basico, clausulas, boleto, xHtml, false);
@@ -588,7 +593,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var precio = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
-                    precio = basico.Moneda + " " + basico.PrecioNeto.ToString();
+                    var simboloMoneda = basico.Moneda == "ARP" ? "ARS" : basico.Moneda;
+                    precio = simboloMoneda + " " + basico.PrecioNeto?.ToString("N", new CultureInfo("es-AR"));
                 }
                 else
                 {
@@ -597,15 +603,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var titulo = "";
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta para cereales y oleaginosos";
+                    titulo = "Boleto de compra venta para cereales y oleaginosos";
                 }
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje != true)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta de granos a fijar precio";
+                    titulo = "Boleto de compra venta de granos a fijar precio";
                 }
                 if (basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && basico.Canje == true)
                 {
-                    titulo = "Bolsa de Comercio de Rosario Boleto de compra venta con pago en especie";
+                    titulo = "Boleto de compra venta con pago en especie";
                 }
                 var numeroSio = status.ValidarEstado(basico.ContratoSAP).NumeroSio;
                 string seccionSio = basico.CorredorId > 0 ?
@@ -613,30 +619,29 @@ namespace Molinos.DataAgro.Business.Managers
                     "<div class=\"espacio\"></div><div style=\"\" class=\"\"><span class=\"cls_006\">NÚMERO DE SIO GRANOS " + numeroSio + "</span></div><div class=\"espacio\"></div><div class=\"espacio\"></div>";
 
                 xHtml = string.Format(xHtml,
-                     stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.RazonSocialProveedor, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
-                     basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad,
-                     precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", basico.Cuit, (basico.CorredorId > 0 ? basico.CUITCorredor : ""),
+                     stylesHtml, basico.ContratoSAP.TrimStart('0'), boleto.Version.ToString().PadLeft(2, '0'), basico.RazonSocialProveedor, basico.ContratoSAP.TrimStart('0'), basico.CorredorId > 0 ? basico.RazonSocialCorredor : "", basico.ContratoSAP.TrimStart('0'),
+                     basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad.ToString("N", new CultureInfo("es-AR")),
+                     precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", FormatoCuit(basico.Cuit), basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : "",
                      titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""), seccionSio);
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
-                var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {basico.CUITCorredor} </b> </td></tr>" : "";
+                var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {FormatoCuit(basico.CUITCorredor)} </b> </td></tr>" : "";
                 xHtml = string.Format(xHtml,
-                stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
-                basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
+                stylesHtml, basico.ContratoSAP.TrimStart('0'), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.TrimStart('0'),
+                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""), basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                //var localidad = reposi
                 string clausulasNumeradas = "";
                 for (int i = 1; i <= clausulas.Count; i++)
                 {
                     clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
                 }
-                xHtml = String.Format(xHtml, stylesHtml, DateTime.Now.ToString("dd/MM/yyyy"), basico.ContratoSAP, basico.Proveedor, basico.Cuit, basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
-                    , basico.Corredor, basico.CUITCorredor, clausulasNumeradas);
+                xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd.MM.yyyy"), basico.ContratoSAP.TrimStart('0'), basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
+                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas);
                 return xHtml;
             }
             return xHtml;
@@ -774,6 +779,81 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
             codigos.Sort();
             return codigos;
+        }
+
+        public bool ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos)
+        {
+            try
+            {
+                foreach (string numeroNegocio in listaContratos)
+                {
+                    var itemNegocio = repositorio.Obtener<Negocio>(n => n.ContratoSAP == ("000" + numeroNegocio));
+
+                    if (itemNegocio != null)
+                    {
+                        var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
+
+                        string _negocio = itemNegocio is ContratoAcuerdo ? itemNegocio.Id.ToString() : (itemNegocio is FijacionDePrecioContrato && (itemNegocio.EstadoId == (int)EnumEstadoContrato.Finalizado || itemNegocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (itemNegocio as FijacionDePrecioContrato).FijacionSAP : itemNegocio.ContratoSAP != "0" ? itemNegocio.ContratoSAP : "";
+
+                        string contratoSapPdf = archivos.Find(sap => sap.Contains(numeroNegocio));
+                        Byte[] fileBytes = BoletoEnByte(pathArchivos + "\\" + contratoSapPdf);
+
+                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio : "");
+
+
+                        var lista = new List<string>();
+                        string contrato = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio.Substring(_negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0');
+                        string razonSocial = (itemNegocio.Corredor != null) ? itemNegocio.Corredor.RazonSocial : itemNegocio.Proveedor.RazonSocial;
+                        string version = (Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1).ToString();
+
+
+                        var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(itemNegocio.Comercial.IdActiveDirectory);
+
+                        if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
+                        {
+                            lista.Add(comercialRegistrado);
+                            lista.Add("dataagro@molinosagro.com.ar");
+                            logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
+                        }
+                        var subject = itemNegocio.Boleto.Descripcion == "Físico" ? "Boleto Físico" : itemNegocio.Boleto.Descripcion;
+                        subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + numeroNegocio;
+
+                        mailManager.EnviarMail(itemNegocio.Comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), fileBytes, contratoSapPdf);
+                    }
+
+                }
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
+        }
+
+        private string FormatoCuit(string cuit)
+        {
+            if (cuit.Length == 11)
+            {
+                cuit = $"{cuit.Substring(0, 2)}-{cuit.Substring(2, 8)}-{cuit.Substring(10, 1)}";
+            }
+
+            return cuit;
+        }
+
+        private string ImageToBase64(string imagePath, ImageFormat format)
+        {
+            using (System.Drawing.Image image = System.Drawing.Image.FromFile(imagePath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, format);
+                    byte[] imageBytes = ms.ToArray();
+                    return Convert.ToBase64String(imageBytes);
+                }
+            }
         }
     }
 }

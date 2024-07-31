@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -12,7 +13,6 @@ using System.Configuration;
 using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Web;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -25,14 +25,12 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IClientePrimaryAPIAgent> clientePrimaryAPIAgentMock;
-        private JavaScriptSerializer serializer;
         private Mock<IHttpContextManager> contextoMock;
 
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             mailManagerMock = new Mock<IMailManager>();
@@ -46,7 +44,6 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void OcultarEnTableroOk()
         {
-
             var negocio = new Negocio()
             {
                 Id = 1,
@@ -57,13 +54,11 @@ namespace Molinos.DataAgro.Test.Managers
 
             var resultado = target.OcultarEnTablero(negocio);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-
         }
 
         [Test]
         public void EnvioMailNegociosAnulaYReemplazaTestOk()
         {
-
             var negocio = new Contrato()
             {
                 Id = 1,
@@ -79,8 +74,7 @@ namespace Molinos.DataAgro.Test.Managers
                 TipoNegocioId = 1,
                 Cantidad = 11111,
                 Comercial = new Comercial { Nombres = "", Apellido = "" },
-                Material = new Material { Descripcion = "" },
-
+                Material = new Material { Descripcion = "" }
             };
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { negocio });
@@ -91,7 +85,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.EnvioMailNegociosAnulaYReemplaza();
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-
         }
 
         [Test]
@@ -105,7 +98,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.EnvioMailNegociosAnulaYReemplaza();
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-
         }
 
         [Test]
@@ -137,10 +129,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.EnvioMailNegociosConDiaAnterior();
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-
         }
-
-        
 
         [Test]
         public void EnviarMailErrorFinalizarNegocioTestOk()
@@ -173,7 +162,6 @@ namespace Molinos.DataAgro.Test.Managers
             target.EnviarMailErrorFinalizarNegocio(1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null, null, null), Times.Once);
-
         }
 
         [Test]
@@ -181,7 +169,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 }, DolarExportador = true } };
             var negociosDA = new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 }, DolarExportador = true };
-            
+
             clientePrimaryAPIAgentMock.Setup(mock => mock.ObtenerNegocios(It.IsAny<DateTime>())).Returns(negociosMAT);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AgenteCompra> { negociosDA });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
@@ -193,6 +181,17 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AgenteCompra>()), Times.AtLeastOnce);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null, null, null), Times.Once);
+        }
+
+        [Test]
+        public void TraerAcuerdoTest()
+        {
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()))
+                .Returns(new BasicoContrato { Id = 10 });
+            var resultado = target.TraerAcuerdo(1);
+
+            Assert.AreEqual(10, resultado.Id);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()), Times.Once);
         }
     }
 }

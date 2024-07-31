@@ -130,7 +130,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },

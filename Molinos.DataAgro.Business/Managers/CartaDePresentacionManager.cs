@@ -1,11 +1,8 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +12,7 @@ namespace Molinos.DataAgro.Business
     public class CartaDePresentacionManager : ICartaDePresentacionManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public CartaDePresentacionManager(ILogger logger, IRepositorio repositorio)
         {
@@ -47,26 +44,28 @@ namespace Molinos.DataAgro.Business
                         });
                     }
 
-                    //// Maiz
+                    // Maiz
                     var TonMaiz = nuevosCampos.Where(a => a.MaterialId == 1).Sum(a => a.Toneladas);
-                    //// Soja
+                    // Soja
                     var TonSoja = nuevosCampos.Where(a => a.MaterialId == 3).Sum(a => a.Toneladas);
-                    //// Trigo
+                    // Trigo
                     var TonTrigo = nuevosCampos.Where(a => a.MaterialId == 2).Sum(a => a.Toneladas);
-                    //// Girasol
+                    // Girasol
                     var TonGira = nuevosCampos.Where(a => a.MaterialId == 4).Sum(a => a.Toneladas);
-                    //// Girasol Alto
+                    // Girasol Alto
                     var TonGiraAlto = nuevosCampos.Where(a => a.MaterialId == 5).Sum(a => a.Toneladas);
+                    // Sorgo
+                    var TonSorgo = nuevosCampos.Where(a => a.MaterialId == 6).Sum(a => a.Toneladas);
 
-                    informe.ToneladasTodo = "Maiz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
-                        " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol A. O. " + TonGiraAlto.ToString("N2") + " Tn. ";
+                    informe.ToneladasTodo = "Maíz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
+                        " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol A. O. " + TonGiraAlto.ToString("N2") + " Tn. / Sorgo " + TonSorgo.ToString("N2") + " Tn. ";
                 }
                 else
                 {
                     informe.ToneladasTodo = "";
                 }
-                informe.TextoCompleto1 = informe.corredorRazonSocial+" , CUIT "+informe.corredorCuit+" en mi carácter de corredor registrado en la Bolsa de Cereales/Comercio de "+informe.corredorBolsa+", registro N° "+informe.corredorNroRegistro+", solicito a Molinos Agro S.A. tenga a bien considerar al siguiente vendedor para celebrar futuras operaciones de compraventa de cereales: "+informe.vendedorRazonSocial+", CUIT "+informe.vendedorCuit+" domicilio fiscal "+informe.vendedorDomicilioFiscal;
-                informe.TextoCompleto2 = "Destaco que "+informe.corredorRazonSocial+" ha tomado los recaudos necesarios a fin de verificar la identidad de las personas aquí indicadas, su existencia y demás datos personales, lo que surge del siguiente detalle, así como también el correcto cumplimiento de las condiciones comerciales y fiscales que los habilitan para operar con Molinos en la compraventa de granos y su capacidad productiva, económica y operativa.";
+                informe.TextoCompleto1 = informe.corredorRazonSocial + " , CUIT " + informe.corredorCuit + " en mi carácter de corredor registrado en la Bolsa de Cereales/Comercio de " + informe.corredorBolsa + ", registro N° " + informe.corredorNroRegistro + ", solicito a Molinos Agro S.A. tenga a bien considerar al siguiente vendedor para celebrar futuras operaciones de compraventa de cereales: " + informe.vendedorRazonSocial + ", CUIT " + informe.vendedorCuit + " domicilio fiscal " + informe.vendedorDomicilioFiscal;
+                informe.TextoCompleto2 = "Destaco que " + informe.corredorRazonSocial + " ha tomado los recaudos necesarios a fin de verificar la identidad de las personas aquí indicadas, su existencia y demás datos personales, lo que surge del siguiente detalle, así como también el correcto cumplimiento de las condiciones comerciales y fiscales que los habilitan para operar con Molinos en la compraventa de granos y su capacidad productiva, económica y operativa.";
 
                 if (nuevosAcopios != null)
                 {
@@ -83,7 +82,6 @@ namespace Molinos.DataAgro.Business
                     }
                 }
             }
-            
 
             return informe;
         }

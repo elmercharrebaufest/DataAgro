@@ -7,6 +7,7 @@ using Humanizer;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Resources;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -20,11 +21,19 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaUno clausula)
         {
             var res = new ResultadoClausula();
-            res.Texto = $"Los señores {clausula.Basico.RazonSocialProveedor} (en adelante el vendedor) domiciliados en {clausula.Basico.ProveedorDireccion} de {clausula.Basico.ProveedorLocalidad}, " +
-                $"{clausula.Basico.ProveedorProvincia}, CP {clausula.Basico.ProveedorCP}, {(String.IsNullOrEmpty(clausula.Basico.ContratoCorredor) ? "" : " por intermedio de " + clausula.Basico.RazonSocialCorredor)}" +
-                $" entregan a Molinos Agro S.A. domiciliado en Bouchard 680 piso 12° de la Ciudad de Buenos Aires (en adelante el comprador), la cantidad de {clausula.Basico.Cantidad.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} kg. " +
-                $"(kilogramos {((int)Math.Abs(clausula.Basico.Cantidad)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}) de {clausula.Basico.Material} {(clausula.Basico.CantidadCamiones != 0 ? " o el resultante de " + clausula.Basico.CantidadCamiones + "camiones" : "")}" +
-                $"y demás condiciones ";
+            if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
+            {
+                res.Texto = "El VENDEDOR vende al COMPRADOR";
+            }
+            else
+            {
+                res.Texto = $"Los señores {clausula.Basico.RazonSocialProveedor} (en adelante el vendedor) domiciliados en {clausula.Basico.ProveedorDireccion} de {clausula.Basico.ProveedorLocalidad}, " +
+                $"{clausula.Basico.ProveedorProvincia}, CP {clausula.Basico.ProveedorCP}, {(!string.IsNullOrEmpty(clausula.Basico.RazonSocialCorredor) ? " por intermedio de " + clausula.Basico.RazonSocialCorredor : "")}" +
+                $" entregan a Molinos Agro S.A. domiciliado en Bouchard 680 piso 12° de la Ciudad de Buenos Aires (en adelante el comprador),";
+            }
+            res.Texto += $" la cantidad de {clausula.Basico.Cantidad.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} kg. " +
+              $"(kilogramos {((int)Math.Abs(clausula.Basico.Cantidad)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}) de {clausula.Basico.Material} {(clausula.Basico.CantidadCamiones != 0 ? " o el resultante de " + clausula.Basico.CantidadCamiones + "camiones" : "")}" +
+              $"y demás condiciones ";
             if (clausula.Basico.TrigoEspecial == true && clausula.Basico.StandardDeCalidadId != 7)
             {
                 res.Texto += "CALIDAD ESPECIAL ";
@@ -44,38 +53,38 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     }
                 }
             }
-            res.Texto += $"de la cosecha  {clausula.Basico.Campania}, ";
-            if (clausula.Basico.TipoNegocioId == 2)
+            res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
-                res.Texto += $"a  {NumeroConSeparadores(clausula.Basico.PrecioNeto)} {DivisaSimbolica(clausula.Basico.Moneda)} ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
+                res.Texto += $"a {NumeroConSeparadores(clausula.Basico.PrecioNeto)} {DivisaSimbolica(clausula.Basico.Moneda)} ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
 
             }
-            if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true)
             {
                 res.Texto += "con precio a fijar ";
             }
-            else if (clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje == true)
+            else if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
                 res.Texto += $"para cancelar {clausula.Basico.Insumo} - {clausula.Basico.Monto} {clausula.Basico.MonedaCanjeId} " +
                     $"(en adelante, el {"Insumo"}) así como también para cancelar los gastos asociados a los que el Vendedor hubiere incurrido para llevar a cabo la presente operación. " +
                     $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
 
             }
-            res.Texto += $"puesta sobre camión en: Planta {clausula.Basico.DestinoDescripcion} " +
-                   $"Localidad {clausula.Basico.DestinoLocalidad}, de Provincia de {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
+            res.Texto += $", puesta sobre camión en: Planta {DevolverRicardone(clausula.Basico.DestinoDescripcion)} " +
+                   $"Localidad de {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
                    $"la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
             if (clausula.Basico.Consignatario == true)
             {
                 res.Texto += "El vendedor actúa en carácter de consignatario. ";
             }
-            res.Texto += $"Procedencia de la mercadería: {clausula.Basico.Localidad}, Provincia de {clausula.Basico.Provincia}.";
+            res.Texto += $"Procedencia de la mercadería: {clausula.Basico.Localidad}, provincia de {clausula.Basico.Provincia}.";
             if (clausula.Basico.EstablecimientoPropio == true)
             {
-                res.Texto += "Campo es Propio ";
+                res.Texto += "El campo es propio. ";
             }
             if (clausula.Basico.EstablecimientoPropio == false)
             {
-                res.Texto += "campo arrendado ";
+                res.Texto += "El campo es arrendado. ";
             }
             if (clausula.Basico.PreciosPactados != null && clausula.Basico.PreciosPactados.Count > 0)
             {
@@ -83,14 +92,14 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 foreach (var precio in clausula.Basico.PreciosPactados)
                 {
                     res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
-                        $"{precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)})";
+                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)}),";
                 }
             }
 
             return res;
         }
 
-        public string DevolverNumeroEnLetras(decimal numero)
+        private string DevolverNumeroEnLetras(decimal numero)
         {
             numero = Math.Round(numero, 2);
             var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
@@ -117,6 +126,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
             return numero.GetValueOrDefault().ToString("#,###.##", objNumberFormatInfo);
+        }
+
+        private string DevolverRicardone(string cadena)
+        {
+            return cadena == "San Lorenzo" ? "San Lorenzo o Ricardone" : cadena;
         }
     }
 }

@@ -30,8 +30,8 @@ function CreateGridAvanceSiembra() {
                 fields: {
                     IntencionSiembra: { type: "number" },
                     CambioAA: { type: "number" },
-                    Avance: { type: "number" },                    
-                    FechaHora: { type: "date" }                    
+                    Avance: { type: "number" },
+                    FechaHora: { type: "date" }
                 }
             }
         },
@@ -46,7 +46,7 @@ function CreateGridAvanceSiembra() {
     $("#gridAvanceSiembra").kendoGrid({
         toolbar: ["excel"],
         excel: {
-             allPages: true
+            allPages: true
         },
         dataSource: ds,
         columns: [
@@ -64,11 +64,11 @@ function CreateGridAvanceSiembra() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
-            { field: "Campania", title: "Campaña"},
+            { field: "Campania", title: "Campaña" },
             { field: "IntencionSiembra", title: "Intención Siembra (Has)" },
             { field: "CambioAA", title: "Cambio vs AA (%)" },
             { field: "Avance", title: "Avance %" },

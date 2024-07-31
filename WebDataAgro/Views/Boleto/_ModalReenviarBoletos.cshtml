@@ -1,0 +1,37 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="ModalReenviarBoletos" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status finalizado-modal">
+                    <div>REENVIAR BOLETOS</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div class="col-xs-12 noPadding">
+                    <div id="boletoEmailReenviado-modal" class="campo clearfix">
+                    </div>
+                </div>
+                <div id="alert-msj" class="alert display-none" role="alert">
+                </div>
+            </div>
+            <br />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <button id="reenviarBoletos" onclick="ReenviarBoletosMails()" class="myBtn">Reenviar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button id="cancelarBoletosReenvio" type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-xs-12 noPaddingLeft">
+                    <button id="cerrarBoletosReenvio" class="myBtn" hidden>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

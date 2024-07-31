@@ -11,5 +11,8 @@ namespace Molinos.DataAgro.Interfaces
         void MigrarContratosPrimary(DateTime fecha);
         void EnvioMailNegociosAnulaYReemplaza();
         void EnviarMailErrorFinalizarNegocio(int contratoId);
+        BasicoContrato TraerAcuerdo(int contratoId);
+        Resultado ControlesAccesoConDescarga(Negocio oContrato);
+        Cupo TransformarContratoACupo(Negocio contrato);
     }
 }

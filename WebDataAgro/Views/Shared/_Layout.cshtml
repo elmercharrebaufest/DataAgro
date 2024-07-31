@@ -414,7 +414,7 @@
                                 {
                                     <li>
                                         <a href="~/Material" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Material
+                                            <i class="icon-bar-chart"></i> ABM Materiales
                                         </a>
                                     </li>
                                 }
@@ -454,7 +454,7 @@
                                 {
                                     <li>
                                         <a href="~/Configuracion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Configuraciones Constantes
+                                            <i class="icon-bar-chart"></i> Configuración de Constantes
                                         </a>
                                     </li>
                                 }
@@ -521,7 +521,7 @@
                                 {
                                     <li>
                                         <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Rangos para confirmacion automatica
+                                            <i class="icon-bar-chart"></i> Rangos para confirmación automática
                                         </a>
                                     </li>
                                 }
@@ -703,7 +703,7 @@
                     @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                     {
                         <li class="dropdown">
-                            <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boleto <span class="caret"></span></a>
+                            <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boletos <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="boleto">
 
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.Confirma))
@@ -727,6 +727,22 @@
                                     <li>
                                         <a href="~/Boleto/DescargarBoletos" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Descargar Boletos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                {
+                                    <li>
+                                        <a href="~/Confirma/GenerarConfirma" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Generar Confirma
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Confirma))
+                                {
+                                    <li>
+                                        <a href="~/Confirma/DescargarConfirma" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Descargar Confirma
                                         </a>
                                     </li>
                                 }
@@ -829,7 +845,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="row col-md-6" style="margin-top: 2em;">
-                        <b>Gerente de proyecto:</b> <p>Alexis Zunino</p>
+                        <b>Account Delivery Manager:</b> <p>Gustavo Censabella</p>
                         <b>Líder del proyecto:</b> <p>Maria de los Angeles Martinez</p>
                         <b>Arquitecto técnico:</b> <p>Eugenio Martin</p>
                         <b>Desarrolladores:</b> <p>Daniela Rodriguez Palacio<br>Gonzalo Sian</p>
@@ -837,7 +853,7 @@
                     </div>
                     <div class="row col-md-6" style="margin-top: 2em;">
                         <b>Gerente de proyecto:</b> <p>Fernando Ponce de Leon</p>
-                        <b>Dueña del producto:</b> <p>Yindri Jeniree Bastidas</p>
+                        <b>Product Owner:</b> <p>Santiago Barbarotta</p>
                         <img style="margin-top: 11em;" width="200" src="~/Content/Images/logomoa.png" />
                     </div>
                 </div>

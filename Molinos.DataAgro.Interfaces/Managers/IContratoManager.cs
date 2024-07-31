@@ -99,10 +99,11 @@ namespace Molinos.DataAgro.Interfaces
         List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId);
         void ReenviarMailContrato(int contratoId, string idActiveDirectory);
         List<ExcelValidatorResumeItem> AltaMasivaMATBA(DataSet dsExcel, int ComercialId);
-        GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato);
         Resultado ValidarPantallaEnUso(PantallaEnUsoDto oParam);
         Resultado LiberarPantalla(PantallaEnUsoDto oParam);
         List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId);
         List<CupoDto> TraerCuposConDescarga(int contratoId);
+        void EnviarMailImpuestos(int contratoId);
+        string ConsultarRangoPrecio(int materialId, string moneda, decimal precio);
     }
 }

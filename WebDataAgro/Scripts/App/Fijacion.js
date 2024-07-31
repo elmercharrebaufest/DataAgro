@@ -1575,7 +1575,7 @@ function InicializarElementos() {
                 }
             }
             if (this.value() == "" && ($("#tipoId").val() == "2")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
                 $("#pagoCbuDiv").show();
             }
             if (this.value() >= 1) {
@@ -1970,11 +1970,19 @@ function InicializarElementos() {
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        },
         change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())); }
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        disableDates: function (date) {
+            var day = new Date(date).getDay();
+            return day === 0 || day === 6;
+        }
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({
@@ -2163,7 +2171,7 @@ function InicializarElementos() {
             $("#dolarizadoDiv").show();
             //$("#dolarizadoExpressId").prop("checked", false);
             $("#pesificadoId").prop("checked", false);
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
             //$("#fechaCiertaDiv").hide();
@@ -2208,7 +2216,7 @@ function InicializarElementos() {
             if (!$("#compensacionId").is(":checked") && fijacionVirtual != true) {
                 $("#pagoCbuDiv").show();
                 if (!$("#pagoDirectoId").is(":checked")) {
-                    $("#chequeElectronicoDiv").show();
+                    //$("#chequeElectronicoDiv").show();
                 }
             }
         }
@@ -2351,7 +2359,7 @@ function InicializarElementos() {
             if (($("#tipoId").val() == '6' || $("#tipoId").val() == '3') && fijacionVirtual != true) {
                 $("#chequeElectronicoId").show();
             } if (!$("#compensacionId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             }
 
         }
@@ -2617,7 +2625,7 @@ function InicializarElementos() {
         filter: "contains",
         change: function () {
             if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
+                //$("#chequeElectronicoDiv").show();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#chequeElectronicoInput").prop("checked", false);
@@ -2762,6 +2770,12 @@ function CambioCalidades(calidades) {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").hide();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+    }
+    else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
+        $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
+    }
+    else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+        $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
     } else {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
@@ -3447,10 +3461,16 @@ function AgregarCalidades() {
         }
         else {
             viewModel.Calidades.push(calidades);
-            $("#calidadesEspecialesId").val("");
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
             $("#porcentajeDesdeId").data("kendoNumericTextBox").value("");
             $("#porcentajeHastaId").data("kendoNumericTextBox").value("");
+
+            if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
+            }
+            else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
+            }
         }
         return err;
     }
@@ -4784,7 +4804,7 @@ function CalcularNetoFijacionConDescuentos() {
 function HayCompensacion() {
     if (!$("#compensacionId").is(":checked")) {
         if (!$("#pagoDirectoId").is(":checked") && fijacionVirtual != true) {
-            $("#chequeElectronicoDiv").show();
+            //$("#chequeElectronicoDiv").show();
         }
         if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked") && fijacionVirtual != true) {
             $("#pagoCbuDiv").show();

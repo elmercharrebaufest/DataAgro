@@ -484,7 +484,10 @@
     <value>Razón Social</value>
   </data>
   <data name="Eliminar_Registro_Research" xml:space="preserve">
-    <value>Eliminar Registro Research</value>
+    <value>Eliminar Registros Research</value>
+  </data>
+  <data name="Sincronizar_Research" xml:space="preserve">
+    <value>Sincronizar Datos Research</value>
   </data>
   <data name="Reasignar_Flete" xml:space="preserve">
     <value>Reasignar Flete Procedencia</value>
@@ -841,6 +844,9 @@
   <data name="ConfirmarNegociosTrigo" xml:space="preserve">
     <value>Confirmar Negocios Trigo</value>
   </data>
+	<data name="ConfirmarNegociosSorgo" xml:space="preserve">
+    <value>Confirmar Negocios Sorgo</value>
+  </data>
   <data name="ModificarFijacionVirtual" xml:space="preserve">
     <value>Modificar Fijación Virtual</value>
   </data>
@@ -874,6 +880,9 @@
   <data name="GenerarBoleto" xml:space="preserve">
     <value>Generar Boleto</value>
   </data>
+  <data name="Confirma" xml:space="preserve">
+    <value>Generar Confirma</value>
+  </data>
   <data name="ActualizarCompraNet" xml:space="preserve">
     <value>Actualizar ALV CompraNet</value>
   </data>
@@ -906,6 +915,9 @@
   </data>
   <data name="Recibir_Mail_SugerenciaFAQ" xml:space="preserve">
     <value>Recibir Mail Sugerencia FAQ</value>
+  </data>
+  <data name="Vincular_Negocio_Con_SolExt" xml:space="preserve">
+    <value>Vincular Solicitud Extraordinaria con Negocio</value>
   </data>
   <data name="Mail_SolExt_Pendientes" xml:space="preserve">
     <value>Recibir Mail de Solicitudes Extraordinarias Pendientes</value>

@@ -215,7 +215,7 @@ function CargarGrillaConfig() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 130, template: "#=Material#"
             },
@@ -363,6 +363,10 @@ function CargarGrillaConfig() {
                 if (view[i].Material == "Girasol AO") {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
                         .addClass("girasolAO");
+                }
+                if (view[i].Material == "Sorgo") {
+                    grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
+                        .addClass("sorgo");
                 }
             }
         },
@@ -789,15 +793,10 @@ function GuardarLimiteCupo() {
     }
 
     if (resultado.HayError) {
-        //$("#error-alert").text(resultado.Errores[0].Message);
-        //$(".alert-danger").show();
-        //setTimeout(function () { $(".alert-danger").hide(); }, 5000);
         MensErr(resultado.Errores[0].Message)
     } else {
         $("#ModalLimiteCupo").modal('toggle');
-        MensInfo("Grabado Correctamente")
-        //$(".alert-success").show();
-        //setTimeout(function () { $(".alert-success").hide(); }, 5000);
+        MensInfo("La configuración se guardó correctamente.\n\n")
         recargarGrilla();
         EliminarTablaConfiguracion(idConfiguracion);
     }

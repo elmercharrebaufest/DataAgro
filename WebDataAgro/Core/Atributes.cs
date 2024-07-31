@@ -5,39 +5,21 @@ using System.Web.Mvc;
 
 namespace WebDataAgro.Filters
 {
-
-
-
-
     // atributo nuevo (ubicar?)
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class MyValidateAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
     {
-
-        
-
         private readonly AcceptVerbsAttribute _acceptVerbs;
 
-        public MyValidateAntiForgeryTokenAttribute()
-            : this(HttpVerbs.Post  )
+        public MyValidateAntiForgeryTokenAttribute() : this(HttpVerbs.Post)
         {
-
         }
-
-       
-      
-        
-         
 
         public MyValidateAntiForgeryTokenAttribute(HttpVerbs verbs)
         {
             _acceptVerbs = new AcceptVerbsAttribute(verbs);
         }
-
-  
-        
-
 
         public void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -48,12 +30,6 @@ namespace WebDataAgro.Filters
                 return;
             }
 
-
-            //if (  requestType.ToString() != "GET" &&  requestType.ToString() != "POST")
-            //{ return;
-            //}
-
-            var url = request.Url;
             var cookie = request.Cookies[AntiForgeryConfig.CookieName];
             var cookieToken = cookie != null ? cookie.Value : "";
             var name = "__RequestVerificationToken";
@@ -78,25 +54,7 @@ namespace WebDataAgro.Filters
                 {
                     throw new HttpException("Error");
                 }
-                
-
             }
-               
-           
-          
-          
-            
- 
-
-
-
- 
-
-
-
         }
     }
-
-
-    
 }

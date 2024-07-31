@@ -507,12 +507,12 @@
                 <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
-                <div class="w70" id="ocultarAperturaMoneda">
+                <div class="w70">
                     <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                     <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
 
                 </div>
-                <div class="w30" id="ocultarAperturaBtn">
+                <div class="w30">
                     <span style="display:inline-block" id="botonAperturaDePrecio">
                         <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
                             <i class="fa fa-table"></i>
@@ -849,8 +849,8 @@
                 <img id="errselectSustenTipoDB" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-2 col-md-3" id="divSustentableSinTarifa" hidden>
-                <label class="sojaSustentable" style="width:120px">Tarifa a Convenir</label>
-                <input id="tarifaAConvenirId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.tarifaAConvenir, disabled: isControlDisabled" type="checkbox" onclick="HayTarifaAConvenir()" />
+                <label style="width:120px">Tarifa a Convenir</label>
+                <input id="tarifaAConvenirId" class="campo-input-input" data-bind="checked:Parametros.tarifaAConvenir, disabled: isControlDisabled" type="checkbox" onclick="HayTarifaAConvenir()" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>

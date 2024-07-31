@@ -58,12 +58,14 @@ a.Descarga {
 }
 
 .borde-derecho {
-    border-right: 1px solid black !important; 
+    border-right: 1px solid black !important;
 }
+
 .borde-izq-der {
     border-right: 1px solid black !important;
     border-left: 1px solid black !important;
 }
+
 .borde-izquierdo {
     border-left: 2px solid black !important;
 }
@@ -80,24 +82,31 @@ a.Descarga {
 #Soja .titulosPosicion {
     background: rgb(153, 204, 0);
 }
+
 #SojaTable {
     z-index: 200;
 }
+
 #Maiz .titulosPosicion {
     background: rgb(255, 204, 153);
 }
+
 #MaizTable {
     z-index: 175;
 }
+
 #TrigoCámara .titulosPosicion {
     background: rgb(153, 153, 255);
 }
+
 #TrigoCámaraTable {
     z-index: 150;
 }
+
 #TrigoCalidad .titulosPosicion {
     background: rgb(153, 204, 255);
 }
+
 #TrigoCalidadTable {
     z-index: 125;
 }
@@ -113,19 +122,32 @@ a.Descarga {
 #TrigoGrado2 .titulosPosicion {
     background: rgb(106, 230, 190);
 }
+
 #TrigoGrado2Table {
     z-index: 100;
 }
+
 #Girasol .titulosPosicion {
     background: rgb(211, 96, 212);
 }
+
 #GirasolTable {
     z-index: 75;
 }
+
 #GirasolAltoOleico .titulosPosicion {
     background: rgb(244, 193, 247);
 }
+
 #GirasolAltoOleicoTable {
+    z-index: 50;
+}
+
+#Sorgo .titulosPosicion {
+    background: rgb(99, 238, 218);
+}
+
+#SorgoTable {
     z-index: 50;
 }
 
@@ -134,7 +156,8 @@ table#Maíz th, table#Maíz td,
 table#TrigoCámara th, table#TrigoCámara td,
 table#TrigoCalidad th, table#TrigoCalidad td,
 table#Girasol th, table#Girasol td,
-table#GirasolAltoOleico th, table#GirasolAltoOleico td {
+table#GirasolAltoOleico th, table#GirasolAltoOleico td,
+table#Sorgo th, table#Sorgo td {
     vertical-align: middle;
 }
 
@@ -143,13 +166,10 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
 .table tfoot > tr > th,
 .table thead > tr > td,
 .table tbody > tr > td,
-.table tfoot > tr > td{
-    border-top:1px solid #000
+.table tfoot > tr > td {
+    border-top: 1px solid #000
 }
 
-/*#TrigoCalidadTable, #TrigoCámaraTable {
-    float: right;
-}*/
 #ComprasToneladasTipo td, #ComprasToneladasTipo th {
     border-left: 1px solid black;
 }
@@ -252,11 +272,13 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
     background-color: yellowgreen;
     font-weight: bold;
 }
+
 #grillaFijacionCorta > .k-grid-header, #grillaFijacionCorta .k-grid-header .k-header {
     background-color: yellowgreen;
     font-weight: bold;
     text-align: center;
 }
+
 #grillaFijacionLarga > .k-grid-header, #grillaFijacionLarga .k-grid-header .k-header {
     background-color: yellowgreen;
     font-weight: bold;
@@ -265,7 +287,7 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
 
 .abrirModalDetallePosicion {
     font-size: 23px;
-    color:black;
+    color: black;
 }
 
 .descargarDetallePosicion {
@@ -278,12 +300,13 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
     border-top: 2px solid white;
     border-bottom: 2px solid white;
     border-right: 2px solid black;
-    border-left:  1px solid  black;
+    border-left: 1px solid black;
 }
 
-#agenteCompras td{
-    font-size:12px;
+#agenteCompras td {
+    font-size: 12px;
 }
+
 .k-i-loading {
     display: none;
 }

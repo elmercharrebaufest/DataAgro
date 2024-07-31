@@ -431,6 +431,18 @@ namespace WebDataAgro.Helpers.Excel
             celda.CellStyle = colores[col];
             c++;
             col = 0;
+            //Sorgo
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 22, 23);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(r - 1).GetCell(22);
+            celda.SetCellValue("SORGO");
+            celda.CellStyle = colores[col];
+            c++;
+            col = 0;
 
             var filaPosicion = r;
             row = sheet.CreateRow(r); r++;
@@ -515,9 +527,14 @@ namespace WebDataAgro.Helpers.Excel
             var listaGirasolCalidad = posicion.Where(x => x.Material == "Girasol").ToList();
             CrearSheets(sheet6, cellcolorTitles, cellStyleColumnTitles, listaGirasolCalidad);
 
-            var sheet7 = (HSSFSheet)workbook.CreateSheet("Posición Girasol Alto Oleico");
+            var sheet7 = (HSSFSheet)workbook.CreateSheet("Posición Sorgo");
+            var listaSorgo = posicion.Where(x => x.Material == "Sorgo").ToList();
+            CrearSheets(sheet7, cellcolorTitles, cellStyleColumnTitles, listaSorgo);
+            
+            var sheet8 = (HSSFSheet)workbook.CreateSheet("Posición Girasol Alto Oleico");
             var listaGirasolAltoCalidad = posicion.Where(x => x.Material == "Girasol Alto Oleico").ToList();
-            CrearSheets(sheet7, cellcolorTitles, cellStyleColumnTitles, listaGirasolAltoCalidad);
+            CrearSheets(sheet8, cellcolorTitles, cellStyleColumnTitles, listaGirasolAltoCalidad);
+            
             #endregion
             using (var fileData = new MemoryStream())
             {

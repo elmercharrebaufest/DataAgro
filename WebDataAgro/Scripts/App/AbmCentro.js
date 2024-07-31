@@ -74,6 +74,7 @@ function CreateGridCentro() {
             { field: "CodigoSap", title: "Codigo SAP", filterable: false },
             { field: "Localidad", title: "Localidad", filterable: false },
             { field: "Orden", title: "Orden", filterable: false, template: "# if(Orden == null){##}else{ # #: Orden# # }#" },
+            { field: "CodigoConfirma", title: "Confirma", filterable: false },
             { field: "Acopio", title: "Acopio", filterable: false, template: "# if(Acopio){#Si#}else{##}#" },
             { field: "ValidaRedespacho", title: "ValidaRedespacho", filterable: false, template: "# if(ValidaRedespacho){#Si#}else{##}#" },
             { field: "Comision", title: "Comision", filterable: false, template: "# if(Comision){#Si#}else{##}#" },
@@ -223,6 +224,7 @@ function UpdateViewModel(model) {
         "CargaNegocios": model.Centro.CargaNegocios,
         "CargaCupos": model.Centro.CargaCupos,
         "Orden": model.Centro.Orden,
+        "CodigoConfirma": model.Centro.CodigoConfirma,
         "CUIT": model.Centro.CUIT,
         "RazonSocial": model.Centro.RazonSocial,
     };
@@ -380,6 +382,7 @@ function Grabar() {
         "CargaNegocios": viewModel.get("Centro.CargaNegocios"),
         "CargaCupos": viewModel.get("Centro.CargaCupos"),
         "Orden": viewModel.get("Centro.Orden"),
+        "CodigoConfirma": viewModel.get("Centro.CodigoConfirma"),
         "CUIT": viewModel.get("Centro.CUIT"),
         "RazonSocial": viewModel.get("Centro.RazonSocial"),
     };

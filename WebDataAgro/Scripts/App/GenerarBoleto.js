@@ -7,12 +7,22 @@ $(document).ready(function () {
 
     $('#menuproveedor').hide();
     inicializarPopUpConratoSap();
+
+    $('#GeneraBoletoContratoSAPId').on('keypress', function (event) {
+        if (event.which === 32) {
+            event.preventDefault();
+        }
+    });
+
+    $('#GeneraBoletoContratoSAPHastaId').on('keypress', function (event) {
+        if (event.which === 32) {
+            event.preventDefault();
+        }
+    });
 });
 
 
-function Filtrar() {
-
-
+function GenerarBoleto() {
     if (ValidarGenerarBoletos()) {
         BlockUi('Cargando...');
         setTimeout(function () {
@@ -21,7 +31,7 @@ function Filtrar() {
                 TipoNegocioId: $("#tipoId").val(),
                 Mail: $("#mailId").is(":checked")
             };
-            //$("#fleteProcedenciaModal").modal("hide");
+
             var url = '/Boleto/GenerarBoletos';
             var data = boleto;
             var result = MSExecuteOnServer(url, data);
@@ -42,13 +52,12 @@ function Filtrar() {
 function AsignarDatos() {
     viewModel.set("TipoCombo", datosIniCrearContrato.Datos.tiponegocio);
     var contrato = {
-        
+
     };
     var url = '/Compranet/TraerContratoCompleto';
     var data = servicio;
     var result = MSExecuteOnServer(url, data);
 }
-
 
 function ValidarGenerarBoletos() {
     var contratoDesde = $("#GeneraBoletoContratoSAPId").val();
@@ -59,7 +68,6 @@ function ValidarGenerarBoletos() {
     }
     return true;
 }
-
 
 function modalcontratoGenerarBoleto() {
     $("#abrirGeneraBoletoPopUpCargarValores").click(function () {
@@ -74,12 +82,11 @@ $("#GeneraBoletoContratoSAPId").bind("paste", function (e) {
     } else {
         clipText = window.clipboardData.getData('text');
     }
-    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r|\s)/gm, ";"));
+    $("#GeneraBoletoContratoSAPId").val(clipText.replace(/\s+/g, ';'));
 
     GeneraBoletoCambioVariosContratos();
 });
-
-
 
 $("#GeneraBoletoContratoSAPId").change(GeneraBoletoCambioVariosContratos);
 
@@ -92,7 +99,7 @@ $("body").on("click", "#filtrarBoletos", function () {
 });
 
 $("body").on("change", "#desde", function () {
-    if ($("#desde").val()=='') {
+    if ($("#desde").val() == '') {
         $("#hasta").prop("disabled", true);
         $("#filtrarBoletos").prop("disabled", true);
     } else {
@@ -149,21 +156,16 @@ function ListarNegocios() {
     }
 }
 
-
 function GeneraBoletoCambioVariosContratos() {
 
-    if
-        (parseInt($("#GeneraBoletoContratoSAPHastaId").val()) - parseInt($("#GeneraBoletoContratoSAPId").val()) > 1000) {
-
+    if (parseInt($("#GeneraBoletoContratoSAPHastaId").val()) - parseInt($("#GeneraBoletoContratoSAPId").val()) > 1000) {
         PopUpError("Seleccione un rango de valores menor a 1000");
-
         return;
     }
 
     var lista = [];
     lista = $("#GeneraBoletoContratoSAPId").val().split(';');
     if (lista.length > 1) {
-
         $("#GeneraBoletoContratoSAPHastaId").attr('disabled', 'disabled');
         $("#GeneraBoletoContratoSAPHastaId").val("")
         ArmarTabla(lista);
@@ -186,9 +188,7 @@ function GeneraBoletoCambioVariosContratos() {
 function inicializarPopUpConratoSap() {
 
     crearPopUp("Contratos");
-
     modalcontratoGenerarBoleto();
-
 
     $("#GeneraBoletoContratoSAPId").bind("paste", function (e) {
         e.preventDefault();
@@ -198,6 +198,7 @@ function inicializarPopUpConratoSap() {
             clipText = window.clipboardData.getData('text');
         }
         $("#GeneraBoletoContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+        $("#GeneraBoletoContratoSAPId").val(clipText.replace(/\s+/g, ';'));
 
         GeneraBoletoCambioVariosContratos();
     });

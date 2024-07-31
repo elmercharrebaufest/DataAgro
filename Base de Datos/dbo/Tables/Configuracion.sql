@@ -1,11 +1,11 @@
 ﻿CREATE TABLE [dbo].[Configuracion] (
-    [Id]					INT	IDENTITY (1, 1) NOT NULL,
-    [CantidadDias]			INT NULL DEFAULT 120,
-    [ClaveStop]				VARCHAR(MAX) NULL DEFAULT '429DAC12-3BDC-6CC4-1A97-AD759F936E1B',
-    [ConexionABMStop]		BIT NULL DEFAULT 1,
-    [ConexionConsultaStop]	BIT NULL DEFAULT 1, 
-    [TerminalStopId]		INT NULL DEFAULT 12,
-    [CuitDestinoStop]		VARCHAR(MAX) NULL DEFAULT '20005894582',
+    [Id] INT IDENTITY (1, 1) NOT NULL,
+    [CantidadDias] INT NULL DEFAULT 120,
+    [ClaveStop] VARCHAR(MAX) NULL DEFAULT '429DAC12-3BDC-6CC4-1A97-AD759F936E1B',
+    [ConexionABMStop] BIT NULL DEFAULT 1,
+    [ConexionConsultaStop] BIT NULL DEFAULT 1, 
+    [TerminalStopId] INT NULL DEFAULT 12,
+    [CuitDestinoStop] VARCHAR(MAX) NULL DEFAULT '20005894582',
     [CodigoLocalidadStop] INT NULL DEFAULT 18794, 
     [ImporteSustentable] DECIMAL(11, 2) NULL DEFAULT 8, 
     [ContratoAperturaPrecioPorcentajeDeComisionMaximo] DECIMAL(11, 2) NULL DEFAULT 3, 
@@ -19,7 +19,6 @@
     [ToleranciaPaseMin] INT NULL DEFAULT 10, 
     [ToleranciaPaseMax] INT NULL DEFAULT 10, 
     [ImporteSustentableEspecial] DECIMAL(11, 2) NULL DEFAULT 20, 
-
     [AlgoritmoKilosMinimosParaSugerencia] INT NOT NULL DEFAULT 20000, 
     [AlgoritmoProcMaxSugerenciasProveedorDia] INT NOT NULL DEFAULT 30, 
     [Actualizacion] INT NULL DEFAULT 30000, 
@@ -28,7 +27,7 @@
     [MinutosCronometroConDescarga] INT NULL DEFAULT 2,
     [CantidadMaximaDiasNegocioConDescarga] INT NULL DEFAULT 15,
     [PorcentajeVolumenNegocioConDescarga] INT NULL DEFAULT 30,
-    [ActivarLogDebug]       BIT NULL DEFAULT 1,
+    [ActivarLogDebug] BIT NULL DEFAULT 1,
+    [ExigirNegocioEnSolExt] BIT NULL DEFAULT 0,
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
-

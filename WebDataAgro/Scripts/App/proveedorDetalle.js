@@ -652,7 +652,7 @@ function armarContacto() {
                     emailComerciales.push('<a href="mailto: ' + comerciales[i].Email3 + '" target: "_blank"><i class="fa fa-envelope-o" aria-hidden="true"> ' + comerciales[i].Email3 + '</i></a>');
                 }
                 var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
-                htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') +'">' +
+                htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') + '">' +
                     '<div class="contenedor-contacto-comercial-titulo">' +
                     '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
                     '<span class="span-contacto-comercial"> ' +
@@ -3464,6 +3464,20 @@ function mostrarEstadoInformesComerciales(cproductiva) {
                 $(".informe-girasol").attr('style', 'color:red; font-weight: bold');
                 $("#iconGirasol").addClass("fa fa-exclamation-circle");
                 $("#iconGirasol").attr('style', 'color:red');
+            }
+        };
+        if (cp.MaterialId == 6) {
+            if (cp.InformeActualizado == 1) {
+                $(".informe-sorgo").html(cp.Campania);
+                $(".informe-sorgo").attr('style', 'color:#00A700; font-weight: bold');
+                $("#iconSorgo").addClass("fa fa-check-circle");
+                $("#iconSorgo").attr('style', 'color:#00A700');
+            }
+            if (cp.InformeActualizado == 2) {
+                $(".informe-sorgo").html(cp.Campania + " ");
+                $(".informe-sorgo").attr('style', 'color:red; font-weight: bold');
+                $("#iconSorgo").addClass("fa fa-exclamation-circle");
+                $("#iconSorgo").attr('style', 'color:red');
             }
         };
     }

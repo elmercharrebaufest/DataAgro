@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
@@ -30,9 +25,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ToleranciaPaseMin { get; set; }
         public int ToleranciaPaseMax { get; set; }
         public decimal ImporteSustentableEspecial { get; set; }
-
-
-
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
         public int AlgoritmoProcMaxSugerenciasProveedorDia { get; set; }
         public int Actualizacion { get; set; }
@@ -42,6 +34,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
         public bool? ActivarLogDebug { get; set; }
-
+        public bool? ExigirNegocioEnSolExt { get; set; }
     }
 }

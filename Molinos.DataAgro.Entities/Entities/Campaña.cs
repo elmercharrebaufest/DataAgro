@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int CampañaId { get; set; }
         public string Descripcion { get; set; }
+        public string CodigoSIO { get; set; }
         public DateTime? Hasta { get; set; }
     }
 }

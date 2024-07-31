@@ -574,8 +574,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
 
-                logger.Debug("Se envió email del contrato ID " + oContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Contrato SAP:" + oContrato.ContratoSAP);
                 oCliente.Send(oMensaje);
+                logger.Debug("Se envió email del contrato ID " + oContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Contrato SAP: " + oContrato.ContratoSAP);
 
                 return new Resultado();
             }
@@ -700,8 +700,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
                 oCliente.Send(oMensaje);
+                logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
 
                 return new Resultado();
             }
@@ -1018,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.TarifaAConvenir == true)
             {
-                htmlBody += "Negocio sustentable con tarifa a convenir antes de la entrega.<br />";
+                htmlBody += $"Negocio {(oContrato.Sustentable == true ? "sustentable" : "EPA")} con tarifa a convenir antes de la entrega.<br />";
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1037,7 +1037,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
+                htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
             }
             htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
@@ -5018,7 +5018,7 @@ namespace Molinos.DataAgro.Business.Managers
             var sisa = new SISA();
             if (segmentacionId == 5 || segmentacionId == 7) // CORREDOR
             {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.CodCategoria == 2 && x.SituacionCategoria == "AL");
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.CodCategoria == (int)EnumEstadoSisa.CORREDOR && x.SituacionCategoria == "AL");
 
                 if (sisa != null)
                 {
@@ -5046,7 +5046,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             { // PROVEEDOR
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL" && x.CodCategoria != 19);
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL" && x.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS);
 
                 if (sisa != null)
                 {

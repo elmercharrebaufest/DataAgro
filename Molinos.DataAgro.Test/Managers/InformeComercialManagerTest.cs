@@ -163,7 +163,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<ProveedorComercial, bool>>>(), It.IsAny<Expression<Func<ProveedorComercial, int>>>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContactoComercial, RptContactosInfo>>>(), It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, InformeComercialAcopiadores>>>(), It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerToneladasPorMaterial>()), Times.Exactly(5));
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerToneladasPorMaterial>()), Times.Exactly(6));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialAlmacenamiento, InformeComercialAcopiadores>>>(), It.IsAny<Expression<Func<InformeComercialAlmacenamiento, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
             Assert.NotNull(result);

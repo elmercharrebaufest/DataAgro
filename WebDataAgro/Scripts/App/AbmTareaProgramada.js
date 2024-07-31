@@ -12,9 +12,9 @@ $(document).ready(function () {
     CreateGrid();
 
     CrearViewModel();
-    
+
     InicializarBusquedaInicial();
-    AsignarBotones();    
+    AsignarBotones();
 });
 
 function InicializarElementos() {
@@ -54,7 +54,7 @@ function CrearResultadosDataSource(datos) {
                 fields: {
                     Name: { type: "string", editable: false },
                     LastRunTime: { type: "date", editable: false },
-                    NextRunTime: { type: "date", editable: false },    
+                    NextRunTime: { type: "date", editable: false },
                     ActionURL: { type: "string", editable: false },
                     RepeticionEnMinutos: { type: "string", editable: false },
                     Inicio: { type: "string", editable: false }
@@ -70,10 +70,14 @@ function CreateGrid() {
     $("#gridIniRango").kendoGrid({
         columns: [
             { field: "Name", title: "Nombre", filterable: false },
-            { field: "NextRunTime", type: "Próxima ejecución", title: "NextRunTime", format: _DefaultDateTemplate, filterable: false },
+            { field: "NextRunTime", title: "Próxima ejecución", format: _DefaultDateTemplate, filterable: false },
             { field: "LastRunTime", title: "Ultima ejecución", format: _DefaultDateTemplate, filterable: false },
-            { field: "ActionURL", title: "Accion", filterable: false },
-            { field: "RepeticionEnMinutos", title: "Repetición(min)", filterable: false }
+            {
+                field: "ActionURL", title: "Acción", filterable: false, template: function (dataItem) {
+                    return '<div title="' + dataItem.ActionURL + '">' + dataItem.ActionURL + '</div>';
+                }
+            },
+            { field: "RepeticionEnMinutos", title: "Repetición (min)", filterable: false }
         ],
         scrollable: true,
         sortable: false,
@@ -168,7 +172,7 @@ function Agregar() {
 }
 
 function Eliminar() {
-    Confirma('¿ Confirma la eliminación de este registro ?',
+    Confirma('¿Confirma la eliminación de este registro?',
         function (dialogItself) {
             EjecutarEliminar();
             dialogItself.close();
@@ -205,7 +209,7 @@ function Grabar() {
     var row = grid.select();
 
     var data = grid.dataItem(row);
-    
+
     var datos = {
         "Name": viewModel.get("TareaProgramada.Name"),
         "ActionURL": viewModel.get("TareaProgramada.ActionURL"),
@@ -242,7 +246,7 @@ function UpdateViewModel(model) {
         "RepeticionEnMinutos": model.RepeticionEnMinutos,
         "Inicio": model.Inicio
     };
-    
+
     viewModel.set("TareaProgramada", rango);
 }
 

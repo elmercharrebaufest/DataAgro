@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     var Cupos_Acopios = PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria);
 }
 <script>
@@ -16,7 +16,7 @@
                 </button>
                 <h1 class="modal-title" id="sugerencia"></h1>
                 <div class="status confirmado-modal">
-                    <div>Solicitud Extraordinaria de Cupo</div>
+                    <div>Solicitud Extraordinaria de Cupos</div>
                 </div>
             </div>
             <div class="modal-body">
@@ -51,52 +51,19 @@
                     <div class="col-sm-4">
                         @Html.TextBox("FechaSE", "", "{0:yyyy-MM-dd}", new { @class = "w100" })
                     </div>
-                    @*<div class="col-sm-1">
-
-            </div>*@
                     <div class="col-xs-2">
                         <span>Hasta</span>
                     </div>
                     <div class="col-sm-4">
                         @Html.TextBox("FechaHastaSE", "", "{0:yyyy-MM-dd}", new { @class = "w100" })
                     </div>
-                    @*<div class="col-xs-2">
-                <span>Material</span>
-            </div>
-            <div class="col-sm-4">
-                @Html.DropDownList("MaterialIdSE", ViewBag.MatLista as SelectList, "Seleccionar", new { @class = "form-control" })
-            </div>*@
                 </div>
-                <div class="row">
-                    <div class="col-xs-2">
+                <div class="row" style="padding-top:8px !important;">
+                    <div class="col-sm-2">
                         <span>Cantidad de Cupos</span>
                     </div>
                     <div class="col-sm-4">
                         @Html.TextBox("CantidadCupoSE", "Cantidad cupo", new { @class = "w100" })
-                    </div>
-                    <div class="col-xs-2">
-                        <span>Material</span>
-                    </div>
-                    <div class="col-sm-4">
-                        @Html.DropDownList("MaterialIdSE", ViewBag.MatLista as SelectList, "Seleccionar", new { @class = "form-control" })
-                    </div>
-                    @*<div class="col-md-2 col-xs-12">
-                <span>Destino</span>
-            </div>
-            <div class="col-sm-4">
-                @Html.DropDownList("CentroIdSE", ViewBag.CenLista as SelectList, "Seleccionar", new { @class = "form-control" })
-
-            </div>*@
-                </div>
-                <div class="row" style="padding-top:8px;">
-                    <div id="calidadDivSE" hidden>
-                        <div class="col-xs-2">
-                            <span>Calidad</span>
-                        </div>
-                        <div class="col-sm-4" @*style="margin-left:8px"*@>
-
-                            @Html.DropDownList("CalidadIdSE", ViewBag.Calidad as SelectList, "Seleccionar", new { @class = "form-control" })
-                        </div>
                     </div>
                     <div class="col-xs-2">
                         <span>Destino</span>
@@ -105,19 +72,41 @@
                         @Html.DropDownList("CentroIdSE", ViewBag.CenLista as SelectList, "Seleccionar", new { @class = "form-control" })
 
                     </div>
-                    @*<div id="stock" >
-                        <div class="col-sm-2">
-                        <label>Establecimiento</label>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Material</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownList("MaterialIdSE", ViewBag.MatLista as SelectList, "Seleccionar", new { @class = "form-control" })
+                    </div>
+                    <div id="calidadDivSE" hidden>
+                        <div class="col-xs-2">
+                            <span>Calidad</span>
                         </div>
                         <div class="col-sm-4">
-                        <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
+                            @Html.DropDownList("CalidadIdSE", ViewBag.Calidad as SelectList, "Seleccionar", new { @class = "form-control" })
                         </div>
-                    </div>*@
+                    </div>
                 </div>
-                <br>
-                <div class="row" style="padding-top:8px;">
-                    <div class="col-sm-6"> </div>
-                    <div id="stock">
+                <div class="row">
+                    <div id="sustentableDivSE" hidden>
+                        <div class="col-xs-10 col-lg-2">
+                            <label style="margin-left: 0px !important">Sustentable</label>
+                        </div>
+                        <div class="col-xs-2 col-lg-1" style="padding-top:8px;" title="Soja sustentable">
+                            @Html.CheckBox("Sustentable")
+                        </div>
+                    </div>
+                    <div id="EPADivSE" hidden>
+                        <div class="col-xs-10 col-lg-2">
+                            <label style="margin-left: 0px !important">EPA</label>
+                        </div>
+                        <div class="col-xs-2 col-lg-1" style="padding-top:8px;" title="Soja EPA">
+                            @Html.CheckBox("EPA")
+                        </div>
+                    </div>
+                    <div id="stock" style="padding-top:8px;">
                         <div class="col-sm-2">
                             <span>Establecimiento</span>
                         </div>
@@ -126,68 +115,66 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div>
-                        <div class="col-sm-4">
-                            <label style="margin-left: 0px !important">Flete procedencia - Acarreo </label>
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.CheckBox("FleteAcarreoES")
-                        </div>
+                <div class="row" style="padding-top:8px !important;">
+                    <div class="col-xs-12 col-sm-2">
+                        <span>N° de Contrato</span>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-4 input-group">
+                        @Html.TextBox("ContratoSE", "", new { @class = "form-control", @maxlength = "10" })
+                        <span class="input-group-addon" onclick="buscarContratoSE()">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="radio-inline">
+                            <input type="radio" name="estadoContrato" value="5" onchange="buscarContratoSE()" checked> Finalizado
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="estadoContrato" value="2" onchange="buscarContratoSE()"> Confirmado
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="estadoContrato" value="0" onchange="buscarContratoSE()"> Ambos
+                        </label>
+                    </div>
+                </div>
+
+                <div id="gridContainer" style="display: none;">
+                    <div id="grid"></div>
+                </div>
+                <div id="noResultsMessage" style="display: none; margin-top: 15px;">
+                    No se encontraron resultados
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-10 col-lg-2">
+                        <label style="margin-left: 0px !important">Con Descarga</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.CheckBox("ConDescarga")
+                    </div>
+                    <div class="col-xs-10 col-lg-4">
+                        <label style="margin-left: 0px !important">Flete procedencia - Acarreo</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.CheckBox("FleteAcarreoES")
+                    </div>
+                    <div class="col-xs-10 col-lg-3">
                         <label>Fasón - Préstamo devolución</label>
                     </div>
-                    <div class="col-sm-4">
-                        <span style="height:34px"></span>
+                    <div class="col-xs-1">
                         @Html.CheckBox("FasonES")
-                        @Html.TextBox("CuitES", "", new { @class = "form-control", @style = "display:none; width: 93%;" })
                     </div>
                 </div>
                 <div class="row">
-                    @*<div class="col-sm-6">
-                    </div>
-                    <div class="col-sm-2">
-                        <label>Con Descarga</label>
-                    </div>
-                    <div class="col-sm-2">
-                        @Html.CheckBox("ConDescarga")
-                    </div>*@
-
-                    <div id="sustentableDivSE" hidden>
-                        <div class="col-sm-4">
-                            <label style="margin-left: 0px !important">Sustentable</label>
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.CheckBox("Sustentable")
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <label>Con Descarga</label>
-                    </div>
-                    <div class="col-sm-4">
-                        @Html.CheckBox("ConDescarga")
+                    <div class="col-lg-8"></div>
+                    <div class="col-lg-4">
+                        @Html.TextBox("CuitES", "", new { @class = "form-control", @style = "display:none; width: 90%;" })
                     </div>
                 </div>
-
-                <div class="row">
-                    <div id="EPADivSE" hidden>
-                        <div class="col-sm-4">
-                            <label style="margin-left: 0px !important">EPA</label>
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.CheckBox("EPA")
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
-                </div>
-
+                <br />
                 <div class="row">
                     <div class="col-md-2 col-xs-12">
-                        <span>Observacion</span>
+                        <span>Observaciones</span>
                     </div>
                     <div class="col-sm-10">
                         @Html.TextArea("ObservacionSE", "", new { @class = "k-textbox", @style = "height:70px;" })
@@ -211,7 +198,6 @@
             <div class="modal-footer">
                 <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
                 <button type="button" title="Copiar como imagen" class="myBtn btn" id="copy_btn" onclick="copiarTablaEstablecimiento()"><i class="fa fa-copy"></i> Copiar</button>
-
             </div>
         </div>
     </div>
@@ -246,17 +232,56 @@
         </div>
     </div>
 </div>
+
 <style>
-    .row {
-        padding: 2px !important;
-    }
     .tabla {
         width: 100%;
         max-height: 335px;
         overflow-y: auto;
     }
-    #modalSolicitudExtraordinaria{
-        z-index:1040;
+
+    #modalSolicitudExtraordinaria {
+        z-index: 1040;
     }
-  
+
+    .input-group-addon {
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-left: none;
+    }
+
+        .input-group-addon i {
+            color: #555;
+        }
+
+    #gridContainer {
+        margin-top: 20px;
+        height: 150px;
+        position: relative;
+    }
+
+    #noResultsMessage {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        font-size: 1em;
+        border: ridge;
+        text-align: center;
+        padding: 50px;
+    }
+
+    .k-grid td {
+        font-size: 12px;
+    }
+
+    .loading-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 16px;
+        padding: 20px;
+    }
 </style>

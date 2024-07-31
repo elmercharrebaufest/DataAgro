@@ -1278,7 +1278,7 @@ function ObtenerDatos() {
     //    obj.PrecioNeto = precioN + ImporteSobrePrecio + desc;
     //    alert(obj.PrecioNeto);
     //} 
-   
+
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
     obj.FechaDesde = $("#fechaDesdeId").val();
@@ -1363,7 +1363,7 @@ function ObtenerDatos() {
         }
         obj.ProveedorCreadorId = corredorId;
     }
-    
+
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 

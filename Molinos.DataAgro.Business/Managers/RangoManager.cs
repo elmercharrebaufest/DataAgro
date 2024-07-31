@@ -5,14 +5,13 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
 
     public class RangoManager : IRangoManager
-    { 
-        private ILogger logger;
+    {
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public RangoManager(ILogger logger, IRepositorio repositorio)
@@ -28,7 +27,7 @@ namespace Molinos.DataAgro.Business
             {
                 Material = qry.GetMaterialCombo(),
                 Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion })
-        };
+            };
         }
 
         public ResultIniRango TraerTodoRango()
@@ -54,9 +53,9 @@ namespace Molinos.DataAgro.Business
                 PrecioMinimo = x.PrecioMinimo,
                 PrecioMaximo = x.PrecioMaximo,
                 Material = x.Material.Descripcion,
-                MaterialId=x.MaterialId,
+                MaterialId = x.MaterialId,
                 Moneda = x.Moneda.Descripcion,
-                MonedaId =x.MonedaId
+                MonedaId = x.MonedaId
             }) ?? new RangoPrecioDto();
         }
 
@@ -94,18 +93,18 @@ namespace Molinos.DataAgro.Business
                 throw;
             }
 
-            logger.Debug("Nuevo Rango de Precio desde" + oRango.PrecioMinimo + " Hasta " + oRango.PrecioMaximo + " Para " + oRango.MaterialId + " en " + oRango.MonedaId);
+            logger.Debug("Nuevo Rango de Precio desde " + oRango.PrecioMinimo + " hasta " + oRango.PrecioMaximo + " en " + oRango.MonedaId + "para el material con ID " + oRango.MaterialId);
 
             return oEntityErrors;
         }
 
         public Resultado EliminarRango(int id)
         {
-            var oEntityErrors = new Resultado(); 
+            var oEntityErrors = new Resultado();
 
             repositorio.Remover<RangoPrecio>(id);
 
-            logger.Debug("Eliminando el Rango:" + id);
+            logger.Debug("Eliminando el Rango con ID " + id);
             try
             {
                 repositorio.GuardarCambios();
@@ -118,7 +117,7 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
-        private Resultado ValidarRango(Resultado oEntityErrors,RangoPrecio oRango)
+        private Resultado ValidarRango(Resultado oEntityErrors, RangoPrecio oRango)
         {
             var rangosExistentes = repositorio.Listar<RangoPrecio>();
             if (oRango.PrecioMaximo == 0)
@@ -137,7 +136,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Material", "El campo Material no puede estar vacío");
             }
-            if (rangosExistentes.Exists(x=> x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId))
+            if (rangosExistentes.Exists(x => x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId))
             {
                 oEntityErrors.Error("Rango", "Ya existe un rango para el grano y moneda elegidos");
             }

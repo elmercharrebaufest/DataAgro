@@ -134,23 +134,93 @@
     </div>
     <div class="linea col-12" data-toggle="collapse" data-target="#demo">
     </div>
-    <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#demo">
+    <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#Filtros">
         <span class="icono"> <i class="fa fa-plus-square-o" aria-hidden="true"></i></span>
     </button>
 
-    <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
-        <div class="col-md-8"></div>
-        <div class="col-xs-12 col-md-2">
-            @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
-        </div>
-        <div class="col-xs-12 col-md-2">
-            <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
-            </button>
-            <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
-            </button>
+    <div id="Filtros" class="container collapse" style="margin-top: -25px;">
+        <div class="row">
+            <!--Fecha Ingreso y Fecha Registro-->
+            <div class="col-md-2">
+                <label>Fecha de Ingreso</label>
+            </div>
+            <div class="col-md-2">
+                <input id="FechaIngresoDesdeId" class="filtroFecha" name="FechaIngreso-desde" type="date" />
+            </div>
+            <div class="col-md-2">
+                <input id="FechaIngresoHastaId" class="filtroFecha" name="FechaIngreso-hasta" type="date" />
+            </div>
 
+            <div class="col-md-2">
+                <label>Fecha de Registro</label>
+            </div>
+            <div class="col-md-2">
+                <input id="FechaRegistroDesdeId" class="filtroFecha" name="FechaRegistro-desde" type="date" />
+            </div>
+            <div class="col-md-2">
+                <input id="FechaRegistroHastaId" class="filtroFecha" name="FechaRegistro-hasta" type="date" />
+            </div>
+
+        </div><!--FIN Fecha Ingreso y Fecha Registro-->
+        <div class="row">
+            <!--Proveedor y Material-->
+            <div class="col-md-2">
+                <label>Proveedor</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("ProveedorId", new SelectList(ViewBag.Proveedores, "Value", "Text"), new { @class = "multiselect input", @id = "ProveedorId", @placeholder = "Buscar por CUIT o razón social" })
+            </div>
+
+            <div class="col-md-2">
+                <label>Material</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("MaterialId", new SelectList(ViewBag.Materiales, "Value", "Text"), new { @class = "multiselect input", @id= "MaterialId" })
+            </div>
+        </div><!--FIN Proveedor y Material-->
+        <div class="row">
+            <div class="col-md-2">
+                <label>Soja Sustentable</label>
+            </div>
+            <div class="col-md-4 filtroBoleano" id="SustentableId" name="Sustentable">
+                Sí: @Html.RadioButton("Sustentable", true, new { @class = "filtroBoleano", @id = "Sustentable" })
+                No: @Html.RadioButton("Sustentable", false, new { @class = "" })
+                <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonSustentable()" style="margin-left:3%; font-size:20px;color:red"></i>
+            </div>
+
+            <div class="col-md-2">
+                <label>Soja EPA</label>
+            </div>
+            <div class="col-md-4 filtroBoleano" id="EPAId" name="EPA">
+                Sí: @Html.RadioButton("EPA", true, new { @class = "filtroBoleano", @id = "EPA" })
+                No: @Html.RadioButton("EPA", false, new { @class = "" })
+                <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <!--Codigo de Cupo y Estado-->
+            <div class="col-md-2">
+                <label>Estado</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("EstadoCupoId", new SelectList(ViewBag.Estados, "Value", "Text"), new { @class = "multiselect input", @id = "EstadoCupoId" })
+            </div>
+
+            <div class="col-md-2">
+                <label>Codigo Cupo</label>
+            </div>
+            <div class="col-md-2">
+                @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
+            </div>
+
+            <div class="col-md-2">
+                <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
+                </button>
+                <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+                </button>
+            </div>
+        </div><!--FIN Codigo de Cupo y Estado-->
+    </div><!--FIN Filtros-->
 
 </div>
 

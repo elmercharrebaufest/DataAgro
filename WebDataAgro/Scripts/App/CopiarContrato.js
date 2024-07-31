@@ -654,22 +654,22 @@ function ObtenerDatos(error) {
     obj.EPA = $("#epaId").is(":checked") ? true : false;
     obj.SustentableTipoDBId = $("#selectSustenTipoDB").val();
     obj.DiasPesificado = obj.TipoNegocioId != "3" ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
-    obj.PorcentajeComision = $("#porcentajeComision").val() != "" && (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2" || obj.TipoNegocioId == "6") ? $("#porcentajeComision").val() : 0;
+    obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.EstadoId = $("#estado").val() == "" ? $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != "4" && obj.TipoNegocioId != "5" && obj.TipoNegocioId != "6" ? "1" : "2" : $("#estado").val();
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
     obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
-    if (obj.TipoNegocioId == "6") {
-        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
-        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
-    } else if (obj.TipoNegocioId == "3") {
+    if (obj.TipoNegocioId == TIPO_NEGOCIO.FIJACION) {
         obj.DesdeFijacion = $("#fechaFijacionDesde").val() == null || $("#fechaFijacionDesde").val() == undefined || $("#fechaFijacionDesde").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionDesde").val();
         obj.HastaFijacion = $("#fechaFijacionHasta").val() == null || $("#fechaFijacionHasta").val() == undefined || $("#fechaFijacionHasta").val() == "" ? formatearFecha(maniana) : $("#fechaFijacionHasta").val();
-    } else {
+    } else if (obj.TipoNegocioId == TIPO_NEGOCIO.A_FIJAR) {
         obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val();
         obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
+    } else {
+        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
+        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
     }
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
@@ -813,7 +813,7 @@ function ObtenerDatos(error) {
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
         if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
         else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
-        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 1;
+        else if (obj.MaterialId == 1 || obj.MaterialId == 2 || obj.MaterialId == 6) obj.StandardDeCalidadId = 1;
     } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
         obj.StandardDeCalidadId = 3;
     } else if (viewModel.Calidades.length > 0) {
@@ -1181,14 +1181,13 @@ function comenzarCarga() {
     function updateCountdown() {
         var minutes = Math.floor(time / 60);
         let seconds = time % 60;
-        //console.log("minutes: " + minutes + " - seconds: " + seconds)
 
         if (minutes == 0 && seconds == 0) {
             detenerIntervalo();
             LiberarPantalla();
             dataTabla = [];
             $("#modalCargarCuposConDescarga").modal("hide");
-            MensErr("El tiempo ha terminado. Debe configurar nuevamente los Cupos con Descarga.");
+            MensErr("El tiempo ha terminado. Debe configurar nuevamente los Cupos con Descarga.\n\n");
         }
 
         seconds = seconds < 10 ? '0' + seconds : seconds;
@@ -1275,22 +1274,39 @@ function AbrirConDescarga() {
 }
 
 function EsConDescarga() {
-
     if ($("#conDescargaId").is(":checked") == false) {
         $("#btnConDescarga").hide();
         detenerIntervalo();
         LiberarPantalla();
         if (dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0)) {
             dataTabla = [];
-            MensAlerta("La configuración de Cupos con Descarga se ha reestablecido.");
+            MensAlerta("La configuración de Cupos con Descarga se ha reestablecido.\n\n");
         }
         return;
     }
 
-    if ($('#buscadorProveedor').val() == "" || $('#fechaDesdeId').val() == "" || $('#fechaHastaId').val() == "") {
+    if ($('#buscadorProveedor').val() == "") {
         $("#conDescargaId").prop("checked", false);
         $("#btnConDescarga").hide();
-        MensErr("Los siguientes campos son obligatorios: CUIT, Fecha Desde y Fecha Hasta.");
+        MensErr("Es obligatorio elegir un proveedor para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#fechaDesdeId').val() == "" || $('#fechaHastaId').val() == "") {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio ingresar las fechas desde y hasta para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#cantidadId').val() == 0 || $('#cantidadId').val() == "") {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio ingresar una cantidad de kilos para configurar cupos con descarga.\n\n");
+        return;
+    }
+    if ($('#comercialId').val() == null) {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Es obligatorio elegir un comercial para configurar cupos con descarga.\n\n");
         return;
     }
 
@@ -1371,12 +1387,12 @@ function guardarCuposConDescarga() {
     }
 
     if (superaCuposMaximoDia) {
-        MensErr("La cantidad de cupos/fletes para uno de los días supera la cantidad disponible en su zona.");
+        MensErr("La cantidad de cupos para uno de los días supera la cantidad disponible en su zona.\n\n");
         return;
     }
     var cantidadCuposFletesPermitidos = Math.ceil($("#cantidadId").val() / 30000);
     if (cantidadTotalCuposFletes > cantidadCuposFletesPermitidos) {
-        MensErr("La cantidad de cupos/fletes ingresados se exceden respecto a los KG del Negocio.");
+        MensErr("La cantidad de cupos ingresados se excede con respecto a los kilos del negocio.\n\n");
         return;
     }
 

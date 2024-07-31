@@ -16,11 +16,14 @@
     <div class="col-xs-6 col-lg-8" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
         <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important; border-radius: 7px;">Mostrar</span></strong></div>
     </div>
-    <div class="col-xs-6 col-lg-4" style="display: flex; justify-content: flex-end;">
-        <button class="k-button" onclick="SincronizarResearch()" type="button" style="border-color: #017940; border-radius: 7px !important">
-            <i class="fa fa-refresh"></i> Sincronizar datos
-        </button>
-    </div>
+    @if (PermisosHelper.Is(PermisosDataAgro.SincronizarResearch))
+    {
+        <div class="col-xs-6 col-lg-4" style="display: flex; justify-content: flex-end;">
+            <button class="k-button" onclick="SincronizarResearch()" type="button" style="border-color: #017940; border-radius: 7px !important">
+                <i class="fa fa-refresh"></i> Sincronizar datos
+            </button>
+        </div>
+    }
 </div>
 
 <br />

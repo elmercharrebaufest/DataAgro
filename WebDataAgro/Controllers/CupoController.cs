@@ -13,6 +13,7 @@ using static WebDataAgro.MvcApplication;
 using Kendo.DynamicLinq;
 using System.Globalization;
 using System.Configuration;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -31,7 +32,7 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, 
+        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager,
             ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
         {
             this.centroManager = centroManager;
@@ -53,6 +54,7 @@ namespace WebDataAgro.Controllers
             ViewBag.comercialId = GlobalVariables.ComercialId;
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
             ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
+            CargarFiltros();
             return View();
         }
 
@@ -191,7 +193,14 @@ namespace WebDataAgro.Controllers
                         if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
                         {
                             if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol alto oleico para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 6:
+                        if (ConfigurationManager.AppSettings["CupoSorgoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de sorgo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
                         }
                         break;
                 }
@@ -290,7 +299,7 @@ namespace WebDataAgro.Controllers
             if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
-            
+
             if (cupoNuevo.CentroId == 1)
             {
                 switch (cupoNuevo.MaterialId)
@@ -327,7 +336,14 @@ namespace WebDataAgro.Controllers
                         if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
                         {
                             if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol alto oleico para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 6:
+                        if (ConfigurationManager.AppSettings["CupoSorgoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de sorgo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
                         }
                         break;
                 }
@@ -366,7 +382,7 @@ namespace WebDataAgro.Controllers
                     return Json(new { Result = cupo, Error = error, irA = "/Cupo/CrearCupoTercero" });
 
                 }
-                return Json(new { Result = cupo, Error = error, irA= "" });
+                return Json(new { Result = cupo, Error = error, irA = "" });
             }
             if (siguientes != null && siguientes.Count != 0)
             {
@@ -392,7 +408,7 @@ namespace WebDataAgro.Controllers
             {
                 centros.Centro = centros.Centro.Where(x => x.CodigoSap == "1029" || x.CodigoSap == "1600").ToList();
             }
-            centros.Centro = centros.Centro.OrderBy(x=>x.Orden).ToList();
+            centros.Centro = centros.Centro.OrderBy(x => x.Orden).ToList();
             var listaCentro = new List<SelectListItem>();
             foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Orden))
             {
@@ -696,6 +712,45 @@ namespace WebDataAgro.Controllers
                 Data = cupoManager.TraerEstablecimientos(cuitProveedor, esEPA),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+        
+        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa)
+        {
+            return new JsonResult()
+            {
+                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId, sustentable, epa),
+                MaxJsonLength = Int32.MaxValue, 
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+        private void CargarFiltros()
+        {
+            var esExterno = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
+            var proveedores = proveedorManager.ListarProveedorTodos(string.Empty);
+            ViewBag.Proveedores = proveedores.Select(
+                x => new SelectListItem
+                {
+                    Text = x.RazonSocial,
+                    Value = x.ProveedorId.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value);
+            var material = materialManager.TraerTodoMaterial();
+            ViewBag.Materiales = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            var estados = cupoManager.TraerTodoLosEstados();
+            ViewBag.Estados = estados.Select(
+               x => new SelectListItem
+               {
+                   Text = esExterno? (x.Id == (int)EnumEstadoCupo.SinCTG ? "Aceptado":(x.Id == (int)EnumEstadoCupo.SinSTOP ? "Pendiente": x.Descripcion)): x.Descripcion,
+                   Value = x.Id.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
         }
     }
 }

@@ -5,10 +5,6 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -16,11 +12,13 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private ILogger logger;
+
         public ConfiguracionManager(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
             this.logger = logger;
         }
+
         public Resultado GrabarFechaPesificacionDolarizado(Configuracion oConfiguracion)
         {
             var oEntityErrors = new Resultado();
@@ -31,9 +29,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
+
             var oConfiguracionSave = TraerConfiguraciones();
             if (oConfiguracionSave != null)
-            {               
+            {
                 oConfiguracionSave.CantidadDias = oConfiguracion.CantidadDias;
                 oConfiguracionSave.ClaveStop = oConfiguracion.ClaveStop;
                 oConfiguracionSave.ConexionABMStop = oConfiguracion.ConexionABMStop;
@@ -62,8 +61,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.MinutosCronometroConDescarga = oConfiguracion.MinutosCronometroConDescarga;
                 oConfiguracionSave.CantidadMaximaDiasNegocioConDescarga = oConfiguracion.CantidadMaximaDiasNegocioConDescarga;
                 oConfiguracionSave.PorcentajeVolumenNegocioConDescarga = oConfiguracion.PorcentajeVolumenNegocioConDescarga;
+                oConfiguracionSave.ExigirNegocioEnSolExt = oConfiguracion.ExigirNegocioEnSolExt;
             }
-
             else
             {
                 repositorio.Agregar(oConfiguracion);
@@ -88,6 +87,34 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<Configuracion>(1);
 
+        }
+
+        public Resultado SetExigirNegocioEnSolExt(bool valor)
+        {
+            var resultado = new Resultado();
+            var config = TraerConfiguraciones();
+
+            if (config != null)
+            {
+                config.ExigirNegocioEnSolExt = valor;
+            }
+            else
+            {
+                resultado.Error("Error:E404", "Entidad Configuracion No Encontrada");
+            }
+
+            try
+            {
+                repositorio.GuardarCambios();
+                logger.Debug("ExigirNegocioEnSolExt se guardó correctamente con valor "+valor+".");
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("Error:E000", "Guardado incorrecto"+ex);
+                throw;
+            }
+
+            return resultado;
         }
     }
 }

@@ -673,6 +673,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generar Confirma.
+        /// </summary>
+        public static string Confirma {
+            get {
+                return ResourceManager.GetString("Confirma", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmar Negocios.
         /// </summary>
         public static string Confirmar_Negocio {
@@ -759,6 +768,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string ConfirmarNegociosSoja {
             get {
                 return ResourceManager.GetString("ConfirmarNegociosSoja", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Sorgo.
+        /// </summary>
+        public static string ConfirmarNegociosSorgo {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosSorgo", resourceCulture);
             }
         }
         
@@ -1015,7 +1033,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Eliminar Registro Research.
+        ///   Looks up a localized string similar to Eliminar Registros Research.
         /// </summary>
         public static string Eliminar_Registro_Research {
             get {
@@ -2086,6 +2104,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sincronizar Datos Research.
+        /// </summary>
+        public static string Sincronizar_Research {
+            get {
+                return ResourceManager.GetString("Sincronizar_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solicitud de Cupos.
         /// </summary>
         public static string SolicitudCupo {
@@ -2230,6 +2257,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Ver_Todos_Tipos_Negocios {
             get {
                 return ResourceManager.GetString("Ver_Todos_Tipos_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vincular Solicitud Extraordinaria con Negocio.
+        /// </summary>
+        public static string Vincular_Negocio_Con_SolExt {
+            get {
+                return ResourceManager.GetString("Vincular_Negocio_Con_SolExt", resourceCulture);
             }
         }
         

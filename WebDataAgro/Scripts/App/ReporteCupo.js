@@ -68,7 +68,9 @@ function InicializarCuposIndex() {
                     ConDescarga: { type: "boolean" },
                     Cumplimiento: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
-                    CTGFechaDesde: { type: "date" }
+                    CTGFechaDesde: { type: "date" },
+                    Peso: { type: "number" },
+                    Km: { type: "number" }
 
                 }
             }
@@ -180,8 +182,8 @@ function InicializarCuposIndex() {
             { field: "CorredorVendedor", title: "Corredor Vendedor", type: "string", width: 150 },
             { field: "MercadoATermino", title: "Mercado a Termino", type: "string", width: 150 },
             { field: "Cosecha", type: "string", width: 150 },
-            { field: "Peso", type: "string", width: 150 },
-            { field: "Km", type: "string", width: 150 },
+            { field: "Peso", type: "number", width: 150, format: "{0:n0}", title: "Kg" },
+            { field: "Km", type: "number", width: 150 },
             { field: "IntermediarioFlete", title: "Intermediario Flete", type: "string", width: 150 },
             { field: "Transportista", type: "string", width: 150 },
             { field: "Chofer", type: "string", width: 150 },

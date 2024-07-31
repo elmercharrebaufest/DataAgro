@@ -1,12 +1,9 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -16,7 +13,6 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo);
         List<DateTime> FechasComprendidas(int? materialId);
         Resultado EliminarCupo(int id, string comerciall, bool enviarMail, TokenStop token = null);
-        //Task ObtenerToken();
         Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta);
         void TransmitirCupos();
         Resultado TransmitirCupos(List<string> cupos);
@@ -73,5 +69,6 @@ namespace Molinos.DataAgro.Interfaces
         List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
         CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
         void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha);
+        List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa);
     }
 }

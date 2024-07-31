@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="~/Content/home.css" />
 <link rel="stylesheet" href="~/Content/homeResponsive.css" />
 <script type="text/javascript" src="~/Scripts/App/home.js"></script>
-@{ 
+@{
     var visualiza = PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor);
 }
 <script>visualiza = '@visualiza'</script>
@@ -22,96 +22,96 @@
             Estado de mi agenda de proveedores
         </div>
         @*<div id="indicadores" class="row">
-            <div class="contactos col-lg-3 col-md-3 col-sm-3" id="sinAlta">
-                SIN ALTA
-            </div>
-            <div class="contactos col-lg-5 col-md-5 col-sm-5" id="conAlta">
-                CON ALTA
-            </div>
-        </div>*@
+                <div class="contactos col-lg-3 col-md-3 col-sm-3" id="sinAlta">
+                    SIN ALTA
+                </div>
+                <div class="contactos col-lg-5 col-md-5 col-sm-5" id="conAlta">
+                    CON ALTA
+                </div>
+            </div>*@
         @*<div class="contenedor-principal-miscontactos-grupo">
-            <a class="cont-agend-det">
-                <div class="contenedor-principal-miscontactos-detalle miscontactos-selected">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont1.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad verde cont-agend">
+                <a class="cont-agend-det">
+                    <div class="contenedor-principal-miscontactos-detalle miscontactos-selected">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont1.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad verde cont-agend">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>Total de contactos agendados</b>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>Total de contactos agendados</b>
-                    </div>
-                </div>
-            </a>
-            <a class="cont-op-det">
-                <div class="contenedor-principal-miscontactos-detalle con-alta">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont23.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-op">
+                </a>
+                <a class="cont-op-det">
+                    <div class="contenedor-principal-miscontactos-detalle con-alta">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont23.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-op">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>Operando</b> <i>(últimos 2 años)</i>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>Operando</b> <i>(últimos 2 años)</i>
-                    </div>
-                </div>
-            </a>
-            <a class="cont-no-op-det">
-                <div class="contenedor-principal-miscontactos-detalle con-alta">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont4.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-no-op">
+                </a>
+                <a class="cont-no-op-det">
+                    <div class="contenedor-principal-miscontactos-detalle con-alta">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont4.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-no-op">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>No operando</b> <i>(últimos 2 años)</i>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>No operando</b> <i>(últimos 2 años)</i>
-                    </div>
-                </div>
-            </a>
+                </a>
 
-            <a class="cont-baj-det">
-                <div class="contenedor-principal-miscontactos-detalle con-alta">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont4.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-baj">
+                <a class="cont-baj-det">
+                    <div class="contenedor-principal-miscontactos-detalle con-alta">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont4.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-baj">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>Bajas</b> <i>(borrados SAP)</i>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>Bajas</b> <i>(borrados SAP)</i>
-                    </div>
-                </div>
-            </a>
+                </a>
 
-            <a class="cont-alta-det">
-                <div class="contenedor-principal-miscontactos-detalle ">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont23.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-alta">
+                <a class="cont-alta-det">
+                    <div class="contenedor-principal-miscontactos-detalle ">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont23.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-alta">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>Potenciales</b>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>Potenciales</b>
-                    </div>
-                </div>
-            </a>
+                </a>
 
-            <a class="cont-alta-no-clie">
-                <div class="contenedor-principal-miscontactos-detalle ">
-                    <div class="contenedor-principal-miscontactos-detalle-titulo">
-                        <img src="~/Content/Images/contprinc-cont23.png" />
-                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-no-clie">
+                <a class="cont-alta-no-clie">
+                    <div class="contenedor-principal-miscontactos-detalle ">
+                        <div class="contenedor-principal-miscontactos-detalle-titulo">
+                            <img src="~/Content/Images/contprinc-cont23.png" />
+                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-no-clie">
 
-                        </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                            <b>Sin interés de operar</b>
+                        </div>
                     </div>
-                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                        <b>Sin interés de operar</b>
-                    </div>
-                </div>
-            </a>
-        </div>*@
+                </a>
+            </div>*@
 
         <div class="contenedor-principal-miscontactos-grupo">
             <a class="cont-agend-det">
@@ -173,17 +173,18 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="pill" href="#Compras" class="contenedor-principal-campanas-titulo">Compras</a></li>
             <li><a data-toggle="pill" href="#Objetivos" class="contenedor-principal-campanas-titulo">Objetivos</a></li>
-             <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <strong>Detalle</strong><b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li hidden id="mostrarSoja"><a data-toggle="pill" href="#Soja">Soja  <strong id="sojaCampania"></strong></a></li>
-                        <li hidden id="mostrarMaiz"><a data-toggle="pill" href="#Maiz">Maíz <strong id="maizCampania"></strong></a></li>
-                        <li hidden id="mostrarTrigo"><a data-toggle="pill" href="#Trigo">Trigo <strong id="trigoCampania"></strong></a></li>
-                        <li hidden id="mostrarGir"><a data-toggle="pill" href="#Girasol">Girasol <strong id="girCampania"></strong></a></li>
-                    </ul>
-                </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <strong>Detalle</strong><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li hidden id="mostrarSoja"><a data-toggle="pill" href="#Soja">Soja  <strong id="sojaCampania"></strong></a></li>
+                    <li hidden id="mostrarMaiz"><a data-toggle="pill" href="#Maiz">Maíz <strong id="maizCampania"></strong></a></li>
+                    <li hidden id="mostrarTrigo"><a data-toggle="pill" href="#Trigo">Trigo <strong id="trigoCampania"></strong></a></li>
+                    <li hidden id="mostrarGir"><a data-toggle="pill" href="#Girasol">Girasol <strong id="girCampania"></strong></a></li>
+                    <li hidden id="mostrarSorgo"><a data-toggle="pill" href="#Sorgo">Sorgo <strong id="sorgoCampania"></strong></a></li>
+                </ul>
+            </li>
         </ul>
         <div class="tab-content">
             <div id="Compras" class="tab-pane fade in active">
@@ -209,10 +210,10 @@
                 </div>
 
             </div>
-           
+
             <div id="Soja" class="tab-pane fade in">
                 <div class="table-editable table-responsive">
-                    <table class="table table-bordered table-responsive-md table-striped text-center tabla"  id="tablaSoja">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tablaSoja">
                         <thead>
                             <tr class="encabezado">
                                 <th>Situación</th>
@@ -225,7 +226,7 @@
                         </tbody>
                     </table>
                     <script id="div-tabla-soja" type="text/x-kendo-template">
-                        <tr> 
+                        <tr>
                             <td>Compras con Precio</td>
                             <td>#: ConCorredor.ComprasConPrecio#</td>
                             <td>#: DirectoAcopiador.ComprasConPrecio#</td>
@@ -256,7 +257,7 @@
                 <div class="">
                     <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tablaMaiz">
                         <thead>
-                            <tr class="encabezado">                               
+                            <tr class="encabezado">
                                 <th>Situación</th>
                                 <th>Con Corredor</th>
                                 <th>Directo Acopiador</th>
@@ -298,7 +299,7 @@
                 <div class="">
                     <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tablaTrigo">
                         <thead>
-                            <tr class="encabezado">                                
+                            <tr class="encabezado">
                                 <th>Situación</th>
                                 <th>Con Corredor</th>
                                 <th>Directo Acopiador</th>
@@ -340,7 +341,7 @@
                 <div class="">
                     <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tablaGi">
                         <thead>
-                            <tr class="encabezado">                                
+                            <tr class="encabezado">
                                 <th>Situación</th>
                                 <th>Con Corredor</th>
                                 <th>Directo Acopiador</th>
@@ -351,6 +352,48 @@
                         </tbody>
                     </table>
                     <script id="div-tabla-gi" type="text/x-kendo-template">
+                        <tr>
+                            <td>Compras con Precio</td>
+                            <td>#: ConCorredor.ComprasConPrecio#</td>
+                            <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                            <td>#: DirectoProductor.ComprasConPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>Recibido Sin Precio</td>
+                            <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                            <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                            <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>A recibir A fijar</td>
+                            <td>#: ConCorredor.ARecibirAFijar#</td>
+                            <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                            <td>#: DirectoProductor.ARecibirAFijar#</td>
+                        </tr>
+                        <tr>
+                            <td>Fasón Fas</td>
+                            <td>#: ConCorredor.FasonFas#</td>
+                            <td>#: DirectoAcopiador.FasonFas#</td>
+                            <td>#: DirectoProductor.FasonFas#</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+            <div id="Sorgo" class="tab-pane fade in">
+                <div class="">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tablaSorgo">
+                        <thead>
+                            <tr class="encabezado">
+                                <th>Situación</th>
+                                <th>Con Corredor</th>
+                                <th>Directo Acopiador</th>
+                                <th>Directo Productor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-sorgo" data-template="div-tabla-sorgo" data-bind="source:Sorgo" type="text/x-kendo-template">
+                        </tbody>
+                    </table>
+                    <script id="div-tabla-sorgo" type="text/x-kendo-template">
                         <tr>
                             <td>Compras con Precio</td>
                             <td>#: ConCorredor.ComprasConPrecio#</td>
@@ -453,13 +496,13 @@
                     </div>
                 </div>
                 <!--<div class="contenedor-segundo-filtro-grupo col-lg-12">
-            <div class="contenedor-segundo-filtro-titulo color-titulo">
-                Tipo de Actividad
-            </div>
-            <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Tipo de Actividad
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
 
-            </div>
-        </div>-->
+                    </div>
+                </div>-->
 
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
@@ -499,9 +542,9 @@
             </div>
             <div>
                 <br /><br />
-                      <button class="k-button" onclick="BorrarCookies()" type="button" style="border-color: #017940; border-radius: 7px !important"> 
-                          <i class="fa fa-refresh"></i> Borrar Cookies y Recargar Página
-                      </button>
+                <button class="k-button" onclick="BorrarCookies()" type="button" style="border-color: #017940; border-radius: 7px !important">
+                    <i class="fa fa-refresh"></i> Borrar Cookies y Recargar Página
+                </button>
             </div>
         </div>
         <div class="col-md-7 contactosHome ">
@@ -524,7 +567,8 @@
         text-align: center !important;
         font-size: 10px !important;
     }
-    #sojaCampania, #trigoCampania, #girCampania, #maizCampania{
+
+    #sojaCampania, #trigoCampania, #girCampania, #maizCampania, #sorgoCampania {
         font-weight: bold;
     }
 </style>

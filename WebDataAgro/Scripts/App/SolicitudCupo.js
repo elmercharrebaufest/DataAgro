@@ -2,6 +2,7 @@
 var dataTabla = [];
 var stockDisponible = true;
 //var stockInsuficiente = false;
+var negocioIdSE, contratoSapSE, kgPendientes, cuposRestantes;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -31,6 +32,8 @@ $(document).ready(function () {
         for (var i = 1; i < table.rows.length; i++) {
             table.deleteRow(i);
         }
+        $('#grid').empty();
+        $("#gridContainer").hide();
     });
     AutoRecargarSolicitudes();
     InicializarElementos();
@@ -155,7 +158,7 @@ function CargarGrilla() {
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol AO"
+                        Material: "Sorgo"
                     }]
                 }, width: 95, attributes: {
                     "class": "mobile-xs"
@@ -518,6 +521,8 @@ function InicializarElementos() {
         change: function () {
             checkSoja();
             MostrarVisualizarStock();
+            $("#ContratoSE").data("kendoNumericTextBox").value('');
+            $("#gridContainer").hide();
         }
     });
     $("#CentroIdSE").kendoDropDownList({
@@ -535,7 +540,6 @@ function InicializarElementos() {
         filter: "contains",
         popup: {
             appendTo: $("#modalSolicitudExtraordinaria"),
-            //origin: "bottom right"
         }
     });
 
@@ -558,10 +562,7 @@ function InicializarElementos() {
         }
     });
 
-
-
     $("#FechaHastaSE").kendoDatePicker({
-        //min: kendo.parseDate($("#FechaSE").data("kendoDatePicker").value()),
         min: kendo.parseDate($("#FechaSE").val()),
         change: function () {
             CrearTablaFechaHasta();
@@ -587,6 +588,7 @@ function InicializarElementos() {
             $("#EPA").prop("checked", false);
         }
         MostrarVisualizarStock();
+        buscarContratoSE();
     });
 
     $("#EPA").change(function () {
@@ -594,6 +596,14 @@ function InicializarElementos() {
             $("#Sustentable").prop("checked", false);
         }
         MostrarVisualizarStock();
+        buscarContratoSE();
+    });
+
+    $("#ContratoSE").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "0:0",
+        spinners: false,
+        min: 0
     });
 }
 
@@ -655,6 +665,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     //$("#ComercialIdSE").data("kendoDropDownList").value('');
     $("#ObservacionSE").val('');
     $("#CantidadCupoSE").data("kendoNumericTextBox").value('');
+    $("#ContratoSE").data("kendoNumericTextBox").value('');
     $("#CuitES").val('');
     $("#FasonES").prop("checked", false);
     $("#FleteAcarreoES").prop("checked", false);
@@ -793,7 +804,11 @@ function grabarSolicitudExtraordinaria() {
             ConDescarga: $("#ConDescarga").is(':checked'),
             Sustentable: $("#Sustentable").is(':checked'),
             EPA: $("#EPA").is(':checked'),
-            Dias: dataTabla
+            Dias: dataTabla,
+            ContratoSAP: contratoSapSE,
+            NegocioId: negocioIdSE,
+            KgPendientes: kgPendientes,
+            CuposRestantes: cuposRestantes
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
         ListarRespuesta(result);
@@ -812,6 +827,8 @@ function ListarRespuesta(result) {
     if (result.ListaCupos != null && result.ListaCupos.length > 0) {
         cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaCupos);
         $("#modalSolicitudExtraordinaria").modal("hide");
+        $('#grid').empty();
+        $("#gridContainer").hide();
     }
     else if (result.ListaErrores != null && result.ListaErrores.length > 0) {
         for (var i = 0; i < result.ListaErrores.length; i++) {
@@ -820,8 +837,9 @@ function ListarRespuesta(result) {
         }
     } else {
         $("#modalSolicitudExtraordinaria").modal("hide");
-        MensInfo("La solicitud se genero correctamente.");
-        //click panel de solicitudes y reresh de grilla
+        $('#grid').empty();
+        $("#gridContainer").hide();
+        MensInfo("La solicitud se generó correctamente.");
     }
     if (result.ListaCupos != null && result.ListaCupos.length == 0 &&
         result.ListaErrores != null && result.ListaErrores.length > 0) {
@@ -1076,6 +1094,84 @@ function stringToDate(_date, _format, _delimiter) {
     var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
     return formatedDate;
 }
-//stringToDate("17/9/2014", "dd/MM/yyyy", "/");
-//stringToDate("9/17/2014", "mm/dd/yyyy", "/")
-//stringToDate("9-17-2014", "mm-dd-yyyy", "-")
+
+function buscarContratoSE() {
+    var contratoSap = $("#ContratoSE").val();
+    var proveedorId = $("#ProveedorIdSE").val();
+    var materialId = $("#MaterialIdSE").data("kendoDropDownList").value();
+    var estadoId = $('input[name="estadoContrato"]:checked').val();
+    var sustentable = $("#Sustentable").is(':checked');
+    var epa = $("#EPA").is(':checked');
+    contratoSapSE = null; negocioIdSE = null; kgPendientes = 0; cuposRestantes = 0;
+
+    if (!proveedorId || !materialId) {
+        MensInfo("Elija un proveedor y material para buscar contratos.");
+        return;
+    }
+    $("body").css("cursor", "wait");
+    $("#noResultsMessage").hide();
+    $("#gridContainer").show();
+    $("#grid").html("<div class='loading-message'>Buscando...</div>").show();
+
+    $.ajax({
+        url: '/Cupo/ListarNegociosParaSolicitarCupo',
+        type: 'GET',
+        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId, sustentable: sustentable, epa: epa },
+        success: function (result) {
+            $("#grid").empty();
+            if (result && result.length > 0) {
+                $("#grid").show().kendoGrid({
+                    dataSource: {
+                        data: result,
+                        schema: {
+                            model: {
+                                fields: {
+                                    ContratoSAP: { type: "string" },
+                                    NegocioId: { type: "number" },
+                                    RazonSocialProveedor: { type: "string" },
+                                    EstadoNegocio: { type: "string" },
+                                    KgPendientes: { type: "number" },
+                                    CuposRestantes: { type: "number" },
+                                    FechaHasta: { type: "date" }
+                                }
+                            }
+                        }
+                    },
+                    height: 150,
+                    contentHeight: 150,
+                    scrollable: true,
+                    selectable: "row",
+                    sortable: true,
+                    columns: [
+                        { field: "NegocioId", title: "ID interno", width: 80, attributes: { style: "text-align: center;" } },
+                        { field: "ContratoSAP", title: "Contrato SAP", width: 110, attributes: { style: "text-align: center;" } },
+                        { field: "RazonSocialProveedor", title: "Proveedor", width: 150 },
+                        { field: "KgPendientes", title: "Kilos pend.", format: "{0:N2}", width: 100 },
+                        { field: "CuposRestantes", title: "Cupos pend.", width: 100, attributes: { style: "text-align: center;" }, headerAttributes: { "title": "Disponibles según kilos pend. menos solicitudes pend. y cupos generados" } },
+                        { field: "FechaHasta", title: "Fecha Hasta", width: 100, format: "{0:dd/MM/yyyy}", attributes: { style: "text-align: center;" } },
+                        { field: "EstadoNegocio", title: "Estado", width: 90, attributes: { style: "text-align: center;" } }
+                    ],
+                    change: onSelect
+                });
+            } else {
+                $('#grid').empty();
+                $("#gridContainer").hide();
+                $("#noResultsMessage").show();
+                $("#ContratoSE").data("kendoNumericTextBox").value('');
+            }
+        },
+        complete: function () {
+            $("body").css("cursor", "default");
+        }
+    });
+}
+
+function onSelect() {
+    var selectedData = this.dataItem(this.select());
+    contratoSapSE = selectedData.ContratoSAP;
+    negocioIdSE = selectedData.NegocioId;
+    kgPendientes = selectedData.KgPendientes;
+    cuposRestantes = selectedData.CuposRestantes;
+    var mostrar = contratoSapSE || negocioIdSE;
+    $("#ContratoSE").data("kendoNumericTextBox").value(mostrar);
+}

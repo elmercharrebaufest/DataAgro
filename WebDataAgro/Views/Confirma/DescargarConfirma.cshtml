@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Descargar Confirma";
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/DescargarConfirma")
+}
+
+<div class="row" style="padding: 10px 10px 0px 10px !important;"><h3>Confirma Generados</h3></div>
+<div class="container" style="margin-top:20px">
+    <div class="modal-body clearfix " style="padding:0;">
+        <div class="input-icons">
+            <span class="k-textbox k-grid-search k-display-flex">
+                <input id="filtrogrilla" autocomplete="off" placeholder="Buscar..." title="Buscar..." class="k-input">
+                <i class="fa fa-search icon"></i>
+            </span>
+        </div>
+        <div id="div1">
+            <div id="grid"></div>
+        </div>
+    </div>
+    <iframe id="my_iframe" style="display:none;"></iframe>
+</div>
+
+<style>
+    .input-icons {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+        .input-icons i {
+            position: absolute;
+            margin-left: 150px;
+            top: -2px;
+        }
+
+    .icon {
+        padding: 10px;
+        color: grey;
+        min-width: 50px;
+        text-align: center;
+    }
+
+    #div1 {
+        width: 100%;
+        min-width: 1000px;
+    }
+
+    .k-grid {
+        font-size: 11px;
+    }
+
+        .k-grid td {
+            line-height: 1.1em;
+            text-align: center;
+        }
+
+    .k-grid-header th.k-header {
+        line-height: 2em;
+        text-align: center;
+        background: aliceblue
+    }
+
+    .k-grid .k-grid-search {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .k-textbox .k-icon {
+        top: 50%;
+        margin: -9px 101px -1px;
+        position: absolute;
+    }
+
+    .k-grid tr td {
+        border-width: 0;
+        border-style: solid;
+    }
+
+    div.k-grid-header {
+        background: aliceblue
+    }
+
+    .k-grid td.k-state-selected:hover, .k-grid tr:hover td label {
+        color: white !important;
+    }
+</style>

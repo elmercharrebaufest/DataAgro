@@ -130,7 +130,7 @@
                     <label>Clave Stop</label>
                 </div>
                 <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.ClaveStop, new { @class = "CantidadDeDias k-input form-control" })
+                    @Html.TextBoxFor(m => m.ClaveStop, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-offset-2 col-md-2">
                     <label>ABM STOP</label>
@@ -171,26 +171,30 @@
                     <label>Kilos Minimos Para Sugerencia (Tn)</label>
                 </div>
                 <div class="col-md-1">
-                    @Html.TextBoxFor(m => m.AlgoritmoKilosMinimosParaSugerencia, new { @class = "CantidadDeDias k-input" })
+                    @Html.TextBoxFor(m => m.AlgoritmoKilosMinimosParaSugerencia, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
 
                 <div class="col-md-2">
                     <label>Procentaje Maximo de Sugerencias por Proveedor por Dia (%)</label>
                 </div>
                 <div class="col-md-1">
-                    @Html.TextBoxFor(m => m.AlgoritmoProcMaxSugerenciasProveedorDia, new { @class = "CantidadDeDias k-input" })
+                    @Html.TextBoxFor(m => m.AlgoritmoProcMaxSugerenciasProveedorDia, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
-                
             </div>
             <div class="row-botones-material row padding">
                 <div class="col-md-2">
                     <label>Actualizacion ALV Compranet (Ms)</label>
                 </div>
                 <div class="col-md-1">
-                    @Html.TextBoxFor(m => m.Actualizacion, new { @class = "CantidadDeDias k-input" })
+                    @Html.TextBoxFor(m => m.Actualizacion, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
 
-
+                <div class="col-md-2">
+                    <label>Exigir vincular Negocio con Solicitud Extraordinaria</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt)
+                </div>
             </div>
 
             <h4>Bolsa de Comercio Rosario (BCR)</h4>
@@ -200,7 +204,7 @@
                     <label>Api Key</label>
                 </div>
                 <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.ApiKeyBolsaRosario, new { @class = "CantidadDeDias k-input form-control" })
+                    @Html.TextBoxFor(m => m.ApiKeyBolsaRosario, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
             </div>
             <div class="row-botones-material row padding">
@@ -208,7 +212,7 @@
                     <label>Secret</label>
                 </div>
                 <div class="col-md-7">
-                    @Html.TextBoxFor(m => m.SecretBolsaRosario, new { @class = "CantidadDeDias k-input form-control" })
+                    @Html.TextBoxFor(m => m.SecretBolsaRosario, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
             </div>
 
@@ -219,7 +223,7 @@
                     <label>Minutos cronómetro</label>
                 </div>
                 <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.MinutosCronometroConDescarga, new { @class = "CantidadDeDias number form-control" })
+                    @Html.TextBoxFor(m => m.MinutosCronometroConDescarga, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-2">
                     <label>Cantidad maxima días Negocio</label>
@@ -231,7 +235,7 @@
                     <label>Porcentaje volumen Negocio</label>
                 </div>
                 <div class="col-md-1" hidden>
-                    @Html.TextBoxFor(m => m.PorcentajeVolumenNegocioConDescarga, new { @class = "CantidadDeDias number form-control" })
+                    @Html.TextBoxFor(m => m.PorcentajeVolumenNegocioConDescarga, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
             </div>
 
@@ -242,7 +246,4 @@
             </div>
         </div>
     </div>
-
 }
-
-

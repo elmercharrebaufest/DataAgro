@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -71,6 +72,9 @@ namespace WebDataAgro.Controllers
                 tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }
             List<string> contratos = new List<string>();
+
+            boleto.ContratoSAP = Regex.Replace(boleto.ContratoSAP, @"\s+", ";");
+
             foreach (string itemContrato in boleto.ContratoSAP.TrimEnd(';').Split(';').ToList())
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
@@ -157,6 +161,19 @@ namespace WebDataAgro.Controllers
                     //return Json(fileBytes); 
                     return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, nombre);
                 }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
+        public ActionResult ReenviarEmailBoletos(List<string> contratosBoletos, List<string> nombresArchivos)
+        {
+            try
+            {
+                boletoManager.ReenviarBoletos(contratosBoletos, nombresArchivos, _logDir);
+                return Json("Ok", JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {

@@ -83,9 +83,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         TIPO_PERIODO = "I",
                         TIPO_DB = "B",
-                        FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
-                        FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                        IMPORTE_DB = (contrato.TarifaAConvenir == true && contrato.Sustentable == true) ? -1 : contrato.SustentableTipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
+                        FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde.ToString("yyyy-MM-dd"),
+                        FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta.ToString("yyyy-MM-dd"),
+                        IMPORTE_DB = contrato.TarifaAConvenir == true ? -1 : contrato.SustentableTipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
                         PORC_DB = 0,
                         PRECIO = 0
@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         });
                     }
                 }
-                logger.Debug("Descuentos: " + descuentoBonificacion);
+                logger.Debug("Descuentos: " + descuentoBonificacion.ToJson());
                 var listaCalidades = new List<ZMPES5300>();
                 foreach (var cal in calidad)
                 {
@@ -190,10 +190,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         });
                     }
                 }
-                logger.Debug("Calidades: " + calidad);
+                logger.Debug("Calidades: " + calidad.ToJson());
 
                 var listaApertura = new List<ZMPES5440>();
-                if ((contrato.EPA == true || (contrato.Sustentable == true && contrato.TarifaAConvenir != true)) && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
+                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.TarifaAConvenir != true && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
                 {
                     listaApertura.Add(new ZMPES5440
                     {
@@ -216,7 +216,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
 
-                logger.Debug("Apertura: " + contrato.AperturaPrecio);
+                logger.Debug("Apertura: " + contrato.AperturaPrecio.ToJson());
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable()
                     .Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1)
                     .Select(a => new DescuentoBonificacion
@@ -265,7 +265,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     descuentoGeneralSobrePrecio.Importe += contrato.ImporteSustentable ?? 0;
                     descuentoGeneralSobrePrecio.MonedaId = contrato.MonedaSustentableId;
                 }
-                logger.Debug("AperturaPrecio: " + contrato.AperturaPrecio);
+                logger.Debug("AperturaPrecio: " + contrato.AperturaPrecio.ToJson());
                 logger.Debug("Servicios: " + contrato.Servicios.ToJson());
                 foreach (var servicio in servicios)
                 {
@@ -280,7 +280,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                     });
                 }
-                logger.Debug("Servicios a enviar a SAP para NegocioID " + contrato.Id + ": " + servicioSap.ToXml());
+                logger.Debug($"Servicios a enviar a SAP para NegocioID {contrato.Id}: {servicioSap.ToXml()}");
 
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
