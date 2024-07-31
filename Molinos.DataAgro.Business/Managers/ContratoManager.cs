@@ -2626,8 +2626,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                     #region BLEND_Finaliza
 
-                    string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(oContratoSave.TipoNegocioId, oContratoSave.MonedaId, oContratoSave.TipoAgenteCompraId, oContratoSave.Fecha);
-                    oContratoSave.TipoDeCambioId = codigoTC == "04" ? (int)EnumTipoDeCambio.BLEND : (int)EnumTipoDeCambio.BNA;
+                    if (oContratoSave.MonedaId == "USDM ")
+                    {
+                        string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(oContratoSave.TipoNegocioId, oContratoSave.MonedaId, oContratoSave.TipoAgenteCompraId, oContratoSave.Fecha);
+                        oContratoSave.TipoDeCambioId = codigoTC == "04" ? (int)EnumTipoDeCambio.BLEND : (int)EnumTipoDeCambio.BNA;
+                    }
 
                     #endregion BLEND_Finaliza
 
@@ -4432,8 +4435,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 #region BLEND_Actualiza
 
-                string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(oContrato.TipoNegocioId, oContrato.MonedaId, oContrato.TipoAgenteCompraId, oContrato.Fecha, true);
-                oContrato.TipoDeCambioId = codigoTC == "04" ? (int)EnumTipoDeCambio.BLEND : (int)EnumTipoDeCambio.BNA;
+                if (oContrato.MonedaId == "USDM ")
+                {
+                    string codigoTC = oFinalizarContratoAgent.DevolverTipoCambioSAP(oContrato.TipoNegocioId, oContrato.MonedaId, oContrato.TipoAgenteCompraId, oContrato.Fecha, true);
+                    oContrato.TipoDeCambioId = codigoTC == "04" ? (int)EnumTipoDeCambio.BLEND : (int)EnumTipoDeCambio.BNA;
+                }
 
                 #endregion BLEND_Actualiza
 
