@@ -10,9 +10,7 @@
 }
 <script>visualiza = '@visualiza'</script>
 <div class="row contenedor-principal">
-    <div class="col-lg-3 contenedor-principal-widget">
-
-    </div>
+    <div class="col-lg-3 contenedor-principal-widget"></div>
 
     <div class="col-lg-6 contenedor-principal-miscontactos">
         <div class="contenedor-principal-miscontactos-titulo">
@@ -21,98 +19,6 @@
         <div class="contenedor-principal-miscontactos-subtitulo">
             Estado de mi agenda de proveedores
         </div>
-        @*<div id="indicadores" class="row">
-                <div class="contactos col-lg-3 col-md-3 col-sm-3" id="sinAlta">
-                    SIN ALTA
-                </div>
-                <div class="contactos col-lg-5 col-md-5 col-sm-5" id="conAlta">
-                    CON ALTA
-                </div>
-            </div>*@
-        @*<div class="contenedor-principal-miscontactos-grupo">
-                <a class="cont-agend-det">
-                    <div class="contenedor-principal-miscontactos-detalle miscontactos-selected">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont1.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad verde cont-agend">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>Total de contactos agendados</b>
-                        </div>
-                    </div>
-                </a>
-                <a class="cont-op-det">
-                    <div class="contenedor-principal-miscontactos-detalle con-alta">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont23.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-op">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>Operando</b> <i>(últimos 2 años)</i>
-                        </div>
-                    </div>
-                </a>
-                <a class="cont-no-op-det">
-                    <div class="contenedor-principal-miscontactos-detalle con-alta">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont4.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-no-op">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>No operando</b> <i>(últimos 2 años)</i>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="cont-baj-det">
-                    <div class="contenedor-principal-miscontactos-detalle con-alta">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont4.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-baj">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>Bajas</b> <i>(borrados SAP)</i>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="cont-alta-det">
-                    <div class="contenedor-principal-miscontactos-detalle ">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont23.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-alta">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>Potenciales</b>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="cont-alta-no-clie">
-                    <div class="contenedor-principal-miscontactos-detalle ">
-                        <div class="contenedor-principal-miscontactos-detalle-titulo">
-                            <img src="~/Content/Images/contprinc-cont23.png" />
-                            <span class="contenedor-principal-miscontactos-detalle-cantidad cont-no-clie">
-
-                            </span>
-                        </div>
-                        <div class="contenedor-principal-miscontactos-detalle-descripcion">
-                            <b>Sin interés de operar</b>
-                        </div>
-                    </div>
-                </a>
-            </div>*@
-
         <div class="contenedor-principal-miscontactos-grupo">
             <a class="cont-agend-det">
                 <div class="contenedor-principal-miscontactos-detalle miscontactos-selected">
@@ -167,7 +73,6 @@
                 </div>
             </a>
         </div>
-
     </div>
     <div class="col-lg-3 contenedor-principal-campanas">
         <ul class="nav nav-tabs">
@@ -200,15 +105,10 @@
             <div id="Objetivos" class="tab-pane fade in">
                 <div class="contenedor-principal-campanas-subtitulo">
                     Objetivo granos (TNs)
-
                     <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid @(PermisosHelper.Is(PermisosDataAgro.VisualizarHedge) ? "" : "hide")" data-toggle="modal" data-target="#objetivo-modal"></button>
-
                     <button class="ajax-editar-link fa fa-eye btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-detalle-modal"></button>
-                    <div class="contenedor-principal-objetivo-detalle">
-
-                    </div>
+                    <div class="contenedor-principal-objetivo-detalle"></div>
                 </div>
-
             </div>
 
             <div id="Soja" class="tab-pane fade in">
@@ -438,8 +338,6 @@
 
             <a id="exportarAll" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial) || PermisosHelper.Is(PermisosDataAgro.DescargaExportAllVisualizador)?"":"hide")"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Export All</span></a>
         </div>
-
-
     </div>
     <div class="row r-relative">
         <div class="col-md-3 absoluto-mt20">
@@ -451,58 +349,38 @@
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Comercial
                     </div>
-                    <div class="contenedor-segundo-filtro-campo filtro-comercial">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo filtro-comercial"></div>
                 </div>
                 <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Zona
                     </div>
-                    <div class="contenedor-segundo-filtro-campo filtro-zona">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo filtro-zona"></div>
                 </div>
                 <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Grano
                     </div>
-                    <div class="contenedor-segundo-filtro-campo material-granos">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo material-granos"></div>
                 </div>
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Período de tiempo
                     </div>
-                    <div class="contenedor-segundo-filtro-campo periodo-tiempo">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo periodo-tiempo"></div>
                 </div>
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Segmentación
                     </div>
-                    <div class="contenedor-segundo-filtro-campo campo-segmentacion">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-segmentacion"></div>
                 </div>
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
                         Condicion Preferentes
                     </div>
-                    <div class="contenedor-segundo-filtro-campo campo-condicion">
-
-                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-condicion"></div>
                 </div>
-                <!--<div class="contenedor-segundo-filtro-grupo col-lg-12">
-                    <div class="contenedor-segundo-filtro-titulo color-titulo">
-                        Tipo de Actividad
-                    </div>
-                    <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
-
-                    </div>
-                </div>-->
 
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
@@ -559,15 +437,12 @@
 
 <style>
     td {
-        /*padding: 0px !important;*/
         font-size: 10px !important;
     }
-
     th {
         text-align: center !important;
         font-size: 10px !important;
     }
-
     #sojaCampania, #trigoCampania, #girCampania, #maizCampania, #sorgoCampania {
         font-weight: bold;
     }
