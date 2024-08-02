@@ -267,7 +267,7 @@ function InicializarCuposIndex() {
                 }, width: 130, template: "#=Centro#",
             },
             {
-                field: "Calidad", type: "string", title: "Calidad", width: 70, editable: function (dataItem) {
+                field: "Calidad", type: "string", title: "Calidad", minResizableWidth: 70, width: 70, editable: function (dataItem) {
                     return false;
                 }, filterable: {
                     multi: true, dataSource: [{
@@ -275,7 +275,7 @@ function InicializarCuposIndex() {
                     }, {
                         Calidad: "Fabrica"
                     }]
-                }, width: 130, template: "#=Calidad#",
+                }, width: 130, template: "#= (Calidad == null) ? ' ' : Calidad #",
             },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
             //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
@@ -386,9 +386,9 @@ function InicializarCuposIndex() {
             { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
             { field: "EstadoOrden", type: "number", hidden: true },
            
-            { field: "CartaPorte", title: "Carta Porte", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
-            { field: "CuitOrigen", title: "Cuit Origen", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
-            { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "CartaPorte", title: "Carta de Porte", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "CuitOrigen", title: "CUIT Origen", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
             { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 130, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
 
         ],
