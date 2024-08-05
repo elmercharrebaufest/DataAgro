@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Business.Managers
                             FechaGeneracion = DateTime.Now,
                             ContratoSAP = contrato.ContratoSAP,
                             FijacionSAP = contrato.FijacionSAP,
-                            TipoBoletoId = contrato.BoletoId.GetValueOrDefault(),
+                            TipoBoletoId = contrato.TipoNegocioId==(int)EnumTipoNegocio.FIJACION?1:contrato.BoletoId.GetValueOrDefault(),
                             IsWebService = usarWebServiceConfirma,
                             Mensaje = string.Empty,
                             Generado = true
@@ -108,7 +108,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.ContratoSAP}");
+                        logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.FijacionSAP??contrato.ContratoSAP}");
                         resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP."));
                     }
                 }
@@ -123,10 +123,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private BoletoGeneradoDto ConvertirConfirmaBoleto(BasicoContrato negocio)
-        {
-            throw new NotImplementedException();
-        }
+ 
 
         public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int claseNegocio, List<int> equipo)
         {
@@ -217,7 +214,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
                         return mensaje;
                     }
-                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP);
+                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId==(int)EnumTipoNegocio.A_FIJAR);
                     if (a_fijar.PlanCanje != true)
                     {
                         mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por no ser de Plan Canje el A Fijar correspondiente.";
@@ -614,7 +611,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new ConfirmaGeneradoDto
             {
-                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.ContratoSAP : itemNegocio.FijacionSAP,
+                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP:itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
                 FechaGeneracion = default(DateTime),
