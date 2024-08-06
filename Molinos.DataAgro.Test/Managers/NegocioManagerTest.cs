@@ -26,6 +26,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailManager> mailManagerMock;
         private Mock<IClientePrimaryAPIAgent> clientePrimaryAPIAgentMock;
         private Mock<IHttpContextManager> contextoMock;
+        private Mock<IAltaTempranaAgent> altaTempranaMock;
+        private Mock<ICartasDePortePendienteAplicarAgent> ccppPendientesMock;
 
 
         [SetUp]
@@ -37,8 +39,9 @@ namespace Molinos.DataAgro.Test.Managers
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             clientePrimaryAPIAgentMock = new Mock<IClientePrimaryAPIAgent>();
             contextoMock = new Mock<IHttpContextManager>();
-
-            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimaryAPIAgentMock.Object, contextoMock.Object);
+            altaTempranaMock = new Mock<IAltaTempranaAgent>();
+            ccppPendientesMock = new Mock<ICartasDePortePendienteAplicarAgent>();
+            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimaryAPIAgentMock.Object, contextoMock.Object, altaTempranaMock.Object, ccppPendientesMock.Object);
         }
 
         [Test]
@@ -192,6 +195,18 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(10, resultado.Id);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()), Times.Once);
+        }
+
+        [Test]
+        public void ValidarAltaTempranaConCartaOfertaTest()
+        {
+            var negocio = new Negocio { ProvinciaId = 12, ClasificacionId = 1, ProveedorId = 120, BoletoId = 4 };
+            var alta = new AltaTempranaNRCODto { Carta = "SI" };
+            altaTempranaMock.Setup(mock => mock.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(alta);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<BoletoCompraNetProvincia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<BoletoCompraNetProvincia> { new BoletoCompraNetProvincia { ProvinciaId = 12 } });
+            var result = target.ValidarAltaTemprana(negocio, new Proveedor { LocalidadCompraNetId = 120, SegmentacionId = 5 });
+            Assert.NotNull(result);
         }
     }
 }
