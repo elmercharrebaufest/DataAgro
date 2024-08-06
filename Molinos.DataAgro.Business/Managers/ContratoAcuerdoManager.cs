@@ -830,6 +830,14 @@ namespace Molinos.DataAgro.Business
                     oEntityErrors.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
                 }
             }
+            if (oContratoAcuerdo.Venta != true)
+            {
+                oEntityErrors.Errores.AddRange(negocioManager.ValidarAltaTemprana(oContratoAcuerdo, proveedor).Errores);
+                if (oContratoAcuerdo.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO)
+                {
+                    oEntityErrors.Errores.AddRange(negocioManager.ValidarSinBoleto(oContratoAcuerdo).Errores);
+                }
+            }
         }
 
         public DatosIniComboContratoAcuerdo TraerDatosCombo()
