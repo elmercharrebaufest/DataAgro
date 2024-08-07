@@ -1,5 +1,15 @@
 ﻿using Autofac.Extras.NLog;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using iTextSharp.tool.xml.css;
+using iTextSharp.tool.xml.html;
+using iTextSharp.tool.xml.parser;
+using iTextSharp.tool.xml.pipeline.css;
+using iTextSharp.tool.xml.pipeline.end;
+using iTextSharp.tool.xml.pipeline.html;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -10,24 +20,11 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.parser;
-using iTextSharp.tool.xml.pipeline.html;
-using iTextSharp.tool.xml.pipeline.end;
-using iTextSharp.tool.xml.pipeline.css;
-using iTextSharp.tool.xml.html;
-using iTextSharp.tool.xml.css;
-using Molinos.DataAgro.Entities.Common.Enums;
-using System.Globalization;
-using System.Drawing.Imaging;
-using System.Net.Http;
-using System.Reflection;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -193,9 +190,9 @@ namespace Molinos.DataAgro.Business.Managers
                 //return System.Text.Encoding.UTF8.GetString(fileBytes);
                 return fileBytes;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -229,7 +226,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (tipo.Descripcion == negocio.TipoNegocio)
                     {
-                        logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
                         if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
                         {
                             negociosFiltrados.Add(negocio);
@@ -259,12 +255,6 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
         {
             var lista = new List<string>();
-            //var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            //if (comercial.IdActiveDirectory != comercial.ToUpper())
-            //{
-            //    lista.Add(email);
-            //    logger.Debug("Enviando mail a Comercial boleto" + email);
-            //}
 
             var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
 
@@ -295,12 +285,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             string htmlBody = "";
 
-            htmlBody += "Se le envía por este medio el boleto de compraventa de granos número " +
-                contrato +
-                " de Molinos Agro S.A., versión " +
-                version +
-                ". Por favor imprimir con todas las copias incluidas (doble faz), firmar y subir a la web de" +
-                " www.moaoperaciones.com.ar  y luego enviar a nuestras oficinas. <br />";
+            htmlBody += "Se le envía por este medio el boleto de compraventa de granos número " + contrato + " de Molinos Agro S.A., versión " + version +
+                ". Por favor imprimir con todas las copias incluidas (doble faz), firmar y subir a la web de www.moaoperaciones.com.ar y luego enviar a nuestras oficinas. <br />";
             htmlBody += "En caso de ser un boleto de Bolsa de Rosario, si no se envía impreso en doble faz se observará debido a que no están autorizando el obleado.<br/>" +
                 "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
                 "<br/><br/>Saludos Cordiales,<br/><br/>" +
@@ -311,24 +297,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
             alternateView.LinkedResources.Add(res);
+
             return alternateView;
-        }
-
-        private string Split(string str)
-        {
-            var enumNumero = Enumerable.Range(0, str.Length / 2)
-                .Select(i => str.Substring(i * 2, 2)).ToList();
-            if (str.Length % 2 == 1)
-            {
-                enumNumero.Add(str[str.Length - 1].ToString());
-            }
-            var nuevoString = "";
-
-            for (int i = 0; i < enumNumero.Count(); i++)
-            {
-                nuevoString += "<span>" + enumNumero[i] + "</span>";
-            }
-            return nuevoString;
         }
 
         private void Inicializar(BasicoContrato basico)
@@ -436,18 +406,15 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                logger.Error("Error al generar PDF de boleto. ", e);
+                throw;
             }
         }
 
         private static string ObtenerPath(BasicoContrato basico)
         {
-            //if(basico.TipoNegocioId == 3 && basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
-            //{
-            //    return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
-            //}
             if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.ROSARIO)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
@@ -781,55 +748,43 @@ namespace Molinos.DataAgro.Business.Managers
             return codigos;
         }
 
-        public bool ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos)
+        public void ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos)
         {
-            try
+            foreach (string numeroNegocio in listaContratos)
             {
-                foreach (string numeroNegocio in listaContratos)
+                var itemNegocio = repositorio.Obtener<Negocio>(n => n.ContratoSAP == ("000" + numeroNegocio));
+
+                if (itemNegocio != null)
                 {
-                    var itemNegocio = repositorio.Obtener<Negocio>(n => n.ContratoSAP == ("000" + numeroNegocio));
+                    var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
 
-                    if (itemNegocio != null)
+                    string _negocio = itemNegocio is ContratoAcuerdo ? itemNegocio.Id.ToString() : (itemNegocio is FijacionDePrecioContrato && (itemNegocio.EstadoId == (int)EnumEstadoContrato.Finalizado || itemNegocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (itemNegocio as FijacionDePrecioContrato).FijacionSAP : itemNegocio.ContratoSAP != "0" ? itemNegocio.ContratoSAP : "";
+
+                    string contratoSapPdf = archivos.Find(sap => sap.Contains(numeroNegocio));
+                    Byte[] fileBytes = BoletoEnByte(pathArchivos + "\\" + contratoSapPdf);
+
+                    var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio : "");
+
+
+                    var lista = new List<string>();
+                    string contrato = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio.Substring(_negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0');
+                    string razonSocial = (itemNegocio.Corredor != null) ? itemNegocio.Corredor.RazonSocial : itemNegocio.Proveedor.RazonSocial;
+                    string version = (Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1).ToString();
+
+
+                    var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(itemNegocio.Comercial.IdActiveDirectory);
+
+                    if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
                     {
-                        var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
-
-                        string _negocio = itemNegocio is ContratoAcuerdo ? itemNegocio.Id.ToString() : (itemNegocio is FijacionDePrecioContrato && (itemNegocio.EstadoId == (int)EnumEstadoContrato.Finalizado || itemNegocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (itemNegocio as FijacionDePrecioContrato).FijacionSAP : itemNegocio.ContratoSAP != "0" ? itemNegocio.ContratoSAP : "";
-
-                        string contratoSapPdf = archivos.Find(sap => sap.Contains(numeroNegocio));
-                        Byte[] fileBytes = BoletoEnByte(pathArchivos + "\\" + contratoSapPdf);
-
-                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio : "");
-
-
-                        var lista = new List<string>();
-                        string contrato = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio.Substring(_negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0');
-                        string razonSocial = (itemNegocio.Corredor != null) ? itemNegocio.Corredor.RazonSocial : itemNegocio.Proveedor.RazonSocial;
-                        string version = (Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1).ToString();
-
-
-                        var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(itemNegocio.Comercial.IdActiveDirectory);
-
-                        if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
-                        {
-                            lista.Add(comercialRegistrado);
-                            lista.Add("dataagro@molinosagro.com.ar");
-                            logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
-                        }
-                        var subject = itemNegocio.Boleto.Descripcion == "Físico" ? "Boleto Físico" : itemNegocio.Boleto.Descripcion;
-                        subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + numeroNegocio;
-
-                        mailManager.EnviarMail(itemNegocio.Comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), fileBytes, contratoSapPdf);
+                        lista.Add(comercialRegistrado);
+                        lista.Add("dataagro@molinosagro.com.ar");
+                        logger.Debug("Reenviando mail Boleto a Comercial Registrado " + comercialRegistrado);
                     }
+                    var subject = itemNegocio.Boleto.Descripcion == "Físico" ? "Boleto Físico" : itemNegocio.Boleto.Descripcion;
+                    subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + numeroNegocio;
 
+                    mailManager.EnviarMail(itemNegocio.Comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), fileBytes, contratoSapPdf);
                 }
-
-
-                return true;
-            }
-            catch (Exception e)
-            {
-
-                return false;
             }
         }
 
@@ -843,17 +798,5 @@ namespace Molinos.DataAgro.Business.Managers
             return cuit;
         }
 
-        private string ImageToBase64(string imagePath, ImageFormat format)
-        {
-            using (System.Drawing.Image image = System.Drawing.Image.FromFile(imagePath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    image.Save(ms, format);
-                    byte[] imageBytes = ms.ToArray();
-                    return Convert.ToBase64String(imageBytes);
-                }
-            }
-        }
     }
 }
