@@ -310,17 +310,18 @@ namespace Molinos.DataAgro.Business.Managers
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, false, equipo, new List<int>()));
             var contrato = consulta.First();
             var confirma = repositorio.Obtener<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
+            var a_fijar = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) : null;
 
             //Calcular datos para el XML
             var estadoSAP = status.ValidarEstado(confirma.Negocio.ContratoSAP);
-            var esFijacionContratoConvenio = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && confirma.Negocio.Madre == true;
-            var esConvenio = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && confirma.Negocio.Madre == true;
+            var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;            
             var nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
             var Partes = (confirma.Negocio.CorredorId > 0) ?
                 new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Corredor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } }
                 : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } };
             var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(codigoSAP, string.Empty);
             var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
+            var esCanje = (a_fijar != null && a_fijar.PlanCanje == true) || contrato.PlanCanje == true;
             var clausulas = ObtenerClausulas(contrato);
             //Fin de carga de datos
             MemoryStream ms = new MemoryStream(); //Memory Stream
@@ -333,7 +334,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         new XElement("CabeceraDocumento",
                             new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.Bolsa.CodigoConfirma)),
-                            new XElement("TipoDocumento", new XAttribute("CodLista", confirma.Negocio.Canje == true ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
+                            new XElement("TipoDocumento", new XAttribute("CodLista", esCanje ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
                             new XElement("Formulario", new XAttribute("formversion", "1.04"))
                         ),//Fin Nodo CabeceraDocumento
 
@@ -366,7 +367,7 @@ namespace Molinos.DataAgro.Business.Managers
                             //Inicio DetalleContrato
                             new XElement("DetalleContrato",
                                 new XElement("Producto", new XAttribute("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty)),
-                                new XElement("DescAdicional", confirma.Negocio.Canje == true ? "INSUMO" : null),
+                                new XElement("DescAdicional", esCanje ? "INSUMO" : null),
                                 new XElement("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy")),
                                 new XElement("Cosecha", new XAttribute("CodLista", confirma.Negocio.Campana.CodigoSIO)),
                                 new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
@@ -374,7 +375,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 new XElement("CantidadHasta", confirma.Negocio.KgMaximo),
                                 new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
                                 new XElement("CantCamiones", confirma.Negocio.CantidadCamiones),
-                                (confirma.Negocio.Canje == true || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
+                                (esCanje || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
                                 new XElement("Moneda", new XAttribute("CodLista", confirma.Negocio.Moneda is null ? string.Empty : (confirma.Negocio.Moneda.Descripcion == "ARP" ? "1" : "2"))),
                                 (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", confirma.Negocio.Precio) : null),
                                 (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),//SOLO en A_PRECIO?
@@ -413,8 +414,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             #region DecisionDeclara
 
-                                (confirma.Negocio.Canje == true ? new XElement("DecisionDeclaraPrecioUnit", new XAttribute("CodLista", "0")) : null),
-                                (confirma.Negocio.Canje == true ? new XElement("DecisionDeclaraCantidad", new XAttribute("CodLista", "0")) : null),
+                                (esCanje ? new XElement("DecisionDeclaraPrecioUnit", new XAttribute("CodLista", "0")) : null),
+                                (esCanje ? new XElement("DecisionDeclaraCantidad", new XAttribute("CodLista", "0")) : null),
 
             #endregion DecisionDeclara
 
@@ -422,9 +423,27 @@ namespace Molinos.DataAgro.Business.Managers
 
             #region Pagos
 
-                                    ((confirma.Negocio.Canje != true) ? new XElement("Pagos",
+                                    ((esCanje != true) ? new XElement("Pagos",
                                         new XElement("ProvinciaPago", new XAttribute("CodLista", "B")),
-                                        new XElement("FechaCondicionPago", confirma.Negocio.Canje == true ? "" : (esFijacionContratoConvenio || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "4 días hábiles de fecha de fijación" : (!(confirma.Negocio.PagoDiferido == true) ? "Días de diferimiento contra mercadería entregada" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (confirma.Negocio.Warrant == true ? "Pago contra warrant" : (confirma.Negocio.CD == true ? "Pago contra CD" : "72 hrs contra mercadería entregada")) : "")))),
+                                        new XElement("FechaCondicionPago",
+                                        esCanje != true ? (
+                                            (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ?
+                                                "4 días hábiles de fecha de fijación" : (
+                                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? (
+                                                    (confirma.Negocio.CD == true) ?
+                                                        "Pago Contra CD" : (
+                                                        (confirma.Negocio.Warrant == true) ?
+                                                            "Pago contra Warrant" : (
+                                                            (confirma.Negocio.PagoDiferido == true) ?
+                                                                "72 hrs contra mercadería entregada" :
+                                                                "Días de diferimiento contra mercadería entregada"
+                                                            )
+                                                        )
+                                                    ) : null
+                                                )
+                                            )
+                                            : null
+                                        ),
                                         new XElement("LugarPago", "BUENOS AIRES"),
                                         new XElement("PagoAOrdenDe", new XAttribute("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "1")),
                                         new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.HasValue? confirma.Negocio.PorcentajeDePago : null)
@@ -434,7 +453,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             #region Insumos
 
-                                    ((confirma.Negocio.Canje == true) ? new XElement("Insumos",
+                                    (esCanje ? new XElement("Insumos",
                                         new XElement("Productos",
                                             new XElement("Insumo",
                                                 new XElement("Producto", new XAttribute("CodLista", "1")),
