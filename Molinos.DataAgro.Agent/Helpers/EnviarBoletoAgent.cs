@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var boletoCompraNet = repositorio.Listar<BoletoCompraNet>();
                 var rq = new Z_MPRFC_ENVIAR_BOLETOS_GENE()
                 {
-                    IM_CONTRATO = string.IsNullOrEmpty(boleto.FijacionSAP) && !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
+                    IM_CONTRATO = boleto.ContratoSAP ?? string.Empty,
                     IM_FECHA_GENE = boleto.FechaGeneracion.ToString("yyyy-MM-dd"),
                     IM_FIJACION = !string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.FijacionSAP : "",
                     IM_GENERADO = "X",
