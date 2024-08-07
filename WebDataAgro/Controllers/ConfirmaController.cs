@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Agent.ScatoRepositorio;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using static WebDataAgro.MvcApplication;
+using Resultado = Molinos.DataAgro.Entities.Dto.Resultado;
 
 namespace WebDataAgro.Controllers
 {
@@ -20,7 +22,6 @@ namespace WebDataAgro.Controllers
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
-
         }
 
         public ActionResult DescargarConfirma()
@@ -38,9 +39,10 @@ namespace WebDataAgro.Controllers
         public ActionResult GenerarConfirma(ConfirmaGeneradoDto confirma)
         {
             CargarSeleccionables();
+            if (string.IsNullOrEmpty(confirma.ContratoSAP)) return new JsonResult() { MaxJsonLength = Int32.MaxValue, Data = new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = "No se ha ingresado ningun valor", ErrorCode = 04 } } } };
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
-            
-            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos,confirma.IsWebService, GlobalVariables.EquipoReal);
+
+            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
                 Data = result,
@@ -82,7 +84,6 @@ namespace WebDataAgro.Controllers
 
         public ActionResult DescargarArchivoConfirma(string codigoSAP)
         {
-
             var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
             try
             {
@@ -94,8 +95,8 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
-                    //return Json(fileBytes); 
-                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml,nombreArchivo);
+                    //return Json(fileBytes);
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml, nombreArchivo);
                 }
             }
             catch (Exception)
@@ -137,7 +138,6 @@ namespace WebDataAgro.Controllers
             var friendly = kb.ToString("N0").Replace(groupSeparator, " ") + " KB";
             return friendly;
         }
-
 
         public ActionResult ObtenerDownloadKey(oParamBusqueda filtro)
         {

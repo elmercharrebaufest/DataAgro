@@ -22,6 +22,7 @@ using static iTextSharp.text.pdf.AcroFields;
 using System.Diagnostics.Contracts;
 using System.ServiceModel.Channels;
 using System.Web.UI.WebControls;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -89,6 +90,7 @@ namespace Molinos.DataAgro.Business.Managers
                             FijacionSAP = contrato.FijacionSAP,
                             TipoBoletoId = contrato.TipoNegocioId==(int)EnumTipoNegocio.FIJACION?1:contrato.BoletoId.GetValueOrDefault(),
                             IsWebService = usarWebServiceConfirma,
+                            NegocioSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP:contrato.ContratoSAP,
                             Mensaje = string.Empty,
                             Generado = true
                         };
@@ -305,255 +307,265 @@ namespace Molinos.DataAgro.Business.Managers
 
         public byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo)
         {
-            //Cargar Datos
-            var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, false, equipo, new List<int>()));
-            var contrato = consulta.First();
-            var confirma = repositorio.Obtener<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
-            var a_fijar = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) : null;
+            try
+            {
+                //Cargar Datos
+                var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
+                var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, false, equipo, new List<int>()));
+                var contrato = consulta.First();
+                var confirma = repositorio.Obtener<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
+                var a_fijar = confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) : null;
+                logger.Info($"Negocio de Confirma Encontrado Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                //Calcular datos para el XML
+                var estadoSAP = status.ValidarEstado(confirma.Negocio.ContratoSAP);
+                var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
+                var nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
+                var Partes = (confirma.Negocio.CorredorId > 0) ?
+                    new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Corredor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } }
+                    : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } };
+                var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(codigoSAP, string.Empty);
+                var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
+                var esCanje = (a_fijar != null && a_fijar.PlanCanje == true) || contrato.PlanCanje == true;
+                logger.Info($"Negocio de Confirma Datos Precargados Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                var clausulas = ObtenerClausulas(contrato);
+                logger.Info($"Negocio de Confirma Clausulas Cargadas Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                //Fin de carga de datos
+                MemoryStream ms = new MemoryStream(); //Memory Stream
+                                                      //Inicia formateo del XML
+                var doc = new XDocument(
+                    new XElement("Lote",
+                        new XElement("Documento", new XAttribute("xmlns-fakexmlns", "Documento"),
 
-            //Calcular datos para el XML
-            var estadoSAP = status.ValidarEstado(confirma.Negocio.ContratoSAP);
-            var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;            
-            var nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
-            var Partes = (confirma.Negocio.CorredorId > 0) ?
-                new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Corredor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } }
-                : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = confirma.Negocio.Proveedor.CUIT, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } };
-            var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(codigoSAP, string.Empty);
-            var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
-            var esCanje = (a_fijar != null && a_fijar.PlanCanje == true) || contrato.PlanCanje == true;
-            var clausulas = ObtenerClausulas(contrato);
-            //Fin de carga de datos
-            MemoryStream ms = new MemoryStream(); //Memory Stream
-            //Inicia formateo del XML
-            var doc = new XDocument(
-                new XElement("Lote",
-                    new XElement("Documento", new XAttribute("xmlns-fakexmlns", "Documento"),
+                #region CabeceraDocumento
 
-            #region CabeceraDocumento
+                            new XElement("CabeceraDocumento",
+                                new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.Bolsa.CodigoConfirma)),
+                                new XElement("TipoDocumento", new XAttribute("CodLista", esCanje ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
+                                new XElement("Formulario", new XAttribute("formversion", "1.04"))
+                            ),//Fin Nodo CabeceraDocumento
 
-                        new XElement("CabeceraDocumento",
-                            new XElement("Bolsa", new XAttribute("CodLista", confirma.Negocio.Bolsa.CodigoConfirma)),
-                            new XElement("TipoDocumento", new XAttribute("CodLista", esCanje ? "17" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
-                            new XElement("Formulario", new XAttribute("formversion", "1.04"))
-                        ),//Fin Nodo CabeceraDocumento
+                #endregion CabeceraDocumento
 
-            #endregion CabeceraDocumento
+                            new XElement("UploadInfo",
+                                new XElement("Workflow", confirma.Negocio.CorredorId > 0 ? "4" : "7")
+                            ),
+                            new XElement("DetalleDocumento",
 
-                        new XElement("UploadInfo",
-                            new XElement("Workflow", confirma.Negocio.CorredorId > 0 ? "4" : "7")
-                        ),
-                        new XElement("DetalleDocumento",
+                #region Partes
 
-            #region Partes
+                                //Inicio Nodo Partes
+                                new XElement("Partes",
+                                    //Inicio Parte
+                                    Partes.Select(x =>
+                                        new XElement("Parte",
+                                            new XAttribute("CodLista", x.CodLista),
+                                            new XElement("NroContratoInterno", x.NroContratoInterno),
+                                            new XElement("CUIT", x.CUIT),
+                                            new XElement("Sucursal", new XAttribute("CodLista", string.Empty))
+                                        )
+                                    )//Fin Nodo Parte
+                                ),//Fin Nodo Partes
 
-                            //Inicio Nodo Partes
-                            new XElement("Partes",
-                                //Inicio Parte
-                                Partes.Select(x =>
-                                    new XElement("Parte",
-                                        new XAttribute("CodLista", x.CodLista),
-                                        new XElement("NroContratoInterno", x.NroContratoInterno),
-                                        new XElement("CUIT", x.CUIT),
-                                        new XElement("Sucursal", new XAttribute("CodLista", string.Empty))
-                                    )
-                                )//Fin Nodo Parte
-                            ),//Fin Nodo Partes
+                #endregion Partes
 
-            #endregion Partes
+                #region DetalleContrato
 
-            #region DetalleContrato
+                                //Inicio DetalleContrato
+                                new XElement("DetalleContrato",
+                                    new XElement("Producto", new XAttribute("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty)),
+                                    new XElement("DescAdicional", esCanje ? "INSUMO" : null),
+                                    new XElement("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy")),
+                                    new XElement("Cosecha", new XAttribute("CodLista", confirma.Negocio.Campana.CodigoSIO)),
+                                    new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
+                                    new XElement("CantidadDesde", confirma.Negocio.KgMinimo),
+                                    new XElement("CantidadHasta", confirma.Negocio.KgMaximo),
+                                    new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
+                                    new XElement("CantCamiones", confirma.Negocio.CantidadCamiones),
+                                    (esCanje || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
+                                    new XElement("Moneda", new XAttribute("CodLista", confirma.Negocio.Moneda is null ? string.Empty : (confirma.Negocio.Moneda.Descripcion == "ARP" ? "1" : "2"))),
+                                    (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", confirma.Negocio.Precio) : null),
+                                    (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),//SOLO en A_PRECIO?
+                                    (confirma.Negocio.CorredorId > 0 ? new XElement("PorcComisionComprador", confirma.Negocio.PorcentajeComision) : null),
 
-                            //Inicio DetalleContrato
-                            new XElement("DetalleContrato",
-                                new XElement("Producto", new XAttribute("CodLista", confirma.Negocio.MaterialId == (int)EnumMateriales.TRIGO ? "1" : confirma.Negocio.MaterialId == (int)EnumMateriales.MAIZ ? "2" : confirma.Negocio.MaterialId == (int)EnumMateriales.SORGO ? "3" : confirma.Negocio.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : confirma.Negocio.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty)),
-                                new XElement("DescAdicional", esCanje ? "INSUMO" : null),
-                                new XElement("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy")),
-                                new XElement("Cosecha", new XAttribute("CodLista", confirma.Negocio.Campana.CodigoSIO)),
-                                new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
-                                new XElement("CantidadDesde", confirma.Negocio.KgMinimo),
-                                new XElement("CantidadHasta", confirma.Negocio.KgMaximo),
-                                new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
-                                new XElement("CantCamiones", confirma.Negocio.CantidadCamiones),
-                                (esCanje || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
-                                new XElement("Moneda", new XAttribute("CodLista", confirma.Negocio.Moneda is null ? string.Empty : (confirma.Negocio.Moneda.Descripcion == "ARP" ? "1" : "2"))),
-                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", confirma.Negocio.Precio) : null),
-                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),//SOLO en A_PRECIO?
-                                (confirma.Negocio.CorredorId > 0 ? new XElement("PorcComisionComprador", confirma.Negocio.PorcentajeComision) : null),
+                #region Calidad
 
-            #region Calidad
+                                    new XElement("Calidad",
+                                        new XElement("CondicionesCalidad", new XAttribute("CodLista", (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.FABRICA ? "4" : ""))),
+                                        new XElement("OtrasCondicionesCalidad")
+                                    ),
 
-                                new XElement("Calidad",
-                                    new XElement("CondicionesCalidad", new XAttribute("CodLista", (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.CAMARA || confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (confirma.Negocio.StandardDeCalidad?.Id == (int)EnumStandarCalidad.FABRICA ? "4" : ""))),
-                                    new XElement("OtrasCondicionesCalidad")
-                                ),
+                #endregion Calidad
 
-            #endregion Calidad
+                                    new XElement("MedioTransporte", new XAttribute("CodLista", "C")),
 
-                                new XElement("MedioTransporte", new XAttribute("CodLista", "C")),
+                #region Entregas
 
-            #region Entregas
+                                    new XElement("Entregas",
+                                        new XElement("EntregaDesde", confirma.Negocio.FechaDesde.ToString("dd/MM/yyyy")),
+                                        new XElement("EntregaHasta", confirma.Negocio.FechaHasta.ToString("dd/MM/yyyy"))
+                                    ),
 
-                                new XElement("Entregas",
-                                    new XElement("EntregaDesde", confirma.Negocio.FechaDesde.ToString("dd/MM/yyyy")),
-                                    new XElement("EntregaHasta", confirma.Negocio.FechaHasta.ToString("dd/MM/yyyy"))
-                                ),
+                #endregion Entregas
 
-            #endregion Entregas
+                #region Origen
 
-            #region Origen
+                                    new XElement("Origen",
+                                        new XElement("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad),
+                                        new XElement("ProvinciaOrigen", new XAttribute("CodLista", confirma.Negocio.Provincia.CodigoConfirma))
+                                    ),
 
-                                new XElement("Origen",
-                                    new XElement("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad),
-                                    new XElement("ProvinciaOrigen", new XAttribute("CodLista", confirma.Negocio.Provincia.CodigoConfirma))
-                                ),
+                #endregion Origen
 
-            #endregion Origen
+                                    new XElement("Destino", new XAttribute("CodLista", confirma.Negocio.Destino.CodigoConfirma.ToString()), new XAttribute("CodPrv", "0000")),
 
-                                new XElement("Destino", new XAttribute("CodLista", confirma.Negocio.Destino.CodigoConfirma.ToString()), new XAttribute("CodPrv", "0000")),
+                #region DecisionDeclara
 
-            #region DecisionDeclara
+                                    (esCanje ? new XElement("DecisionDeclaraPrecioUnit", new XAttribute("CodLista", "0")) : null),
+                                    (esCanje ? new XElement("DecisionDeclaraCantidad", new XAttribute("CodLista", "0")) : null),
 
-                                (esCanje ? new XElement("DecisionDeclaraPrecioUnit", new XAttribute("CodLista", "0")) : null),
-                                (esCanje ? new XElement("DecisionDeclaraCantidad", new XAttribute("CodLista", "0")) : null),
+                #endregion DecisionDeclara
 
-            #endregion DecisionDeclara
+                                    new XElement("ProvinciaInstrumentacion", new XAttribute("CodLista", "B")),
 
-                                new XElement("ProvinciaInstrumentacion", new XAttribute("CodLista", "B")),
+                #region Pagos
 
-            #region Pagos
-
-                                    ((esCanje != true) ? new XElement("Pagos",
-                                        new XElement("ProvinciaPago", new XAttribute("CodLista", "B")),
-                                        new XElement("FechaCondicionPago",
-                                        esCanje != true ? (
-                                            (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ?
-                                                "4 días hábiles de fecha de fijación" : (
-                                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? (
-                                                    (confirma.Negocio.CD == true) ?
-                                                        "Pago Contra CD" : (
-                                                        (confirma.Negocio.Warrant == true) ?
-                                                            "Pago contra Warrant" : (
-                                                            (confirma.Negocio.PagoDiferido == true) ?
-                                                                "72 hrs contra mercadería entregada" :
-                                                                "Días de diferimiento contra mercadería entregada"
+                                        ((esCanje != true) ? new XElement("Pagos",
+                                            new XElement("ProvinciaPago", new XAttribute("CodLista", "B")),
+                                            new XElement("FechaCondicionPago",
+                                            esCanje != true ? (
+                                                (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ?
+                                                    "4 días hábiles de fecha de fijación" : (
+                                                    (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? (
+                                                        (confirma.Negocio.CD == true) ?
+                                                            "Pago Contra CD" : (
+                                                            (confirma.Negocio.Warrant == true) ?
+                                                                "Pago contra Warrant" : (
+                                                                (confirma.Negocio.PagoDiferido == true) ?
+                                                                    "72 hrs contra mercadería entregada" :
+                                                                    "Días de diferimiento contra mercadería entregada"
+                                                                )
                                                             )
-                                                        )
-                                                    ) : null
+                                                        ) : null
+                                                    )
                                                 )
-                                            )
-                                            : null
-                                        ),
-                                        new XElement("LugarPago", "BUENOS AIRES"),
-                                        new XElement("PagoAOrdenDe", new XAttribute("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "1")),
-                                        new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.HasValue? confirma.Negocio.PorcentajeDePago : null)
-                                    ) : null),
+                                                : null
+                                            ),
+                                            new XElement("LugarPago", "BUENOS AIRES"),
+                                            new XElement("PagoAOrdenDe", new XAttribute("CodLista", confirma.Negocio.CorredorId > 0 ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "2") : "1")),
+                                            new XElement("PorcPago", confirma.Negocio.PorcentajeDePago.HasValue ? confirma.Negocio.PorcentajeDePago : null)
+                                        ) : null),
 
-            #endregion Pagos
+                #endregion Pagos
 
-            #region Insumos
+                #region Insumos
 
-                                    (esCanje ? new XElement("Insumos",
-                                        new XElement("Productos",
-                                            new XElement("Insumo",
-                                                new XElement("Producto", new XAttribute("CodLista", "1")),
-                                                new XElement("DescAdicional", "insumos"),
-                                                new XElement("Cantidad"),
-                                                new XElement("Precio"),
-                                                new XElement("UnidadMedida", new XAttribute("CodLista", string.Empty)),
-                                                new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", string.Empty))
-                                            )
-                                        ),
-                                        new XElement("Moneda", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("PrecioTotal", confirma.Negocio.Monto),
-                                        new XElement("Factura"),
-                                        new XElement("PorcentajeGastos"),
-                                        new XElement("TipoCambioPesos"),
-                                        new XElement("LugarEntrega"),
-                                        new XElement("ProvinciaEntrega", confirma.Negocio.Destino.Localidad.Provincia.CodigoConfirma)
-                                    ) : null),
+                                        (esCanje ? new XElement("Insumos",
+                                            new XElement("Productos",
+                                                new XElement("Insumo",
+                                                    new XElement("Producto", new XAttribute("CodLista", "1")),
+                                                    new XElement("DescAdicional", "insumos"),
+                                                    new XElement("Cantidad"),
+                                                    new XElement("Precio"),
+                                                    new XElement("UnidadMedida", new XAttribute("CodLista", string.Empty)),
+                                                    new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", string.Empty))
+                                                )
+                                            ),
+                                            new XElement("Moneda", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("PrecioTotal", confirma.Negocio.Monto),
+                                            new XElement("Factura"),
+                                            new XElement("PorcentajeGastos"),
+                                            new XElement("TipoCambioPesos"),
+                                            new XElement("LugarEntrega"),
+                                            new XElement("ProvinciaEntrega", confirma.Negocio.Destino.Localidad.Provincia.CodigoConfirma)
+                                        ) : null),
 
-            #endregion Insumos
+                #endregion Insumos
 
-            #region Fijacion
+                #region Fijacion
 
-                                    ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
-                                        new XElement("FijMinima", Convert.ToInt32(condiciones.CantidadMinima).ToString()),
-                                        new XElement("FijMaxima", Convert.ToInt32(condiciones.CantidadMaxima).ToString()),
-                                        new XElement("UnidadMedidaFijacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K")),
-                                        new XElement("FijPeriodo", "1"),
-                                        new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
-                                        new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
-                                        new XElement("PorcMultaIncumplimiento", "010"),
-                                        new XElement("ComunicacionFijacion", new XAttribute("CodLista", confirma.Negocio.PagoDirectoVendedor == true ? "2" : "1"))
-                                    ) : null),
+                                        ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
+                                            new XElement("FijMinima", Convert.ToInt32(condiciones.CantidadMinima).ToString()),
+                                            new XElement("FijMaxima", Convert.ToInt32(condiciones.CantidadMaxima).ToString()),
+                                            new XElement("UnidadMedidaFijacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K")),
+                                            new XElement("FijPeriodo", "1"),
+                                            new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
+                                            new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
+                                            new XElement("PorcMultaIncumplimiento", "010"),
+                                            new XElement("ComunicacionFijacion", new XAttribute("CodLista", confirma.Negocio.PagoDirectoVendedor == true ? "2" : "1"))
+                                        ) : null),
 
-            #endregion Fijacion
+                #endregion Fijacion
 
-                                new XElement("ProduccionVendedor", new XAttribute("CodLista", confirma.Negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "4") : (confirma.Negocio.Consignatario == true ? "5" : "2"))),
+                                    new XElement("ProduccionVendedor", new XAttribute("CodLista", confirma.Negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (confirma.Negocio.PagoDirectoVendedor == true ? "1" : "4") : (confirma.Negocio.Consignatario == true ? "5" : "2"))),
 
-            #region APRECIO
+                #region APRECIO
 
-                                ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ?
-                                    new XElement("APrecio", new XAttribute("CodLista", "1"))
-                                : null),
+                                    ((confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ?
+                                        new XElement("APrecio", new XAttribute("CodLista", "1"))
+                                    : null),
 
-            #endregion APRECIO
+                #endregion APRECIO
 
-                                new XElement("TipoOperacion", new XAttribute("CodLista", "1")),
+                                    new XElement("TipoOperacion", new XAttribute("CodLista", "1")),
 
-            #region SioGranos
+                #region SioGranos
 
-                                new XElement("SioGranos",
-                                    new XElement("NumeroDeclaracion", estadoSAP.NumeroSio>0? estadoSAP.NumeroSio.ToString() :null ),
-                                    new XElement("DetalleDeclaracion",
-                                        new XElement("ModalidadOperacion", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("EsCompradorFinal"),
-                                        new XElement("ProvinciaDestino", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("LocalidadDestino"),
-                                        new XElement("LugarEntregaSIO", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("CondicionPago", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("OpcionFijacion", new XAttribute("CodLista", string.Empty)),
-                                        new XElement("Observaciones", null)
+                                    new XElement("SioGranos",
+                                        new XElement("NumeroDeclaracion", estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null),
+                                        new XElement("DetalleDeclaracion",
+                                            new XElement("ModalidadOperacion", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("EsCompradorFinal"),
+                                            new XElement("ProvinciaDestino", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("LocalidadDestino"),
+                                            new XElement("LugarEntregaSIO", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("CondicionPago", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("OpcionFijacion", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("Observaciones", null)
+                                        )
                                     )
+
+                #endregion SioGranos
+
+                                ),//Fin DetalleContrato
+
+                #endregion DetalleContrato
+
+                #region ExtendedData
+
+                                new XElement("ExtendedData",
+                                    new XElement("ExtendedDataItem", new XAttribute("Caption", string.Empty), new XAttribute("DataName", string.Empty))
+                               ),
+
+                #endregion ExtendedData
+
+                #region Clausulas
+
+                                new XElement("Clausulas",
+                                    clausulas.Select(x => new XElement("Clausula", new XAttribute("Orden", string.Empty),
+                                        new XElement("TextoClausula", x.Texto),
+                                        new XElement("TextoAdicionalClausula", string.Empty)
+                                    ))
                                 )
 
-            #endregion SioGranos
+                #endregion Clausulas
 
-                            ),//Fin DetalleContrato
-
-            #endregion DetalleContrato
-
-            #region ExtendedData
-
-                            new XElement("ExtendedData",
-                                new XElement("ExtendedDataItem", new XAttribute("Caption", string.Empty), new XAttribute("DataName", string.Empty))
-                           ),
-
-            #endregion ExtendedData
-
-            #region Clausulas
-
-                            new XElement("Clausulas",
-                                clausulas.Select(x => new XElement("Clausula", new XAttribute("Orden", string.Empty),
-                                    new XElement("TextoClausula", x.Texto),
-                                    new XElement("TextoAdicionalClausula", string.Empty)
-                                ))
-                            )
-
-            #endregion Clausulas
-
-                        )//Fin Detalle Documento
-                    )//Fin Nodo Documento
-                )//Fin Nodo Lote
-            );
-            var xml = doc.ToString().Replace("-fakexmlns", string.Empty);
-            var document = XDocument.Parse(xml);
-            document.Declaration = new XDeclaration("1.0", "iso-8859-1", null);
-            //Fin Formateo del XML
-            document.Save(ms); //Guarda el Documento en el Stream
-            byte[] bytes = ms.ToArray(); //Devuelve el documento
-            return bytes;
+                            )//Fin Detalle Documento
+                        )//Fin Nodo Documento
+                    )//Fin Nodo Lote
+                );
+                var xml = doc.ToString().Replace("-fakexmlns", string.Empty);
+                var document = XDocument.Parse(xml);
+                document.Declaration = new XDeclaration("1.0", "iso-8859-1", null);
+                //Fin Formateo del XML
+                document.Save(ms); //Guarda el Documento en el Stream
+                byte[] bytes = ms.ToArray(); //Devuelve el documento
+                return bytes;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                return null;
+            }
         }
 
         private static Confirma ConvertirDtoAEntidad(ConfirmaGeneradoDto tempConfirma)

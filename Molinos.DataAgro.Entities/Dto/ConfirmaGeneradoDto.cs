@@ -16,5 +16,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Version { get; set; }
         public string FijacionSAP { get; set; }
         public int TipoBoletoId { get; set; }
+        public string NegocioSAP { get; set; }
     }
 }
