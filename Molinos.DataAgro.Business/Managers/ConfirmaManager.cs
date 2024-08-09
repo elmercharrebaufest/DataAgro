@@ -377,15 +377,15 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("FechaConcertacion", confirma.Negocio.FechaOperacion.ToString("dd/MM/yyyy")),
                                     new XElement("Cosecha", new XAttribute("CodLista", confirma.Negocio.Campana.CodigoSIO)),
                                     new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
-                                    new XElement("CantidadDesde", confirma.Negocio.KgMinimo),
-                                    new XElement("CantidadHasta", confirma.Negocio.KgMaximo),
+                                    new XElement("CantidadDesde", confirma.Negocio.KgMinimo?? (int)confirma.Negocio.Cantidad),
+                                    new XElement("CantidadHasta", confirma.Negocio.KgMaximo?? (int)confirma.Negocio.Cantidad),
                                     new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
                                     new XElement("CantCamiones", confirma.Negocio.CantidadCamiones),
                                     (esCanje || confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
                                     new XElement("Moneda", new XAttribute("CodLista", confirma.Negocio.Moneda is null ? string.Empty : (confirma.Negocio.Moneda.Descripcion == "ARP" ? "1" : "2"))),
                                     (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", confirma.Negocio.Precio) : null),
                                     (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),//SOLO en A_PRECIO?
-                                    (confirma.Negocio.CorredorId > 0 ? new XElement("PorcComisionComprador", confirma.Negocio.PorcentajeComision) : null),
+                                    (confirma.Negocio.CorredorId > 0 ? new XElement("PorcComisionComprador", confirma.Negocio.PorcentajeComision>0? confirma.Negocio.PorcentajeComision:null) : null),
 
                 #region Calidad
 
