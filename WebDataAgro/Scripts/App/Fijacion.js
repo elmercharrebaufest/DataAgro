@@ -2775,7 +2775,7 @@ function CambioCalidades(calidades) {
         $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
     }
     else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-        $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
+        $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
     } else {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
@@ -3469,7 +3469,7 @@ function AgregarCalidades() {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
             }
             else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-                $("#valorEspecialesId").data("kendoNumericTextBox").value('0,50');
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
             }
         }
         return err;
