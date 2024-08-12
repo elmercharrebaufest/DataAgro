@@ -65,12 +65,19 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new ConfirmaResult();
             try
             {
+                if (contratos==null || contratos.Count==0)
+                {
+                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {codigosSap}");
+                    resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
+                    return resultado;
+                }
                 foreach (var contrato in contratos)
                 {
                     var mensaje = ValidarContrato(contrato, claseNegocio);
                     var esValido = mensaje == "" ? true : false;
                     if (!esValido)
                     {
+                        logger.Info($"Generacion Confirma: No es valido el Negocio SAP {contrato.Negocio}");
                         resultado.confirmasGenerados.Add(DevolverDto(contrato, false, mensaje));
                         continue;
                     }
@@ -95,8 +102,9 @@ namespace Molinos.DataAgro.Business.Managers
                             Generado = true
                         };
                         //Enviando Confirma a RFC como BoletoGeneradoDto
-                        logger.Debug("Enviando confirma" + tempConfirma.ToString());
+                        logger.Debug("Confirma: Enviando Boleto confirma" + tempConfirma.ToString());
                         var res = oEnviarBoletoAgent.Enviar(ConfirmaABoletoDto(tempConfirma));
+                        logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
                         { //Generado exitosamente en RFC
                             //Se Almacena en DB el nuevo Confirma
