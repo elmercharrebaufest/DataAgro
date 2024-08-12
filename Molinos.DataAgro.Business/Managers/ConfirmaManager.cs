@@ -67,7 +67,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (contratos==null || contratos.Count==0)
                 {
-                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {codigosSap}");
+                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {codigosSap.ToArray()} siendo los codigos completos: {codigos.ToArray()}");
                     resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
                     return resultado;
                 }
