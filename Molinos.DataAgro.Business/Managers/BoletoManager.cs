@@ -628,15 +628,16 @@ namespace Molinos.DataAgro.Business.Managers
                         mensaje = "No se pudo generar el boleto para la fijación por su cantidad menor a 10 toneladas.";
                         logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por cantidad menor a 10 toneladas.");
                     }
-                    if (contrato.Canje != true)
+                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR);
+                    if (a_fijar.PlanCanje != true)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por no ser de canje.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no ser de canje.");
+                        mensaje = "No se pudo generar el boleto para la fijación por no ser de Plan Canje su A Fijar Correspondiente.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no ser de Plan Canje su A Fijar Correspondiente.");
                     }
-                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                    if (a_fijar.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
                     {
-                        mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no tener tilde de boleto físico o carta oferta.");
+                        mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.";
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.");
                     }
                 }
                 else
