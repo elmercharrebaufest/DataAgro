@@ -23,6 +23,7 @@ using System.Diagnostics.Contracts;
 using System.ServiceModel.Channels;
 using System.Web.UI.WebControls;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
+using System.Linq.Dynamic;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -61,6 +62,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var codigos = AgregarCeros(codigosSap);
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
+            if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
+            else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             var resultado = new ConfirmaResult();
             try
