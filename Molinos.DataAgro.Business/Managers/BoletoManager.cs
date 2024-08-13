@@ -614,11 +614,10 @@ namespace Molinos.DataAgro.Business.Managers
             return xHtml;
         }
 
-        private string ValidarNegocioEnGeneracionBoleto(BasicoContrato negocio, int tipoNegocio)
+        private string ValidarNegocioEnGeneracionBoleto(BasicoContrato contrato, int tipoNegocio)
         {
             var mensaje = "";
             var kilosDisponibles = 10000;
-            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
             if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
             {
                 if (contrato != null)
@@ -626,18 +625,17 @@ namespace Molinos.DataAgro.Business.Managers
                     if (contrato.Cantidad < kilosDisponibles)
                     {
                         mensaje = "No se pudo generar el boleto para la fijación por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por cantidad menor a 10 toneladas.");
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
                     }
-                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR);
-                    if (a_fijar.PlanCanje != true)
+                    if (contrato.PlanCanje != true)
                     {
                         mensaje = "No se pudo generar el boleto para la fijación por no ser de Plan Canje su A Fijar Correspondiente.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no ser de Plan Canje su A Fijar Correspondiente.");
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por no ser de Plan Canje su A Fijar Correspondiente.");
                     }
-                    if (a_fijar.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
                     {
                         mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {negocio.FijacionSAP} por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.");
+                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.");
                     }
                 }
                 else
@@ -647,23 +645,23 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var res = status.ValidarEstado(negocio.ContratoSAP);
+                var res = status.ValidarEstado(contrato.ContratoSAP);
                 if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
                     string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
                     mensaje = $"No se pudo generar el boleto para el contrato por su estado: {motivoStatus}";
-                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {negocio.ContratoSAP}");
+                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {contrato.ContratoSAP}");
                 }
                 else if (string.IsNullOrEmpty(res.Status))
                 {
                     mensaje = $"No se pudo generar el boleto para el contrato por estar en slip.";
-                    logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {negocio.ContratoSAP}");
+                    logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {contrato.ContratoSAP}");
                 }
             }
             if (contrato != null && contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 mensaje = "No se pudo generar el boleto por tener tilde de Confirma.";
-                logger.Debug($"No se pudo generar el boleto para el negocio {negocio.ContratoSAP} por tener tilde de Confirma.");
+                logger.Debug($"No se pudo generar el boleto para el negocio {contrato.ContratoSAP} por tener tilde de Confirma.");
             }
             return mensaje;
         }
