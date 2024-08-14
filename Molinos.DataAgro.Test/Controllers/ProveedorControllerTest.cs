@@ -156,15 +156,24 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerLocalidadTest()
         {
-            proveedorManagerMock.Setup(x => x.TraerLocalidad(1)).Returns(new List<LocalidadDto>() { new LocalidadDto { LocalidadId = 1, CodLocalidad = "A", Nombre = "A", ProvinciaId = 2, Provincia_Nombre = "A" } });
+            proveedorManagerMock.Setup(x => x.TraerLocalidad(1)).Returns(new List<LocalidadDto>() { new LocalidadDto {
+                LocalidadId = 1,
+                CodLocalidad = "A",
+                Nombre = "A",
+                ProvinciaId = 2,
+                Provincia_Nombre = "A",
+                CodigoPostal = "A",
+                SubCodigoPostal = "B"
+            } });
             var result = target.TraerLocalidad(1);
 
             proveedorManagerMock.Verify(x => x.TraerLocalidad(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
+            var serializedResult = serializer.Serialize(result);
+            Console.WriteLine("Serialized Result: " + serializedResult);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":2,\"Provincia_Nombre\":\"A\",\"Partido_Nombre\":null,\"PartidoId\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"CodigoPostal\":\"A\",\"SubCodigoPostal\":\"B\",\"ProvinciaId\":2,\"Provincia_Nombre\":\"A\",\"Partido_Nombre\":null,\"PartidoId\":null,\"CodigoConfirma\":\"AB\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                serializedResult);
         }
 
         [Test]

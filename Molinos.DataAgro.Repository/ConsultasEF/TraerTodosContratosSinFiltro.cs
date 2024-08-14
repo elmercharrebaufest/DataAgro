@@ -246,7 +246,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         DolarExportador = (contrato is AgenteCompra) && ((contrato as AgenteCompra).DolarExportador ?? false),
                         TipoDeCambioId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.TipoDeCambioId:contrato.TipoDeCambioId,
                         Madre = contrato.Madre,
-                        ContratoMadre = contrato.ContratoMadre
+                        ContratoMadre = contrato.ContratoMadre,
+                        LocalidadConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Localidad.CodigoPostal + (contrato as FijacionDePrecioContrato).Contrato.Localidad.SubCodigoPostal : contrato.Localidad.CodigoPostal+ contrato.Localidad.SubCodigoPostal,
                     };
 
                 return queryNegocios;
@@ -423,7 +424,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         DolarExportador = (contrato is AgenteCompra) && ((contrato as AgenteCompra).DolarExportador ?? false),
                         TipoDeCambioId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.TipoDeCambioId:contrato.TipoDeCambioId,
                         Madre = contrato.Madre,
-                        ContratoMadre = contrato.ContratoMadre
+                        ContratoMadre = contrato.ContratoMadre,
+                        LocalidadConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Localidad.CodigoPostal + (contrato as FijacionDePrecioContrato).Contrato.Localidad.SubCodigoPostal : contrato.Localidad.CodigoPostal + contrato.Localidad.SubCodigoPostal,
                     };
 
                 return queryNegocios;

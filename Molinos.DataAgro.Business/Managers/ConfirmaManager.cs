@@ -421,7 +421,7 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Origen
 
                                     new XElement("Origen",
-                                        new XElement("LocalidadOrigen", confirma.Negocio.Localidad.CodLocalidad),
+                                        new XElement("LocalidadOrigen", confirma.Negocio.Localidad.CodigoPostal+confirma.Negocio.Localidad.SubCodigoPostal),
                                         new XElement("ProvinciaOrigen", new XAttribute("CodLista", confirma.Negocio.Provincia.CodigoConfirma))
                                     ),
 

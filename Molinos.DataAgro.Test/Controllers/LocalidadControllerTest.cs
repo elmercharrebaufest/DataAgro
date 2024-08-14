@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -71,10 +72,11 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
+            var serializedResult = serializer.Serialize(result);
+            Console.WriteLine("Serialized Result: " + serializedResult);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":1,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"CodigoPostal\":null,\"SubCodigoPostal\":null,\"ProvinciaId\":1,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null,\"CodigoConfirma\":\"\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+        serializedResult);
         }
 
         [Test]
@@ -92,10 +94,11 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
+            var serializedResult = serializer.Serialize(result);
+            Console.WriteLine("Serialized Result: " + serializedResult);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":0,\"CodLocalidad\":\"\",\"Nombre\":\"\",\"ProvinciaId\":0,\"PartidoId\":null,\"Provincia\":null,\"Partido\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":0,\"CodLocalidad\":\"\",\"CodigoPostal\":null,\"SubCodigoPostal\":null,\"Nombre\":\"\",\"ProvinciaId\":0,\"PartidoId\":null,\"Provincia\":null,\"Partido\":null,\"CodigoConfirma\":\"\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                serializedResult);
         }
 
         [Test]
@@ -109,7 +112,7 @@ namespace Molinos.DataAgro.Test.Controllers
             //"{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
             //"{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":3,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}"
             //};
-            //Assert.AreEqual(true, resultadosOk.Contains(a)); -> para el Eliminar async
+            //Assert.AreEqual(true, resultadosOk.Contains(serializedResult)); -> para el Eliminar async
             Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
@@ -120,10 +123,11 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
+            var serializedResult = serializer.Serialize(result);
+            Console.WriteLine("Serialized Result: " + serializedResult);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":0,\"CodLocalidad\":\"\",\"Nombre\":\"\",\"ProvinciaId\":0,\"PartidoId\":null,\"Provincia\":null,\"Partido\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":0,\"CodLocalidad\":\"\",\"CodigoPostal\":null,\"SubCodigoPostal\":null,\"Nombre\":\"\",\"ProvinciaId\":0,\"PartidoId\":null,\"Provincia\":null,\"Partido\":null,\"CodigoConfirma\":\"\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                serializedResult);
         }
 
         [Test]
@@ -142,10 +146,11 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
+            var serializedResult = serializer.Serialize(result);
+            Console.WriteLine("Serialized Result: " + serializedResult);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":0,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"CodigoPostal\":null,\"SubCodigoPostal\":null,\"ProvinciaId\":0,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null,\"CodigoConfirma\":\"\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                serializedResult);
         }
 
         [Test]
