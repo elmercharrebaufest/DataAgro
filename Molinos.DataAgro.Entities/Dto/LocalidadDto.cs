@@ -11,13 +11,7 @@
         public string Provincia_Nombre { get; set; }
         public string Partido_Nombre { get; set; }
         public int? PartidoId { get; set; }
-        public string CodigoConfirma
-        {
-            get
-            {
-                return CodigoPostal + SubCodigoPostal;
-            }
-        }
+        public string CodigoConfirma { get; set; }
     }
 }
    

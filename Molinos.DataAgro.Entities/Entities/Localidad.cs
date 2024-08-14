@@ -23,13 +23,7 @@ namespace Molinos.DataAgro.Entities.Entities
             Nombre = "";  
         }
 
-        public string CodigoConfirma
-        {
-            get
-            {
-                return CodigoPostal+SubCodigoPostal;
-            }
-        }
+        public string CodigoConfirma { get; set; }
     }
 }
    

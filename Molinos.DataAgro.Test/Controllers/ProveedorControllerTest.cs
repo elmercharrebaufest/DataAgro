@@ -163,7 +163,8 @@ namespace Molinos.DataAgro.Test.Controllers
                 ProvinciaId = 2,
                 Provincia_Nombre = "A",
                 CodigoPostal = "A",
-                SubCodigoPostal = "B"
+                SubCodigoPostal = "B",
+                CodigoConfirma = "AB",
             } });
             var result = target.TraerLocalidad(1);
 
