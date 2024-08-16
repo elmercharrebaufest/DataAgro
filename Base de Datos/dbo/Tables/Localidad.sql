@@ -4,6 +4,9 @@
     [Nombre]       VARCHAR (100) NOT NULL,
     [ProvinciaId]  INT           NOT NULL,
 	[PartidoId]  INT            NULL,
+    [CodigoPostal] VARCHAR (10)  NULL,
+    [SubCodigoPostal] VARCHAR (10)  NULL,
+    [CodigoConfirma] VARCHAR (10)  NULL,
     CONSTRAINT [PK_Localidad] PRIMARY KEY CLUSTERED ([LocalidadId] ASC),
     CONSTRAINT [FK_Localidad_Provincia] FOREIGN KEY ([ProvinciaId]) REFERENCES [dbo].[Provincia] ([ProvinciaId]),
 	CONSTRAINT [FK_Localidad_Partido] FOREIGN KEY ([PartidoId]) REFERENCES [dbo].[Partido] ([Id])
