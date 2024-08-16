@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Id = contrato.Id,
                         ContratoId = contrato is Contrato ? contrato.Id : contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).ContratoId ?? 0 : 0,
                         ProveedorId = contrato.ProveedorId ?? 0,
-                        CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
+                        CorredorId = contrato.CorredorId.HasValue ? contrato.CorredorId.Value : 0,
                         ComercialId = contrato.ComercialId,
                         ComercialZonaId = contrato.Comercial.GrupoDeComprasId,
                         ComercialZonaDescripcion = contrato.Comercial.GrupoDeCompras.Descripcion,
@@ -108,7 +108,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PlanCanje = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PlanCanje: contrato.PlanCanje,
                         CD = contrato.CD,
                         Warrant = contrato.Warrant,
-                        PagoDirectoVendedor = contrato.PagoDirectoVendedor,
+                        PagoDirectoVendedor = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PagoDirectoVendedor:contrato.PagoDirectoVendedor,
                         EstablecimientoPropio = contrato.EstablecimientoPropio,
                         BoletoId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BoletoId : contrato.BoletoId,
                         BolsaId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId : contrato.BolsaId,
@@ -181,7 +181,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ObservacionTercero = contrato.ObservacionTercero,
                         Canje = contrato.Canje,
                         MonedaCanjeId = contrato.MonedaCanjeId,
-                        Monto = contrato.Monto,
+                        Monto = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Monto:contrato.Monto,
                         Insumo = contrato.Insumo,
                         PrestamoDevolucion = contrato.PrestamoDevolucion ?? false,
                         PlantaDestinoId = contrato.PlantaDestinoId ?? 0,
@@ -248,6 +248,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Madre = contrato.Madre,
                         ContratoMadre = contrato.ContratoMadre,
                         LocalidadConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Localidad.CodigoPostal + (contrato as FijacionDePrecioContrato).Contrato.Localidad.SubCodigoPostal : contrato.Localidad.CodigoPostal+ contrato.Localidad.SubCodigoPostal,
+                        BolsaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Bolsa.CodigoConfirma : contrato.Bolsa.CodigoConfirma,
+                        CampanaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Campana.CodigoSIO : contrato.Campana.CodigoSIO,
+                        ProvinciaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Provincia.CodigoConfirma : contrato.Provincia.CodigoConfirma,
+                        DestinoConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Destino.CodigoConfirma: contrato.Destino.CodigoConfirma,
                     };
 
                 return queryNegocios;
@@ -268,7 +272,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Id = contrato.Id,
                         ContratoId = contrato is Contrato ? contrato.Id : contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).ContratoId.HasValue ? (contrato as FijacionDePrecioContrato).ContratoId.Value : 0 : 0,
                         ProveedorId = contrato.ProveedorId ?? 0,
-                        CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
+                        CorredorId = contrato.CorredorId.HasValue ? contrato.CorredorId.Value : 0,
                         ComercialId = contrato.ComercialId,
                         ComercialZonaId = contrato.Comercial.GrupoDeComprasId,
                         ComercialZonaDescripcion = contrato.Comercial.GrupoDeCompras.Descripcion,
@@ -336,7 +340,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PlanCanje = contrato.PlanCanje,
                         CD = contrato.CD,
                         Warrant = contrato.Warrant,
-                        PagoDirectoVendedor = contrato.PagoDirectoVendedor,
+                        PagoDirectoVendedor = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PagoDirectoVendedor : contrato.PagoDirectoVendedor,
                         EstablecimientoPropio = contrato.EstablecimientoPropio,
                         BoletoId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BoletoId:contrato.BoletoId,
                         BolsaId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId:contrato.BolsaId,
@@ -426,6 +430,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Madre = contrato.Madre,
                         ContratoMadre = contrato.ContratoMadre,
                         LocalidadConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Localidad.CodigoPostal + (contrato as FijacionDePrecioContrato).Contrato.Localidad.SubCodigoPostal : contrato.Localidad.CodigoPostal + contrato.Localidad.SubCodigoPostal,
+                        BolsaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Bolsa.CodigoConfirma : contrato.Bolsa.CodigoConfirma,
+                        CampanaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Campana.CodigoSIO : contrato.Campana.CodigoSIO,
+                        ProvinciaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Provincia.CodigoConfirma : contrato.Provincia.CodigoConfirma,
+                        DestinoConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Destino.CodigoConfirma : contrato.Destino.CodigoConfirma,
+                        Monto = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Monto : contrato.Monto,
                     };
 
                 return queryNegocios;

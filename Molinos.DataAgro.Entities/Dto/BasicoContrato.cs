@@ -279,6 +279,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? DolarExportador { get; set; }
         public int? TipoDeCambioId { get; set; }
         public string LocalidadConfirma { get; set; }
+        public string BolsaConfirma { get; set; }
+        public string CampanaConfirma { get; set; }
+        public string ProvinciaConfirma { get; set; }
+        public string DestinoConfirma { get; set; }
     }
 
     public class StoredPorContratoResult
