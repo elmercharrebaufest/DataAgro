@@ -730,11 +730,11 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             if (eliminar.HasValue && eliminar.Value)
             {
-                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
             }
             else
             {
-                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea);
@@ -843,7 +843,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
 
-            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 1)
             {
                 if (oContrato.Cantidad < 30000)
@@ -1006,7 +1006,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oContrato.ChequeElectronico == true)
             {
@@ -1023,17 +1023,17 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
 
-            if (oContrato.BoletoId == 5)
+            if (oContrato.EPA == true && eliminar != true)
             {
-                if (oContrato.TipoNegocioId == 1)
+                htmlBody += "<br />Considerar que para este tipo de negocios debido a la estructura de nuestra planta solamente podremos recibir camiones escalables tolvas. Por favor no enviar transportes con modelos escalables con chasis acoplado ni bateas.<br />";
+            }
+            if (oContrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO)
+            {
+                if (oContrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
                 {
-                    htmlBody += "<br/>Si el Vendedor no enviara la Notificación  hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
-                    htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                    htmlBody += "<br/>Si el Vendedor no enviara la Notificación hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
                 }
-                else
-                {
-                    htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
-                }
+                htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
             }
             else
             {
@@ -1047,6 +1047,7 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
+
         private AlternateView CuerpoMailFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
         {
             LinkedResource res = new LinkedResource(filePath);
@@ -1063,7 +1064,7 @@ namespace Molinos.DataAgro.Business.Managers
             var linea = 0;
             string htmlBody = "";
 
-            //htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
+            htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
@@ -1120,7 +1121,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oFijacionDePrecioContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oFijacionDePrecioContrato.FechaCierta.HasValue)
             {
@@ -1201,11 +1202,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br />  En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+            if (oFijacionDePrecioContrato.Contrato.EPA == true)
+            {
+                htmlBody += "<br />Considerar que para este tipo de negocios debido a la estructura de nuestra planta solamente podremos recibir camiones escalables tolvas. Por favor no enviar transportes con modelos escalables con chasis acoplado ni bateas.<br />";
+            }
+            htmlBody += "<br />Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -3924,11 +3928,11 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             if (eliminar.HasValue && eliminar.Value)
             {
-                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
             }
             else
             {
-                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "CANJE" + "</td></tr>";
@@ -4009,7 +4013,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             //if (oContrato.TipoNegocioId == 1)
             //{
             //    if (oContrato.Cantidad < 30000)
@@ -4167,7 +4171,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oContrato.ChequeElectronico == true)
             {
@@ -4179,7 +4183,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            if (oContrato.EPA == true && eliminar != true)
+            {
+                htmlBody += "<br />Considerar que para este tipo de negocios debido a la estructura de nuestra planta solamente podremos recibir camiones escalables tolvas. Por favor no enviar transportes con modelos escalables con chasis acoplado ni bateas.<br />";
+            }
+            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -4287,7 +4295,7 @@ namespace Molinos.DataAgro.Business.Managers
             var linea = 0;
             string htmlBody = "";
 
-            //htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
+            if (!eliminar) htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "FIJACIÓN CANJE" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
@@ -4341,7 +4349,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oFijacionDePrecioContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oFijacionDePrecioContrato.Dolarizado == true)
             {
@@ -4441,26 +4449,18 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            if (eliminar)
+            if (contrato.EPA == true && !eliminar)
             {
-                htmlBody += "<br />    Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales," +
-                " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
-                "<br /> <br /> www.molinosagro.com.ar";
+                htmlBody += "<br />Considerar que para este tipo de negocios debido a la estructura de nuestra planta solamente podremos recibir camiones escalables tolvas. Por favor no enviar transportes con modelos escalables con chasis acoplado ni bateas.<br />";
+            }
+            htmlBody += "<br />Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            "<br /> <br />  Saludos Cordiales," +
+            " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
+            @"<img src='cid:" + res.ContentId + @"'/>" +
+            "<br /> <br /> www.molinosagro.com.ar";
 
-            }
-            else
-            {
-                htmlBody += "<br />  En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                    "<br /> <br />  Saludos Cordiales," +
-                    " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
-                    @"<img src='cid:" + res.ContentId + @"'/>" +
-                    "<br /> <br /> www.molinosagro.com.ar";
-            }
             htmlBody += "<style> table, th, td{ }</style>";
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
@@ -4536,11 +4536,11 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             if (eliminar.HasValue && eliminar.Value)
             {
-                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
             }
             else
             {
-                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "TIPO NEGOCIO</th>" + Td(ref linea) + "PRESTAMO DEVOLUCIÓN" + "</td></tr>";
@@ -4622,7 +4622,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 1)
             {
                 if (oContrato.Cantidad < 30000)
@@ -4780,7 +4780,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DolarizadoExpress == true)
             {
-                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+                htmlBody += "A pesificar en mes en curso mediante envío de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             if (oContrato.ChequeElectronico == true)
             {
@@ -4793,7 +4793,11 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "Planta Destino: " + oContrato.PlantaDestino.Descripcion + "<br />";
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            if (oContrato.EPA == true && eliminar != true)
+            {
+                htmlBody += "<br />Considerar que para este tipo de negocios debido a la estructura de nuestra planta solamente podremos recibir camiones escalables tolvas. Por favor no enviar transportes con modelos escalables con chasis acoplado ni bateas.<br />";
+            }
+            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
