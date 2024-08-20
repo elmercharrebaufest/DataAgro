@@ -65,7 +65,6 @@
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WebDataAgro\ExternalLibs\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">

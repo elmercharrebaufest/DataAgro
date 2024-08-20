@@ -479,3 +479,6 @@ IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN 
 --TipoDeCambio
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END
+
+--PRUEBA
+insert into Log (Fecha, Xml) values (CURRENT_TIMESTAMP, CONCAT('PRUEBA',' - ',CURRENT_TIMESTAMP));
