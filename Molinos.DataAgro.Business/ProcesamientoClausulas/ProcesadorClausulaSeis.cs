@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
+            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA && clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 res.Texto += $"El importe del sellado del presente Contrato como los honorarios de la Cámara Arbitral de la Bolsa de Cereales de {clausula.Basico.BolsaDescripcion} " +
                      $"será abonado por ";
