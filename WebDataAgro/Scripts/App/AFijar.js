@@ -4912,9 +4912,10 @@ function ocultarSiHayPrestamos() {
     $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     LimpiarCalidades();
     LimpiarDescuentos();
-    $(".contratoAFijar").hide();
-    $("#fechaDesdeTopeId").val("");
-    $("#fechaHastaTopeId").val("");
+    //$(".contratoAFijar").hide();
+    $(".prestamoDevolucion").hide();
+    //$("#fechaDesdeTopeId").val("");
+    //$("#fechaHastaTopeId").val("");
 
     $("#condicion").hide();
     $("#condicionFijacionId").data("kendoDropDownList").value("");
@@ -4948,7 +4949,8 @@ function HayPrestamo() {
         $("#porcentajePagoDiv").hide();
         $("#boletoNingunoId").prop("checked", false);
         $(".madreDiv").show();
-        $(".contratoAFijar").show();
+        //$(".contratoAFijar").show();
+        $(".prestamoDevolucion").show();
         var hoy = new Date();
         var maniana = new Date();
         maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
