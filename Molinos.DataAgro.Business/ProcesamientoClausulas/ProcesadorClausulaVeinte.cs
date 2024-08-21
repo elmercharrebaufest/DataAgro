@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -20,7 +21,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.CorredorId > 0 && !string.IsNullOrEmpty(clausula.Basico.CUITCorredor))
+            if (clausula.Basico.CorredorId > 0 && !string.IsNullOrEmpty(clausula.Basico.CUITCorredor) && clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 res.Texto += $"Los señores {clausula.Basico.RazonSocialCorredor}, CUIT N° {FormatoCuit(clausula.Basico.CUITCorredor)}, actúan en la presente operación en carácter de " +
                     $"corredores quedando facultados por los vendedores para fijar el precio, facturar, recibir el pago, firmar recibos de mercadería, ampliaciones " +

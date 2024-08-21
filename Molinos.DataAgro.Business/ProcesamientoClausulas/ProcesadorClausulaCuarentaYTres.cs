@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -19,8 +20,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //CLAUSULA SIEMPRE PRESENTE
 
             var res = new ResultadoClausula();
-            res.Texto += "Como proveedor de materias primas agrícolas me comprometo a cumplir con las recomendaciones de Buenas Prácticas Agrícolas leídas en la " +
+            if (clausula.Basico.BoletoId!=(int)EnumBoletoCompraNet.CONFIRMA)
+            {
+                res.Texto += "Como proveedor de materias primas agrícolas me comprometo a cumplir con las recomendaciones de Buenas Prácticas Agrícolas leídas en la " +
                     "página web de Molinos Agro SA http://moaoperaciones.com.ar/Documentacion/GMP%20MOA.pdf";
+            }
             return res;
         }
     }
