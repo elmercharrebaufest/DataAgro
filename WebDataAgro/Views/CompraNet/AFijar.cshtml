@@ -267,7 +267,7 @@
                     </span>
                 </div>
             </div>
-            <div hidden class="ampliar">
+            <div hidden class="ampliar prestamoDevolucion">
                 <div class="col-sm-5 col-md-2 contratoAFijar">
                     <div class="madreDiv @(canje ? "hide" : "")" style="padding-right:0">
                         <label style="width:60px">Convenio</label>
@@ -276,7 +276,7 @@
                     </div>
                 </div>
             </div>
-            <div hidden class="ampliar">
+            <div hidden class="ampliar prestamoDevolucion">
                 <div class="col-sm-5 col-md-2 contratoAFijar">
                     <div class="madreDiv @(canje ? "hide" : "")" style="padding-right:0">
                         <label style="width:60px">Fasón</label>
@@ -285,14 +285,14 @@
                     </div>
                 </div>
             </div>
-            <div class="ampliar @(!canje ? "hide" : "")">
+            <div class="ampliar @(!canje ? "hide" : "") prestamoDevolucion">
                 <div class="col-sm-2" id="canjeDiv">
                     <label>Canje</label>
                     <input id="canjeId" class="campo-input-input" data-bind="checked:Parametros.canjeId, disabled: isControlDisabled" type="checkbox" onclick="HayCanje()" />
                 </div>
             </div>
         </div>
-        <div class="row ampliar">
+        <div class="row ampliar prestamoDevolucion">
             <div class="contratoAFijar acuerdoSinPrecio" id="contratoAfijarDiv">
                 <div class="col-sm-2 ">
                     <label>Fijación Mínimo-Máximo(Kg)</label>
@@ -308,7 +308,7 @@
                 </div>
             </div>
         </div>
-        <div class="row acuerdo ampliar">
+        <div class="row acuerdo ampliar prestamoDevolucion">
             <div class="contratoAFijar noFason noAgente acuerdoSinPrecio" id="condicion">
                 <div class="col-sm-2 ">
                     <label>Condición fijación</label>
