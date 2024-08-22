@@ -5,7 +5,7 @@
 		<TargetDatabaseName>DataAgroDEV</TargetDatabaseName>
 		<DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
 		<!--<TargetConnectionString>Data Source=APPAGLQA.molinosagro.ad;Integrated Security=True;Pooling=False</TargetConnectionString>-->
-		<TargetConnectionString>Data Source=APPAGLQA.molinosagro.ad;User Id=dataagrot;Password=MOA.Test;initial catalog=DataAgroDEV;Pooling=False</TargetConnectionString>
+		<TargetConnectionString>Data Source=APPAGLQA.molinosagro.ad;User Id=MOLINOSAGRO\dataagrot;Password=MOA.Test;initial catalog=DataAgroDEV;Pooling=False</TargetConnectionString>
 		<ProfileVersionNumber>1</ProfileVersionNumber>
 		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
 		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
