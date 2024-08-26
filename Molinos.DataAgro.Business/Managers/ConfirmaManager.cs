@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Business.Managers
                         };
                         //Enviando Confirma a RFC como BoletoGeneradoDto
                         logger.Debug("Confirma: Enviando Boleto confirma" + tempConfirma.ToString());
-                        var res = oEnviarBoletoAgent.Enviar(ConfirmaABoletoDto(tempConfirma));
+                        var res = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
                         logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
                         { //Generado exitosamente en RFC
@@ -663,9 +663,9 @@ namespace Molinos.DataAgro.Business.Managers
             };
         }
 
-        private static BoletoGeneradoDto ConfirmaABoletoDto(ConfirmaGeneradoDto tempConfirma)
+        private static BoletoDto ConfirmaABoletoDto(ConfirmaGeneradoDto tempConfirma)
         {
-            return new BoletoGeneradoDto
+            return new BoletoDto
             {
                 NegocioId = tempConfirma.NegocioId,
                 Version = 1,

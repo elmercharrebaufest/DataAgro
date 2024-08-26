@@ -6,11 +6,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -22,13 +18,13 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
         public DatosEstadoBoletoDto EstadoBoleto(string ContratoSAP, string FijacionSAP)
         {
-            logger.Debug("Enviando ContratoSAP Nro: " + ContratoSAP);
+            logger.Debug("Consultando EstadoBoleto del ContratoSAP Nro " + ContratoSAP);
             //Cambiar el Dto a la convencion de DA
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
@@ -55,14 +51,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             try
             {
-
                 SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-
-                logger.Debug("Cargando contrato");
                 var rq = new Z_MPRFC_CONSULTAR_ESTADO_BOLET()
                 {
                     IM_CONTRATO = ContratoSAP,
@@ -97,10 +90,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     FechaConfirmacion = devolucion.EX_FECHA_CONFIR,
                     Generado = devolucion.EX_GENERADO
                 };
-                foreach(var item in devolucion.EX_COND_FIJACION)
+                foreach (var item in devolucion.EX_COND_FIJACION)
                 {
-                    estadoBoleto.CondicionFijacion.Add(new CondicionFijacionEstadoBoletoDto {
-                        Contrato = item.CONTRNUM, 
+                    estadoBoleto.CondicionFijacion.Add(new CondicionFijacionEstadoBoletoDto
+                    {
+                        Contrato = item.CONTRNUM,
                         CantidadMaxima = item.CANT_MAX,
                         CantidadMinima = item.CANT_MIN,
                         FechaDesde = item.FE_DESDE,
@@ -113,8 +107,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
-                throw e;
+                logger.Error("Error comunicacion SAP en EstadoBoletoAgent: ", e);
+                throw;
             }
         }
     }

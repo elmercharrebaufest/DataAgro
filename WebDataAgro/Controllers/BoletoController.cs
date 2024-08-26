@@ -57,10 +57,10 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerarBoletos(BoletoGeneradoDto boleto)
+        public ActionResult GenerarBoletos(BoletoDto boleto)
         {
             CompletarVista();
-            //List<string> contratos = new List<string>();
+            List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
             if (boleto.TipoNegocioId == 1) // Contrato
             {
@@ -71,7 +71,6 @@ namespace WebDataAgro.Controllers
             {
                 tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
             }
-            List<string> contratos = new List<string>();
 
             boleto.ContratoSAP = Regex.Replace(boleto.ContratoSAP, @"\s+", ";");
 
@@ -79,11 +78,11 @@ namespace WebDataAgro.Controllers
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }
-            var boletos = boletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
-            //var boletos = new BoletoGeneradoDto { ContratoSAP = "000036363", Generado = true };
+            var boletos = boletoManager.GrabarBoleto(contratos, tipoNegocios, GlobalVariables.ComercialId, boleto.Mail, GlobalVariables.EquipoReal);
+
             return new JsonResult()
             {
-                Data = boletos.boletosGenerados,
+                Data = boletos.BoletosDto,
                 MaxJsonLength = Int32.MaxValue
             };
         }

@@ -326,7 +326,7 @@
     <Compile Include="Dto\TokenBCR.cs" />
     <Compile Include="Dto\TopeSugerenciasPorDiaPorProveedor.cs" />
     <Compile Include="Dto\BoletoArchivoDto.cs" />
-    <Compile Include="Dto\BoletoGeneradoDto.cs" />
+    <Compile Include="Dto\BoletoDto.cs" />
     <Compile Include="Dto\ContratoIdKgPendiente.cs" />
     <Compile Include="Dto\SugerenciaCupoExcel.cs" />
     <Compile Include="Dto\BoletoResult.cs" />

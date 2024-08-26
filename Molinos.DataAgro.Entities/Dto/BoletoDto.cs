@@ -2,11 +2,10 @@
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public partial class BoletoGeneradoDto
+    public partial class BoletoDto
     {
         public string ContratoSAP { get; set; }
         public int TipoNegocioId { get; set; }
-        public int TipoNegocioDetalleId { get; set; }
         public int TipoBoletoId { get; set; }
         public int NegocioId { get; set; }
         public int ComercialId { get; set; }
@@ -16,6 +15,5 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Mensaje { get; set; }
         public string FijacionSAP { get; set; }
         public DateTime FechaGeneracion { get; set; }
-        public bool IsConfirma { get; set; }
     }
 }

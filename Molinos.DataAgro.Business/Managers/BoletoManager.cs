@@ -8,7 +8,6 @@ using iTextSharp.tool.xml.parser;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
-using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -40,9 +39,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulas servicioClausula;
         private readonly IStatusContratoAgent status;
 
-        public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent
-            , IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IEnviarBoletoAgent oEnviarBoletoAgent
-            , IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
+        public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, 
+            IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -55,126 +53,107 @@ namespace Molinos.DataAgro.Business.Managers
             this.status = status;
         }
 
-        public BoletoResult GrabarBoleto(List<int> tipoNegocios, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo)
+        public BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, int comercialId, bool enviarEmail, List<int> equipo)
         {
-            var error = new BoletoResult { boleto = new Boleto() };
+            var boletoResult = new BoletoResult();
             try
             {
-                var request = new DataSourceRequest();
-                var result = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, false, equipo, new List<int>()));
+                var basicoContratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, false, equipo, new List<int>()));
+                var negociosHabilitados = FiltrarNegociosHabilitados(basicoContratos);
 
-                var negocios = FiltrarNegocios(result, tipoNegocios);
-                var comercial = repositorio.Obtener<Comercial>(comercialId);
-                var contratosSinNegocio = contratos.Where(x => negocios.All(n => n.ContratoSAP != x && n.Negocio != x));
-                foreach (var itemNegocio in negocios)
+                foreach (string itemContrato in contratos)
                 {
-                    if (tipoNegocios.Exists(x => x == itemNegocio.TipoNegocioId))
+                    var habilitado = negociosHabilitados.Exists(n => n.Negocio.Contains(itemContrato) || n.ContratoSAP.Contains(itemContrato));
+                    if (!habilitado)
                     {
-                        var mensaje = ValidarNegocioEnGeneracionBoleto(itemNegocio, itemNegocio.TipoNegocioId);
-                        if (!string.IsNullOrEmpty(mensaje))
-                        {
-                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, mensaje));
-                            continue;
-                        }
-
-                        var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : "");
-
-                        if (consultaBoleto.Generado == "" || consultaBoleto.Generado.Equals("X")) // probar casos anulados
-                        {
-                            var tempBoleto = new BoletoGeneradoDto
-                            {
-                                NegocioId = itemNegocio.Id,
-                                Version = Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1,
-                                ComercialId = comercialId,
-                                FechaGeneracion = DateTime.Now,
-                                //TipoNegocioDetalleId = itemNegocio.TipoNegocioId,
-                                ContratoSAP = itemNegocio.ContratoSAP,
-                                FijacionSAP = itemNegocio.FijacionSAP,
-                                TipoBoletoId = itemNegocio.BoletoId.Value
-                            };
-                            logger.Debug("Enviando boleto" + tempBoleto.ToString());
-                            var resultado = oEnviarBoletoAgent.Enviar(tempBoleto);
-                            if (resultado == "Se actualizan correctamente los datos")
-                            {
-                                var guardaBoleto = repositorio.Agregar(ConvertirDtoAEntidad(tempBoleto));
-                                error.boletos.Add(guardaBoleto);
-                                var boletoGenerado = DevolverDto(itemNegocio, true, tempBoleto.Version, "");
-
-                                var pdf = GenerarPDF(itemNegocio, ObtenerClausulas(itemNegocio), boletoGenerado);
-
-                                try
-                                {
-                                    if (enviarEmail)
-                                    {
-                                        var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
-                                        EnviarMailBoleto(itemNegocio.BoletoDescripcion,
-                                            (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : itemNegocio.TipoNegocio,
-                                            String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
-                                            itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0'),
-                                            tempBoleto.Version.ToString(), comercial, emailproveedor, pdf, (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0')));
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    error.ListaErrores.Add(new ErrorMessage { Message = " Error al enviar el email: " + ex.Message });
-                                }
-
-                                try
-                                {
-                                    File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
-                                         + (itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP.TrimStart('0') + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
-                                }
-                                catch (Exception ex)
-                                {
-                                    boletoGenerado.Mensaje += " Error al grabar el PDF del Boleto: " + ex.Message;
-                                }
-                                error.boletosGenerados.Add(boletoGenerado);
-                            }
-                            else
-                            {
-                                error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, resultado));
-                            }
-                        }
-                        else
-                        {
-                            if (consultaBoleto.Generado != "") logger.Info($"Boleto.Generado = {consultaBoleto.Generado} -- contrato SAP {itemNegocio.ContratoSAP}");
-                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El boleto ya se encuentra generado en SAP."));
-                        }
+                        boletoResult.BoletosDto.Add(DevolverDto(new BasicoContrato { ContratoSAP = itemContrato }, false, 0, "El negocio no está habilitado para generar boleto."));
+                    }
+                }
+                foreach (var negocio in negociosHabilitados)
+                {
+                    if (!tipoNegocios.Exists(x => x == negocio.TipoNegocioId))
+                    {
+                        boletoResult.BoletosDto.Add(DevolverDto(negocio, false, 0, "El negocio no corresponde al tipo de negocio indicado."));
                     }
                     else
                     {
-                        error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "El negocio no corresponde al tipo de negocio indicado."));
-                    }
-                }
-                foreach (string itemContrato in contratos)
-                {
-                    var neg = negocios.Find(n => n.Negocio.Contains(itemContrato) || n.ContratoSAP.Contains(itemContrato));
-                    if (neg == null)
-                    {
-                        error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = (int)EnumTipoNegocio.A_PRECIO, ContratoSAP = itemContrato }, false, 0, "El negocio no está habilitado para generar boleto."));
+                        var boletoDto = ValidarNegocioParaGenerarBoleto(negocio);
+                        boletoDto.ComercialId = comercialId;
+
+                        if (!string.IsNullOrEmpty(boletoDto.Mensaje))
+                        {
+                            boletoDto.Generado = false;
+                            boletoResult.BoletosDto.Add(boletoDto);
+                            continue;
+                        }
+
+                        logger.Debug("Enviando boleto " + boletoDto.ToString());
+                        var resultado = oEnviarBoletoAgent.EnviarBoleto(boletoDto);
+                        if (resultado == "Se actualizan correctamente los datos")
+                        {
+                            boletoDto.Generado = true;
+                            var guardarBoleto = repositorio.Agregar(ConvertirBoletoDtoAEntidad(boletoDto));
+                            boletoResult.BoletosGenerados.Add(guardarBoleto);
+                            var pdf = GenerarPDF(negocio, ObtenerClausulas(negocio), boletoDto);
+                            if (enviarEmail)
+                            {
+                                try
+                                {
+                                    var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (negocio.CorredorId != 0 ? negocio.CorredorId : negocio.ProveedorId) && x.Boleto == true);
+                                    var comercial = repositorio.Obtener<Comercial>(comercialId);
+                                    EnviarMailBoleto(negocio.BoletoDescripcion,
+                                        (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : negocio.TipoNegocio,
+                                        String.IsNullOrEmpty(negocio.RazonSocialCorredor) ? negocio.RazonSocialProveedor : negocio.RazonSocialCorredor,
+                                        negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.Negocio.Substring(negocio.Negocio.Length - 2) : negocio.ContratoSAP.TrimStart('0'),
+                                        boletoDto.Version.ToString(), comercial, emailproveedor, pdf, (negocio.ContratoSAP.TrimStart('0') + "_V" + boletoDto.Version.ToString().PadLeft(2, '0')));
+                                }
+                                catch (Exception ex)
+                                {
+                                    boletoDto.Mensaje += "Error al enviar el email del boleto: " + ex.Message;
+                                    logger.Error(ex);
+                                }
+                            }
+                            try
+                            {
+                                File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
+                                     + (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (negocio.ContratoSAP + "_F" + negocio.Negocio.Substring(negocio.Negocio.Length - 3, 2)) : (negocio.ContratoSAP.TrimStart('0') + "_V" + boletoDto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
+                            }
+                            catch (Exception ex)
+                            {
+                                boletoDto.Mensaje += "Error al guardar el PDF del boleto: " + ex.Message;
+                                logger.Error(ex);
+                            }
+                            boletoDto.Mensaje = "El boleto se generó correctamente.";
+                            boletoResult.BoletosDto.Add(boletoDto);
+                        }
+                        else
+                        {
+                            boletoDto.Generado = false;
+                            boletoDto.Mensaje = resultado;
+                            boletoResult.BoletosDto.Add(boletoDto);
+                        }
                     }
                 }
 
-                //repositorio.AgregarTodos(error.boletos);
                 repositorio.GuardarCambios();
             }
             catch (Exception e)
             {
                 logger.Error(e);
-                error.Errores.Add(new ErrorMessage(400, e.Message));
+                boletoResult.Error("Error en GrabarBoleto", e.Message);
             }
-            return error;
+
+            return boletoResult;
         }
 
-        private static Boleto ConvertirDtoAEntidad(BoletoGeneradoDto tempBoleto)
+        private static Boleto ConvertirBoletoDtoAEntidad(BoletoDto tempBoleto)
         {
             return new Boleto
             {
                 NegocioId = tempBoleto.NegocioId,
                 Version = tempBoleto.Version,
-                ComercialId = tempBoleto.ComercialId,
                 FechaGeneracion = tempBoleto.FechaGeneracion,
-                //TipoNegocioDetalleId = tempBoleto.TipoNegocioDetalleId
+                ComercialId = tempBoleto.ComercialId
             };
         }
 
@@ -205,9 +184,9 @@ namespace Molinos.DataAgro.Business.Managers
             return strIdent;
         }
 
-        private static BoletoGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, int version, string mensaje)
+        private static BoletoDto DevolverDto(BasicoContrato itemNegocio, bool generado, int version, string mensaje)
         {
-            return new BoletoGeneradoDto
+            return new BoletoDto
             {
                 ContratoSAP = Convert.ToInt64(itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.Negocio : itemNegocio.ContratoSAP).ToString(),
                 Generado = generado,
@@ -216,25 +195,26 @@ namespace Molinos.DataAgro.Business.Managers
             };
         }
 
-        private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios, List<int> tipoNegocios)
+        private List<BasicoContrato> FiltrarNegociosHabilitados(IQueryable<BasicoContrato> negocios)
         {
             List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
             List<BasicoContrato> negociosFiltrados = new List<BasicoContrato>();
+            
             foreach (var negocio in negocios)
             {
                 foreach (var tipo in tipoNegocioDetalles)
                 {
                     if (tipo.Descripcion == negocio.TipoNegocio)
                     {
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
+                        if (negocio.BoletoContratoId == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
+                        if (negocio.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
                         {
                             negociosFiltrados.Add(negocio);
                         }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
+                        if (negocio.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
                         {
                             negociosFiltrados.Add(negocio);
                         }
@@ -252,7 +232,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
+        private void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
         {
             var lista = new List<string>();
 
@@ -357,7 +337,7 @@ namespace Molinos.DataAgro.Business.Managers
             return result.OrderBy(x => x.Orden).ToList();
         }
 
-        public byte[] GenerarPDF(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto)
+        private byte[] GenerarPDF(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoDto boleto)
         {
             try
             {
@@ -433,7 +413,7 @@ namespace Molinos.DataAgro.Business.Managers
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
         }
 
-        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
+        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoDto boleto, string xHtml, bool esCartaOferta)
         {
             string clausulashtml = String.Join("", clausulas.OrderBy(a => a.Orden).Select(a => "<br />" + a.Orden + " . " + a.Texto).ToList());
             var stylesHtml = @"<style type='text/css'>
@@ -614,56 +594,55 @@ namespace Molinos.DataAgro.Business.Managers
             return xHtml;
         }
 
-        private string ValidarNegocioEnGeneracionBoleto(BasicoContrato contrato, int tipoNegocio)
+        public BoletoDto ValidarNegocioParaGenerarBoleto(BasicoContrato negocio)
         {
-            var mensaje = "";
-            var kilosDisponibles = 10000;
-            if (tipoNegocio == (int)EnumTipoNegocio.FIJACION)
+            var estadoBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(negocio.ContratoSAP, negocio.FijacionSAP);
+            var boletoDto = new BoletoDto
             {
-                if (contrato != null)
+                NegocioId = negocio.Id,
+                FechaGeneracion = DateTime.Now,
+                ContratoSAP = negocio.ContratoSAP,
+                FijacionSAP = negocio.FijacionSAP,
+                TipoBoletoId = negocio.BoletoId.Value,
+                Version = Convert.ToInt32(String.IsNullOrEmpty(estadoBoleto.Version) ? "0" : estadoBoleto.Version) + 1
+            };
+
+            if (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                boletoDto.Mensaje = $"No se pudo generar el boleto porque el negocio tiene tilde de Confirma.";
+
+            else if (!string.IsNullOrEmpty(estadoBoleto.Generado) && string.IsNullOrEmpty(estadoBoleto.Anulado))
+                boletoDto.Mensaje = $"El negocio ya tiene un boleto generado en SAP.";
+
+            else if (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
+            {
+                if (negocio.BoletoId != (int)EnumBoletoCompraNet.FISICO && negocio.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
                 {
-                    if (contrato.Cantidad < kilosDisponibles)
-                    {
-                        mensaje = "No se pudo generar el boleto para la fijación por su cantidad menor a 10 toneladas.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
-                    }
-                    if (contrato.PlanCanje != true)
-                    {
-                        mensaje = "No se pudo generar el boleto para la fijación por no ser de Plan Canje su A Fijar Correspondiente.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por no ser de Plan Canje su A Fijar Correspondiente.");
-                    }
-                    if (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
-                    {
-                        mensaje = "No se pudo generar el boleto para la fijación por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.";
-                        logger.Debug($"No se pudo generar el boleto para la fijacion {contrato.FijacionSAP} por no tener tilde de boleto físico o carta oferta su A Fijar Correspondiente.");
-                    }
+                    boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación no tiene tilde de boleto físico o carta oferta.";
                 }
-                else
+                else if (negocio.Cantidad < 10000)
                 {
-                    mensaje = "No se encontró el contrato para la fijación seleccionada.";
+                    boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación tiene cantidad menor a 10 toneladas.";
+                }
+                else if (negocio.PlanCanje != true)
+                {
+                    boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación no es de Plan Canje.";
                 }
             }
             else
             {
-                var res = status.ValidarEstado(contrato.ContratoSAP);
-                if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
+                var res = status.ValidarEstado(negocio.ContratoSAP); //en fijaciones no se valida el estado
+                if (string.IsNullOrEmpty(res.Status))
+                {
+                    boletoDto.Mensaje = $"No se pudo generar el boleto porque el contrato está en slip.";
+                }
+                else if (res.Status != "X")
                 {
                     string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
-                    mensaje = $"No se pudo generar el boleto para el contrato por su estado: {motivoStatus}";
-                    logger.Debug($"No se pudo generar el boleto por el status: {res.Status} ({motivoStatus}) - ContratoSAP: {contrato.ContratoSAP}");
-                }
-                else if (string.IsNullOrEmpty(res.Status))
-                {
-                    mensaje = $"No se pudo generar el boleto para el contrato por estar en slip.";
-                    logger.Debug($"No se pudo generar el boleto por tener status vacío (slip) - ContratoSAP: {contrato.ContratoSAP}");
+                    boletoDto.Mensaje = $"No se pudo generar el boleto por el estado del contrato: {res.Status} - {motivoStatus}";
                 }
             }
-            if (contrato != null && contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-            {
-                mensaje = "No se pudo generar el boleto por tener tilde de Confirma.";
-                logger.Debug($"No se pudo generar el boleto para el negocio {contrato.ContratoSAP} por tener tilde de Confirma.");
-            }
-            return mensaje;
+
+            return boletoDto;
         }
 
         private string StatusNegocioEnGeneracionBoleto(EstadoSAPDto statusNegocio)
