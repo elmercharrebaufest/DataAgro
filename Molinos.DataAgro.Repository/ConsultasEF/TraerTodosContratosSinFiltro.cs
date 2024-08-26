@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         OperadorId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Id : 0,
                         AgenteId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Id : 0,
                         PrecioNeto = contrato.PrecioNeto,
-                        StandardCalidadId = contrato.StandardDeCalidadId,
+                        StandardDeCalidadId = contrato.StandardDeCalidadId,
                         StandardDeCalidadDescripcion = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.Descripcion : "",
                         Pizarra = contrato.Pizarra,
                         PagoDiferido = contrato.PagoDiferido,

@@ -122,7 +122,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<PrecioPactadosDto> PreciosPactados { get; set; }
         public decimal? PrecioNeto { get; set; }
         public bool? Pizarra { get; set; }
-        public int? StandardCalidadId { get; set; }
+        public int? StandardDeCalidadId { get; set; }
         public string StandardDeCalidadDescripcion { get; set; }
         public bool? PagoDiferido { get; set; }
         public int? PagoDiferidoTerceroId { get; set; }
@@ -245,7 +245,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int KgMaximo { get; set; }
         public int? ProveedorComisionistaId { get; set; }
         public string RazonSocialProveedorComisionista { get; set; }
-        public int StandardDeCalidadId { get; set; }
         public string DestinoLocalidad { get; set; }
         public string DestinoProvincia { get; set; }
         public string MonedaCanjeDescripcion { get; set; }
@@ -283,11 +282,5 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CampanaConfirma { get; set; }
         public string ProvinciaConfirma { get; set; }
         public string DestinoConfirma { get; set; }
-    }
-
-    public class StoredPorContratoResult
-    {
-        public List<BasicoContrato> BasicoContratoTraerPorFiltro { get; set; }
-        public List<BasicoContrato> ReporteContratoContratoTraerPorFiltro { get; set; }
     }
 }

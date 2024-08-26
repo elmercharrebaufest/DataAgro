@@ -3211,7 +3211,7 @@ namespace Molinos.DataAgro.Business.Managers
                 EsFason = x.EsFason,
                 ContratoMadre = x.ContratoMadre,
                 Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido = x.PagoDiferido,
                 PagoDiferidoTerceroId = x.PagoDiferidoTerceroId,
@@ -3907,7 +3907,7 @@ namespace Molinos.DataAgro.Business.Managers
                     PorcentajeDesde = y.PorcentajeDesde,
                     PorcentajeHasta = y.PorcentajeHasta
                 }).ToList(),
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 Dolarizado = x.Dolarizado == true || x.DolarizadoCorredor == true,
                 PagoDiferido = x.PagoDiferido,
@@ -5142,7 +5142,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MonedaId = !string.IsNullOrEmpty(x.MonedaId) ? x.MonedaId : "",
                     Cantidad = x.Cantidad,
                     Precio = x.Precio,
-                    StandardCalidadId = x.StandardDeCalidadId,
+                    StandardDeCalidadId = x.StandardDeCalidadId,
                     StandardDeCalidadDescripcion = x.StandardDeCalidad != null ? x.StandardDeCalidad.Descripcion : "",
                     Calidades = x.Calidad.Select(y => new CalidadDto
                     {
@@ -5207,7 +5207,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 MonedaId = !string.IsNullOrEmpty(x.MonedaId) ? x.MonedaId : "",
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 DesdeFijacion = x.DesdeFijacion,
                 HastaFijacion = x.HastaFijacion,
@@ -5705,7 +5705,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.OperadorId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).OperadorId : 0;
             bc.AgenteId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).Id : 0;
             bc.PrecioNeto = negocio.PrecioNeto;
-            bc.StandardCalidadId = negocio.StandardDeCalidadId;
+            bc.StandardDeCalidadId = negocio.StandardDeCalidadId;
             bc.Pizarra = negocio.Pizarra ?? null;
             bc.PagoDiferido = negocio.PagoDiferido ?? null;
             bc.ZonaId = (negocio is Contrato) ? (negocio as Contrato).ZonaId : null;
@@ -6107,7 +6107,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.SelCargoMOA = acuerdo.SelCargoMOA;
                 contrato.SelCargoVendedor = acuerdo.SelCargoVendedor;
                 contrato.MercsDeposito = acuerdo.MercsDeposito;
-                contrato.StandardDeCalidadId = acuerdo.StandardCalidadId;
+                contrato.StandardDeCalidadId = acuerdo.StandardDeCalidadId;
                 contrato.ZonaId = acuerdo.ZonaId;
                 contrato.Pizarra = acuerdo.Pizarra == true;
                 contrato.CaratulaMAT = acuerdo.CaratulaMAT;

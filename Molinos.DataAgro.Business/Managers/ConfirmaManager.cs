@@ -403,7 +403,7 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Calidad
 
                                     new XElement("Calidad",
-                                        new XElement("CondicionesCalidad", new XAttribute("CodLista", (contrato.StandardCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : ""))),
+                                        new XElement("CondicionesCalidad", new XAttribute("CodLista", (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : ""))),
                                         new XElement("OtrasCondicionesCalidad")
                                     ),
 

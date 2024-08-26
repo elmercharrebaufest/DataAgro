@@ -1935,7 +1935,7 @@ namespace Molinos.DataAgro.Test.Managers
                     Madre = false,
                     ContratoMadre = "",
                     Pizarra = false,
-                    StandardCalidadId = 2,
+                    StandardDeCalidadId = 2,
                     Calidades = cal,
                     Descuentos = desc,
                     AperturaPrecios = ap
@@ -2296,7 +2296,7 @@ namespace Molinos.DataAgro.Test.Managers
                     Madre = false,
                     ContratoMadre = "",
                     Pizarra = false,
-                    StandardCalidadId = 2
+                    StandardDeCalidadId = 2
                 });
 
 
@@ -2501,7 +2501,7 @@ namespace Molinos.DataAgro.Test.Managers
                      Madre = false,
                      ContratoMadre = "",
                      Pizarra = false,
-                     StandardCalidadId = 2
+                     StandardDeCalidadId = 2
                  });
 
             var resultado = target.TraerContratoAcuerdoACopiar(1);
@@ -4586,7 +4586,7 @@ namespace Molinos.DataAgro.Test.Managers
                                 Madre = false,
                                 ContratoMadre = "",
                                 Pizarra = false,
-                                StandardCalidadId = 2,
+                                StandardDeCalidadId = 2,
                                 AperturaPrecios = new List<AperturaPrecioDto> { new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 1 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 2 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 3 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 4 } },
                                 Descuentos = new List<DescuentoBonificacionDto>(),
                                 Calidades = new List<CalidadDto>(),
@@ -5702,7 +5702,7 @@ namespace Molinos.DataAgro.Test.Managers
                     Madre = false,
                     ContratoMadre = "",
                     Pizarra = false,
-                    StandardCalidadId = 2,
+                    StandardDeCalidadId = 2,
                     AperturaPrecios = new List<AperturaPrecioDto> { new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 1 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 2 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 3 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 4 } },
                     Descuentos = new List<DescuentoBonificacionDto>(),
                     Calidades = new List<CalidadDto>(),
