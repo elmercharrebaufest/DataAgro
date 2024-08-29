@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -44,24 +43,13 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        public ActionResult InicializarContrato(int? tipoNegocioId)
-        {
-            return new JsonResult()
-            {
-                Data = new ContratoModel_prueba
-                {
-                    Datos = boletoManager.TraerDatosCombo(tipoNegocioId)
-                },
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
         [HttpPost]
         public ActionResult GenerarBoletos(BoletoDto boleto)
         {
             CompletarVista();
             List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
+            boleto.ComercialId = GlobalVariables.ComercialId;
             if (boleto.TipoNegocioId == 1) // Contrato
             {
                 tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
@@ -78,7 +66,7 @@ namespace WebDataAgro.Controllers
             {
                 contratos.Add(itemContrato.PadLeft(10, '0'));
             }
-            var boletos = boletoManager.GrabarBoleto(contratos, tipoNegocios, GlobalVariables.ComercialId, boleto.Mail, GlobalVariables.EquipoReal);
+            var boletos = boletoManager.GrabarBoleto(contratos, tipoNegocios, boleto, GlobalVariables.EquipoReal);
 
             return new JsonResult()
             {
@@ -208,5 +196,15 @@ namespace WebDataAgro.Controllers
                 Data = boletoManager.FiltrarNegociosNumeroSAP(contratoDesde, contratoHasta, negocio)
             };
         }
+
+        [HttpGet]
+        public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
+        {
+            ViewBag.Clausulas = boletoManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
+            ViewBag.NegocioSAP = numeroSap;
+            ViewBag.TipoNegocio = tipoNegocio;
+            return View();
+        }
+
     }
 }

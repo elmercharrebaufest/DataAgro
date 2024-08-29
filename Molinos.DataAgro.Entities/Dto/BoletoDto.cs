@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -15,5 +16,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Mensaje { get; set; }
         public string FijacionSAP { get; set; }
         public DateTime FechaGeneracion { get; set; }
+        public List<string> Clausulas { get; set; } = new List<string>();
     }
 }

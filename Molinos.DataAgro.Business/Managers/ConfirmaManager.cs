@@ -1,30 +1,21 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Clausulas;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using Molinos.DataAgro.Entities.Common.Enums;
-using System.Globalization;
-using System.Xml;
-using Molinos.DataAgro.Interfaces.Clausulas;
-using System.Xml.Linq;
-using iTextSharp.tool.xml.html.head;
-using static iTextSharp.text.pdf.AcroFields;
-using System.Diagnostics.Contracts;
-using System.ServiceModel.Channels;
-using System.Web.UI.WebControls;
-using Molinos.DataAgro.Agent.ScatoRepositorio;
 using System.Linq.Dynamic;
-using iTextSharp.xmp.impl;
+using System.Net.Mail;
+using System.Xml.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -62,14 +53,14 @@ namespace Molinos.DataAgro.Business.Managers
         public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo)
         {
             var codigos = AgregarCeros(codigosSap);
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
             if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
             else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             var resultado = new ConfirmaResult();
             try
             {
-                if (contratos==null || contratos.Count==0)
+                if (contratos == null || contratos.Count == 0)
                 {
                     logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {String.Join("\n", codigosSap)} siendo los codigos completos: {String.Join("\n", codigos)}");
                     resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
@@ -99,9 +90,9 @@ namespace Molinos.DataAgro.Business.Managers
                             FechaGeneracion = DateTime.Now,
                             ContratoSAP = contrato.ContratoSAP,
                             FijacionSAP = contrato.FijacionSAP,
-                            TipoBoletoId = contrato.TipoNegocioId==(int)EnumTipoNegocio.FIJACION?1:contrato.BoletoId.GetValueOrDefault(),
+                            TipoBoletoId = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? 1 : contrato.BoletoId.GetValueOrDefault(),
                             IsWebService = usarWebServiceConfirma,
-                            NegocioSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP:contrato.ContratoSAP,
+                            NegocioSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP,
                             Mensaje = string.Empty,
                             Generado = true
                         };
@@ -122,7 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.FijacionSAP??contrato.ContratoSAP}");
+                        logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
                         resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP."));
                     }
                 }
@@ -137,7 +128,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
- 
+
 
         public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int claseNegocio, List<int> equipo)
         {
@@ -160,7 +151,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<string> ValidarNegocios(List<string> codigosSAP, int claseNegocio, List<int> equipo)
         {
             var codigos = AgregarCeros(codigosSAP);
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, false, equipo, new List<int>()));
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             List<string> rechazados = new List<string>();
             foreach (var contrato in contratos)
@@ -197,7 +188,7 @@ namespace Molinos.DataAgro.Business.Managers
             var codigoSAPcompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
             var mensaje = "";
 
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { codigoSAPcompleto }, false, equipo, new List<int>()));
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { codigoSAPcompleto }, equipo));
             var contrato = consulta.First();
 
             mensaje += ValidarContrato(contrato, claseNegocio);
@@ -228,7 +219,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
                         return mensaje;
                     }
-                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId==(int)EnumTipoNegocio.A_FIJAR);
+                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR);
                     if (a_fijar.PlanCanje != true)
                     {
                         mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por no ser de Plan Canje el A Fijar correspondiente.";
@@ -323,7 +314,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 //Cargar Datos
                 var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
-                var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, false, equipo, new List<int>()));
+                var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
                 var contrato = consulta.First();
                 logger.Info($"Se Busca Negocio de Confirma SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
                 var existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
@@ -655,7 +646,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new ConfirmaGeneradoDto
             {
-                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP:itemNegocio.ContratoSAP,
+                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
                 FechaGeneracion = default(DateTime),

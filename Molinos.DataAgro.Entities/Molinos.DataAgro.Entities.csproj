@@ -150,6 +150,7 @@
     </Reference>
     <Reference Include="System.Console" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Diagnostics.Tracing" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Globalization.Calendars" />

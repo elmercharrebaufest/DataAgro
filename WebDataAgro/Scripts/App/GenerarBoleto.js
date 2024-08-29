@@ -45,18 +45,8 @@ function GenerarBoleto() {
             } else {
                 $("#ModalBoleto").modal("show");
             }
-        }, 250);
+        }, 150);
     }
-}
-
-function AsignarDatos() {
-    viewModel.set("TipoCombo", datosIniCrearContrato.Datos.tiponegocio);
-    var contrato = {
-
-    };
-    var url = '/Compranet/TraerContratoCompleto';
-    var data = servicio;
-    var result = MSExecuteOnServer(url, data);
 }
 
 function ValidarGenerarBoletos() {

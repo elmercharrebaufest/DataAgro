@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulas servicioClausula;
         private readonly IStatusContratoAgent status;
 
-        public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, 
+        public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
             IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
         {
             this.repositorio = repositorio;
@@ -53,12 +53,12 @@ namespace Molinos.DataAgro.Business.Managers
             this.status = status;
         }
 
-        public BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, int comercialId, bool enviarEmail, List<int> equipo)
+        public BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, BoletoDto boletoContrato, List<int> equipo)
         {
             var boletoResult = new BoletoResult();
             try
             {
-                var basicoContratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, false, equipo, new List<int>()));
+                var basicoContratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo));
                 var negociosHabilitados = FiltrarNegociosHabilitados(basicoContratos);
 
                 foreach (string itemContrato in contratos)
@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                     {
                         var boletoDto = ValidarNegocioParaGenerarBoleto(negocio);
-                        boletoDto.ComercialId = comercialId;
+                        boletoDto.ComercialId = boletoContrato.ComercialId;
 
                         if (!string.IsNullOrEmpty(boletoDto.Mensaje))
                         {
@@ -94,13 +94,23 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoDto.Generado = true;
                             var guardarBoleto = repositorio.Agregar(ConvertirBoletoDtoAEntidad(boletoDto));
                             boletoResult.BoletosGenerados.Add(guardarBoleto);
-                            var pdf = GenerarPDF(negocio, ObtenerClausulas(negocio), boletoDto);
-                            if (enviarEmail)
+                            List<ResultadoClausula> clausulas = new List<ResultadoClausula>();
+                            if (boletoContrato.Clausulas.Any())
+                            {
+                                int orden = 1;
+                                clausulas = boletoContrato.Clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = orden++ }).ToList();
+                            }
+                            else
+                            {
+                                clausulas = ObtenerClausulas(negocio);
+                            }
+                            var pdf = GenerarPDF(negocio, clausulas, boletoDto);
+                            if (boletoContrato.Mail)
                             {
                                 try
                                 {
                                     var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (negocio.CorredorId != 0 ? negocio.CorredorId : negocio.ProveedorId) && x.Boleto == true);
-                                    var comercial = repositorio.Obtener<Comercial>(comercialId);
+                                    var comercial = repositorio.Obtener<Comercial>(boletoContrato.ComercialId);
                                     EnviarMailBoleto(negocio.BoletoDescripcion,
                                         (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : negocio.TipoNegocio,
                                         String.IsNullOrEmpty(negocio.RazonSocialCorredor) ? negocio.RazonSocialProveedor : negocio.RazonSocialCorredor,
@@ -199,7 +209,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
             List<BasicoContrato> negociosFiltrados = new List<BasicoContrato>();
-            
+
             foreach (var negocio in negocios)
             {
                 foreach (var tipo in tipoNegocioDetalles)
@@ -351,7 +361,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
                         var xHtml = templateString;
-                        xHtml = CompletarHtml(basico, clausulas, boleto, xHtml, false);
+                        xHtml = CompletarHtml(basico, clausulas, boleto, xHtml);
 
                         var PdfWriter = iTextSharp.text.pdf.PdfWriter.GetInstance(document, stream);
                         document.Open();
@@ -413,7 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
         }
 
-        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoDto boleto, string xHtml, bool esCartaOferta)
+        private string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoDto boleto, string xHtml)
         {
             string clausulashtml = String.Join("", clausulas.OrderBy(a => a.Orden).Select(a => "<br />" + a.Orden + " . " + a.Texto).ToList());
             var stylesHtml = @"<style type='text/css'>
@@ -774,6 +784,16 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return cuit;
+        }
+
+        public List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo)
+        {
+            contratoSap = contratoSap.PadLeft(10, '0');
+            List<string> clausulas = new List<string>();
+            var contratos = new List<string> { contratoSap };
+            var basicoContrato = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo)).FirstOrDefault();
+            clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
+            return clausulas;
         }
 
     }

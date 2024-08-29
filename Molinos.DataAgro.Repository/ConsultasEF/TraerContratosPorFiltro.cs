@@ -1,21 +1,12 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
-using System.Globalization;
 using System.Linq;
 using System.Transactions;
-
-
-
-
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -43,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var result = queryContratos.ToDataSourceResult<BasicoContrato>(request);
             var cargaDesde = DateTime.Now.Date;
             var cargaHasta = DateTime.Now.Date;
-           
+
             if (request.Filter != null && request.Filter.Filters != null)
             {
                 foreach (var item in request.Filter.Filters)
@@ -61,12 +52,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     }
                 }
             }
-            
 
-            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => (( a.FechaDesde >=cargaDesde && a.FechaDesde <= cargaHasta) 
+            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => ((a.FechaDesde >= cargaDesde && a.FechaDesde <= cargaHasta)
                                                                                       || (a.FechaHasta >= cargaDesde && a.FechaHasta <= cargaHasta)
-                                                                                      || (a.FechaDesde <= cargaDesde && a.FechaHasta >= cargaHasta)
-                                                                                      )
+                                                                                      || (a.FechaDesde <= cargaDesde && a.FechaHasta >= cargaHasta))
                                                                                       && a.PizarraId == 1).ToList();
             foreach (var item in result.Data)
             {
