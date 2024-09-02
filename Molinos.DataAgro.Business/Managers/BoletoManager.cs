@@ -111,11 +111,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (negocio.CorredorId != 0 ? negocio.CorredorId : negocio.ProveedorId) && x.Boleto == true);
                                     var comercial = repositorio.Obtener<Comercial>(boletoContrato.ComercialId);
-                                    EnviarMailBoleto(negocio.BoletoDescripcion,
-                                        (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? "Contrato" : negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "Fijación" : negocio.TipoNegocio,
-                                        String.IsNullOrEmpty(negocio.RazonSocialCorredor) ? negocio.RazonSocialProveedor : negocio.RazonSocialCorredor,
+                                    EnviarMailBoleto(negocio.BoletoDescripcion, String.IsNullOrEmpty(negocio.RazonSocialCorredor) ? negocio.RazonSocialProveedor : negocio.RazonSocialCorredor,
                                         negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.Negocio.Substring(negocio.Negocio.Length - 2) : negocio.ContratoSAP.TrimStart('0'),
-                                        boletoDto.Version.ToString(), comercial, emailproveedor, pdf, (negocio.ContratoSAP.TrimStart('0') + "_V" + boletoDto.Version.ToString().PadLeft(2, '0')));
+                                        boletoDto.Version.ToString(), comercial, emailproveedor, pdf, negocio.ContratoSAP.TrimStart('0') + "_V" + boletoDto.Version.ToString().PadLeft(2, '0'));
                                 }
                                 catch (Exception ex)
                                 {
@@ -242,7 +240,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        private void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
+        private void EnviarMailBoleto(string boletoDescripcion, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf, string nombrePDF)
         {
             var lista = new List<string>();
 
@@ -252,7 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 lista.Add(comercialRegistrado);
                 lista.Add("dataagro@molinosagro.com.ar");
-                logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
+                logger.Debug("Enviando mail Boleto a " + comercialRegistrado);
             }
             var subject = boletoDescripcion == "Físico" ? "Boleto Físico" : boletoDescripcion;
             subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + contrato;
@@ -262,28 +260,19 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailBoleto(String filePath, string contrato, string version)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
-            string th;
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            LinkedResource res = new LinkedResource(filePath)
             {
-                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
-            }
-            else
-            {
-                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
-            }
-            string htmlBody = "";
+                ContentId = Guid.NewGuid().ToString()
+            };
 
-            htmlBody += "Se le envía por este medio el boleto de compraventa de granos número " + contrato + " de Molinos Agro S.A., versión " + version +
+            string htmlBody = "Se le envía por este medio el boleto de compraventa de granos número " + contrato + " de Molinos Agro S.A., versión " + version +
                 ". Por favor imprimir con todas las copias incluidas (doble faz), firmar y subir a la web de www.moaoperaciones.com.ar y luego enviar a nuestras oficinas. <br />";
             htmlBody += "En caso de ser un boleto de Bolsa de Rosario, si no se envía impreso en doble faz se observará debido a que no están autorizando el obleado.<br/>" +
-                "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
-                "<br/><br/>Saludos Cordiales,<br/><br/>" +
-                "<br/><br/>Molinos Agro S.A.<br/><br/><br/><br/>" +
+                "<br/>En caso de tener alguna consulta, ingresar a www.moaoperaciones.com.ar " +
+                "<br/><br/>Saludos Cordiales," +
+                "<br/><br/>Molinos Agro S.A.<br/><br/>" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
-                "www.molinosagro.com.ar";
-            htmlBody += "<style> table, th, td{ }</style>";
+                "<br/>www.molinosagro.com.ar";
 
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
             alternateView.LinkedResources.Add(res);

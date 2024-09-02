@@ -1,11 +1,6 @@
-﻿using Kendo.DynamicLinq;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -19,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
         ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo);
         string GenerarNombreArchivoConfirma(string codigoSAP);
         byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo);
-        string EnviarMailConfirmas();
+        void EnviarMailConfirma(DateTime fecha);
         List<ConfirmaArchivoDto> ListarConfirmas();
 
     }
