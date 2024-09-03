@@ -489,7 +489,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 #region Fijacion
 
-                                        ((contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
+                                        (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
                                             new XElement("FijMinima", Convert.ToInt32(condiciones.CantidadMinima).ToString()),
                                             new XElement("FijMaxima", Convert.ToInt32(condiciones.CantidadMaxima).ToString()),
                                             new XElement("UnidadMedidaFijacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K")),
@@ -497,8 +497,9 @@ namespace Molinos.DataAgro.Business.Managers
                                             new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
                                             new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
                                             new XElement("PorcMultaIncumplimiento", "010"),
-                                            new XElement("ComunicacionFijacion", new XAttribute("CodLista", contrato.PagoDirectoVendedor == true ? "2" : "1"))
-                                        ) : null),
+                                            new XElement("ComunicacionFijacion", new XAttribute("CodLista", contrato.PagoDirectoVendedor == true ? "2" : "1")),
+                                            new XElement("PizarraFijacion", new XAttribute("CodLista", contrato.Pizarra == true ? "1" : ""))
+                                        ) : null,
 
                 #endregion Fijacion
 
