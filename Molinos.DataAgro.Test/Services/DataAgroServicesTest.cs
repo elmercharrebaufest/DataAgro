@@ -292,7 +292,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>(), true)).Returns(new Resultado());
+            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
             var result = target.ActualizarContratoSAP(contratoSap) as ResultadoSap;
             Assert.NotNull(result);
 
@@ -367,7 +367,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>(), true)).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
             var result = target.ActualizarContratoSAP(contratoSap) as ResultadoSap;
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
@@ -706,7 +706,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
 
-            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>(), true)).Returns(new Resultado());
+            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
             var result = target.AltaContratoSAP(contratoSap) as ResultadoSap;
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
@@ -792,7 +792,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
 
-            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>(), true)).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
 
             var result = target.AltaContratoSAP(contratoSap) as ResultadoSap;
             Assert.NotNull(result);

@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -60,7 +59,6 @@ namespace WebDataAgro.Services
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.proveedorManager = proveedorManager;
         }
-        #region Servicios de DataAgro
 
         public ResultadoSap Ping()
         {
@@ -190,7 +188,7 @@ namespace WebDataAgro.Services
                 {
                     return oEntityErrors;
                 }
-                var resultado = contratoManager.ActualizarContratoSAP(contrato, true);
+                var resultado = contratoManager.ActualizarContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)
@@ -237,7 +235,7 @@ namespace WebDataAgro.Services
                     return oEntityErrors;
                 }
 
-                var resultado = contratoManager.AltaContratoSAP(contrato, true);
+                var resultado = contratoManager.AltaContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
                 var idNuevo = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(contratoSAP.ContratoSAP), x => x.Id);
                 oEntityErrors.ContratoId = idNuevo != 0 ? idNuevo.ToString() : "";
@@ -1292,6 +1290,6 @@ namespace WebDataAgro.Services
                 throw;
             }
         }
-        #endregion
+        
     }
 }

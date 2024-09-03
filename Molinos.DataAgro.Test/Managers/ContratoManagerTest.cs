@@ -2565,7 +2565,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                Id = 1,
+                Id = 0,
                 ProveedorId = 1,
                 ComercialId = 1,
                 TipoNegocioId = 1,
@@ -2627,7 +2627,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             var oContratoBase = new Contrato()
             {
-                Id = 1,
+                Id = 0,
                 ProveedorId = 1,
                 ClasificacionId = 3,
                 CorredorId = null,
@@ -2686,7 +2686,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPactado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<PrecioPactado>());
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
 
-            var resultado = target.ActualizarContratoSAP(contrato, true);
+            var resultado = target.ActualizarContratoSAP(contrato);
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
@@ -2814,7 +2814,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
 
-            var resultado = target.ActualizarContratoSAP(oContrato, false);
+            var resultado = target.ActualizarContratoSAP(oContrato);
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
@@ -3823,7 +3823,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
 
-            var resultado = target.AltaContratoSAP(oContrato, false);
+            var resultado = target.AltaContratoSAP(oContrato);
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
