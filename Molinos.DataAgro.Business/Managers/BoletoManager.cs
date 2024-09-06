@@ -8,6 +8,7 @@ using iTextSharp.tool.xml.parser;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -16,6 +17,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Clausulas;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -163,6 +165,15 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaGeneracion = tempBoleto.FechaGeneracion,
                 ComercialId = tempBoleto.ComercialId
             };
+        }
+
+        public string ValidarNegocio(string negocioSAP, List<int> equipo)
+        {
+            var contratos = new List<string> { negocioSAP };
+            var basicoContratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo));
+            var contrato = FiltrarNegociosHabilitados(basicoContratos).FirstOrDefault();
+            var mensaje = contrato is null ? "No encontrado" : ValidarNegocioParaGenerarBoleto(contrato).Mensaje;
+            return mensaje;
         }
 
         public byte[] BoletoEnByte(string archivoUrl)
@@ -347,7 +358,6 @@ namespace Molinos.DataAgro.Business.Managers
                         string templateFilePath = ObtenerPath(basico);
 
                         var templateString = System.IO.File.ReadAllText(templateFilePath);
-
 
                         var xHtml = templateString;
                         xHtml = CompletarHtml(basico, clausulas, boleto, xHtml);
@@ -608,10 +618,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                 boletoDto.Mensaje = $"No se pudo generar el boleto porque el negocio tiene tilde de Confirma.";
-
             else if (!string.IsNullOrEmpty(estadoBoleto.Generado) && string.IsNullOrEmpty(estadoBoleto.Anulado))
                 boletoDto.Mensaje = $"El negocio ya tiene un boleto generado en SAP.";
-
             else if (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
             {
                 if (negocio.BoletoId != (int)EnumBoletoCompraNet.FISICO && negocio.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
@@ -691,40 +699,6 @@ namespace Molinos.DataAgro.Business.Managers
             return msje;
         }
 
-        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio)
-        {
-            var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var fechaHasta = hasta == "" ? DateTime.Now : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1);
-            var listaNegocios = new List<Negocio>();
-            if (tipoNegocio == 1)
-            {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta);
-            }
-            else
-            {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000);
-            }
-
-            return listaNegocios.Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-        }
-
-        public List<string> FiltrarNegociosNumeroSAP(int negocioDesde, int negocioHasta, int tipoNegocio)
-        {
-            var listaNegocios = new List<Negocio>();
-            if (tipoNegocio == 1)
-            {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true);
-            }
-            else
-            {
-                listaNegocios = repositorio.Listar<Negocio>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.Cantidad >= 10000);
-            }
-
-            List<string> codigos = listaNegocios.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            codigos.Sort();
-            return codigos;
-        }
-
         public void ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos)
         {
             foreach (string numeroNegocio in listaContratos)
@@ -742,12 +716,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                     var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio : "");
 
-
                     var lista = new List<string>();
                     string contrato = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? _negocio.Substring(_negocio.Length - 2) : itemNegocio.ContratoSAP.TrimStart('0');
                     string razonSocial = (itemNegocio.Corredor != null) ? itemNegocio.Corredor.RazonSocial : itemNegocio.Proveedor.RazonSocial;
                     string version = (Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1).ToString();
-
 
                     var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(itemNegocio.Comercial.IdActiveDirectory);
 
@@ -785,5 +757,142 @@ namespace Molinos.DataAgro.Business.Managers
             return clausulas;
         }
 
+        public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro)
+        {
+            var filter = CorregirFiltro(filtro);
+            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var data = result.Data as IEnumerable<BasicoBoleto>;
+
+            // Iterar sobre los datos y modificar atributos
+            foreach (var boleto in data)
+            {
+                boleto.Version_Proxima = boleto.Version_Proxima is null ? 1 : boleto.Version_Proxima + 1;
+            }
+            return result;
+        }
+
+        private DataSourceRequest CorregirFiltro(DataSourceRequest request)
+        {
+            if (request.Filter != null)
+            {
+                // Modificar el filtro principal
+                request.Filter = ModificarFiltro(request.Filter);
+            }
+
+            return request;
+        }
+
+        private string CompletarEstadoBoleto(string ContratoSAP, string FijacionSAP)
+        {
+            var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(ContratoSAP, FijacionSAP);
+            var mensaje = string.Empty;
+            if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "X")
+            {
+                mensaje = "Anulado";
+            }
+            else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+            {
+                mensaje = "Generado";
+            }
+            else
+            {
+                mensaje = "No Generado";
+            }
+            return mensaje;
+        }
+
+        private Filter ModificarFiltro(Filter filtro)
+        {
+            if (filtro == null)
+            {
+                return null;
+            }
+
+            // Lista para acumular los filtros modificados
+            var modifiedFilters = new List<Filter>();
+
+            // Manejo de filtros hijos
+            if (filtro.Filters != null)
+            {
+                foreach (var childFilter in filtro.Filters)
+                {
+                    // Manejar filtros 'ContratoSAP' con operador 'gte' y si solo hay uno
+                    if ((childFilter.Field == "ContratoSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "ContratoSAP") == 1) ||
+                     (childFilter.Field == "FijacionSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "FijacionSAP") == 1))
+                    {
+                        // Interpretar el valor como una lista de contratos y crear filtros eq
+                        var contratos = childFilter.Value.ToString().Split(';');
+                        var eqFilters = contratos.Select(c => new Filter
+                        {
+                            Field = ObtenerTextoNegocio(c),
+                            Operator = "eq",
+                            Value = CompletarNegocioSAP(c)
+                        }).ToList();
+
+                        // Crear un nuevo filtro con lógica 'or' para ContratoSAP = [lista de contratos]
+                        var contratoSapLogicFilter = new Filter
+                        {
+                            Logic = "or",
+                            Filters = eqFilters
+                        };
+
+                        // Añadir el nuevo filtro y continuar con los demás filtros
+                        modifiedFilters.Add(contratoSapLogicFilter);
+                    }
+                    else if (childFilter.Field == "ContratoSAP" || childFilter.Field == "FijacionSAP")
+                    {
+                        childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
+                    }
+                    // Manejar filtros 'ClaseNegocio'
+                    else if (childFilter.Field == "ClaseNegocio")
+                    {
+                        childFilter.Field = "TipoNegocioId";
+
+                        if (childFilter.Value.ToString() == "1")
+                        {
+                            // Crear un nuevo filtro con lógica 'or' para TipoNegocio = 1 o TipoNegocio = 2
+                            modifiedFilters.Add(new Filter
+                            {
+                                Logic = "or",
+                                Filters = new List<Filter>
+                        {
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 1 },
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 2 }
+                        }
+                            });
+                        }
+                        else if (childFilter.Value.ToString() == "2")
+                        {
+                            childFilter.Value = 3;
+                            childFilter.Operator = "eq";
+                            modifiedFilters.Add(childFilter);
+                        }
+                    }
+                    // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
+                    else if (childFilter.Field == "FechaConfirmacion" && childFilter.Value is string strValue)
+                    {
+                        if (DateTime.TryParse(strValue, out DateTime dateValue))
+                        {
+                            childFilter.Value = dateValue;
+                        }
+                        modifiedFilters.Add(childFilter);
+                    }
+                    // Añadir otros filtros tal cual
+                    else
+                    {
+                        modifiedFilters.Add(childFilter);
+                    }
+                }
+            }
+
+            // Asignar la lista de filtros modificados al filtro principal
+            filtro.Filters = modifiedFilters;
+
+            return filtro;
+        }
+
+        private string ObtenerTextoNegocio(string negocioSAP) => int.TryParse(negocioSAP, out var numero) && numero.ToString().Length == 7 ? "ContratoSAP" : "FijacionSAP";
+
+        private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
     }
 }

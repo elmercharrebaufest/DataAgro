@@ -1,5 +1,8 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -9,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -30,6 +34,7 @@ namespace WebDataAgro.Controllers
             this.reportesManager = reportesManager;
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
+
         public ActionResult Index()
         {
             CompletarVista();
@@ -95,7 +100,7 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListarBoletos()
+        public ActionResult ListarBoletos()//Para Pantalla Descargar Boleto
         {
             List<BoletoArchivoDto> boletos = new List<BoletoArchivoDto>();
             if (Directory.Exists(_logDir))
@@ -145,7 +150,7 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
-                    //return Json(fileBytes); 
+                    //return Json(fileBytes);
                     return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, nombre);
                 }
             }
@@ -168,35 +173,6 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public ActionResult FiltrarBoletos(string desde, string hasta, int negocio)
-        {
-            return new JsonResult()
-            {
-                Data = boletoManager.FiltrarNegociosPorFecha(desde, hasta, negocio)
-            };
-        }
-
-        public ActionResult ListarContratos(List<int> listaContratoSap, int negocio)
-        {
-            listaContratoSap.Sort();
-            if (listaContratoSap.First().Equals(0) || listaContratoSap.First() > listaContratoSap.Last())
-            {
-                return new JsonResult()
-                {
-                    Data = ""
-                };
-            }
-
-            int contratoDesde = listaContratoSap.First();
-            int contratoHasta = listaContratoSap.Last();
-
-
-            return new JsonResult()
-            {
-                Data = boletoManager.FiltrarNegociosNumeroSAP(contratoDesde, contratoHasta, negocio)
-            };
-        }
-
         [HttpGet]
         public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
         {
@@ -206,5 +182,22 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
+        public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
+        {
+            var model = boletoManager.TraerContratosFiltrados(filtro);
+
+            return new JsonResult()
+            {
+                Data = model,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ValidarNegocio(string NegocioSAP)
+        {
+            var mensaje = boletoManager.ValidarNegocio(NegocioSAP, GlobalVariables.EquipoReal);
+            return new JsonResult() { Data = new { Mensaje = mensaje } };
+        }
     }
 }
