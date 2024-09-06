@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IEnviarBoletoAgent
     {
-        string Enviar(BoletoGeneradoDto boleto);
+        string EnviarBoleto(BoletoDto boleto);
     }
 }

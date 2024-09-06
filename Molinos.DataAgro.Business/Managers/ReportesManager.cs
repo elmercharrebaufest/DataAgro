@@ -425,7 +425,7 @@ namespace Molinos.DataAgro.Business.Managers
                 OcultarEnTablero = x.OcultarEnTablero,
                 Estado = x.EstadoId,
                 MaterialId = x.MaterialId,
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 DestinoId = x.DestinoId,
                 EsFason = x is Contrato ? (x as Contrato).EsFason : null,
                 ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null,
@@ -479,7 +479,7 @@ namespace Molinos.DataAgro.Business.Managers
                     OcultarEnTablero = x.OcultarEnTablero,
                     Estado = x.Estado,
                     MaterialId = x.MaterialId,
-                    StandardCalidadId = x.StandardDeCalidadId,
+                    StandardDeCalidadId = x.StandardDeCalidadId,
                     DestinoId = x.DestinoId,
                     EsFason = x.EsFason,
                     ContratoAcuerdoId = x.ContratoAcuerdoId,
@@ -502,13 +502,13 @@ namespace Molinos.DataAgro.Business.Managers
                 var contrato = contratosDeFijaciones.Where(a => a.ContratoSAP == fijacion.ContratoSAP).FirstOrDefault();
                 if (contrato != null)
                 {
-                    fijacion.StandardCalidadId = contrato.StandardDeCalidadId;
+                    fijacion.StandardDeCalidadId = contrato.StandardDeCalidadId;
                 }
                 else
                 {
-                    if (fijacion.StandardCalidadId == null)
+                    if (fijacion.StandardDeCalidadId == null)
                     {
-                        fijacion.StandardCalidadId = fijacion.TrigoEspecial == true ? 7 : 1;
+                        fijacion.StandardDeCalidadId = fijacion.TrigoEspecial == true ? 7 : 1;
                     }
                 }
             }
@@ -1009,7 +1009,7 @@ namespace Molinos.DataAgro.Business.Managers
                 //&& x.Fecha >= fechaHoy && x.Fecha <= fechaManana
                 && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5 || x.Estado == 10)
                 && x.MaterialId == materialId
-                && (calidad == null || (calidad != null && x.StandardCalidadId == standard))
+                && (calidad == null || (calidad != null && x.StandardDeCalidadId == standard))
                 && (centroId == 0 || x.DestinoId == centroId)
                 && x.ContratoAcuerdoId == null //&& x.EsFason != true
                 && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2)
@@ -1060,7 +1060,7 @@ namespace Molinos.DataAgro.Business.Managers
             && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5 || x.Estado == 10)
             && x.MaterialId == materialId
             && x.TipoNegocioId == 3
-            && (calidad == null || (calidad == x.StandardCalidadId))
+            && (calidad == null || (calidad == x.StandardDeCalidadId))
             && (centroId == 0 || centroId == x.DestinoId))
                 .Select(
                 x => new PosicionPorMaterial
@@ -1134,7 +1134,7 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.Estado == 2 || x.Estado == 5)
                && x.MaterialId == materialId
                && x.TipoNegocioId == 6
-               && (calidad == null || (calidad != null && x.StandardCalidadId == standard))
+               && (calidad == null || (calidad != null && x.StandardDeCalidadId == standard))
                && (centroId == 0 || x.DestinoId == centroId)
             ).Select(
                 x => new PosicionPorMaterial

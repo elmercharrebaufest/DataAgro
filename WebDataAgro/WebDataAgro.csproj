@@ -1157,6 +1157,7 @@
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\FAQ.js" />
     <Content Include="Scripts\App\DescargarConfirma.js" />
+    <Content Include="Scripts\App\GestionarClausulas.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\GenerarConfirma.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
@@ -2981,6 +2982,7 @@
     <Content Include="Views\Confirma\ModalConfirmaGenerado.cshtml" />
     <Content Include="Views\Confirma\DescargarConfirma.cshtml" />
     <Content Include="Views\Boleto\_ModalReenviarBoletos.cshtml" />
+    <Content Include="Views\Boleto\GestionarClausulas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

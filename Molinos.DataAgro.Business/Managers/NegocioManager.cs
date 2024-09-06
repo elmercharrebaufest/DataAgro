@@ -642,7 +642,7 @@ namespace Molinos.DataAgro.Business.Managers
                 EsFason = x.EsFason,
                 ContratoMadre = x.ContratoMadre,
                 Pizarra = x.Pizarra ?? false,
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido = x.PagoDiferido,
                 PagoDiferidoTerceroId = x.PagoDiferidoTerceroId,

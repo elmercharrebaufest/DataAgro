@@ -22,9 +22,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Enviar(BoletoGeneradoDto boleto)
+        public string EnviarBoleto(BoletoDto boleto)
         {
-            logger.Debug("Enviando boleto del negocio Nro " + (string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.ContratoSAP : boleto.FijacionSAP));
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
                 return "Se actualizan correctamente los datos";
@@ -75,23 +74,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
-                throw e;
+                logger.Error("Error comunicacion SAP en EnviarBoleto ", e);
+                throw;
             }
 
-        }
-
-        private string RellenarEspaciosSAP(string value, int stringLength)
-        {
-            if (value != null)
-            {
-                int cantCeros = stringLength - value.Length;
-                for (int i = 0; i < cantCeros; i++)
-                {
-                    value = " " + value;
-                }
-            }
-            return value;
         }
     }
 }

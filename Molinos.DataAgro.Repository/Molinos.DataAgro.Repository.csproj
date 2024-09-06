@@ -207,6 +207,7 @@
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
+    <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
     <Compile Include="ConsultasEF\TraerResearchPorFiltro.cs" />

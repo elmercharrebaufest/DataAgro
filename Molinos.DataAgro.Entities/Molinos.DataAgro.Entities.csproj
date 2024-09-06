@@ -150,6 +150,7 @@
     </Reference>
     <Reference Include="System.Console" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Diagnostics.Tracing" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Globalization.Calendars" />
@@ -279,6 +280,7 @@
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\ApoderadoSapDto.cs" />
+    <Compile Include="Dto\BasicoBoleto.cs" />
     <Compile Include="Dto\ConfirmaArchivoDto.cs" />
     <Compile Include="Dto\ConfirmaResult.cs" />
     <Compile Include="Dto\ConfirmaGeneradoDto.cs" />
@@ -326,7 +328,7 @@
     <Compile Include="Dto\TokenBCR.cs" />
     <Compile Include="Dto\TopeSugerenciasPorDiaPorProveedor.cs" />
     <Compile Include="Dto\BoletoArchivoDto.cs" />
-    <Compile Include="Dto\BoletoGeneradoDto.cs" />
+    <Compile Include="Dto\BoletoDto.cs" />
     <Compile Include="Dto\ContratoIdKgPendiente.cs" />
     <Compile Include="Dto\SugerenciaCupoExcel.cs" />
     <Compile Include="Dto\BoletoResult.cs" />

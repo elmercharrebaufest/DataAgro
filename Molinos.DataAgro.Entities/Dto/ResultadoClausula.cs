@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Molinos.DataAgro.Entities.Dto
+﻿namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class ResultadoClausula
     {
@@ -8,6 +6,3 @@ namespace Molinos.DataAgro.Entities.Dto
        public int Orden { get; set; }
     }
 }
-
-
-
