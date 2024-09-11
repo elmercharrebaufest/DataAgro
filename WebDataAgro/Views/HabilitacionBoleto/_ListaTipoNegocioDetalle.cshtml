@@ -1,23 +1,20 @@
 ﻿@using Molinos.DataAgro.Entities.Dto
-@model WebDataAgro.Models.HabilitacionBoletoModel
+
+@model List<TipoNegocioDetalleDto>
 @{
-    var habilitados = (List<TipoNegocioDetalleDto>)ViewBag.ListaHabilitacion;
-    ViewBag.Title = "Habilitacion Boleto";
+    var habilitados = Model;
 }
-<script>
-    var data = '@Html.Raw(Json.Encode(ViewBag.ListaHabilitacion))';
-    habilitados = JSON.parse(data);
-</script>
+
 <script src="~/Scripts/App/HabilitacionBoleto.js"></script>
 <div class="col-md-12">
     <table class="tabla-historial table">
         <thead>
             <tr>
                 <th>Tipo</th>
-                <th>Descripcion</th>
+                <th>Descripción</th>
+                <th>Físico</th>
                 <th>Carta Oferta</th>
                 <th>Confirma</th>
-                <th>Físico</th>
                 <th></th>
             </tr>
         </thead>
@@ -28,6 +25,14 @@
             <tr>
                 <td>@mat.TipoNegocioDescripcion</td>
                 <td>@mat.Descripcion</td>
+                <td>
+                    <span>
+                        <label class="content-input">
+                            <input type="checkbox" class="check" name="TipoNegocioDetalles[@i].BoletoFisico" id="@("Fisico" + mat.Id)" @(mat.BoletoFisico ? "checked" : "") onchange="actualizarListado(@("Fisico" + mat.Id))">
+                            <i></i>
+                        </label>
+                    </span>
+                </td>
                 <td>
                     <span>
                         <label class="content-input">
@@ -44,17 +49,6 @@
                         </label>
                     </span>
                 </td>
-                <td>
-                    <span>
-                        <label class="content-input">
-                            <input type="checkbox" class="check" name="TipoNegocioDetalles[@i].BoletoFisico" id="@("Fisico" + mat.Id)" @(mat.BoletoFisico ? "checked" : "") onchange="actualizarListado(@("Fisico" + mat.Id))">
-                            <i></i>
-                        </label>
-                    </span>
-                </td>
-                <td class="fin-dia">
-                    @* @Ajax.ActionLink(" ", "EliminarAvanceSiembra", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })*@
-                </td>
             </tr>
             i += 1;
         }
@@ -68,6 +62,7 @@
     i {
         margin-top: 6px;
     }
+
     .tableFixHead {
         overflow: auto;
         height: 500px;
@@ -79,7 +74,6 @@
             z-index: 30;
         }
 
-    /* Just common table stuff. Really. */
     table {
         border-collapse: collapse;
         width: 100%;
@@ -93,5 +87,3 @@
         background: #eee;
     }
 </style>
-
-
