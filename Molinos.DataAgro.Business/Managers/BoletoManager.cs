@@ -630,9 +630,9 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación tiene cantidad menor a 10 toneladas.";
                 }
-                else if (negocio.PlanCanje != true)
+                else if (negocio.Canje != true)
                 {
-                    boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación no es de Plan Canje.";
+                    boletoDto.Mensaje = $"No se pudo generar el boleto porque la fijación no es de Canje.";
                 }
             }
             else

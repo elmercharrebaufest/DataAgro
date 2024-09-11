@@ -179,7 +179,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         DolarizadoTercero = contrato.DolarizadoTercero,
                         PagoDiferidoTercero = contrato.PagoDiferidoTercero,
                         ObservacionTercero = contrato.ObservacionTercero,
-                        Canje = contrato.Canje,
+                        Canje = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Canje : contrato.Canje,
                         MonedaCanjeId = contrato.MonedaCanjeId,
                         Monto = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Monto : contrato.Monto,
                         Insumo = contrato.Insumo,
