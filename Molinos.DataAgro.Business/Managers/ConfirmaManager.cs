@@ -453,8 +453,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
                                                                 (contrato.PagoDiferido == true) ?
-                                                                    "72 hrs contra mercadería entregada" :
-                                                                    "Días de diferimiento contra mercadería entregada"
+                                                                    "Días de diferimiento contra mercadería entregada":
+                                                                    "72 hrs contra mercadería entregada"
                                                                 )
                                                             )
                                                         ) : null
