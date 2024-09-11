@@ -1,10 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Models;
 
@@ -14,29 +10,63 @@ namespace WebDataAgro.Controllers
     {
         private readonly IHabilitacionBoletoManager habilitacionBoletoManager;
         private readonly ITipoNegocioManager tipoNegocioManager;
+        private readonly IProvinciaManager provinciaManager;
 
-        public HabilitacionBoletoController(IHabilitacionBoletoManager habilitacionBoletoManager, ITipoNegocioManager tipoNegocioManager)
+        public HabilitacionBoletoController(IHabilitacionBoletoManager habilitacionBoletoManager, ITipoNegocioManager tipoNegocioManager, IProvinciaManager provinciaManager)
         {
             this.habilitacionBoletoManager = habilitacionBoletoManager;
             this.tipoNegocioManager = tipoNegocioManager;
+            this.provinciaManager = provinciaManager;
         }
-        // GET: HabilitacionBoleto
+
         public ActionResult Index()
         {
-            CompletarVista();
-            return View("Index", new HabilitacionBoletoModel());
+            var viewModel = CompletarViewModel();
+
+            return View("Index", viewModel);
         }
+
+        private HabilitacionBoletoViewModel CompletarViewModel()
+        {
+            return new HabilitacionBoletoViewModel
+            {
+                TipoNegocioDetalle = habilitacionBoletoManager.ListarTipoNegociosDetalle().OrderBy(x => x.TipoNegocioDescripcion).ThenBy(x => x.Descripcion).ToList(),
+                BoletoCompraNetProvincia = habilitacionBoletoManager.ListarBoletoCompraNetProvincia().OrderBy(x => x.ProvinciaNombre).ThenBy(x => x.BoletoDescripcion).ToList(),
+                TipoNegocio = tipoNegocioManager.TraerTodoTipoNegocio().Select(x => new SelectListItem
+                {
+                    Text = x.Descripcion,
+                    Value = x.TipoNegocioId.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value),
+                ProvinciaList = provinciaManager.ListarProvincia("").Select(x => new SelectListItem
+                {
+                    Value = x.ProvinciaId.ToString(),
+                    Text = x.Nombre
+                }).OrderBy(x => x.Text),
+                TipoBoleto = habilitacionBoletoManager.ListarBoletoCompraNet().Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Descripcion
+                })
+            };
+        }
+
+        #region TipoNegocioDetalle
         [HttpPost]
         public ActionResult AgregarTipoNegocioDetalle(HabilitacionBoletoModel modelo)
         {
-            CompletarVista();
-            if (!ModelState.IsValid)
+            var resultado = habilitacionBoletoManager.AgregarTipoNegocioDetalle(ConvertirModeloADto(modelo));
+
+            if (resultado.HayError)
             {
-                return PartialView("AgregarModal", modelo);
+                return Json(new { success = false, message = resultado.Errores.First().Message });
             }
-            habilitacionBoletoManager.AgregarHabilitacionBoleto(ConvertirModeloADto(modelo));
-            return Json(new { success = true });
+            else
+            {
+                return Json(new { success = true });
+            }
         }
+
         [HttpPost]
         public ActionResult ActualizarTipoNegocioDetalle(HabilitacionBoletoModel modelo)
         {
@@ -44,30 +74,17 @@ namespace WebDataAgro.Controllers
             {
                 habilitacionBoletoManager.ActualizarTipoNegocioDetalle(modelo.TipoNegocioDetalles);
             }
-            CompletarVista();
-            return PartialView("_ListaHabilitados", modelo);
+
+            var viewModel = CompletarViewModel();
+
+            return PartialView("_ListaTipoNegocioDetalle", viewModel.TipoNegocioDetalle);
         }
 
         [HttpPost]
-        public ActionResult RecargarPantalla(HabilitacionBoletoModel modelo)
+        public ActionResult RecargarTipoNegocioDetalle()
         {
-            CompletarVista();
-            return PartialView("_ListaHabilitados", modelo);
-        }
-
-        private void CompletarVista()
-        {
-            ViewBag.ListaHabilitacion = habilitacionBoletoManager.ListarTipoNegociosDetalle();
-
-            var negocios = tipoNegocioManager.TraerTodoTipoNegocio();
-            var negocioListItems = negocios.Select(
-                    x => new SelectListItem
-                    {
-                        Text = x.Descripcion,
-                        Value = x.TipoNegocioId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-            ViewBag.TipoNegocio = negocioListItems;
+            var viewModel = CompletarViewModel();
+            return PartialView("_ListaTipoNegocioDetalle", viewModel.TipoNegocioDetalle);
         }
 
         private TipoNegocioDetalleDto ConvertirModeloADto(HabilitacionBoletoModel modelo)
@@ -77,8 +94,46 @@ namespace WebDataAgro.Controllers
                 TipoNegocioId = modelo.TipoNegocioId,
                 Descripcion = modelo.Descripcion
             };
-
-
         }
+        #endregion
+
+        #region BoletoCompraNetProvincia
+        public ActionResult ActualizarBoletoCompraNetProvincia()
+        {
+            var viewModel = CompletarViewModel();
+            return PartialView("_ListaBoletoCompraNetProvincia", viewModel.BoletoCompraNetProvincia);
+        }
+
+        [HttpPost]
+        public ActionResult AgregarBoletoCompraNetProvincia(BoletoCompraNetProvinciaModel model)
+        {
+            BoletoCompraNetProvinciaDto dto = new BoletoCompraNetProvinciaDto { BoletoCompraNetId = model.BoletoCompraNetId, ProvinciaId = model.ProvinciaId };
+            var resultado = habilitacionBoletoManager.AgregarBoletoCompraNetProvincia(dto);
+
+            if (resultado.HayError)
+            {
+                return Json(new { success = false, message = resultado.Errores.First().Message });
+            }
+            else
+            {
+                return Json(new { success = true });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EliminarBoletoCompraNetProvincia(int id)
+        {
+            var resultado = habilitacionBoletoManager.EliminarBoletoCompraNetProvincia(id);
+
+            if (resultado.HayError)
+            {
+                return Json(new { success = false, message = resultado.Errores.First().Message });
+            }
+            else
+            {
+                return Json(new { success = true });
+            }
+        }
+        #endregion
     }
 }

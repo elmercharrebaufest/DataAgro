@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-
-namespace Molinos.DataAgro.Entities.Dto
+﻿namespace Molinos.DataAgro.Entities.Dto
 {
 
     public class TipoNegocioDetalleDto
@@ -15,5 +12,3 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoNegocioDescripcion { get; set; }
     }
 }
-
-

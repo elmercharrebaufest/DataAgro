@@ -2944,7 +2944,7 @@
     <Content Include="Views\SugerenciaCupo\SolicitudExtraordinaria.cshtml" />
     <Content Include="Views\SugerenciaCupo\MensajesSugerencia.cshtml" />
     <Content Include="Views\HabilitacionBoleto\Index.cshtml" />
-    <Content Include="Views\HabilitacionBoleto\_ListaHabilitados.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\_ListaTipoNegocioDetalle.cshtml" />
     <Content Include="Views\HabilitacionBoleto\AgregarModal.cshtml" />
     <Content Include="Views\Boleto\GenerarBoletos.cshtml" />
     <Content Include="Views\Boleto\ModalBoletoGenerado.cshtml" />
@@ -2983,6 +2983,8 @@
     <Content Include="Views\Confirma\DescargarConfirma.cshtml" />
     <Content Include="Views\Boleto\_ModalReenviarBoletos.cshtml" />
     <Content Include="Views\Boleto\GestionarClausulas.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\_ListaBoletoCompraNetProvincia.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\AgregarBoletoProvinciaModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

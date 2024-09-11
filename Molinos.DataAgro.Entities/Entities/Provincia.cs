@@ -6,9 +6,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int ProvinciaId { get; set; }
-
         public string Nombre { get; set; }
-
         public int Orden { get; set; }
         public bool HabilitadoVenta { get; set; }
         public bool Inscripto { get; set; }
@@ -16,11 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public Provincia()
         {
-            this.Nombre = "";
+            Nombre = "";
         }
     }
 }
-   
-
-
-

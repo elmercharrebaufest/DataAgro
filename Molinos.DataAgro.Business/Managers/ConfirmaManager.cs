@@ -221,10 +221,10 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por cantidad menor a 10 toneladas.");
                         return mensaje;
                     }
-                    var a_fijar = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contrato.ContratoSAP && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR);
-                    if (a_fijar.PlanCanje != true)
+
+                    if (contrato.Canje != true)
                     {
-                        mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por no ser de Plan Canje el A Fijar correspondiente.";
+                        mensaje = $"No se puede generar el confirma {contrato.FijacionSAP} por no ser de Canje el A Fijar correspondiente.";
                         logger.Debug($"No se puede generar el confirma para la fijacion {contrato.FijacionSAP} por no ser de plan canje el A Fijar correspondiente.");
                         return mensaje;
                     }
@@ -317,29 +317,30 @@ namespace Molinos.DataAgro.Business.Managers
                 //Cargar Datos
                 var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
                 var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
-                var contrato = consulta.First();
-                logger.Info($"Se Busca Negocio de Confirma SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                var contrato = consulta.FirstOrDefault();
+                if (consulta is null || contrato is null) throw new ArgumentNullException(paramName: "BasicoContrato", message: $"Descargar XML Confirma - Error al recuperar BasicoContrato con CodigoSAP: {CodigoSapCompleto}");
+                else logger.Info($"Se Recupera BasicoContrado con CodigoSAP {CodigoSapCompleto}");
                 var existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
-                if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
+                if (existeConfirma is false) throw new ArgumentNullException("Confirma", $"Descargar XML Confirma - No existe el confirma asociado al contrato: {CodigoSapCompleto}");
+                logger.Info($"Datos del Negocio de Confirma Precargados; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, FechaDesde:{contrato.FechaDesde}, FechaHasta:{contrato.FechaHasta}, LocalidadConfirma:{contrato.LocalidadConfirma}, ProvinciaConfirma:{contrato.ProvinciaConfirma}, DestinoConfirma:{contrato.DestinoConfirma}, CD:{contrato.CD}, Warrant:{contrato.Warrant}, PagoDiferido:{contrato.PagoDiferido}, PagoDirectoVendedor:{contrato.PagoDirectoVendedor}, PorcentajeDePago:{contrato.PorcentajeDePago}, Monto:{contrato.Monto}, Pizarra:{contrato.Pizarra}, ClasificacionId:{contrato.ClasificacionId}");
                 //Calcular datos para el XML
-                logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
                 var estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
+                if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"Descargar XML Confirma - Error al consultar el estadoSAP asociado al contrato: {CodigoSapCompleto}");
+                else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {CodigoSapCompleto} resultando NroSIO:{estadoSAP.NumeroSio}");
+                var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
+                var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
+                if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("CondicionFijacion", $"Descargar XML Confirma - Error al consultar el EstadoBoleto del ContratoSAP: {CodigoSapCompleto} y sus condiciones de fijacion asociadas.");
+                else logger.Info($"Descargar XML Confirma - Se Consulta el Estado del Boleto SAP del contrato: {CodigoSapCompleto}. Resultando las condiciones fijacion: CantidadMaxima:{condiciones.CantidadMaxima}; CantidadMinima{condiciones.CantidadMinima}.");
+                var CuitMolinos = ConfigurationManager.AppSettings["Cuit"];
                 var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
+                var esCanje = contrato.Canje == true;
                 var nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
                 var Partes = (contrato.CorredorId > 0) ?
-                    new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } }
-                    : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = "30715118773", Sucursal = string.Empty } };
-                var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(codigoSAP, string.Empty);
-                var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
-                var esCanje = contrato.PlanCanje == true;
-                logger.Info($"Negocio de Confirma Datos Precargados Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                    new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } }
+                    : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } };
+                logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{CodigoSapCompleto}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
                 var clausulas = ObtenerClausulas(contrato);
-                logger.Info($"Negocio de Confirma Clausulas Cargadas Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}"+" siendo las clausulas: "+ string.Join(" - ", clausulas.Select(e => e.Texto)));
-                logger.Info($"Datos del Negocio de Confirma; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, FechaDesde:{contrato.FechaDesde}, FechaHasta:{contrato.FechaHasta}, LocalidadConfirma:{contrato.LocalidadConfirma}, ProvinciaConfirma:{contrato.ProvinciaConfirma}, DestinoConfirma:{contrato.DestinoConfirma}, CD:{contrato.CD}, Warrant:{contrato.Warrant}, PagoDiferido:{contrato.PagoDiferido}, PagoDirectoVendedor:{contrato.PagoDirectoVendedor}, PorcentajeDePago:{contrato.PorcentajeDePago}, Monto:{contrato.Monto}, Pizarra:{contrato.Pizarra}, ClasificacionId:{contrato.ClasificacionId}");
-                logger.Info($"Otros Datos del Negocio de Confirma; Codigo:{contrato.FijacionSAP ?? contrato.ContratoSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}");
-                logger.Info($"Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))},");
-                logger.Info($"estadoSAP:NroSIO:{estadoSAP.NumeroSio}");
-                logger.Info($"condiciones fijacion: CantidadMaxima:{condiciones.CantidadMaxima} . CantidadMinima{condiciones.CantidadMinima}");
+                if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {CodigoSapCompleto}.");
                 //Fin de carga de datos
                 MemoryStream ms = new MemoryStream(); //Memory Stream
                                                       //Inicia formateo del XML
@@ -452,8 +453,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
                                                                 (contrato.PagoDiferido == true) ?
-                                                                    "72 hrs contra mercadería entregada" :
-                                                                    "Días de diferimiento contra mercadería entregada"
+                                                                    "Días de diferimiento contra mercadería entregada":
+                                                                    "72 hrs contra mercadería entregada"
                                                                 )
                                                             )
                                                         ) : null

@@ -316,6 +316,7 @@
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
+    <Compile Include="Dto\BoletoCompraNetProvinciaDto.cs" />
     <Compile Include="Dto\TipoOperacionNoHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\TipoNegocioHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\MaterialHabilitadoSinBoletoDto.cs" />

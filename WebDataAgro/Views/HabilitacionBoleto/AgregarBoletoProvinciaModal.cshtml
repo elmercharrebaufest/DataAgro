@@ -1,16 +1,11 @@
 ﻿@model WebDataAgro.Models.HabilitacionBoletoViewModel
 
-<div class="modal fade" id="ModalCrearNegocio" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalCrearBoletoProvincia" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-mio">
         <div class="modal-content">
-            <div class="alert alert-danger alert-dismissible" role="alert" hidden>
-                <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
-                <span id="error-alert"></span>
-            </div>
-
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-            <div class="modal-header ">
-                <div style="color: green; font-weight: bold;">Agregar Tipo de Negocio</div>
+            <div class="modal-header">
+                <div style="color: green; font-weight: bold;">Agregar Boleto Habilitado por Provincia</div>
             </div>
             <br />
             <div class="modal-body clearfix scrollInside">
@@ -23,27 +18,21 @@
                         </div>
                     </div>
                 }
-                else
-                {
-                    <script>
-                        $("#ModalCrearNegocio").modal("hide");
-                    </script>
-                }
 
-                @using (Ajax.BeginForm("AgregarTipoNegocioDetalle", null, new AjaxOptions { UpdateTargetId = "listado", InsertionMode = InsertionMode.Replace }, new { @id = "grabarNegocio" }))
+                @using (Ajax.BeginForm("AgregarBoletoCompraNetProvincia", null, new AjaxOptions { UpdateTargetId = "listaBoletoProvincia", InsertionMode = InsertionMode.Replace }, new { @id = "grabarBoletoProvincia" }))
                 {
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
-                            <label>Descripción</label>
+                            <label>Provincia</label>
                         </div>
                         <div class="col-sm-3 col-md-4">
-                            @Html.TextBoxFor(m => m.TipoNegocioDetalle.First().Descripcion, new { @id = "Descripcion", @class = "w100 form-control limpiar" })
+                            @Html.DropDownListFor(m => m.BoletoCompraNetProvincia.First().ProvinciaId, Model.ProvinciaList, new { @class = "form-control" })
                         </div>
                         <div class="col-sm-2 col-md-2">
-                            <label>Tipo de Negocio</label>
+                            <label>Boleto</label>
                         </div>
                         <div class="col-sm-3 col-md-4">
-                            @Html.DropDownListFor(m => m.TipoNegocioDetalle.First().TipoNegocioId, Model.TipoNegocio, new { @class = "form-control", @id = "TipoNegocioId" })
+                            @Html.DropDownListFor(m => m.BoletoCompraNetProvincia.First().BoletoCompraNetId, Model.TipoBoleto, new { @class = "form-control" })
                         </div>
                     </div>
 
@@ -53,10 +42,10 @@
                     <div class="row">
                         <div class="col-md-4"></div>
                         <div class="col-md-2 col-xs-4">
-                            <button type="button" style="width: 100%; background: #ffddb3; border-color: darkgrey;" class="btn" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn" style="width: 100%; background: #ffddb3; border-color: darkgrey;" data-dismiss="modal">Cerrar</button>
                         </div>
                         <div class="col-md-2 col-xs-4">
-                            <button type="button" style="width:100%; background: green; color: white;" class="btn btnSubmit" onclick="GrabarNegocio()">Guardar</button>
+                            <button type="button" class="btn btnSubmit" style="width: 100%; background: green; color: white;" onclick="GrabarBoletoProvincia()">Guardar</button>
                         </div>
                     </div>
                 }

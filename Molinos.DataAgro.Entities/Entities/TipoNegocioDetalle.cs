@@ -1,9 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Helpers;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -11,18 +6,15 @@ namespace Molinos.DataAgro.Entities.Entities
     public partial class TipoNegocioDetalle
     {
         [Key]
-        public int Id { get; set; }              
-        public string Descripcion { get; set; } 
-        public int TipoNegocioId { get; set; }    
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+        public int TipoNegocioId { get; set; }
         public bool BoletoFisico { get; set; }
         public bool CartaOferta { get; set; }
         public bool Confirma { get; set; }
 
         [ForeignKey("TipoNegocioId")]
-        public virtual TipoNegocio TipoNegocio { get; set; } 
-       
+        public virtual TipoNegocio TipoNegocio { get; set; }
+
     }
 }
-
-
-
