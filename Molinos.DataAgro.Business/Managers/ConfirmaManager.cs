@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Clausulas;
 using Molinos.DataAgro.Repository;
@@ -326,11 +325,14 @@ namespace Molinos.DataAgro.Business.Managers
                 //Calcular datos para el XML
                 var estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
                 if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"Descargar XML Confirma - Error al consultar el estadoSAP asociado al contrato: {CodigoSapCompleto}");
-                else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {CodigoSapCompleto} resultando NroSIO:{estadoSAP.NumeroSio}");
+                else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {CodigoSapCompleto} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
                 var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
                 var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
-                if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("CondicionFijacion", $"Descargar XML Confirma - Error al consultar el EstadoBoleto del ContratoSAP: {CodigoSapCompleto} y sus condiciones de fijacion asociadas.");
-                else logger.Info($"Descargar XML Confirma - Se Consulta el Estado del Boleto SAP del contrato: {CodigoSapCompleto}. Resultando las condiciones fijacion: CantidadMaxima:{condiciones.CantidadMaxima}; CantidadMinima{condiciones.CantidadMinima}.");
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
+                {
+                    if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {CodigoSapCompleto} y no tiene condiciones de fijacion asociadas.");
+                    else logger.Info($"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {CodigoSapCompleto}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
+                }
                 var CuitMolinos = ConfigurationManager.AppSettings["Cuit"];
                 var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                 var esCanje = contrato.Canje == true;
@@ -352,7 +354,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             new XElement("CabeceraDocumento",
                                 new XElement("Bolsa", new XAttribute("CodLista", contrato.BolsaConfirma)),
-                                new XElement("TipoDocumento", new XAttribute("CodLista", esCanje ? "17" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")))),
+                                new XElement("TipoDocumento", new XAttribute("CodLista", contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "")),
                                 new XElement("Formulario", new XAttribute("formversion", "1.04"))
                             ),//Fin Nodo CabeceraDocumento
 
@@ -453,7 +455,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
                                                                 (contrato.PagoDiferido == true) ?
-                                                                    "Días de diferimiento contra mercadería entregada":
+                                                                    "Días de diferimiento contra mercadería entregada" :
                                                                     "72 hrs contra mercadería entregada"
                                                                 )
                                                             )
@@ -742,7 +744,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Nombre = "confirma" + a.FechaGeneracion.Year + (a.FechaGeneracion.Month > 9 ? "" : "0") + a.FechaGeneracion.Month + (a.FechaGeneracion.Day > 9 ? "" : "0") + a.FechaGeneracion.Day + "_" + a.Negocio.ContratoSAP + (a.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + (a.Negocio as FijacionDePrecioContrato).FijacionSAP : string.Empty) + ".XML",
                     FechaGeneracion = a.FechaGeneracion.Day + "/" + a.FechaGeneracion.Month + "/" + a.FechaGeneracion.Year,
                     IsWebService = a.IsWebService,
-                }, null, 0, null, Entities.Helpers.DirOrden.Asc)
+                }, null, 0, null, Entities.Helpers.DirOrden.Asc).OrderByDescending(x => x.FechaGeneracion)
                 .Where(c => !c.IsWebService).ToList();
         }
 
