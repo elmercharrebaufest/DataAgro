@@ -4,6 +4,8 @@ var externo;
 var enviarEmail;
 
 $(document).ready(function () {
+    kendo.culture("es-AR");
+    console.log("Current Kendo culture:", kendo.culture().name);
     $('#menuproveedor').hide();
     inicializarFiltros();
     inicializarGrillaContratos();
@@ -301,7 +303,7 @@ function inicializarGrillaContratos() {
                         FechaConfirmacion: { type: "date" },
                         Corredor: { type: "string" },
                         Vendedor: { type: "string" },
-                        Precio: { type: "number" },
+                        Precio: { type: "number"},
                         Moneda: { type: "string" },
                         TipoNegocio: { type: "string" },
                         Canje: { type: "string" },
@@ -356,21 +358,21 @@ function inicializarGrillaContratos() {
                         </a>
                     </div>
                 `,
-                width: 100
+                width: 70
             },
-            { field: "ContratoSAP", title: "Contrato SAP", width: 150 },
-            { field: "FijacionSAP", title: "Fijación SAP", width: 150 },
-            { field: "Version_Proxima", title: "Versión Próxima", width: 150, format: "{0:N0}" },
-            { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
-            { field: "Bolsa", title: "Bolsa", width: "100px" },
-            { field: "FechaOperacion", title: "Fecha Operación", width: 150, format: "{0:dd/MM/yyyy}" },
-            { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150, format: "{0:dd/MM/yyyy}" },
+            { field: "ContratoSAP", title: "Contrato SAP", width: 50, },
+            { field: "FijacionSAP", title: "Fijación SAP", width: 50, },
+            { field: "Version_Proxima", title: "Ver. Próx.", width: 30, format: "{0:N0}", headerAttributes: { "title": "Version Próxima" } },
+            { field: "TipoBoleto", title: "Tipo Boleto", width: 50 },
+            { field: "Bolsa", title: "Bolsa", width: "50px" },
+            { field: "FechaOperacion", title: "F. Operación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" } },
+            { field: "FechaConfirmacion", title: "F. Confirmación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" } },
             { field: "Corredor", title: "Corredor", width: 150 },
             { field: "Vendedor", title: "Vendedor", width: 150 },
-            { field: "Precio", title: "Precio", width: 150 },
-            { field: "Moneda", title: "Moneda", width: 150 },
-            { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
-            { field: "Canje", title: "Canje", width: 150 }
+            { field: "Precio", title: "Precio", type: "number", width: 50, format: "{0:#,##0.00}" },
+            { field: "Moneda", title: "Moneda", width: 30 },
+            { field: "TipoNegocio", title: "Tipo Contrato", width: 50 },
+            { field: "Canje", title: "Canje", width: 30 }
         ]
     });
 }
