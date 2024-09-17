@@ -451,7 +451,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                     "4 días hábiles de fecha de fijación" : (
                                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) ? (
                                                         (contrato.CD == true) ?
-                                                            "Pago Contra CD" : (
+                                                            "Pago Anticipado" : (
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
                                                                 (contrato.PagoDiferido == true) ?
