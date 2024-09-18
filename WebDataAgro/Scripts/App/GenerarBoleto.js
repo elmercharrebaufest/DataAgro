@@ -3,6 +3,56 @@ var datosIniCrearContrato;
 var externo;
 var enviarEmail;
 
+// Función para validar el contenido de contratoDesde
+function esContratoDesdeValido() {
+    // Obtener el valor del campo de entrada directamente
+    var contratoDesde = $("#contratoDesde").val();
+
+    // Si contratoDesde es nulo o vacío, lo consideramos válido
+    if (contratoDesde === null || contratoDesde.trim() === '') {
+        return true;
+    }
+
+    // Verificar que contratoDesde contenga solo números o el símbolo ';'
+    return /^[0-9;]+$/.test(contratoDesde.trim());
+}
+
+// Función principal para validar fechas y contratos
+function validarFechasYContratos() {
+    // Obtener los valores de los campos de fecha
+    var fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
+    var fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
+
+    // Obtener los valores de los campos de contrato
+    var contratoDesde = $("#contratoDesde").val();
+    var contratoHasta = $("#contratoHasta").val();
+
+    // Validar el contenido de contratoDesde
+    if (!esContratoDesdeValido(contratoDesde)) {
+        return false; // El valor de contratoDesde contiene caracteres no permitidos
+    }
+
+    // Convertir las fechas a objetos Date para comparar
+    if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
+        return false; // La fecha desde no puede ser mayor que la fecha hasta
+    }
+
+    // Validar contratos solo si ambos valores están presentes
+    if (contratoDesde) {
+        contratoDesde = contratoDesde.trim();
+        if (contratoHasta) {
+            contratoHasta = contratoHasta.trim();
+            // Verificar que contratoDesde sea menor que contratoHasta
+            if (contratoDesde >= contratoHasta) {
+                return false; // El contrato desde debe ser menor que el contrato hasta
+            }
+        }
+    }
+
+    // Si todas las validaciones pasan
+    return true;
+}
+
 $(document).ready(function () {
     kendo.culture("es-AR");
     console.log("Current Kendo culture:", kendo.culture().name);
@@ -81,63 +131,68 @@ $("body").on("click", "#filtrarBoletos", function () {
 });
 
 function FiltrarBoletos() {
-    let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
-    let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
-    let claseNegocio = $("#tipoId").val();
-    let contratoDesde = $("#contratoDesde").val();
-    let contratoHasta = $("#contratoHasta").val();
+    if (esContratoDesdeValido() && validarFechasYContratos()) {
+        let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
+        let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
+        let claseNegocio = $("#tipoId").val();
+        let contratoDesde = $("#contratoDesde").val();
+        let contratoHasta = $("#contratoHasta").val();
 
-    BlockUi("Consultando...");
+        BlockUi("Consultando...");
 
-    var filters = {
-        logic: "and",
-        filters: []
-    };
+        var filters = {
+            logic: "and",
+            filters: []
+        };
 
-    if (contratoDesde) {
-        filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "gte", value: contratoDesde });
-    }
-    if (contratoHasta) {
-        filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "lte", value: contratoHasta });
-    }
-    if (fechaDesde) {
-        filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
-    }
-    if (fechaHasta) {
-        filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
-    }
-    if (claseNegocio) {
-        filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
-    }
+        if (claseNegocio) {
+            filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
+        }
+        if (contratoDesde) {
+            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "gte", value: contratoDesde });
+        }
+        if (contratoHasta) {
+            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "lte", value: contratoHasta });
+        }
+        if (fechaDesde) {
+            filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
+        }
+        if (fechaHasta) {
+            filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
+        }
 
-    var data = {
-        Filter: filters,
-        Take: 100000,
-        Skip: 0
-    };
+        var data = {
+            Filter: filters,
+            Take: 100000,
+            Skip: 0
+        };
 
-    var result = MSExecuteOnServer('/Boleto/BuscaDatosTabla', data);
+        var result = MSExecuteOnServer('/Boleto/BuscaDatosTabla', data);
 
-    $.unblockUI();
+        $.unblockUI();
 
-    if (result && result.Data) {
-        if (result.Data.length == 0) {
-            MensAlerta("Sin Resultados");
-            $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+        if (result && result.Data) {
+            if (result.Data.length == 0) {
+                MensAlerta("Sin Resultados");
+                $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+            } else {
+                // Actualizar la grilla Kendo UI con los resultados
+                var grid = $("#contratos-grid").data("kendoGrid");
+                grid.dataSource.data(result.Data.map(function (item) {
+                    return {
+                        ...item,
+                        FechaOperacion: parseDate(item.FechaOperacion),
+                        FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                    };
+                }));
+                $("#contratos-grid").show();
+            }
         } else {
-            // Actualizar la grilla Kendo UI con los resultados
-            var grid = $("#contratos-grid").data("kendoGrid");
-            grid.dataSource.data(result.Data.map(function (item) {
-                return {
-                    ...item,
-                    FechaOperacion: parseDate(item.FechaOperacion),
-                    FechaConfirmacion: parseDate(item.FechaConfirmacion)
-                };
-            }));
-            $("#contratos-grid").show();
+            MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
         }
     } else {
-        MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+        if (!esContratoDesdeValido()) MensErr("Ha Ingresado caracteres no permitidos. Por favor reviselos.");
+        else MensErr("El Rango de Contratos o Fechas no es válido.");
     }
 }
 
@@ -415,3 +470,5 @@ function GestionarClausulas(negocioSAP) {
         MensErr(response.Mensaje || "Ocurrió un error al intentar validar el Negocio.");
     }
 }
+
+
