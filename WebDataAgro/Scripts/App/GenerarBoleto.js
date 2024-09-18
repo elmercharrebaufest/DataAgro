@@ -5,7 +5,6 @@ var enviarEmail;
 
 // Función para validar el contenido de contratoDesde
 function esContratoDesdeValido() {
-    // Obtener el valor del campo de entrada directamente
     var contratoDesde = $("#contratoDesde").val();
 
     // Si contratoDesde es nulo o vacío, lo consideramos válido
@@ -17,38 +16,26 @@ function esContratoDesdeValido() {
     return /^[0-9;]+$/.test(contratoDesde.trim());
 }
 
-// Función principal para validar fechas y contratos
+// Función para validar fechas y contratos
 function validarFechasYContratos() {
-    // Obtener los valores de los campos de fecha
     var fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
     var fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
+    var contratoDesde = ($("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val()).trim();
+    var contratoHasta = $("#contratoHasta").val().trim();
 
-    // Obtener los valores de los campos de contrato
-    var contratoDesde = $("#contratoDesde").val();
-    var contratoHasta = $("#contratoHasta").val();
-
-    // Validar el contenido de contratoDesde
-    if (!esContratoDesdeValido(contratoDesde)) {
-        return false; // El valor de contratoDesde contiene caracteres no permitidos
-    }
-
-    // Convertir las fechas a objetos Date para comparar
     if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
         return false; // La fecha desde no puede ser mayor que la fecha hasta
     }
 
     // Validar contratos solo si ambos valores están presentes
     if (contratoDesde) {
-        contratoDesde = contratoDesde.trim();
         if (contratoHasta) {
-            contratoHasta = contratoHasta.trim();
             // Verificar que contratoDesde sea menor que contratoHasta
-            if (contratoDesde >= contratoHasta) {
+            if (parseInt(contratoDesde) >= parseInt(contratoHasta)) {
                 return false; // El contrato desde debe ser menor que el contrato hasta
             }
         }
     }
-
     // Si todas las validaciones pasan
     return true;
 }
@@ -135,7 +122,7 @@ function FiltrarBoletos() {
         let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
         let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
         let claseNegocio = $("#tipoId").val();
-        let contratoDesde = $("#contratoDesde").val();
+        let contratoDesde = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
         let contratoHasta = $("#contratoHasta").val();
 
         BlockUi("Consultando...");
@@ -191,13 +178,14 @@ function FiltrarBoletos() {
             MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
         }
     } else {
-        if (!esContratoDesdeValido()) MensErr("Ha Ingresado caracteres no permitidos. Por favor reviselos.");
-        else MensErr("El Rango de Contratos o Fechas no es válido.");
+        if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
+        else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
     }
 }
 
 function GeneraBoletoCambioVariosContratos() {
-    var lista = $("#contratoDesde").val().split(';');
+    let contratos = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
+    var lista = contratos.split(';');
     if (lista.length > 1) {
         $("#contratoHasta").attr('disabled', 'disabled');
         $("#contratoHasta").val("");
@@ -233,7 +221,7 @@ function inicializarGrillaContratos() {
             });
 
             if (selectedRows.length === 0) {
-                alert("No hay filas seleccionadas para exportar.");
+                MensAlerta("No hay filas seleccionadas para exportar.");
                 e.preventDefault();
                 return;
             }
@@ -301,71 +289,7 @@ function inicializarGrillaContratos() {
             console.log(e.workbook);
         },
         dataSource: {
-            transport: {
-                read: {
-                    url: "/Boleto/BuscaDatosTabla",
-                    type: "POST",
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: function () {
-                        // Construir el objeto de filtros y parámetros
-                        var filters = {
-                            logic: "and",
-                            filters: []
-                        };
-
-                        var contratoDesde = $("#contratoDesde").val();
-                        var contratoHasta = $("#contratoHasta").val();
-                        var fechaDesde = $("#FechaConfirmacionDesdeId").val();
-                        var fechaHasta = $("#FechaConfirmacionHastaId").val();
-                        var claseNegocio = $("#tipoId").val();
-
-                        if (contratoDesde) {
-                            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "gte", value: contratoDesde });
-                        }
-                        if (contratoHasta) {
-                            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "lte", value: contratoHasta });
-                        }
-                        if (fechaDesde) {
-                            filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
-                        }
-                        if (fechaHasta) {
-                            filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
-                        }
-                        if (claseNegocio) {
-                            filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: claseNegocio });
-                        }
-
-                        return JSON.stringify({
-                            filtro: filters,
-                            Take: 10,
-                            Skip: 0
-                        });
-                    }
-                }
-            },
-            schema: {
-                data: "Data",
-                total: "Total",
-                model: {
-                    fields: {
-                        ContratoSAP: { type: "string" },
-                        FijacionSAP: { type: "string" },
-                        Version_Proxima: { type: "number" },
-                        TipoBoleto: { type: "string" },
-                        Bolsa: { type: "string" },
-                        FechaOperacion: { type: "date" },
-                        FechaConfirmacion: { type: "date" },
-                        Corredor: { type: "string" },
-                        Vendedor: { type: "string" },
-                        Precio: { type: "number"},
-                        Moneda: { type: "string" },
-                        TipoNegocio: { type: "string" },
-                        Canje: { type: "string" },
-                        NegocioSAP: { type: "string" }
-                    }
-                }
-            },
+            
             pageSize: 10
         },
         pageable: {

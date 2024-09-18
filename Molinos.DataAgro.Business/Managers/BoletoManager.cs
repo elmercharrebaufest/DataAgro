@@ -870,6 +870,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else if (childFilter.Field == "ContratoSAP" || childFilter.Field == "FijacionSAP")
                     {
                         childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
+                        modifiedFilters.Add(childFilter);
                     }
                     // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
                     else if (childFilter.Field == "FechaConfirmacion" && childFilter.Value is string strValue)
