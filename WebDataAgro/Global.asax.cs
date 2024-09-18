@@ -34,6 +34,9 @@ namespace WebDataAgro
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(KendoGridMvcRequest), new KendoGridMvcModelBinder());
 
+            // Habilita TLS 1.2
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //Autofac Configuration
             var builder = new ContainerBuilder();
 

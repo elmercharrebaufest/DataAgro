@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Interfaces
         byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo);
         void EnviarMailConfirma(DateTime fecha);
         List<ConfirmaArchivoDto> ListarConfirmas();
-
+        List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico);
+        string CorregirFormatoFecha(string cadena);
     }
 }

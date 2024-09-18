@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2012/05/consultalote" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ConsultaLoteDocumentosService" targetNamespace="http://confirma.com.ar/gd/2012/05/consultalote" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/consultalotedocumentos">
+      <xsd:element xmlns:q1="http://confirma.com.ar/gd/2012/05/WSConsultaLoteSchema" name="ConsultaLote" type="q1:consultaLote" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteSchema">
+      <xsd:complexType name="consultaLote">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaIdLote" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/consultalote">
+      <xsd:element xmlns:q2="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" name="ConsultaLoteResult" type="q2:consultaLoteResult" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema">
+      <xsd:complexType name="consultaLoteResult">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaIdLote" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstado">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstadoLote">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q3="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" minOccurs="0" maxOccurs="unbounded" name="consultaItem" type="q3:consultaItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="consultaItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaIdDocumento" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="consultaEstadoDocumento">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+                <xsd:enumeration value="5" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q4="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" minOccurs="0" maxOccurs="1" name="consultaErrores" type="q4:ArrayOfString" />
+        </xsd:sequence>
+        <xsd:attribute name="codigo" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="consultaError" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="consultaLoteInvoke">
+    <wsdl:part xmlns:q5="http://confirma.com.ar/gd/2012/05/consultalotedocumentos" name="ConsultaLote" element="q5:ConsultaLote" />
+  </wsdl:message>
+  <wsdl:message name="consultaLoteResponse">
+    <wsdl:part name="ConsultaLoteResult" element="tns:ConsultaLoteResult" />
+  </wsdl:message>
+  <wsdl:portType name="IConsultaLoteDocumentosService">
+    <wsdl:operation name="consultaLote">
+      <wsdl:input wsaw:Action="http://confirma.com.ar/gd/2012/05/IConsultaLoteDocumentosService/consultaLote" name="consultaLoteInvoke" message="tns:consultaLoteInvoke" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2012/05/consultalote/IConsultaLoteDocumentosService/consultaLoteResponse" name="consultaLoteResponse" message="tns:consultaLoteResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:IConsultaLoteDocumentosService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="consultaLote">
+      <soap:operation soapAction="http://confirma.com.ar/gd/2012/05/IConsultaLoteDocumentosService/consultaLote" style="document" />
+      <wsdl:input name="consultaLoteInvoke">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="consultaLoteResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ConsultaLoteDocumentosService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/ConsultaLoteService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

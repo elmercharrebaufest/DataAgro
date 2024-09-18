@@ -803,6 +803,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Filter ModificarFiltro(Filter filtro)
         {
+            int claseNegocio = 0;
             if (filtro == null)
             {
                 return null;
@@ -816,15 +817,42 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var childFilter in filtro.Filters)
                 {
+                    // Manejar filtros 'ClaseNegocio'
+                    if (childFilter.Field == "ClaseNegocio")
+                    {
+                        childFilter.Field = "TipoNegocioId";
+
+                        if (childFilter.Value.ToString() == "1")
+                        {
+                            claseNegocio = 1;
+                            // Crear un nuevo filtro con lógica 'or' para TipoNegocio = 1 o TipoNegocio = 2
+                            modifiedFilters.Add(new Filter
+                            {
+                                Logic = "or",
+                                Filters = new List<Filter>
+                        {
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 1 },
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 2 }
+                        }
+                            });
+                        }
+                        else if (childFilter.Value.ToString() == "2")
+                        {
+                            claseNegocio = 2;
+                            childFilter.Value = 3;
+                            childFilter.Operator = "eq";
+                            modifiedFilters.Add(childFilter);
+                        }
+                    }
                     // Manejar filtros 'ContratoSAP' con operador 'gte' y si solo hay uno
-                    if ((childFilter.Field == "ContratoSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "ContratoSAP") == 1) ||
+                    else if ((childFilter.Field == "ContratoSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "ContratoSAP") == 1) ||
                      (childFilter.Field == "FijacionSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "FijacionSAP") == 1))
                     {
                         // Interpretar el valor como una lista de contratos y crear filtros eq
                         var contratos = childFilter.Value.ToString().Split(';');
                         var eqFilters = contratos.Select(c => new Filter
                         {
-                            Field = ObtenerTextoNegocio(c),
+                            Field = ObtenerTextoNegocio(claseNegocio),
                             Operator = "eq",
                             Value = CompletarNegocioSAP(c)
                         }).ToList();
@@ -842,31 +870,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else if (childFilter.Field == "ContratoSAP" || childFilter.Field == "FijacionSAP")
                     {
                         childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
-                    }
-                    // Manejar filtros 'ClaseNegocio'
-                    else if (childFilter.Field == "ClaseNegocio")
-                    {
-                        childFilter.Field = "TipoNegocioId";
-
-                        if (childFilter.Value.ToString() == "1")
-                        {
-                            // Crear un nuevo filtro con lógica 'or' para TipoNegocio = 1 o TipoNegocio = 2
-                            modifiedFilters.Add(new Filter
-                            {
-                                Logic = "or",
-                                Filters = new List<Filter>
-                        {
-                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 1 },
-                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 2 }
-                        }
-                            });
-                        }
-                        else if (childFilter.Value.ToString() == "2")
-                        {
-                            childFilter.Value = 3;
-                            childFilter.Operator = "eq";
-                            modifiedFilters.Add(childFilter);
-                        }
+                        modifiedFilters.Add(childFilter);
                     }
                     // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
                     else if (childFilter.Field == "FechaConfirmacion" && childFilter.Value is string strValue)
@@ -891,7 +895,7 @@ namespace Molinos.DataAgro.Business.Managers
             return filtro;
         }
 
-        private string ObtenerTextoNegocio(string negocioSAP) => int.TryParse(negocioSAP, out var numero) && numero.ToString().Length == 7 ? "ContratoSAP" : "FijacionSAP";
+        private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio==1 ? "ContratoSAP" : "FijacionSAP";
 
         private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
     }

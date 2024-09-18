@@ -212,6 +212,11 @@
     <Compile Include="Agent\IAzureAgent.cs" />
     <Compile Include="Agent\IClienteBolsaRosarioAPIAgent.cs" />
     <Compile Include="Agent\IClienteResearchAgent.cs" />
+    <Compile Include="Agent\IConfirmaConsultaDocumentosAgent.cs" />
+    <Compile Include="Agent\IConfirmaConsultaDocumentosRegistradosAgent.cs" />
+    <Compile Include="Agent\IConfirmaConsultaLoteAgent.cs" />
+    <Compile Include="Agent\IConfirmaLoteDocumentosAgent.cs" />
+    <Compile Include="Agent\IConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Agent\IConsultarAcuerdosGeneradosAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionParcialAgent.cs" />
     <Compile Include="Agent\IValidarPesificacionAgent.cs" />
