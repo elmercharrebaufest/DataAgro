@@ -1,5 +1,5 @@
-﻿using Molinos.DataAgro.Agent.ScatoRepositorio;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,14 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using static WebDataAgro.MvcApplication;
 using Resultado = Molinos.DataAgro.Entities.Dto.Resultado;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ConfirmaController : Controller
     {
         private readonly IConfirmaManager confirmaManager;

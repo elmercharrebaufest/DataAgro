@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -30,8 +31,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IEnviarBoletoAgent oEnviarBoletoAgent;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         private readonly IServicioClausulas servicioClausula;
+        private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
+        private readonly IConfirmaLoteDocumentosAgent confirmaLoteDocumentosAgent;
 
-        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula)
+        public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
+            IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
+            IServicioClausulas servicioClausula, IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent, IConfirmaLoteDocumentosAgent confirmaLoteDocumentosAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -41,6 +46,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
             this.oEnviarBoletoAgent = oEnviarBoletoAgent;
+            this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
+            this.confirmaLoteDocumentosAgent = confirmaLoteDocumentosAgent;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -59,6 +66,28 @@ namespace Molinos.DataAgro.Business.Managers
             else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             var resultado = new ConfirmaResult();
+            string activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
+            string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
+
+            if (usarWebServiceConfirma && ambienteLocal == "1")
+            {
+                //confirmaConsultaDocumentosAgent.ConsultaDocumentos(1, "1");
+
+                string CodigoSapCompleto = codigos[0].TrimStart('0').PadLeft(10, '0');
+                IQueryable<BasicoContrato> consultaIQ = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
+                BasicoContrato contrato = consultaIQ.First();
+                List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
+
+                EstadosConfirmaDto estadosConfirmaDto = new EstadosConfirmaDto
+                {
+                    ConfirmaAltaEstadoDto = repositorio.Listar<ConfirmaAltaEstado, ConfirmaAltaEstadoDto>(x => new ConfirmaAltaEstadoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstado = x.CodigoConfirmaAltaEstado }),
+                    ConfirmaAltaEstadoLoteDto = repositorio.Listar<ConfirmaAltaEstadoLote, ConfirmaAltaEstadoLoteDto>(x => new ConfirmaAltaEstadoLoteDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoLote = x.CodigoConfirmaAltaEstadoLote }),
+                    ConfirmaAltaEstadoDocumentoDto = repositorio.Listar<ConfirmaAltaEstadoDocumento, ConfirmaAltaEstadoDocumentoDto>(x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento }),
+                };
+
+                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+            }
+
             try
             {
                 if (contratos == null || contratos.Count == 0)
@@ -67,6 +96,14 @@ namespace Molinos.DataAgro.Business.Managers
                     resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
                     return resultado;
                 }
+
+                EstadosConfirmaDto estadosConfirmaDto = new EstadosConfirmaDto
+                {
+                    ConfirmaAltaEstadoDto = repositorio.Listar<ConfirmaAltaEstado, ConfirmaAltaEstadoDto>(x => new ConfirmaAltaEstadoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstado = x.CodigoConfirmaAltaEstado }),
+                    ConfirmaAltaEstadoLoteDto = repositorio.Listar<ConfirmaAltaEstadoLote, ConfirmaAltaEstadoLoteDto>(x => new ConfirmaAltaEstadoLoteDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoLote = x.CodigoConfirmaAltaEstadoLote }),
+                    ConfirmaAltaEstadoDocumentoDto = repositorio.Listar<ConfirmaAltaEstadoDocumento, ConfirmaAltaEstadoDocumentoDto>(x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento }),
+                };
+
                 foreach (var contrato in contratos)
                 {
                     var mensaje = ValidarContrato(contrato, claseNegocio);
@@ -106,6 +143,13 @@ namespace Molinos.DataAgro.Business.Managers
                             //Se Almacena en DB el nuevo Confirma
                             var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
                             resultado.confirmasGenerados.Add(tempConfirma);
+
+                            if (usarWebServiceConfirma && activarConfirmaWS == "1")
+                            {
+                                List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
+                                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+                                confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y => resultado.Errores.Add(new ErrorMessage("WS Confirma: " + y))));
+                            }
                         }
                         else
                         {
@@ -748,7 +792,7 @@ namespace Molinos.DataAgro.Business.Managers
                 .Where(c => !c.IsWebService).ToList();
         }
 
-        private List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico)
+        public List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico)
         {
             var clausulas = repositorio.Listar<Clausula>();
             var result = new List<ResultadoClausula>();
@@ -804,7 +848,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private string CorregirFormatoFecha(string cadena)
+        public string CorregirFormatoFecha(string cadena)
         {
             var date = DateTime.Parse(cadena);
             return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);

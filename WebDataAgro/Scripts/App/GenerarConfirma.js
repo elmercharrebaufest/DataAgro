@@ -7,7 +7,8 @@ $(document).ready(function () {
 function Generar() {
     var confirma = {
         ContratoSAP: $("#Negocio").val(),
-        ClaseNegocioId: $("#ClaseNegocioId").val()
+        ClaseNegocioId: $("#ClaseNegocioId").val(),
+        IsWebService: $("#servicioConfirmaId").is(":checked")
     };
     var url = '/Confirma/GenerarConfirma';
     var data = confirma;
@@ -85,7 +86,7 @@ function ListarNegocios() {
             $("#popUpCargarValores").modal('toggle');
             $('#popUpCargarValores').modal('show');
         }
-        
+
     } else {
         let data = { desdeSAP: $("#Negocio").val(), hastaSAP: $("#NegocioHasta").val(), claseNegocio: claseNegocio };
         result = MSExecuteOnServer('/Confirma/ListarNegocios', data);
@@ -125,7 +126,7 @@ function inicializarPopUpContratoSap() {
             } else { //Inválido
                 MensErr(mensaje);
             }
-            
+
         }
     });
 

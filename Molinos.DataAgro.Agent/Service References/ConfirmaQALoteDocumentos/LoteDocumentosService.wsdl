@@ -1,0 +1,1134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2012/05/lotedocumentos" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="LoteDocumentosService" targetNamespace="http://confirma.com.ar/gd/2012/05/lotedocumentos" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/lotedocumentos">
+      <xsd:element xmlns:q1="http://confirma.com.ar/gd/2012/05/WSLoteDocumentosSchema" name="Lote" type="q1:Lote" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSLoteDocumentosSchema">
+      <xsd:complexType name="Lote">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EmpresaPresentante" type="xsd:string" />
+          <xsd:element xmlns:q2="http://confirma.com.ar/gd/2012/05/WSLoteDocumentosSchema" minOccurs="0" maxOccurs="unbounded" name="Items" type="q2:Item" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Item">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="itemInfo">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="Workflow">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="1" />
+                      <xsd:enumeration value="4" />
+                      <xsd:enumeration value="7" />
+                      <xsd:enumeration value="36" />
+                      <xsd:enumeration value="39" />
+                      <xsd:enumeration value="42" />
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:choice minOccurs="1" maxOccurs="1">
+            <xsd:element xmlns:q3="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="ContratoPagoEspeciesFijarPrecio" type="q3:DocumentoPagoEspecieFijarPrecio" />
+            <xsd:element xmlns:q4="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="ContratoPagoEspeciesPrecioHecho" type="q4:DocumentoPagoEspeciePrecioHecho" />
+            <xsd:element xmlns:q5="http://confirma.com.ar/gd/2012/05/WSContratoPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="ContratoPrecioHecho" type="q5:DocumentoContratoPrecioHecho" />
+            <xsd:element xmlns:q6="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="ConsignacionFijarPrecio" type="q6:DocumentoConsignacionFijarPrecio" />
+            <xsd:element xmlns:q7="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema" minOccurs="0" maxOccurs="1" name="ContratoFijarPrecioRofex" type="q7:DocumentoFijarPrecioRofex" />
+            <xsd:element xmlns:q8="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema" minOccurs="0" maxOccurs="1" name="ContratoOIVFijarPrecioRofex" type="q8:DocumentoOIVPrecioFijarRofex" />
+            <xsd:element xmlns:q9="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="ContratoFijarPrecio" type="q9:DocumentoFijarPrecio" />
+            <xsd:element xmlns:q10="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema" minOccurs="0" maxOccurs="1" name="ContratoWSOIVPrecioFijar" type="q10:DocumentoOIVFijarPrecio" />
+            <xsd:element xmlns:q11="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="ContratoWSOIVPrecioHecho" type="q11:DocumentoOIVPrecioHecho" />
+            <xsd:element xmlns:q12="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="ConsignacionPrecioHecho" type="q12:DocumentoConsignacionPrecioHecho" />
+          </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="codigo" type="xsd:string" />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema">
+      <xsd:complexType name="DocumentoPagoEspecieFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q13="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q13:CabeceraDocumento" />
+          <xsd:element xmlns:q14="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q14:DetalleDocumentoPagoEspecieFijarPrecio" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoPagoEspecieFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q15="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q15:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q16="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q16:Producto" />
+                <xsd:element xmlns:q17="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q17:TCaption" />
+                <xsd:element xmlns:q18="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q18:TCodLista" />
+                <xsd:element xmlns:q19="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q19:TCaption" />
+                <xsd:element xmlns:q20="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q20:TCaption" />
+                <xsd:element xmlns:q21="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q21:TCodCaption" />
+                <xsd:element xmlns:q22="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q22:TCodCaption" />
+                <xsd:element xmlns:q23="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q23:TCaption" />
+                <xsd:element xmlns:q24="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q24:TCaption" />
+                <xsd:element xmlns:q25="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q25:TCodLista" />
+                <xsd:element xmlns:q26="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q26:TCodLista" />
+                <xsd:element xmlns:q27="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q27:TCaption" />
+                <xsd:element xmlns:q28="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorComprador" type="q28:TCaption" />
+                <xsd:element xmlns:q29="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q29:Calidad" />
+                <xsd:element xmlns:q30="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q30:TCodCaption" />
+                <xsd:element xmlns:q31="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q31:Entrega" />
+                <xsd:element xmlns:q32="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q32:Origen" />
+                <xsd:element xmlns:q33="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q33:TCodCaption" />
+                <xsd:element xmlns:q34="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionDeclaraPrecioUnit" type="q34:DecisionDeclaraPrecioUnit" />
+                <xsd:element xmlns:q35="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q35:TCodCaption" />
+                <xsd:element xmlns:q36="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionDeclaraCantidad" type="q36:DecisionDeclaraCantidad" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Insumos">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element xmlns:q37="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="Productos" type="q37:ArrayOfInsumo" />
+                      <xsd:element xmlns:q38="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q38:TCodLista" />
+                      <xsd:element xmlns:q39="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PrecioTotal" type="q39:TCaption" />
+                      <xsd:element xmlns:q40="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Factura" type="q40:TCaption" />
+                      <xsd:element xmlns:q41="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcentajeGastos" type="q41:TCaption" />
+                      <xsd:element xmlns:q42="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoCambioPesos" type="q42:TCaption" />
+                      <xsd:element xmlns:q43="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="LugarEntrega" type="q43:TCaption" />
+                      <xsd:element xmlns:q44="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaEntrega" type="q44:TCodCaption" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q45="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Fijacion" type="q45:Fijacion" />
+                <xsd:element xmlns:q46="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProduccionVendedor" type="q46:ProduccionVendedor" />
+                <xsd:element xmlns:q47="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q47:TCodLista" />
+                <xsd:element xmlns:q48="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q48:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q49="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q49:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q50="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q50:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q51="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q51:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q52="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q52:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfInsumo">
+        <xsd:sequence>
+          <xsd:element xmlns:q53="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Insumo" type="q53:Insumo" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema">
+      <xsd:complexType name="CabeceraDocumento">
+        <xsd:sequence>
+          <xsd:element xmlns:q54="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Bolsa" type="q54:TCodLista" />
+          <xsd:element xmlns:q55="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoDocumento" type="q55:TCodLista" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TCodLista">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="Parte">
+        <xsd:sequence>
+          <xsd:element xmlns:q56="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="NroContratoInterno" type="q56:TCaption" />
+          <xsd:element xmlns:q57="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CUIT" type="q57:TCodCaption" />
+        </xsd:sequence>
+        <xsd:attribute xmlns:q58="http://confirma.com.ar/gd/2012/05/WSCommonSchema" name="CodLista" type="q58:codigoParte" />
+        <xsd:attribute name="Caption" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="TCaption">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Caption" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="TCodCaption">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="CodLista" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="PagoAOrdenDe">
+        <xsd:simpleContent>
+          <xsd:extension xmlns:q59="http://confirma.com.ar/gd/2012/05/WSCommonSchema" base="q59:TCodCaption">
+            <xsd:attribute name="CUIT" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:simpleType name="codigoParte">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+          <xsd:enumeration value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="Producto">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+            <xsd:attribute name="CodConv" type="xsd:positiveInteger" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="Calidad">
+        <xsd:sequence>
+          <xsd:element xmlns:q60="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="CondicionesCalidad" nillable="true" type="q60:TCodLista" />
+          <xsd:element xmlns:q61="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="OtrasCondicionesCalidad" nillable="true" type="q61:TCaption" />
+        </xsd:sequence>
+        <xsd:attribute name="Caption" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="Entrega">
+        <xsd:sequence>
+          <xsd:element xmlns:q62="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="EntregaDesde" type="q62:TCaption" />
+          <xsd:element xmlns:q63="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="EntregaHasta" type="q63:TCaption" />
+        </xsd:sequence>
+        <xsd:attribute name="Caption" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="Origen">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LocalidadOrigen">
+            <xsd:complexType>
+              <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                  <xsd:attribute name="Caption" type="xsd:string" />
+                  <xsd:attribute name="LocalidadText" type="xsd:string" />
+                </xsd:extension>
+              </xsd:simpleContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element xmlns:q64="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaOrigen" type="q64:TCodCaption" />
+        </xsd:sequence>
+        <xsd:attribute name="Caption" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DecisionDeclaraPrecioUnit">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="DecisionDeclaraCantidad">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="Insumo">
+        <xsd:sequence>
+          <xsd:element xmlns:q65="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q65:Producto" />
+          <xsd:element xmlns:q66="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q66:TCaption" />
+          <xsd:element xmlns:q67="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cantidad" type="q67:TCaption" />
+          <xsd:element xmlns:q68="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Precio" type="q68:TCaption" />
+          <xsd:element xmlns:q69="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q69:TCodCaption" />
+          <xsd:element xmlns:q70="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q70:TCodCaption" />
+          <xsd:element xmlns:q71="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PrecioTotal" type="q71:TCaption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Fijacion">
+        <xsd:sequence>
+          <xsd:element xmlns:q72="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMinima" type="q72:TCaption" />
+          <xsd:element xmlns:q73="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMaxima" type="q73:TCaption" />
+          <xsd:element xmlns:q74="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaFijacion" type="q74:TCodCaption" />
+          <xsd:element xmlns:q75="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijPeriodo" type="q75:TCodCaption" />
+          <xsd:element xmlns:q76="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecDesde" type="q76:TCaption" />
+          <xsd:element xmlns:q77="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecHasta" type="q77:TCaption" />
+          <xsd:element xmlns:q78="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcMultaIncumplimiento" type="q78:TCaption" />
+          <xsd:element xmlns:q79="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComunicacionFijacion" type="q79:TCodCaption" />
+          <xsd:element xmlns:q80="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PizarraFijacion" type="q80:TCodCaption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ProduccionVendedor">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="ClausulaText" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="DecisionPagoVoluntario">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="FondoFederalText" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="OperacionExentaImpSantaFe">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+            <xsd:attribute name="OperacionExentaImpSantaFeText" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="SioGranos">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="NumeroDeclaracion" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Clausula">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Orden" type="xsd:positiveInteger" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="Pagos">
+        <xsd:sequence>
+          <xsd:element xmlns:q81="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaCondicionPago" type="q81:TCaption" />
+          <xsd:element xmlns:q82="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="LugarPago" type="q82:TCaption" />
+          <xsd:element xmlns:q83="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PagoAOrdenDe" type="q83:PagoAOrdenDe" />
+          <xsd:element xmlns:q84="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcPago" type="q84:TCaption" />
+          <xsd:element xmlns:q85="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaPago" type="q85:TCodCaption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TFecha">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Mes" type="xsd:string" />
+            <xsd:attribute name="Anio" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="ParteOIV">
+        <xsd:sequence>
+          <xsd:element xmlns:q86="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="NroInterno" type="q86:TCaption" />
+          <xsd:element xmlns:q87="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CUIT" type="q87:TCodCaption" />
+        </xsd:sequence>
+        <xsd:attribute xmlns:q88="http://confirma.com.ar/gd/2012/05/WSCommonSchema" name="CodLista" type="q88:codigoParteOIV" />
+        <xsd:attribute name="Caption" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:simpleType name="codigoParteOIV">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+          <xsd:enumeration value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ProduccionComitente">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="ClausulaText" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema">
+      <xsd:complexType name="DocumentoPagoEspeciePrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q89="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q89:CabeceraDocumento" />
+          <xsd:element xmlns:q90="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q90:DetalleDocumentoPagoEspeciePrecioHecho" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoPagoEspeciePrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q91="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q91:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q92="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorComprador" type="q92:TCaption" />
+                <xsd:element xmlns:q93="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q93:Producto" />
+                <xsd:element xmlns:q94="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q94:TCaption" />
+                <xsd:element xmlns:q95="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q95:TCaption" />
+                <xsd:element xmlns:q96="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q96:TCodLista" />
+                <xsd:element xmlns:q97="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q97:TCodCaption" />
+                <xsd:element xmlns:q98="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q98:TCodCaption" />
+                <xsd:element xmlns:q99="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q99:TCaption" />
+                <xsd:element xmlns:q100="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q100:TCaption" />
+                <xsd:element xmlns:q101="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q101:TCodLista" />
+                <xsd:element xmlns:q102="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q102:TCaption" />
+                <xsd:element xmlns:q103="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q103:TCodLista" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Precio" type="xsd:string" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="MontoImponible" type="xsd:string" />
+                <xsd:element xmlns:q104="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q104:Calidad" />
+                <xsd:element xmlns:q105="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q105:TCodCaption" />
+                <xsd:element xmlns:q106="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q106:Entrega" />
+                <xsd:element xmlns:q107="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q107:Origen" />
+                <xsd:element xmlns:q108="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q108:TCodCaption" />
+                <xsd:element xmlns:q109="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q109:TCodCaption" />
+                <xsd:element xmlns:q110="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionDeclaraPrecioUnit" type="q110:DecisionDeclaraPrecioUnit" />
+                <xsd:element xmlns:q111="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionDeclaraCantidad" type="q111:DecisionDeclaraCantidad" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Insumos">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element xmlns:q112="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="Productos" type="q112:ArrayOfInsumo" />
+                      <xsd:element xmlns:q113="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q113:TCodLista" />
+                      <xsd:element xmlns:q114="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PrecioTotal" type="q114:TCaption" />
+                      <xsd:element xmlns:q115="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Factura" type="q115:TCaption" />
+                      <xsd:element xmlns:q116="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcentajeGastos" type="q116:TCaption" />
+                      <xsd:element xmlns:q117="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoCambioPesos" type="q117:TCaption" />
+                      <xsd:element xmlns:q118="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="LugarEntrega" type="q118:TCaption" />
+                      <xsd:element xmlns:q119="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaEntrega" type="q119:TCodCaption" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q120="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProduccionVendedor" type="q120:ProduccionVendedor" />
+                <xsd:element xmlns:q121="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q121:TCodLista" />
+                <xsd:element xmlns:q122="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="APrecio" type="q122:TCodLista" />
+                <xsd:element xmlns:q123="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q123:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q124="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q124:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q125="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q125:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q126="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q126:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q127="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q127:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfInsumo">
+        <xsd:sequence>
+          <xsd:element xmlns:q128="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Insumo" type="q128:Insumo" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSContratoPrecioHechoSchema">
+      <xsd:complexType name="DocumentoContratoPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q129="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q129:CabeceraDocumento" />
+          <xsd:element xmlns:q130="http://confirma.com.ar/gd/2012/05/WSContratoPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q130:DetalleDocumentoContratoPrecioHecho" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoContratoPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q131="http://confirma.com.ar/gd/2012/05/WSContratoPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q131:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q132="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorComprador" type="q132:TCaption" />
+                <xsd:element xmlns:q133="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q133:Producto" />
+                <xsd:element xmlns:q134="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q134:TCaption" />
+                <xsd:element xmlns:q135="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q135:TCaption" />
+                <xsd:element xmlns:q136="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q136:TCodLista" />
+                <xsd:element xmlns:q137="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q137:TCodCaption" />
+                <xsd:element xmlns:q138="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q138:TCodCaption" />
+                <xsd:element xmlns:q139="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q139:TCaption" />
+                <xsd:element xmlns:q140="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q140:TCaption" />
+                <xsd:element xmlns:q141="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q141:TCodLista" />
+                <xsd:element xmlns:q142="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q142:TCaption" />
+                <xsd:element xmlns:q143="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q143:TCodLista" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Precio" type="xsd:string" />
+                <xsd:element xmlns:q144="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q144:TCaption" />
+                <xsd:element xmlns:q145="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q145:Calidad" />
+                <xsd:element xmlns:q146="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q146:TCodCaption" />
+                <xsd:element xmlns:q147="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q147:Entrega" />
+                <xsd:element xmlns:q148="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q148:Origen" />
+                <xsd:element xmlns:q149="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q149:TCodCaption" />
+                <xsd:element xmlns:q150="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q150:TCodCaption" />
+                <xsd:element xmlns:q151="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q151:Pagos" />
+                <xsd:element xmlns:q152="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProduccionVendedor" type="q152:ProduccionVendedor" />
+                <xsd:element xmlns:q153="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q153:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q154="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q154:TCodLista" />
+                <xsd:element xmlns:q155="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="APrecio" type="q155:TCodLista" />
+                <xsd:element xmlns:q156="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q156:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q157="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q157:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q158="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q158:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q159="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q159:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema">
+      <xsd:complexType name="DocumentoConsignacionFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q160="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q160:CabeceraDocumento" />
+          <xsd:element xmlns:q161="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q161:DetalleDocumentoConsignacionFijarPrecio" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoConsignacionFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q162="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q162:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q163="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q163:Producto" />
+                <xsd:element xmlns:q164="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q164:TCaption" />
+                <xsd:element xmlns:q165="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q165:TCodLista" />
+                <xsd:element xmlns:q166="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q166:TCaption" />
+                <xsd:element xmlns:q167="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q167:TCaption" />
+                <xsd:element xmlns:q168="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q168:TCodCaption" />
+                <xsd:element xmlns:q169="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q169:TCaption" />
+                <xsd:element xmlns:q170="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q170:TCaption" />
+                <xsd:element xmlns:q171="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q171:TCodLista" />
+                <xsd:element xmlns:q172="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q172:TCodLista" />
+                <xsd:element xmlns:q173="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q173:TCaption" />
+                <xsd:element xmlns:q174="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorConsignatario" type="q174:TCaption" />
+                <xsd:element xmlns:q175="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q175:Calidad" />
+                <xsd:element xmlns:q176="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q176:TCodCaption" />
+                <xsd:element xmlns:q177="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q177:Entrega" />
+                <xsd:element xmlns:q178="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q178:Origen" />
+                <xsd:element xmlns:q179="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q179:TCodCaption" />
+                <xsd:element xmlns:q180="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q180:TCodCaption" />
+                <xsd:element xmlns:q181="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q181:Pagos" />
+                <xsd:element xmlns:q182="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Fijacion" type="q182:Fijacion" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="ProduccionComitente">
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        <xsd:attribute name="Caption" type="xsd:string" />
+                        <xsd:attribute name="ClausulaText" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q183="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q183:TCodLista" />
+                <xsd:element xmlns:q184="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q184:SioGranos" />
+                <xsd:element xmlns:q185="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q185:OperacionExentaImpSantaFe" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q186="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q186:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q187="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q187:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema">
+      <xsd:complexType name="DocumentoFijarPrecioRofex">
+        <xsd:sequence>
+          <xsd:element xmlns:q188="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q188:CabeceraDocumento" />
+          <xsd:element xmlns:q189="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q189:DetalleDocumentoFijarPrecioRofex" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoFijarPrecioRofex">
+        <xsd:sequence>
+          <xsd:element xmlns:q190="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q190:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q191="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q191:Producto" />
+                <xsd:element xmlns:q192="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q192:TCaption" />
+                <xsd:element xmlns:q193="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q193:TCodLista" />
+                <xsd:element xmlns:q194="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q194:TCaption" />
+                <xsd:element xmlns:q195="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q195:TCaption" />
+                <xsd:element xmlns:q196="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q196:TCodCaption" />
+                <xsd:element xmlns:q197="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q197:TCodCaption" />
+                <xsd:element xmlns:q198="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q198:TCaption" />
+                <xsd:element xmlns:q199="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q199:TCaption" />
+                <xsd:element xmlns:q200="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q200:TCodLista" />
+                <xsd:element xmlns:q201="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q201:TCodLista" />
+                <xsd:element xmlns:q202="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q202:TCaption" />
+                <xsd:element xmlns:q203="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorComprador" type="q203:TCaption" />
+                <xsd:element xmlns:q204="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q204:Calidad" />
+                <xsd:element xmlns:q205="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q205:TCodCaption" />
+                <xsd:element xmlns:q206="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q206:Entrega" />
+                <xsd:element xmlns:q207="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q207:Origen" />
+                <xsd:element xmlns:q208="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q208:TCodCaption" />
+                <xsd:element xmlns:q209="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q209:TCodCaption" />
+                <xsd:element xmlns:q210="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q210:Pagos" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Fijacion">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element xmlns:q211="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMinima" type="q211:TCaption" />
+                      <xsd:element xmlns:q212="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMaxima" type="q212:TCaption" />
+                      <xsd:element xmlns:q213="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaFijacion" type="q213:TCodCaption" />
+                      <xsd:element xmlns:q214="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijPeriodo" type="q214:TCodCaption" />
+                      <xsd:element xmlns:q215="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecDesde1" type="q215:TCaption" />
+                      <xsd:element xmlns:q216="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecHasta1" type="q216:TCaption" />
+                      <xsd:element xmlns:q217="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaPosicionRofex1" type="q217:TFecha" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="IndiceRofex1">
+                        <xsd:complexType>
+                          <xsd:simpleContent>
+                            <xsd:extension base="xsd:string">
+                              <xsd:attribute name="Codigo" type="xsd:string" />
+                            </xsd:extension>
+                          </xsd:simpleContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element xmlns:q218="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecDesde2" type="q218:TCaption" />
+                      <xsd:element xmlns:q219="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecHasta2" type="q219:TCaption" />
+                      <xsd:element xmlns:q220="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaPosicionRofex2" type="q220:TFecha" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="IndiceRofex2">
+                        <xsd:complexType>
+                          <xsd:simpleContent>
+                            <xsd:extension base="xsd:string">
+                              <xsd:attribute name="Codigo" type="xsd:string" />
+                            </xsd:extension>
+                          </xsd:simpleContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element xmlns:q221="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcMultaIncumplimiento" type="q221:TCaption" />
+                      <xsd:element xmlns:q222="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComunicacionFijacion" type="q222:TCodCaption" />
+                      <xsd:element xmlns:q223="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PizarraFijacion" type="q223:TCodCaption" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q224="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProduccionVendedor" type="q224:ProduccionVendedor" />
+                <xsd:element xmlns:q225="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q225:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q226="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q226:TCodLista" />
+                <xsd:element xmlns:q227="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q227:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q228="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q228:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q229="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q229:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q230="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q230:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema">
+      <xsd:complexType name="DocumentoOIVPrecioFijarRofex">
+        <xsd:sequence>
+          <xsd:element xmlns:q231="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q231:CabeceraDocumento" />
+          <xsd:element xmlns:q232="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q232:DetalleDocumentoOIVPrecioFijarRofex" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoOIVPrecioFijarRofex">
+        <xsd:sequence>
+          <xsd:element xmlns:q233="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q233:ArrayOfParteOIV" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DocumentoDetalle">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q234="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q234:Producto" />
+                <xsd:element xmlns:q235="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaInicioTramite" type="q235:TCaption" />
+                <xsd:element xmlns:q236="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Vigencia" type="q236:TCaption" />
+                <xsd:element xmlns:q237="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q237:TCodLista" />
+                <xsd:element xmlns:q238="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q238:TCaption" />
+                <xsd:element xmlns:q239="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q239:TCaption" />
+                <xsd:element xmlns:q240="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q240:TCodCaption" />
+                <xsd:element xmlns:q241="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q241:TCodCaption" />
+                <xsd:element xmlns:q242="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q242:TCaption" />
+                <xsd:element xmlns:q243="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q243:TCaption" />
+                <xsd:element xmlns:q244="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q244:TCodLista" />
+                <xsd:element xmlns:q245="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q245:TCodLista" />
+                <xsd:element xmlns:q246="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q246:TCaption" />
+                <xsd:element xmlns:q247="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorDestinatario" type="q247:TCaption" />
+                <xsd:element xmlns:q248="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q248:Calidad" />
+                <xsd:element xmlns:q249="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q249:TCodCaption" />
+                <xsd:element xmlns:q250="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q250:Entrega" />
+                <xsd:element xmlns:q251="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q251:Origen" />
+                <xsd:element xmlns:q252="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q252:TCodCaption" />
+                <xsd:element xmlns:q253="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q253:TCodCaption" />
+                <xsd:element xmlns:q254="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q254:Pagos" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Fijacion">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element xmlns:q255="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMinima" type="q255:TCaption" />
+                      <xsd:element xmlns:q256="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijMaxima" type="q256:TCaption" />
+                      <xsd:element xmlns:q257="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaFijacion" type="q257:TCodCaption" />
+                      <xsd:element xmlns:q258="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijPeriodo" type="q258:TCodCaption" />
+                      <xsd:element xmlns:q259="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecDesde1" type="q259:TCaption" />
+                      <xsd:element xmlns:q260="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecHasta1" type="q260:TCaption" />
+                      <xsd:element xmlns:q261="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaPosicionRofex1" type="q261:TFecha" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="IndiceRofex1">
+                        <xsd:complexType>
+                          <xsd:simpleContent>
+                            <xsd:extension base="xsd:string">
+                              <xsd:attribute name="Codigo" type="xsd:string" />
+                            </xsd:extension>
+                          </xsd:simpleContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element xmlns:q262="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecDesde2" type="q262:TCaption" />
+                      <xsd:element xmlns:q263="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FijFecHasta2" type="q263:TCaption" />
+                      <xsd:element xmlns:q264="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaPosicionRofex2" type="q264:TFecha" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="IndiceRofex2">
+                        <xsd:complexType>
+                          <xsd:simpleContent>
+                            <xsd:extension base="xsd:string">
+                              <xsd:attribute name="Codigo" type="xsd:string" />
+                            </xsd:extension>
+                          </xsd:simpleContent>
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element xmlns:q265="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="PorcMultaIncumplimiento" type="q265:TCaption" />
+                      <xsd:element xmlns:q266="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComunicacionFijacion" type="q266:TCodCaption" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="ProduccionOferente">
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        <xsd:attribute name="Caption" type="xsd:string" />
+                        <xsd:attribute name="ClausulaText" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q267="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q267:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q268="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q268:TCodLista" />
+                <xsd:element xmlns:q269="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q269:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q270="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q270:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParteOIV">
+        <xsd:sequence>
+          <xsd:element xmlns:q271="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q271:ParteOIV" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema">
+      <xsd:complexType name="DocumentoFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q272="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q272:CabeceraDocumento" />
+          <xsd:element xmlns:q273="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q273:DetalleDocumentoFijarPrecio" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q274="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q274:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q275="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q275:Producto" />
+                <xsd:element xmlns:q276="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q276:TCaption" />
+                <xsd:element xmlns:q277="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q277:TCodLista" />
+                <xsd:element xmlns:q278="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q278:TCaption" />
+                <xsd:element xmlns:q279="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q279:TCaption" />
+                <xsd:element xmlns:q280="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q280:TCodCaption" />
+                <xsd:element xmlns:q281="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q281:TCodCaption" />
+                <xsd:element xmlns:q282="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q282:TCaption" />
+                <xsd:element xmlns:q283="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q283:TCaption" />
+                <xsd:element xmlns:q284="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q284:TCodLista" />
+                <xsd:element xmlns:q285="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q285:TCodLista" />
+                <xsd:element xmlns:q286="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q286:TCaption" />
+                <xsd:element xmlns:q287="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorComprador" type="q287:TCaption" />
+                <xsd:element xmlns:q288="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q288:Calidad" />
+                <xsd:element xmlns:q289="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q289:TCodCaption" />
+                <xsd:element xmlns:q290="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q290:Entrega" />
+                <xsd:element xmlns:q291="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q291:Origen" />
+                <xsd:element xmlns:q292="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q292:TCodCaption" />
+                <xsd:element xmlns:q293="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q293:TCodCaption" />
+                <xsd:element xmlns:q294="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q294:Pagos" />
+                <xsd:element xmlns:q295="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Fijacion" type="q295:Fijacion" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="ProduccionVendedor">
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        <xsd:attribute name="Caption" type="xsd:string" />
+                        <xsd:attribute name="ClausulaText" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q296="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q296:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q297="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q297:TCodLista" />
+                <xsd:element xmlns:q298="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q298:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q299="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q299:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q300="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q300:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q301="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q301:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema">
+      <xsd:complexType name="DocumentoOIVFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q302="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q302:CabeceraDocumento" />
+          <xsd:element xmlns:q303="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q303:DetalleDocumentoOIVFijarPrecio" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoOIVFijarPrecio">
+        <xsd:sequence>
+          <xsd:element xmlns:q304="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q304:ArrayOfParteOIV" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DocumentoDetalle">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q305="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q305:Producto" />
+                <xsd:element xmlns:q306="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaInicioTramite" type="q306:TCaption" />
+                <xsd:element xmlns:q307="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Vigencia" type="q307:TCaption" />
+                <xsd:element xmlns:q308="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q308:TCodLista" />
+                <xsd:element xmlns:q309="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q309:TCaption" />
+                <xsd:element xmlns:q310="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q310:TCaption" />
+                <xsd:element xmlns:q311="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q311:TCodCaption" />
+                <xsd:element xmlns:q312="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q312:TCodCaption" />
+                <xsd:element xmlns:q313="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q313:TCaption" />
+                <xsd:element xmlns:q314="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q314:TCaption" />
+                <xsd:element xmlns:q315="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q315:TCodLista" />
+                <xsd:element xmlns:q316="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q316:TCodLista" />
+                <xsd:element xmlns:q317="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q317:TCaption" />
+                <xsd:element xmlns:q318="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorDestinatario" type="q318:TCaption" />
+                <xsd:element xmlns:q319="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q319:Calidad" />
+                <xsd:element xmlns:q320="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q320:TCodCaption" />
+                <xsd:element xmlns:q321="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q321:Entrega" />
+                <xsd:element xmlns:q322="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q322:Origen" />
+                <xsd:element xmlns:q323="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q323:TCodCaption" />
+                <xsd:element xmlns:q324="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q324:TCodCaption" />
+                <xsd:element xmlns:q325="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q325:Pagos" />
+                <xsd:element xmlns:q326="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Fijacion" type="q326:Fijacion" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="ProduccionOferente">
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        <xsd:attribute name="Caption" type="xsd:string" />
+                        <xsd:attribute name="ClausulaText" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q327="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q327:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q328="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q328:TCodLista" />
+                <xsd:element xmlns:q329="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q329:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q330="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q330:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParteOIV">
+        <xsd:sequence>
+          <xsd:element xmlns:q331="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q331:ParteOIV" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema">
+      <xsd:complexType name="DocumentoOIVPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q332="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q332:CabeceraDocumento" />
+          <xsd:element xmlns:q333="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q333:DetalleDocumentoOIVPrecioHecho" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoOIVPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q334="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q334:ArrayOfParteOIV" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DocumentoDetalle">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q335="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorDestinatario" type="q335:TCaption" />
+                <xsd:element xmlns:q336="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q336:Producto" />
+                <xsd:element xmlns:q337="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q337:TCaption" />
+                <xsd:element xmlns:q338="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaInicioTramite" type="q338:TCaption" />
+                <xsd:element xmlns:q339="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Vigencia" type="q339:TCaption" />
+                <xsd:element xmlns:q340="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q340:TCodLista" />
+                <xsd:element xmlns:q341="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q341:TCodCaption" />
+                <xsd:element xmlns:q342="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q342:TCodCaption" />
+                <xsd:element xmlns:q343="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q343:TCaption" />
+                <xsd:element xmlns:q344="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q344:TCaption" />
+                <xsd:element xmlns:q345="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q345:TCodLista" />
+                <xsd:element xmlns:q346="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q346:TCaption" />
+                <xsd:element xmlns:q347="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q347:TCodLista" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Precio" type="xsd:string" />
+                <xsd:element xmlns:q348="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MontoImponible" type="q348:TCaption" />
+                <xsd:element xmlns:q349="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q349:Calidad" />
+                <xsd:element xmlns:q350="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q350:TCodCaption" />
+                <xsd:element xmlns:q351="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q351:Entrega" />
+                <xsd:element xmlns:q352="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q352:Origen" />
+                <xsd:element xmlns:q353="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q353:TCodCaption" />
+                <xsd:element xmlns:q354="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q354:TCodCaption" />
+                <xsd:element xmlns:q355="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q355:Pagos" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="ProduccionOferente">
+                  <xsd:complexType>
+                    <xsd:simpleContent>
+                      <xsd:extension base="xsd:string">
+                        <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        <xsd:attribute name="Caption" type="xsd:string" />
+                        <xsd:attribute name="ClausulaText" type="xsd:string" />
+                      </xsd:extension>
+                    </xsd:simpleContent>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element xmlns:q356="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DecisionPagoVoluntario" type="q356:DecisionPagoVoluntario" />
+                <xsd:element xmlns:q357="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q357:TCodLista" />
+                <xsd:element xmlns:q358="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="EntregadeMercaderia" type="q358:TCodLista" />
+                <xsd:element xmlns:q359="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q359:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q360="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q360:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParteOIV">
+        <xsd:sequence>
+          <xsd:element xmlns:q361="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q361:ParteOIV" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema">
+      <xsd:complexType name="DocumentoConsignacionPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q362="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CabeceraDocumento" type="q362:CabeceraDocumento" />
+          <xsd:element xmlns:q363="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="DetalleDocumento" type="q363:DetalleDocumentoConsignacionPrecioHecho" />
+        </xsd:sequence>
+        <xsd:attribute name="Id" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="DetalleDocumentoConsignacionPrecioHecho">
+        <xsd:sequence>
+          <xsd:element xmlns:q364="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema" minOccurs="0" maxOccurs="1" name="Partes" type="q364:ArrayOfParte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="DetalleContrato">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q365="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ComisionPorConsignatario" type="q365:TCaption" />
+                <xsd:element xmlns:q366="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Producto" type="q366:Producto" />
+                <xsd:element xmlns:q367="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="DescAdicional" type="q367:TCaption" />
+                <xsd:element xmlns:q368="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="FechaConcertacion" type="q368:TCaption" />
+                <xsd:element xmlns:q369="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Cosecha" type="q369:TCodLista" />
+                <xsd:element xmlns:q370="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedida" type="q370:TCodCaption" />
+                <xsd:element xmlns:q371="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="UnidadMedidaPrecio" type="q371:TCodCaption" />
+                <xsd:element xmlns:q372="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadDesde" type="q372:TCaption" />
+                <xsd:element xmlns:q373="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantidadHasta" type="q373:TCaption" />
+                <xsd:element xmlns:q374="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="1" maxOccurs="1" name="Ajuste" nillable="true" type="q374:TCodLista" />
+                <xsd:element xmlns:q375="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CantCamiones" type="q375:TCaption" />
+                <xsd:element xmlns:q376="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Moneda" type="q376:TCodLista" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Precio" type="xsd:string" />
+                <xsd:element xmlns:q377="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Calidad" type="q377:Calidad" />
+                <xsd:element xmlns:q378="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="MedioTransporte" type="q378:TCodCaption" />
+                <xsd:element xmlns:q379="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Entregas" type="q379:Entrega" />
+                <xsd:element xmlns:q380="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Origen" type="q380:Origen" />
+                <xsd:element xmlns:q381="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Destino" type="q381:TCodCaption" />
+                <xsd:element xmlns:q382="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProvinciaInstrumentacion" type="q382:TCodCaption" />
+                <xsd:element xmlns:q383="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="Pagos" type="q383:Pagos" />
+                <xsd:element xmlns:q384="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="ProduccionComitente" type="q384:ProduccionComitente" />
+                <xsd:element xmlns:q385="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="TipoOperacion" type="q385:TCodLista" />
+                <xsd:element xmlns:q386="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="OperacionExentaImpSantaFe" type="q386:OperacionExentaImpSantaFe" />
+                <xsd:element xmlns:q387="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="SioGranos" type="q387:SioGranos" />
+              </xsd:sequence>
+              <xsd:attribute name="Caption" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Clausulas">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element xmlns:q388="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Clausula" type="q388:Clausula" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParte">
+        <xsd:sequence>
+          <xsd:element xmlns:q389="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="unbounded" name="Parte" type="q389:Parte" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/lotedocumentosresponse">
+      <xsd:element xmlns:q390="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" name="AltaLoteResult" type="q390:altaLoteResult" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema">
+      <xsd:complexType name="altaLoteResult">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdLote" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstado">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstadoDetalleError" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstadoLote">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q391="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" minOccurs="0" maxOccurs="unbounded" name="altaItem" type="q391:altaItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="altaItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdDocumento" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="altaEstadoDocumento">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+                <xsd:enumeration value="5" />
+                <xsd:enumeration value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q392="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema" minOccurs="0" maxOccurs="1" name="altaErrores" type="q392:ArrayOfString" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdDocumentoExistenteLote" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdDocumentoExistente" type="xsd:string" />
+        </xsd:sequence>
+        <xsd:attribute name="codigo" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="altaError" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="LoteDocumentos">
+    <wsdl:part name="Lote" element="tns:Lote" />
+  </wsdl:message>
+  <wsdl:message name="LoteDocumentosResponse">
+    <wsdl:part xmlns:q393="http://confirma.com.ar/gd/2012/05/lotedocumentosresponse" name="AltaLoteResult" element="q393:AltaLoteResult" />
+  </wsdl:message>
+  <wsdl:portType name="ILoteDocumentosService">
+    <wsdl:operation name="AltaDefinitiva">
+      <wsdl:input wsaw:Action="http://confirma.com.ar/gd/2012/05/ILoteDocumentosService/AltaDefinitiva" name="LoteDocumentos" message="tns:LoteDocumentos" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2012/05/lotedocumentos/ILoteDocumentosService/AltaDefinitivaResponse" name="LoteDocumentosResponse" message="tns:LoteDocumentosResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:ILoteDocumentosService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AltaDefinitiva">
+      <soap:operation soapAction="http://confirma.com.ar/gd/2012/05/ILoteDocumentosService/AltaDefinitiva" style="document" />
+      <wsdl:input name="LoteDocumentos">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="LoteDocumentosResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LoteDocumentosService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/LoteDocumentosService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

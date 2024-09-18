@@ -276,12 +276,15 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Dto\ConfirmaParteDto.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
     <Compile Include="Dto\AcuerdoSap.cs" />
     <Compile Include="Dto\ApoderadoSapDto.cs" />
     <Compile Include="Dto\BasicoBoleto.cs" />
+    <Compile Include="Dto\ConfirmaAltaLoteResultDto.cs" />
     <Compile Include="Dto\ConfirmaArchivoDto.cs" />
+    <Compile Include="Dto\ConfirmaConsultaDocumentosDto.cs" />
     <Compile Include="Dto\ConfirmaResult.cs" />
     <Compile Include="Dto\ConfirmaGeneradoDto.cs" />
     <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
@@ -546,6 +549,9 @@
     <Compile Include="Entities\ClausulaCuarentaYNueve.cs" />
     <Compile Include="Entities\ClausulaCincuenta.cs" />
     <Compile Include="Entities\ClausulaCincuentaYUno.cs" />
+    <Compile Include="Entities\ConfirmaAltaEstado.cs" />
+    <Compile Include="Entities\ConfirmaAltaEstadoDocumento.cs" />
+    <Compile Include="Entities\ConfirmaAltaEstadoLote.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />

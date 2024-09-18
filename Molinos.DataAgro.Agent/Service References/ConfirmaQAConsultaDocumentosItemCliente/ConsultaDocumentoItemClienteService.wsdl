@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2012/05/consultadocumentositemcliente" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ConsultaDocumentoItemClienteService" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentositemcliente" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentositemcliente">
+      <xsd:element xmlns:q1="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoItemSchema" name="ConsultaIdClienteRequest" type="q1:consultaIdClienteRequest" />
+      <xsd:element xmlns:q2="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoItemSchema" name="ConsultaIdClienteResponse" type="q2:consultaIdClienteResponse" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoItemSchema">
+      <xsd:complexType name="consultaIdClienteRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EmpresaPresentante" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Items">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="consultaCodigoItem" type="xsd:string" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="consultaIdClienteResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstado" nillable="true">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstadoDetalleError" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Items">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="consultaCodigoItem">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element minOccurs="1" maxOccurs="1" name="consultaEstadoItem">
+                        <xsd:simpleType>
+                          <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="1" />
+                            <xsd:enumeration value="2" />
+                          </xsd:restriction>
+                        </xsd:simpleType>
+                      </xsd:element>
+                      <xsd:element minOccurs="1" maxOccurs="1" name="consultaIdLote" nillable="true" type="xsd:integer" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstadoLote" nillable="true">
+                        <xsd:simpleType>
+                          <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="1" />
+                            <xsd:enumeration value="2" />
+                            <xsd:enumeration value="3" />
+                            <xsd:enumeration value="4" />
+                          </xsd:restriction>
+                        </xsd:simpleType>
+                      </xsd:element>
+                      <xsd:element minOccurs="1" maxOccurs="1" name="consultaIdDocumento" nillable="true" type="xsd:string" />
+                      <xsd:element minOccurs="1" maxOccurs="1" name="consultaIdBolsa" nillable="true" type="xsd:string" />
+                      <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstadoDocumento" nillable="true" type="xsd:int" />
+                      <xsd:element xmlns:q3="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoItemSchema" minOccurs="0" maxOccurs="1" name="consultaErrores" type="q3:ArrayOfString" />
+                    </xsd:sequence>
+                    <xsd:attribute name="codigo" type="xsd:string" />
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="consultaError" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="consultaDocumentoItemClienteRequestMessage">
+    <wsdl:part name="ConsultaIdClienteRequest" element="tns:ConsultaIdClienteRequest" />
+  </wsdl:message>
+  <wsdl:message name="consultaDocumentoItemClienteResponseMessage">
+    <wsdl:part name="ConsultaIdClienteResponse" element="tns:ConsultaIdClienteResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IConsultaDocumentoItemClienteService">
+    <wsdl:operation name="consultaDocumentoItemCliente">
+      <wsdl:input wsaw:Action="consultaDocumentoItemCliente" name="consultaDocumentoItemClienteRequestMessage" message="tns:consultaDocumentoItemClienteRequestMessage" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2012/05/consultadocumentositemcliente/IConsultaDocumentoItemClienteService/consultaDocumentoItemClienteResponse" name="consultaDocumentoItemClienteResponseMessage" message="tns:consultaDocumentoItemClienteResponseMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:IConsultaDocumentoItemClienteService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="consultaDocumentoItemCliente">
+      <soap:operation soapAction="consultaDocumentoItemCliente" style="document" />
+      <wsdl:input name="consultaDocumentoItemClienteRequestMessage">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="consultaDocumentoItemClienteResponseMessage">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ConsultaDocumentoItemClienteService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

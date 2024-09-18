@@ -1112,7 +1112,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             contratoManagerMock.Verify(x => x.ValidarStatus(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Status\":\"OK\",\"NumeroSio\":0,\"ContratoSap\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoSap\":null,\"Status\":\"OK\",\"NumeroSio\":0,\"Mensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 

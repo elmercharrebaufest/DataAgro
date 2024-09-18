@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ConsultaDocumentoTrackingInteraccionesFechasService" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas">
+      <xsd:element xmlns:q1="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoTrackingInteraccionesFechasSchema" name="ConsultaDocumentoTrackingInteraccionesFechas" type="q1:ConsultaDocumentoTrackingInteraccionesFechas" />
+      <xsd:element xmlns:q2="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" name="ConsultaDocumentosResponse" type="q2:consultaDocumentosResponse" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoTrackingInteraccionesFechasSchema">
+      <xsd:complexType name="ConsultaDocumentoTrackingInteraccionesFechas">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EmpresaPresentante" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="FechaDesde" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="FechaHasta" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema">
+      <xsd:complexType name="consultaDocumentosResponse">
+        <xsd:sequence>
+          <xsd:element xmlns:q3="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" minOccurs="1" maxOccurs="1" name="consultaEstado" type="q3:consultaEstadoWS" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="consultaEstadoError" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="consultaDocumentoResponse">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="1" name="IdDocumento" type="xsd:string" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="IdBolsa" type="xsd:string" />
+                <xsd:element xmlns:q4="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" minOccurs="1" maxOccurs="1" name="consultaEstadoDocumento" type="q4:consultaEstadoDocumento" />
+                <xsd:element minOccurs="1" maxOccurs="1" name="EstadoDocumento" type="xsd:int" />
+                <xsd:element xmlns:q5="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" minOccurs="0" maxOccurs="1" name="EnPoderDe" type="q5:Empresa" />
+                <xsd:element minOccurs="0" maxOccurs="1" name="Acciones">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Tracking">
+                        <xsd:complexType>
+                          <xsd:sequence>
+                            <xsd:element minOccurs="0" maxOccurs="1" name="FechaHora" type="xsd:string" />
+                            <xsd:element minOccurs="0" maxOccurs="1" name="Accion">
+                              <xsd:complexType>
+                                <xsd:simpleContent>
+                                  <xsd:extension base="xsd:string">
+                                    <xsd:attribute xmlns:q6="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" name="codigo" type="q6:codigoAccion" />
+                                  </xsd:extension>
+                                </xsd:simpleContent>
+                              </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element minOccurs="0" maxOccurs="1" name="Resultado">
+                              <xsd:complexType>
+                                <xsd:simpleContent>
+                                  <xsd:extension base="xsd:string">
+                                    <xsd:attribute xmlns:q7="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" name="codigo" type="q7:codigoResultado" />
+                                  </xsd:extension>
+                                </xsd:simpleContent>
+                              </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element xmlns:q8="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" minOccurs="0" maxOccurs="1" name="Empresa" type="q8:Empresa" />
+                            <xsd:element minOccurs="0" maxOccurs="1" name="Usuario">
+                              <xsd:complexType>
+                                <xsd:sequence>
+                                  <xsd:element minOccurs="0" maxOccurs="1" name="TipoDocumento" type="xsd:string" />
+                                  <xsd:element minOccurs="0" maxOccurs="1" name="NroDocumento" type="xsd:string" />
+                                  <xsd:element minOccurs="0" maxOccurs="1" name="Apellido" type="xsd:string" />
+                                  <xsd:element minOccurs="0" maxOccurs="1" name="Nombre" type="xsd:string" />
+                                  <xsd:element minOccurs="0" maxOccurs="1" name="Cargo" type="xsd:string" />
+                                </xsd:sequence>
+                              </xsd:complexType>
+                            </xsd:element>
+                          </xsd:sequence>
+                        </xsd:complexType>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="consultaEstadoWS">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="consultaEstadoDocumento">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+          <xsd:enumeration value="3" />
+          <xsd:enumeration value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="Empresa">
+        <xsd:sequence>
+          <xsd:element xmlns:q9="http://confirma.com.ar/gd/2012/05/WSCommonSchema" minOccurs="0" maxOccurs="1" name="CUIT" type="q9:TCodCaption" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="RazonSocial" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="codigoAccion">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+          <xsd:enumeration value="3" />
+          <xsd:enumeration value="4" />
+          <xsd:enumeration value="9" />
+          <xsd:enumeration value="11" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="codigoResultado">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="18" />
+          <xsd:enumeration value="3" />
+          <xsd:enumeration value="4" />
+          <xsd:enumeration value="5" />
+          <xsd:enumeration value="8" />
+          <xsd:enumeration value="11" />
+          <xsd:enumeration value="27" />
+          <xsd:enumeration value="23" />
+          <xsd:enumeration value="33" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema">
+      <xsd:complexType name="TCodCaption">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="Caption" type="xsd:string" />
+            <xsd:attribute name="CodLista" type="xsd:string" />
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ConsultaDocumentoTrackingInteraccionesMasivo">
+    <wsdl:part name="ConsultaDocumentoTrackingInteraccionesFechas" element="tns:ConsultaDocumentoTrackingInteraccionesFechas" />
+  </wsdl:message>
+  <wsdl:message name="ConsultaDocumentoTrackingInteraccionesMasivoResponse">
+    <wsdl:part name="ConsultaDocumentosResponse" element="tns:ConsultaDocumentosResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IConsultaDocumentoTrackingInteraccionesFechasService">
+    <wsdl:operation name="ConsultaDocumentoTrackingInteracciones">
+      <wsdl:input wsaw:Action="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas" name="ConsultaDocumentoTrackingInteraccionesMasivo" message="tns:ConsultaDocumentoTrackingInteraccionesMasivo" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas/IConsultaDocumentoTrackingInteraccionesFechasService/ConsultaDocumentoTrackingInteraccionesResponse" name="ConsultaDocumentoTrackingInteraccionesMasivoResponse" message="tns:ConsultaDocumentoTrackingInteraccionesMasivoResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:IConsultaDocumentoTrackingInteraccionesFechasService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ConsultaDocumentoTrackingInteracciones">
+      <soap:operation soapAction="http://confirma.com.ar/gd/2012/05/consultadocumentotrackinginteraccionesfechas" style="document" />
+      <wsdl:input name="ConsultaDocumentoTrackingInteraccionesMasivo">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ConsultaDocumentoTrackingInteraccionesMasivoResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ConsultaDocumentoTrackingInteraccionesFechasService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
