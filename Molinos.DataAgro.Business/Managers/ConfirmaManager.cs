@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -62,7 +61,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var codigos = AgregarCeros(codigosSap);
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
-             if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
+            if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
             else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
             var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
             var resultado = new ConfirmaResult();
@@ -141,25 +140,31 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
                         { //Generado exitosamente en RFC
-                            
-                            
                             try
                             {
-	                            //Se Almacena el ArchivoXML 
-	                            var xml = GenerarXML(contrato);
+                                //Se Almacena el ArchivoXML 
+                                var xml = GenerarXML(contrato);
                                 var adicional = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + contrato.FijacionSAP : string.Empty;
                                 File.WriteAllBytes(ConfigurationManager.AppSettings["PathConfirmas"].ToString() + "\\"
-                                     +  "confirma" + tempConfirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + contrato.ContratoSAP + adicional + ".xml", xml);
+                                     + "confirma" + tempConfirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + contrato.ContratoSAP + adicional + ".xml", xml);
                                 //Se Almacena en DB el nuevo Confirma
                                 var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
                                 resultado.confirmasGenerados.Add(tempConfirma);
 
-	                            if (usarWebServiceConfirma && activarConfirmaWS == "1")
-	                            {
-	                                List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
-	                                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
-	                                confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y => resultado.Errores.Add(new ErrorMessage("WS Confirma: " + y))));
-	                            }
+                                if (usarWebServiceConfirma && activarConfirmaWS == "1")
+                                {
+                                    List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
+                                    ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+
+                                    // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
+                                    // nuevoConfirma.IsWebService = true;
+
+                                    // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
+                                    confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
+                                    {
+                                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
+                                    }));
+                                }
                             }
                             catch (Exception ex)
                             {
