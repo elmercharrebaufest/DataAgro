@@ -99,15 +99,15 @@
 	<setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
 
-	<endpoint address="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQALoteDocumentos.ILoteDocumentosService" name="Default" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQALoteDocumentosAsync.ILoteDocumentosAsyncService" name="Default1" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaLote.IConsultaLoteDocumentosService" name="Default2" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosRegistrados.IConsultaDocumentosRegistradosService" name="Default3" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentoRegistradoPdf.IConsultaDocumentoRegistradoPdfService" name="Default4" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosControlFirmaXml.IConsultaDocumentosControlFirmaXmlService" name="Default5" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentos.IConsultaDocumentosService" name="Default6" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosItemCliente.IConsultaDocumentoItemClienteService" name="Default7" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaEmpresas.IConsultaEmpresasService" name="Default8" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaTrackingInteraccionesFecha.IConsultaDocumentoTrackingInteraccionesFechasService" name="Default9" />
-	<endpoint address="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosBorrador.IConsultaDocumentosBorradorService" name="Default10" />
+	<setParameter name="Default" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
+	<setParameter name="Default1" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
+	<setParameter name="Default2" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
+	<setParameter name="Default3" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
+	<setParameter name="Default4" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
+	<setParameter name="Default5" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
+	<setParameter name="Default6" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
+	<setParameter name="Default7" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
+	<setParameter name="Default8" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
+	<setParameter name="Default9" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
+	<setParameter name="Default10" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
 </parameters>
