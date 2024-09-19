@@ -102,15 +102,15 @@
   <setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
 
-	<endpoint address="https://services.confirma.com.ar/LoteDocumentosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQALoteDocumentos.ILoteDocumentosService" name="Default" />
-	<endpoint address="https://services.confirma.com.ar/LoteDocumentosAsyncService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQALoteDocumentosAsync.ILoteDocumentosAsyncService" name="Default1" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaLoteService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaLote.IConsultaLoteDocumentosService" name="Default2" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosRegistrados.IConsultaDocumentosRegistradosService" name="Default3" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentoRegistradoPdf.IConsultaDocumentoRegistradoPdfService" name="Default4" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosControlFirmaXml.IConsultaDocumentosControlFirmaXmlService" name="Default5" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentosService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentos.IConsultaDocumentosService" name="Default6" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosItemCliente.IConsultaDocumentoItemClienteService" name="Default7" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaEmpresasService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaEmpresas.IConsultaEmpresasService" name="Default8" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaTrackingInteraccionesFecha.IConsultaDocumentoTrackingInteraccionesFechasService" name="Default9" />
-	<endpoint address="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_Confirma" contract="ConfirmaQAConsultaDocumentosBorrador.IConsultaDocumentosBorradorService" name="Default10" />
+	<setParameter name="Default" value="https://services.confirma.com.ar/LoteDocumentosService.svc" />
+	<setParameter name="Default1" value="https://services.confirma.com.ar/LoteDocumentosAsyncService.svc" />
+	<setParameter name="Default2" value="https://services.confirma.com.ar/ConsultaLoteService.svc" />
+	<setParameter name="Default3" value="https://services.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" />
+	<setParameter name="Default4" value="https://services.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
+	<setParameter name="Default5" value="https://services.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" />
+	<setParameter name="Default6" value="https://services.confirma.com.ar/ConsultaDocumentosService.svc" />
+	<setParameter name="Default7" value="https://services.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
+	<setParameter name="Default8" value="https://services.confirma.com.ar/ConsultaEmpresasService.svc" />
+	<setParameter name="Default9" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
+	<setParameter name="Default10" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
 </parameters>
