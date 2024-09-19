@@ -68,8 +68,9 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new ConfirmaResult();
             string activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
             string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
+            string pruebaRapidaDeConfirma = ConfigurationManager.AppSettings["PruebaRapidaDeConfirma"];
 
-            if (usarWebServiceConfirma && ambienteLocal == "1")
+            if (usarWebServiceConfirma && (ambienteLocal == "1" || pruebaRapidaDeConfirma == "1"))
             {
                 //confirmaConsultaDocumentosAgent.ConsultaDocumentos(1, "1");
 
