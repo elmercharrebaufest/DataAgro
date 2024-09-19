@@ -52,27 +52,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
         public ActionResult ListarNegocios(int desdeSAP, int hastaSAP, int claseNegocio)
         {
             return new JsonResult()
             {
                 Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
-        public ActionResult ValidarNegocio(string codigoSAP, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio, GlobalVariables.EquipoReal)
             };
         }
 
@@ -84,12 +68,28 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int claseNegocio)
+        {
+            return new JsonResult()
+            {
+                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio, GlobalVariables.EquipoReal)
+            };
+        }
+
+        public ActionResult ValidarNegocio(string codigoSAP, int claseNegocio)
+        {
+            return new JsonResult()
+            {
+                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio, GlobalVariables.EquipoReal)
+            };
+        }
+
         public ActionResult DescargarArchivoConfirma(string codigoSAP)
         {
             var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
             try
             {
-                Byte[] fileBytes = confirmaManager.ConfirmaEnByte(codigoSAP, GlobalVariables.EquipoReal);
+                Byte[] fileBytes = confirmaManager.ObtenerArchivoXML (nombreArchivo);
 
                 if (fileBytes == null)
                 {

@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -130,7 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
                             ContratoSAP = contrato.ContratoSAP,
                             FijacionSAP = contrato.FijacionSAP,
                             TipoBoletoId = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? 1 : contrato.BoletoId.GetValueOrDefault(),
-                            IsWebService = usarWebServiceConfirma,
+                            IsWebService = false,
                             NegocioSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP,
                             Mensaje = string.Empty,
                             Generado = true
@@ -141,15 +140,37 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
                         { //Generado exitosamente en RFC
-                            //Se Almacena en DB el nuevo Confirma
-                            var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-                            resultado.confirmasGenerados.Add(tempConfirma);
-
-                            if (usarWebServiceConfirma && activarConfirmaWS == "1")
+                            try
                             {
-                                List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
-                                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
-                                confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y => resultado.Errores.Add(new ErrorMessage("WS Confirma: " + y))));
+                                //Se Almacena el ArchivoXML 
+                                var xml = GenerarXML(contrato);
+                                var adicional = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + contrato.FijacionSAP : string.Empty;
+                                File.WriteAllBytes(ConfigurationManager.AppSettings["PathConfirmas"].ToString() + "\\"
+                                     + "confirma" + tempConfirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + contrato.ContratoSAP + adicional + ".xml", xml);
+                                //Se Almacena en DB el nuevo Confirma
+                                var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+                                resultado.confirmasGenerados.Add(tempConfirma);
+
+                                if (usarWebServiceConfirma && activarConfirmaWS == "1")
+                                {
+                                    List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
+                                    ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+
+                                    // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
+                                    // nuevoConfirma.IsWebService = true;
+
+                                    // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
+                                    confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
+                                    {
+                                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
+                                    }));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                tempConfirma.Mensaje += "Error al guardar el XML del confirma: " + ex.Message;
+                                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El XML del confirma No se ha almacenado correctamente."));
+                                logger.Error(ex);
                             }
                         }
                         else
@@ -354,29 +375,40 @@ namespace Molinos.DataAgro.Business.Managers
             return msje;
         }
 
-        public byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo)
+        public byte[] ObtenerArchivoXML(string nombreArchivo)
+        {
+            // Obtener la ruta base del archivo desde la configuración
+            string rutaBase = ConfigurationManager.AppSettings["PathConfirmas"];
+
+            // Construir la ruta completa del archivo XML
+            string rutaArchivo = Path.Combine(rutaBase, nombreArchivo);
+
+            // Verificar si el archivo existe
+            if (!File.Exists(rutaArchivo))
+            {
+                // Retornar null si el archivo no existe
+                return null;
+            }
+
+            // Leer y devolver el archivo como un array de bytes
+            return File.ReadAllBytes(rutaArchivo);
+        }
+
+        private byte[] GenerarXML(BasicoContrato contrato)
         {
             try
             {
-                //Cargar Datos
-                var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
-                var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
-                var contrato = consulta.FirstOrDefault();
-                if (consulta is null || contrato is null) throw new ArgumentNullException(paramName: "BasicoContrato", message: $"Descargar XML Confirma - Error al recuperar BasicoContrato con CodigoSAP: {CodigoSapCompleto}");
-                else logger.Info($"Se Recupera BasicoContrado con CodigoSAP {CodigoSapCompleto}");
-                var existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
-                if (existeConfirma is false) throw new ArgumentNullException("Confirma", $"Descargar XML Confirma - No existe el confirma asociado al contrato: {CodigoSapCompleto}");
                 logger.Info($"Datos del Negocio de Confirma Precargados; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, FechaDesde:{contrato.FechaDesde}, FechaHasta:{contrato.FechaHasta}, LocalidadConfirma:{contrato.LocalidadConfirma}, ProvinciaConfirma:{contrato.ProvinciaConfirma}, DestinoConfirma:{contrato.DestinoConfirma}, CD:{contrato.CD}, Warrant:{contrato.Warrant}, PagoDiferido:{contrato.PagoDiferido}, PagoDirectoVendedor:{contrato.PagoDirectoVendedor}, PorcentajeDePago:{contrato.PorcentajeDePago}, Monto:{contrato.Monto}, Pizarra:{contrato.Pizarra}, ClasificacionId:{contrato.ClasificacionId}");
                 //Calcular datos para el XML
                 var estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
-                if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"Descargar XML Confirma - Error al consultar el estadoSAP asociado al contrato: {CodigoSapCompleto}");
-                else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {CodigoSapCompleto} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
+                if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"Descargar XML Confirma - Error al consultar el estadoSAP asociado al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}");
+                else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
                 var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
                 var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
                 if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
                 {
-                    if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {CodigoSapCompleto} y no tiene condiciones de fijacion asociadas.");
-                    else logger.Info($"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {CodigoSapCompleto}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
+                    if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)} y no tiene condiciones de fijacion asociadas.");
+                    else logger.Info($"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
                 }
                 var CuitMolinos = ConfigurationManager.AppSettings["Cuit"];
                 var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
@@ -385,9 +417,9 @@ namespace Molinos.DataAgro.Business.Managers
                 var Partes = (contrato.CorredorId > 0) ?
                     new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } }
                     : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } };
-                logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{CodigoSapCompleto}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
+                logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
                 var clausulas = ObtenerClausulas(contrato);
-                if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {CodigoSapCompleto}.");
+                if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}.");
                 //Fin de carga de datos
                 MemoryStream ms = new MemoryStream(); //Memory Stream
                                                       //Inicia formateo del XML
@@ -662,8 +694,7 @@ namespace Molinos.DataAgro.Business.Managers
             var adicional = string.Empty;
             if (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
             {
-                var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP == CodigoSapCompleto);
-                adicional += fijacion != null ? "_" + fijacion.FijacionSAP : string.Empty;
+                adicional += "_" + (confirma.Negocio as FijacionDePrecioContrato).FijacionSAP;
             }
             var nombreArchivo = "confirma" + confirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + confirma.Negocio.ContratoSAP + adicional + ".xml";
             return nombreArchivo;

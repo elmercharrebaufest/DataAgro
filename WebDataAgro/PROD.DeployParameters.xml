@@ -43,6 +43,7 @@
   <setParameter name="ActivarBLEND Key" value="No" />
   
   <setParameter name="PathBoletos Key" value="\\MOAFSP01\MATERIAS_PRIMAS\CONTRATOSGAP\" />
+	<setParameter name="PathConfirmas Key" value="\\MOAFSP01\MATERIAS_PRIMAS\CONTRATOSGAP\CONFIRMAS\" />
   <setParameter name="LibraryNameResearch Key" value="Datos research" />
 
 	<setParameter name="ConfirmaUser Key" value="molinosagro" />
