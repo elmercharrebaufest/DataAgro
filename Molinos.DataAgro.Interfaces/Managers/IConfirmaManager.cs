@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Interfaces
         List<string> FiltrarNegociosPorFecha(string desde, string hasta, int tipoNegocio, List<int> equipo);
         ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo);
         string GenerarNombreArchivoConfirma(string codigoSAP);
-        byte[] ConfirmaEnByte(string codigoSAP, List<int> equipo);
+        byte[] ObtenerArchivoXML(string nombreArchivo);
         void EnviarMailConfirma(DateTime fecha);
         List<ConfirmaArchivoDto> ListarConfirmas();
         List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico);

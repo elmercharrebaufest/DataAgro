@@ -85,10 +85,15 @@
                     match="/configuration/appSettings/add[@key='Rg2300']
                            /@value" />
   </parameter>
-	<parameter name="PathBoletos Key">
+    <parameter name="PathBoletos Key">
+	    <parameterEntry kind="XmlFile" scope="Web.config"
+					    match="/configuration/appSettings/add[@key='PathBoletos']
+                            /@value" />
+    </parameter>
+	<parameter name="PathConfirmas Key">
 		<parameterEntry kind="XmlFile" scope="Web.config"
-						match="/configuration/appSettings/add[@key='PathBoletos']
-                           /@value" />
+					    match="/configuration/appSettings/add[@key='PathConfirmas']
+                            /@value" />
 	</parameter>
   <parameter name="SISA Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
