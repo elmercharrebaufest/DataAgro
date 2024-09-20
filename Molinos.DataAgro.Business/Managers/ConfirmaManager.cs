@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (usarWebServiceConfirma && (ambienteLocal == "1" || pruebaRapidaDeConfirma == "1"))
             {
                 //confirmaConsultaDocumentosAgent.ConsultaDocumentos(1, "1");
-
+                logger.Info("---- PRUEBA: INICIO WS CONFIRMA ----");
                 string CodigoSapCompleto = codigos[0].TrimStart('0').PadLeft(10, '0');
                 IQueryable<BasicoContrato> consultaIQ = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
                 BasicoContrato contrato = consultaIQ.First();
@@ -86,6 +86,22 @@ namespace Molinos.DataAgro.Business.Managers
                 };
 
                 ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+
+                logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}. " +
+                    $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. " +
+                    $"altaEstadoDocumento = {confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " +
+                    $"altaIdDocumentoExistenteLote = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " +
+                    $"altaIdDocumentoExistente = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}");
+
+                // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
+                // nuevoConfirma.IsWebService = true;
+
+                // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
+                confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
+                {
+                    resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
+                }));
+                logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
             }
 
             try
@@ -153,8 +169,15 @@ namespace Molinos.DataAgro.Business.Managers
 
                                 if (usarWebServiceConfirma && activarConfirmaWS == "1")
                                 {
+                                    logger.Info("---- INICIO WS CONFIRMA ----");
                                     List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
                                     ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+
+                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}. " +
+                                        $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. " +
+                                        $"altaEstadoDocumento = {confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " +
+                                        $"altaIdDocumentoExistenteLote = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " +
+                                        $"altaIdDocumentoExistente = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}");
 
                                     // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
                                     // nuevoConfirma.IsWebService = true;
@@ -164,6 +187,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
                                     }));
+                                    logger.Info("---- FIN WS CONFIRMA ----");
                                 }
                             }
                             catch (Exception ex)

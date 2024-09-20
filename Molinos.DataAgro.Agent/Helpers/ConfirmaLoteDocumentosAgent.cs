@@ -1469,7 +1469,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Producto = new Producto()
             {
                 CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-                CodConv = "",
             };
 
             detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
@@ -1480,18 +1479,16 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
-            TCaption cantCamiones = new TCaption();
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            cantCamiones.Caption = "";
-            detalleContrato.CantCamiones = cantCamiones;
+            detalleContrato.CantCamiones = new TCaption();
 
             detalleContrato.MontoImponible = new TCaption() { Value = string.Empty };
             detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.
 
-            TCaption comisionPorComprador = new TCaption();
-            comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-            detalleContrato.ComisionPorComprador = comisionPorComprador;
+            //TCaption comisionPorComprador = new TCaption();
+            //comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
+            //detalleContrato.ComisionPorComprador = comisionPorComprador;
 
             detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
             {
@@ -1513,13 +1510,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
             };
 
-            TCodCaption destino = new TCodCaption();
-            destino.CodLista = contrato.DestinoConfirma;
-            //destino.CodPrv = "0000"; // no está en Staging?
-            detalleContrato.Destino = destino;
+            detalleContrato.Destino = new TCodCaption()
+            {
+                CodLista = contrato.DestinoConfirma,
+                //CodPrv = "0000", // no está en Staging?
+            };
 
             detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-            detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
+            //detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
 
             if (esCanje)
             {
@@ -1559,8 +1557,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
                     FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
-                    UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
-                    FijPeriodo = new TCodCaption() { CodLista = "1" },
+                    UnidadMedidaFijacion = new TCodCaption() { Caption = "K", CodLista = "K" },
+                    FijPeriodo = new TCodCaption() { /*CodLista = "1",*/ Value = "1" },
                     FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
                     FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
@@ -1570,22 +1568,20 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             #endregion Fijacion
 
-            ProduccionVendedor produccionVendedor = new ProduccionVendedor();
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            produccionVendedor.CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2");
-            produccionVendedor.ClausulaText = "";
-            detalleContrato.ProduccionVendedor = produccionVendedor;
+            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            decisionPagoVoluntario.FondoFederalText = "";
-            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
+            //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario()
+            //{
+            //    CodLista = "2",
+            //    FondoFederalText = "",
+            //};
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
 
             // GSIAN: Cómo se completa??
-            detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
+            //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
 
             SioGranos sioGranos = new SioGranos();
             sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
