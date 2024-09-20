@@ -55,25 +55,34 @@ namespace Molinos.DataAgro.Agent.Helpers
                     agent.ClientCredentials.UserName.UserName = userConfirma;
                     agent.ClientCredentials.UserName.Password = passConfirma;
 
-                    bool existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == contrato.ContratoSAP) : x.Negocio.ContratoSAP == contrato.ContratoSAP);
-                    if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
-                    logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                    logger.Info($"Datos del Negocio de Confirma Precargados; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, " +
+                        $"FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, " +
+                        $"CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, " +
+                        $"FechaDesde:{contrato.FechaDesde}, FechaHasta:{contrato.FechaHasta}, LocalidadConfirma:{contrato.LocalidadConfirma}, ProvinciaConfirma:{contrato.ProvinciaConfirma}, DestinoConfirma:{contrato.DestinoConfirma}, " +
+                        $"CD:{contrato.CD}, Warrant:{contrato.Warrant}, PagoDiferido:{contrato.PagoDiferido}, PagoDirectoVendedor:{contrato.PagoDirectoVendedor}, PorcentajeDePago:{contrato.PorcentajeDePago}, Monto:{contrato.Monto}, " +
+                        $"Pizarra:{contrato.Pizarra}, ClasificacionId:{contrato.ClasificacionId}");
+
+                    string numeroSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP;
 
                     EstadoSAPDto estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
-                    if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"WS Confirma - Error al consultar el estadoSAP asociado al contrato: {contrato.ContratoSAP}");
-                    else logger.Info($"WS Confirma - Se Consulta el status del contrato SAP {contrato.ContratoSAP} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
+                    if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"WS Confirma - Error al consultar el estadoSAP asociado al contrato: {numeroSAP}");
+                    else logger.Info($"WS Confirma - Se Consulta el status del contrato SAP {numeroSAP} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
 
                     DatosEstadoBoletoDto datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
                     CondicionFijacionEstadoBoletoDto condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
                     if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
                     {
-                        if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {contrato.ContratoSAP} y no tiene condiciones de fijacion asociadas.");
-                        else logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {contrato.ContratoSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
+                        if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} y no tiene condiciones de fijacion asociadas.");
+                        else logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
                     }
 
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                     bool esCanje = contrato.Canje == true;
-                    string nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
+                    string nroContratoInterno = numeroSAP.TrimStart('0');
+
+                    //bool existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == contrato.ContratoSAP) : x.Negocio.ContratoSAP == contrato.ContratoSAP);
+                    //if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
+                    //logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
 
                     List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
                         new ConfirmaParteDto { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit1 : contrato.Cuit, Sucursal = string.Empty },
@@ -82,8 +91,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     if (contrato.CorredorId > 0)
                         Partes.Add(new ConfirmaParteDto { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit2 : contrato.CUITCorredor, Sucursal = string.Empty });
 
-                    logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{contrato.ContratoSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
-                    if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {contrato.ContratoSAP}.");
+                    logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{numeroSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
+                    if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {numeroSAP}.");
 
                     Lote lote = new Lote();
                     #region Lote
@@ -925,6 +934,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         // EN USO
         DocumentoFijarPrecio DevolverItemDocumentoFijarPrecio(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
         {
+            logger.Info("WS Confirma - Método DevolverItemDocumentoFijarPrecio()");
             DocumentoFijarPrecio item1 = new DocumentoFijarPrecio();
             #region DocumentoFijarPrecio
             #region CabeceraDocumento
@@ -1410,6 +1420,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         // EN USO - tiene INSUMOS
         DocumentoPagoEspecieFijarPrecio DevolverItemDocumentoPagoEspecieFijarPrecio(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
         {
+            logger.Info("WS Confirma - Método DevolverItemDocumentoPagoEspecieFijarPrecio()");
             DocumentoPagoEspecieFijarPrecio item1 = new DocumentoPagoEspecieFijarPrecio();
             #region DocumentoPagoEspecieFijarPrecio
             #region CabeceraDocumento
@@ -1609,6 +1620,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         // EN USO - tiene INSUMOS
         DocumentoPagoEspeciePrecioHecho DevolverItemDocumentoPagoEspeciePrecioHecho(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
         {
+            logger.Info("WS Confirma - Método DevolverItemDocumentoPagoEspeciePrecioHecho()");
             DocumentoPagoEspeciePrecioHecho item1 = new DocumentoPagoEspeciePrecioHecho();
             #region DocumentoPagoEspecieFijarPrecio
             #region CabeceraDocumento
@@ -1657,7 +1669,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Producto = new Producto()
             {
                 CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-                CodConv = "",
             };
 
             detalleContrato.FechaConcertacion = new TCaption()
@@ -1690,11 +1701,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
-            TCaption cantCamiones = new TCaption();
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            cantCamiones.Caption = "";
-            detalleContrato.CantCamiones = cantCamiones;
+            detalleContrato.CantCamiones = new TCaption();
 
             TCaption comisionPorComprador = new TCaption();
             comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
@@ -1815,6 +1824,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         // EN USO
         DocumentoContratoPrecioHecho DevolverItemDocumentoContratoPrecioHecho(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
         {
+            logger.Info("WS Confirma - Método DevolverItemDocumentoContratoPrecioHecho()");
             DocumentoContratoPrecioHecho item1 = new DocumentoContratoPrecioHecho();
             #region DocumentoConsignacionPrecioHecho
             #region CabeceraDocumento
@@ -1863,7 +1873,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Producto = new Producto()
             {
                 CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-                CodConv = "",
             };
 
             detalleContrato.FechaConcertacion = new TCaption() { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null };
@@ -1875,7 +1884,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
             }
 
-            detalleContrato.MontoImponible = new TCaption() { Value = "" };
+            if (esCanje || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                detalleContrato.MontoImponible = new TCaption() { Value = "" };
+
             detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
             detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
             detalleContrato.CantidadDesde = new TCaption() { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() };
@@ -1883,11 +1894,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
-            TCaption cantCamiones = new TCaption();
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            cantCamiones.Caption = "";
-            detalleContrato.CantCamiones = cantCamiones;
+            detalleContrato.CantCamiones = new TCaption();
 
             detalleContrato.ComisionPorComprador = new TCaption() { Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null };
 
@@ -1907,14 +1916,15 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.Origen = new Origen()
             {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { LocalidadText = "", Value = contrato.LocalidadConfirma },
+                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma },
                 ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
             };
 
-            TCodCaption destino = new TCodCaption();
-            destino.CodLista = contrato.DestinoConfirma;
-            //destino.CodPrv = "0000"; // no está en Staging?
-            detalleContrato.Destino = destino;
+            detalleContrato.Destino = new TCodCaption()
+            {
+                CodLista = contrato.DestinoConfirma,
+                //CodPrv = "0000", // no está en Staging?
+            };
 
             detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
 
@@ -1933,7 +1943,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
                 pagos.PagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
+                    //CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
                 pagos.PorcPago = new TCaption() { Value = contrato.PorcentajeDePago.Value.ToString() };
@@ -1945,19 +1955,20 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: qué va acá?
-            detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario();
+            //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario();
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 detalleContrato.APrecio = new TCodLista() { CodLista = "1" };
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            detalleContrato.SioGranos = new SioGranos()
+            {
+                NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null,
+            };
 
             // GSIAN: qué va acá?
-            detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
+            //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
 
             #endregion DetalleDocumentoContratoPrecioHechoDetalleContrato
 
