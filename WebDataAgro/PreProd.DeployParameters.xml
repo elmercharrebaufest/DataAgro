@@ -46,7 +46,7 @@
 	<setParameter name="ActivarBLEND Key" value="No" />
 
 	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
-	<setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMA\" />
+	<setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMAS\" />
 
 	<setParameter name="ConfirmaUser Key" value="molinosagro" />
 	<setParameter name="ConfirmaPass Key" value="molinosagro" />
