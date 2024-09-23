@@ -1,8 +1,8 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
 
@@ -24,31 +24,40 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
-            var basicosContratos = queryContratos.Where(x => contratos.Contains(x.Negocio) && x.Estado == 5);
+            // Cargar los contratos en memoria antes de hacer las siguientes consultas
+            var basicosContratosList = queryContratos
+                .Where(x => contratos.Contains(x.Negocio) && x.Estado == (int)EnumEstadoContrato.Finalizado)
+                .ToList();
 
+            // Cargar direccionesSap una vez que los contratos estén en memoria
+            var proveedorIds = basicosContratosList.Select(c => c.ProveedorId).Distinct().ToList();
             var direccionesSap = contexto.Set<MailProveedor>()
-                .Where(x => basicosContratos.Select(c => c.ProveedorId).Contains((int)x.ProveedorId)).ToList();
+                .Where(x => proveedorIds.Contains((int)x.ProveedorId) && !string.IsNullOrEmpty(x.DireccionSap))
+                .ToList();
 
+            // Cargar precios una vez que los contratos estén en memoria
+            var contratoIds = basicosContratosList.Select(c => c.Id).ToList();
             var precios = contexto.Set<PrecioPactado>()
-                .Where(x => basicosContratos.Select(c => c.Id).Contains(x.ContratoId)).ToList();
+                .Where(x => contratoIds.Contains(x.ContratoId))
+                .ToList();
 
-            return basicosContratos.AsEnumerable().Select(contrato =>
+            return basicosContratosList.Select(contrato =>
             {
                 // usar direcciones fiscales de SAP
                 contrato.ProveedorDireccion = direccionesSap
-                    .Where(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap))
+                    .Where(x => x.ProveedorId == contrato.ProveedorId)
                     .Select(x => x.DireccionSap).FirstOrDefault();
 
                 contrato.ProveedorLocalidad = direccionesSap
-                    .Where(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap))
+                    .Where(x => x.ProveedorId == contrato.ProveedorId)
                     .Select(x => x.LocalidadSap).FirstOrDefault();
 
                 contrato.ProveedorProvincia = direccionesSap
-                    .Where(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap))
+                    .Where(x => x.ProveedorId == contrato.ProveedorId)
                     .Select(x => x.ProvinciaSap).FirstOrDefault();
 
                 contrato.ProveedorCP = direccionesSap
-                    .Where(x => x.ProveedorId == contrato.ProveedorId && !string.IsNullOrEmpty(x.DireccionSap))
+                    .Where(x => x.ProveedorId == contrato.ProveedorId)
                     .Select(x => x.CodigoPostalSap).FirstOrDefault();
 
                 // guardar precios pactados
@@ -57,12 +66,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     .Select(e => new PrecioPactadosDto
                     {
                         ContratoId = e.ContratoId,
-                        FechaDesde = e.FechaDesde.HasValue ? DbFunctions.Right("0" + SqlFunctions.DatePart("day", e.FechaDesde), 2) + "/" +
-                          DbFunctions.Right("0" + SqlFunctions.DatePart("month", e.FechaDesde), 2) + "/" +
-                          SqlFunctions.DateName("year", e.FechaDesde) : "",
-                        FechaHasta = e.FechaHasta.HasValue ? DbFunctions.Right("0" + SqlFunctions.DatePart("day", e.FechaHasta), 2) + "/" +
-                          DbFunctions.Right("0" + SqlFunctions.DatePart("month", e.FechaHasta), 2) + "/" +
-                          SqlFunctions.DateName("year", e.FechaHasta) : "",
+                        FechaDesde = e.FechaDesde.HasValue ? e.FechaDesde.Value.ToString("dd/MM/yyyy") : null,
+                        FechaHasta = e.FechaHasta.HasValue ? e.FechaHasta.Value.ToString("dd/MM/yyyy") : null,
                         MonedaPactadoDesc = e.MonedaPactado.Descripcion ?? "",
                         MonedaPactadoId = e.MonedaPactadoId ?? "",
                         Precio = e.Precio,
