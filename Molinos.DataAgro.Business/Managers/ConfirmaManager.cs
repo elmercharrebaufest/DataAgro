@@ -928,10 +928,15 @@ namespace Molinos.DataAgro.Business.Managers
                         modifiedFilters.Add(childFilter);
                     }
                     // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
-                    else if (childFilter.Field == "FechaConfirmacion" && childFilter.Value is string strValue)
+                    else if (childFilter.Field == "FechaConfirmacion")
                     {
-                        if (DateTime.TryParse(strValue, out DateTime dateValue))
+                        if (DateTime.TryParse(childFilter.Value.ToString(), out DateTime dateValue))
                         {
+                            // Comprobar si el operador es "hasta" y ajustar la hora
+                            if (childFilter.Operator == "lte")
+                            {
+                                dateValue = dateValue.Date.AddDays(1);
+                            }
                             childFilter.Value = dateValue;
                         }
                         modifiedFilters.Add(childFilter);
