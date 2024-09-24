@@ -276,6 +276,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Dto\BasicoConfirma.cs" />
     <Compile Include="Dto\ConfirmaParteDto.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
