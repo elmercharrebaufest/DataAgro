@@ -547,7 +547,7 @@ namespace Molinos.DataAgro.Business.Managers
                                             new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
                                             new XElement("PorcMultaIncumplimiento", "010"),
                                             new XElement("ComunicacionFijacion", new XAttribute("CodLista", contrato.PagoDirectoVendedor == true ? "2" : "1")),
-                                            new XElement("PizarraFijacion", new XAttribute("CodLista", contrato.Pizarra == true ? "1" : ""))
+                                            (contrato.Pizarra == true ? new XElement("PizarraFijacion", new XAttribute("CodLista", "1")):null)
                                         ) : null,
 
                 #endregion Fijacion
@@ -569,7 +569,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("SioGranos",
                                         new XElement("NumeroDeclaracion", estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null),
                                         new XElement("DetalleDeclaracion",
-                                            new XElement("ModalidadOperacion", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("ModalidadOperacion", new XAttribute("CodLista", esCanje?"2":"1")),
                                             new XElement("EsCompradorFinal"),
                                             new XElement("ProvinciaDestino", new XAttribute("CodLista", string.Empty)),
                                             new XElement("LocalidadDestino"),
