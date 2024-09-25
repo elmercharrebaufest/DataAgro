@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -219,71 +220,10 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-
-
-        public List<string> ListarNegociosPorRangoCodigoSAP(int negocioDesde, int negocioHasta, int claseNegocio, List<int> equipo)
+        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro)
         {
-            var listaNegocios = new List<string>();
-            if (claseNegocio == 1)
-            {
-                var lista = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.EstadoId == 5);
-                listaNegocios = lista.Where(x => int.Parse(x.ContratoSAP) >= negocioDesde && int.Parse(x.ContratoSAP) <= negocioHasta).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            }
-            else
-            {
-                var lista = repositorio.Listar<FijacionDePrecioContrato>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.FijacionSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.Cantidad >= 10000 && x.EstadoId == 5);
-                listaNegocios = lista.Where(x => int.Parse(x.FijacionSAP) >= negocioDesde && int.Parse(x.FijacionSAP) <= negocioHasta).Select(x => x.FijacionSAP.TrimStart('0')).ToList();
-            }
-            listaNegocios.Sort();
-            var result = listaNegocios.FindAll(x => ValidarNegocio(x, claseNegocio, equipo) == string.Empty);
-            return result;
-        }
-
-        public List<string> ValidarNegocios(List<string> codigosSAP, int claseNegocio, List<int> equipo)
-        {
-            var codigos = AgregarCeros(codigosSAP);
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
-            var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
-            List<string> rechazados = new List<string>();
-            foreach (var contrato in contratos)
-            {
-                var mensaje = ValidarContrato(contrato, claseNegocio);
-                if (!string.IsNullOrEmpty(mensaje))
-                {
-                    rechazados.Add(mensaje);
-                }
-            }
-            return rechazados;
-        }
-
-        public List<string> FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio, List<int> equipo)
-        {
-            var fechaDesde = DateTime.ParseExact(desde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var fechaHasta = hasta == "" ? DateTime.Now : DateTime.ParseExact(hasta, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1);
-            var listaNegocios = new List<string>();
-            if (claseNegocio == 1)
-            {
-                listaNegocios = repositorio.Listar<Negocio>(x => (x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !string.IsNullOrEmpty(x.ContratoSAP) && x.ConfirmadoSAP == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.EstadoId == 5).Select(x => x.ContratoSAP.TrimStart('0')).ToList();
-            }
-            else
-            {
-                listaNegocios = repositorio.Listar<FijacionDePrecioContrato>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && !string.IsNullOrEmpty(x.FijacionSAP) && x.ConfirmadoSAP == true && x.Canje == true && x.FechaConfirmacion >= fechaDesde && x.FechaConfirmacion <= fechaHasta && x.Cantidad >= 10000 && x.EstadoId == 5).Select(x => x.FijacionSAP.TrimStart('0')).ToList();
-            }
-            listaNegocios.Sort();
-            var result = listaNegocios.FindAll(x => ValidarNegocio(x, claseNegocio, equipo) == string.Empty);
-            return result;
-        }
-
-        public string ValidarNegocio(string codigoSAP, int claseNegocio, List<int> equipo)
-        {
-            var codigoSAPcompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
-            var mensaje = "";
-
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { codigoSAPcompleto }, equipo));
-            var contrato = consulta.First();
-
-            mensaje += ValidarContrato(contrato, claseNegocio);
-            return mensaje;
+            var filter = CorregirFiltro(filtro);
+            return repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
         }
 
         private string ValidarContrato(BasicoContrato contrato, int claseNegocio)
@@ -832,7 +772,7 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public List<ConfirmaArchivoDto> ListarConfirmas()
+        public List<ConfirmaArchivoDto> ListarConfirmas() //Pantalla descargas
         {
             return repositorio.Listar<Confirma, ConfirmaArchivoDto>
                 (a => new ConfirmaArchivoDto
@@ -919,5 +859,104 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
+
+        private DataSourceRequest CorregirFiltro(DataSourceRequest request)
+        {
+            var filtro = request.Filter;
+            int claseNegocio = 0;
+            // Lista para acumular los filtros modificados
+            var modifiedFilters = new List<Filter>();
+
+            // Manejo de filtros hijos
+            if (filtro.Filters != null)
+            {
+                foreach (var childFilter in filtro.Filters)
+                {
+                    // Manejar filtros 'ClaseNegocio'
+                    if (childFilter.Field == "ClaseNegocio")
+                    {
+                        childFilter.Field = "TipoNegocioId";
+
+                        if (childFilter.Value.ToString() == "1")
+                        {
+                            claseNegocio = 1;
+                            // Crear un nuevo filtro con lógica 'or' para TipoNegocio = 1 o TipoNegocio = 2
+                            modifiedFilters.Add(new Filter
+                            {
+                                Logic = "or",
+                                Filters = new List<Filter>
+                        {
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 1 },
+                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 2 }
+                        }
+                            });
+                        }
+                        else if (childFilter.Value.ToString() == "2")
+                        {
+                            claseNegocio = 2;
+                            childFilter.Value = 3;
+                            childFilter.Operator = "eq";
+                            modifiedFilters.Add(childFilter);
+                        }
+                    }
+                    // Manejar filtros 'ContratoSAP' con operador 'gte' y si solo hay uno
+                    else if (childFilter.Field == "NegocioSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "NegocioSAP") == 1)
+                    {
+                        // Interpretar el valor como una lista de contratos y crear filtros eq
+                        var contratos = childFilter.Value.ToString().Split(';');
+                        var eqFilters = contratos.Select(c => new Filter
+                        {
+                            Field = ObtenerTextoNegocio(claseNegocio),
+                            Operator = "eq",
+                            Value = CompletarNegocioSAP(c)
+                        }).ToList();
+
+                        // Crear un nuevo filtro con lógica 'or' para ContratoSAP = [lista de contratos]
+                        var contratoSapLogicFilter = new Filter
+                        {
+                            Logic = "or",
+                            Filters = eqFilters
+                        };
+
+                        // Añadir el nuevo filtro y continuar con los demás filtros
+                        modifiedFilters.Add(contratoSapLogicFilter);
+                    }
+                    else if (childFilter.Field == "NegocioSAP")
+                    {
+                        childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
+                        childFilter.Field = ObtenerTextoNegocio(claseNegocio);
+                        modifiedFilters.Add(childFilter);
+                    }
+                    // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
+                    else if (childFilter.Field == "FechaConfirmacion")
+                    {
+                        if (DateTime.TryParse(childFilter.Value.ToString(), out DateTime dateValue))
+                        {
+                            // Comprobar si el operador es "hasta" y ajustar la hora
+                            if (childFilter.Operator == "lte")
+                            {
+                                dateValue = dateValue.Date.AddDays(1);
+                            }
+                            childFilter.Value = dateValue;
+                        }
+                        modifiedFilters.Add(childFilter);
+                    }
+                    // Añadir otros filtros tal cual
+                    else
+                    {
+                        modifiedFilters.Add(childFilter);
+                    }
+                }
+            }
+
+            // Asignar la lista de filtros modificados al filtro principal
+            filtro.Filters = modifiedFilters;
+            request.Filter = filtro;
+            return request;
+        }
+
+        private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio == 1 ? "ContratoSAP" : "FijacionSAP";
+
+        private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
     }
 }
