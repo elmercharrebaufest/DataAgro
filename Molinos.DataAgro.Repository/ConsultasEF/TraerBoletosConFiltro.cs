@@ -18,20 +18,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class TraerBoletosConFiltro : IConsultaEscalar<DataSourceResult>
     {
         private readonly DataSourceRequest request;
+        private readonly List<int> equipo;
 
-        public TraerBoletosConFiltro(DataSourceRequest request)
+        public TraerBoletosConFiltro(DataSourceRequest request,List<int> equipo)
         {
             this.request = request;
+            this.equipo = equipo;
         }
 
-        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request)
+        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
+            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
+            // Aplicar los filtros de Kendo Grid
+            GridHelper.TruncateTime(request.Filter, ref queryContratos);
             // Consulta base para obtener los negocios aplicables
             var queryNegocios = contexto.Set<Negocio>().AsQueryable();
 
-            // Consulta para obtener los boletos asociados
             var queryBoletos = contexto.Set<Boleto>().Select(b => new
             {
                 b.Id,
@@ -41,28 +45,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 b.ComercialId
             });
 
-            // Consulta para obtener la descripción del tipo de boleto
             var queryTiposBoleto = contexto.Set<BoletoCompraNet>().Select(tb => new
             {
                 tb.Id,
                 tb.Descripcion
             });
 
-            // Consulta para obtener la descripción del tipo de negocio
             var queryTiposNegocio = contexto.Set<TipoNegocio>().Select(tb => new
             {
                 tb.TipoNegocioId,
                 tb.Descripcion
             });
 
-            // Consulta para obtener la descripción de la bolsa
             var queryBolsas = contexto.Set<BolsaCompraNet>().Select(b => new
             {
                 b.Id,
                 b.Descripcion
             });
 
-            // Consulta para obtener la descripción del proveedor (corredor)
             var queryProveedores = contexto.Set<Proveedor>().Select(p => new
             {
                 p.ProveedorId,
@@ -84,27 +84,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     np.parent.Canje
                 });
 
-            // Aplicar los filtros de Kendo Grid
-            GridHelper.TruncateTime(request.Filter, ref queryNegocios);
-
-            if (request.Filter == null)
-            {
-                request.Filter = new Filter
-                {
-                    Filters = new List<Filter>
-                    {
-                        new Filter
-                        {
-                            Field = "Fecha",
-                            Operator = "gte",
-                            Value = DateTime.Now.Date
-                        }
-                    },
-                    Logic = "and"
-                };
-            }
-
-            var queryBasicoBoletos = from negocio in queryNegocios
+            var queryBasicoBoletos = from negocio in queryContratos
                                      join boleto in queryBoletos on negocio.Id equals boleto.NegocioId into b
                                      from boleto in b.DefaultIfEmpty()
                                      join np in queryNegociosPadre on negocio.ContratoSAP equals np.ContratoSAP into npGroup
@@ -129,7 +109,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                      from proveedorVendedor in pVendedor.DefaultIfEmpty()
                                      where
                                         negocio.ConfirmadoSAP == true &&
-                                        negocio.EstadoId == (int)EnumEstadoContrato.Finalizado &&
+                                        negocio.Estado == (int)EnumEstadoContrato.Finalizado &&
                                         (
                                             (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
                                              (np.BoletoId == (int)EnumBoletoCompraNet.FISICO ||
@@ -142,9 +122,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                      select new BasicoBoleto
                                      {
                                          Id = negocio.Id,
-                                         NegocioSAP = (negocio as FijacionDePrecioContrato).FijacionSAP ?? negocio.ContratoSAP,
+                                         NegocioSAP = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION? negocio.FijacionSAP : negocio.ContratoSAP,
                                          ContratoSAP = negocio.ContratoSAP ?? "",
-                                         FijacionSAP = (negocio as FijacionDePrecioContrato).FijacionSAP ?? "",
+                                         FijacionSAP = negocio.FijacionSAP ?? "",
                                          Version_Proxima = boleto.Version,
                                          Estado_Version = boleto.FechaGeneracion == null ? "No Generado" : string.Empty,
                                          TipoBoleto = tipoBoleto.Descripcion ?? "Ninguno",
@@ -174,7 +154,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request);
+                return Query(contexto, request, equipo);
             }
         }
     }

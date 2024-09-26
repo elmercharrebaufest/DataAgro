@@ -123,7 +123,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
         {
-            var model = confirmaManager.TraerNegociosFiltrados(filtro);
+            var model = confirmaManager.TraerNegociosFiltrados(filtro, GlobalVariables.EquipoReal);
 
             return new JsonResult()
             {

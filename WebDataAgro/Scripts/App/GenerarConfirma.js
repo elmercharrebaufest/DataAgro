@@ -1,4 +1,4 @@
-//Inicializar
+ï»¿//Inicializar
 $(document).ready(function () {
     inicializarFiltros();
     inicializarGrillaContratos();
@@ -9,7 +9,7 @@ function inicializarFiltros() {
         weekNumber: true,
         format: "dd/MM/yyyy"
     });
-
+     
     $("#FechaConfirmacionHasta").kendoDatePicker({
         weekNumber: true,
         format: "dd/MM/yyyy"
@@ -50,7 +50,7 @@ function inicializarGrillaContratos() {
                 };
                 workbook.sheets.push(sheet);
             } else {
-                // Vacíar las filas existentes del sheet
+                // VacÃ­ar las filas existentes del sheet
                 sheet.rows = [];
                 sheet.columns = [];
                 sheet.name = "Datos Seleccionados";
@@ -58,11 +58,11 @@ function inicializarGrillaContratos() {
 
             var columns = [
                 { field: "ContratoSAP", title: "Contrato SAP", width: 150 },
-                { field: "FijacionSAP", title: "Fijación SAP", width: 150 },
+                { field: "FijacionSAP", title: "FijaciÃ³n SAP", width: 150 },
                 { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
                 { field: "Bolsa", title: "Bolsa", width: 150 },
-                { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
-                { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150 },
+                { field: "FechaOperacion", title: "Fecha OperaciÃ³n", width: 150 },
+                { field: "FechaConfirmacion", title: "Fecha ConfirmaciÃ³n", width: 150 },
                 { field: "Corredor", title: "Corredor", width: 150 },
                 { field: "Vendedor", title: "Vendedor", width: 150 },
                 { field: "Precio", title: "Precio", width: 150 },
@@ -110,11 +110,11 @@ function inicializarGrillaContratos() {
             messages: {
                 display: "{0} - {1} de {2} elementos",
                 empty: "No hay elementos para mostrar",
-                page: "Página",
+                page: "PÃ¡gina",
                 of: "de {0}",
-                itemsPerPage: "elementos por página",
+                itemsPerPage: "elementos por pÃ¡gina",
                 first: "Primero",
-                last: "Último",
+                last: "Ãšltimo",
                 next: "Siguiente",
                 previous: "Anterior"
             }
@@ -151,11 +151,11 @@ function inicializarGrillaContratos() {
                 width: 70
             },
             { field: "ContratoSAP", title: "Contrato SAP", width: 50, },
-            { field: "FijacionSAP", title: "Fijación SAP", width: 50, },
+            { field: "FijacionSAP", title: "FijaciÃ³n SAP", width: 50, },
             { field: "TipoBoleto", title: "Tipo Boleto", width: 50 },
             { field: "Bolsa", title: "Bolsa", width: "50px" },
-            { field: "FechaOperacion", title: "F. Operación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" } },
-            { field: "FechaConfirmacion", title: "F. Confirmación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" } },
+            { field: "FechaOperacion", title: "F. OperaciÃ³n", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha OperaciÃ³n" } },
+            { field: "FechaConfirmacion", title: "F. ConfirmaciÃ³n", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha ConfirmaciÃ³n" } },
             { field: "Corredor", title: "Corredor", width: 150 },
             { field: "Vendedor", title: "Vendedor", width: 150 },
             { field: "Precio", title: "Precio", type: "number", width: 50, format: "{0:#,##0.00}" },
@@ -178,14 +178,6 @@ $("body").on("change", "#ContratoDesde", function () {
         $("#ContratoHasta").val("");
     } else {
         $("#ContratoHasta").removeAttr('disabled');
-    }
-});
-
-$("body").on("change", "#FechaConfirmacionDesde", function () {
-    if ($("#FechaConfirmacionDesde").val() == '') {
-        $("#FechaConfirmacionHasta").prop("disabled", true);
-    } else {
-        $("#FechaConfirmacionHasta").removeAttr('disabled');
     }
 });
 
@@ -277,11 +269,11 @@ function FiltrarNegocios() {
                 $("#contratos-grid").show();
             }
         } else {
-            MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+            MensErr(result.Mensaje || "OcurriÃ³ un error al intentar obtener los Negocios.");
         }
     } else {
-        if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
-        else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
+        if (!esContratoDesdeValido()) MensErr("Solo se admiten nÃºmeros y el ';' en el campo Contrato.");
+        else MensErr("El Rango de Contratos o Fechas no es vÃ¡lido. El campo Desde debe tener un valor menor al campo Hasta.");
     }
 }
 
@@ -303,20 +295,20 @@ function trimEnd(cadena) {
     return cadena.at(cadena.length - 1) == ';' ? cadena.slice(0, cadena.length - 1) : cadena;
 }
 
-// Función para validar el contenido de contratoDesde
+// FunciÃ³n para validar el contenido de contratoDesde
 function esContratoDesdeValido() {
     var contratoDesde = $("#ContratoDesde").val();
 
-    // Si contratoDesde es nulo o vacío, lo consideramos válido
+    // Si contratoDesde es nulo o vacÃ­o, lo consideramos vÃ¡lido
     if (contratoDesde === null || contratoDesde.trim() === '') {
         return true;
     }
 
-    // Verificar que contratoDesde contenga solo números o el símbolo ';'
+    // Verificar que contratoDesde contenga solo nÃºmeros o el sÃ­mbolo ';'
     return /^[0-9;]+$/.test(contratoDesde.trim());
 }
 
-// Función para validar fechas y contratos
+// FunciÃ³n para validar fechas y contratos
 function validarFechasYContratos() {
     var fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
     var fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
@@ -327,7 +319,7 @@ function validarFechasYContratos() {
         return false; // La fecha desde no puede ser mayor que la fecha hasta
     }
 
-    // Validar contratos solo si ambos valores están presentes
+    // Validar contratos solo si ambos valores estÃ¡n presentes
     if (contratoDesde) {
         if (contratoHasta) {
             // Verificar que contratoDesde sea menor que contratoHasta
@@ -365,7 +357,7 @@ function GenerarConfirmas() {
         var negocioSAPString = negocioSAPList.join(';');
         GenerarConfirma(negocioSAPString);
     } else {
-        MensErr("No hay ningún negocio seleccionado.");
+        MensErr("No hay ningÃºn negocio seleccionado.");
     }
 }
 
@@ -385,7 +377,7 @@ function GenerarConfirma(negocioSAP) {
         if (result.HayError) {
             result.ListaErrores.forEach(err => MensErr(err.Message));
         } else {
-            MensErr("No se generó ningún Confirma.");
+            MensErr("No se generÃ³ ningÃºn Confirma.");
         }
     } else {
         CargarTablaModal(result.confirmasGenerados);
