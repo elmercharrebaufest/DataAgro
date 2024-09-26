@@ -497,7 +497,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                                 "Pago contra Warrant" : (
                                                                 (contrato.PagoDiferido == true) ?
                                                                     "Días de diferimiento contra mercadería entregada" :
-                                                                    "72 hrs contra mercadería entregada"
+                                                                    "72 hs contra mercadería descargada."
                                                                 )
                                                             )
                                                         ) : null
@@ -552,7 +552,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 #endregion Fijacion
 
-                                    new XElement("ProduccionVendedor", new XAttribute("CodLista", contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2"))),
+                                    new XElement("ProduccionVendedor", new XAttribute("CodLista", contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId>0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2"))),
 
                 #region APRECIO
 
