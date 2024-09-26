@@ -252,6 +252,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CampanaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Campana.CodigoSIO : contrato.Campana.CodigoSIO,
                         ProvinciaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Provincia.CodigoConfirma : contrato.Provincia.CodigoConfirma,
                         DestinoConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Destino.CodigoConfirma : contrato.Destino.CodigoConfirma,
+                        ConfirmadoSAP = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.ConfirmadoSAP : contrato.ConfirmadoSAP,
                     };
 
                 return queryNegocios;

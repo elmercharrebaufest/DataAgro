@@ -282,5 +282,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CampanaConfirma { get; set; }
         public string ProvinciaConfirma { get; set; }
         public string DestinoConfirma { get; set; }
+        public bool? ConfirmadoSAP { get; set; }
     }
 }

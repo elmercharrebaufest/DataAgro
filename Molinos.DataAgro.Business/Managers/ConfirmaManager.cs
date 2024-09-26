@@ -220,10 +220,10 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro)
+        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro,List<int> equipo)
         {
             var filter = CorregirFiltro(filtro);
-            return repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            return repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
         }
 
         private string ValidarContrato(BasicoContrato contrato, int claseNegocio)
