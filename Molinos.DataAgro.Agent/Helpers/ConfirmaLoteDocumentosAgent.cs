@@ -645,8 +645,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
+                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
+
+                if(contrato.Pizarra == true)
+                    fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
                 #endregion Fijacion
                 detalleContrato.Fijacion = fijacion;
             }
@@ -983,7 +986,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Producto = new Producto()
             {
                 CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-                CodConv = "",
             };
 
             detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
@@ -1007,7 +1009,8 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             //TCodLista moneda = new TCodLista() { CodLista = monedaAFijar == "ARP" ? "1" : monedaAFijar == "USD" ? "2" : string.Empty };
 
-            detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
+            // GSIAN: Comentado por el caso de QA 2687753
+            //detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
 
             detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
             detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
@@ -1015,18 +1018,17 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
-            TCaption cantCamiones = new TCaption();
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            cantCamiones.Caption = "";
-            detalleContrato.CantCamiones = cantCamiones;
+            detalleContrato.CantCamiones = new TCaption();
 
             detalleContrato.MontoImponible = new TCaption() { Value = string.Empty };
             detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.;
 
-            TCaption comisionPorComprador = new TCaption();
-            comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-            detalleContrato.ComisionPorComprador = comisionPorComprador;
+            // GSIAN: Comentado por el caso de QA 2687753
+            //TCaption comisionPorComprador = new TCaption();
+            //comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
+            //detalleContrato.ComisionPorComprador = comisionPorComprador;
 
             detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
             {
@@ -1044,7 +1046,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.Origen = new Origen()
             {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { LocalidadText = "", Value = contrato.LocalidadConfirma },
+                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma },
                 ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma }
             };
 
@@ -1085,29 +1087,31 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
                     FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
-                    UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
-                    FijPeriodo = new TCodCaption() { CodLista = "1" },
+                    UnidadMedidaFijacion = new TCodCaption() { CodLista = "K", Caption = "K" },
+                    FijPeriodo = new TCodCaption() { Value = "1" },
                     FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
                     FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
+                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
+
+                if(contrato.Pizarra == true)
+                    detalleContrato.Fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
             }
 
             DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor produccionVendedor = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor();
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
             produccionVendedor.CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2");
-            produccionVendedor.ClausulaText = "";
             detalleContrato.ProduccionVendedor = produccionVendedor;
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal;
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            decisionPagoVoluntario.FondoFederalText = "";
-            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
+            //DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
+            //decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
+            //decisionPagoVoluntario.FondoFederalText = "";
+            //detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
 
             //OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
             //operacionExentaImpSantaFe.CodLista = "";
@@ -1115,9 +1119,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             //operacionExentaImpSantaFe.OperacionExentaImpSantaFeText = "";
             ////operacionExentaImpSantaFe.Value = "";
 
-            //SioGranos sioGranos = new SioGranos();
-            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            //detalleContrato.SioGranos = sioGranos;
+            SioGranos sioGranos = new SioGranos();
+            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoFijarPrecioDetalleContrato
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -1362,8 +1366,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IndiceRofex2 = new DetalleDocumentoFijarPrecioRofexDetalleContratoFijacionIndiceRofex2() { Codigo = "", Value = "" }, // ???
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
+                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
+
+                if (contrato.Pizarra == true)
+                    fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
                 #endregion Fijacion
                 detalleContrato.Fijacion = fijacion;
             }
@@ -1563,8 +1570,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
+                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
+
+                if (contrato.Pizarra == true)
+                    detalleContrato.Fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
             }
             #endregion Fijacion
 
@@ -2478,8 +2488,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
+                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
+
+                if (contrato.Pizarra == true)
+                    fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
                 #endregion Fijacion
                 detalleContrato.Fijacion = fijacion;
             }
