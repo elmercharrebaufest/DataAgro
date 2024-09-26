@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
         void ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos);
         BoletoDto ValidarNegocioParaGenerarBoleto(BasicoContrato negocio);
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
-        DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro);
+        DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
     }
 }
