@@ -210,6 +210,7 @@
     <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
+    <Compile Include="ConsultasEF\TraerConfirmasConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerResearchPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerContratosReporteAFijarPase.cs" />
     <Compile Include="ConsultasEF\TraerExportarAllCapacidadProductiva.cs" />

@@ -1,4 +1,6 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -52,38 +54,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult ListarNegocios(int desdeSAP, int hastaSAP, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.ListarNegociosPorRangoCodigoSAP(desdeSAP, hastaSAP, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
-        public ActionResult FiltrarNegociosPorFecha(string desde, string hasta, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.FiltrarNegociosPorFecha(desde, hasta, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
-        public ActionResult ValidarNegocios(List<string> listaCodigosSAP, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.ValidarNegocios(listaCodigosSAP, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
-        public ActionResult ValidarNegocio(string codigoSAP, int claseNegocio)
-        {
-            return new JsonResult()
-            {
-                Data = confirmaManager.ValidarNegocio(codigoSAP, claseNegocio, GlobalVariables.EquipoReal)
-            };
-        }
-
         public ActionResult DescargarArchivoConfirma(string codigoSAP)
         {
             var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
@@ -107,7 +77,7 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public ActionResult ListarConfirmas()
+        public ActionResult ListarConfirmas()//Para pantalla descargar
         {
             List<ConfirmaArchivoDto> confirmas = confirmaManager.ListarConfirmas();
 
@@ -149,6 +119,18 @@ namespace WebDataAgro.Controllers
             string identif = strFechaHora + strTicks;
 
             return Json(Util.GetDownloadKey(identif));
+        }
+
+        public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
+        {
+            var model = confirmaManager.TraerNegociosFiltrados(filtro);
+
+            return new JsonResult()
+            {
+                Data = model,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
         }
     }
 }
