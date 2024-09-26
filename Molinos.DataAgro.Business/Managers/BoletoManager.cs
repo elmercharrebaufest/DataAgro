@@ -757,10 +757,10 @@ namespace Molinos.DataAgro.Business.Managers
             return clausulas;
         }
 
-        public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro)
+        public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo)
         {
             var filter = CorregirFiltro(filtro);
-            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoBoleto>;
 
             // Iterar sobre los datos y modificar atributos
@@ -873,10 +873,15 @@ namespace Molinos.DataAgro.Business.Managers
                         modifiedFilters.Add(childFilter);
                     }
                     // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
-                    else if (childFilter.Field == "FechaConfirmacion" && childFilter.Value is string strValue)
+                    else if (childFilter.Field == "FechaConfirmacion")
                     {
-                        if (DateTime.TryParse(strValue, out DateTime dateValue))
+                        if (DateTime.TryParse(childFilter.Value.ToString(), out DateTime dateValue))
                         {
+                            // Comprobar si el operador es "hasta" y adicionar 1 día
+                            if (childFilter.Operator == "lte")
+                            {
+                                dateValue = dateValue.Date.AddDays(1);
+                            }
                             childFilter.Value = dateValue;
                         }
                         modifiedFilters.Add(childFilter);
