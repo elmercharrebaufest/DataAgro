@@ -272,6 +272,7 @@
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\EnumNegocioTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Common\Enums\EnumTipoPeriodoDB.cs" />
+    <Compile Include="Common\Enums\EnumTipoPosicionCBOT.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
