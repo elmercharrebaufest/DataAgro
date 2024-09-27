@@ -253,7 +253,22 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ProvinciaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Provincia.CodigoConfirma : contrato.Provincia.CodigoConfirma,
                         DestinoConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Destino.CodigoConfirma : contrato.Destino.CodigoConfirma,
                         ConfirmadoSAP = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.ConfirmadoSAP : contrato.ConfirmadoSAP,
-                    };
+                        Descuentos = contrato.Descuentos.Select(y => new DescuentoBonificacionDto
+                        {
+                            ContratoId = y.ContratoId,
+                            FechaDesde = y.FechaDesde.ToString(),
+                            FechaHasta = y.FechaHasta.ToString(),
+                            Importe = y.Importe,
+                            MonedaId = y.MonedaId,
+                            Moneda = y.Moneda.Descripcion,
+                            Id = y.Id,
+                            Porcentaje = y.Porcentaje,
+                            TipoDBDesc = y.TipoDB.Descripcion,
+                            TipoDBId = y.TipoDBId,
+                            TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                            TipoPeriodoDBId = y.TipoPeriodoDBId
+                        }).ToList()
+            };
 
                 return queryNegocios;
             }

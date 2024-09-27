@@ -16,6 +16,7 @@
     [CodigoConfirma] VARCHAR(50) NULL,
     [CUIT] VARCHAR(20) NULL,
     [RazonSocial] VARCHAR(100) NULL,
+    [CentroPropio] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
 
 );

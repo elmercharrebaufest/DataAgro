@@ -1477,6 +1477,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE.");
             }
 
+            if (oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && centro.CentroPropio == false)
+            {
+                oErrorMessages.Error("Centro", "No es posible crear un contrato carta oferta para el centro " + centro.Descripcion);
+            }
+
             //if (oParam.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oParam.TipoAgenteCompraId != null)
             //{
             //    if (ValidarFechaAgenteMP(oParam))

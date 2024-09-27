@@ -6,6 +6,7 @@ using System;
 using Humanizer;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Resources;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -36,13 +37,13 @@ namespace Molinos.DataAgro.Business.Procesamiento
             }
             if (descuentoGeneralSobrePrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe} " +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
+                res.Texto += $"Se bonificará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe,descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
             }
             if (descuentoGeneralSobrePrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe} " +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
+                res.Texto += $"Se descontará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
             }
 
 
@@ -56,27 +57,43 @@ namespace Molinos.DataAgro.Business.Procesamiento
             }
             if (descuentoGeneralFueraPrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {descuentoGeneralFueraPrecio.Importe}" +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe)}) por tonelada. ";
+                res.Texto += $"Se bonificará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralFueraPrecio.Importe,descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
             }
             if (descuentoGeneralFueraPrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {descuentoGeneralFueraPrecio.Importe}" +
-                    $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe)}) por tonelada. ";
+                res.Texto += $"Se descontará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralFueraPrecio.Importe, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
             }
             return res;
         }
 
-        private string DevolverNumeroEnLetras(decimal numero)
+        private decimal ValorAbsoluto(decimal numero)
+        {
+            return Math.Abs(numero);
+        }
+
+        private string DevolverNumeroEnLetrasConDivisa(decimal numero, string moneda)
         {
             numero = Math.Round(numero, 2);
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
+            var letras = moneda == "USD" ? "Dólares " : "Pesos ";
+            letras += ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
             var fraccion = numero - Math.Floor(numero);
-            if (fraccion > 0)
-            {
-                letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()}";
-            }
+            letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper()} Centavos";
             return letras;
+        }
+
+        private string DivisaSimbolica(string divisa)
+        {
+            return divisa == "USD" ? Text.USD : Text.ARP;
+        }
+
+        private string NumeroConSeparadores(decimal? numero)
+        {
+            var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
+            // Obtener el valor absoluto del número
+            decimal valorAbsoluto = Math.Abs(numero.GetValueOrDefault());
+            return valorAbsoluto.ToString("#,###.##", objNumberFormatInfo);
         }
     }
 }
