@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CodigoConfirma { get; set; }
         public string CUIT { get; set; }
         public string RazonSocial { get; set; }
+        public bool CentroPropio { get; set; }
 
         [ForeignKey("LocalidadId")]
         public virtual Localidad Localidad { get; set; }
