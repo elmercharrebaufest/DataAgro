@@ -88,20 +88,27 @@ namespace Molinos.DataAgro.Business.Managers
 
                 ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
 
-                logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}. " +
-                    $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. " +
-                    $"altaEstadoDocumento = {confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " +
-                    $"altaIdDocumentoExistenteLote = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " +
-                    $"altaIdDocumentoExistente = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}");
+                logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado?.Descripcion}. " +
+                    $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote?.Descripcion}. " +
+                    $"altaEstadoDocumento = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
+                    $"altaIdDocumentoExistenteLote = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
+                    $"altaIdDocumentoExistente = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
                 // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
                 // nuevoConfirma.IsWebService = true;
 
                 // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
+                string wsErrorConfirma = "";
+                wsErrorConfirma += $"{confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}: {confirmaAltaLoteResult.altaEstadoDetalleError}. <br>";
+                wsErrorConfirma += $"{confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. <br>";
+
                 confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
                 {
-                    resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
+                    wsErrorConfirma += $"{x.confirmaAltaEstadoDocumento.Descripcion}: {y}. <br>";
                 }));
+
+                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {wsErrorConfirma}"));
+
                 logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
             }
 
@@ -174,20 +181,27 @@ namespace Molinos.DataAgro.Business.Managers
                                     List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
                                     ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
 
-                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}. " +
-                                        $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. " +
-                                        $"altaEstadoDocumento = {confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " +
-                                        $"altaIdDocumentoExistenteLote = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " +
-                                        $"altaIdDocumentoExistente = {confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}");
+                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado?.Descripcion}. " +
+                                        $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote?.Descripcion}. " +
+                                        $"altaEstadoDocumento = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
+                                        $"altaIdDocumentoExistenteLote = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
+                                        $"altaIdDocumentoExistente = " + (confirmaAltaLoteResult.altaItem.Count() > 0 ? $"{confirmaAltaLoteResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
                                     // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
                                     // nuevoConfirma.IsWebService = true;
 
                                     // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
+                                    string wsErrorConfirma = "";
+                                    wsErrorConfirma += $"{confirmaAltaLoteResult.confirmaAltaEstado.Descripcion}: {confirmaAltaLoteResult.altaEstadoDetalleError}. <br>";
+                                    wsErrorConfirma += $"{confirmaAltaLoteResult.confirmaAltaEstadoLote.Descripcion}. <br>";
+
                                     confirmaAltaLoteResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
                                     {
-                                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {y}"));
+                                        wsErrorConfirma += $"{x.confirmaAltaEstadoDocumento.Descripcion}: {y}. <br>";
                                     }));
+
+                                    resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {wsErrorConfirma}"));
+
                                     logger.Info("---- FIN WS CONFIRMA ----");
                                 }
                             }
@@ -697,11 +711,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new ConfirmaGeneradoDto
             {
-                ContratoSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
+                NegocioSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
                 FechaGeneracion = default(DateTime),
                 IsWebService = false,
+                ContratoSAP = itemNegocio.ContratoSAP,
+                FijacionSAP = itemNegocio.FijacionSAP,
             };
         }
 
