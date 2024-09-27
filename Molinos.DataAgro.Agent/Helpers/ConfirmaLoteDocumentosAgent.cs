@@ -602,7 +602,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -615,7 +615,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
@@ -648,7 +647,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
 
-                if(contrato.Pizarra == true)
+                if (contrato.Pizarra == true)
                     fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
                 #endregion Fijacion
                 detalleContrato.Fijacion = fijacion;
@@ -862,7 +861,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -875,7 +874,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
@@ -1066,13 +1064,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
                 (contrato.PagoDiferido == true ? "Días de diferimiento contra mercadería entregada" :
-                "72 hrs contra mercadería entregada"))) : null);
+                "72 hs contra mercadería descargada."))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
                 pagos.PagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
                 pagos.PorcPago = new TCaption() { Value = contrato.PorcentajeDePago.Value.ToString() };
@@ -1096,14 +1093,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
                 };
 
-                if(contrato.Pizarra == true)
+                if (contrato.Pizarra == true)
                     detalleContrato.Fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
             }
 
-            DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor produccionVendedor = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor();
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            produccionVendedor.CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2");
-            detalleContrato.ProduccionVendedor = produccionVendedor;
+            detalleContrato.ProduccionVendedor = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal;
 
@@ -1316,7 +1311,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -1329,7 +1324,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
@@ -1375,11 +1369,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalleContrato.Fijacion = fijacion;
             }
 
-            ProduccionVendedor produccionVendedor = new ProduccionVendedor();
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            produccionVendedor.CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2");
-            produccionVendedor.ClausulaText = "";
-            detalleContrato.ProduccionVendedor = produccionVendedor;
+            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
             DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
@@ -1579,7 +1570,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             #endregion Fijacion
 
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2") };
+            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
             //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario()
@@ -1777,11 +1768,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Insumos = insumos;
             #endregion Insumos
 
-            ProduccionVendedor produccionVendedor = new ProduccionVendedor();
             // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            produccionVendedor.CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2");
-            produccionVendedor.ClausulaText = "";
-            detalleContrato.ProduccionVendedor = produccionVendedor;
+            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
             DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
@@ -1943,13 +1931,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
                 (contrato.PagoDiferido == true ? "Días de diferimiento contra mercadería entregada" :
-                "72 hrs contra mercadería entregada"))) : null);
+                "72 hs contra mercadería descargada."))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
                 pagos.PagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    //CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
                 pagos.PorcPago = new TCaption() { Value = contrato.PorcentajeDePago.Value.ToString() };
@@ -1958,7 +1945,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalleContrato.Pagos = pagos;
             }
 
-            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.PagoDirectoVendedor == true ? "1" : "4") : (contrato.Consignatario == true ? "5" : "2") };
+            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: qué va acá?
             //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario();
@@ -2176,7 +2163,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -2189,7 +2176,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
@@ -2445,7 +2431,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -2458,7 +2444,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
@@ -2717,7 +2702,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 (contrato.Warrant == true) ?
                 "Pago contra Warrant" : (
                                     (contrato.PagoDiferido == true) ?
-                                        "72 hrs contra mercadería entregada" :
+                                        "72 hs contra mercadería descargada." :
                                         "Días de diferimiento contra mercadería entregada"
                                     )
                                 )
@@ -2730,7 +2715,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 PagoAOrdenDe pagoAOrdenDe = new PagoAOrdenDe()
                 {
-                    CUIT = string.Empty,
                     CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
                 };
 
