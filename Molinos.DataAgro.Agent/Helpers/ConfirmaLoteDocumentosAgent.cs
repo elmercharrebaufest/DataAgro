@@ -73,7 +73,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
                     {
                         if (datosConfirma is null || (condiciones is null && contrato.EsFason != true && contrato.PrestamoDevolucion != true)) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} y no tiene condiciones de fijacion asociadas.");
-                        else logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
+                        else if (datosConfirma != null && condiciones != null) logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
                     }
 
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
