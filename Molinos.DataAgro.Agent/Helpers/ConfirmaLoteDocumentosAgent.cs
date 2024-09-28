@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     CondicionFijacionEstadoBoletoDto condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
                     if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
                     {
-                        if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} y no tiene condiciones de fijacion asociadas.");
+                        if (datosConfirma is null || (condiciones is null && contrato.EsFason != true && contrato.PrestamoDevolucion != true)) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} y no tiene condiciones de fijacion asociadas.");
                         else logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
                     }
 
@@ -633,15 +633,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
                 #region Fijacion
                 Fijacion fijacion = new Fijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
                     FijPeriodo = new TCodCaption() { CodLista = "1" },
-                    FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
@@ -1080,14 +1081,15 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
                 detalleContrato.Fijacion = new Fijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K", Caption = "K" },
                     FijPeriodo = new TCodCaption() { Value = "1" },
-                    FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
@@ -1344,14 +1346,15 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 #region Fijacion
                 // GSIAN: Cómo se completa?
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
                 DetalleDocumentoFijarPrecioRofexDetalleContratoFijacion fijacion = new DetalleDocumentoFijarPrecioRofexDetalleContratoFijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
                     FijPeriodo = new TCodCaption() { CodLista = "1" },
-                    FijFecDesde1 = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta1 = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde1 = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta1 = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     FechaPosicionRofex1 = new TFecha() { Anio = "", Mes = "", Value = "" }, // ????
                     IndiceRofex1 = new DetalleDocumentoFijarPrecioRofexDetalleContratoFijacionIndiceRofex1() { Codigo = "", Value = "" }, // ???
                     FijFecDesde2 = new TCaption(), // ???
@@ -1551,14 +1554,16 @@ namespace Molinos.DataAgro.Agent.Helpers
             #region Fijacion
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
+
                 detalleContrato.Fijacion = new Fijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { Caption = "K", CodLista = "K" },
                     FijPeriodo = new TCodCaption() { /*CodLista = "1",*/ Value = "1" },
-                    FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
@@ -2194,15 +2199,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
                 #region Fijacion
                 DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion fijacion = new DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
                     FijPeriodo = new TCodCaption() { CodLista = "1" },
-                    FijFecDesde1 = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta1 = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde1 = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta1 = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     FechaPosicionRofex1 = new TFecha() { Anio = "", Mes = "", Value = "" }, // ????
                     IndiceRofex1 = new DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1() { Codigo = "", Value = "" }, // ???
                     FijFecDesde2 = new TCaption(), // ???
@@ -2462,15 +2468,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
             {
+                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
                 #region Fijacion
                 Fijacion fijacion = new Fijacion()
                 {
-                    FijMinima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K" },
                     FijPeriodo = new TCodCaption() { CodLista = "1" },
-                    FijFecDesde = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = CorregirFormatoFecha(condiciones.FechaHasta) },
+                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
                     ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
                     //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },

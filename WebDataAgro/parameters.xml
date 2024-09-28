@@ -145,6 +145,38 @@
 						match="/configuration/appSettings/add[@key='ActivarBLEND']
                            /@value" />
 	</parameter>
+	
+	<parameter name="AmbienteStaging Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='AmbienteStaging']
+					   /@value" />
+	</parameter>
+	<parameter name="AmbienteUATMOA Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='AmbienteUATMOA']
+					   /@value" />
+	</parameter>
+	<parameter name="AmbienteUATDA Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='AmbienteUATDA']
+					   /@value" />
+	</parameter>
+
+	<parameter name="ValorPruebaConfirma Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ValorPruebaConfirma']
+					   /@value" />
+	</parameter>
+	<parameter name="ActivarConfirmaWS Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ActivarConfirmaWS']
+					   /@value" />
+	</parameter>
+	<parameter name="PruebaRapidaDeConfirma Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='PruebaRapidaDeConfirma']
+					   /@value" />
+	</parameter>
 
   <parameter name="HTTP_Port Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
