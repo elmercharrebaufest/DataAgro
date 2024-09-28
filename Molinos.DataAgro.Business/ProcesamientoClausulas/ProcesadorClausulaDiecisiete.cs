@@ -13,8 +13,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
 {
     public class ProcesadorClausulaDiecisiete : ProcesadorClausula<ClausulaDiecisiete>
     {
-        private readonly ILogger log;
-
         public ProcesadorClausulaDiecisiete(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto)
            : base(repositorio, log, estadoBoleto)
         {
@@ -25,11 +23,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
             var datosBoleto = EstadoBoleto.EstadoBoleto(clausula.Basico.ContratoSAP, "");
             var condiciones = datosBoleto.CondicionFijacion.FirstOrDefault();
-
-            log.Debug($"{clausula.Basico.CondicionFijacionDescripcion}, {CorregirFormatoFecha(condiciones.FechaDesde)}, {CorregirFormatoFecha(condiciones.FechaHasta)}, {NumeroConSeparadores(condiciones.CantidadMaxima)}," +
-                $"{clausula.Basico.MonedaBonificacion}, {clausula.Basico.ImporteBonificacion?.ToString("N", new CultureInfo("es-AR"))} ({DevolverNumeroEnLetras(clausula.Basico.ImporteBonificacion.Value)})," +
-                $"{clausula.Basico.PosicionCBOT}");
-
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y NO ES POSICIÓN PASE
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (!clausula.Basico.TipoPosicionCBOTId.HasValue || clausula.Basico.TipoPosicionCBOTId.Value != (int)EnumTipoPosicionCBOT.PASE) && clausula.Basico.EsFason != true && clausula.Basico.PrestamoDevolucion != true)
             {
