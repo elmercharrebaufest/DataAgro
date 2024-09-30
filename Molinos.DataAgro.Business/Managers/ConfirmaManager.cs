@@ -383,11 +383,8 @@ namespace Molinos.DataAgro.Business.Managers
                 else logger.Info($"Descargar XML Confirma - Se Consulta el status del contrato SAP {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
                 var datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
                 var condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
-                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
-                {
-                    if (datosConfirma is null || condiciones is null) throw new ArgumentNullException("Error CondicionFijacion", $"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)} y no tiene condiciones de fijacion asociadas.");
+                if ((contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) && (datosConfirma is null || condiciones is null)) logger.Info("Error CondicionFijacion", $"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)} y no tiene condiciones de fijacion asociadas.");
                     else logger.Info($"Descargar XML Confirma - Se consultó el Estado del Boleto SAP del contrato {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
-                }
                 var CuitMolinos = ConfigurationManager.AppSettings["Cuit"];
                 var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                 var esCanje = contrato.Canje == true;
@@ -553,12 +550,12 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Fijacion
 
                                         (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) ? new XElement("Fijacion",
-                                            new XElement("FijMinima", Convert.ToInt32(condiciones.CantidadMinima).ToString()),
-                                            new XElement("FijMaxima", Convert.ToInt32(condiciones.CantidadMaxima).ToString()),
+                                            new XElement("FijMinima", condiciones != null? Convert.ToInt32(condiciones.CantidadMinima).ToString(): contrato.KgMinimo>0?contrato.KgMinimo.ToString():null),
+                                            new XElement("FijMaxima", condiciones != null? Convert.ToInt32(condiciones.CantidadMaxima).ToString(): contrato.KgMaximo>0?contrato.KgMaximo.ToString():null),
                                             new XElement("UnidadMedidaFijacion", new XAttribute("Caption", "K"), new XAttribute("CodLista", "K")),
                                             new XElement("FijPeriodo", "1"),
-                                            new XElement("FijFecDesde", CorregirFormatoFecha(condiciones.FechaDesde)),
-                                            new XElement("FijFecHasta", CorregirFormatoFecha(condiciones.FechaHasta)),
+                                            new XElement("FijFecDesde", condiciones != null ? CorregirFormatoFecha(condiciones.FechaDesde): contrato.FechaDesde.HasValue? contrato.FechaDesde.Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture):null),
+                                            new XElement("FijFecHasta", condiciones != null ? CorregirFormatoFecha(condiciones.FechaHasta): contrato.FechaHasta.HasValue? contrato.FechaHasta.Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture):null),
                                             new XElement("PorcMultaIncumplimiento", "010"),
                                             new XElement("ComunicacionFijacion", new XAttribute("CodLista", contrato.PagoDirectoVendedor == true ? "2" : "1")),
                                             (contrato.Pizarra == true ? new XElement("PizarraFijacion", new XAttribute("CodLista", "1")):null)
