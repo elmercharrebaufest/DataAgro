@@ -384,3 +384,8 @@ function GenerarConfirma(negocioSAP) {
         $("#ModalConfirma").modal("show");
     }
 }
+
+$("#contratos-grid").on("change", "#select-all", function () {
+    var isChecked = $(this).is(":checked");
+    $("#contratos-grid").find("input.row-checkbox").prop("checked", isChecked);
+});
