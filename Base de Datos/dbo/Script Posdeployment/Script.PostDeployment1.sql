@@ -484,6 +484,4 @@ IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN ins
 insert into Log (Fecha, Xml) values (CURRENT_TIMESTAMP, CONCAT('PRUEBA',' - ',CURRENT_TIMESTAMP));
 
 --Centro
-
-UPDATE Centro SET CentroPropio = 1 WHERE Descripcion IN ('San Lorenzo', 'Pergamino', 'Bandera', 'La Cautiva', 'Lincoln', 'Chivilcoy', 'Rio del Valle', 'General Pinedo', 'Vicentin Virtual', 'Rio del Valle (Planta Soto)');
-
+--UPDATE Centro SET CentroPropio = 1 WHERE Descripcion IN ('San Lorenzo', 'Pergamino', 'Bandera', 'La Cautiva', 'Lincoln', 'Chivilcoy', 'Rio del Valle', 'General Pinedo', 'Vicentin Virtual', 'Rio del Valle (Planta Soto)');
