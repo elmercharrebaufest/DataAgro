@@ -3234,6 +3234,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Ampliaciones = x.Ampliaciones,
                 Precio = x.Precio,
+                PrecioNeto = x.PrecioNeto,
                 MonedaId = x.MonedaId,
                 CampanaId = x.CampanaId ?? 0,
                 ProvinciaId = x.ProvinciaId,
