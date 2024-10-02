@@ -1157,6 +1157,7 @@
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\FAQ.js" />
     <Content Include="Scripts\App\DescargarConfirma.js" />
+    <Content Include="Scripts\App\GestionarClausulasConfirma.js" />
     <Content Include="Scripts\App\GestionarClausulas.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\GenerarConfirma.js" />
@@ -2985,6 +2986,7 @@
     <Content Include="Views\Boleto\GestionarClausulas.cshtml" />
     <Content Include="Views\HabilitacionBoleto\_ListaBoletoCompraNetProvincia.cshtml" />
     <Content Include="Views\HabilitacionBoleto\AgregarBoletoProvinciaModal.cshtml" />
+    <Content Include="Views\Confirma\GestionarClausulas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
