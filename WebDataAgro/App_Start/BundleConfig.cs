@@ -321,6 +321,10 @@ namespace WebDataAgro
                                        "~/Scripts/App/GestionarClausulas.js",
                                        "~/Scripts/KendoExtensions.js"
                                        ));
+            bundles.Add(new ScriptBundle("~/bundles/GestionarClausulasConfirma").Include(
+                                       "~/Scripts/App/GestionarClausulasConfirma.js",
+                                       "~/Scripts/KendoExtensions.js"
+                                       ));
             bundles.IgnoreList.Clear();
         }
     }

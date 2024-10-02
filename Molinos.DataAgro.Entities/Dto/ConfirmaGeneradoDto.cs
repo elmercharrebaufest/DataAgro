@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -17,5 +18,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FijacionSAP { get; set; }
         public int TipoBoletoId { get; set; }
         public string NegocioSAP { get; set; }
+        public List<string> Clausulas { get; set; } = new List<string>();
     }
 }

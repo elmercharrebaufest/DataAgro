@@ -142,7 +142,7 @@ function inicializarGrillaContratos() {
                             <img style="width:16px;height:16px;" src="/Content/Images/agregar-tel-mail.png">
                             <span class="editar-contacto editar-contacto-dc" style="text-decoration: none;"> Generar Confirma</span>
                         </a>
-                        <a onclick="GestionarClausulas('#= NegocioSAP #')" hidden>
+                        <a onclick="GestionarClausulas('#= NegocioSAP #')">
                             <img style="width:16px;height:16px;" src="/Content/Images/contacto-edit.png">
                             <span class="editar-contacto editar-contacto-dc" style="text-decoration: none;"> Editar Clausulas</span>
                         </a>
@@ -389,3 +389,22 @@ $("#contratos-grid").on("change", "#select-all", function () {
     var isChecked = $(this).is(":checked");
     $("#contratos-grid").find("input.row-checkbox").prop("checked", isChecked);
 });
+
+function GestionarClausulas(negocioSAP) {
+    var tipoNegocioId = $("#ClaseNegocio").val();
+    // Validar el negocio
+    var url = '/Confirma/ValidarNegocio';
+    var data = {
+        NegocioSAP: negocioSAP
+    };
+    var response = MSExecuteOnServer(url, data);
+
+    if (response && response.Mensaje == '') {
+        // Redireccionar si el negocio es válido
+        var redirectUrl = `/Confirma/GestionarClausulas?numeroSap=${encodeURIComponent(negocioSAP)}&tipoNegocio=${tipoNegocioId}`;
+        window.location.href = redirectUrl;
+    } else {
+        // Mostrar mensaje de error si el negocio no es válido
+        MensErr(response.Mensaje || "Ocurrió un error al intentar validar el Negocio.");
+    }
+}

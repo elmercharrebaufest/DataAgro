@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<int> equipo)
+        public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var codigos = AgregarCeros(codigosSap);
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
@@ -77,7 +77,8 @@ namespace Molinos.DataAgro.Business.Managers
                 string CodigoSapCompleto = codigos[0].TrimStart('0').PadLeft(10, '0');
                 IQueryable<BasicoContrato> consultaIQ = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
                 BasicoContrato contrato = consultaIQ.First();
-                List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
+                List<ResultadoClausula> clausulasConfirma = new List<ResultadoClausula>();
+                clausulasConfirma = clausulas.Count()==0? ObtenerClausulas(contrato): clausulas.Select(x=>new ResultadoClausula() {Texto=x,Orden=0 }).ToList();
 
                 EstadosConfirmaDto estadosConfirmaDto = new EstadosConfirmaDto
                 {
@@ -86,7 +87,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ConfirmaAltaEstadoDocumentoDto = repositorio.Listar<ConfirmaAltaEstadoDocumento, ConfirmaAltaEstadoDocumentoDto>(x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento }),
                 };
 
-                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulasConfirma, equipo, contrato, estadosConfirmaDto);
 
                 logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado?.Descripcion}. " +
                     $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote?.Descripcion}. " +
@@ -130,7 +131,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var contrato in contratos)
                 {
-                    var mensaje = ValidarContrato(contrato, claseNegocio);
+                    var mensaje = ValidarContrato(contrato);
                     var esValido = mensaje == "" ? true : false;
                     if (!esValido)
                     {
@@ -167,7 +168,7 @@ namespace Molinos.DataAgro.Business.Managers
                             try
                             {
                                 //Se Almacena el ArchivoXML 
-                                var xml = GenerarXML(contrato);
+                                var xml = GenerarXML(contrato, clausulas);
                                 var adicional = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + contrato.FijacionSAP : string.Empty;
                                 File.WriteAllBytes(ConfigurationManager.AppSettings["PathConfirmas"].ToString() + "\\"
                                      + "confirma" + tempConfirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + contrato.ContratoSAP + adicional + ".xml", xml);
@@ -178,8 +179,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 if (usarWebServiceConfirma && activarConfirmaWS == "1")
                                 {
                                     logger.Info("---- INICIO WS CONFIRMA ----");
-                                    List<ResultadoClausula> clausulas = ObtenerClausulas(contrato);
-                                    ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulas, equipo, contrato, estadosConfirmaDto);
+                                    List<ResultadoClausula> clausulasConfirma = new List<ResultadoClausula>();
+                                    clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                                    ConfirmaAltaLoteResultDto confirmaAltaLoteResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulasConfirma, equipo, contrato, estadosConfirmaDto);
 
                                     logger.Info($"WS: altaIdLote = {confirmaAltaLoteResult.altaIdLote}. altaEstado = {confirmaAltaLoteResult.confirmaAltaEstado?.Descripcion}. " +
                                         $"altaEstadoLote = {confirmaAltaLoteResult.confirmaAltaEstadoLote?.Descripcion}. " +
@@ -240,22 +242,13 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
         }
 
-        private string ValidarContrato(BasicoContrato contrato, int claseNegocio)
+        private string ValidarContrato(BasicoContrato contrato)
         {
-            var tiposNegocios = ConvertirClaseNegocioATiposNegocios(claseNegocio);
             var mensaje = "";
             var kilosMinimos = 10000;
 
             if (contrato != null)
             {
-                //Validar que corresponda la clase de negocio
-                if (!tiposNegocios.Contains(contrato.TipoNegocioId))
-                {
-                    mensaje = $"No se puede generar el confirma {contrato.ContratoSAP}. Ha seleccionado el tipo incorrecto.";
-                    logger.Debug($"No se puede generar el confirma el confirma {contrato.ContratoSAP}. Ha seleccionado el tipo incorrecto.");
-                    return mensaje;
-                }
-
                 if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) //FIJACION
                 {
                     if (contrato.Cantidad < kilosMinimos)
@@ -372,7 +365,7 @@ namespace Molinos.DataAgro.Business.Managers
             return File.ReadAllBytes(rutaArchivo);
         }
 
-        private byte[] GenerarXML(BasicoContrato contrato)
+        private byte[] GenerarXML(BasicoContrato contrato, List<string> clausulas)
         {
             try
             {
@@ -393,8 +386,8 @@ namespace Molinos.DataAgro.Business.Managers
                     new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } }
                     : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } };
                 logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
-                var clausulas = ObtenerClausulas(contrato);
-                if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}.");
+                var clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                if (clausulasConfirma is null || clausulasConfirma.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}.");
                 //Fin de carga de datos
                 MemoryStream ms = new MemoryStream(); //Memory Stream
                                                       //Inicia formateo del XML
@@ -608,7 +601,7 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Clausulas
 
                                 new XElement("Clausulas",
-                                    clausulas.Select(x => new XElement("Clausula", new XAttribute("Orden", string.Empty),
+                                    clausulasConfirma.Select(x => new XElement("Clausula", new XAttribute("Orden", string.Empty),
                                         new XElement("TextoClausula", x.Texto),
                                         new XElement("TextoAdicionalClausula", string.Empty)
                                     ))
@@ -971,5 +964,25 @@ namespace Molinos.DataAgro.Business.Managers
         private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio == 1 ? "ContratoSAP" : "FijacionSAP";
 
         private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
+
+        public List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo)
+        {
+            contratoSap = contratoSap.TrimStart('0').PadLeft(10, '0');
+            List<string> clausulas = new List<string>();
+            var contratos = new List<string> { contratoSap };
+            var basicoContrato = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo)).FirstOrDefault();
+            clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
+            return clausulas;
+        }
+
+        public string ValidarNegocio(string negocioSAP, List<int> equipo)
+        {
+            var contratoSap = negocioSAP.TrimStart('0').PadLeft(10, '0');
+            var contratos = new List<string> { contratoSap };
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo));
+            var basicoContrato = consulta.FirstOrDefault();
+            var mensaje = basicoContrato is null ? "No encontrado" : ValidarContrato(basicoContrato);
+            return mensaje;
+        }
     }
 }

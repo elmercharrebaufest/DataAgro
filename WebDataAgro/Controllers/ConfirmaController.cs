@@ -3,6 +3,7 @@ using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -45,8 +46,9 @@ namespace WebDataAgro.Controllers
             CargarSeleccionables();
             if (string.IsNullOrEmpty(confirma.ContratoSAP)) return new JsonResult() { MaxJsonLength = Int32.MaxValue, Data = new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = "No se ha ingresado ningun valor", ErrorCode = 04 } } } };
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
+            var clausulas = confirma.Clausulas;
 
-            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, GlobalVariables.EquipoReal);
+            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService,clausulas, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
                 Data = result,
@@ -131,6 +133,21 @@ namespace WebDataAgro.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        [HttpGet]
+        public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
+        {
+            ViewBag.Clausulas = confirmaManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
+            ViewBag.NegocioSAP = numeroSap;
+            ViewBag.TipoNegocio = tipoNegocio;
+            return View();
+        }
+
+        public ActionResult ValidarNegocio(string NegocioSAP)
+        {
+            var mensaje = confirmaManager.ValidarNegocio(NegocioSAP, GlobalVariables.EquipoReal);
+            return new JsonResult() { Data = new { Mensaje = mensaje } };
         }
     }
 }
