@@ -27,41 +27,36 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     if (clausula.Basico.PorcentajeDePago != null)
+                        res.Texto += $"El pago se hará {clausula.Basico.PorcentajeDePago}% ({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento), ";
+
+                    if (clausula.Basico.Dias_Pesificado > 0)
+                        res.Texto += $"los {clausula.Basico.Dias_Pesificado.Value} días";
+
+                    if (clausula.Basico.CD == true && clausula.Basico.PagoDirectoVendedor != true)
                     {
-                        res.Texto += $"El pago se hará {clausula.Basico.PorcentajeDePago}% " +
-                          $"({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento), ";
+                        res.Texto += $"anticipado";
                     }
-                    if ((clausula.Basico.TipoNegocioId == 3 && clausula.Basico.Canje == true) || clausula.Basico.TipoNegocioId == 1)
-                    {
-                        res.Texto += "4 DÍAS HÁBILES DE FECHA DE FIJACIÓN";
-                    }
-                    if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-                    {
-                        if (clausula.Basico.Dias_Pesificado > 0)
-                        {
-                            res.Texto += $"los {clausula.Basico.Dias_Pesificado.Value} días";
-                        }
-                        if (clausula.Basico.CD == true)
-                        {
-                            res.Texto += $"anticipado contra entrega de CD/CG";
-                        }
-                        if (clausula.Basico.Warrant == true)
-                        {
-                            res.Texto += $"anticipado contra entrega de WARRANT";
-                        }
-                        if (clausula.Basico.Dias_Pesificado == null && clausula.Basico.CD != true && clausula.Basico.Warrant != true)
-                        {
-                            res.Texto += "las 72 hs";
-                        }
-                    }
+                    else if (clausula.Basico.Warrant == true)
+                        res.Texto += $"anticipado contra entrega de WARRANT";
+                    else if (clausula.Basico.Dias_Pesificado == null)
+                        res.Texto += "las 72 hs";
+                    
                     if (clausula.Basico.PorcentajeDePago != null)
                     {
                         res.Texto += $", con mercadería descargada en planta, liquidándose el {100 - clausula.Basico.PorcentajeDePago.Value}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
                         $"restante a los 30 (treinta) días del cumplimiento del contrato.";
                     }
-                    if (clausula.Basico.PagoDirectoVendedor == true)
+
+                    if (clausula.Basico.ProveedorId > 0 && clausula.Basico.CorredorId > 0)
                     {
-                        res.Texto += " El pago se hará en su totalidad al vendedor. ";
+                        if (clausula.Basico.PagoDirectoVendedor == true)
+                            res.Texto += " El pago se hará en su totalidad al vendedor. ";
+                        else
+                            res.Texto += $" El pago del valor correspondiente a la mercadería se realizará al corredor. ";
+                    }
+                    else if (clausula.Basico.CorredorId > 0)
+                    {
+                        res.Texto += $" El pago del valor correspondiente a la mercadería se realizará al corredor. ";
                     }
                 }
                 // SI EL BOLETO ES DE CONTRATO SIN PRECIO
@@ -81,7 +76,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     }
                 }
             }
-            
+
             return res;
         }
 

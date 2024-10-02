@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (clausula.Basico.TarifaFlete.HasValue)
             {
                 res.Texto += $"Molinos Agro S. A. se hará cargo del traslado de la mercadería abonando una tarifa de $ {clausula.Basico.TarifaFlete?.ToString("N", new CultureInfo("es-AR"))}" +
-                    $"({DevolverNumeroEnLetras(clausula.Basico.TarifaFlete.Value)}) por tonelada, la cual se al momento de contratación del " +
+                    $" ({DevolverNumeroEnLetras(clausula.Basico.TarifaFlete.Value)}) por tonelada, la cual al momento de contratación del " +
                     $"transporte será ajustada sobre la liquidación final o por medio de factura/nota de crédito.";
             }
 
