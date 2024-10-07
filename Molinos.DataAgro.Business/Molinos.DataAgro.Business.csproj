@@ -350,6 +350,7 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausula.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCatorce.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYDos.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarenta.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCinco.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCuatro.cs" />

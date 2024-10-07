@@ -545,6 +545,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYDos.cs" />
     <Compile Include="Entities\Confirma.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
     <Compile Include="Entities\ClausulaCuarentaYOcho.cs" />
