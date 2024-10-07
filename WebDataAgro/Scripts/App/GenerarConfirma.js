@@ -203,7 +203,7 @@ function CargarTablaModal(contratos) {
             + (contratos[i].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
             + '</td><td>'
             + (contratos[i].IsWebService ? '<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
-            + (contratos[i].Generado ? ('<a href="/Confirma/DescargarArchivoConfirma?codigoSAP=' + contratos[i].NegocioSAP + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
+            + (contratos[i].Generado ? ('<a href="/Confirma/DescargarArchivoConfirma?nombreArchivo=' + contratos[i].Archivo + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
             + '</td><td>'
             + contratos[i].Mensaje
             + '</td></tr>';

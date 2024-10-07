@@ -34,7 +34,7 @@ $(document).ready(function () {
             },
             {
                 field: "Download", title: "Descargar", template: function (dataItem) {
-                    return '<a onclick="DesacargaConfirma(\'' + dataItem.ContratoSAP + '\')"> Descargar </a>'
+                    return '<a onclick="DesacargaConfirma(\'' + dataItem.Nombre + '\')"> Descargar </a>'
                 }
             }
         ],
@@ -75,11 +75,11 @@ function ArmarGrillaConfirmasDesacargas() {
 
 }
 
-function DesacargaConfirma(codigoSAP) {
+function DesacargaConfirma(nombreArchivo) {
     var funcReturn = function (data) {
         if (data != null) {
             if (data.length > 0) {
-                var url = MSGetUrl('/Confirma/DescargarArchivoConfirma?codigoSAP=' + codigoSAP);
+                var url = MSGetUrl('/Confirma/DescargarArchivoConfirma?nombreArchivo=' + nombreArchivo);
                 window.location = url;
             }
         }
