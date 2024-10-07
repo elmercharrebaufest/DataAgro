@@ -56,9 +56,8 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult DescargarArchivoConfirma(string codigoSAP)
+        public ActionResult DescargarArchivoConfirma(string nombreArchivo)
         {
-            var nombreArchivo = confirmaManager.GenerarNombreArchivoConfirma(codigoSAP);
             try
             {
                 Byte[] fileBytes = confirmaManager.ObtenerArchivoXML (nombreArchivo);

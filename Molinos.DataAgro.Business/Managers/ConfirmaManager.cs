@@ -60,11 +60,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
-            var codigos = AgregarCeros(codigosSap);
-            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
-            if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
-            else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
-            var contratos = FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
+            var codigos = CompletarCodigoLista(codigosSap);
+            var contratos = ObtenerContratos(codigos, claseNegocio, equipo);
             var resultado = new ConfirmaResult();
             string activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
             string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
@@ -117,7 +114,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (contratos == null || contratos.Count == 0)
                 {
-                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {String.Join("\n", codigosSap)} siendo los codigos completos: {String.Join("\n", codigos)}");
+                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {String.Join(",", codigos)}.");
                     resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
                     return resultado;
                 }
@@ -148,7 +145,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var tempConfirma = new ConfirmaGeneradoDto()
                         {
                             NegocioId = contrato.Id,
-                            Version = "01",
+                            Version = String.IsNullOrEmpty(consultaConfirma.Version) ? 1 : Convert.ToInt32(consultaConfirma.Version)+1,
                             ComercialId = ComercialId,
                             FechaGeneracion = DateTime.Now,
                             ContratoSAP = contrato.ContratoSAP,
@@ -171,7 +168,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 var xml = GenerarXML(contrato, clausulas);
                                 var adicional = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + contrato.FijacionSAP : string.Empty;
                                 File.WriteAllBytes(ConfigurationManager.AppSettings["PathConfirmas"].ToString() + "\\"
-                                     + "confirma" + tempConfirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + contrato.ContratoSAP + adicional + ".xml", xml);
+                                     + tempConfirma.Archivo, xml);
                                 //Se Almacena en DB el nuevo Confirma
                                 var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
                                 resultado.confirmasGenerados.Add(tempConfirma);
@@ -636,6 +633,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialId = tempConfirma.ComercialId,
                 FechaGeneracion = tempConfirma.FechaGeneracion,
                 IsWebService = tempConfirma.IsWebService,
+                Archivo = tempConfirma.Archivo,
+                Version = tempConfirma.Version,
             };
         }
 
@@ -654,18 +653,11 @@ namespace Molinos.DataAgro.Business.Managers
             return tiposNegocios;
         }
 
-        public string GenerarNombreArchivoConfirma(string codigoSAP)
+        public string ObtenerNombreArchivoConfirma(string codigoSAP)
         {
             int claseNegocio = codigoSAP.TrimStart('0').Length >= 9 ? 2 : 1;
-            var CodigoSapCompleto = codigoSAP.TrimStart('0').PadLeft(10, '0');
-            var confirma = repositorio.Obtener<Confirma>(x => claseNegocio == 2 ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == CodigoSapCompleto) : x.Negocio.ContratoSAP == CodigoSapCompleto);
-            var adicional = string.Empty;
-            if (confirma.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
-            {
-                adicional += "_" + (confirma.Negocio as FijacionDePrecioContrato).FijacionSAP;
-            }
-            var nombreArchivo = "confirma" + confirma.FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", string.Empty) + "_" + confirma.Negocio.ContratoSAP + adicional + ".xml";
-            return nombreArchivo;
+            var confirma = repositorio.Obtener<Confirma>(x => claseNegocio == 2 ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == codigoSAP) : x.Negocio.ContratoSAP == codigoSAP);
+            return confirma.Archivo;
         }
 
         private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios, List<int> tipoNegocios)
@@ -716,7 +708,7 @@ namespace Molinos.DataAgro.Business.Managers
             return new BoletoDto
             {
                 NegocioId = tempConfirma.NegocioId,
-                Version = 1,
+                Version = tempConfirma.Version,
                 ComercialId = tempConfirma.ComercialId,
                 FechaGeneracion = tempConfirma.FechaGeneracion,
                 ContratoSAP = tempConfirma.ContratoSAP,
@@ -780,18 +772,19 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ConfirmaArchivoDto> ListarConfirmas() //Pantalla descargas
         {
-            return repositorio.Listar<Confirma, ConfirmaArchivoDto>
+            var result = repositorio.Listar<Confirma, ConfirmaArchivoDto>
                 (a => new ConfirmaArchivoDto
                 {
                     Id = a.Id,
                     NegocioId = a.NegocioId,
                     ComercialId = a.ComercialId,
                     ContratoSAP = a.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (a.Negocio as FijacionDePrecioContrato).FijacionSAP : a.Negocio.ContratoSAP,
-                    Nombre = "confirma" + a.FechaGeneracion.Year + (a.FechaGeneracion.Month > 9 ? "" : "0") + a.FechaGeneracion.Month + (a.FechaGeneracion.Day > 9 ? "" : "0") + a.FechaGeneracion.Day + "_" + a.Negocio.ContratoSAP + (a.Negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + (a.Negocio as FijacionDePrecioContrato).FijacionSAP : string.Empty) + ".XML",
+                    Nombre = a.Archivo,
                     FechaGeneracion = a.FechaGeneracion.Day + "/" + a.FechaGeneracion.Month + "/" + a.FechaGeneracion.Year,
                     IsWebService = a.IsWebService,
                 }, null, 0, null, Entities.Helpers.DirOrden.Asc).OrderByDescending(x => x.FechaGeneracion)
                 .Where(c => !c.IsWebService).ToList();
+            return result;
         }
 
         public List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico)
@@ -856,7 +849,7 @@ namespace Molinos.DataAgro.Business.Managers
             return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
 
-        private List<string> AgregarCeros(List<string> lista)
+        private List<string> CompletarCodigoLista(List<string> lista)
         {
             var result = new List<string>();
             foreach (var item in lista)
@@ -983,6 +976,14 @@ namespace Molinos.DataAgro.Business.Managers
             var basicoContrato = consulta.FirstOrDefault();
             var mensaje = basicoContrato is null ? "No encontrado" : ValidarContrato(basicoContrato);
             return mensaje;
+        }
+
+        private List<BasicoContrato> ObtenerContratos(List<string> codigos, int claseNegocio, List<int> equipo)
+        {
+            var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
+            if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
+                else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
+            return FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
         }
     }
 }

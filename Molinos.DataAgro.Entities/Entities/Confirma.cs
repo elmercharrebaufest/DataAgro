@@ -12,6 +12,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialId { get; set; }
         public DateTime FechaGeneracion { get; set; }
         public bool IsWebService { get; set; }
+        public int Version { get; set; }
+        public string Archivo { get; set; }
 
         [ForeignKey("NegocioId")]
         public virtual Negocio Negocio { get; set; }
