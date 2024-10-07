@@ -448,7 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                //&& (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
                && (((x is Contrato) && (x as Contrato).PrestamoDevolucion != true) || !(x is Contrato))
-               && (((x is Contrato) && (x as Contrato).Venta != true) || !(x is Contrato))
+               //&& (((x is Contrato) && (x as Contrato).Venta != true) || !(x is Contrato))
                && (((x is Contrato) && (x as Contrato).AnulaYReemplazaContratoId == null) || !(x is Contrato))
 
                && !(((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true && (x as FijacionDePrecioContrato).Virtual != true && (x as FijacionDePrecioContrato).Contrato.Canje == true))
