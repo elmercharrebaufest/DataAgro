@@ -32,12 +32,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     if (clausula.Basico.Dias_Pesificado > 0)
                         res.Texto += $"los {clausula.Basico.Dias_Pesificado.Value} días";
 
-                    if (clausula.Basico.CD == true && clausula.Basico.PagoDirectoVendedor != true)
+                    if (clausula.Basico.CD == true)
                     {
-                        res.Texto += $"anticipado";
+                        res.Texto += "anticipado";
                     }
                     else if (clausula.Basico.Warrant == true)
-                        res.Texto += $"anticipado contra entrega de WARRANT";
+                        res.Texto += "anticipado contra entrega de WARRANT";
                     else if (clausula.Basico.Dias_Pesificado == null)
                         res.Texto += "las 72 hs";
                     
@@ -52,11 +52,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         if (clausula.Basico.PagoDirectoVendedor == true)
                             res.Texto += " El pago se hará en su totalidad al vendedor. ";
                         else
-                            res.Texto += $" El pago del valor correspondiente a la mercadería se realizará al corredor. ";
-                    }
-                    else if (clausula.Basico.CorredorId > 0)
-                    {
-                        res.Texto += $" El pago del valor correspondiente a la mercadería se realizará al corredor. ";
+                            res.Texto += " El pago del valor correspondiente a la mercadería se realizará al corredor. ";
                     }
                 }
                 // SI EL BOLETO ES DE CONTRATO SIN PRECIO
