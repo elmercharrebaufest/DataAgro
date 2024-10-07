@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
 
             //SI EL CAMPO CODIGO_TC ES 02 o Es A_Fijar con Boleto Confirma
-            if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.MonedaId == "USDM ") || (clausula.Basico.TipoNegocioId==(int)EnumTipoNegocio.A_FIJAR && clausula.Basico.BoletoId==(int)EnumBoletoCompraNet.CONFIRMA))
+            if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) || clausula.Basico.MonedaId.Trim() == "USDM")
             {
                 res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
             }
