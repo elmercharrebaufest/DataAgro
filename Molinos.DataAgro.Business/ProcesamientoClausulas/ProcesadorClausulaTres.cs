@@ -43,7 +43,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     
                     if (clausula.Basico.PorcentajeDePago != null)
                     {
-                        res.Texto += $", con mercadería descargada en planta, liquidándose el {100 - clausula.Basico.PorcentajeDePago.Value}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
+                        if(clausula.Basico.CD != true)
+                                res.Texto += ", con mercadería descargada en planta";
+
+                        res.Texto += $", liquidándose el {100 - clausula.Basico.PorcentajeDePago.Value}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
                         $"restante a los 30 (treinta) días del cumplimiento del contrato.";
                     }
 
