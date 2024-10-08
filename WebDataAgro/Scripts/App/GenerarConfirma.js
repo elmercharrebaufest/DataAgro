@@ -9,7 +9,7 @@ function inicializarFiltros() {
         weekNumber: true,
         format: "dd/MM/yyyy"
     });
-     
+
     $("#FechaConfirmacionHasta").kendoDatePicker({
         weekNumber: true,
         format: "dd/MM/yyyy"
@@ -212,69 +212,75 @@ function CargarTablaModal(contratos) {
 }
 
 function FiltrarNegocios() {
-    if (esContratoDesdeValido() && validarFechasYContratos()) {
-        let fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
-        let fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
-        let claseNegocio = $("#ClaseNegocio").val();
-        let contratoDesde = $("#ContratoDesde").val().endsWith(';') ? $("#ContratoDesde").val().slice(0, -1) : $("#ContratoDesde").val();
-        let contratoHasta = $("#ContratoHasta").val();
+    BlockUi('Consultando...');
+    setTimeout(function () {
+        try {
+            if (esContratoDesdeValido() && validarFechasYContratos()) {
+                let fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
+                let fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
+                let claseNegocio = $("#ClaseNegocio").val();
+                let contratoDesde = $("#ContratoDesde").val().endsWith(';') ? $("#ContratoDesde").val().slice(0, -1) : $("#ContratoDesde").val();
+                let contratoHasta = $("#ContratoHasta").val();
 
-        BlockUi("Consultando...");
+                var filters = {
+                    logic: "and",
+                    filters: []
+                };
 
-        var filters = {
-            logic: "and",
-            filters: []
-        };
+                if (claseNegocio) {
+                    filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
+                }
+                if (contratoDesde) {
+                    filters.filters.push({ field: "NegocioSAP", operator: "gte", value: contratoDesde });
+                }
+                if (contratoHasta) {
+                    filters.filters.push({ field: "NegocioSAP", operator: "lte", value: contratoHasta });
+                }
+                if (fechaDesde) {
+                    filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
+                }
+                if (fechaHasta) {
+                    filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
+                }
 
-        if (claseNegocio) {
-            filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
-        }
-        if (contratoDesde) {
-            filters.filters.push({ field: "NegocioSAP", operator: "gte", value: contratoDesde });
-        }
-        if (contratoHasta) {
-            filters.filters.push({ field: "NegocioSAP", operator: "lte", value: contratoHasta });
-        }
-        if (fechaDesde) {
-            filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
-        }
-        if (fechaHasta) {
-            filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
-        }
+                var data = {
+                    Filter: filters,
+                    Take: 100000,
+                    Skip: 0
+                };
 
-        var data = {
-            Filter: filters,
-            Take: 100000,
-            Skip: 0
-        };
+                var result = MSExecuteOnServer('/Confirma/BuscaDatosTabla', data);
 
-        var result = MSExecuteOnServer('/Confirma/BuscaDatosTabla', data);
-
-        $.unblockUI();
-
-        if (result && result.Data) {
-            if (result.Data.length == 0) {
-                MensAlerta("Sin Resultados");
-                $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+                if (result && result.Data) {
+                    if (result.Data.length == 0) {
+                        MensAlerta("Sin Resultados");
+                        $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+                    } else {
+                        // Actualizar la grilla Kendo UI con los resultados
+                        var grid = $("#contratos-grid").data("kendoGrid");
+                        grid.dataSource.data(result.Data.map(function (item) {
+                            return {
+                                ...item,
+                                FechaOperacion: parseDate(item.FechaOperacion),
+                                FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                            };
+                        }));
+                        $("#contratos-grid").show();
+                    }
+                } else {
+                    MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+                }
             } else {
-                // Actualizar la grilla Kendo UI con los resultados
-                var grid = $("#contratos-grid").data("kendoGrid");
-                grid.dataSource.data(result.Data.map(function (item) {
-                    return {
-                        ...item,
-                        FechaOperacion: parseDate(item.FechaOperacion),
-                        FechaConfirmacion: parseDate(item.FechaConfirmacion)
-                    };
-                }));
-                $("#contratos-grid").show();
+                if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
+                else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
             }
-        } else {
-            MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+        } catch (e) {
+            console.error("Error al filtrar negocios: ", e);
+            MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
+        } finally {
+            $.unblockUI();
         }
-    } else {
-        if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
-        else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
-    }
+    }, 200);
 }
 
 function ValidarNegocio(codigoSAP) {
@@ -361,28 +367,37 @@ function GenerarConfirmas() {
     }
 }
 
-
 //Funcion Generar Confirma
 function GenerarConfirma(negocioSAP) {
     BlockUi('Cargando...');
-    var data = {
-        ContratoSAP: negocioSAP,
-        ClaseNegocioId: $("#ClaseNegocio").val(),
-        IsWebService: $("#servicioConfirmaId").is(":checked")
-    };
-    var url = '/Confirma/GenerarConfirma';
-    var result = MSExecuteOnServer(url, data);
-    $.unblockUI();
-    if (result.confirmasGenerados == undefined || result.confirmasGenerados.length == 0) {
-        if (result.HayError) {
-            result.ListaErrores.forEach(err => MensErr(err.Message));
-        } else {
-            MensErr("No se generó ningún Confirma.");
+    setTimeout(function () {
+        try {
+            var data = {
+                ContratoSAP: negocioSAP,
+                ClaseNegocioId: $("#ClaseNegocio").val(),
+                IsWebService: $("#servicioConfirmaId").is(":checked")
+            };
+
+            var url = '/Confirma/GenerarConfirma';
+            var result = MSExecuteOnServer(url, data);
+
+            if (result.confirmasGenerados == undefined || result.confirmasGenerados.length == 0) {
+                if (result.HayError) {
+                    result.ListaErrores.forEach(err => MensErr(err.Message));
+                } else {
+                    MensErr("No se generó ningún Confirma.");
+                }
+            } else {
+                CargarTablaModal(result.confirmasGenerados);
+                $("#ModalConfirma").modal("show");
+            }
+        } catch (e) {
+            console.error("Error al Generar Confirma: ", e);
+            MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
+        } finally {
+            $.unblockUI();
         }
-    } else {
-        CargarTablaModal(result.confirmasGenerados);
-        $("#ModalConfirma").modal("show");
-    }
+    }, 200);
 }
 
 $("#contratos-grid").on("change", "#select-all", function () {

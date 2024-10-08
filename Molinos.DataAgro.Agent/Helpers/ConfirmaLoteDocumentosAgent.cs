@@ -41,7 +41,25 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaConfirma"] == "1")
             {
-                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteResultDto();
+                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteResultDto()
+                {
+                    altaIdLote = "18443050",
+                    altaEstado = 1,
+                    altaEstadoLote = 4,
+                    altaItem = new List<altaItemDto>(){
+                        new altaItemDto()
+                        {
+                            altaIdDocumento = "",
+                            altaEstadoDocumento = 6,
+                            altaErrores = new List<string>(){ "Documento existente" },
+                            altaIdDocumentoExistente = "18390504",
+                            altaIdDocumentoExistenteLote = "25007245",
+                            confirmaAltaEstadoDocumento = new ConfirmaAltaEstadoDocumentoDto(){ Id = 6, Descripcion = "Documento existente", CodigoConfirmaAltaEstadoDocumento = 6 }
+                        }
+                    },
+                    confirmaAltaEstado = new ConfirmaAltaEstadoDto() { Id = 1, Descripcion = "Correcta", CodigoConfirmaAltaEstado = 1 },
+                    confirmaAltaEstadoLote = new ConfirmaAltaEstadoLoteDto() { Id = 4, Descripcion = "Procesado", CodigoConfirmaAltaEstadoLote = 4 }
+                };
                 return confirmaAltaLoteResult;
             }
             else

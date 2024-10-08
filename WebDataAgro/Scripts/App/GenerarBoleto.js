@@ -118,69 +118,75 @@ $("body").on("click", "#filtrarBoletos", function () {
 });
 
 function FiltrarBoletos() {
-    if (esContratoDesdeValido() && validarFechasYContratos()) {
-        let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
-        let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
-        let claseNegocio = $("#tipoId").val();
-        let contratoDesde = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
-        let contratoHasta = $("#contratoHasta").val();
+    BlockUi('Consultando...');
+    setTimeout(function () {
+        try {
+            if (esContratoDesdeValido() && validarFechasYContratos()) {
+                let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
+                let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
+                let claseNegocio = $("#tipoId").val();
+                let contratoDesde = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
+                let contratoHasta = $("#contratoHasta").val();
 
-        BlockUi("Consultando...");
+                var filters = {
+                    logic: "and",
+                    filters: []
+                };
 
-        var filters = {
-            logic: "and",
-            filters: []
-        };
+                if (claseNegocio) {
+                    filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
+                }
+                if (contratoDesde) {
+                    filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "gte", value: contratoDesde });
+                }
+                if (contratoHasta) {
+                    filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "lte", value: contratoHasta });
+                }
+                if (fechaDesde) {
+                    filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
+                }
+                if (fechaHasta) {
+                    filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
+                }
 
-        if (claseNegocio) {
-            filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
-        }
-        if (contratoDesde) {
-            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "gte", value: contratoDesde });
-        }
-        if (contratoHasta) {
-            filters.filters.push({ field: calcularTextoNegocio(claseNegocio), operator: "lte", value: contratoHasta });
-        }
-        if (fechaDesde) {
-            filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
-        }
-        if (fechaHasta) {
-            filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
-        }
+                var data = {
+                    Filter: filters,
+                    Take: 100000,
+                    Skip: 0
+                };
 
-        var data = {
-            Filter: filters,
-            Take: 100000,
-            Skip: 0
-        };
+                var result = MSExecuteOnServer('/Boleto/BuscaDatosTabla', data);
 
-        var result = MSExecuteOnServer('/Boleto/BuscaDatosTabla', data);
-
-        $.unblockUI();
-
-        if (result && result.Data) {
-            if (result.Data.length == 0) {
-                MensAlerta("Sin Resultados");
-                $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+                if (result && result.Data) {
+                    if (result.Data.length == 0) {
+                        MensAlerta("Sin Resultados");
+                        $("#contratos-grid").data("kendoGrid").dataSource.data([]);
+                    } else {
+                        // Actualizar la grilla Kendo UI con los resultados
+                        var grid = $("#contratos-grid").data("kendoGrid");
+                        grid.dataSource.data(result.Data.map(function (item) {
+                            return {
+                                ...item,
+                                FechaOperacion: parseDate(item.FechaOperacion),
+                                FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                            };
+                        }));
+                        $("#contratos-grid").show();
+                    }
+                } else {
+                    MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+                }
             } else {
-                // Actualizar la grilla Kendo UI con los resultados
-                var grid = $("#contratos-grid").data("kendoGrid");
-                grid.dataSource.data(result.Data.map(function (item) {
-                    return {
-                        ...item,
-                        FechaOperacion: parseDate(item.FechaOperacion),
-                        FechaConfirmacion: parseDate(item.FechaConfirmacion)
-                    };
-                }));
-                $("#contratos-grid").show();
+                if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
+                else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
             }
-        } else {
-            MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
+        } catch (e) {
+            console.error("Error al filtrar negocios: ", e);
+            MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
+        } finally {
+            $.unblockUI();
         }
-    } else {
-        if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
-        else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
-    }
+    }, 200);
 }
 
 function GeneraBoletoCambioVariosContratos() {
@@ -289,7 +295,7 @@ function inicializarGrillaContratos() {
             console.log(e.workbook);
         },
         dataSource: {
-            
+
             pageSize: 10
         },
         pageable: {
