@@ -25,5 +25,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Precio {  get; set; }
         public string Moneda {  get; set; }
         public int? TipoNegocioId { get; set; }
+        public string Material { get; set; }
+        public string ContratoVendedor { get; set; }
+        public string ContratoCorredor { get; set; }
+        public string Comercial { get; set; }
+        public string UsuarioAnulacion { get; set; }
     }
 }
