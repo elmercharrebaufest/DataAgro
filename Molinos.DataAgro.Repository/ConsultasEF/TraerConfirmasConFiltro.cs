@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
@@ -19,7 +20,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         public TraerConfirmasConFiltro(DataSourceRequest request, List<int> equipo)
         {
             this.request = request;
-            this.equipo = equipo; 
+            this.equipo = equipo;
         }
 
         private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
@@ -77,57 +78,58 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             // Construir la consulta
             var queryBasicoConfirmas = from negocio in queryContratos
-                                       join confirma in queryConfirmas on negocio.Id equals confirma.NegocioId into c
-                                        from confirma in c.DefaultIfEmpty()
-                                        join np in queryNegociosPadre on negocio.ContratoSAP equals np.ContratoSAP into npGroup
-                                        from np in npGroup.DefaultIfEmpty()
-                                        join tipoBoleto in queryTiposBoleto on
-                                            (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                                ? np.BoletoId
-                                                : negocio.BoletoId)
-                                            equals tipoBoleto.Id into t
-                                        from tipoBoleto in t.DefaultIfEmpty()
-                                        join tipoNegocio in queryTiposNegocio on negocio.TipoNegocioId equals tipoNegocio.TipoNegocioId into tn
-                                        from tipoNegocio in tn.DefaultIfEmpty()
-                                        join bolsa in queryBolsas on
-                                            (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                                ? np.BolsaId
-                                                : negocio.BolsaId)
-                                            equals bolsa.Id into bl
-                                        from bolsa in bl.DefaultIfEmpty()
-                                        join proveedorCorredor in queryProveedores on negocio.CorredorId equals proveedorCorredor.ProveedorId into pCorredor
-                                        from proveedorCorredor in pCorredor.DefaultIfEmpty()
-                                        join proveedorVendedor in queryProveedores on negocio.ProveedorId equals proveedorVendedor.ProveedorId into pVendedor
-                                        from proveedorVendedor in pVendedor.DefaultIfEmpty()
-                                        where
+                                       join confirma in queryConfirmas on negocio.Id equals confirma.NegocioId into confirmaGroup
+                                       from confirma in confirmaGroup.DefaultIfEmpty()
+
+                                       join np in queryNegociosPadre on negocio.ContratoSAP equals np.ContratoSAP into npGroup
+                                       from np in npGroup.DefaultIfEmpty()
+
+                                       let boletoId = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? np.BoletoId : negocio.BoletoId
+                                       let bolsaId = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? np.BolsaId : negocio.BolsaId
+                                       let canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (np.Canje == true ? "SI" : "NO") : (negocio.Canje == true ? "SI" : "NO")
+
+                                       join tipoBoleto in queryTiposBoleto on boletoId equals tipoBoleto.Id into tipoBoletoGroup
+                                       from tipoBoleto in tipoBoletoGroup.DefaultIfEmpty()
+
+                                       join tipoNegocio in queryTiposNegocio on negocio.TipoNegocioId equals tipoNegocio.TipoNegocioId into tipoNegocioGroup
+                                       from tipoNegocio in tipoNegocioGroup.DefaultIfEmpty()
+
+                                       join bolsa in queryBolsas on bolsaId equals bolsa.Id into bolsaGroup
+                                       from bolsa in bolsaGroup.DefaultIfEmpty()
+
+                                       join proveedorCorredor in queryProveedores on negocio.CorredorId equals proveedorCorredor.ProveedorId into pCorredor
+                                       from proveedorCorredor in pCorredor.DefaultIfEmpty()
+
+                                       join proveedorVendedor in queryProveedores on negocio.ProveedorId equals proveedorVendedor.ProveedorId into pVendedor
+                                       from proveedorVendedor in pVendedor.DefaultIfEmpty()
+
+                                       where
                                             negocio.ConfirmadoSAP == true &&
                                             negocio.Estado == (int)EnumEstadoContrato.Finalizado &&
                                             (
-                                                (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-                                                np.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                                                (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && np.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                                                 ||
-                                                (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
-                                                negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                                                (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                                             )
-                                        select new BasicoConfirma
-                                        {
-                                            Id = negocio.Id,
-                                            NegocioSAP = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.FijacionSAP: negocio.ContratoSAP,
-                                            ContratoSAP = negocio.ContratoSAP ?? "",
-                                            FijacionSAP = negocio.FijacionSAP ?? "",
-                                            TipoBoleto = tipoBoleto.Descripcion ?? "Ninguno",
-                                            TipoNegocio = tipoNegocio.Descripcion ?? "Ninguno",
-                                            Canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (np.Canje == true ? "SI" : "NO") : (negocio.Canje == true ? "SI" : "NO"),
-                                            Bolsa = bolsa.Descripcion ?? "",
-                                            Precio = negocio.Precio,
-                                            Moneda = negocio.MonedaId == "ARP" ? "ARP" : (negocio.MonedaId == "USDM" ? "USD" : string.Empty),
-                                            FechaGeneracion = confirma.FechaGeneracion,
-                                            FechaOperacion = negocio.FechaOperacion,
-                                            FechaConfirmacion = negocio.FechaConfirmacion,
-                                            Corredor = proveedorCorredor.RazonSocial ?? "",
-                                            Vendedor = proveedorVendedor.RazonSocial ?? "",
-                                            TipoNegocioId = negocio.TipoNegocioId
-                                        };
+                                       select new BasicoConfirma
+                                       {
+                                           Id = negocio.Id,
+                                           NegocioSAP = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.FijacionSAP : negocio.ContratoSAP,
+                                           ContratoSAP = negocio.ContratoSAP ?? "",
+                                           FijacionSAP = negocio.FijacionSAP ?? "",
+                                           TipoBoleto = tipoBoleto.Descripcion ?? "Ninguno",
+                                           TipoNegocio = tipoNegocio.Descripcion ?? "Ninguno",
+                                           Canje = canje,
+                                           Bolsa = bolsa.Descripcion ?? "",
+                                           Precio = negocio.Precio,
+                                           Moneda = negocio.MonedaId == "ARP" ? "ARP" : (negocio.MonedaId == "USDM" ? "USD" : string.Empty),
+                                           FechaGeneracion = confirma.FechaGeneracion,
+                                           FechaOperacion = negocio.FechaOperacion,
+                                           FechaConfirmacion = negocio.FechaConfirmacion,
+                                           Corredor = proveedorCorredor.RazonSocial ?? "",
+                                           Vendedor = proveedorVendedor.RazonSocial ?? "",
+                                           TipoNegocioId = negocio.TipoNegocioId
+                                       };
 
             var orderedQuery = queryBasicoConfirmas.OrderByDescending(b => b.Id);
 
@@ -141,7 +143,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request,equipo);
+                return Query(contexto, request, equipo);
             }
         }
     }

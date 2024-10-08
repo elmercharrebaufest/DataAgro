@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly DataSourceRequest request;
         private readonly List<int> equipo;
 
-        public TraerBoletosConFiltro(DataSourceRequest request,List<int> equipo)
+        public TraerBoletosConFiltro(DataSourceRequest request, List<int> equipo)
         {
             this.request = request;
             this.equipo = equipo;
@@ -87,52 +87,50 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var queryBasicoBoletos = from negocio in queryContratos
                                      join boleto in queryBoletos on negocio.Id equals boleto.NegocioId into b
                                      from boleto in b.DefaultIfEmpty()
+
                                      join np in queryNegociosPadre on negocio.ContratoSAP equals np.ContratoSAP into npGroup
                                      from np in npGroup.DefaultIfEmpty()
-                                     join tipoBoleto in queryTiposBoleto on
-                                         (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                            ? np.BoletoId
-                                            : negocio.BoletoId)
-                                         equals tipoBoleto.Id into t
-                                     from tipoBoleto in t.DefaultIfEmpty()
-                                     join tipoNegocio in queryTiposNegocio on negocio.TipoNegocioId equals tipoNegocio.TipoNegocioId into tn
-                                     from tipoNegocio in tn.DefaultIfEmpty()
-                                     join bolsa in queryBolsas on
-                                         (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                            ? np.BolsaId
-                                            : negocio.BolsaId)
-                                         equals bolsa.Id into bl
-                                     from bolsa in bl.DefaultIfEmpty()
+
+                                     let boletoId = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? np.BoletoId : negocio.BoletoId
+                                     let bolsaId = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? np.BolsaId : negocio.BolsaId
+
+                                     join tipoBoleto in queryTiposBoleto on boletoId equals tipoBoleto.Id into tiposBoletos
+                                     from tipoBoleto in tiposBoletos.DefaultIfEmpty()
+
+                                     join tipoNegocio in queryTiposNegocio on negocio.TipoNegocioId equals tipoNegocio.TipoNegocioId into tiposNegocios
+                                     from tipoNegocio in tiposNegocios.DefaultIfEmpty()
+
+                                     join bolsa in queryBolsas on bolsaId equals bolsa.Id into bolsas
+                                     from bolsa in bolsas.DefaultIfEmpty()
+
                                      join proveedorCorredor in queryProveedores on negocio.CorredorId equals proveedorCorredor.ProveedorId into pCorredor
                                      from proveedorCorredor in pCorredor.DefaultIfEmpty()
+
                                      join proveedorVendedor in queryProveedores on negocio.ProveedorId equals proveedorVendedor.ProveedorId into pVendedor
                                      from proveedorVendedor in pVendedor.DefaultIfEmpty()
+
                                      where
                                         negocio.ConfirmadoSAP == true &&
                                         negocio.Estado == (int)EnumEstadoContrato.Finalizado &&
                                         (
-                                            (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-                                             (np.BoletoId == (int)EnumBoletoCompraNet.FISICO ||
-                                              np.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
+                                            (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && (np.BoletoId == (int)EnumBoletoCompraNet.FISICO || np.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
                                             ||
-                                            (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
-                                             (negocio.BoletoId == (int)EnumBoletoCompraNet.FISICO ||
-                                              negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
+                                            (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && (negocio.BoletoId == (int)EnumBoletoCompraNet.FISICO || negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
                                         )
                                      select new BasicoBoleto
                                      {
                                          Id = negocio.Id,
-                                         NegocioSAP = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION? negocio.FijacionSAP : negocio.ContratoSAP,
+                                         NegocioSAP = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.FijacionSAP : negocio.ContratoSAP,
                                          ContratoSAP = negocio.ContratoSAP ?? "",
                                          FijacionSAP = negocio.FijacionSAP ?? "",
                                          Version_Proxima = boleto.Version,
                                          Estado_Version = boleto.FechaGeneracion == null ? "No Generado" : string.Empty,
                                          TipoBoleto = tipoBoleto.Descripcion ?? "Ninguno",
                                          TipoNegocio = tipoNegocio.Descripcion ?? "Ninguno",
-                                         Canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION?(np.Canje==true?"SI":"NO"): (negocio.Canje == true ? "SI" : "NO"),
+                                         Canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (np.Canje == true ? "SI" : "NO") : (negocio.Canje == true ? "SI" : "NO"),
                                          Bolsa = bolsa.Descripcion ?? "",
                                          Precio = negocio.Precio,
-                                         Moneda = negocio.MonedaId=="ARP" ?"ARP":(negocio.MonedaId=="USDM"?"USD":string.Empty),
+                                         Moneda = negocio.MonedaId == "ARP" ? "ARP" : (negocio.MonedaId == "USDM" ? "USD" : string.Empty),
                                          FechaGeneracion = boleto.FechaGeneracion,
                                          FechaOperacion = negocio.FechaOperacion,
                                          FechaConfirmacion = negocio.FechaConfirmacion,
