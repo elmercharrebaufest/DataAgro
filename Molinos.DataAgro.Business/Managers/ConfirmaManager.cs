@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -166,7 +167,6 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 //Se Almacena el ArchivoXML 
                                 var xml = GenerarXML(contrato, clausulas);
-                                var adicional = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? "_" + contrato.FijacionSAP : string.Empty;
                                 File.WriteAllBytes(ConfigurationManager.AppSettings["PathConfirmas"].ToString() + "\\"
                                      + tempConfirma.Archivo, xml);
                                 //Se Almacena en DB el nuevo Confirma
@@ -236,7 +236,15 @@ namespace Molinos.DataAgro.Business.Managers
         public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro,List<int> equipo)
         {
             var filter = CorregirFiltro(filtro);
-            return repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var data = result.Data as IEnumerable<BasicoConfirma>;
+
+            // Iterar sobre los datos y modificar atributos
+            foreach (var boleto in data)
+            {
+                boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
+            }
+            return result;
         }
 
         private string ValidarContrato(BasicoContrato contrato)
@@ -984,6 +992,39 @@ namespace Molinos.DataAgro.Business.Managers
             if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
                 else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
             return FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
+        }
+
+        private string ObtenerEstadoBoleto(BasicoConfirma boleto)
+        {
+            var mensaje = boleto.Estado_Version;
+            try
+            {
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                if (Int32.Parse(consultaBoleto.Version) == boleto.Version_Proxima - 1)
+                {
+                    if (consultaBoleto.Anulado == "X")
+                    {
+                        mensaje = "Anulado";
+                    }
+                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+                    {
+                        mensaje = "Vigente";
+                    }
+                    else
+                    {
+                        mensaje = "Pendiente";
+                    }
+                }
+                else
+                {
+                    logger.Info($"Generar Confirma - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
+                }
+            } catch (Exception ex)
+            {
+                logger.Info($"Generar Confirma - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Mensaje: {ex.Message}.");
+            }
+            
+            return mensaje;
         }
     }
 }
