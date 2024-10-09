@@ -5,8 +5,9 @@
     [IsWebService] BIT NOT NULL, 
     [FechaGeneracion] DATETIME NOT NULL , 
     [ComercialId] INT NOT NULL, 
-    [Version] INT NULL,
-    [Archivo] VARCHAR(100) NULL,
+    [Version] INT NOT NULL,
+    [Archivo] VARCHAR(100) NOT NULL,
+    [FechaAnulacion] DATETIME NULL,
     CONSTRAINT [FK_Confirma_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [Negocio]([Id]),
 	CONSTRAINT [FK_Confirma_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
 

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="LoteBorradorService" targetNamespace="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2015/08/loteborrador">
+      <xsd:element xmlns:q1="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSSchema" name="Lote" type="q1:Lote" />
+      <xsd:element xmlns:q2="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSResponseSchema" name="AltaLoteResult" type="q2:altaLoteResult" />
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSSchema">
+      <xsd:complexType name="Lote">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EmpresaPresentante" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Documento">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="1" name="CabeceraDocumento">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element minOccurs="0" maxOccurs="1" name="Bolsa">
+                        <xsd:complexType mixed="true">
+                          <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" maxOccurs="1" name="TipoDocumento">
+                        <xsd:complexType mixed="true">
+                          <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" maxOccurs="1" name="Formulario">
+                        <xsd:complexType mixed="true">
+                          <xsd:attribute name="formversion" type="xsd:string" />
+                        </xsd:complexType>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="UploadInfo">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:any minOccurs="0" maxOccurs="unbounded" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element minOccurs="0" maxOccurs="1" name="DetalleDocumento">
+                  <xsd:complexType mixed="true">
+                    <xsd:sequence>
+                      <xsd:any minOccurs="0" maxOccurs="unbounded" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSResponseSchema">
+      <xsd:complexType name="altaLoteResult">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdLote" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstado">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstadoDetalleError" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaEstadoLote">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q3="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSResponseSchema" minOccurs="0" maxOccurs="unbounded" name="altaItem" type="q3:altaItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="altaItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdLote" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdBolsa" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="altaEstadoDocumento">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="1" />
+                <xsd:enumeration value="2" />
+                <xsd:enumeration value="3" />
+                <xsd:enumeration value="4" />
+                <xsd:enumeration value="5" />
+                <xsd:enumeration value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element xmlns:q4="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSResponseSchema" minOccurs="0" maxOccurs="1" name="altaErrores" type="q4:ArrayOfString" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdDocumentoExistenteLote" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="altaIdDocumentoExistente" type="xsd:string" />
+        </xsd:sequence>
+        <xsd:attribute name="codigo" type="xsd:string" />
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="altaError" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="LoteBorradores">
+    <wsdl:part name="Lote" element="tns:Lote" />
+  </wsdl:message>
+  <wsdl:message name="LoteBorradoresResponse">
+    <wsdl:part name="AltaLoteResult" element="tns:AltaLoteResult" />
+  </wsdl:message>
+  <wsdl:portType name="ILoteBorradorService">
+    <wsdl:operation name="AltaBorrador">
+      <wsdl:input wsaw:Action="http://Confirma.GD.Services.Host.WAN.IIS/2015/LoteBorrador/ILoteBorradorService/AltaBorrador" name="LoteBorradores" message="tns:LoteBorradores" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2015/08/loteborrador/ILoteBorradorService/AltaBorradorResponse" name="LoteBorradoresResponse" message="tns:LoteBorradoresResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:ILoteBorradorService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AltaBorrador">
+      <soap:operation soapAction="http://Confirma.GD.Services.Host.WAN.IIS/2015/LoteBorrador/ILoteBorradorService/AltaBorrador" style="document" />
+      <wsdl:input name="LoteBorradores">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="LoteBorradoresResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LoteBorradorService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/LoteBorradorService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

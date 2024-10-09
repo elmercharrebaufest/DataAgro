@@ -57,18 +57,24 @@ function inicializarGrillaContratos() {
             }
 
             var columns = [
-                { field: "ContratoSAP", title: "Contrato SAP", width: 150 },
-                { field: "FijacionSAP", title: "Fijación SAP", width: 150 },
+                { field: "NegocioSAP", title: "Contrato", width: 150 },
+                { field: "Material", title: "Material", width: 150 },
                 { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
                 { field: "Bolsa", title: "Bolsa", width: 150 },
+                { field: "Version_Proxima", title: "V. Prox.", width: 150 },
+                { field: "Estado_Version", title: "Estado V.", width: 150},
+                { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
                 { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
                 { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150 },
+                { field: "FechaAnulacion", title: "Fecha Anulación", width: 150 },
+                { field: "ContratoVendedor", title: "Contrato Vendedor", width: 150 },
+                { field: "ContratoCorredor", title: "Contrato Corredor", width: 150 },
                 { field: "Corredor", title: "Corredor", width: 150 },
                 { field: "Vendedor", title: "Vendedor", width: 150 },
+                { field: "Comercial", title: "Comercial", width: 150 },
                 { field: "Precio", title: "Precio", width: 150 },
                 { field: "Moneda", title: "Moneda", width: 150 },
                 { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
-                { field: "Canje", title: "Canje", width: 150 }
             ];
 
             var header = columns.map(function (column) {
@@ -123,45 +129,45 @@ function inicializarGrillaContratos() {
         filterable: false,
         columns: [
             {
-                field: "NegocioSAP",
-                title: "Negocio SAP",
-                hidden: true
-            },
-            {
                 field: "Select",
                 title: "<input type='checkbox' id='select-all'>",
                 template: "<input type='checkbox' class='row-checkbox'/>",
-                width: 50,
+                width: 25,
                 sortable: false
             },
             {
                 title: "",
                 template: `
                     <div style="display: flex; flex-direction: column;">
-                        <a onclick="GenerarConfirma('#= NegocioSAP #')" style="margin-bottom: 5px;">
-                            <img style="width:16px;height:16px;" src="/Content/Images/agregar-tel-mail.png">
-                            <span class="editar-contacto editar-contacto-dc" style="text-decoration: none;"> Generar Confirma</span>
+                        <a onclick="GenerarConfirma('#= NegocioSAP #')" title="Generar Confirma">
+                            <img style="width:16px;height:16px;" src="/Content/Images/agregar-tel-mail.png" hidden>
                         </a>
-                        <a onclick="GestionarClausulas('#= NegocioSAP #')">
-                            <img style="width:16px;height:16px;" src="/Content/Images/contacto-edit.png">
-                            <span class="editar-contacto editar-contacto-dc" style="text-decoration: none;"> Editar Clausulas</span>
+                        <a onclick="GestionarClausulas('#= NegocioSAP #')" title="Gestionar Clausulas">
+                            <img style="width:16px;height:16px;" src="/Content/Images/pencil_line.svg">
                         </a>
                     </div>
                 `,
-                width: 70
+                width: 30
             },
-            { field: "ContratoSAP", title: "Contrato SAP", width: 50, },
-            { field: "FijacionSAP", title: "Fijación SAP", width: 50, },
-            { field: "TipoBoleto", title: "Tipo Boleto", width: 50 },
-            { field: "Bolsa", title: "Bolsa", width: "50px" },
-            { field: "FechaOperacion", title: "F. Operación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" } },
-            { field: "FechaConfirmacion", title: "F. Confirmación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" } },
-            { field: "Corredor", title: "Corredor", width: 150 },
+            { field: "NegocioSAP", title: "Contrato", width: 80, },
+            { field: "Material", title: "Material", width: 50 },
+            { field: "TipoBoleto", title: "Tipo Boleto", width: 60, headerAttributes: { "title": "Tipo Boleto" } },
+            { field: "Bolsa", title: "Bolsa", width: 50 },
+            { field: "Version_Proxima", title: "Vers. P.", width: 38, headerAttributes: { "title": "Versión Próxima" } },
+            { field: "Estado_Version", title: "Estado V.", width: 65, headerAttributes: { "title": "Estado Versión" } },
+            { field: "FechaGeneracion", title: "F. Generación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Generación" } },
+            { field: "FechaOperacion", title: "F. Operación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" } },
+            { field: "FechaConfirmacion", title: "F. Confirmación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" } },
+            { field: "FechaAnulacion", title: "F. Anulación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Anulación" } },
+            { field: "ContratoVendedor", title: "C. Vendedor", width: 80, headerAttributes: { "title": "Contrato Vendedor" } },
+            { field: "ContratoCorredor", title: "C. Corredor", width: 80, headerAttributes: { "title": "Contrato Corredor" } },
             { field: "Vendedor", title: "Vendedor", width: 150 },
-            { field: "Precio", title: "Precio", type: "number", width: 50, format: "{0:#,##0.00}" },
-            { field: "Moneda", title: "Moneda", width: 30 },
-            { field: "TipoNegocio", title: "Tipo Contrato", width: 50 },
-            { field: "Canje", title: "Canje", width: 30 }
+            { field: "Corredor", title: "Corredor", width: 150 },
+            { field: "Comercial", title: "Comercial", width: 150 },
+            { field: "Precio", title: "Precio", type: "number", width: 70, format: "{0:#,##0.00}" },
+            { field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" } },
+            { field: "TipoNegocio", title: "Tipo Contrato", width: 55, headerAttributes: { "title": "Tipo Contrato" } },
+            { field: "UsuarioAnulacion", title: "U. Anulación", width: 35, headerAttributes: { "title": "Usuario Anulación" } },
         ]
     });
 }
@@ -262,7 +268,8 @@ function FiltrarNegocios() {
                             return {
                                 ...item,
                                 FechaOperacion: parseDate(item.FechaOperacion),
-                                FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                                FechaConfirmacion: parseDate(item.FechaConfirmacion),
+                                FechaGeneracion: parseDate(item.FechaGeneracion)
                             };
                         }));
                         $("#contratos-grid").show();

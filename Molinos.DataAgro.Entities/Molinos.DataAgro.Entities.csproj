@@ -256,6 +256,7 @@
     <Compile Include="Common\Enums\EnumClasificacionCompraNet.cs" />
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
+    <Compile Include="Common\Enums\EnumConfirmaAltaEstadoDocumento.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoSisa.cs" />
     <Compile Include="Common\Enums\EnumStandarCalidad.cs" />

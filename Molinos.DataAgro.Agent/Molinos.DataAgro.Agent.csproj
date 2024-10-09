@@ -220,6 +220,7 @@
     <Compile Include="Helpers\ConfirmaConsultaDocumentosAgent.cs" />
     <Compile Include="Helpers\ConfirmaConsultaDocumentosRegistradosAgent.cs" />
     <Compile Include="Helpers\ConfirmaConsultaLoteAgent.cs" />
+    <Compile Include="Helpers\ConfirmaLoteBorradorAgent.cs" />
     <Compile Include="Helpers\ConfirmaLoteDocumentosAgent.cs" />
     <Compile Include="Helpers\ConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Helpers\EnviarCapacidadProductivaSAPAgent.cs" />
@@ -346,6 +347,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQALoteBorradorService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -654,6 +660,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\ConsultaDocumentoTrackingInteraccionesFechasService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\LoteBorradorService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService.altaLoteResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteBorradorService\Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService.LoteBorradoresResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ConfirmaQALoteDocumentosAsync\LoteDocumentosAsyncService.wsdl" />
     <None Include="Service References\ConfirmaQALoteDocumentosAsync\Molinos.DataAgro.Agent.ConfirmaQALoteDocumentosAsync.altaLoteResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -2158,6 +2171,7 @@
     <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaEmpresas\" />
     <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaLote\" />
     <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQALoteBorradorService\" />
     <WCFMetadataStorage Include="Service References\ConfirmaQALoteDocumentosAsync\" />
     <WCFMetadataStorage Include="Service References\ConfirmaQALoteDocumentos\" />
     <WCFMetadataStorage Include="Service References\ConsultarEstadoBoleto\" />
@@ -2718,6 +2732,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </Content>
+    <None Include="Service References\ConfirmaQALoteBorradorService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQALoteBorradorService\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\configuration91.svcinfo" />
     <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
