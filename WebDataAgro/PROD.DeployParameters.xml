@@ -114,4 +114,5 @@
 	<setParameter name="Default8" value="https://services.confirma.com.ar/ConsultaEmpresasService.svc" />
 	<setParameter name="Default9" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
 	<setParameter name="Default10" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
+	<setParameter name="Default11" value="https://services.confirma.com.ar/LoteBorradorService.svc" />
 </parameters>

@@ -54,4 +54,29 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ConfirmaAltaEstadoLoteDto> ConfirmaAltaEstadoLoteDto;
         public List<ConfirmaAltaEstadoDocumentoDto> ConfirmaAltaEstadoDocumentoDto;
     }
+
+    public class ConfirmaAltaLoteBorradorResultDto : Resultado
+    {
+        public string altaIdLote;
+        public int altaEstado;
+        public bool altaEstadoSpecified;
+        public object altaEstadoDetalleError;
+        public int altaEstadoLote;
+        public bool altaEstadoLoteSpecified;
+        public List<altaItemBorradorDto> altaItem;
+        public ConfirmaAltaEstadoDto confirmaAltaEstado;
+        public ConfirmaAltaEstadoLoteDto confirmaAltaEstadoLote;
+    }
+
+    public class altaItemBorradorDto
+    {
+        public string altaIdLote;
+        public string altaIdBolsa;
+        public int altaEstadoDocumento;
+        public List<string> altaErrores;
+        public string altaIdDocumentoExistenteLote;
+        public string altaIdDocumentoExistente;
+        public string codigo;
+        public ConfirmaAltaEstadoDocumentoDto confirmaAltaEstadoDocumento;
+    }
 }

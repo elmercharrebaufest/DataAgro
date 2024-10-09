@@ -215,6 +215,7 @@
     <Compile Include="Agent\IConfirmaConsultaDocumentosAgent.cs" />
     <Compile Include="Agent\IConfirmaConsultaDocumentosRegistradosAgent.cs" />
     <Compile Include="Agent\IConfirmaConsultaLoteAgent.cs" />
+    <Compile Include="Agent\IConfirmaLoteBorradorAgent.cs" />
     <Compile Include="Agent\IConfirmaLoteDocumentosAgent.cs" />
     <Compile Include="Agent\IConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Agent\IConsultarAcuerdosGeneradosAgent.cs" />

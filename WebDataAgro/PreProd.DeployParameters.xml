@@ -114,4 +114,5 @@
 	<setParameter name="Default8" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
 	<setParameter name="Default9" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
 	<setParameter name="Default10" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
+	<setParameter name="Default11" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
 </parameters>
