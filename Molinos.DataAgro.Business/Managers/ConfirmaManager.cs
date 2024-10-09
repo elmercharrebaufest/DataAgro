@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -13,13 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Mail;
+using System.Web.WebPages;
 using System.Xml.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -99,9 +98,9 @@ namespace Molinos.DataAgro.Business.Managers
                     $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
                     $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
-                bool generadorPorWebServices = false;
-                if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO) 
-                    generadorPorWebServices = true;
+                bool webServiceOK = false;
+                if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                    webServiceOK = true;
 
                 string wsErrorConfirma = "";
                 wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstado.Descripcion}";
@@ -110,7 +109,7 @@ namespace Molinos.DataAgro.Business.Managers
                     wsErrorConfirma += ". ";
                 else
                     wsErrorConfirma += $": {confirmaAltaLoteBorradorResult.altaEstadoDetalleError}. ";
-                
+
                 wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote.Descripcion}. ";
 
                 confirmaAltaLoteBorradorResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
@@ -118,7 +117,7 @@ namespace Molinos.DataAgro.Business.Managers
                     wsErrorConfirma += $"{x.confirmaAltaEstadoDocumento.Descripcion}: {y}. ";
                 }));
 
-                resultado.confirmasGenerados.Add(DevolverDto(contrato, generadorPorWebServices, $"WS: {wsErrorConfirma}"));
+                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {wsErrorConfirma}", webServiceOK));
 
                 logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
             }
@@ -183,7 +182,6 @@ namespace Molinos.DataAgro.Business.Managers
                                      + tempConfirma.Archivo, xml);
                                 //Se Almacena en DB el nuevo Confirma
                                 var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-                                resultado.confirmasGenerados.Add(tempConfirma);
 
                                 if (usarWebServiceConfirma && activarConfirmaWS == "1")
                                 {
@@ -201,34 +199,35 @@ namespace Molinos.DataAgro.Business.Managers
                                         $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
                                         $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
-                                    // Si está todo OK, se debería actualizar el campo IsWebService en true. Encontrar caso de éxito.
-                                    //bool generadorPorWebServices = false;
                                     if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
                                     {
                                         nuevoConfirma.IsWebService = true;
-                                        //generadorPorWebServices = true;
+                                        tempConfirma.IsWebService = true;
+                                    }
+                                    else
+                                    {
+                                        string wsErrorConfirma = "";
+                                        wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstado.Descripcion}";
+
+                                        if (confirmaAltaLoteBorradorResult.altaEstadoDetalleError == null)
+                                            wsErrorConfirma += ". ";
+                                        else
+                                            wsErrorConfirma += $": {confirmaAltaLoteBorradorResult.altaEstadoDetalleError}. ";
+
+                                        wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote.Descripcion}. ";
+
+                                        confirmaAltaLoteBorradorResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
+                                        {
+                                            wsErrorConfirma += $"{x.confirmaAltaEstadoDocumento.Descripcion}: {y}. ";
+                                        }));
+
+                                        tempConfirma.Mensaje += tempConfirma.Mensaje.IsEmpty() ? $"WS: {wsErrorConfirma}" : $". WS: {wsErrorConfirma}";
                                     }
 
-                                    // Si hay errores, se muestran (evaluar los diferentes tipos de errores. Hay 3 objetos de estados)
-                                    string wsErrorConfirma = "";
-                                    wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstado.Descripcion}";
-
-                                    if (confirmaAltaLoteBorradorResult.altaEstadoDetalleError == null)
-                                        wsErrorConfirma += ". ";
-                                    else
-                                        wsErrorConfirma += $": {confirmaAltaLoteBorradorResult.altaEstadoDetalleError}. ";
-
-                                    wsErrorConfirma += $"{confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote.Descripcion}. ";
-
-                                    confirmaAltaLoteBorradorResult.altaItem?.ForEach(x => x.altaErrores?.ForEach(y =>
-                                    {
-                                        wsErrorConfirma += $"{x.confirmaAltaEstadoDocumento.Descripcion}: {y}. ";
-                                    }));
-
-                                    resultado.confirmasGenerados.Add(DevolverDto(contrato, false, $"WS: {wsErrorConfirma}"));
-                                    logger.Info($"Se intentará guardar el IsWebService = true para el negocio id {nuevoConfirma.NegocioId}");
                                     logger.Info("---- FIN WS CONFIRMA ----");
                                 }
+
+                                resultado.confirmasGenerados.Add(tempConfirma);
                             }
                             catch (Exception ex)
                             {
@@ -261,7 +260,7 @@ namespace Molinos.DataAgro.Business.Managers
         public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo)
         {
             var filter = CorregirFiltro(filtro);
-            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoConfirma>;
 
             // Iterar sobre los datos y modificar atributos
@@ -722,7 +721,7 @@ namespace Molinos.DataAgro.Business.Managers
             return negociosFiltrados;
         }
 
-        private static ConfirmaGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, string mensaje)
+        private static ConfirmaGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, string mensaje, bool webServicesOK = false)
         {
             return new ConfirmaGeneradoDto
             {
@@ -730,7 +729,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Generado = generado,
                 Mensaje = mensaje,
                 FechaGeneracion = default(DateTime),
-                IsWebService = false,
+                IsWebService = webServicesOK,
                 ContratoSAP = itemNegocio.ContratoSAP,
                 FijacionSAP = itemNegocio.FijacionSAP,
             };
@@ -1044,11 +1043,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     logger.Info($"Generar Confirma - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.Info($"Generar Confirma - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Mensaje: {ex.Message}.");
             }
-            
+
             return mensaje;
         }
     }
