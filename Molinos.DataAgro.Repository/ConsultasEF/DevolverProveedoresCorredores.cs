@@ -23,40 +23,41 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         private static List<BusquedaHome> Query(DbContext contexto, string filtro, bool esComisionista, bool? validarSisa = true)
         {
-            var resultado = from Proveedor in contexto.Set<Proveedor>()
-                            join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
-                            from p in rgs.DefaultIfEmpty()
-                            join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
-                            from c in rg.DefaultIfEmpty()
-                            where (Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
-                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) && (esComisionista == false || Proveedor.Comisionista == esComisionista)
-                            group c by Proveedor into provs
-                            select new BusquedaHome
-                            {
-                                Id = provs.Key.ProveedorId,
-                                Cuit = provs.Key.CUIT,
-                                Alias = provs.Key.Alias,
-                                RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) : !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
-                                Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
-                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
-                                ClasificacionId = provs.Key.ClasificacionCompraNetId,
-                                RiesgoComercialSap = provs.Key.RiesgoComercialSap,
-                                Deshabilitado = provs.Key.Deshabilitado,
-                                Consignatario = provs.Key.Consignatario,
-                                PlanCanje = provs.Key.PlanCanje,
-                                Deshabilitar = false,
-                                Color = "",
-                                CuposConRiesgo = provs.Key.CuposConRiesgo,
-                                Segmentacion = provs.Key.Segmentacion.Descripcion,
-                                Grupo = provs.Key.Segmentacion.Grupo,
-                                SegmentacionId = provs.Key.SegmentacionId,
-                            };
-            var lista = resultado.Distinct().Take(15).ToList();
+            var resultado = (from Proveedor in contexto.Set<Proveedor>()
+                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
+                             from p in rgs.DefaultIfEmpty()
+                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
+                             from c in rg.DefaultIfEmpty()
+                             where (Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
+                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) && (esComisionista == false || Proveedor.Comisionista == esComisionista)
+                             group c by Proveedor into provs
+                             select new BusquedaHome
+                             {
+                                 Id = provs.Key.ProveedorId,
+                                 Cuit = provs.Key.CUIT,
+                                 Alias = provs.Key.Alias,
+                                 RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) : !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
+                                 Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
+                                 Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
+                                 ClasificacionId = provs.Key.ClasificacionCompraNetId,
+                                 RiesgoComercialSap = provs.Key.RiesgoComercialSap,
+                                 Deshabilitado = provs.Key.Deshabilitado,
+                                 Consignatario = provs.Key.Consignatario,
+                                 PlanCanje = provs.Key.PlanCanje,
+                                 Deshabilitar = false,
+                                 Color = "",
+                                 CuposConRiesgo = provs.Key.CuposConRiesgo,
+                                 Segmentacion = provs.Key.Segmentacion.Descripcion,
+                                 Grupo = provs.Key.Segmentacion.Grupo,
+                                 SegmentacionId = provs.Key.SegmentacionId,
+                             }).Distinct().Take(15).ToList();
+
             if (validarSisa == true)
             {
-                return DevolverEstadoSisa(contexto, lista);
+                return DevolverEstadoSisa(contexto, resultado);
             }
-            return lista;
+
+            return resultado;
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)
@@ -72,7 +73,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             if (lista.Count > 0)
             {
                 foreach (var item in lista)
-                {                    
+                {
                     if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
                     {
                         item.Estado = "Deshabilitado";
@@ -94,8 +95,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     var sisa = new SISA();
 
                     sisa = (from s in contexto.Set<SISA>()
-                                    where s.CUIT == item.Cuit
-                                    select s).OrderBy(x => x.SituacionCategoria).FirstOrDefault();
+                            where s.CUIT == item.Cuit
+                            select s).OrderBy(x => x.SituacionCategoria).FirstOrDefault();
 
                     if (sisa != null)
                     {
