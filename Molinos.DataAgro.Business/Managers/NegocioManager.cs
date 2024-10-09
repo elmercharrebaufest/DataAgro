@@ -927,7 +927,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else if (provinciaId == 12 && esProductor)
             {
-                resultado.Error("Carta Oferta", "La provincia de Santa Fe no está habilitada para que los productores directos operen con carta oferta.\n\n");
+                resultado.Error("Carta Oferta", "La provincia de Santa Fe no está habilitada para que los productores operen con carta oferta.\n\n");
                 return resultado;
             }
             else if (altaTempranaCO == "NO")
