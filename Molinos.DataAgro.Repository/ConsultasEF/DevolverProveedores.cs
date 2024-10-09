@@ -34,39 +34,42 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         private static List<BusquedaHome> Query(DbContext contexto, string filtro, int corredor, List<int> equipo, int? agenteCompraId)
         {
-            var resultado = from Proveedor in contexto.Set<Proveedor>()
-                            join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
-                            from p in rgs.DefaultIfEmpty()
-                            join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
-                            from c in rg.DefaultIfEmpty()
-                            where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
-                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
-                            (corredor.Equals(0) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
-                            : corredor.Equals(1) ? (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7) : Proveedor.SegmentacionId > 0))
-                            group c by Proveedor into provs
-                            select new BusquedaHome
-                            {
-                                Id = provs.Key.ProveedorId,
-                                Cuit = provs.Key.CUIT,
-                                RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
-                                Alias = provs.Key.Alias,
-                                ClasificacionId = provs.Key.ClasificacionCompraNetId,
-                                RiesgoComercialSap = provs.Key.RiesgoComercialSap,
-                                Deshabilitado = provs.Key.Deshabilitado,
-                                Consignatario = provs.Key.Consignatario,
-                                PlanCanje = provs.Key.PlanCanje,
-                                Deshabilitar = false,
-                                Color = "",
-                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
-                                ComisionistaId = provs.Key.ComisionistaId,
-                                OperaConMATBA = provs.Key.OperaConMATBA,
-                            };
-            if(agenteCompraId == null)
+            var resultado = (from Proveedor in contexto.Set<Proveedor>()
+                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
+                             from p in rgs.DefaultIfEmpty()
+                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
+                             from c in rg.DefaultIfEmpty()
+                             where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
+                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
+                             (corredor.Equals(0) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
+                             : corredor.Equals(1) ? (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7) : Proveedor.SegmentacionId > 0))
+                             group c by Proveedor into provs
+                             select new BusquedaHome
+                             {
+                                 Id = provs.Key.ProveedorId,
+                                 Cuit = provs.Key.CUIT,
+                                 RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
+                                 Alias = provs.Key.Alias,
+                                 ClasificacionId = provs.Key.ClasificacionCompraNetId,
+                                 RiesgoComercialSap = provs.Key.RiesgoComercialSap,
+                                 Deshabilitado = provs.Key.Deshabilitado,
+                                 Consignatario = provs.Key.Consignatario,
+                                 PlanCanje = provs.Key.PlanCanje,
+                                 Deshabilitar = false,
+                                 Color = "",
+                                 Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
+                                 ComisionistaId = provs.Key.ComisionistaId,
+                                 OperaConMATBA = provs.Key.OperaConMATBA,
+                             }).Distinct().Take(15).ToList();
+
+            if (agenteCompraId == null)
             {
-                resultado = resultado.Where(x => x.OperaConMATBA != true);
+                resultado = resultado.Where(x => x.OperaConMATBA != true).ToList();
             }
-            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), corredor, agenteCompraId);
-            return lista.Distinct().Take(15).ToList();
+
+            var lista = DevolverEstadoSisa(contexto, resultado, corredor, agenteCompraId);
+
+            return lista;
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)
@@ -120,7 +123,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         var sisa = new SISA();
                         if (item.ClasificacionId.HasValue)
                         {
-                         if (item.ClasificacionId == 1)
+                            if (item.ClasificacionId == 1)
                             {
                                 sisa = (from s in contexto.Set<SISA>()
                                         where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.PRODUCTOR && s.SituacionCategoria == "AL"
@@ -172,7 +175,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 continue;
                             }
                         }
-                        
+
                     }
                     else
                     {
