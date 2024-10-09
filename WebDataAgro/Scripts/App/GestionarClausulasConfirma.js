@@ -93,16 +93,46 @@ $("#generar-confirma").click(function () {
         if (result.length == 0) {
             MensErr("No se generó ningún confirma.");
         } else {
+            var tablaFila = '<tr><td>'
+                + result.confirmasGenerados[0].NegocioSAP
+                + '</td><td>'
+                + result.confirmasGenerados[0].FechaGeneracionFormateada
+                + '</td><td>'
+                + (result.confirmasGenerados[0].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
+                + '</td><td>'
+                + (result.confirmasGenerados[0].IsWebService ? '<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
+                + (result.confirmasGenerados[0].Generado ? ('<a href="/Confirma/DescargarArchivoConfirma?nombreArchivo=' + result.confirmasGenerados[0].Archivo + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
+                + '</td><td>'
+                + result.confirmasGenerados[0].Mensaje
+                + '</td></tr>';
             BootstrapDialog.show({
                 title: 'Generar confirma',
-                message: "\n" + result[0].Mensaje,
+                message: `
+                <div class="dialogTabla">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Negocio SAP</th>
+                                <th>Fecha Generación</th>
+                                <th>Generado</th>
+                                <th>Servicio Web</th>
+                                <th>Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tablaFila}
+                        </tbody>
+                    </table>
+                 </div>
+                `,
                 draggable: true,
+                closable: false,
                 buttons: [{
                     label: 'Cerrar y volver',
                     cssClass: 'k-button',
                     action: function (dialogItself) {
                         dialogItself.close();
-                        window.history.back();
+                        window.location.href = `/Confirma/GenerarConfirma`;
                     }
                 }]
             });
@@ -113,3 +143,8 @@ $("#generar-confirma").click(function () {
 $("#volver").click(function () {
     window.history.back();
 });
+
+function descargarArchivoConfirma(nombreArchivo) {
+    // Cambia la URL según la ruta correcta de tu controlador
+    window.location.href = '/Confirma/DescargarArchivoConfirma?nombreArchivo=' + encodeURIComponent(nombreArchivo);
+}
