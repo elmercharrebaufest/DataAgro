@@ -22,6 +22,7 @@ $(document).ready(function () {
         height: 400,
         pageable: false,
         columns: [
+            { selectable: true, width: "35px" },
             {
                 field: "Name", title: "Nombre", template: function (dataItem) {
                     return "<label  style=' color: black'> <strong>" + dataItem.Nombre + "</strong></label>"

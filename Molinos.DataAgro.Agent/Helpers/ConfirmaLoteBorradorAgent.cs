@@ -28,8 +28,9 @@ namespace Molinos.DataAgro.Agent.Helpers
         string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
         string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
         string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
-        string cuit1 = "30646328450";
-        string cuit2 = "30500120882";
+        // CUITs de prueba recomendado por Confirma para Staging
+        string cuit1 = "23555555555"; // VIOLETA
+        string cuit2 = "23888888888"; // CELESTE
 
         public ConfirmaLoteBorradorAgent(ILogger logger, IRepositorio repositorio, IStatusContratoAgent status, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
         {
@@ -99,11 +100,29 @@ namespace Molinos.DataAgro.Agent.Helpers
                     string nroContratoInterno = numeroSAP.TrimStart('0');
 
                     List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
-                        new ConfirmaParteDto { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit1 : contrato.Cuit, Sucursal = string.Empty },
-                        new ConfirmaParteDto { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = cuitMOA, Sucursal = string.Empty }
+                        new ConfirmaParteDto
+                        {
+                            CodLista = "1",
+                            NroContratoInterno = nroContratoInterno, 
+                            CUIT = ambienteLocal == "1" || ambientePruebas == "1" ? cuit1 : contrato.Cuit,
+                            Sucursal = string.Empty
+                        },
+                        new ConfirmaParteDto
+                        {
+                            CodLista = "3",
+                            NroContratoInterno = nroContratoInterno + "V01",
+                            CUIT = cuitMOA,
+                            Sucursal = string.Empty
+                        }
                     };
                     if (contrato.CorredorId > 0)
-                        Partes.Add(new ConfirmaParteDto { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit2 : contrato.CUITCorredor, Sucursal = string.Empty });
+                        Partes.Add(new ConfirmaParteDto
+                        {
+                            CodLista = "2",
+                            NroContratoInterno = nroContratoInterno,
+                            CUIT = ambienteLocal == "1" || ambientePruebas == "1" ? cuit2 : contrato.CUITCorredor,
+                            Sucursal = string.Empty
+                        });
 
                     logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{numeroSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
                     if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {numeroSAP}.");
