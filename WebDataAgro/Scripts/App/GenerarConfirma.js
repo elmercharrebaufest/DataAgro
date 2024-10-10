@@ -226,9 +226,87 @@ function inicializarGrillaContratos() {
             { field: "FechaAnulacion", title: "F. Anulación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Anulación" }, type: "date" },
             { field: "ContratoVendedor", title: "C. Vendedor", width: 80, headerAttributes: { "title": "Contrato Vendedor" }, type: "string" },
             { field: "ContratoCorredor", title: "C. Corredor", width: 80, headerAttributes: { "title": "Contrato Corredor" }, type: "string" },
-            { field: "Vendedor", title: "Vendedor", width: 150, type: "string", headerAttributes: { "title": "Vendedor" } },
-            { field: "Corredor", title: "Corredor", width: 150, type: "string", headerAttributes: { "title": "Corredor" } },
-            { field: "Comercial", title: "Comercial", width: 150, type: "string", headerAttributes: { "title": "Comercial" } },
+            {
+                field: "Vendedor",
+                title: "Vendedor",
+                width: 150,
+                headerAttributes: { "title": "Vendedor" },
+                filterable: {
+                    multi: true,
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione vendedores...",
+                            dataTextField: "Vendedor",
+                            dataValueField: "Vendedor",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Vendedor", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
+            {
+                field: "Corredor",
+                title: "Corredor",
+                width: 150,
+                headerAttributes: { "title": "Corredor" },
+                filterable: {
+                    multi: true,
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione corredores...",
+                            dataTextField: "Corredor",
+                            dataValueField: "Corredor",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Corredor", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
+            {
+                field: "Comercial",
+                title: "Comercial",
+                width: 150,
+                headerAttributes: { "title": "Comercial" },
+                filterable: {
+                    multi: true, // Permitir selección múltiple
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione comerciales...",
+                            dataTextField: "Comercial",
+                            dataValueField: "Comercial",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Comercial", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
             { field: "Precio", title: "Precio", type: "number", width: 70, format: "{0:#,##0.00}", headerAttributes: { "title": "Precio" } },
             {
                 field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" }, editable: false, type: "string", 
@@ -267,9 +345,43 @@ function inicializarGrillaContratos() {
                 }
             },
             { field: "UsuarioAnulacion", title: "U. Anulación", width: 35, headerAttributes: { "title": "Usuario Anulación" } },
-                ]
+        ],
+        dataBound: function () {
+            // Cargar comerciales
+            $.ajax({
+                url: '/Confirma/ListarComerciales', // Cambia esto a la URL de tu método
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (comerciales) {
+                // Asignar los datos al MultiSelect
+                $("#comercialFilter").data("kendoMultiSelect").setDataSource(comerciales.map(c => ({ Comercial: c })));
+            }).fail(function () {
+                console.error("Error al obtener comerciales");
+            });
+            // Cargar corredores
+            $.ajax({
+                url: '/TuControlador/ListarCorredores', // Cambia esto a la URL de tu método
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (corredores) {
+                $("#corredorFilter").data("kendoMultiSelect").setDataSource(corredores.map(c => ({ Corredor: c })));
+            }).fail(function () {
+                console.error("Error al obtener corredores");
+            });
+
+            // Cargar vendedores
+            $.ajax({
+                url: '/TuControlador/ListarVendedores', // Cambia esto a la URL de tu método
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (vendedores) {
+                $("#vendedorFilter").data("kendoMultiSelect").setDataSource(vendedores.map(v => ({ Vendedor: v })));
+            }).fail(function () {
+                console.error("Error al obtener vendedores");
             });
         }
+     });
+}
 
 //Eventos
 $("body").on("click", "#filtrarConfirmas", function () {

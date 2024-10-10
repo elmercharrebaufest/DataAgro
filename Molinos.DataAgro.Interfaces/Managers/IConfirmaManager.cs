@@ -18,5 +18,8 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro,List<int> equipo);
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
+        List<string> ListarComerciales();
+        List<string> ListarCorredores();
+        List<string> ListarVendedores();
     }
 }
