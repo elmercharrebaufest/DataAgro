@@ -17,7 +17,6 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Clausulas;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -760,7 +759,7 @@ namespace Molinos.DataAgro.Business.Managers
         public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo)
         {
             var filter = CorregirFiltro(filtro);
-            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter,equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoBoleto>;
 
             // Iterar sobre los datos y modificar atributos
@@ -900,7 +899,7 @@ namespace Molinos.DataAgro.Business.Managers
             return filtro;
         }
 
-        private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio==1 ? "ContratoSAP" : "FijacionSAP";
+        private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio == 1 ? "ContratoSAP" : "FijacionSAP";
 
         private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
     }

@@ -1,8 +1,6 @@
 ﻿using Kendo.DynamicLinq;
-using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -12,7 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;

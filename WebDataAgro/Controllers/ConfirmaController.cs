@@ -1,9 +1,7 @@
 ﻿using Kendo.DynamicLinq;
-using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -48,7 +46,7 @@ namespace WebDataAgro.Controllers
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
             var clausulas = confirma.Clausulas;
 
-            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService,clausulas, GlobalVariables.EquipoReal);
+            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, clausulas, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
                 Data = result,
@@ -60,7 +58,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                Byte[] fileBytes = confirmaManager.ObtenerArchivoXML (nombreArchivo);
+                Byte[] fileBytes = confirmaManager.ObtenerArchivoXML(nombreArchivo);
 
                 if (fileBytes == null)
                 {
@@ -153,7 +151,7 @@ namespace WebDataAgro.Controllers
         {
             var comerciales = confirmaManager.ListarComerciales();
             comerciales.Sort();
-            var result = new JsonResult() { Data = comerciales.Select(x=>new {Comercial=x}) };
+            var result = new JsonResult() { Data = comerciales.Select(x => new { Comercial = x }) };
             return result;
         }
 

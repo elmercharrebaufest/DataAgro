@@ -9,15 +9,21 @@
 <div class="row" style="padding: 10px 10px 0px 10px !important;"><h3>Confirma Generados</h3></div>
 <div class="container" style="margin-top:20px">
     <div class="modal-body clearfix " style="padding:0;">
+
         <div class="input-icons">
             <span class="k-textbox k-grid-search k-display-flex">
                 <input id="filtrogrilla" autocomplete="off" placeholder="Buscar..." title="Buscar..." class="k-input">
                 <i class="fa fa-search icon"></i>
             </span>
+            <button id="descargarConfirmaIdBtn" data-toggle="tooltip" class="float-right btn btn-primary" onclick="DescargarZipConfirmas()">
+                <span>Descargar</span>
+            </button>
         </div>
+
         <div id="div1">
             <div id="grid"></div>
         </div>
+
     </div>
     <iframe id="my_iframe" style="display:none;"></iframe>
 </div>
