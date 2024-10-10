@@ -143,7 +143,7 @@ function inicializarGrillaContratos() {
                             <img style="width:16px;height:16px;" src="/Content/Images/agregar-tel-mail.png" hidden>
                         </a>
                         <a onclick="GestionarClausulas('#= NegocioSAP #')" title="Gestionar Clausulas">
-                            <img style="width:16px;height:16px;" src="/Content/Images/pencil_line.svg">
+                            <img style="width:16px;height:16px;" src="/Content/Images/pencil_line.png">
                         </a>
                     </div>
                 `,
