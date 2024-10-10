@@ -243,8 +243,12 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
+                        DateTime? fechaGeneracionUltimoConfirma = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id && x.FechaAnulacion == null)
+                            .Select(x => x.FechaGeneracion)
+                            .FirstOrDefault();
+
                         logger.Info($"Confirma.Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
-                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP."));
+                        resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP.", false, fechaGeneracionUltimoConfirma));
                     }
                 }
                 repositorio.GuardarCambios();
@@ -721,17 +725,18 @@ namespace Molinos.DataAgro.Business.Managers
             return negociosFiltrados;
         }
 
-        private static ConfirmaGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, string mensaje, bool webServicesOK = false)
+        private static ConfirmaGeneradoDto DevolverDto(BasicoContrato itemNegocio, bool generado, string mensaje, bool webServicesOK = false, DateTime? fechaGeneracionUltimoConfirma = null)
         {
             return new ConfirmaGeneradoDto
             {
                 NegocioSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
-                FechaGeneracion = default(DateTime),
+                FechaGeneracion = fechaGeneracionUltimoConfirma == null ? default(DateTime) : (DateTime)fechaGeneracionUltimoConfirma,
                 IsWebService = webServicesOK,
                 ContratoSAP = itemNegocio.ContratoSAP,
                 FijacionSAP = itemNegocio.FijacionSAP,
+                TieneFechaGeneracionUltimoConfirma = fechaGeneracionUltimoConfirma != null,
             };
         }
 

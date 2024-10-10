@@ -1,0 +1,17 @@
+@media (min-width: 1024px) {
+    .modal-confirma {
+        width: 1024px !important;
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 720px) {
+    .modal-confirma {
+        width: 720px !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .modal-confirma {
+        width: 512px !important;
+    }
+}

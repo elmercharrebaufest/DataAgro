@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime FechaGeneracion { get; set; }
         public DateTime? FechaAnulacion { get; set; }
         public bool IsWebService { get; set; }
-        public int Version { get; set; }
+        public int? Version { get; set; }
         public string Archivo { get; set; }
 
         [ForeignKey("NegocioId")]
