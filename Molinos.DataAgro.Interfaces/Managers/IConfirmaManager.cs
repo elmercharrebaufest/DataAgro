@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ConfirmaArchivoDto> ListarConfirmas();
         List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico);
         string CorregirFormatoFecha(string cadena);
-        DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro,List<int> equipo);
+        DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo);
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
         List<string> ListarComerciales();

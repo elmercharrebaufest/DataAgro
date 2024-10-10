@@ -62,7 +62,7 @@ function inicializarGrillaContratos() {
                 { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
                 { field: "Bolsa", title: "Bolsa", width: 150 },
                 { field: "Version_Proxima", title: "V. Prox.", width: 150 },
-                { field: "Estado_Version", title: "Estado V.", width: 150},
+                { field: "Estado_Version", title: "Estado V.", width: 150 },
                 { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
                 { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
                 { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150 },
@@ -309,7 +309,7 @@ function inicializarGrillaContratos() {
             },
             { field: "Precio", title: "Precio", type: "number", width: 70, format: "{0:#,##0.00}", headerAttributes: { "title": "Precio" } },
             {
-                field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" }, editable: false, type: "string", 
+                field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" }, editable: false, type: "string",
                 filterable: {
                     multi: true,
                     dataSource: [
@@ -380,7 +380,7 @@ function inicializarGrillaContratos() {
                 console.error("Error al obtener vendedores");
             });
         }
-     });
+    });
 }
 
 //Eventos
