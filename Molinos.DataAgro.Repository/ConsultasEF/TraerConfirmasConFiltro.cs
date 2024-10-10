@@ -6,6 +6,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Transactions;
@@ -139,7 +140,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                            ContratoSAP = negocio.ContratoSAP ?? "",
                                            FijacionSAP = negocio.FijacionSAP ?? "",
                                            TipoBoleto = tipoBoleto.Descripcion ?? "Ninguno",
-                                           TipoNegocio = tipoNegocio.Descripcion ?? "Ninguno",
+                                           TipoNegocio = negocio.TipoNegocio,
                                            Canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? (np.Canje == true ? "SI" : "NO") : (negocio.Canje == true ? "SI" : "NO"),
                                            Bolsa = bolsa.Descripcion ?? "",
                                            Precio = negocio.Precio,
