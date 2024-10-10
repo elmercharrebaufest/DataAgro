@@ -148,5 +148,29 @@ namespace WebDataAgro.Controllers
             var mensaje = confirmaManager.ValidarNegocio(NegocioSAP, GlobalVariables.EquipoReal);
             return new JsonResult() { Data = new { Mensaje = mensaje } };
         }
+
+        public ActionResult ListarComerciales()
+        {
+            var comerciales = confirmaManager.ListarComerciales();
+            comerciales.Sort();
+            var result = new JsonResult() { Data = comerciales.Select(x=>new {Comercial=x}) };
+            return result;
+        }
+
+        public ActionResult ListarCorredores()
+        {
+            var corredores = confirmaManager.ListarCorredores();
+            corredores.Sort();
+            var result = new JsonResult() { Data = corredores.Select(x => new { Corredor = x }) };
+            return result;
+        }
+
+        public ActionResult ListarVendedores()
+        {
+            var vendedores = confirmaManager.ListarVendedores();
+            vendedores.Sort();
+            var result = new JsonResult() { Data = vendedores.Select(x => new { Vendedor = x }) };
+            return result;
+        }
     }
 }

@@ -1051,5 +1051,27 @@ namespace Molinos.DataAgro.Business.Managers
 
             return mensaje;
         }
+        public List<string> ListarComerciales()
+        {
+            return repositorio.Listar<Comercial>()
+                .Select(x => x.Nombres + " " + x.Apellido) // Asegúrate de que tengas la propiedad Nombre
+                .ToList(); // Agrega ToList() para devolver una lista
+        }
+
+        public List<string> ListarCorredores()
+        {
+            return repositorio.Listar<Proveedor>()
+                .Where(x => x.Segmentacion.Grupo == "Corredores") // Filtrar por el grupo
+                .Select(x => x.RazonSocial) // Concatenar Nombre y Apellido
+                .ToList(); // Convertir a lista
+        }
+
+        public List<string> ListarVendedores()
+        {
+            return repositorio.Listar<Proveedor>()
+                .Where(x => x.Segmentacion.Grupo != "Corredores") // Filtrar proveedores que no son Corredores
+                .Select(x => x.RazonSocial) // Concatenar Nombre y Apellido
+                .ToList(); // Convertir a lista
+        }
     }
 }
