@@ -21,5 +21,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string NegocioSAP { get; set; }
         public List<string> Clausulas { get; set; } = new List<string>();
         public string Archivo { get { return "confirma" + FechaGeneracion.ToString("yyyy/MM/dd").Replace("/", String.Empty) + "_" + ContratoSAP + (!String.IsNullOrEmpty(FijacionSAP)?"_"+FijacionSAP:String.Empty) + "_V" + Version.ToString("D2") + ".xml"; } }
+        public bool? TieneFechaGeneracionUltimoConfirma { get; set; }
     }
 }

@@ -409,13 +409,14 @@ $("#ContratoDesde").bind("paste", function (e) {//En caso de Pegar Codigos
 });
 
 function CargarTablaModal(contratos) {
-    $("#tabla-cap-pendientes").empty();
+    $("#modal-respuestas-confirma").empty();
     var tabla = '';
     for (var i = 0; i < contratos.length; i++) {
         tabla += '<tr><td>'
             + contratos[i].NegocioSAP
-            + '</td><td>'
-            + contratos[i].FechaGeneracionFormateada
+            + '</td><td '
+            + (contratos[i].TieneFechaGeneracionUltimoConfirma ? 'title="Último Confirma generado"' : '') + '>'
+            + (contratos[i].FechaGeneracionFormateada == '1/1/0001' ? '' : contratos[i].FechaGeneracionFormateada)
             + '</td><td>'
             + (contratos[i].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
             + '</td><td>'
@@ -425,7 +426,7 @@ function CargarTablaModal(contratos) {
             + contratos[i].Mensaje
             + '</td></tr>';
     }
-    $("#tabla-cap-pendientes").append(tabla);
+    $("#modal-respuestas-confirma").append(tabla);
 }
 
 function FiltrarNegocios() {
