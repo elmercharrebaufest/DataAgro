@@ -14,10 +14,12 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Mail;
+using System.Web;
 using System.Web.WebPages;
 using System.Xml.Linq;
 
@@ -36,6 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
         private readonly IConfirmaLoteDocumentosAgent confirmaLoteDocumentosAgent;
         private readonly IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent;
+        private readonly string pathConfirmas;
 
         public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
             IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
@@ -53,6 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
             this.confirmaLoteDocumentosAgent = confirmaLoteDocumentosAgent;
             this.confirmaLoteBorradorAgent = confirmaLoteBorradorAgent;
+            pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -1077,6 +1081,38 @@ namespace Molinos.DataAgro.Business.Managers
                 .Where(x => x.Segmentacion.Grupo != "Corredores") // Filtrar proveedores que no son Corredores
                 .Select(x => x.RazonSocial) // Concatenar Nombre y Apellido
                 .ToList(); // Convertir a lista
+        }
+
+        public byte[] DescargarZipConfirmas(List<string> nombresArchivos)
+        {
+            // Crear un MemoryStream para almacenar el ZIP en memoria
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                // Crear el archivo ZIP
+                using (ZipArchive zip = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var filePath in nombresArchivos)
+                    {
+                        string pathCompleto = Path.Combine(pathConfirmas, filePath);
+                        // Asegúrate de que el archivo exista antes de agregarlo al ZIP
+                        if (File.Exists(pathCompleto))
+                        {
+                            // Agregar cada archivo al ZIP
+                            string fileName = Path.GetFileName(pathCompleto);
+
+                            ZipArchiveEntry entry = zip.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using (var entryStream = entry.Open())
+                            using (var fileStream = File.OpenRead(pathCompleto))
+                            {
+                                fileStream.CopyTo(entryStream);
+                            }
+                        }
+                    }
+                }
+
+                return memoryStream.ToArray(); // Devolver los datos ZIP como byte[]
+            }
         }
     }
 }

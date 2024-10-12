@@ -87,3 +87,59 @@ function DesacargaConfirma(nombreArchivo) {
     }
     MSExecuteOnServerAsync('/Confirma/ObtenerDownloadKey', null, funcReturn, true);
 }
+
+function DescargarZipConfirmas() {
+    var boletosSeleccionados = SeleccionarElementos();
+    var nombresArchivos = [];
+    var data = {};
+
+    if (boletosSeleccionados.length > 0) {
+        for (var i in boletosSeleccionados) {
+            if (boletosSeleccionados[i].Nombre != null)
+                nombresArchivos.push(boletosSeleccionados[i].Nombre);
+        }
+
+        data.nombresArchivos = nombresArchivos;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/Confirma/DescargarZipConfirmas', true);
+        xhr.responseType = 'blob';  // Para manejar la respuesta como un archivo binario
+
+        // Definir qué sucede cuando la respuesta está lista
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Crear un Blob a partir de la respuesta
+                var blob = xhr.response;
+
+                // Establecer el nombre del archivo a descargar
+                var filename = "confirmas.zip";
+
+                // Crear un enlace para descargar el archivo
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('Ocurrió un error al descargar el archivo ZIP.');
+            }
+        };
+
+        // Enviar los datos en formato JSON
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+    }
+}
+
+function SeleccionarElementos() {
+    var grid = $("#grid").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        obj.push(selectedItem);
+    });
+    return obj;
+}

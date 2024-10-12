@@ -21,5 +21,6 @@ namespace Molinos.DataAgro.Interfaces
         List<string> ListarComerciales();
         List<string> ListarCorredores();
         List<string> ListarVendedores();
+        byte[] DescargarZipConfirmas(List<string> nombresArchivos);
     }
 }
