@@ -170,5 +170,31 @@ namespace WebDataAgro.Controllers
             var result = new JsonResult() { Data = vendedores.Select(x => new { Vendedor = x }) };
             return result;
         }
+
+        public ActionResult DescargarZipConfirmas(List<string> nombresArchivos)
+        {
+            try
+            {
+                if (nombresArchivos == null || !nombresArchivos.Any())
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No se han proporcionado nombres de archivo.");
+                }
+
+                byte[] fileBytes = confirmaManager.DescargarZipConfirmas(nombresArchivos);
+
+                if (fileBytes == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    return File(fileBytes, "application/zip", "confirmas.zip");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
     }
 }
