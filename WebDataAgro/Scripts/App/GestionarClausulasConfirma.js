@@ -80,6 +80,7 @@ $("#cancelar-clausula").click(function () {
 
 // Evento para generar boleto
 $("#generar-confirma").click(function () {
+    let descargaHabilitada = $("#checkDescargar").is(":checked");
     BlockUi('Generando...');
     setTimeout(function () {
         var data = {
@@ -101,7 +102,7 @@ $("#generar-confirma").click(function () {
                 + (result.confirmasGenerados[0].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
                 + '</td><td>'
                 + (result.confirmasGenerados[0].IsWebService ? '<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
-                + (result.confirmasGenerados[0].Generado ? ('<a href="/Confirma/DescargarArchivoConfirma?nombreArchivo=' + result.confirmasGenerados[0].Archivo + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
+                + (result.confirmasGenerados[0].Generado && descargaHabilitada ? ('<a href="/Confirma/DescargarArchivoConfirma?nombreArchivo=' + result.confirmasGenerados[0].Archivo + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
                 + '</td><td>'
                 + result.confirmasGenerados[0].Mensaje
                 + '</td></tr>';
