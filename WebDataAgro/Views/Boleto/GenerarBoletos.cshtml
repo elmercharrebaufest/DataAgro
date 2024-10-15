@@ -37,7 +37,7 @@
                 <div class="col"></div>
             </div>
             <br />
-            <div class="row" style="border-bottom: 2px solid #017940; position:relative; padding-bottom:20px;">
+            <div class="row">
                 <div class="col-sm-1 col-lg-2"></div>
                 <div class="col-sm-2 col-lg-1">
                     <label>Fecha de confirmación</label>
@@ -51,21 +51,18 @@
                 <div class="col-sm-2">
                     <input id="FechaConfirmacionHastaId" class="filtroFecha" name="FechaConfirmacion-hasta" type="date" style="width:unset" />
                 </div>
-                <div class="col-sm-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="mailId" checked>
-                        <label style="text-align: end" class="form-check-label ml-3" for="mailId">
-                            Enviar Mail
-                        </label>
-                    </div>
-                </div>
                 <div class="col"></div>
             </div>
             <br />
-            <div class="row">
-                <div class="col-sm-5 col-md-10"></div>
-                <div class="col-sm-5 col-md-2">
-                    <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px" onclick="GenerarBoletos()">
+            <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
+                <div class="col-sm-12" style="display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="display: flex; align-items: center;">
+                        <input class="form-check-input" type="checkbox" id="mailId" checked style="margin: 0;">
+                        <label class="form-check-label" for="mailId" style="margin-left: 5px;">
+                            Enviar Mail
+                        </label>
+                    </div>
+                    <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px; margin-left: 20px; width: auto;" onclick="GenerarBoletos()">
                         Generar Boletos
                     </button>
                 </div>
@@ -78,50 +75,5 @@
         </div>
     </div>
 </div>
-
-<style>
-    #generar {
-        height: 37px;
-        BACKGROUND: green;
-        background: #017940 !important;
-        color: white;
-        color: #fff;
-        padding: 4px;
-        border-radius: 5px !important;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-
-    #filtrarBoletos {
-        height: 37px;
-        BACKGROUND: green;
-        background: #017940 !important;
-        color: white;
-        color: #fff;
-        padding: 4px;
-        border-radius: 5px !important;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-
-    .modal .confirmado-modal div {
-        background: #008e61 !important;
-        color: white;
-    }
-
-    .k-grid .row-checkbox {
-        cursor: pointer;
-    }
-
-    .k-header {
-        font-size: 12px;
-        font-family: "G-Open Sans-n4", Arial;
-    }
-
-    #contratos-grid .k-grid-content td {
-        font-family: "G-Open Sans-n4", Arial;
-        font-size: 12px;
-    }
-</style>
 
 @Html.Partial("ModalBoletoGenerado")
