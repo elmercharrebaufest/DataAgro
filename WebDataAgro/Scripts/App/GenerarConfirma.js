@@ -81,6 +81,7 @@ function inicializarGrillaContratos() {
                 { field: "Precio", title: "Precio", width: 150 },
                 { field: "Moneda", title: "Moneda", width: 150 },
                 { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
+                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35},
             ];
 
             var header = columns.map(function (column) {
@@ -131,35 +132,7 @@ function inicializarGrillaContratos() {
             }
         },
         sortable: true,
-        filterable: {
-            mode: "menu",
-            operators: {
-                string: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    contains: "Contiene",
-                    doesnotcontain: "No contiene",
-                    startswith: "Empieza con",
-                    endswith: "Termina con"
-                },
-                number: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    gte: "Es mayor o igual a",
-                    gt: "Es mayor que",
-                    lte: "Es menor o igual a",
-                    lt: "Es menor que"
-                },
-                date: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    gte: "Es mayor o igual a",
-                    gt: "Es mayor que",
-                    lte: "Es menor o igual a",
-                    lt: "Es menor que"
-                }
-            }
-        },
+        filterable: false,
         columns: [
             {
                 field: "Select",
