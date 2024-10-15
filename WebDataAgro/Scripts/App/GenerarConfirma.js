@@ -325,40 +325,6 @@ function inicializarGrillaContratos() {
             },
             { field: "UsuarioAnulacion", title: "U. Anulación", width: 35, headerAttributes: { "title": "Usuario Anulación" } },
         ],
-        dataBound: function () {
-            // Cargar comerciales
-            $.ajax({
-                url: '/Confirma/ListarComerciales', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (comerciales) {
-                // Asignar los datos al MultiSelect
-                $("#comercialFilter").data("kendoMultiSelect").setDataSource(comerciales.map(c => ({ Comercial: c })));
-            }).fail(function () {
-                console.error("Error al obtener comerciales");
-            });
-            // Cargar corredores
-            $.ajax({
-                url: '/TuControlador/ListarCorredores', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (corredores) {
-                $("#corredorFilter").data("kendoMultiSelect").setDataSource(corredores.map(c => ({ Corredor: c })));
-            }).fail(function () {
-                console.error("Error al obtener corredores");
-            });
-
-            // Cargar vendedores
-            $.ajax({
-                url: '/TuControlador/ListarVendedores', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (vendedores) {
-                $("#vendedorFilter").data("kendoMultiSelect").setDataSource(vendedores.map(v => ({ Vendedor: v })));
-            }).fail(function () {
-                console.error("Error al obtener vendedores");
-            });
-        }
     });
 }
 
