@@ -35,21 +35,13 @@
             <label>Fecha de confirmación</label>
         </div>
         <div class="col-sm-2">
-            <input id="FechaConfirmacionDesde" class="filtroFecha" type="date" style="width: unset" >
+            <input id="FechaConfirmacionDesde" class="filtroFecha" type="date" style="width: unset">
         </div>
         <div class="col-sm-2 col-md-1">
             <label>Hasta</label>
         </div>
         <div class="col-sm-2">
-            <input id="FechaConfirmacionHasta" class="filtroFecha" type="date" style="width: unset" >
-        </div>
-        <div class="col-sm-2">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="servicioConfirmaId" checked>
-                <label style="text-align: end" class="form-check-label ml-3" for="servicioConfirmaId">
-                    Servicio Confirma
-                </label>
-            </div>
+            <input id="FechaConfirmacionHasta" class="filtroFecha" type="date" style="width: unset">
         </div>
         <div class="col-sm-2">
             <div class="form-check">
@@ -62,9 +54,14 @@
     </div>
     <br />
     <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
-        <div class="col-sm-5 col-md-10"></div>
-        <div class="col-sm-5 col-md-2">
-            <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px" onclick="GenerarConfirmas()">
+        <div class="col-sm-12" style="display: flex; justify-content: flex-end; align-items: center;">
+            <div style="display: flex; align-items: center;">
+                <input class="form-check-input" type="checkbox" id="servicioConfirmaId" checked style="margin: 0;">
+                <label class="form-check-label" for="servicioConfirmaId" style="margin-left: 5px;">
+                    Web Services
+                </label>
+            </div>
+            <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px; margin-left: 20px; width: auto;" onclick="GenerarConfirmas()">
                 Generar Confirma
             </button>
         </div>
@@ -74,7 +71,6 @@
             <div id="contratos-grid"></div>
         </div>
     </div>
-
 </div>
 
 <style>
