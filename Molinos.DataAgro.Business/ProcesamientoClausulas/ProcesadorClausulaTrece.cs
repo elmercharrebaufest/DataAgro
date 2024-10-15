@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -20,7 +21,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             var res = new ResultadoClausula();
 
-            if (clausula.Basico.CorredorId == 0 && clausula.Basico.Canje != true)
+            if (clausula.Basico.CorredorId == 0 && clausula.Basico.Canje != true && clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 res.Texto += "Por medio de la presente la VENDEDORA autoriza en forma expresa e irrevocable a la COMPRADORA a compensar en los términos " +
                     "de los artículos 921, siguientes y concordantes del Código Civil y Comercial de la Nación, la totalidad de los CRÉDITOS que pudieran " +
