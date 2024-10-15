@@ -1085,7 +1085,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
                 if (proveedorContacto.Count == 0)
                 {
-                    logger.Debug($"El proveedor {id} no tiene ContactoComercial. cupos {string.Join(", ", listaCupos)}");
+                    logger.Debug($"El proveedor {id} no tiene ContactoComercial. Cupos generados: {string.Join(", ", listaCupos)}");
                     return;
                 }
 
