@@ -363,14 +363,20 @@ function inicializarGrillaContratos() {
 }
 
 function inicializarFiltros() {
+    var hoy = new Date(); //Hoy
+    var ayer = new Date(hoy);
+    ayer.setDate(hoy.getDate() - 1); //Ayer
+
     $("#FechaConfirmacionDesdeId").kendoDatePicker({
         weekNumber: true,
-        format: "dd/MM/yyyy"
+        format: "dd/MM/yyyy",
+        value: ayer
     });
 
     $("#FechaConfirmacionHastaId").kendoDatePicker({
         weekNumber: true,
-        format: "dd/MM/yyyy"
+        format: "dd/MM/yyyy",
+        value: hoy
     });
 }
 
