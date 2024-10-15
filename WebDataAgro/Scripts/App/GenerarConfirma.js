@@ -81,6 +81,7 @@ function inicializarGrillaContratos() {
                 { field: "Precio", title: "Precio", width: 150 },
                 { field: "Moneda", title: "Moneda", width: 150 },
                 { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
+                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35},
             ];
 
             var header = columns.map(function (column) {
@@ -131,35 +132,7 @@ function inicializarGrillaContratos() {
             }
         },
         sortable: true,
-        filterable: {
-            mode: "menu",
-            operators: {
-                string: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    contains: "Contiene",
-                    doesnotcontain: "No contiene",
-                    startswith: "Empieza con",
-                    endswith: "Termina con"
-                },
-                number: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    gte: "Es mayor o igual a",
-                    gt: "Es mayor que",
-                    lte: "Es menor o igual a",
-                    lt: "Es menor que"
-                },
-                date: {
-                    eq: "Es igual a",
-                    neq: "No es igual a",
-                    gte: "Es mayor o igual a",
-                    gt: "Es mayor que",
-                    lte: "Es menor o igual a",
-                    lt: "Es menor que"
-                }
-            }
-        },
+        filterable: false,
         columns: [
             {
                 field: "Select",
@@ -352,40 +325,6 @@ function inicializarGrillaContratos() {
             },
             { field: "UsuarioAnulacion", title: "U. Anulación", width: 35, headerAttributes: { "title": "Usuario Anulación" } },
         ],
-        dataBound: function () {
-            // Cargar comerciales
-            $.ajax({
-                url: '/Confirma/ListarComerciales', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (comerciales) {
-                // Asignar los datos al MultiSelect
-                $("#comercialFilter").data("kendoMultiSelect").setDataSource(comerciales.map(c => ({ Comercial: c })));
-            }).fail(function () {
-                console.error("Error al obtener comerciales");
-            });
-            // Cargar corredores
-            $.ajax({
-                url: '/TuControlador/ListarCorredores', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (corredores) {
-                $("#corredorFilter").data("kendoMultiSelect").setDataSource(corredores.map(c => ({ Corredor: c })));
-            }).fail(function () {
-                console.error("Error al obtener corredores");
-            });
-
-            // Cargar vendedores
-            $.ajax({
-                url: '/TuControlador/ListarVendedores', // Cambia esto a la URL de tu método
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (vendedores) {
-                $("#vendedorFilter").data("kendoMultiSelect").setDataSource(vendedores.map(v => ({ Vendedor: v })));
-            }).fail(function () {
-                console.error("Error al obtener vendedores");
-            });
-        }
     });
 }
 

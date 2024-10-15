@@ -6,7 +6,6 @@ var Siguientes;
 var posicionFijacion;
 var aperturaPrecio = [];
 var altaTemprana;
-var AperturaPrecioPorcentajeDeComision;
 var ImporteSobrePrecio = 0;
 var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
@@ -4247,17 +4246,6 @@ function validarGuardarApertura(precioPactado) {
 }
 
 function GuardarAperturaDePrecio() {
-    if (AperturaPrecioPorcentajeDeComision != null && AperturaPrecioPorcentajeDeComision != '') {
-        var num = Number(AperturaPrecioPorcentajeDeComision.replace(',', '.'));
-        if ($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() > num) {
-            MensErr("El Porcentaje de Comision no puede ser mayor a " + AperturaPrecioPorcentajeDeComision);
-            return false;
-        }
-        if (descuento.Porcentaje > 1) {
-            errores.push("El campo Porcentaje de Comision no puede ser mayor al 1%.");
-            return false;
-        }
-    }
     var total = CalcularPrecioTotalApertura();
 
     InsertarAperturasViewModel(total);
@@ -4277,7 +4265,7 @@ function GuardarAperturaDePrecio() {
             FechaHasta: null,
             Importe: total,
             MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
-            Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+            Porcentaje: $("#PorcentajeDescuentoAFijarId").val().replace('.', ','),
             Borrar: function () {
                 eliminarDescuento(this);
             }
@@ -5306,7 +5294,7 @@ function CargarAutomaticamenteLaComision(compraNet) {
                 FechaHasta: null,
                 Importe: total,
                 MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
-                Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                Porcentaje: $("#PorcentajeDescuentoAFijarId").val().replace('.', ','),
                 Borrar: function () {
                     eliminarDescuento(this);
                 }
@@ -5334,7 +5322,7 @@ function CargarAutomaticamenteLaComision(compraNet) {
                 FechaHasta: null,
                 Importe: total,
                 MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
-                Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                Porcentaje: $("#PorcentajeDescuentoAFijarId").val().replace('.', ','),
                 Borrar: function () {
                     eliminarDescuento(this);
                 }
@@ -5352,7 +5340,7 @@ function CargarAutomaticamenteLaComision(compraNet) {
                     FechaHasta: null,
                     Importe: total,
                     MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
-                    Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                    Porcentaje: $("#PorcentajeDescuentoAFijarId").val().replace('.', ','),
                     Borrar: function () {
                         eliminarDescuento(this);
                     }
