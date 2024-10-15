@@ -5,14 +5,20 @@ $(document).ready(function () {
 });
 
 function inicializarFiltros() {
+    var hoy = new Date(); //Hoy
+    var ayer = new Date(hoy);
+    ayer.setDate(hoy.getDate() - 1); //Ayer
+
     $("#FechaConfirmacionDesde").kendoDatePicker({
         weekNumber: true,
-        format: "dd/MM/yyyy"
+        format: "dd/MM/yyyy",
+        value: ayer
     });
 
     $("#FechaConfirmacionHasta").kendoDatePicker({
         weekNumber: true,
-        format: "dd/MM/yyyy"
+        format: "dd/MM/yyyy",
+        value: hoy
     });
 }
 
