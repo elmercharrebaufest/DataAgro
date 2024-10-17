@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Filtros" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Filtros" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:complexType name="ChoferFiltro">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Apellido" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Cuil" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Documento" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
-    </xs:sequence>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="MulticastDelegate">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Delegate" />
+    </xs:complexContent>
   </xs:complexType>
-  <xs:element name="ChoferFiltro" nillable="true" type="tns:ChoferFiltro" />
+  <xs:element name="MulticastDelegate" nillable="true" type="tns:MulticastDelegate" />
+  <xs:complexType name="Delegate">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+    </xs:sequence>
+    <xs:attribute ref="ser:FactoryType" />
+  </xs:complexType>
+  <xs:element name="Delegate" nillable="true" type="tns:Delegate" />
 </xs:schema>

@@ -112,6 +112,7 @@
           <xsd:element name="CANJE" type="rfc:char1" />
           <xsd:element name="REGION" type="rfc:char3" />
           <xsd:element name="EPA" type="rfc:char1" />
+          <xsd:element name="EUDR" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

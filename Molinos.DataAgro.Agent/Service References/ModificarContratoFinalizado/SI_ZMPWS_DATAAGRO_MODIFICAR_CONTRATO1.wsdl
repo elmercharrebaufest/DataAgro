@@ -330,6 +330,7 @@
           <xsd:element name="CANTIDAD_COND" type="rfc:decimal25.0" />
           <xsd:element name="SIN_BOLETO" type="rfc:char1" />
           <xsd:element name="EPA" type="rfc:char1" />
+          <xsd:element name="EUDR" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

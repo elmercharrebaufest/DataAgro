@@ -1,10 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System.ComponentModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System.ComponentModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/System" />
-  <xs:complexType name="PropertyChangedEventHandler">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/System" base="q1:MulticastDelegate" />
-    </xs:complexContent>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios.ServiciosSap" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios.ServiciosSap" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel" />
+  <xs:complexType name="Z_SDMF_Z2200N">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.ComponentModel" name="PropertyChanged" nillable="true" type="q1:PropertyChangedEventHandler" />
+      <xs:element name="iM_Z2200Field" nillable="true" type="tns:ArrayOfZMPES2200" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="PropertyChangedEventHandler" nillable="true" type="tns:PropertyChangedEventHandler" />
+  <xs:element name="Z_SDMF_Z2200N" nillable="true" type="tns:Z_SDMF_Z2200N" />
+  <xs:complexType name="ArrayOfZMPES2200">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ZMPES2200" nillable="true" type="tns:ZMPES2200" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfZMPES2200" nillable="true" type="tns:ArrayOfZMPES2200" />
+  <xs:complexType name="ZMPES2200">
+    <xs:sequence>
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.ComponentModel" name="PropertyChanged" nillable="true" type="q2:PropertyChangedEventHandler" />
+      <xs:element name="aGENTE_DE_COMPRAField" nillable="true" type="xs:string" />
+      <xs:element name="cENTROField" nillable="true" type="xs:string" />
+      <xs:element name="cODIGOField" nillable="true" type="xs:string" />
+      <xs:element name="cORREDORField" nillable="true" type="xs:string" />
+      <xs:element name="cUIT_SOLICITANTEField" nillable="true" type="xs:string" />
+      <xs:element name="dESCAGENTEField" nillable="true" type="xs:string" />
+      <xs:element name="dESCCENTROField" nillable="true" type="xs:string" />
+      <xs:element name="dESCCORREDORField" nillable="true" type="xs:string" />
+      <xs:element name="dESCDESTINAField" nillable="true" type="xs:string" />
+      <xs:element name="dESCMATField" nillable="true" type="xs:string" />
+      <xs:element name="dESCPROVField" nillable="true" type="xs:string" />
+      <xs:element name="dESCREMITField" nillable="true" type="xs:string" />
+      <xs:element name="dESTINATARIOField" nillable="true" type="xs:string" />
+      <xs:element name="eSTABLECIMIENTOField" nillable="true" type="xs:string" />
+      <xs:element name="fECHA_ACTUALIZAField" nillable="true" type="xs:string" />
+      <xs:element name="fECHA_EGRESOField" nillable="true" type="xs:string" />
+      <xs:element name="fECHA_INGRESOField" nillable="true" type="xs:string" />
+      <xs:element name="fECHA_TARAField" nillable="true" type="xs:string" />
+      <xs:element name="hORA_ACTUALIZAField" nillable="true" type="xs:string" />
+      <xs:element name="hORA_EGRESOField" nillable="true" type="xs:string" />
+      <xs:element name="hORA_INRGESOField" nillable="true" type="xs:string" />
+      <xs:element name="hORA_TARAField" nillable="true" type="xs:string" />
+      <xs:element name="mATERIALField" nillable="true" type="xs:string" />
+      <xs:element name="nUMCARPORField" nillable="true" type="xs:string" />
+      <xs:element name="pROCESADOField" nillable="true" type="xs:string" />
+      <xs:element name="pROVEEDORField" nillable="true" type="xs:string" />
+      <xs:element name="rECHAZADOField" nillable="true" type="xs:string" />
+      <xs:element name="rEMITENTE_COMField" nillable="true" type="xs:string" />
+      <xs:element name="sECUENCIAField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ZMPES2200" nillable="true" type="tns:ZMPES2200" />
 </xs:schema>
