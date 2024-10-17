@@ -20,11 +20,16 @@ namespace WebDataAgro.Controllers
     {
         private readonly IConfirmaManager confirmaManager;
         private readonly IReportesManager reportesManager;
+        private readonly IMaterialManager _materialManager;
+        private readonly IContratoManager _contratoManager;
 
-        public ConfirmaController(IConfirmaManager confirmaManager, IReportesManager reportesManager)
+        public ConfirmaController(IConfirmaManager confirmaManager, IReportesManager reportesManager, IMaterialManager materialManager, IContratoManager contratoManager)
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
+            _materialManager = materialManager;
+            _contratoManager = contratoManager;
+
         }
 
         public ActionResult DescargarConfirma()
@@ -100,6 +105,26 @@ namespace WebDataAgro.Controllers
                         Selected = false
                     }).OrderBy(x => x.Value);
             ViewBag.ClaseNegocio = claseListItems;
+            var material = _materialManager.TraerTodoMaterial();
+
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+
+            var boleto = _contratoManager.TraerTodosLosBoletos();
+            var boletoListItems = boleto.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.Id.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Boleto = boletoListItems;
         }
 
         private string GetFriendlyFileSize(long lengthInBytes)
