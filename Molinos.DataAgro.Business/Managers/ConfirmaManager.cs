@@ -486,7 +486,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
                                     new XElement("CantCamiones", contrato.CantidadCamiones),
                                     (esCanje || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
-                                    new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (contrato.Moneda == null ? "2" : string.Empty))),
+                                    new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
                                     (contrato.CorredorId > 0 ? new XElement("PorcComisionComprador", contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision : null) : null),
