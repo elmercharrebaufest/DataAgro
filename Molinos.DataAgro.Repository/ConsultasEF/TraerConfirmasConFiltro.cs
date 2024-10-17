@@ -139,7 +139,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                ContratoVendedor = negocio.ContratoVendedor,
                                                ContratoCorredor = negocio.ContratoCorredor,
                                                Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres,
-                                               Version_Proxima = confirma.Version > 0 ? confirma.Version + 1 : 1,
+                                               Version = confirma.Version > 1 ? confirma.Version : 1,
                                                MaterialId = negocio.MaterialId,
                                                BoletoId = negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).Contrato.BoletoId : negocio.BoletoId,
 

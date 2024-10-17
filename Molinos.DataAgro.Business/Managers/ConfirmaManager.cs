@@ -275,6 +275,14 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var boleto in data)
             {
                 boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
+                if (boleto.Estado_Version == "Anulado")
+                {
+                    boleto.Estado_Version = "Pendiente";
+                    boleto.Version = boleto.Version + 1;
+                    boleto.FechaAnulacion = null;
+                    boleto.FechaGeneracion = null;
+                    boleto.UsuarioAnulacion = null;
+                }
             }
             return result;
         }
@@ -1033,7 +1041,12 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
-                if (Int32.Parse(consultaBoleto.Version) == boleto.Version_Proxima - 1)
+                var version = Int32.Parse(consultaBoleto.Version);
+                if (version>boleto.Version)
+                {
+                    mensaje = "Anulado";
+                } 
+                else if(version==boleto.Version)
                 {
                     if (consultaBoleto.Anulado == "X")
                     {
@@ -1047,6 +1060,10 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         mensaje = "Pendiente";
                     }
+                }
+                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
+                {
+                    mensaje = "Pendiente";
                 }
                 else
                 {
