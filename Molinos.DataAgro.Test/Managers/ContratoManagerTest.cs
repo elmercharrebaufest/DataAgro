@@ -70,43 +70,47 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ICentroManager> centroManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
 
-        private Contrato oContrato = new Contrato()
+        private Contrato CrearContrato()
         {
-            ProveedorId = 1,
-            ClasificacionId = 1,
-            CorredorId = null,
-            MaterialId = 1,
-            Cantidad = 1,
-            Precio = 1000,
-            PrecioNeto = 1000,
-            TipoNegocioId = 2,
-            EstadoId = 1,
-            DestinoId = 1,
-            Destino = new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false },
-            LocalidadId = 1,
-            ProvinciaId = 1,
-            FechaEntrega = DateTime.Now,
-            FechaOperacion = DateTime.Now.Date,
-            FechaDesde = DateTime.Now,
-            FechaHasta = DateTime.Now,
-            MonedaId = "ARS ",
-            CampanaId = 1,
-            ComercialId = 70,
-            EstablecimientoPropio = true,
-            BoletoId = 3,
-            StandardDeCalidadId = 1,
-            Sustentable = false,
-            EPA = false,
-            PorcentajeDePago = 95,
-            Comercial = new Comercial { ComercialId = 1, Email = "email@email.com", IdActiveDirectory = "active", GrupoDeComprasId = 1 },
-            MotivoOperacionAnterior = "MotivoOperacionAnterior",
-            DescripcionOperacionAnterior = "DescripcionOperacionAnterior",
-            PagoDiferido = true,
-            DiasPesificado = 10,
-            Descuentos = new List<DescuentoBonificacion>() { new DescuentoBonificacion() { Id = 1 } },
-            Calidad = new List<Calidad>() { new Calidad() { Id = 1, } },
-            AperturaPrecio = new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe = 100 } },
-        };
+            return new Contrato()
+            {
+                ProveedorId = 1,
+                ClasificacionId = 1,
+                CorredorId = null,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1000,
+                PrecioNeto = 1000,
+                TipoNegocioId = 2,
+                EstadoId = 1,
+                DestinoId = 1,
+                Destino = new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false },
+                LocalidadId = 1,
+                ProvinciaId = 1,
+                FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                MonedaId = "ARS ",
+                CampanaId = 1,
+                ComercialId = 70,
+                EstablecimientoPropio = true,
+                BoletoId = 3,
+                StandardDeCalidadId = 1,
+                Sustentable = false,
+                EPA = false,
+                PorcentajeDePago = 95,
+                Comercial = new Comercial { ComercialId = 1, Email = "email@email.com", IdActiveDirectory = "active", GrupoDeComprasId = 1 },
+                MotivoOperacionAnterior = "MotivoOperacionAnterior",
+                DescripcionOperacionAnterior = "DescripcionOperacionAnterior",
+                PagoDiferido = true,
+                DiasPesificado = 10,
+                Descuentos = new List<DescuentoBonificacion>() { new DescuentoBonificacion() { Id = 1 } },
+                Calidad = new List<Calidad>() { new Calidad() { Id = 1, } },
+                AperturaPrecio = new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe = 100 } },
+            };
+
+        }
 
         [SetUp]
         public void SetUp()
@@ -339,6 +343,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoOk()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -381,6 +386,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoOkDiferencial()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -425,6 +431,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoConfirmacionAutomaticaOk()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -484,6 +491,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void UpdateContratoOk()
         {
+            var oContrato = CrearContrato();
             oContrato.Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -579,6 +587,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void UpdateContratoError()
         {
+            var oContrato = CrearContrato();
             var oContratoBase = new Contrato()
             {
                 Id = 1,
@@ -646,6 +655,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void UpdateContratoErrores()
         {
+            var oContrato = CrearContrato();
             var oContratoBase = new Contrato()
             {
                 Id = 1,
@@ -711,6 +721,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoErrorProveedor1()
         {
+            var oContrato = CrearContrato();
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -720,6 +731,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoErrorProveedor2()
         {
+            var oContrato = CrearContrato();
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -729,6 +741,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoError()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", RiesgoComercialSap = "a" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1, Material = new Material { Descripcion = "SOPA" }, Moneda = new Moneda { Descripcion = "PATACON" } });
@@ -766,6 +779,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoErrorDos()
         {
+            var oContrato = CrearContrato();
             ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] = "a";
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", RiesgoComercialSap = "a" });
@@ -803,6 +817,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ConfirmarContratoOk()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
 
             var resultado = target.ConfirmarContrato(It.IsAny<int>(), It.IsAny<int>());
@@ -812,6 +827,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ConfirmarContratoError()
         {
+            var oContrato = CrearContrato();
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             diferencialManagerMock.Setup(y => y.ValidarComprasDiferencial(It.IsAny<int>())).Throws(new Exception("Error diferencial"));
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>() { 1, 2 });
@@ -910,6 +926,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizarContratoSinSap()
         {
+            var oContrato = CrearContrato();
             oContrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
             var diasHabiles = new List<DateTime>();
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
@@ -937,6 +954,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizarContratoSinSapNiApertura()
         {
+            var oContrato = CrearContrato();
             oContrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
             oContrato.AperturaPrecio = new List<AperturaPrecio>();
             var diasHabiles = new List<DateTime>();
@@ -981,6 +999,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizarContratoError()
         {
+            var oContrato = CrearContrato();
             oContrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
             var diasHabiles = new List<DateTime>();
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
@@ -1026,6 +1045,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BorrarContratoEstadoOk()
         {
+            var oContrato = CrearContrato();
             var contratoParaSerializar = new Contrato()
             {
                 ProveedorId = 1,
@@ -1147,6 +1167,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BorrarContratoEstadoSinAmpliacionOk()
         {
+            var oContrato = CrearContrato();
             var contratoParaSerializar = new Contrato()
             {
                 ProveedorId = 1,
@@ -1492,6 +1513,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizacionAutomaticaOk()
         {
+            var oContrato = CrearContrato();
             oContrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
             var diasHabiles = new List<DateTime>();
@@ -1522,6 +1544,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizacionAutomaticaError()
         {
+            var oContrato = CrearContrato();
             oContrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Throws(new Exception("Error obtener contrato"));
 
@@ -4624,6 +4647,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoVentaError()
         {
+            var oContrato = CrearContrato();
             oContrato.Venta = true;
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
@@ -4664,6 +4688,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoVentaOk()
         {
+            var oContrato = CrearContrato();
             oContrato.Venta = true;
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
@@ -4714,6 +4739,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarContratoSinBoletoOk()
         {
+            var oContrato = CrearContrato();
             oContrato.BoletoId = 3;
             oContrato.Boleto = new BoletoCompraNet()
             {
@@ -4792,6 +4818,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ObtenerDatosMercaderiaEnDepositoOk()
         {
+            var oContrato = CrearContrato();
             oContrato.BoletoId = 3;
             oContrato.Boleto = new BoletoCompraNet()
             {
