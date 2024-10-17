@@ -711,15 +711,15 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Precio", "Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
-            var centro = repositorio.Obtener<Centro>(x => x.Id == oContratoAcuerdo.DestinoId);
+            oContratoAcuerdo.Destino = repositorio.Obtener<Centro>(x => x.Id == oContratoAcuerdo.DestinoId);
             if (oContratoAcuerdo.Venta != true)
             {
-                if (centro?.ValidaRedespacho != false && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho
+                if (oContratoAcuerdo.Destino.ValidaRedespacho != false && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho
                 && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oEntityErrors.Error("Descuentos", "Se debe completar Redespacho en Acopios");
                 }
-                if (centro?.ValidaRedespacho == false && oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
+                if (oContratoAcuerdo.Destino.ValidaRedespacho == false && oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
                 {
                     oEntityErrors.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                 }

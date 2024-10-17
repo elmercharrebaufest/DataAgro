@@ -883,7 +883,7 @@ namespace Molinos.DataAgro.Business.Managers
                     resultado.Error("PlanCanje", "El proveedor no está habilitado para Plan Canje.\n\n");
                 }
                 if (negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
-                    resultado.Errores.AddRange(ValidarCartaOferta(negocio.ProvinciaId.Value, negocio.ClasificacionId.GetValueOrDefault(), alta.Carta).Errores);
+                    resultado.Errores.AddRange(ValidarCartaOferta(negocio, alta.Carta).Errores);
 
                 if (alta.AltaTemprana == "SI")
                 {
@@ -915,25 +915,34 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return resultado;
         }
-        private Resultado ValidarCartaOferta(int provinciaId, int clasificacionId, string altaTempranaCO)
+
+        private Resultado ValidarCartaOferta(Negocio negocio, string altaTempranaCO)
         {
             var resultado = new Resultado();
-            var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == 4);
-            bool esProductor = clasificacionId == (int)EnumClasificacionCompraNet.Productor;
-            if (!boletoCompraNetProvincias.Any(x => x.ProvinciaId == provinciaId))
+            var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == (int)EnumBoletoCompraNet.CARTA_OFERTA);
+            bool esProductor = negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor;
+            if (!boletoCompraNetProvincias.Any(x => x.ProvinciaId == negocio.ProvinciaId))
             {
                 resultado.Error("Carta Oferta", "La provincia de procedencia no está habilitada para operar con carta oferta.\n\n");
                 return resultado;
             }
-            else if (provinciaId == 12 && esProductor)
+            else if (negocio.ProvinciaId == 12 && esProductor)
             {
                 resultado.Error("Carta Oferta", "La provincia de Santa Fe no está habilitada para que los productores operen con carta oferta.\n\n");
                 return resultado;
+            }
+            else if (!negocio.Destino.CentroPropio)
+            {
+                resultado.Error("Carta Oferta", "Solo se puede operar con carta oferta en destinos propios de MOA. " + negocio.Destino.Descripcion + " no lo es.\n\n");
             }
             else if (altaTempranaCO == "NO")
             {
                 resultado.Error("Carta Oferta", "No está habilitado para operar con carta oferta.\n\n");
                 return resultado;
+            }
+            else if (negocio.BolsaId != (int)EnumBolsaCompraNet.BS_AS)
+            {
+                resultado.Error("Carta Oferta", "La bolsa debe ser Buenos Aires cuando el boleto es Carta Oferta.\n\n");
             }
             return resultado;
         }
@@ -941,53 +950,45 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ValidarSinBoleto(Negocio contrato)
         {
             var resultado = new Resultado();
-            var materialesHabilitados = repositorio.Listar<MaterialHabilitadoSinBoleto, MaterialHabilitadoSinBoletoDto>(x =>
-                new MaterialHabilitadoSinBoletoDto() { Id = x.Id, Material = x.Material.Descripcion, MaterialId = x.MaterialId });
+            var materialesHabilitados = repositorio.Listar<MaterialHabilitadoSinBoleto, int>(x => x.MaterialId);
             var centrosHabilitados = repositorio.Listar<CentroHabilitadoSinBoleto, CentroHabilitadoSinBoletoDto>(x =>
                 new CentroHabilitadoSinBoletoDto() { Id = x.Id, Centro = x.Centro.Descripcion, CentroId = x.CentroId, TipoNegocioId = x.TipoNegocioId });
-            var clasificacionHabilitados = repositorio.Listar<ClasificacionHabilitadoSinBoleto, ClasificacionHabilitadoSinBoletoDto>(x =>
-                new ClasificacionHabilitadoSinBoletoDto() { Id = x.Id, Clasificacion = x.Clasificacion.Descripcion, ClasificacionId = x.ClasificacionId });
+            var clasificacionHabilitados = repositorio.Listar<ClasificacionHabilitadoSinBoleto, int>(x => x.ClasificacionId);
             var operacionHabilitada = repositorio.Listar<TipoOperacionHabilitadoSinBoleto, TipoOperacionHabilitadoSinBoletoDto>(x =>
                 new TipoOperacionHabilitadoSinBoletoDto() { Id = x.Id, Corredor = x.Corredor, OperacionDirecta = x.Directo }).FirstOrDefault();
-            var tipoNegocioHabilitados = repositorio.Listar<TipoNegocioHabilitadoSinBoleto, TipoNegocioHabilitadoSinBoletoDto>(x =>
-                new TipoNegocioHabilitadoSinBoletoDto() { Id = x.Id, TipoNegocio = x.TipoNegocio.Descripcion, TipoNegocioId = x.TipoNegocioId });
-            var provinciaNoHabilitados = repositorio.Listar<ProvinciaNoHabilitadoSinBoleto, ProvinciaNoHabilitadoSinBoletoDto>(x =>
-                new ProvinciaNoHabilitadoSinBoletoDto() { Id = x.Id, Provincia = x.Provincia.Nombre, ProvinciaId = x.ProvinciaId });
+            var tipoNegocioHabilitados = repositorio.Listar<TipoNegocioHabilitadoSinBoleto, int>(x => x.TipoNegocioId);
+            var provinciaNoHabilitados = repositorio.Listar<ProvinciaNoHabilitadoSinBoleto, int>(x => x.ProvinciaId); //no hay ABM para que los usuarios gestionen la tabla y BoletoCompraNetProvincia cubre la misma función
+            var provinciasHabilitadas = repositorio.Listar<BoletoCompraNetProvincia, int>(a => a.ProvinciaId, x => x.BoletoCompraNetId == (int)EnumBoletoCompraNet.SIN_BOLETO);
 
-            if (!materialesHabilitados.Any(x => x.MaterialId == contrato.MaterialId))
+            if (!materialesHabilitados.Any(x => x == contrato.MaterialId))
             {
                 resultado.Error("Material", "El material seleccionado no está habilitado para la carga de contratos sin boleto.\n\n");
                 return resultado;
             }
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+            if (contrato.DestinoId != null && !centrosHabilitados.Any(x => x.CentroId == contrato.DestinoId && x.TipoNegocioId == contrato.TipoNegocioId))
             {
-                if (contrato.DestinoId != null && !centrosHabilitados.Any(x => x.CentroId == contrato.DestinoId && x.TipoNegocioId == contrato.TipoNegocioId))
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     resultado.Error("Centro", "El destino seleccionado no está habilitado para la carga de contratos a precio sin boleto.\n\n");
-                    return resultado;
                 }
-            }
-            else if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
-            {
-                if (contrato.DestinoId != null && (!centrosHabilitados.Any(x => x.CentroId == contrato.DestinoId && x.TipoNegocioId == contrato.TipoNegocioId)))
+                else if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
                 {
                     resultado.Error("Centro", "El destino seleccionado no está habilitado para la carga de contratos a fijar sin boleto.\n\n");
-                    return resultado;
                 }
+                return resultado;
             }
-
-            if (contrato.ProvinciaId != null && provinciaNoHabilitados.Any(x => x.ProvinciaId == contrato.ProvinciaId))
+            if (contrato.ProvinciaId != null && !provinciasHabilitadas.Any(x => x == contrato.ProvinciaId))
             {
                 resultado.Error("Provincia", "La provincia de procedencia no está habilitada para la carga de contratos sin boleto.\n\n");
                 return resultado;
             }
-            if (contrato.ClasificacionId != null && !clasificacionHabilitados.Any(x => x.ClasificacionId == contrato.ClasificacionId))
+            if (contrato.ClasificacionId != null && !clasificacionHabilitados.Any(x => x == contrato.ClasificacionId))
             {
                 resultado.Error("Clasificacion", "La clasificación seleccionada no está habilitada para la carga de contratos sin boleto.\n\n");
                 return resultado;
             }
 
-            if (!tipoNegocioHabilitados.Any(x => x.TipoNegocioId == contrato.TipoNegocioId))
+            if (!tipoNegocioHabilitados.Any(x => x == contrato.TipoNegocioId))
             {
                 resultado.Error("TipoNegocio", "El tipo de negocio seleccionado no está habilitado para la carga de contratos sin boleto.\n\n");
                 return resultado;

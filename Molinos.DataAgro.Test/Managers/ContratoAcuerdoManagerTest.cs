@@ -345,7 +345,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Precio = 10,
                 Cantidad = 10,
                 ComercialCreadorId = 1,
-                DestinoId = 1,
+                DestinoId = 5,
+                Destino = new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false },
                 CampanaId = 1,
                 MaterialId = 1,
                 MonedaId = "a",
@@ -391,31 +392,12 @@ namespace Molinos.DataAgro.Test.Managers
                 }
             };
 
-            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
-                .Returns(new ContratoAcuerdo
-                {
-                    Id = 10,
-                    Precio = 10,
-                    Cantidad = 10,
-                    ComercialCreadorId = 1,
-                    DestinoId = 1,
-                    MaterialId = 1,
-                    MonedaId = "a",
-                    FechaHasta = new DateTime(2019, 08, 08),
-                    Descuentos = new List<DescuentoBonificacion>()
-                {
-                    new DescuentoBonificacion()
-                    {
-                        Id= 0
-                    }
-                }
-                });
+            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>())).Returns(acuerdo);
 
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
 
             var resultado = target.GrabarAcuerdo(acuerdo);
-
-            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { Id = 1 });
 
             Assert.That(!resultado.HayError);
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Once);
