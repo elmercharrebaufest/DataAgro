@@ -6075,6 +6075,11 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.DesdeFijacion = acuerdo.DesdeFijacion;
                 contrato.HastaFijacion = acuerdo.HastaFijacion;
 
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                {
+                    CalcularKgMaximoYMinimo(contrato);
+                }
+
                 var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId && a.EstadoId != (int)EnumEstadoContrato.Eliminado && a.EstadoId != (int)EnumEstadoContrato.Rechazado);
                 if (existe)
                 {
