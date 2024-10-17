@@ -401,6 +401,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo.");
             }
+            oParam.Destino = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
             if (oParam.Venta != true)
             {
                 if (oParam.Venta != true)
@@ -424,7 +425,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacío.");
             }
-            var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
             if (oParam.EsFason != true)
             {
                 if (oParam.DestinoId == 0 || oParam.DestinoId == null)
@@ -439,7 +439,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                     {
-                        if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) /*&& oParam.Pizarra != true*/)
+                        if (oParam.Destino.ValidaRedespacho && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) /*&& oParam.Pizarra != true*/)
                         {
                             oErrorMessages.Error("Descuentos", "Se debe completar Redespacho en Acopios.");
                         }
@@ -449,7 +449,7 @@ namespace Molinos.DataAgro.Business.Managers
                         //    oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                         //}
 
-                        if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) /*&& oParam.Pizarra != true*/)
+                        if (!oParam.Destino.ValidaRedespacho && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) /*&& oParam.Pizarra != true*/)
                         {
                             oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                         }
@@ -555,10 +555,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacío cuando existe Boleto.");
                 }
-            }
-            if (oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && oParam.BolsaId != (int)EnumBoletoCompraNet.CONFIRMA)
-            {
-                oErrorMessages.Error("BolsaCartaOfertaId", "La bolsa debe ser Buenos Aires cuando el boleto es 'Carta Oferta'.");
             }
             if (oParam.FechaDesde > oParam.FechaHasta)
             {
@@ -1475,11 +1471,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.TipoPosicionCBOTId == 3 && oParam.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO)
             {
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE.");
-            }
-
-            if (oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && centro.CentroPropio == false)
-            {
-                oErrorMessages.Error("Centro", "No es posible crear un contrato carta oferta para el centro " + centro.Descripcion);
             }
 
             //if (oParam.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && oParam.TipoAgenteCompraId != null)
