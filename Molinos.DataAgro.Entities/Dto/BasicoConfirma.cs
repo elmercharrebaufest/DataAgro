@@ -30,5 +30,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ContratoCorredor { get; set; }
         public string Comercial { get; set; }
         public string UsuarioAnulacion { get; set; }
+        public DateTime FechaCarga { get; set; }
+        public string ClaseNegocioId { get; set; }
+        public int MaterialId { get; set; }
+        public int? BoletoId { get; set; }
     }
 }

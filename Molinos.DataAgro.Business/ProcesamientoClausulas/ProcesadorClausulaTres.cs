@@ -33,19 +33,17 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         res.Texto += $"los {clausula.Basico.Dias_Pesificado.Value} días";
 
                     if (clausula.Basico.CD == true)
-                    {
                         res.Texto += "anticipado";
-                    }
                     else if (clausula.Basico.Warrant == true)
                         res.Texto += "anticipado contra entrega de WARRANT";
                     else if (clausula.Basico.Dias_Pesificado == null)
                         res.Texto += "las 72 hs";
-                    
+
+                    if (clausula.Basico.CD != true && clausula.Basico.Warrant != true)
+                        res.Texto += ", con mercadería descargada en planta";
+
                     if (clausula.Basico.PorcentajeDePago != null)
                     {
-                        if(clausula.Basico.CD != true)
-                                res.Texto += ", con mercadería descargada en planta";
-
                         res.Texto += $", liquidándose el {100 - clausula.Basico.PorcentajeDePago.Value}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
                         $"restante a los 30 (treinta) días del cumplimiento del contrato.";
                     }

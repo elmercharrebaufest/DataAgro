@@ -5,72 +5,113 @@
 @section Scripts{
     @Scripts.Render("~/bundles/GenerarConfirma")
 }
-<div class="container-fluid">
-    <section style="margin-left: 4em !important; margin-right: 4em !important;">
-        <div class="row" style="padding: 10px 10px 0px 10px !important;">
-            <div class="col"><h3>Generación de Confirma</h3></div>
+<div class="container-fluid" style="margin-left: 4em !important; margin-right: 4em !important;">
+    <div class="row" style="padding: 10px 10px 0px 10px !important;">
+        <div class="col"><h3>Generación de Confirma</h3></div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Tipo de Negocio</label>
         </div>
-        <br />
-        <div class="row">
-            <div class="col-sm-1 col-lg-1 display-none visible-lg"></div>
-            <div class="col-sm-2 col-lg-1">
-                <label>Tipo de Negocio</label>
-            </div>
-            <div class="col-sm-2" style="margin-bottom:0.5em;">
-                @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control", @id = "ClaseNegocio" })
-            </div>
-            <div class="col-sm-2" style="margin-bottom:0.5em;">
-                @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%", @id = "ContratoDesde" })
-            </div>
-            <div class="col-sm-2" style="margin-bottom:0.5em;">
-                @Html.TextBox("NegocioHasta", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoHasta" })
-            </div>
-            <div class="col-md-2" style="text-align: start">
-                <button type="button" id="filtrarConfirmas" class="k-button k-button-icontext" style="height:34px">Filtrar Confirmas</button>
-            </div>
+        <div class="col-sm-2" style="margin-bottom:0.5em;">
+            @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "ClaseNegocio" })
         </div>
-        <br />
+        <div class="col-md-2 noRightPadding">
+            @Html.TextBox("ContratoSAP", "", new { placeholder = "Número/s SAP", @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+        </div>
+        <div class="col-md-2">
+            @Html.TextBox("ContratoSAPHasta", "", new { placeholder = "Número/s SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+        </div>
+        <div class="col-md-1 noLeftPadding" hidden>
+            <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+        </div>
+        <div hidden class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+        </div>
+        <div class="col-md-1">
+            <label>Boleto</label>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("BoletoId", new SelectList(ViewBag.Boleto, "Value", "Text"), "Seleccione el Boleto", new { @class = "form-control filtroBusquedaPorId", @id = "BoletoId" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Contrato</label>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("TipoNegocio", new SelectList(
+                                         new List<SelectListItem>
+                                         {
+                    new SelectListItem{ Value = "A FIJAR", Text = "A FIJAR"},
+                    new SelectListItem{ Value = "A PRECIO", Text = "A PRECIO"}
+                                         }, "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaTextBox", @id = "TipoNegocio" })
+        </div>
         <div class="row">
-            <div class="col-sm-1 col-lg-1 display-none visible-lg"></div>
-            <div class="col-sm-2 col-lg-1">
-                <label>Fecha de confirmación</label>
-            </div>
-            <div class="col-sm-3">
-                <input id="FechaConfirmacionDesde" class="filtroFecha" type="date" style="width: unset">
-            </div>
-            <div class="col-sm-2 col-md-1">
-                <label>Hasta</label>
-            </div>
-            <div class="col-sm-3">
-                <input id="FechaConfirmacionHasta" class="filtroFecha" type="date" style="width: unset">
+            <div class="col-md-2">
+                <label>Fecha de Confirmación desde</label>
             </div>
             <div class="col-sm-2">
-                <div class="form-check">
-
-                </div>
+                <input id="FechaConfirmacionDesde" class="filtroFecha" name="FechaConfirmacion-desde" style="width: 100%" type="date" style="width:unset" />
             </div>
-        </div>
-        <br />
-        <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
-            <div class="col-sm-12" style="display: flex; justify-content: flex-end; align-items: center;">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" id="checkDescargar" checked>
-                    <label class="form-check-label" for="checkDescargar" style="margin-bottom: 0px !important; margin-right: 1em !important ">
-                        Descargar Archivo
-                    </label>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" id="servicioConfirmaId" checked>
-                    <label class="form-check-label" for="servicioConfirmaId" style="margin: 0px !important">
-                        Web Services
-                    </label>
-                </div>
-                <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px; margin-left: 20px; width: auto;" onclick="GenerarConfirmas()">
-                    Generar Confirma
-                </button>
+            <div class="col-md-1">
+                <label>Hasta</label>
             </div>
+            <div class="col-sm-2">
+                <input id="FechaConfirmacionHasta" class="filtroFecha" name="FechaConfirmacion-hasta" style="width: 100%" type="date" style="width:unset" />
+            </div>
+            <div class="col"></div>
         </div>
-    </section>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Material</label>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
+        </div>
+        <div class="col-md-2">
+            <label>Fecha de Carga desde</label>
+        </div>
+        <div class="col-md-2">
+            <input id="fechaCargaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
+        </div>
+        <div class="col-sm-2 col-md-1">
+            <label>Hasta</label>
+        </div>
+        <div class="col-md-2">
+            <input id="fechaCargaHastaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
+        </div>
+    </div>
+    <br />
+    <div class="row">        
+        <div class="col-md-9"></div>
+        <div class="col-md-2" style="text-align: start">
+            <button type="button" id="filtrarConfirmas" class="k-button k-button-icontext" style="height:34px; width:218px">Filtrar Confirmas</button>
+        </div>
+    </div>
+    <br />
+    <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
+        <div class="col-sm-12" style="display: flex; justify-content: flex-end; align-items: center;">
+            <div style="display: flex; align-items: center;">
+                <input class="form-check-input" type="checkbox" id="checkDescargar" checked>
+                <label class="form-check-label" for="checkDescargar" style="margin-bottom: 0px !important; margin-right: 1em !important ">
+                    Descargar Archivo
+                </label>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <input class="form-check-input" type="checkbox" id="servicioConfirmaId" checked>
+                <label class="form-check-label" for="servicioConfirmaId" style="margin: 0px !important">
+                    Web Services
+                </label>
+            </div>
+            <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px; margin-left: 20px; width: auto;" onclick="GenerarConfirmas()">
+                Generar Confirma
+            </button>
+        </div>
+    </div>
     <section>
         <div class="row">
             <div class="col-xs-12">
@@ -80,8 +121,9 @@
     </section>
 </div>
 
+
 <style>
-    
+
     .modal .confirmado-modal div {
         background: #008e61 !important;
         color: white;
@@ -146,7 +188,6 @@
         padding-left: 6px !important;
         padding-right: 6px !important;
     }
-
 </style>
 
 @Html.Partial("ModalConfirmaGenerado")

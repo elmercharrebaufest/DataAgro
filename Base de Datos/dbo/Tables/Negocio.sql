@@ -209,4 +209,8 @@ GO
 CREATE NONCLUSTERED INDEX IX_Fecha_ComercialId_EstadoId
 ON [dbo].[Negocio] ([Fecha],[ComercialId],[EstadoId])
 INCLUDE ([ContratoId],[Cantidad],[Precio],[ProveedorId],[MonedaId],[ComercialCreadorId])
+
+GO
+CREATE NONCLUSTERED INDEX IX_ContratoSAP
+ON [dbo].[Negocio] ([ContratoSAP])
 GO

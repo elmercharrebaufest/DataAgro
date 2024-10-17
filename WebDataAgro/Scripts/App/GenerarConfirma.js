@@ -5,9 +5,9 @@ $(document).ready(function () {
 });
 
 function inicializarFiltros() {
-    var hoy = new Date(); //Hoy
+    var hoy = new Date(); 
     var ayer = new Date(hoy);
-    ayer.setDate(hoy.getDate() - 1); //Ayer
+    ayer.setDate(hoy.getDate() - 1); 
 
     $("#FechaConfirmacionDesde").kendoDatePicker({
         weekNumber: true,
@@ -20,9 +20,79 @@ function inicializarFiltros() {
         format: "dd/MM/yyyy",
         value: hoy
     });
+
+    $("#fechaCargaId").kendoDatePicker({
+        weekNumber: true,
+        format: "dd/MM/yyyy",
+    });
+
+    $("#fechaCargaHastaId").kendoDatePicker({
+        weekNumber: true,
+        format: "dd/MM/yyyy",
+    });
+    inicializarPopUpSap("Contratos");
 }
 
 function inicializarGrillaContratos() {
+
+
+    var ds = {
+        transport: {
+            parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
+                if (options.filter) {
+                    KendoGrid_FixFilter(ds, options.filter);
+                }
+                return options;
+            },
+            read: {
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json",
+                url: '/Confirma/BuscaDatosTabla',
+
+                data: function () {
+                    let filtroCompleto = TraerFiltrosConValores();
+                    return filtroCompleto;
+                }
+            }
+        },
+        schema: {
+            data: 'Data',
+            total: 'Total',
+            model: {
+                id: 'Id',
+                fields: {
+                    Select: { type: "string" },
+                    NegocioSAP: { type: "string" },
+                    Material: { type: "string" },
+                    TipoBoleto: { type: "string" },
+                    Bolsa: { type: "string" },
+                    Version_Proxima: { type: "string" },
+                    Estado_Version: { type: "string" },
+                    FechaGeneracion: { type: "date" },
+                    FechaOperacion: { type: "date" },
+                    FechaConfirmacion: { type: "date" },
+                    FechaAnulacion: { type: "date" },
+                    ContratoVendedor: { type: "string" },
+                    ContratoCorredor: { type: "string" },
+                    Vendedor: { type: "string" },
+                    Corredor: { type: "string" },
+                    Comercial: { type: "string" },
+                    Precio: { type: "number" },
+                    Moneda: { type: "string" },
+                    TipoNegocio: { type: "string" }
+                }
+            }
+        },
+        serverPaging: true,
+        serverSorting: true,
+        serverFiltering: false,
+        pageSize: 15,
+    };
+
     $("#contratos-grid").kendoGrid({
         toolbar: ["excel"],
         excel: {
@@ -81,7 +151,7 @@ function inicializarGrillaContratos() {
                 { field: "Precio", title: "Precio", width: 150 },
                 { field: "Moneda", title: "Moneda", width: 150 },
                 { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
-                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35},
+                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35 },
             ];
 
             var header = columns.map(function (column) {
@@ -112,9 +182,7 @@ function inicializarGrillaContratos() {
             e.workbook = workbook;
             console.log(e.workbook);
         },
-        dataSource: {
-            pageSize: 10
-        },
+        dataSource: ds,
         pageable: {
             refresh: true,
             pageSizes: [10, 20, 50, 100, 1000, "all"],
@@ -322,8 +390,7 @@ function inicializarGrillaContratos() {
                         { TipoNegocio: "ESPACIO DINAMICO" }
                     ],
                 }
-            },
-            { field: "UsuarioAnulacion", title: "U. Anulación", width: 35, headerAttributes: { "title": "Usuario Anulación" } },
+            }
         ],
     });
 }
@@ -333,24 +400,24 @@ $("body").on("click", "#filtrarConfirmas", function () {
     FiltrarNegocios();
 });
 
-$("body").on("change", "#ContratoDesde", function () {
-    let lista = trimEnd($("#ContratoDesde").val()).split(';');
+$("body").on("change", "#ContratoSAPId", function () {
+    let lista = trimEnd($("#ContratoSAPId").val()).split(';');
     if (lista.length > 1) {
-        $("#ContratoHasta").attr('disabled', 'disabled');
-        $("#ContratoHasta").val("");
+        $("#ContratoSAPHastaId").attr('disabled', 'disabled');
+        $("#ContratoSAPHastaId").val("");
     } else {
-        $("#ContratoHasta").removeAttr('disabled');
+        $("#ContratoSAPHastaId").removeAttr('disabled');
     }
 });
 
-$("#ContratoDesde").bind("paste", function (e) {//En caso de Pegar Codigos
+$("#ContratoSAPId").bind("paste", function (e) {//En caso de Pegar Codigos
     e.preventDefault();
     if (e.originalEvent.clipboardData !== undefined) {
         clipText = e.originalEvent.clipboardData.getData('text/plain');
     } else {
         clipText = window.clipboardData.getData('text');
     }
-    $("#ContratoDesde").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+    $("#ContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
 });
 
 function CargarTablaModal(contratos) {
@@ -380,61 +447,9 @@ function FiltrarNegocios() {
     setTimeout(function () {
         try {
             if (esContratoDesdeValido() && validarFechasYContratos()) {
-                let fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
-                let fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
-                let claseNegocio = $("#ClaseNegocio").val();
-                let contratoDesde = $("#ContratoDesde").val().endsWith(';') ? $("#ContratoDesde").val().slice(0, -1) : $("#ContratoDesde").val();
-                let contratoHasta = $("#ContratoHasta").val();
 
-                var filters = {
-                    logic: "and",
-                    filters: []
-                };
+                $('#contratos-grid').data('kendoGrid').dataSource.read();
 
-                if (claseNegocio) {
-                    filters.filters.push({ field: "ClaseNegocio", operator: "eq", value: parseInt(claseNegocio) });
-                }
-                if (contratoDesde) {
-                    filters.filters.push({ field: "NegocioSAP", operator: "gte", value: contratoDesde });
-                }
-                if (contratoHasta) {
-                    filters.filters.push({ field: "NegocioSAP", operator: "lte", value: contratoHasta });
-                }
-                if (fechaDesde) {
-                    filters.filters.push({ field: "FechaConfirmacion", operator: "gte", value: fechaDesde });
-                }
-                if (fechaHasta) {
-                    filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
-                }
-
-                var data = {
-                    Filter: filters,
-                    Take: 100000,
-                    Skip: 0
-                };
-
-                var result = MSExecuteOnServer('/Confirma/BuscaDatosTabla', data);
-
-                if (result && result.Data) {
-                    if (result.Data.length == 0) {
-                        MensAlerta("Sin Resultados");
-                        $("#contratos-grid").data("kendoGrid").dataSource.data([]);
-                    } else {
-                        // Actualizar la grilla Kendo UI con los resultados
-                        var grid = $("#contratos-grid").data("kendoGrid");
-                        grid.dataSource.data(result.Data.map(function (item) {
-                            return {
-                                ...item,
-                                FechaOperacion: parseDate(item.FechaOperacion),
-                                FechaConfirmacion: parseDate(item.FechaConfirmacion),
-                                FechaGeneracion: parseDate(item.FechaGeneracion)
-                            };
-                        }));
-                        $("#contratos-grid").show();
-                    }
-                } else {
-                    MensErr(result.Mensaje || "Ocurrió un error al intentar obtener los Negocios.");
-                }
             } else {
                 if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
                 else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
@@ -468,7 +483,7 @@ function trimEnd(cadena) {
 
 // Función para validar el contenido de contratoDesde
 function esContratoDesdeValido() {
-    var contratoDesde = $("#ContratoDesde").val();
+    var contratoDesde = $("#ContratoSAPId").val();
 
     // Si contratoDesde es nulo o vacío, lo consideramos válido
     if (contratoDesde === null || contratoDesde.trim() === '') {
@@ -483,8 +498,8 @@ function esContratoDesdeValido() {
 function validarFechasYContratos() {
     var fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
     var fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
-    var contratoDesde = ($("#ContratoDesde").val().endsWith(';') ? $("#ContratoDesde").val().slice(0, -1) : $("#ContratoDesde").val()).trim();
-    var contratoHasta = $("#ContratoHasta").val().trim();
+    var contratoDesde = ($("#ContratoSAPId").val().endsWith(';') ? $("#ContratoSAPId").val().slice(0, -1) : $("#ContratoSAPId").val()).trim();
+    var contratoHasta = $("#ContratoSAPHastaId").val().trim();
 
     if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
         return false; // La fecha desde no puede ser mayor que la fecha hasta
