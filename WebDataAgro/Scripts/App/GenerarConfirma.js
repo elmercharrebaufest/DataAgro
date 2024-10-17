@@ -70,7 +70,7 @@ function inicializarGrillaContratos() {
                     Material: { type: "string" },
                     TipoBoleto: { type: "string" },
                     Bolsa: { type: "string" },
-                    Version_Proxima: { type: "string" },
+                    Version: { type: "string" },
                     Estado_Version: { type: "string" },
                     FechaGeneracion: { type: "date" },
                     FechaOperacion: { type: "date" },
@@ -137,7 +137,7 @@ function inicializarGrillaContratos() {
                 { field: "Material", title: "Material", width: 150 },
                 { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
                 { field: "Bolsa", title: "Bolsa", width: 150 },
-                { field: "Version_Proxima", title: "V. Prox.", width: 150 },
+                { field: "Version", title: "Vers.", width: 150 },
                 { field: "Estado_Version", title: "Estado V.", width: 150 },
                 { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
                 { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
@@ -255,7 +255,7 @@ function inicializarGrillaContratos() {
                     ],
                 }
             },
-            { field: "Version_Proxima", title: "Vers. P.", width: 38, headerAttributes: { "title": "Versión Próxima" }, type: "number" },
+            { field: "Version", title: "Vers.", width: 38, headerAttributes: { "title": "Versión" }, type: "number" },
             {
                 field: "Estado_Version", title: "Estado V.", width: 65, headerAttributes: { "title": "Estado Versión" }, editable: false, type: "string",
                 filterable: {
