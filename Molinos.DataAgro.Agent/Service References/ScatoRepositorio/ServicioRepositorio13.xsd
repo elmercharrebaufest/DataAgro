@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd12" namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios.ServiciosSap" />
-  <xs:complexType name="ArrayOfTransmisionesCupoEnErrorDto">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="TransmisionesCupoEnErrorDto" nillable="true" type="tns:TransmisionesCupoEnErrorDto" />
-    </xs:sequence>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System.Web" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System.Web" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="HttpPostedFileBase">
+    <xs:sequence />
   </xs:complexType>
-  <xs:element name="ArrayOfTransmisionesCupoEnErrorDto" nillable="true" type="tns:ArrayOfTransmisionesCupoEnErrorDto" />
-  <xs:complexType name="TransmisionesCupoEnErrorDto">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="InstanciaWorkflow" type="ser:guid" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Molinos.Scato.Servicios.ServiciosSap" minOccurs="0" name="Z2200" nillable="true" type="q1:Z_SDMF_Z2200N" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="TransmisionesCupoEnErrorDto" nillable="true" type="tns:TransmisionesCupoEnErrorDto" />
+  <xs:element name="HttpPostedFileBase" nillable="true" type="tns:HttpPostedFileBase" />
 </xs:schema>

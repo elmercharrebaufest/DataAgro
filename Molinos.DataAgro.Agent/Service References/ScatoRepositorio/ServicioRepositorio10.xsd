@@ -1,17 +1,575 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/System.Diagnostics" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System.Diagnostics" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Comandos" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Comandos" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Enums" />
   <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:complexType name="ArrayOfEventLogEntry">
+  <xs:complexType name="Resultado">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="EventLogEntry" nillable="true" type="tns:EventLogEntry" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Errores" nillable="true" type="q1:ArrayOfKeyValueOfstringstring" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfEventLogEntry" nillable="true" type="tns:ArrayOfEventLogEntry" />
-  <xs:complexType name="EventLogEntry">
-    <xs:sequence>
-      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
-    </xs:sequence>
-    <xs:attribute ref="ser:FactoryType" />
+  <xs:element name="Resultado" nillable="true" type="tns:Resultado" />
+  <xs:complexType name="ResultadoCartaPorteElectronicaDummy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="NroOrden" type="xs:long" />
+          <xs:element minOccurs="0" name="Sucursal" type="xs:int" />
+          <xs:element minOccurs="0" name="TipoCPE" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
-  <xs:element name="EventLogEntry" nillable="true" type="tns:EventLogEntry" />
+  <xs:element name="ResultadoCartaPorteElectronicaDummy" nillable="true" type="tns:ResultadoCartaPorteElectronicaDummy" />
+  <xs:complexType name="ResultadoConsultaDomiciliosDG">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Domicilios" nillable="true" type="q2:ArrayOfDomicilioDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultaDomiciliosDG" nillable="true" type="tns:ResultadoConsultaDomiciliosDG" />
+  <xs:complexType name="ResultadoConsultaPlantasDG">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Plantas" nillable="true" type="q3:ArrayOfint" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultaPlantasDG" nillable="true" type="tns:ResultadoConsultaPlantasDG" />
+  <xs:complexType name="ResultadoConsultaCpeAutomotorDG">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CodigoGranario" type="xs:short" />
+          <xs:element minOccurs="0" name="CodigoPadre" type="xs:short" />
+          <xs:element minOccurs="0" name="CuitChofer" type="xs:long" />
+          <xs:element minOccurs="0" name="CuitOrigen" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CuitTransportista" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NroCTG" type="xs:long" />
+          <xs:element minOccurs="0" name="NroOrden" type="xs:long" />
+          <xs:element minOccurs="0" name="PatenteAcoplado" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PatenteCamion" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Pdf" nillable="true" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="PdfBase" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PesoBruto" type="xs:int" />
+          <xs:element minOccurs="0" name="PesoTara" type="xs:int" />
+          <xs:element minOccurs="0" name="PlantaDG" type="xs:int" />
+          <xs:element minOccurs="0" name="Sucursal" type="xs:int" />
+          <xs:element minOccurs="0" name="TipoCPE" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultaCpeAutomotorDG" nillable="true" type="tns:ResultadoConsultaCpeAutomotorDG" />
+  <xs:complexType name="ResultadoConsultarAFIP">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="TarifaReferencia" nillable="true" type="xs:double" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultarAFIP" nillable="true" type="tns:ResultadoConsultarAFIP" />
+  <xs:complexType name="ResultadoMensajeCartelLedReordenado">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="ListaDeMensajes" nillable="true" type="q4:ArrayOfMensajeCartelLedDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoMensajeCartelLedReordenado" nillable="true" type="tns:ResultadoMensajeCartelLedReordenado" />
+  <xs:complexType name="ResultadoMensajeCartelLed">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NumeroPrograma" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NumeroTrama" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NumeroVariable" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SegundosDeEspera" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoMensajeCartelLed" nillable="true" type="tns:ResultadoMensajeCartelLed" />
+  <xs:complexType name="ResultadoPuestoComandoPuerto">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Workflows" nillable="true" type="q5:ArrayOfDatosDeWorkflowDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoPuestoComandoPuerto" nillable="true" type="tns:ResultadoPuestoComandoPuerto" />
+  <xs:complexType name="ResultadoConsultaCpePorDestino">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Cpes" nillable="true" type="tns:ArrayOfCartaPorteResumenDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultaCpePorDestino" nillable="true" type="tns:ResultadoConsultaCpePorDestino" />
+  <xs:complexType name="ArrayOfCartaPorteResumenDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CartaPorteResumenDto" nillable="true" type="tns:CartaPorteResumenDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCartaPorteResumenDto" nillable="true" type="tns:ArrayOfCartaPorteResumenDto" />
+  <xs:complexType name="CartaPorteResumenDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Ctg" type="xs:long" />
+      <xs:element minOccurs="0" name="Estado" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FechaPartida" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaUltimaModificacion" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="TipoCartaPorte" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CartaPorteResumenDto" nillable="true" type="tns:CartaPorteResumenDto" />
+  <xs:complexType name="ResultadoCircular">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="TurnoActivo" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCircular" nillable="true" type="tns:ResultadoCircular" />
+  <xs:complexType name="ResultadoConsultarImagenCpe">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PdfImage" nillable="true" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultarImagenCpe" nillable="true" type="tns:ResultadoConsultarImagenCpe" />
+  <xs:complexType name="ResultadoConsultarPDFCpe">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Pdf" nillable="true" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoConsultarPDFCpe" nillable="true" type="tns:ResultadoConsultarPDFCpe" />
+  <xs:complexType name="ResultadoCrearCalle">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ResultadoCrear">
+        <xs:sequence>
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Enums" minOccurs="0" name="Calidad" type="q6:TipoCalidad" />
+          <xs:element minOccurs="0" name="CalleId" type="xs:int" />
+          <xs:element minOccurs="0" name="CentroId" type="xs:int" />
+          <xs:element minOccurs="0" name="Disponibilidad" type="xs:int" />
+          <xs:element minOccurs="0" name="DisponibilidadCalles" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCrearCalle" nillable="true" type="tns:ResultadoCrearCalle" />
+  <xs:complexType name="ResultadoCrear">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Id" type="xs:int" />
+          <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCrear" nillable="true" type="tns:ResultadoCrear" />
+  <xs:complexType name="ResultadoCartaPorteElectronica">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Cpe" nillable="true" type="q7:CartaPorteDto" />
+          <xs:element minOccurs="0" name="PdfImage" nillable="true" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="PdfImageSustentable" nillable="true" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="RutaImagen" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCartaPorteElectronica" nillable="true" type="tns:ResultadoCartaPorteElectronica" />
+  <xs:complexType name="ResultadoFas">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="OrdenFas" nillable="true" type="q8:ArrayOfOrdenCargaFasDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoFas" nillable="true" type="tns:ResultadoFas" />
+  <xs:complexType name="ResultadoPesaje">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BalanzaId" type="xs:int" />
+          <xs:element minOccurs="0" name="Peso" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoPesaje" nillable="true" type="tns:ResultadoPesaje" />
+  <xs:complexType name="ResultadoReasignarCamionPostcalado">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CalleId" type="xs:int" />
+          <xs:element minOccurs="0" name="Disponibilidad" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoReasignarCamionPostcalado" nillable="true" type="tns:ResultadoReasignarCamionPostcalado" />
+  <xs:complexType name="ResultadoTickets">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CP" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CertificadoCP" nillable="true" type="xs:base64Binary" />
+          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="FotoCP" nillable="true" type="q9:FotosDto" />
+          <xs:element minOccurs="0" name="Patente" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TicketPesada" nillable="true" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="TicketReciboMunicipal" nillable="true" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoTickets" nillable="true" type="tns:ResultadoTickets" />
+  <xs:complexType name="ResultadoValidarPatente">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ReconocimientoExitoso" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoValidarPatente" nillable="true" type="tns:ResultadoValidarPatente" />
+  <xs:complexType name="ResultadoLeerNumeroCartaPorte">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="NumeroCartaPorte" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoLeerNumeroCartaPorte" nillable="true" type="tns:ResultadoLeerNumeroCartaPorte" />
+  <xs:complexType name="ResultadoPagarMercadoPago">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="DetalleDePago" nillable="true" type="q10:EstadoPagoDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoPagarMercadoPago" nillable="true" type="tns:ResultadoPagarMercadoPago" />
+  <xs:complexType name="ResultadoActualizarUltimoAnalisisDePuestoDeTrabajo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoActualizarUltimoAnalisisDePuestoDeTrabajo" nillable="true" type="tns:ResultadoActualizarUltimoAnalisisDePuestoDeTrabajo" />
+  <xs:complexType name="ResultadoActualizarCargaOpuesta">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoActualizarCargaOpuesta" nillable="true" type="tns:ResultadoActualizarCargaOpuesta" />
+  <xs:complexType name="ResultadoAlertarAnalisisObligatorio">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AlertarAnalisisObligatorio" type="xs:boolean" />
+          <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Material" nillable="true" type="q11:ArrayOfstring" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoAlertarAnalisisObligatorio" nillable="true" type="tns:ResultadoAlertarAnalisisObligatorio" />
+  <xs:complexType name="ResultadoCorrespondeAnalisisObligatorio">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CorrespondeAnalisisObligatorio" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCorrespondeAnalisisObligatorio" nillable="true" type="tns:ResultadoCorrespondeAnalisisObligatorio" />
+  <xs:complexType name="ResultadoGuardarFoto">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Path" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoGuardarFoto" nillable="true" type="tns:ResultadoGuardarFoto" />
+  <xs:complexType name="ResultadoEscalables">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Enums" minOccurs="0" name="Categoria" nillable="true" type="q12:TipoVehiculo" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEscalables" nillable="true" type="tns:ResultadoEscalables" />
+  <xs:complexType name="ResultadoEstacionMeteorologica">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Imagenes" nillable="true" type="q13:ArrayOfEstacionMeteorologicaDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEstacionMeteorologica" nillable="true" type="tns:ResultadoEstacionMeteorologica" />
+  <xs:complexType name="ResultadoEnviarZE7550">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CuposNoPaso24Horas" type="xs:int" />
+          <xs:element minOccurs="0" name="CuposReenviados" type="xs:int" />
+          <xs:element minOccurs="0" name="TransaccionesEnviadasError" type="xs:int" />
+          <xs:element minOccurs="0" name="TransaccionesEnviadasOK" type="xs:int" />
+          <xs:element minOccurs="0" name="TransaccionesTotales" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEnviarZE7550" nillable="true" type="tns:ResultadoEnviarZE7550" />
+  <xs:complexType name="ResultadoRetransmitirTransmisionASap">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Enums" minOccurs="0" name="Resultado" type="q14:TipoAlerta" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoRetransmitirTransmisionASap" nillable="true" type="tns:ResultadoRetransmitirTransmisionASap" />
+  <xs:complexType name="ResultadoValidarBalanzadasOrquestador">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="BalanzadasPerdidas" nillable="true" type="q15:ArrayOfint" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoValidarBalanzadasOrquestador" nillable="true" type="tns:ResultadoValidarBalanzadasOrquestador" />
+  <xs:complexType name="ResultadoValidarConsistenciaBalanzadas">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q16="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="BalanzadasPerdidas" nillable="true" type="q16:ArrayOfint" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoValidarConsistenciaBalanzadas" nillable="true" type="tns:ResultadoValidarConsistenciaBalanzadas" />
+  <xs:complexType name="ResultadoDetalleCTG">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="CartaPorte" nillable="true" type="q17:CartaPorteDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoDetalleCTG" nillable="true" type="tns:ResultadoDetalleCTG" />
+  <xs:complexType name="ResultadoCrearBiotecnologia">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ResultadoCrear">
+        <xs:sequence>
+          <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Enums" minOccurs="0" name="FormatoDeArchivo" type="q18:CamaraFormatoDeArchivo" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCrearBiotecnologia" nillable="true" type="tns:ResultadoCrearBiotecnologia" />
+  <xs:complexType name="ResultadoEliminarRecorrido">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q19="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Advertencias" nillable="true" type="q19:ArrayOfKeyValueOfstringstring" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEliminarRecorrido" nillable="true" type="tns:ResultadoEliminarRecorrido" />
+  <xs:complexType name="ResultadoEliminarPrimerLectura">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OcrActivo" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ProximaLectura" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ProximaPatente" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ProximaPatenteLeida" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReconocimientoExitoso" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEliminarPrimerLectura" nillable="true" type="tns:ResultadoEliminarPrimerLectura" />
+  <xs:complexType name="ResultadoEliminarNotificaciones">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q20="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Grupos" nillable="true" type="q20:ArrayOfstring" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoEliminarNotificaciones" nillable="true" type="tns:ResultadoEliminarNotificaciones" />
+  <xs:complexType name="ResultadoCargarBinesSalida">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PesoTaraBodega" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCargarBinesSalida" nillable="true" type="tns:ResultadoCargarBinesSalida" />
+  <xs:complexType name="ResultadoModificarRecorridoPesoNetoBodegaEnLitros">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PesoNetoBodegaEnLitros" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoModificarRecorridoPesoNetoBodegaEnLitros" nillable="true" type="tns:ResultadoModificarRecorridoPesoNetoBodegaEnLitros" />
+  <xs:complexType name="ResultadoActualizarEstadoConexion">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="EstadoConexionDto" nillable="true" type="q21:ArrayOfEstadoConexionDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoActualizarEstadoConexion" nillable="true" type="tns:ResultadoActualizarEstadoConexion" />
+  <xs:complexType name="ResultadoActualizarLecturaDeTarjeta">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="LecturaPuestosDeTrabajo" nillable="true" type="q22:ArrayOfLecturaPuestoDeTrabajoDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoActualizarLecturaDeTarjeta" nillable="true" type="tns:ResultadoActualizarLecturaDeTarjeta" />
+  <xs:complexType name="ResultadoMotivoQuiebre">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q23="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Fotos" nillable="true" type="q23:ArrayOfstring" />
+          <xs:element xmlns:q24="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="PuestosDeTrabajo" nillable="true" type="q24:ArrayOfstring" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoMotivoQuiebre" nillable="true" type="tns:ResultadoMotivoQuiebre" />
+  <xs:complexType name="ResultadoPrevisualizar">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Archivo" nillable="true" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoPrevisualizar" nillable="true" type="tns:ResultadoPrevisualizar" />
+  <xs:complexType name="ResultadoPuestoComando">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Workflows" nillable="true" type="q25:ArrayOfDatosDeWorkflowDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoPuestoComando" nillable="true" type="tns:ResultadoPuestoComando" />
+  <xs:complexType name="ResultadoActualizarValoresSap">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DocumentoInternoSap" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NumeroDeDocumentoSap" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoActualizarValoresSap" nillable="true" type="tns:ResultadoActualizarValoresSap" />
+  <xs:complexType name="ResultadoCrearWorkflow">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ResultadoCrear">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="InstanciaWorkflowId" type="ser:guid" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoCrearWorkflow" nillable="true" type="tns:ResultadoCrearWorkflow" />
+  <xs:complexType name="ResultadoSincronizarMateriales">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Cantidad" type="xs:int" />
+          <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q26:ArrayOfMaterialDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoSincronizarMateriales" nillable="true" type="tns:ResultadoSincronizarMateriales" />
+  <xs:complexType name="ResultadoSincronizarProveedores">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Cantidad" type="xs:int" />
+          <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q27:ArrayOfProveedorDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoSincronizarProveedores" nillable="true" type="tns:ResultadoSincronizarProveedores" />
+  <xs:complexType name="ResultadoSincronizarClientes">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Resultado">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Cantidad" type="xs:int" />
+          <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q28:ArrayOfClienteDto" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResultadoSincronizarClientes" nillable="true" type="tns:ResultadoSincronizarClientes" />
 </xs:schema>
