@@ -44,6 +44,8 @@ $(document).ready(function () {
     IniciarListaConfirmas();
 
     $("#filtrogrilla").on("keyup", function () {
+        var grid = $("#grid").data("kendoGrid");
+        grid.clearSelection();
         var value = $(this).val().toLowerCase();
         $("table tbody tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
