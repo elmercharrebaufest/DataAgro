@@ -2,16 +2,30 @@
 var datosIniCrearContrato;
 var externo;
 var enviarEmail;
+var isFiltered = false;
 
 $(document).ready(function () {
+    isFiltered = false;
+
     $("#grid").kendoGrid({
         dataSource: {
             data: [],
         },
         dataBound: function () {
             var grid = $("#grid").data("kendoGrid");
-            var view = grid.dataSource.view();
-            //grid.thead.find("[data-title='Kgs Aplicados']").html("Kgs Aplicados");
+
+            // Limpiar selecciones anteriores cuando el filtro está activo
+            if (isFiltered) {
+                grid.clearSelection();
+                var view = grid.dataSource.view();
+                // Seleccionar solo las filas visibles después del filtrado
+                grid.tbody.find("tr:visible").each(function () {
+                    var dataItem = grid.dataItem(this);
+                    if (dataItem) {
+                        $(this).addClass("k-state-selected");
+                    }
+                });
+            }
 
             grid.tbody.find("tr").dblclick(function (e) {
                 var data = grid.dataItem(this);
@@ -21,6 +35,7 @@ $(document).ready(function () {
         },
         height: 400,
         pageable: false,
+        selectable: "multiple row",
         columns: [
             { selectable: true, width: "35px" },
             {
@@ -45,14 +60,42 @@ $(document).ready(function () {
 
     $("#filtrogrilla").on("keyup", function () {
         var grid = $("#grid").data("kendoGrid");
+        isFiltered = true;
         grid.clearSelection();
         var value = $(this).val().toLowerCase();
         $("table tbody tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
-});
 
+    // Sobrescribimos el evento de "Select All" para manejar solo lo visible
+    $(".k-header .k-checkbox").on("change", function () {
+        var grid = $("#grid").data("kendoGrid");
+        var isChecked = $(this).is(":checked");
+
+        if (isFiltered) {
+            grid.clearSelection();
+
+            // Solo seleccionamos las filas visibles
+            grid.tbody.find("tr:visible").each(function () {
+                if (isChecked) {
+                    $(this).addClass("k-state-selected");
+                } else {
+                    $(this).removeClass("k-state-selected");
+                }
+            });
+        } else {
+            // Si no está filtrado, el comportamiento del "Select All" es estándar
+            grid.tbody.find("tr").each(function () {
+                if (isChecked) {
+                    $(this).addClass("k-state-selected");
+                } else {
+                    $(this).removeClass("k-state-selected");
+                }
+            });
+        }
+    });
+});
 
 function IniciarListaConfirmas() {
     BlockUi('Consultando...');
@@ -113,7 +156,6 @@ function DescargarZipConfirmas() {
                 // Crear un Blob a partir de la respuesta
                 var blob = xhr.response;
 
-                // Establecer el nombre del archivo a descargar
                 var filename = "confirmas.zip";
 
                 // Crear un enlace para descargar el archivo
@@ -128,7 +170,6 @@ function DescargarZipConfirmas() {
             }
         };
 
-        // Enviar los datos en formato JSON
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(data));
     }
@@ -136,12 +177,23 @@ function DescargarZipConfirmas() {
 
 function SeleccionarElementos() {
     var grid = $("#grid").data("kendoGrid");
-    var selectedRows = grid.select();
-    obj = [];
+    var obj = [];
 
-    selectedRows.each(function (index, row) {
-        var selectedItem = grid.dataItem(row);
-        obj.push(selectedItem);
-    });
+    if (isFiltered) {
+        var visibleRows = grid.tbody.find("tr:visible");
+        visibleRows.each(function () {
+            if ($(this).hasClass("k-state-selected")) {
+                var dataItem = grid.dataItem(this);
+                obj.push(dataItem);
+            }
+        });
+    } else {
+        var selectedRows = grid.select();
+        selectedRows.each(function (index, row) {
+            var selectedItem = grid.dataItem(row);
+            obj.push(selectedItem);
+        });
+    }
+
     return obj;
 }
