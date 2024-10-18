@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
 
             //SI EL CAMPO CODIGO_TC ES 02(BNA) mientras sea negocio de Tipo A Fijar  O  tambien se aplica a Negocios con Moneda Dolar
-            if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) || clausula.Basico.MonedaId == "USDM " || (string.IsNullOrEmpty(clausula.Basico.MonedaId) && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR))
+            if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) || clausula.Basico.MonedaId == "USDM " || (string.IsNullOrWhiteSpace(clausula.Basico.MonedaId) && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR))
             {
                 res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
             }
