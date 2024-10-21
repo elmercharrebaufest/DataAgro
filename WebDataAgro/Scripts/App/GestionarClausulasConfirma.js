@@ -135,7 +135,10 @@ $("#generar-confirma").click(function () {
                         dialogItself.close();
                         window.location.href = `/Confirma/GenerarConfirma`;
                     }
-                }]
+                }],
+                onshown: function (dialog) {
+                    $(dialog.getModalDialog()).addClass('modal-confirma');
+                }
             });
         }
     }, 100);
@@ -146,6 +149,5 @@ $("#volver").click(function () {
 });
 
 function descargarArchivoConfirma(nombreArchivo) {
-    // Cambia la URL según la ruta correcta de tu controlador
     window.location.href = '/Confirma/DescargarArchivoConfirma?nombreArchivo=' + encodeURIComponent(nombreArchivo);
 }
