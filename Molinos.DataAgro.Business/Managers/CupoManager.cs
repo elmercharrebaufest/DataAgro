@@ -5224,7 +5224,8 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                         negocioAsociado = repositorio.Obtener<Negocio>(x => x.Id == solicitud.NegocioId && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
                 }
-                else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value)
+                else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value && solicitud.Fason != true
+                    && !solicitud.Proveedor.Contains("30715118773") && !solicitud.Proveedor.Contains("30500858628")) //no se vincula a un negocio cuando el proveedor es MOA
                 {
                     result.Error("VincularNegocio", "Debe vincular la solicitud a un negocio completando el campo 'N° de Contrato'.");
                     return result;
