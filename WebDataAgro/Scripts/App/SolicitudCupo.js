@@ -667,6 +667,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     $("#CantidadCupoSE").data("kendoNumericTextBox").value('');
     $("#ContratoSE").data("kendoNumericTextBox").value('');
     $("#CuitES").val('');
+    $("#CuitES").hide();
     $("#FasonES").prop("checked", false);
     $("#FleteAcarreoES").prop("checked", false);
     checkSoja();
@@ -790,6 +791,7 @@ function grabarSolicitudExtraordinaria() {
     setTimeout(function () {
         var solicitud = {
             ProveedorId: $("#ProveedorIdSE").val(),
+            Proveedor: $("#buscadorProveedorSE").val(),
             ComercialId: $("#ComercialIdSE").data("kendoDropDownList").value(),
             Fecha: $("#FechaSE").data("kendoDatePicker").value(),
             MaterialId: $("#MaterialIdSE").data("kendoDropDownList").value(),
