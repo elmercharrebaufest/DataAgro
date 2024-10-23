@@ -103,6 +103,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Negocio = (contrato is ContratoAcuerdo || contrato is AgenteCompra) ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                         DestinoId = contrato.DestinoId,
                         DestinoDescripcion = contrato.Destino.Descripcion,
+                        DestinoCodigoSap = contrato.Destino.CodigoSap,
                         CantidadCamiones = contrato.CantidadCamiones,
                         Consignatario = contrato.Consignatario,
                         PlanCanje = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PlanCanje : contrato.PlanCanje,

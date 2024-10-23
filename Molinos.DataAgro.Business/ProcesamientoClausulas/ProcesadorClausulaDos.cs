@@ -21,21 +21,18 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
 
-                res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'/'MM'/'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'/'MM'/'yyyy}";
+                res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'/'MM'/'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'/'MM'/'yyyy},";
                 if (clausula.Basico.MercsDeposito == true)
                 {
-                    res.Texto += $" habiendo a su vez mercadería descargada";
+                    res.Texto += $" habiendo a su vez mercadería descargada,";
                 }
-                res.Texto += $", haciéndose el recibo por el comprador en planta {ReemplazarSanLorenzo(clausula.Basico.DestinoDescripcion)}, Localidad {clausula.Basico.DestinoLocalidad}, " +
-                    $"de Provincia de {clausula.Basico.DestinoProvincia}. Queda establecido que toda tasa contribución, impuesto provincial y/o municipal que grave " +
-                    $"la presente operación será a cargo de la parte vendedora.";
+
+                string destino = clausula.Basico.DestinoDescripcion;
+                res.Texto += $" haciéndose el recibo por el comprador en planta {(destino.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : destino)}" +
+                    $"{(clausula.Basico.DestinoCodigoSap.Equals("1068") ? "" : $", localidad {clausula.Basico.DestinoLocalidad}, de la Provincia de {clausula.Basico.DestinoProvincia}")}" +
+                    $". Queda establecido que toda tasa contribución, impuesto provincial y/o municipal que grave la presente operación será a cargo de la parte vendedora.";
             }
             return res;
-        }
-
-        private string ReemplazarSanLorenzo(string palabra)
-        {
-            return palabra.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : palabra;
         }
     }
 }
