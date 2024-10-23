@@ -340,7 +340,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         codListaAttrPrecioUnit.Value = "0";
                         decisionDeclaraPrecioUnitElement.Attributes.Append(codListaAttrPrecioUnit);
 
-                        nodeList.Add(decisionDeclaraPrecioUnitElement);
+                        detalleContratoElement.AppendChild(decisionDeclaraPrecioUnitElement);
 
                         // Crear el elemento "DecisionDeclaraCantidad"
                         XmlElement decisionDeclaraCantidadElement = xmlDoc.CreateElement("DecisionDeclaraCantidad");
@@ -490,7 +490,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                         // Agregar "PrecioTotal"
                         XmlElement precioTotalElement = xmlDoc.CreateElement("PrecioTotal");
-                        precioTotalElement.InnerText = contrato.Monto.ToString();
+                        if(contrato.Monto.HasValue) precioTotalElement.InnerText = contrato.Monto.Value.ToString("F2", CultureInfo.InvariantCulture);
                         insumosElement.AppendChild(precioTotalElement);
 
                         // Agregar otros elementos vacíos
@@ -662,7 +662,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     // Agregar el elemento "NumeroDeclaracion"
                     XmlElement numeroDeclaracionElement = xmlDoc.CreateElement("NumeroDeclaracion");
-                    numeroDeclaracionElement.InnerText = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+                    if(estadoSAP.NumeroSio > 0) numeroDeclaracionElement.InnerText = estadoSAP.NumeroSio.ToString();
                     sioGranosElement.AppendChild(numeroDeclaracionElement);
 
                     // Crear el elemento "DetalleDeclaracion"
