@@ -133,7 +133,7 @@ $("#generar-confirma").click(function () {
                     cssClass: 'k-button',
                     action: function (dialogItself) {
                         dialogItself.close();
-                        window.location.href = `/Confirma/GenerarConfirma`;
+                        window.history.back();
                     }
                 }],
                 onshown: function (dialog) {
