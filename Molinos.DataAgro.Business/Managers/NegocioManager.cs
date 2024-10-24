@@ -959,6 +959,7 @@ namespace Molinos.DataAgro.Business.Managers
             var tipoNegocioHabilitados = repositorio.Listar<TipoNegocioHabilitadoSinBoleto, int>(x => x.TipoNegocioId);
             var provinciaNoHabilitados = repositorio.Listar<ProvinciaNoHabilitadoSinBoleto, int>(x => x.ProvinciaId); //no hay ABM para que los usuarios gestionen la tabla y BoletoCompraNetProvincia cubre la misma función
             var provinciasHabilitadas = repositorio.Listar<BoletoCompraNetProvincia, int>(a => a.ProvinciaId, x => x.BoletoCompraNetId == (int)EnumBoletoCompraNet.SIN_BOLETO);
+            bool esProductor = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor;
 
             if (!materialesHabilitados.Any(x => x == contrato.MaterialId))
             {
@@ -1002,6 +1003,11 @@ namespace Molinos.DataAgro.Business.Managers
             if (!conCorredor && operacionHabilitada.OperacionDirecta != true)
             {
                 resultado.Error("Operacion", "Las operaciones directas (sin corredor) no están habilitadas sin boleto.\n\n");
+                return resultado;
+            }
+            if (contrato.ProvinciaId == 12 && esProductor)
+            {
+                resultado.Error("Productor Santa Fe", "La provincia de Santa Fe no está habilitada para que los productores operen sin boleto.\n\n");
                 return resultado;
             }
             if (contrato.Warrant == true || contrato.CD == true)
