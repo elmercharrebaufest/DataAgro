@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClasificacionDescripcion { get; set; }
         public int? DestinoId { get; set; }
         public string DestinoDescripcion { get; set; }
+        public string DestinoCodigoSap { get; set; }
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }

@@ -62,12 +62,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
-                    res.Texto += $"a {NumeroConSeparadores(clausula.Basico.PrecioNeto)} {DivisaSimbolica(clausula.Basico.Moneda)} ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada, ";
+                    res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {DivisaSimbolica(clausula.Basico.Moneda)} ({DivisaEnLetras(clausula.Basico.Moneda)} {DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada";
 
                 }
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true)
                 {
-                    res.Texto += "con precio a fijar ";
+                    res.Texto += "con precio a fijar";
                 }
                 else if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
                 {
@@ -76,9 +76,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
 
                 }
-                res.Texto += $", puesta sobre camión en: Planta {DevolverRicardone(clausula.Basico.DestinoDescripcion)} " +
-                       $"Localidad de {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. A todos los efectos impositivos los vendedores declaran que " +
-                       $"la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
+
+                string destino = clausula.Basico.DestinoDescripcion;
+                res.Texto += $", puesta sobre camión en: Planta {(destino.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : destino)}" +
+                       $"{(clausula.Basico.DestinoCodigoSap.Equals("1068") ? "" : $", localidad de {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}")}" +
+                       $". A todos los efectos impositivos los vendedores declaran que la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción. ";
                 if (clausula.Basico.Consignatario == true)
                 {
                     res.Texto += "El vendedor actúa en carácter de consignatario. ";
@@ -129,15 +131,5 @@ namespace Molinos.DataAgro.Business.Procesamiento
             return divisa == "USD" ? Text.USD : Text.ARP;
         }
 
-        private string NumeroConSeparadores(decimal? numero)
-        {
-            var objNumberFormatInfo = new NumberFormatInfo() { NumberGroupSeparator = "." };
-            return numero.GetValueOrDefault().ToString("#,###.##", objNumberFormatInfo);
-        }
-
-        private string DevolverRicardone(string cadena)
-        {
-            return cadena == "San Lorenzo" ? "San Lorenzo o Ricardone" : cadena;
-        }
     }
 }

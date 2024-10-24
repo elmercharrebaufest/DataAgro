@@ -921,7 +921,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var childFilter in filtro.Filters)
                 {
                     // Manejar filtros 'ClaseNegocio'
-                    if (childFilter.Field == "ClaseNegocio")
+                    if (childFilter.Field == "ClaseNegocioId")
                     {
                         childFilter.Field = "TipoNegocioId";
 
@@ -948,7 +948,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                     }
                     // Manejar filtros 'ContratoSAP' con operador 'gte' y si solo hay uno
-                    else if (childFilter.Field == "NegocioSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "NegocioSAP") == 1)
+                    else if (childFilter.Field == "ContratoSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "ContratoSAP") == 1)
                     {
                         // Interpretar el valor como una lista de contratos y crear filtros eq
                         var contratos = childFilter.Value.ToString().Split(';');
@@ -969,7 +969,7 @@ namespace Molinos.DataAgro.Business.Managers
                         // Añadir el nuevo filtro y continuar con los demás filtros
                         modifiedFilters.Add(contratoSapLogicFilter);
                     }
-                    else if (childFilter.Field == "NegocioSAP")
+                    else if (childFilter.Field == "ContratoSAP")
                     {
                         childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
                         childFilter.Field = ObtenerTextoNegocio(claseNegocio);
