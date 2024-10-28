@@ -793,7 +793,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             },
                             TipoDocumento = new LoteDocumentoCabeceraDocumentoTipoDocumento()
                             {
-                                CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "",
+                                CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "",
                                 Text = new List<string>().ToArray()
                             },
                             Formulario = new LoteDocumentoCabeceraDocumentoFormulario()

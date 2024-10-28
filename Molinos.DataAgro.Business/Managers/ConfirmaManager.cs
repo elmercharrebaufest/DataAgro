@@ -444,7 +444,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             new XElement("CabeceraDocumento",
                                 new XElement("Bolsa", new XAttribute("CodLista", contrato.BolsaConfirma)),
-                                new XElement("TipoDocumento", new XAttribute("CodLista", contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "")),
+                                new XElement("TipoDocumento", new XAttribute("CodLista", contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
                                 new XElement("Formulario", new XAttribute("formversion", "1.04"))
                             ),//Fin Nodo CabeceraDocumento
 
