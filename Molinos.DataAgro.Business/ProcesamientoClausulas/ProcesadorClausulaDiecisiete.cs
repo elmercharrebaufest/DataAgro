@@ -23,9 +23,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
             var datosBoleto = EstadoBoleto.EstadoBoleto(clausula.Basico.ContratoSAP, "");
             var condiciones = datosBoleto.CondicionFijacion.FirstOrDefault();
-
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y NO ES POSICIÓN PASE
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (!clausula.Basico.TipoPosicionCBOTId.HasValue || clausula.Basico.TipoPosicionCBOTId.Value != 3))
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (!clausula.Basico.TipoPosicionCBOTId.HasValue || clausula.Basico.TipoPosicionCBOTId.Value != (int)EnumTipoPosicionCBOT.PASE) && clausula.Basico.EsFason != true && clausula.Basico.PrestamoDevolucion != true)
             {
                 res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
                     $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
@@ -34,7 +33,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     $"Únicamente a los efectos del impuesto de sellos las partes acuerdan que el precio de referencia corresponde a Pizarra Rosario.";
             }
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y ES POSICIÓN PASE
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.TipoPosicionCBOTId.HasValue && clausula.Basico.TipoPosicionCBOTId.Value == 3)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.TipoPosicionCBOTId.HasValue && clausula.Basico.TipoPosicionCBOTId.Value == (int)EnumTipoPosicionCBOT.PASE && clausula.Basico.EsFason != true && clausula.Basico.PrestamoDevolucion != true)
             {
                 if (clausula.Basico.ImporteBonificacion.HasValue && clausula.Basico.ImporteBonificacion.Value != 0)
                 {

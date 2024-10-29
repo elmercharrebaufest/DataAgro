@@ -1,22 +1,19 @@
 ﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IBoletoManager
     {
         DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null);
-        BoletoResult GrabarBoleto(List<int> tipoNegocios, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo);
+        BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, BoletoDto boleto, List<int> equipo);
         string ObtenerIdentDescarga();
         byte[] BoletoEnByte(string archivoUrl);
-        List<string> FiltrarNegociosPorFecha(string desde, string hasta, int negocio);
-        List<string> FiltrarNegociosNumeroSAP(int negocioDesde, int negocioHasta, int tipoNegocio);
-        bool ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos);
+        void ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos);
+        BoletoDto ValidarNegocioParaGenerarBoleto(BasicoContrato negocio);
+        List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
+        DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo);
+        string ValidarNegocio(string negocioSAP, List<int> equipo);
     }
 }

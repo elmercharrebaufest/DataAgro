@@ -1053,9 +1053,6 @@ function CreateGridInformeCompraNet() {
                         Material: "Soja"
                     }, {
                         Material: "Girasol"
-                    }, {
-                    }, {
-                        Material: "Sorgo"
                     }]
                 }, width: 60, minResizableWidth: 60, attributes: {
                     "class": "mobile-xs"

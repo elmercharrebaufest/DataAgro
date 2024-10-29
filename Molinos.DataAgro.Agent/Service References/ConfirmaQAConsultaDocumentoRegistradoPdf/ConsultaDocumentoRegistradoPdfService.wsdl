@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ConsultaDocumentoRegistradoPdfService" targetNamespace="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf">
+      <xsd:element name="ConsultaDocumentoRegistradoPdf">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="CodigoBolsa" type="xsd:integer" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="CuitEmpresa" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="IdDocumento" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConsultaDocumentoRegistradoPdfResult" type="tns:ConsultaDocumentoRegistradoPdfResult" />
+      <xsd:complexType name="ConsultaDocumentoRegistradoPdfResult">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="NombreArchivo" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PdfBinario" type="xsd:base64Binary" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ConsultaDocumentoRegistradoPdfErrores" />
+          <xsd:element xmlns:q1="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema" minOccurs="1" maxOccurs="1" name="EstadoConsulta" type="q1:consultaEstadoWS" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ConsultaDocumentoRegistradoPdfErrores">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Error" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/WSConsultaDocumentoResponseSchema">
+      <xsd:simpleType name="consultaEstadoWS">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="1" />
+          <xsd:enumeration value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ConsultaDocumentoRegistradoPdfInvoke">
+    <wsdl:part name="ConsultaDocumentoRegistradoPdf" element="tns:ConsultaDocumentoRegistradoPdf" />
+  </wsdl:message>
+  <wsdl:message name="ConsultaDocumentoRegistradoPdfResponse">
+    <wsdl:part name="ConsultaDocumentoRegistradoPdfResult" element="tns:ConsultaDocumentoRegistradoPdfResult" />
+  </wsdl:message>
+  <wsdl:portType name="IConsultaDocumentoRegistradoPdfService">
+    <wsdl:operation name="ConsultaDocumentoRegistradoPdf">
+      <wsdl:input wsaw:Action="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf/IConsultaDocumentoRegistradoPdfService/ConsultaDocumentoRegistradoPdf" name="ConsultaDocumentoRegistradoPdfInvoke" message="tns:ConsultaDocumentoRegistradoPdfInvoke" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf/IConsultaDocumentoRegistradoPdfService/ConsultaDocumentoRegistradoPdfResponse" name="ConsultaDocumentoRegistradoPdfResponse" message="tns:ConsultaDocumentoRegistradoPdfResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:IConsultaDocumentoRegistradoPdfService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ConsultaDocumentoRegistradoPdf">
+      <soap:operation soapAction="http://confirma.com.ar/gd/2020/04/consultadocumentoregistradopdf/IConsultaDocumentoRegistradoPdfService/ConsultaDocumentoRegistradoPdf" style="document" />
+      <wsdl:input name="ConsultaDocumentoRegistradoPdfInvoke">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ConsultaDocumentoRegistradoPdfResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ConsultaDocumentoRegistradoPdfService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

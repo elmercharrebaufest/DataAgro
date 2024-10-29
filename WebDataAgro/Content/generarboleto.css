@@ -9,9 +9,9 @@
     margin-bottom: 30px;
     text-align: right;
     position: relative;
-    width:100%;
+    width: 100%;
     height: 100%;
-   padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 .campo-span {
@@ -33,4 +33,47 @@
 
 .modal .confirmado-modal div {
     background: #008e61 !important;
+}
+
+#generar {
+    height: 37px;
+    BACKGROUND: green;
+    background: #017940 !important;
+    color: white;
+    color: #fff;
+    padding: 4px;
+    border-radius: 5px !important;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#filtrarBoletos {
+    height: 37px;
+    BACKGROUND: green;
+    background: #017940 !important;
+    color: white;
+    color: #fff;
+    padding: 4px;
+    border-radius: 5px !important;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.modal .confirmado-modal div {
+    background: #008e61 !important;
+    color: white;
+}
+
+.k-grid .row-checkbox {
+    cursor: pointer;
+}
+
+.k-header {
+    font-size: 12px;
+    font-family: "G-Open Sans-n4", Arial;
+}
+
+#contratos-grid .k-grid-content td {
+    font-family: "G-Open Sans-n4", Arial;
+    font-size: 12px;
 }

@@ -120,7 +120,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ComercialId = 44,
                         ComercialCreadorId = 44, //Id DataAgro en prod
 
-                    }).ToList();
+                    }).Where(a => !string.IsNullOrEmpty(a.Posicion)) 
+                    .ToList();
+
                     var materiales = repositorio.Listar<Material>();
 
                     foreach (var item in listaAgenteCompra)
@@ -167,6 +169,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
             if (item != null)
             {
+                if (string.IsNullOrEmpty(item.MaturityMonthYear))
+                {
+                    logger.Error($"ObtenerCampania - No se puede grabar MATBA porque el instrumento con SecurityID {tradeCaptureReportInstrument.SecurityID} no tiene la posición (MaturityMonthYear).");
+                    return 0;
+                }
                 var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
                 var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
                 int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
@@ -187,6 +194,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
             if (item != null)
             {
+                if (string.IsNullOrEmpty(item.MaturityMonthYear))
+                {
+                    logger.Error($"ObtenerPosicion - No se puede grabar MATBA porque el instrumento con SecurityID {tradeCaptureReportInstrument.SecurityID} no tiene la posición (MaturityMonthYear).");
+                    return "";
+                }
                 return item.MaturityMonthYear.Substring(4, 2) + "." + item.MaturityMonthYear.Substring(0, 4);
             }
             else

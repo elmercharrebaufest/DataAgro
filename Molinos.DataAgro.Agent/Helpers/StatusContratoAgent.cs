@@ -68,22 +68,15 @@ namespace Molinos.DataAgro.Agent
 
                     long numsio = 0;
                     long.TryParse(valor2.NUM_SIO, out numsio);
-                    logger.Debug("valor.EX_STATUS: ." + valor2.STATUS + ".");
-                    logger.Debug("NUM_SIO: ." + numsio + ".");
+                    logger.Debug($"CONTRATO: {valor2.CONTRATO}. EX_STATUS: {valor2.STATUS}. NUM_SIO: {numsio}. MENSAJE: {valor2.MENSAJE}");
                     var estado = new EstadoSAPDto()
                     {
+                        ContratoSap = valor2.CONTRATO,
                         NumeroSio = numsio,
-                        Status = valor2.STATUS
+                        Status = valor2.STATUS,
+                        Mensaje = valor2.MENSAJE
                     };
                     return estado;
-                    //if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
-                    //{
-                    //    return "";
-                    //}
-                    //else
-                    //{
-                    //    return "El contrato ya no se encuentra en slip o fue informado a SIO granos";
-                    //}
 
                 }
                 catch (Exception e)
@@ -127,15 +120,15 @@ namespace Molinos.DataAgro.Agent
                     {
                         foreach (var item in valor.EX_SALIDA)
                         {
-
                             long numsio = 0;
                             long.TryParse(item.NUM_SIO, out numsio);
-                            logger.Debug($"Contrato: .{item.CONTRATO}. EX_STATUS: .{item.STATUS}. NUM_SIO: .{numsio}.");
+                            logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}");
                             var estado = new EstadoSAPDto()
                             {
                                 NumeroSio = numsio,
                                 Status = item.STATUS,
                                 ContratoSap = item.CONTRATO,
+                                Mensaje = item.MENSAJE
                             };
                             estados.Add(estado);
                         }

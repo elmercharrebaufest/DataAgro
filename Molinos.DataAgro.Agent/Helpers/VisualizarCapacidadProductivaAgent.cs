@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
-using Autofac.Extras.NLog;
-using System.Configuration;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.VisualizarCapacidadProductiva;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -19,8 +19,9 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -43,7 +44,7 @@ namespace Molinos.DataAgro.Agent
                     if (materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault() == null ||
                         cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault() == null)
                     {
-                        logger.Error("Visualizar Capacidad Productiva: no se pudo agregar " + item.ToJson());
+                        logger.Error($"VisualizarCapacidadProductivaAgent - No se pudo agregar para el CUIT {proveedor.CUIT}: {item.ToJson()}");
                     }
                     else
                     {
@@ -65,8 +66,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception e)
             {
-                logger.Error("No se pudo obtener la capacidad productiva para el ID " + proveedorID);
-                logger.Error(e);
+                logger.Error($"No se pudo obtener la capacidad productiva para el proveedor con ID {proveedorID}. ", e);
                 return new List<CapacidadProductivaDto> { };
             }
 

@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Business
 
     public class HabilitacionBoletoManager : IHabilitacionBoletoManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public HabilitacionBoletoManager(ILogger logger, IRepositorio repositorio)
@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business
 
         public List<TipoNegocioDetalleDto> ListarTipoNegociosDetalle()
         {
-           return repositorio.Listar<TipoNegocioDetalle, TipoNegocioDetalleDto>(x => new TipoNegocioDetalleDto()
+            return repositorio.Listar<TipoNegocioDetalle, TipoNegocioDetalleDto>(x => new TipoNegocioDetalleDto()
             {
                 Id = x.Id,
                 Descripcion = x.Descripcion,
@@ -32,6 +32,27 @@ namespace Molinos.DataAgro.Business
                 CartaOferta = x.CartaOferta,
                 Confirma = x.Confirma,
                 BoletoFisico = x.BoletoFisico,
+            });
+        }
+
+        public List<BoletoCompraNetProvinciaDto> ListarBoletoCompraNetProvincia()
+        {
+            return repositorio.Listar<BoletoCompraNetProvincia, BoletoCompraNetProvinciaDto>(x => new BoletoCompraNetProvinciaDto()
+            {
+                Id = x.Id,
+                BoletoCompraNetId = x.BoletoCompraNetId,
+                ProvinciaId = x.ProvinciaId,
+                BoletoDescripcion = x.BoletoCompraNet.Descripcion,
+                ProvinciaNombre = x.Provincia.Nombre
+            });
+        }
+        
+        public List<BoletoCompraNetDto> ListarBoletoCompraNet()
+        {
+            return repositorio.Listar<BoletoCompraNet, BoletoCompraNetDto>(x => new BoletoCompraNetDto()
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion
             });
         }
 
@@ -55,28 +76,32 @@ namespace Molinos.DataAgro.Business
             }
         }
 
-        public Resultado AgregarHabilitacionBoleto(TipoNegocioDetalleDto tipoDetalle)
+        public Resultado AgregarTipoNegocioDetalle(TipoNegocioDetalleDto tipoDetalle)
         {
-            var resultado = Validar(tipoDetalle);
-            repositorio.Agregar(new TipoNegocioDetalle()
+            var resultado = ValidarTipoNegocioDetalle(tipoDetalle);
+            if (!resultado.HayError)
             {
-                TipoNegocioId = tipoDetalle.TipoNegocioId,
-                Descripcion = tipoDetalle.Descripcion,                
-            });
-            
-            try
-            {
-                repositorio.GuardarCambios();
-            }
-            catch (Exception ex)
-            {
-                logger.Error("", ex);
+                repositorio.Agregar(new TipoNegocioDetalle()
+                {
+                    TipoNegocioId = tipoDetalle.TipoNegocioId,
+                    Descripcion = tipoDetalle.Descripcion,
+                });
+
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("AgregarTipoNegocioDetalle ", ex);
+                    resultado.Error("AgregarTipoNegocioDetalle", ex.Message);
+                }
             }
 
             return resultado;
         }
 
-        private Resultado Validar(TipoNegocioDetalleDto tipoDetalle)
+        private Resultado ValidarTipoNegocioDetalle(TipoNegocioDetalleDto tipoDetalle)
         {
             var error = new Resultado();
             if (tipoDetalle.TipoNegocioId == 0)
@@ -90,6 +115,57 @@ namespace Molinos.DataAgro.Business
 
             return error;
         }
+
+        public Resultado AgregarBoletoCompraNetProvincia(BoletoCompraNetProvinciaDto boletoProvincia)
+        {
+            var resultado = new Resultado();
+            if (boletoProvincia.BoletoCompraNetId == 0)
+            {
+                resultado.Errores.Add(new ErrorMessage("Se debe elegir un tipo de boleto."));
+            }
+            else
+            {
+                repositorio.Agregar(new BoletoCompraNetProvincia
+                {
+                    BoletoCompraNetId = boletoProvincia.BoletoCompraNetId,
+                    ProvinciaId = boletoProvincia.ProvinciaId
+                });
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    resultado.Error("AgregarBoletoCompraNetProvincia", ex.Message);
+                }
+            }
+            return resultado;
+        }
+
+        public Resultado EliminarBoletoCompraNetProvincia(int id)
+        {
+            Resultado resultado = new Resultado();
+            try
+            {
+                var boleto = repositorio.Obtener<BoletoCompraNetProvincia>(id);
+                if (boleto != null)
+                {
+                    repositorio.Remover(boleto);
+                    repositorio.GuardarCambios();
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage(400, "No existe un registro con ID " + id));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error en EliminarBoletoCompraNetProvincia ", ex);
+                resultado.Error("400", ex.Message);
+            }
+            return resultado;
+        }
+
     }
 }
 

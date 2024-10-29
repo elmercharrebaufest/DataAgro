@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClasificacionDescripcion { get; set; }
         public int? DestinoId { get; set; }
         public string DestinoDescripcion { get; set; }
+        public string DestinoCodigoSap { get; set; }
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
@@ -122,7 +123,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<PrecioPactadosDto> PreciosPactados { get; set; }
         public decimal? PrecioNeto { get; set; }
         public bool? Pizarra { get; set; }
-        public int? StandardCalidadId { get; set; }
+        public int? StandardDeCalidadId { get; set; }
         public string StandardDeCalidadDescripcion { get; set; }
         public bool? PagoDiferido { get; set; }
         public int? PagoDiferidoTerceroId { get; set; }
@@ -245,7 +246,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int KgMaximo { get; set; }
         public int? ProveedorComisionistaId { get; set; }
         public string RazonSocialProveedorComisionista { get; set; }
-        public int StandardDeCalidadId { get; set; }
         public string DestinoLocalidad { get; set; }
         public string DestinoProvincia { get; set; }
         public string MonedaCanjeDescripcion { get; set; }
@@ -278,11 +278,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? ConDescarga { get; set; }
         public bool? DolarExportador { get; set; }
         public int? TipoDeCambioId { get; set; }
-    }
-
-    public class StoredPorContratoResult
-    {
-        public List<BasicoContrato> BasicoContratoTraerPorFiltro { get; set; }
-        public List<BasicoContrato> ReporteContratoContratoTraerPorFiltro { get; set; }
+        public string LocalidadConfirma { get; set; }
+        public string BolsaConfirma { get; set; }
+        public string CampanaConfirma { get; set; }
+        public string ProvinciaConfirma { get; set; }
+        public string DestinoConfirma { get; set; }
+        public bool? ConfirmadoSAP { get; set; }
     }
 }

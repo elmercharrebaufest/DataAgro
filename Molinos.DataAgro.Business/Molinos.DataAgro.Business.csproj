@@ -112,7 +112,6 @@
       <HintPath>..\packages\JsonDiffPatch.Net.2.2.0\lib\net45\JsonDiffPatchDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WebDataAgro\ExternalLibs\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -351,10 +350,12 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausula.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCatorce.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYDos.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarenta.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCinco.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCuatro.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYDos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYTres.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSeis.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYOcho.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSiete.cs" />

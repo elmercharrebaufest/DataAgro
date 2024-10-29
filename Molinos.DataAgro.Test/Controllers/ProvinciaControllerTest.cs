@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void AplicarProvinciaTest()
         {
-            provinciaManagerMock.Setup(x => x.TraerProvincia(1)).Returns(new ProvinciaDto
+            provinciaManagerMock.Setup(x => x.ObtenerProvincia(1)).Returns(new ProvinciaDto
             {
                 ProvinciaId = 1,
                 Nombre = "A"

@@ -217,6 +217,12 @@
     <Compile Include="Helpers\AzureAgent.cs" />
     <Compile Include="Helpers\ClienteBolsaRosarioAPIAgent.cs" />
     <Compile Include="Helpers\ClienteResearchAgent.cs" />
+    <Compile Include="Helpers\ConfirmaConsultaDocumentosAgent.cs" />
+    <Compile Include="Helpers\ConfirmaConsultaDocumentosRegistradosAgent.cs" />
+    <Compile Include="Helpers\ConfirmaConsultaLoteAgent.cs" />
+    <Compile Include="Helpers\ConfirmaLoteBorradorAgent.cs" />
+    <Compile Include="Helpers\ConfirmaLoteDocumentosAgent.cs" />
+    <Compile Include="Helpers\ConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Helpers\EnviarCapacidadProductivaSAPAgent.cs" />
     <Compile Include="Helpers\ValidarPesificacionesAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionParcialAgent.cs" />
@@ -296,6 +302,66 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\CartasDePortePendienteAplicar\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentosBorrador\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaDocumentos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaEmpresas\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaLote\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQALoteBorradorService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQALoteDocumentosAsync\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ConfirmaQALoteDocumentos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -576,6 +642,45 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ComprasDetalle\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE1.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\ConsultaDocumentoRegistradoPdfService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\ConsultaDocumentosBorradorService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\ConsultaDocumentosControlFirmaXmlService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\ConsultaDocumentoItemClienteService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\ConsultaDocumentosRegistradosService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\Molinos.DataAgro.Agent.ConfirmaQAConsultaDocumentosRegistrados.DocumentosRegistradoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\ConsultaDocumentosService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaEmpresas\ConsultaEmpresasService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaLote\ConsultaLoteDocumentosService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaLote\Molinos.DataAgro.Agent.ConfirmaQAConsultaLote.consultaLoteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaLote\Molinos.DataAgro.Agent.ConfirmaQAConsultaLote.consultaLoteResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\ConsultaDocumentoTrackingInteraccionesFechasService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\LoteBorradorService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService.altaLoteResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteBorradorService\Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService.LoteBorradoresResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\LoteDocumentosAsyncService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\Molinos.DataAgro.Agent.ConfirmaQALoteDocumentosAsync.altaLoteResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\Molinos.DataAgro.Agent.ConfirmaQALoteDocumentosAsync.LoteDocumentosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentos\LoteDocumentosService.wsdl" />
+    <None Include="Service References\ConfirmaQALoteDocumentos\Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos.altaLoteResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentos\Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos.LoteDocumentosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ConsultarEstadoBoleto\Molinos.DataAgro.Agent.ConsultarEstadoBoleto.SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -844,6 +949,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ArchivoINVFilaDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionAutomatismoGranoEnRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionDeEstablecimientoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -853,7 +961,19 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionNoGranoEnRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ATAPuertoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutomatismoGranoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutomatismoNoGranoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutomatismoTipoLlamadoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutorizacionCamionDto.datasource">
@@ -907,10 +1027,16 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CallePorRecorridoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CallePreBalanzaPlayaInternaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CamaraDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CampoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CantidadPrecaladoCircularHelper.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaracteristicaConfiguracionDeTablaDto.datasource">
@@ -932,6 +1058,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaDePorteRegistradaServicioMonsantoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaPorteDerivadoGranarioDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaPorteDto.datasource">
@@ -973,10 +1102,16 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ColaImpresionDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ComercialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConfigSensoresDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConfiguracionAutomatizacionEtapasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConfiguracionCalleHidraulicaDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConfiguracionGeneralDto.datasource">
@@ -1027,6 +1162,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDeInstanciaDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDerivadoGranarioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDeWorkflowsDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1066,6 +1204,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DocumentoExternoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DomicilioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EficienciaCaladoValoresDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1100,6 +1241,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionAlControlDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionAlControlProveedorDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionAlDescuentoDto.datasource">
@@ -1150,6 +1294,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoToneladasRangoDeDiasDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HistorialMensajeCartelLedDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HistoricoInhabilitacionCamionDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1183,6 +1330,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InfoCaladoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InfoCalleDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InfoPatenteDeCalleDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1202,6 +1352,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LectorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LecturaPuestoDeTrabajoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LetraDto.datasource">
@@ -1300,7 +1453,13 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfClienteDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfComercialDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConfigSensoresDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConfiguracionCalleHidraulicaDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConsultaCasilleroAntiguedadDtoT7DPfI5_P.datasource">
@@ -1360,6 +1519,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionAlControlDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionAlControlProveedorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionAlDescuentoDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1405,6 +1567,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteBiotecnologiaListaDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteInaseDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteListaDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1427,6 +1592,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMovimientoDeTercerosListaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMuestraDeInaseDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMuestraEnvioACamaraAuditoriaDtoT7DPfI5_P.datasource">
@@ -1549,10 +1717,16 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfVisualizacionBarreraDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LlamadoAutomaticoHidraulicaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LocalidadDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LogActividadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LogDispositivoDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteAuditoriaDto.datasource">
@@ -1562,6 +1736,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteInaseDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MailAvisoStockDto.datasource">
@@ -1628,6 +1805,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraDeHumedadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraDeInaseDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraEnvioACamaraBiotecnoligiaDto.datasource">
@@ -1721,6 +1901,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PuestosDeCargaDescargaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PuntoDeCargaDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RamalFerroviarioDto.datasource">
@@ -1835,6 +2018,15 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoDocumentoIngreso.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoEmbalajeDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoVariedadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoVariedadPorMaterialDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoVehiculoBodegaDto.datasource">
@@ -1956,6 +2148,9 @@
     <None Include="Service References\ScatoRepositorio\ServicioRepositorio15.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio16.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ScatoRepositorio\ServicioRepositorio2.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -2057,6 +2252,18 @@
     <WCFMetadataStorage Include="Service References\AnularFijacionVirtual\" />
     <WCFMetadataStorage Include="Service References\CapacidadProductivaDisponible\" />
     <WCFMetadataStorage Include="Service References\CartasDePortePendienteAplicar\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentosBorrador\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaDocumentos\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaEmpresas\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaLote\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQALoteBorradorService\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQALoteDocumentosAsync\" />
+    <WCFMetadataStorage Include="Service References\ConfirmaQALoteDocumentos\" />
     <WCFMetadataStorage Include="Service References\ConsultarEstadoBoleto\" />
     <WCFMetadataStorage Include="Service References\ContratoKgPendientes\" />
     <WCFMetadataStorage Include="Service References\ContratosAPesificar\" />
@@ -2615,6 +2822,78 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </Content>
+    <None Include="Service References\ConfirmaQALoteBorradorService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQALoteBorradorService\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteBorradorService\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaEmpresas\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaEmpresas\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaEmpresas\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosItemCliente\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentosRegistrados\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaLote\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaLote\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQAConsultaLote\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteDocumentosAsync\configuration91.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteDocumentos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfirmaQALoteDocumentos\configuration.svcinfo" />
+    <None Include="Service References\ConfirmaQALoteDocumentos\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ObtenerMailProveedor\configuration91.svcinfo" />

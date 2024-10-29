@@ -1,22 +1,15 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
-using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -27,12 +20,10 @@ namespace Molinos.DataAgro.Test.Managers
         private ProvinciaManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
-        private JavaScriptSerializer serializer;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
@@ -44,7 +35,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerTodoProvinciaTestOk()
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Provincia, ProvinciaIni>>>(), It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<ProvinciaIni>() { new ProvinciaIni { ProvinciaId = 1, Nombre="1" } });
+                            .Returns(new List<ProvinciaIni>() { new ProvinciaIni { ProvinciaId = 1, Nombre = "1" } });
             var result = target.TraerTodoProvincia();
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Provincia, ProvinciaIni>>>(), It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.NotNull(result);
@@ -52,13 +43,13 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void TraerProvinciaOk()
+        public void ObtenerProvinciaOk()
         {
-            
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Provincia, bool>>>(),It.IsAny<Expression<Func<Provincia, ProvinciaDto>>>()))
-                .Returns( new ProvinciaDto { ProvinciaId=1 } );
-            
-            var resultado = target.TraerProvincia(1);
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<Expression<Func<Provincia, ProvinciaDto>>>()))
+                .Returns(new ProvinciaDto { ProvinciaId = 1 });
+
+            var resultado = target.ObtenerProvincia(1);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<Expression<Func<Provincia, ProvinciaDto>>>()), Times.Once);
 
             Assert.NotNull(resultado);
@@ -69,7 +60,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var prov = new Provincia { ProvinciaId = 1, Nombre = "a" };
             repositorioMock.Setup(y => y.Obtener<Provincia>(It.IsAny<int>()))
-                .Returns( new Provincia { ProvinciaId = 1 });
+                .Returns(new Provincia { ProvinciaId = 1 });
 
             var resultado = target.GrabarProvincia(prov);
             repositorioMock.Verify(x => x.Obtener<Provincia>(It.IsAny<int>()), Times.Once);
@@ -113,7 +104,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Provincia, ProvinciaDto>>>(), It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
             Assert.NotNull(resultado);
-            Assert.AreEqual(1,resultado.Count);
+            Assert.AreEqual(1, resultado.Count);
         }
     }
 }

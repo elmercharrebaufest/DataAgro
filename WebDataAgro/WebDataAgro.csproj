@@ -499,6 +499,9 @@
     <Content Include="Content\bootstrap-toggle.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bulma.min.css" />
+    <Content Include="Content\confirma.css" />
+    <Content Include="Content\Images\ambienteStaging.png" />
+    <Content Include="Content\Images\ambienteUATda.png" />
     <Content Include="Content\LeaFlet\Control.FullScreen.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1155,6 +1158,8 @@
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\FAQ.js" />
     <Content Include="Scripts\App\DescargarConfirma.js" />
+    <Content Include="Scripts\App\GestionarClausulasConfirma.js" />
+    <Content Include="Scripts\App\GestionarClausulas.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\GenerarConfirma.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
@@ -2941,7 +2946,7 @@
     <Content Include="Views\SugerenciaCupo\SolicitudExtraordinaria.cshtml" />
     <Content Include="Views\SugerenciaCupo\MensajesSugerencia.cshtml" />
     <Content Include="Views\HabilitacionBoleto\Index.cshtml" />
-    <Content Include="Views\HabilitacionBoleto\_ListaHabilitados.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\_ListaTipoNegocioDetalle.cshtml" />
     <Content Include="Views\HabilitacionBoleto\AgregarModal.cshtml" />
     <Content Include="Views\Boleto\GenerarBoletos.cshtml" />
     <Content Include="Views\Boleto\ModalBoletoGenerado.cshtml" />
@@ -2979,9 +2984,14 @@
     <Content Include="Views\Confirma\ModalConfirmaGenerado.cshtml" />
     <Content Include="Views\Confirma\DescargarConfirma.cshtml" />
     <Content Include="Views\Boleto\_ModalReenviarBoletos.cshtml" />
+    <Content Include="Views\Boleto\GestionarClausulas.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\_ListaBoletoCompraNetProvincia.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\AgregarBoletoProvinciaModal.cshtml" />
+    <Content Include="Views\Confirma\GestionarClausulas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="obj\Release\Package\" />
     <Folder Include="Views\SincronizarMaestros\" />
     <Folder Include="Views\TareasProgramadas\" />
   </ItemGroup>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ConsultaDocumentosBorradorService" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="Default_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic128 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax />
+              </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp />
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+              <wsp:Policy>
+                <sp:WssUsernameToken10 />
+              </wsp:Policy>
+            </sp:UsernameToken>
+          </wsp:Policy>
+        </sp:SignedSupportingTokens>
+        <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy />
+        </sp:Wss10>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice">
+      <xsd:element name="ObtenerDocumentosBorrador">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="criteria" type="tns:DocumentoBorradorCriteria" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DocumentoBorradorCriteria">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="CodigoBolsa" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="NumLote" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="CuitPresentante" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ObtenerDocumentosBorradorResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="ObtenerDocumentosBorradorResult" type="tns:ConsultaDocumentosBorradorResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ConsultaDocumentosBorradorResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ResponseBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="DocumentosBorradores" type="tns:ArrayOfDocumentoBorradorResponse" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="IdBolsa" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="NumLote" type="xsd:int" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="EstadoLote" type="xsd:int" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ResponseBase" abstract="true">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Valido" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Messages" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfDocumentoBorradorResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DocumentoBorradorResponse" nillable="true" type="tns:DocumentoBorradorResponse" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DocumentoBorradorResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Orden" type="xsd:int" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Resultado" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IConsultaDocumentosBorradorService_ObtenerDocumentosBorrador_InputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerDocumentosBorrador" />
+  </wsdl:message>
+  <wsdl:message name="IConsultaDocumentosBorradorService_ObtenerDocumentosBorrador_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerDocumentosBorradorResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IConsultaDocumentosBorradorService">
+    <wsdl:operation name="ObtenerDocumentosBorrador">
+      <wsdl:input wsaw:Action="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice/IConsultaDocumentosBorradorService/ObtenerDocumentosBorrador" message="tns:IConsultaDocumentosBorradorService_ObtenerDocumentosBorrador_InputMessage" />
+      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice/IConsultaDocumentosBorradorService/ObtenerDocumentosBorradorResponse" message="tns:IConsultaDocumentosBorradorService_ObtenerDocumentosBorrador_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Default" type="tns:IConsultaDocumentosBorradorService">
+    <wsp:PolicyReference URI="#Default_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ObtenerDocumentosBorrador">
+      <soap:operation soapAction="http://confirma.com.ar/gd/2012/05/consultadocumentosborradorservice/IConsultaDocumentosBorradorService/ObtenerDocumentosBorrador" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ConsultaDocumentosBorradorService">
+    <wsdl:port name="Default" binding="tns:Default">
+      <soap:address location="https://services.staging.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

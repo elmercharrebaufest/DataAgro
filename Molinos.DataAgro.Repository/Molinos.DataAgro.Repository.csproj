@@ -48,7 +48,6 @@
       <HintPath>..\packages\JsonDiffer.0.2.0\lib\net45\JsonDiffer.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WebDataAgro\ExternalLibs\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -208,8 +207,10 @@
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
+    <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
+    <Compile Include="ConsultasEF\TraerConfirmasConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerResearchPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerContratosReporteAFijarPase.cs" />
     <Compile Include="ConsultasEF\TraerExportarAllCapacidadProductiva.cs" />

@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/System" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:complexType name="MulticastDelegate">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System.ComponentModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System.ComponentModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd15" namespace="http://schemas.datacontract.org/2004/07/System" />
+  <xs:complexType name="PropertyChangedEventHandler">
     <xs:complexContent mixed="false">
-      <xs:extension base="tns:Delegate" />
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/System" base="q1:MulticastDelegate" />
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="MulticastDelegate" nillable="true" type="tns:MulticastDelegate" />
-  <xs:complexType name="Delegate">
-    <xs:sequence>
-      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
-    </xs:sequence>
-    <xs:attribute ref="ser:FactoryType" />
-  </xs:complexType>
-  <xs:element name="Delegate" nillable="true" type="tns:Delegate" />
+  <xs:element name="PropertyChangedEventHandler" nillable="true" type="tns:PropertyChangedEventHandler" />
 </xs:schema>

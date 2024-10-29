@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[Centro] (
-    [Id]	INT IDENTITY (1, 1) NOT NULL,
-    [Descripcion]         VARCHAR(50) NOT NULL,
-    [CodigoSap]           VARCHAR(20) NOT NULL
-    CONSTRAINT [PK_Centro] PRIMARY KEY CLUSTERED ([Id] ASC), 
+    [Id] INT IDENTITY (1, 1) NOT NULL,
+    [Descripcion] VARCHAR(50) NOT NULL,
+    [CodigoSap] VARCHAR(20) NOT NULL
+    CONSTRAINT [PK_Centro] PRIMARY KEY CLUSTERED ([Id] ASC),
     [Acopio] BIT NOT NULL DEFAULT 0, 
     [ValidaRedespacho] BIT NOT NULL DEFAULT 0, 
     [LocalidadId] INT NULL,
@@ -16,7 +16,6 @@
     [CodigoConfirma] VARCHAR(50) NULL,
     [CUIT] VARCHAR(20) NULL,
     [RazonSocial] VARCHAR(100) NULL,
+    [CentroPropio] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
-
 );
-

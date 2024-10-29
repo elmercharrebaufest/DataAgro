@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Business
     public class ProvinciaManager : IProvinciaManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public ProvinciaManager(ILogger logger, IRepositorio repositorio)
         {
@@ -38,12 +38,10 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-
-        public ProvinciaDto TraerProvincia(int intProvinciaId)
+        public ProvinciaDto ObtenerProvincia(int intProvinciaId)
         {
-            return repositorio.Obtener<Provincia, ProvinciaDto>(x=>x.ProvinciaId == intProvinciaId, x=> new ProvinciaDto {ProvinciaId=x.ProvinciaId, Nombre=x.Nombre, Inscripto = x.Inscripto }) ?? new ProvinciaDto();
+            return repositorio.Obtener<Provincia, ProvinciaDto>(x => x.ProvinciaId == intProvinciaId, x => new ProvinciaDto { ProvinciaId = x.ProvinciaId, Nombre = x.Nombre, Inscripto = x.Inscripto }) ?? new ProvinciaDto();
         }
-
 
         public Resultado GrabarProvincia(Provincia oProvincia)
         {
@@ -80,7 +78,6 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
-
         public Resultado EliminarProvincia(int intProvinciaId)
         {
             var oEntityErrors = new Resultado();
@@ -101,11 +98,7 @@ namespace Molinos.DataAgro.Business
 
         public List<ProvinciaDto> ListarProvincia(string provincia)
         {
-            return repositorio.Listar<Provincia, ProvinciaDto>(x => new ProvinciaDto { Nombre = x.Nombre, ProvinciaId = x.ProvinciaId },x => provincia == "" || x.Nombre.Contains(provincia));
+            return repositorio.Listar<Provincia, ProvinciaDto>(x => new ProvinciaDto { Nombre = x.Nombre, ProvinciaId = x.ProvinciaId }, x => provincia == "" || x.Nombre.Contains(provincia));
         }
     }
 }
-
-
-
-

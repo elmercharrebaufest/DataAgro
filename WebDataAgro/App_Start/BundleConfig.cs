@@ -308,14 +308,23 @@ namespace WebDataAgro
                                        "~/Scripts/moment.js"
                                        ));
             bundles.Add(new ScriptBundle("~/bundles/GenerarConfirma").Include(
+                                       "~/Scripts/App/Filtros.js",
                                        "~/Scripts/App/GenerarConfirma.js",
-                                       "~/Scripts/KendoExtensions.js",
+                                       "~/Scripts/KendoExtensions.js",                                       
                                        "~/Scripts/moment.js"
                                        ));
             bundles.Add(new ScriptBundle("~/bundles/DescargarConfirma").Include(
                                        "~/Scripts/App/DescargarConfirma.js",
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
+                                       ));
+            bundles.Add(new ScriptBundle("~/bundles/GestionarClausulas").Include(
+                                       "~/Scripts/App/GestionarClausulas.js",
+                                       "~/Scripts/KendoExtensions.js"
+                                       ));
+            bundles.Add(new ScriptBundle("~/bundles/GestionarClausulasConfirma").Include(
+                                       "~/Scripts/App/GestionarClausulasConfirma.js",
+                                       "~/Scripts/KendoExtensions.js"
                                        ));
             bundles.IgnoreList.Clear();
         }

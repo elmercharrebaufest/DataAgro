@@ -22,9 +22,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Enviar(BoletoGeneradoDto boleto)
+        public string EnviarBoleto(BoletoDto boleto)
         {
-            logger.Debug("Enviando boleto del negocio Nro " + (string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.ContratoSAP : boleto.FijacionSAP));
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
                 return "Se actualizan correctamente los datos";
@@ -39,7 +38,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var boletoCompraNet = repositorio.Listar<BoletoCompraNet>();
                 var rq = new Z_MPRFC_ENVIAR_BOLETOS_GENE()
                 {
-                    IM_CONTRATO = string.IsNullOrEmpty(boleto.FijacionSAP) && !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
+                    IM_CONTRATO = boleto.ContratoSAP ?? string.Empty,
                     IM_FECHA_GENE = boleto.FechaGeneracion.ToString("yyyy-MM-dd"),
                     IM_FIJACION = !string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.FijacionSAP : "",
                     IM_GENERADO = "X",
@@ -75,23 +74,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
-                throw e;
+                logger.Error("Error comunicacion SAP en EnviarBoleto ", e);
+                throw;
             }
 
-        }
-
-        private string RellenarEspaciosSAP(string value, int stringLength)
-        {
-            if (value != null)
-            {
-                int cantCeros = stringLength - value.Length;
-                for (int i = 0; i < cantCeros; i++)
-                {
-                    value = " " + value;
-                }
-            }
-            return value;
         }
     }
 }

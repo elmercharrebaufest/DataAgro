@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //SI EL CONTRATO CORRESPONDE A CANJE y es a fijar
 
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true && clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 res.Texto += $"Queda establecido que toda tasa contribución, impuesto provincial y/o municipal que grave la presente operación será a cargo del " +
                     $"Vendedor. Sin perjuicio de ello, se deja expresa constancia que la presente operación de compraventa de mercaderías con pago en especie se " +

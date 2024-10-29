@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -24,15 +25,19 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly IClientePrimaryAPIAgent clientePrimaryAPI;
         private readonly IHttpContextManager httpContextManager;
+        private readonly IAltaTempranaAgent altaTempranaAgent;
+        private readonly ICartasDePortePendienteAplicarAgent ccppPendientesAgent;
 
-
-        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimaryAPIAgent clientePrimaryAPI, IHttpContextManager httpContextManager)
+        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimaryAPIAgent clientePrimaryAPI, IHttpContextManager httpContextManager,
+            IAltaTempranaAgent altaTempranaAgent, ICartasDePortePendienteAplicarAgent ccppPendientesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
             this.clientePrimaryAPI = clientePrimaryAPI;
             this.httpContextManager = httpContextManager;
+            this.altaTempranaAgent = altaTempranaAgent;
+            this.ccppPendientesAgent = ccppPendientesAgent;
         }
 
         public Resultado OcultarEnTablero(Negocio negocio)
@@ -637,7 +642,7 @@ namespace Molinos.DataAgro.Business.Managers
                 EsFason = x.EsFason,
                 ContratoMadre = x.ContratoMadre,
                 Pizarra = x.Pizarra ?? false,
-                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido = x.PagoDiferido,
                 PagoDiferidoTerceroId = x.PagoDiferidoTerceroId,
@@ -860,6 +865,226 @@ namespace Molinos.DataAgro.Business.Managers
             };
 
             return cupoNuevo;
+        }
+
+        public Resultado ValidarAltaTemprana(Negocio negocio, Proveedor proveedor)
+        {
+            var resultado = new Resultado();
+            string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
+            if (string.IsNullOrEmpty(alta.Mensaje))
+            {
+                if (negocio.Consignatario.HasValue && negocio.Consignatario.Value && alta.Consignatario == "NO")
+                {
+                    resultado.Error("Consignatario", "El proveedor no está habilitado como Consignatario.\n\n");
+                }
+                if (negocio.PlanCanje.HasValue && negocio.PlanCanje.Value && alta.PlanCanje == "NO")
+                {
+                    resultado.Error("PlanCanje", "El proveedor no está habilitado para Plan Canje.\n\n");
+                }
+                if (negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                    resultado.Errores.AddRange(ValidarCartaOferta(negocio, alta.Carta).Errores);
+
+                if (alta.AltaTemprana == "SI")
+                {
+                    if (alta.Bolsa == "NO" && alta.Nosis == "NO")
+                    {
+                        resultado.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa.\n\n");
+                    }
+                    if (alta.Bolsa == "NO" && alta.Nosis == "SI")
+                    {
+                        resultado.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa.\n\n");
+                    }
+                    if (alta.Bolsa == "SI" && alta.Nosis == "NO")
+                    {
+                        resultado.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado.\n\n");
+                    }
+                }
+                if (alta.ProveedorGrano == "SI")
+                {
+                    resultado.Error("MateriasPrimas", "El proveedor es un vendedor eventual.\n\n");
+                }
+                if (alta.BoletoFisico == "NO" && negocio.BoletoId == (int)EnumBoletoCompraNet.FISICO)
+                {
+                    resultado.Error("BoletoFisico", "No está habilitado para operar con boleto físico.\n\n");
+                }
+            }
+            else
+            {
+                resultado.Error("", alta.Mensaje);
+            }
+            return resultado;
+        }
+
+        private Resultado ValidarCartaOferta(Negocio negocio, string altaTempranaCO)
+        {
+            var resultado = new Resultado();
+            var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == (int)EnumBoletoCompraNet.CARTA_OFERTA);
+            bool esProductor = negocio.ClasificacionId == (int)EnumClasificacionCompraNet.Productor;
+            if (!boletoCompraNetProvincias.Any(x => x.ProvinciaId == negocio.ProvinciaId))
+            {
+                resultado.Error("Carta Oferta", "La provincia de procedencia no está habilitada para operar con carta oferta.\n\n");
+                return resultado;
+            }
+            else if (negocio.ProvinciaId == 12 && esProductor)
+            {
+                resultado.Error("Carta Oferta", "La provincia de Santa Fe no está habilitada para que los productores operen con carta oferta.\n\n");
+                return resultado;
+            }
+            else if (!negocio.Destino.CentroPropio)
+            {
+                resultado.Error("Carta Oferta", "Solo se puede operar con carta oferta en destinos propios de MOA. " + negocio.Destino.Descripcion + " no lo es.\n\n");
+            }
+            else if (altaTempranaCO == "NO")
+            {
+                resultado.Error("Carta Oferta", "No está habilitado para operar con carta oferta.\n\n");
+                return resultado;
+            }
+            else if (negocio.BolsaId != (int)EnumBolsaCompraNet.BS_AS)
+            {
+                resultado.Error("Carta Oferta", "La bolsa debe ser Buenos Aires cuando el boleto es Carta Oferta.\n\n");
+            }
+            return resultado;
+        }
+
+        public Resultado ValidarSinBoleto(Negocio contrato)
+        {
+            var resultado = new Resultado();
+            var materialesHabilitados = repositorio.Listar<MaterialHabilitadoSinBoleto, int>(x => x.MaterialId);
+            var centrosHabilitados = repositorio.Listar<CentroHabilitadoSinBoleto, CentroHabilitadoSinBoletoDto>(x =>
+                new CentroHabilitadoSinBoletoDto() { Id = x.Id, Centro = x.Centro.Descripcion, CentroId = x.CentroId, TipoNegocioId = x.TipoNegocioId });
+            var clasificacionHabilitados = repositorio.Listar<ClasificacionHabilitadoSinBoleto, int>(x => x.ClasificacionId);
+            var operacionHabilitada = repositorio.Listar<TipoOperacionHabilitadoSinBoleto, TipoOperacionHabilitadoSinBoletoDto>(x =>
+                new TipoOperacionHabilitadoSinBoletoDto() { Id = x.Id, Corredor = x.Corredor, OperacionDirecta = x.Directo }).FirstOrDefault();
+            var tipoNegocioHabilitados = repositorio.Listar<TipoNegocioHabilitadoSinBoleto, int>(x => x.TipoNegocioId);
+            var provinciaNoHabilitados = repositorio.Listar<ProvinciaNoHabilitadoSinBoleto, int>(x => x.ProvinciaId); //no hay ABM para que los usuarios gestionen la tabla y BoletoCompraNetProvincia cubre la misma función
+            var provinciasHabilitadas = repositorio.Listar<BoletoCompraNetProvincia, int>(a => a.ProvinciaId, x => x.BoletoCompraNetId == (int)EnumBoletoCompraNet.SIN_BOLETO);
+            bool esProductor = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor;
+
+            if (!materialesHabilitados.Any(x => x == contrato.MaterialId))
+            {
+                resultado.Error("Material", "El material seleccionado no está habilitado para la carga de contratos sin boleto.\n\n");
+                return resultado;
+            }
+            if (contrato.DestinoId != null && !centrosHabilitados.Any(x => x.CentroId == contrato.DestinoId && x.TipoNegocioId == contrato.TipoNegocioId))
+            {
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+                {
+                    resultado.Error("Centro", "El destino seleccionado no está habilitado para la carga de contratos a precio sin boleto.\n\n");
+                }
+                else if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                {
+                    resultado.Error("Centro", "El destino seleccionado no está habilitado para la carga de contratos a fijar sin boleto.\n\n");
+                }
+                return resultado;
+            }
+            if (contrato.ProvinciaId != null && !provinciasHabilitadas.Any(x => x == contrato.ProvinciaId))
+            {
+                resultado.Error("Provincia", "La provincia de procedencia no está habilitada para la carga de contratos sin boleto.\n\n");
+                return resultado;
+            }
+            if (contrato.ClasificacionId != null && !clasificacionHabilitados.Any(x => x == contrato.ClasificacionId))
+            {
+                resultado.Error("Clasificacion", "La clasificación seleccionada no está habilitada para la carga de contratos sin boleto.\n\n");
+                return resultado;
+            }
+
+            if (!tipoNegocioHabilitados.Any(x => x == contrato.TipoNegocioId))
+            {
+                resultado.Error("TipoNegocio", "El tipo de negocio seleccionado no está habilitado para la carga de contratos sin boleto.\n\n");
+                return resultado;
+            }
+            bool conCorredor = contrato.CorredorId != null && contrato.CorredorId > 0;
+            if (conCorredor && operacionHabilitada.Corredor != true)
+            {
+                resultado.Error("Operacion", "Las operaciones con corredor no están habilitadas sin boleto.\n");
+                return resultado;
+            }
+            if (!conCorredor && operacionHabilitada.OperacionDirecta != true)
+            {
+                resultado.Error("Operacion", "Las operaciones directas (sin corredor) no están habilitadas sin boleto.\n\n");
+                return resultado;
+            }
+            if (contrato.ProvinciaId == 12 && esProductor)
+            {
+                resultado.Error("Productor Santa Fe", "La provincia de Santa Fe no está habilitada para que los productores operen sin boleto.\n\n");
+                return resultado;
+            }
+            if (contrato.Warrant == true || contrato.CD == true)
+            {
+                resultado.Error("SinBoleto", "Los contratos sin boleto no pueden tener la tilde CD o Warrant.\n\n");
+            }
+            if (!string.IsNullOrEmpty(contrato.ContratoMadre))
+            {
+                resultado.Error("Convenir", "Los contratos sin boleto no pueden tener la tilde Fij. Convenio.\n\n");
+            }
+            if (contrato.DestinoId != null && contrato.ProveedorId != null)
+            {
+                var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == contrato.DestinoId, x => x.CodigoSap);
+                var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == contrato.MaterialId, x => x.Codigo);
+                var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == contrato.ProveedorId, x => x.CUIT);
+                var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO && x.Id != contrato.Id && x.ProveedorId == contrato.ProveedorId && x.DestinoId == contrato.DestinoId &&
+                x.MaterialId == contrato.MaterialId && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.ConfirmadoSAP != true && (x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO));
+
+                var pendienteDto = new CcPpPendienteAplicarDto()
+                {
+                    Centro = centroCodigo,
+                    Material = materialCodigo,
+                    Proveedor = cuitProveedor,
+                    Corredor = null,
+                };
+                logger.Debug($"Datos ingresados para CartasDePortePendienteAplicar: {pendienteDto.ToJson()}");
+                var pendientes = ccppPendientesAgent.ListarCartasDePortePendienteAplicar(pendienteDto).Where(x => x.Region != "3").ToList();
+                var sustentableOEPA = contrato.Sustentable | contrato.EPA;
+                double cantidadDisponible = DevolverCantidadDisponible(sustentableOEPA, contratosPendientes, pendientes, true);
+                logger.Debug($"Cantidad Disponible: {cantidadDisponible}");
+
+                if (contrato.Cantidad > cantidadDisponible)
+                {
+                    if (cantidadDisponible < 0) { cantidadDisponible = 0; }
+                    resultado.Error("Cantidad", $"La cantidad del contrato sin boleto no puede exceder la cantidad de {cantidadDisponible:N2} kg. disponibles en depósito.\n\n");
+                    return resultado;
+                }
+            }
+            return resultado;
+        }
+
+        public double DevolverCantidadDisponible(bool? sustentableOEPA, List<Contrato> contratosPendientes, List<CcPpPendienteAplicarDto> ccppPendientes, bool tieneBoleto)
+        {
+            var cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);
+            var cantidadContratoDeSAP = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+            logger.Debug($"cantidadContratoDeSAPCanje {ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+
+            var contratosPendientesAplicar = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
+            logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
+
+            var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
+            {
+                ContratoSAP = x.ContratoSAP,
+                BoletoId = x.BoletoId,
+                Cantidad = x.Cantidad
+            }, x => contratosPendientesAplicar.Contains(x.ContratoSAP));
+
+            contratosFinalizados = tieneBoleto ? contratosFinalizados.Where(x => x.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO && x.FechaDesde <= DateTime.Today.AddDays(1)).ToList() : contratosFinalizados.Where(x => x.FechaDesde <= DateTime.Today.AddDays(1)).ToList();
+
+            var cantidadContratosKilosPendientesAplicar = ccppPendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+            var cantidadNegocioPendiente = contratosPendientes.Where(x => !ccppPendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
+
+            logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
+
+            //Soja Comun
+            if (sustentableOEPA != true)
+            {
+                cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && !x.EPA).Sum(x => x.Cantidad);
+                cantidadContratoDeSAP = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && !x.EPA && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+                logger.Debug($"soja comun {ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && !x.EPA && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+                cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true && x.EPA != true).Sum(x => x.Cantidad);
+                cantidadContratosKilosPendientesAplicar = ccppPendientes.Where(x => x.Sustentable != true && x.EPA != true && contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+            }
+            logger.Debug($"soja sustentable {ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+            logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
+            var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
+            return decimal.ToDouble(cantidadDisponible);
         }
     }
 }

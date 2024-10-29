@@ -56,9 +56,16 @@
 </head>
 @{
     string ambientePruebas = System.Configuration.ConfigurationManager.AppSettings["AmbientePruebas"];
+
+    string ambienteStaging = System.Configuration.ConfigurationManager.AppSettings["AmbienteStaging"];
+    string ambienteUATMOA = System.Configuration.ConfigurationManager.AppSettings["AmbienteUATMOA"];
+    string ambienteUATDA = System.Configuration.ConfigurationManager.AppSettings["AmbienteUATDA"];
     if (ambientePruebas == "1")
     {
-        ambientePruebas = "body-background-QA";
+        if (ambienteStaging == "1") { ambientePruebas = "body-background-Staging"; }
+        else if (ambienteUATMOA == "1") { ambientePruebas = "body-background-QA"; }
+        else if (ambienteUATDA == "1") { ambientePruebas = "body-background-UAT-DA"; }
+        else { ambientePruebas = "body-background-QA"; }
     }
     else
     {

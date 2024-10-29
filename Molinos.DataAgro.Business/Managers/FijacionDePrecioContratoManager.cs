@@ -187,7 +187,7 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
+        private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages)
         {
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
             if (proveedor == null)
@@ -225,31 +225,28 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacío.");
                 return oErrorMessages;
             }
-            if (validacionesMinimas)
+
+            var fijacion = oParam.Virtual != true ? oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault() :
+               contratosParaFijacionVirtualAgent.ObtenerContratosCanje(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault();
+
+            if (fijacion == null)
             {
-
-                var fijacion = oParam.Virtual != true ? oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault() :
-                   contratosParaFijacionVirtualAgent.ObtenerContratosCanje(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault();
-
-                if (fijacion == null)
+                oErrorMessages.Error("ContratoId", "El contrato no existe.");
+                return oErrorMessages;
+            }
+            else
+            {
+                //double kilosContrato = 0;
+                //if (oParam.Id > 0)
+                //{
+                //    kilosContrato = repositorio.Obtener<Negocio, double>(a => a.Id == oParam.Id, a => a.Cantidad);
+                //}
+                var KilosPendiente = double.Parse(fijacion.KilosPendiente.Replace(".", "")) /*+ kilosContrato*/;
+                if (KilosPendiente < oParam.Cantidad)
                 {
-                    oErrorMessages.Error("ContratoId", "El contrato no existe.");
-                    return oErrorMessages;
+                    oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato.");
                 }
-                else
-                {
-                    //double kilosContrato = 0;
-                    //if (oParam.Id > 0)
-                    //{
-                    //    kilosContrato = repositorio.Obtener<Negocio, double>(a => a.Id == oParam.Id, a => a.Cantidad);
-                    //}
-                    var KilosPendiente = double.Parse(fijacion.KilosPendiente.Replace(".", "")) /*+ kilosContrato*/;
-                    if (KilosPendiente < oParam.Cantidad)
-                    {
-                        oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato.");
-                    }
-                    oParam.TrigoEspecial = oParam.Virtual != true ? fijacion.Calidad != null ? fijacion.Calidad.Value : false : false;
-                }
+                oParam.TrigoEspecial = oParam.Virtual != true && (fijacion.Calidad != null && fijacion.Calidad.Value);
             }
             if (oParam.Cantidad < 0)
             {
@@ -267,7 +264,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacío.");
             }
-            if (validacionesMinimas && oParam.Pizarra != true)
+            if (oParam.Pizarra != true)
             {
                 var rangosPrecio = repositorio.Listar<RangoPrecio>();
                 if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
@@ -338,55 +335,52 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 fijacionSave = repositorio.Obtener<Negocio>(oParam.Id);
             }
-            if (validacionesMinimas)
+            if (oParam.Id > 0)
             {
-                if (oParam.Id > 0)
+                if ((oParam.FechaOperacion.Date != fijacionSave.Fecha.Date && oParam.FechaOperacion.Date < fijacionSave.Fecha.Date))
                 {
-                    if ((oParam.FechaOperacion.Date != fijacionSave.Fecha.Date && oParam.FechaOperacion.Date < fijacionSave.Fecha.Date))
+
+                    var diaAnterior = diasHabilesAgent.UltimoDiaHabil(fijacionSave.Fecha.Date);
+
+                    if (oParam.FechaOperacion < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                     {
+                        oErrorMessages.Error("FechaOperacion", "La Fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
 
-                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil(fijacionSave.Fecha.Date);
-
-                        if (oParam.FechaOperacion < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
-                        {
-                            oErrorMessages.Error("FechaOperacion", "La Fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
-
-                        }
-
-                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
-                        {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la fecha de operación es anterior al día de la fecha.");
-                        }
-
-                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
-                        {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
-                        }
                     }
-                    if (oParam.FechaOperacion.Date > fijacionSave.Fecha.Date)
+
+                    if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                     {
-                        oErrorMessages.Error("NoInformaSio", "La fecha de operación no puede ser mayor a " + fijacionSave.Fecha.ToString("dd/MM/yyyy"));
+                        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la fecha de operación es anterior al día de la fecha.");
+                    }
+
+                    if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
+                    {
+                        oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
                     }
                 }
-                else
+                if (oParam.FechaOperacion.Date > fijacionSave.Fecha.Date)
                 {
-                    if (oParam.FechaOperacion.Date < DateTime.Now.Date)
+                    oErrorMessages.Error("NoInformaSio", "La fecha de operación no puede ser mayor a " + fijacionSave.Fecha.ToString("dd/MM/yyyy"));
+                }
+            }
+            else
+            {
+                if (oParam.FechaOperacion.Date < DateTime.Now.Date)
+                {
+                    var diaAnterior = diasHabilesAgent.UltimoDiaHabil(null);
+
+                    if (oParam.FechaOperacion.Date < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                     {
-                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil(null);
+                        oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
 
-                        if (oParam.FechaOperacion.Date < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
-                        {
-                            oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
-
-                        }
-                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
-                        {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la fecha de operación es anterior al día de la fecha.");
-                        }
-                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
-                        {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
-                        }
+                    }
+                    if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
+                    {
+                        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la fecha de operación es anterior al día de la fecha.");
+                    }
+                    if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
+                    {
+                        oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
                     }
                 }
             }
@@ -471,7 +465,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFijacionResult GrabarFijacionDePrecio(FijacionDePrecioContrato oFijacionDePrecio)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            this.Validar(oFijacionDePrecio, oEntityErrors, true);
+            Validar(oFijacionDePrecio, oEntityErrors);
 
             if (oEntityErrors.HayErrores)
             {
@@ -1306,7 +1300,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
             {
-                Validar(oFijacionDePrecioSave, oEntityErrors, true);
+                Validar(oFijacionDePrecioSave, oEntityErrors);
 
                 if (oEntityErrors.HayErrores)
                 {
@@ -1537,7 +1531,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     error.Error("Fijacion", "No existe la fijacion en DataAgro");
                 }
-                //this.Validar(fijacion, error);
+
                 if (error.Errores.Count > 0)
                 {
                     return error;
@@ -1597,7 +1591,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     error.Error("Fijacion", "No existe el contrato en DataAgro");
                 }
-                this.Validar(fijacion, error, false);
                 if (error.Errores.Count > 0)
                 {
                     return error;
@@ -2270,7 +2263,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("fijacionSAP", "fijacionSAP no puede ser null.");
                 return resultado;
             }
-            fijacionSAP = fijacionSAP.PadLeft(10,'0');
+            fijacionSAP = fijacionSAP.PadLeft(10, '0');
             var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP == fijacionSAP && x.EstadoId == (int)EnumEstadoContrato.Finalizado);
             if (fijacion == null)
             {

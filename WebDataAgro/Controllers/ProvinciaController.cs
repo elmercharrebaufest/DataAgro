@@ -1,19 +1,17 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
     [Autorizacion(PermisosDataAgro.IngresoDataAgro, PermisosDataAgro.AbmProvincia)]
     public class ProvinciaController : Controller
     {
-        private IProvinciaManager mobjProvinciaManager;
+        private readonly IProvinciaManager mobjProvinciaManager;
 
         public ProvinciaController(IProvinciaManager oProvinciaManager)
         {
@@ -28,7 +26,7 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Buscar()
         {
             var model = new ResultIniProvinciaModel();
@@ -46,19 +44,19 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult Aplicar(AbmProvinciaParam oParam)
         {
             return new JsonResult()
             {
                 Data = new AbmProvinciaCrearResult
                 {
-                    Provincia = mobjProvinciaManager.TraerProvincia(oParam.ProvinciaId)
+                    Provincia = mobjProvinciaManager.ObtenerProvincia(oParam.ProvinciaId)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult Grabar(Provincia oProvincia)
         {
             var model = new AbmProvinciaResult();
@@ -77,7 +75,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult Eliminar(AbmProvinciaParam oParam)
         {
             var model = new AbmProvinciaResult();
@@ -90,17 +88,15 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult Cancelar()
-        {    
+        {
             return new JsonResult()
             {
                 Data = new AbmProvinciaResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
     }
 }
-
-

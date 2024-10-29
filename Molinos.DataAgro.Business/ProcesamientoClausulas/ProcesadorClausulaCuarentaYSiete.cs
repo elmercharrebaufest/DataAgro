@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -16,11 +17,14 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public override ResultadoClausula DevolverClausulas(ClausulaCuarentaYSiete clausula)
         {
-            //CLAUSULA SIEMPRE PRESENTE
-
             var res = new ResultadoClausula();
-            res.Texto += "Los firmantes acuerdan y aceptan que en lo sucesivo, todos los documentos que tengan relación con el presente contrato podrán suscribirse " +
+            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
+            {
+
+                res.Texto += "Los firmantes acuerdan y aceptan que en lo sucesivo, todos los documentos que tengan relación con el presente contrato podrán suscribirse " +
                   "mediante firma digital y/o electrónica, la que tendrá plena validez para las Partes.";
+            }
+
             return res;
         }
 

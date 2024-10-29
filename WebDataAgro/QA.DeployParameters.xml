@@ -20,6 +20,9 @@
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
 	<setParameter name="AmbientePruebas Key" value="1" />
+	<setParameter name="AmbienteStaging Key" value="0" />
+	<setParameter name="AmbienteUATMOA Key" value="1" />
+	<setParameter name="AmbienteUATDA Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />
 
 	<setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG2300.LST" />
@@ -34,7 +37,8 @@
 	<setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9000/" />
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
-	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" /> Primary Producción
+	<!--Primary Producción-->
+	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
 	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />-->
 	<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
@@ -47,6 +51,13 @@
 	<setParameter name="ActivarBLEND Key" value="No" />
 
 	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
+	<setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMAS\" />
+
+	<setParameter name="ConfirmaUser Key" value="molinosagro" />
+	<setParameter name="ConfirmaPass Key" value="molinosagro" />
+	<setParameter name="ValorPruebaConfirma Key" value="0" />
+	<setParameter name="ActivarConfirmaWS Key" value="1" />
+	<setParameter name="PruebaRapidaDeConfirma Key" value="1" />
 
 	<setParameter name="HTTP_Port Service Endpoint Address"  value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port1 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />
@@ -97,4 +108,17 @@
 	<setParameter name="HTTP_Port47 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONES&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
+
+	<setParameter name="Default" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
+	<setParameter name="Default1" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
+	<setParameter name="Default2" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
+	<setParameter name="Default3" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
+	<setParameter name="Default4" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
+	<setParameter name="Default5" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
+	<setParameter name="Default6" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
+	<setParameter name="Default7" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
+	<setParameter name="Default8" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
+	<setParameter name="Default9" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
+	<setParameter name="Default10" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
+	<setParameter name="Default11" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
 </parameters>

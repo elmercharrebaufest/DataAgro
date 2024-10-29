@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                  Corredor = provs.Key.Proveedor.SegmentacionId == 5 || provs.Key.Proveedor.SegmentacionId == 7 ? "COR" : "",
                              }).Distinct().Take(15).ToList();
 
-            return DevolverEstadoSisa(contexto, resultado.ToList());
+            return DevolverEstadoSisa(contexto, resultado);
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)
@@ -138,7 +138,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 continue;
                             }
                         }
-                        
+
                     }
                     else
                     {

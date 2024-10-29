@@ -1,11 +1,9 @@
 ﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -18,13 +16,13 @@ namespace WebDataAgro.Controllers
     public class ConfiguracionBolsaController : Controller
     {
 
-        private IContratoManager contratoManager;
-        private IConfiguracionBolsaManager configuracionBolsaManager;
+        private readonly IContratoManager contratoManager;
+        private readonly IConfiguracionBolsaManager configuracionBolsaManager;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public ConfiguracionBolsaController(IContratoManager contratoManager, 
+        public ConfiguracionBolsaController(IContratoManager contratoManager,
             IConfiguracionBolsaManager configuracionBolsaManager)
         {
             this.contratoManager = contratoManager;
@@ -80,7 +78,7 @@ namespace WebDataAgro.Controllers
         private void CargarViewBag()
         {
             var datosCombo = contratoManager.TraerDatosCombo();
-           
+
             var destino = datosCombo.Destino;
             var destinoListItems = destino.Select(
                     x => new SelectListItem

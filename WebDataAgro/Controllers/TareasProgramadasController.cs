@@ -171,7 +171,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult MigrarContratosPrimary(string fecha)
         {
-            DateTime dia = DateTime.Now.Date;
+            DateTime dia = DateTime.Today;
             logger.Info("INICIO MigrarContratosPrimary");
             if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
             {
@@ -204,7 +204,7 @@ namespace WebDataAgro.Controllers
             logger.Info("INICIO ReportePagosDiferidos");
             try
             {
-                var hoy = DateTime.Now.Date;
+                var hoy = DateTime.Today;
                 var ultimoDiaDelMesSiguiente = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1).AddDays(-1);
                 DateTime? desde = null;
                 if (hoy.DayOfWeek == DayOfWeek.Friday)//el semanal solo se envian los viernes 
@@ -371,7 +371,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult VerificarSolicitudesExtraordinariasPendientes(string fecha)
         {
-            DateTime dia = DateTime.Now.Date;
+            DateTime dia = DateTime.Today;
             logger.Info("INICIO VerificarSolicitudesExtraordinariasPendientes");
             if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
             {
@@ -382,11 +382,17 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-        public ActionResult EnviarMailConfirmas()
+        public ActionResult EnviarMailConfirma(string fecha)
         {
-            logger.Info("INICIO EnviarMailConfirmas");
-            confirmaManager.EnviarMailConfirmas();
-            logger.Info("FIN EnviarMailConfirmas");
+            DateTime dia = DateTime.Today;
+            logger.Info("INICIO EnviarMailConfirma");
+            if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
+            {
+                dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
+            }
+            confirmaManager.EnviarMailConfirma(dia);
+            logger.Info("FIN EnviarMailConfirma");
+            
             return Content("ok");
         }
 

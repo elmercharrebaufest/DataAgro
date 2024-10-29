@@ -22,10 +22,10 @@
                         <div class="col-xs-12 noPadding">
                             <div class="precioMonedaAFijarIdDiv" style="display:none;">
                                 <div style="display:inline-flex">
-                                    <label style="width:130px;">Moneda</label>
+                                    <label style="width:160px;">Moneda </label>
                                     <select id="precioMonedaAFijarId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                                     <img id="errprecioMonedaAFijarId" src="~/Content/Images/error.png" style="display:none" />
-                                    <input type="text" id="PorcentajeDescuentoAFijarId" class="campo-input-text k-textbox" placeholder="(comision)" style="width: 80%" max="1" onchange="LimpiarDatos()" />
+                                    <input type="number" id="PorcentajeDescuentoAFijarId" class="campo-input-text k-textbox" placeholder="(comisión)" max="1" min="0" onchange="LimpiarDatos()" />
                                     <label style="width:20px;">%</label>
                                     <img id="errPorcentajeDescuentoAFijarId" src="~/Content/Images/error.png" style="display:none" />
                                 </div>

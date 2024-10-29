@@ -1,0 +1,55 @@
+﻿@model WebDataAgro.Models.HabilitacionBoletoViewModel
+
+<div class="modal fade" id="ModalCrearBoletoProvincia" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-mio">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <div class="modal-header">
+                <div style="color: green; font-weight: bold;">Agregar Boleto Habilitado por Provincia</div>
+            </div>
+            <br />
+            <div class="modal-body clearfix scrollInside">
+                @if (!Html.ViewData.ModelState.IsValid)
+                {
+                    <div id="errorModal">
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            @Html.ValidationSummary()
+                        </div>
+                    </div>
+                }
+
+                @using (Ajax.BeginForm("AgregarBoletoCompraNetProvincia", null, new AjaxOptions { UpdateTargetId = "listaBoletoProvincia", InsertionMode = InsertionMode.Replace }, new { @id = "grabarBoletoProvincia" }))
+                {
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2">
+                            <label>Provincia</label>
+                        </div>
+                        <div class="col-sm-3 col-md-4">
+                            @Html.DropDownListFor(m => m.BoletoCompraNetProvincia.First().ProvinciaId, Model.ProvinciaList, new { @class = "form-control" })
+                        </div>
+                        <div class="col-sm-2 col-md-2">
+                            <label>Boleto</label>
+                        </div>
+                        <div class="col-sm-3 col-md-4">
+                            @Html.DropDownListFor(m => m.BoletoCompraNetProvincia.First().BoletoCompraNetId, Model.TipoBoleto, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2 col-xs-4">
+                            <button type="button" class="btn" style="width: 100%; background: #ffddb3; border-color: darkgrey;" data-dismiss="modal">Cerrar</button>
+                        </div>
+                        <div class="col-md-2 col-xs-4">
+                            <button type="button" class="btn btnSubmit" style="width: 100%; background: green; color: white;" onclick="GrabarBoletoProvincia()">Guardar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

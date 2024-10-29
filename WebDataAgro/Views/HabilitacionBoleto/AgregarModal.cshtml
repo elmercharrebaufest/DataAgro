@@ -1,7 +1,4 @@
-﻿@model WebDataAgro.Models.HabilitacionBoletoModel
-@{
-    ViewBag.Title = "HabilitacionBoleto";
-}
+﻿@model WebDataAgro.Models.HabilitacionBoletoViewModel
 
 <div class="modal fade" id="ModalCrearNegocio" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-mio">
@@ -13,10 +10,7 @@
 
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
             <div class="modal-header ">
-                <div style="color: green; font-weight: bold;">Agregar Negocio</div>
-                <div class="status confirmado-modal" style="background: #008e61 !important">
-                    <div id="tituloAgente" class="tituloPosicion" style="padding: 1px;margin: 0px !important;  margin-left: -16px !important; margin-right:-16px !important;"></div>
-                </div>
+                <div style="color: green; font-weight: bold;">Agregar Tipo de Negocio</div>
             </div>
             <br />
             <div class="modal-body clearfix scrollInside">
@@ -35,34 +29,34 @@
                         $("#ModalCrearNegocio").modal("hide");
                     </script>
                 }
+
                 @using (Ajax.BeginForm("AgregarTipoNegocioDetalle", null, new AjaxOptions { UpdateTargetId = "listado", InsertionMode = InsertionMode.Replace }, new { @id = "grabarNegocio" }))
                 {
-
-
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
-                            <label>Descripcion</label>
+                            <label>Descripción</label>
                         </div>
                         <div class="col-sm-3 col-md-4">
-                            @Html.TextBoxFor(m => m.Descripcion, new { @id = "Descripcion", @class = "w100 form-control  limpiar" })
+                            @Html.TextBoxFor(m => m.TipoNegocioDetalle.First().Descripcion, new { @id = "Descripcion", @class = "w100 form-control limpiar" })
                         </div>
                         <div class="col-sm-2 col-md-2">
-                            <label>Tipo Negocio</label>
+                            <label>Tipo de Negocio</label>
                         </div>
                         <div class="col-sm-3 col-md-4">
-                            @Html.DropDownListFor(m => m.TipoNegocioId, new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control", @id = "MaterialAvanceSiembraId" })
+                            @Html.DropDownListFor(m => m.TipoNegocioDetalle.First().TipoNegocioId, Model.TipoNegocio, new { @class = "form-control", @id = "TipoNegocioId" })
                         </div>
                     </div>
 
                     <br />
+                    <br />
 
                     <div class="row">
-                        <div class="col-md-8"></div>
-                        <div class="col-md-2">
-                            <button type="button" style="width:100%; background: green; color: white;" id="grabarLimiteCupo" class="btn btnSubmit" onclick="GrabarNegocio()">Guardar</button>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2 col-xs-4">
+                            <button type="button" style="width: 100%; background: #ffddb3; border-color: darkgrey;" class="btn" data-dismiss="modal">Cerrar</button>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" style="width: 100%; background: red; color: white;" id="cancelar" class="btn" data-dismiss="modal">Cerrar</button>
+                        <div class="col-md-2 col-xs-4">
+                            <button type="button" style="width:100%; background: green; color: white;" class="btn btnSubmit" onclick="GrabarNegocio()">Guardar</button>
                         </div>
                     </div>
                 }

@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="namespace:dataagro", ConfigurationName="FinalizarContrato.SI_ZMPWS_DATAAGRO_PRE_SLIP")]
     public interface SI_ZMPWS_DATAAGRO_PRE_SLIP {
-
+        
         // CODEGEN: Generating message contract since the operation SI_ZMPWS_DATAAGRO_PRE_SLIP is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="http://sap.com/xi/WebService/soap1.1", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -798,6 +798,8 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         private string sIN_BOLETOField;
         
         private string ePAField;
+        
+        private string eUDRField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1972,6 +1974,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.ePAField = value;
                 this.RaisePropertyChanged("EPA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=98)]
+        public string EUDR {
+            get {
+                return this.eUDRField;
+            }
+            set {
+                this.eUDRField = value;
+                this.RaisePropertyChanged("EUDR");
             }
         }
         
