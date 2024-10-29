@@ -16,7 +16,6 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -1752,7 +1751,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.FechaDesde = oContrato.FechaDesde;
             oContratoSave.FechaHasta = oContrato.FechaHasta;
             oContratoSave.ProveedorId = oContrato.ProveedorId;
-            oContratoSave.MonedaId = oContrato.MonedaId??(oContrato.TipoNegocioId==(int)EnumTipoNegocio.A_FIJAR?"USDM ":null);
+            oContratoSave.MonedaId = oContrato.MonedaId ?? (oContrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "USDM " : null);
             oContratoSave.GrupoCompra = oContrato.GrupoCompra;
             oContratoSave.ComercialId = oContrato.ComercialId;
             oContratoSave.LocalidadId = oContrato.LocalidadId;
