@@ -7224,7 +7224,7 @@ namespace Molinos.DataAgro.Business.Managers
             return ms;
         }
 
-        public CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto)
+        public CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? sinBoleto)
         {
             var disponible = new CcPpPendienteAplicarDto();
             id = id ?? 0;
@@ -7236,7 +7236,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 DateTime hoyInclusive = DateTime.Today.AddDays(1);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro && x.FechaDesde <= hoyInclusive &&
-                x.MaterialId == materialId && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado));
+                x.MaterialId == materialId && x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
 
                 var pendienteDto = new CcPpPendienteAplicarDto()
                 {
@@ -7250,7 +7250,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (ccppPendientes != null && ccppPendientes.Count > 0)
                 {
                     var cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);
-                    var cantidadDisponible = negocioManager.DevolverCantidadDisponible(tieneSustentable, contratosPendientes, ccppPendientes, tieneBoleto.GetValueOrDefault());
+                    var cantidadDisponible = negocioManager.DevolverCantidadDisponible(tieneSustentable, contratosPendientes, ccppPendientes, sinBoleto.GetValueOrDefault());
                     disponible.CantidadDisponible = (decimal)cantidadDisponible < 0 ? 0 : (decimal)cantidadDisponible;
                     disponible.CantidadTotal = cantidadCartaDePorte;
                 }

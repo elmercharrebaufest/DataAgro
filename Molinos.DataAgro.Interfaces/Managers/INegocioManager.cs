@@ -17,6 +17,6 @@ namespace Molinos.DataAgro.Interfaces
         Cupo TransformarContratoACupo(Negocio contrato);
         Resultado ValidarAltaTemprana(Negocio oContratoAcuerdo, Proveedor proveedor);
         Resultado ValidarSinBoleto(Negocio contrato);
-        double DevolverCantidadDisponible(bool? sustentableOEPA, List<Contrato> contratosPendientes, List<CcPpPendienteAplicarDto> ccppPendientes, bool tieneBoleto);
+        double DevolverCantidadDisponible(bool? sustentableOEPA, List<Contrato> contratosPendientes, List<CcPpPendienteAplicarDto> ccppPendientes, bool sinBoleto);
     }
 }

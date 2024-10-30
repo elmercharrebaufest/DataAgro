@@ -2194,7 +2194,7 @@ function InicializarElementos() {
             LimpiarBoleto();
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
-                MensAlerta("Se completó la tilde de mercadería en depósito automáticamente");
+                MensAlerta("Se completó la tilde de mercadería en depósito automáticamente.\nPor ser sin boleto se excluyen las cartas de porte con origen Córdoba.\n\n");
             }
 
         }
@@ -6204,7 +6204,7 @@ function CompletarCantidadDisponibleDeposito() {
             cuitC = cuitCorr;
         }
         Id = Id != "" ? Id : 0;
-        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), tieneBoleto: $("#sinBoletoId").is(':checked') };
+        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), sinBoleto: $("#sinBoletoId").is(':checked') };
         var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
         if (disponible != null && disponible.CantidadDisponible != null) {
             $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadDisponible);
