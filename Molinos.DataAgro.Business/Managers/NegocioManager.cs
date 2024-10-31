@@ -238,9 +238,11 @@ namespace Molinos.DataAgro.Business.Managers
                         var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador == true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                         if (elem != null)
                         {
-                            if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
+                            var elemPrecioRound = elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"));
+                            var itemPrecioRound = item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"));
+                            if (elemPrecioRound != itemPrecioRound)
                             {
-                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} EXPORTADOR para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))} y en MAT: {item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))}");
+                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} EXPORTADOR para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elemPrecioRound} y en MAT: {itemPrecioRound}");
                             }
 
                             if (cantidadDA != cantidadMAT)
@@ -258,9 +260,11 @@ namespace Molinos.DataAgro.Business.Managers
                         var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.DolarExportador != true && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                         if (elem != null)
                         {
-                            if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
+                            var elemPrecioRound = elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"));
+                            var itemPrecioRound = item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"));
+                            if (elemPrecioRound != itemPrecioRound)
                             {
-                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))} y en MAT: {item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR"))}");
+                                errores.Add($"• Diferencia de precios ponderados para negocios de {elem.Material.Descripcion} en {elem.MonedaId} para la posición {elem.Posicion} y operador {elem.Operador.Descripcion} - en Data Agro: {elemPrecioRound} y en MAT: {itemPrecioRound}");
                             }
 
                             if (cantidadDA != cantidadMAT)

@@ -489,7 +489,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
-                                    (contrato.CorredorId > 0 ? new XElement("PorcComisionComprador", contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision : null) : null),
+                                    new XElement("PorcComisionComprador", contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty),
 
                 #region Calidad
 
@@ -556,7 +556,7 @@ namespace Molinos.DataAgro.Business.Managers
                                             ),
                                             new XElement("LugarPago", "BUENOS AIRES"),
                                             new XElement("PagoAOrdenDe", new XAttribute("CodLista", contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1")),
-                                            new XElement("PorcPago", contrato.PorcentajeDePago.Value)
+                                            new XElement("PorcPago", contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture))
                                         ) : null),
 
                 #endregion Pagos
@@ -574,7 +574,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                     new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", string.Empty))
                                                 )
                                             ),
-                                            new XElement("Moneda", new XAttribute("CodLista", string.Empty)),
+                                            new XElement("Moneda", new XAttribute("CodLista", contrato.Monto.HasValue ? (contrato.MonedaCanjeId.Trim() == "ARP" ? "1" : "2") : string.Empty)),
                                             new XElement("PrecioTotal", contrato.Monto),
                                             new XElement("Factura"),
                                             new XElement("PorcentajeGastos"),
