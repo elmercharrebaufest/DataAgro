@@ -267,8 +267,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo)
         {
-            var filter = CorregirFiltro(filtro);
-            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filter, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoConfirma>;
 
             // Iterar sobre los datos y modificar atributos
@@ -907,105 +906,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
-
-        private DataSourceRequest CorregirFiltro(DataSourceRequest request)
-        {
-            var filtro = request.Filter;
-            int claseNegocio = 0;
-            // Lista para acumular los filtros modificados
-            var modifiedFilters = new List<Filter>();
-
-            // Manejo de filtros hijos
-            if (filtro.Filters != null)
-            {
-                foreach (var childFilter in filtro.Filters)
-                {
-                    // Manejar filtros 'ClaseNegocio'
-                    if (childFilter.Field == "ClaseNegocioId")
-                    {
-                        childFilter.Field = "TipoNegocioId";
-
-                        if (childFilter.Value.ToString() == "1")
-                        {
-                            claseNegocio = 1;
-                            // Crear un nuevo filtro con lógica 'or' para TipoNegocio = 1 o TipoNegocio = 2
-                            modifiedFilters.Add(new Filter
-                            {
-                                Logic = "or",
-                                Filters = new List<Filter>
-                        {
-                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 1 },
-                            new Filter { Field = "TipoNegocioId", Operator = "eq", Value = 2 }
-                        }
-                            });
-                        }
-                        else if (childFilter.Value.ToString() == "2")
-                        {
-                            claseNegocio = 2;
-                            childFilter.Value = 3;
-                            childFilter.Operator = "eq";
-                            modifiedFilters.Add(childFilter);
-                        }
-                    }
-                    // Manejar filtros 'ContratoSAP' con operador 'gte' y si solo hay uno
-                    else if (childFilter.Field == "ContratoSAP" && childFilter.Operator == "gte" && filtro.Filters.Count(f => f.Field == "ContratoSAP") == 1)
-                    {
-                        // Interpretar el valor como una lista de contratos y crear filtros eq
-                        var contratos = childFilter.Value.ToString().Split(';');
-                        var eqFilters = contratos.Select(c => new Filter
-                        {
-                            Field = ObtenerTextoNegocio(claseNegocio),
-                            Operator = "eq",
-                            Value = CompletarNegocioSAP(c)
-                        }).ToList();
-
-                        // Crear un nuevo filtro con lógica 'or' para ContratoSAP = [lista de contratos]
-                        var contratoSapLogicFilter = new Filter
-                        {
-                            Logic = "or",
-                            Filters = eqFilters
-                        };
-
-                        // Añadir el nuevo filtro y continuar con los demás filtros
-                        modifiedFilters.Add(contratoSapLogicFilter);
-                    }
-                    else if (childFilter.Field == "ContratoSAP")
-                    {
-                        childFilter.Value = CompletarNegocioSAP(childFilter.Value.ToString());
-                        childFilter.Field = ObtenerTextoNegocio(claseNegocio);
-                        modifiedFilters.Add(childFilter);
-                    }
-                    // Convertir valores a DateTime solo si el filtro es de tipo FechaConfirmacion
-                    else if (childFilter.Field == "FechaConfirmacion")
-                    {
-                        if (DateTime.TryParse(childFilter.Value.ToString(), out DateTime dateValue))
-                        {
-                            // Comprobar si el operador es "hasta" y ajustar la hora
-                            if (childFilter.Operator == "lte")
-                            {
-                                dateValue = dateValue.Date.AddDays(1);
-                            }
-                            childFilter.Value = dateValue;
-                        }
-                        modifiedFilters.Add(childFilter);
-                    }
-                    // Añadir otros filtros tal cual
-                    else
-                    {
-                        modifiedFilters.Add(childFilter);
-                    }
-                }
-            }
-
-            // Asignar la lista de filtros modificados al filtro principal
-            filtro.Filters = modifiedFilters;
-            request.Filter = filtro;
-            return request;
-        }
-
-        private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio == 1 ? "ContratoSAP" : "FijacionSAP";
-
-        private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
 
         public List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo)
         {

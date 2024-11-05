@@ -400,24 +400,24 @@ $("body").on("click", "#filtrarConfirmas", function () {
     FiltrarNegocios();
 });
 
-$("body").on("change", "#ContratoSAPId", function () {
-    let lista = trimEnd($("#ContratoSAPId").val()).split(';');
+$("body").on("change", "#NegocioSAP-desde", function () {
+    let lista = trimEnd($("#NegocioSAP-desde").val()).split(';');
     if (lista.length > 1) {
-        $("#ContratoSAPHastaId").attr('disabled', 'disabled');
-        $("#ContratoSAPHastaId").val("");
+        $("#NegocioSAP-hasta").attr('disabled', 'disabled');
+        $("#NegocioSAP-hasta").val("");
     } else {
-        $("#ContratoSAPHastaId").removeAttr('disabled');
+        $("#NegocioSAP-hasta").removeAttr('disabled');
     }
 });
 
-$("#ContratoSAPId").bind("paste", function (e) {//En caso de Pegar Codigos
+$("#NegocioSAP-desde").bind("paste", function (e) {//En caso de Pegar Codigos
     e.preventDefault();
     if (e.originalEvent.clipboardData !== undefined) {
         clipText = e.originalEvent.clipboardData.getData('text/plain');
     } else {
         clipText = window.clipboardData.getData('text');
     }
-    $("#ContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+    $("#NegocioSAP-desde").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
 });
 
 function CargarTablaModal(contratos) {
@@ -483,7 +483,7 @@ function trimEnd(cadena) {
 
 // Función para validar el contenido de contratoDesde
 function esContratoDesdeValido() {
-    var contratoDesde = $("#ContratoSAPId").val();
+    var contratoDesde = $("#NegocioSAP-desde").val();
 
     // Si contratoDesde es nulo o vacío, lo consideramos válido
     if (contratoDesde === null || contratoDesde.trim() === '') {
@@ -498,8 +498,8 @@ function esContratoDesdeValido() {
 function validarFechasYContratos() {
     var fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
     var fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
-    var contratoDesde = ($("#ContratoSAPId").val().endsWith(';') ? $("#ContratoSAPId").val().slice(0, -1) : $("#ContratoSAPId").val()).trim();
-    var contratoHasta = $("#ContratoSAPHastaId").val().trim();
+    var contratoDesde = ($("#NegocioSAP-desde").val().endsWith(';') ? $("#NegocioSAP-desde").val().slice(0, -1) : $("#NegocioSAP-desde").val()).trim();
+    var contratoHasta = $("#NegocioSAP-hasta").val().trim();
 
     if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
         return false; // La fecha desde no puede ser mayor que la fecha hasta

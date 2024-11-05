@@ -15,6 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoBoleto { get; set; }
         public string TipoNegocio { get; set; }
         public string Bolsa { get; set; }
+        public int? BolsaId { get; set; }
         public DateTime? FechaOperacion { get; set; }
         public DateTime? FechaConfirmacion { get; set; }
         public DateTime? FechaGeneracion { get; set; }
