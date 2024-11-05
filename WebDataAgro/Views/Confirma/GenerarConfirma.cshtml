@@ -18,10 +18,10 @@
             @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "ClaseNegocio" })
         </div>
         <div class="col-md-2 noRightPadding">
-            @Html.TextBox("ContratoSAP", "", new { placeholder = "Número/s SAP", @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+            @Html.TextBox("NegocioSAP", "", new { placeholder = "Número/s SAP", @class = "form-control filtroBusquedaNumeroRangoDesde", style = "width:100%", @id = "NegocioSAP-desde" })
         </div>
         <div class="col-md-2">
-            @Html.TextBox("ContratoSAPHasta", "", new { placeholder = "Número/s SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+            @Html.TextBox("NegocioSAP", "", new { placeholder = "Número/s SAP Hasta", @type = "number", @class = "form-control filtroBusquedaNumeroRangoHasta", style = "width:100%", @id = "NegocioSAP-hasta" })
         </div>
         <div class="col-md-1 noLeftPadding" hidden>
             <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
