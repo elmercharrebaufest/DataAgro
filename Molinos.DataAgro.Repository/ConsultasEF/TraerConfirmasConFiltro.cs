@@ -38,8 +38,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                // Filtrar primero para reducir la cantidad de datos antes de hacer los JOINS
                                            where negocio.ConfirmadoSAP == true
                                                  && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
-                                                 &&
-                                                 (
+                                                 && (
                                                      (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == null) ||
                                                      (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                                                  )
@@ -55,6 +54,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                join parent in contexto.Set<Negocio>()
                                                    on n.ContratoSAP equals parent.ContratoSAP
                                                where parent.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR
+                                                     // Condiciones adicionales en el subquery 'np'
+                                                     && n.ConfirmadoSAP == true
+                                                     && n.EstadoId == (int)EnumEstadoContrato.Finalizado
+                                                     && n.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA
+                                                     && (
+                                                         (n.ComercialId != null && equipo.Contains(n.ComercialId.Value)) ||
+                                                         (n.ComercialCreadorId != null && equipo.Contains(n.ComercialCreadorId.Value))
+                                                     )
                                                select new
                                                {
                                                    n.ContratoSAP,
@@ -65,9 +72,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                            ) on negocio.ContratoSAP equals np.ContratoSAP into npGroup
                                            from np in npGroup.DefaultIfEmpty()
 
-                                               // Unir con la confirmación (última versión)
+                                               // Unir con la confirmación (última versión sin anulaciones)
                                            join confirma in (
                                                from c in contexto.Set<Confirma>()
+                                               where c.FechaAnulacion == null  // Solo incluir confirmaciones no anuladas
                                                group c by c.NegocioId into g
                                                select g.OrderByDescending(c => c.Version).FirstOrDefault()
                                            ) on negocio.Id equals confirma.NegocioId into c
