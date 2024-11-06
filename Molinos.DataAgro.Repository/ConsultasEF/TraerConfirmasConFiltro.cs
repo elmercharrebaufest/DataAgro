@@ -35,29 +35,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             try
             {
                 var queryBasicoConfirmas = from negocio in contexto.Set<Negocio>()
-                                               // Filtrar primero para reducir la cantidad de datos antes de hacer los JOINS
-                                           where negocio.ConfirmadoSAP == true
-                                                 && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
-                                                 && (
-                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == null) ||
-                                                     (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-                                                 )
-                                                 // Filtro adicional para ComercialId y ComercialCreadorId
-                                                 && (
-                                                     (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
-                                                     (negocio.ComercialCreadorId != null && equipo.Contains(negocio.ComercialCreadorId.Value))
-                                                 )
-
-                                           // Unir con Negocios con contrato SAP de tipo FIJAR
+                                               // Filtrar para negocios de tipo FIJACION y relacionarlos con el negocio padre A_FIJAR
                                            join np in (
                                                from n in contexto.Set<Negocio>()
                                                join parent in contexto.Set<Negocio>()
                                                    on n.ContratoSAP equals parent.ContratoSAP
                                                where parent.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR
-                                                     // Condiciones adicionales en el subquery 'np'
-                                                     && n.ConfirmadoSAP == true
-                                                     && n.EstadoId == (int)EnumEstadoContrato.Finalizado
-                                                     && n.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA
+                                                     && parent.ConfirmadoSAP == true
+                                                     && parent.EstadoId == (int)EnumEstadoContrato.Finalizado
                                                      && (
                                                          (n.ComercialId != null && equipo.Contains(n.ComercialId.Value)) ||
                                                          (n.ComercialCreadorId != null && equipo.Contains(n.ComercialCreadorId.Value))
@@ -80,6 +65,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                select g.OrderByDescending(c => c.Version).FirstOrDefault()
                                            ) on negocio.Id equals confirma.NegocioId into c
                                            from confirma in c.DefaultIfEmpty()
+
+                                               // Filtros generales antes de aplicar los filtros de Kendo
+                                           where negocio.ConfirmadoSAP == true
+                                                 && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
+                                                 && (
+                                                     // Si el negocio es de tipo FIJACION, usar el BoletoId del negocio padre (A_FIJAR)
+                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && np != null && np.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ||
+                                                     // Para otros negocios que no sean FIJACION, usar el BoletoId propio si es CONFIRMA
+                                                     (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                                                 )
+                                                 // Filtro adicional para ComercialId y ComercialCreadorId
+                                                 && (
+                                                     (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
+                                                     (negocio.ComercialCreadorId != null && equipo.Contains(negocio.ComercialCreadorId.Value))
+                                                 )
 
                                            orderby negocio.Id descending
                                            select new BasicoConfirma
@@ -111,10 +111,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                   negocio.TipoNegocio.Descripcion),
 
                                                // Version
-                                               Version = confirma.Version > 1 ? confirma.Version : 1,
+                                               Version = confirma != null && confirma.Version > 1 ? confirma.Version : 1,  // Asegurarse de que la versión sea válida
 
                                                // Estado de la versión (Anulado, Vigente, Pendiente)
-                                               Estado_Version = confirma.FechaAnulacion != null ? "Anulado" : (confirma.FechaGeneracion != null ? "Vigente" : "Pendiente"),
+                                               Estado_Version = confirma != null && confirma.FechaAnulacion != null ? "Anulado" : (confirma != null && confirma.FechaGeneracion != null ? "Vigente" : "Pendiente"),
 
                                                // ID y Descripción del Boleto
                                                BoletoId = negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).Contrato.BoletoId : negocio.BoletoId,
