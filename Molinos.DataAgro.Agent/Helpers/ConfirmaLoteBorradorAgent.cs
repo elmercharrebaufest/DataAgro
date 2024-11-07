@@ -97,6 +97,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                     bool esCanje = contrato.Canje == true;
+                    string tipoDocumento = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "";
                     string nroContratoInterno = numeroSAP.TrimStart('0');
 
                     List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
@@ -241,9 +242,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                         detalleContratoElement.AppendChild(unidadMedidaPrecioElement);
                     }
 
-                    XmlElement porcComisionCompradorElement = xmlDoc.CreateElement("PorcComisionComprador");
-                    porcComisionCompradorElement.InnerText = contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty;
-                    detalleContratoElement.AppendChild(porcComisionCompradorElement);
+                    if(tipoDocumento != "17"){
+                        XmlElement porcComisionCompradorElement = xmlDoc.CreateElement("PorcComisionComprador");
+                        porcComisionCompradorElement.InnerText = contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty;
+                        detalleContratoElement.AppendChild(porcComisionCompradorElement);
+                    }
 
                     nodeList.Add(detalleContratoElement);
                     #endregion DetalleContrato
@@ -790,7 +793,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             },
                             TipoDocumento = new LoteDocumentoCabeceraDocumentoTipoDocumento()
                             {
-                                CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "",
+                                CodLista = tipoDocumento,
                                 Text = new List<string>().ToArray()
                             },
                             Formulario = new LoteDocumentoCabeceraDocumentoFormulario()
