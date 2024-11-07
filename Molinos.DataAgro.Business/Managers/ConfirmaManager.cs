@@ -426,6 +426,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                 var esCanje = contrato.Canje == true;
                 var nroContratoInterno = (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP).TrimStart('0');
+                string tipoDocumento = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : string.Empty;
                 var Partes = (contrato.CorredorId > 0) ?
                     new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } }
                     : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } };
@@ -443,7 +444,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             new XElement("CabeceraDocumento",
                                 new XElement("Bolsa", new XAttribute("CodLista", contrato.BolsaConfirma)),
-                                new XElement("TipoDocumento", new XAttribute("CodLista", contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
+                                new XElement("TipoDocumento", new XAttribute("CodLista", tipoDocumento)),
                                 new XElement("Formulario", new XAttribute("formversion", "1.04"))
                             ),//Fin Nodo CabeceraDocumento
 
@@ -488,7 +489,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
-                                    new XElement("PorcComisionComprador", contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty),
+                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty):null),
 
                 #region Calidad
 
