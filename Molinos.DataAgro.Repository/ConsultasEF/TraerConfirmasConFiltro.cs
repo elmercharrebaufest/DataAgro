@@ -53,12 +53,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                            where negocio.ConfirmadoSAP == true
                                                  && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
 
-                                                 // Si el negocio es de tipo FIJACION, usamos los valores del negocio padre (A_FIJAR)
-                                                 && (
-                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-                                                      negocioPadre != null && negocioPadre.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ||
-                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-                                                 )
+                                                // Negocios A_Precio y A_Fijar: Deben tener el BoletoId igual a "CONFIRMA"
+                                                && (
+                                                    (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION
+                                                    && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+
+                                                // Negocios Fijación: El BoletoId debe estar en el negocio padre, y el negocio padre debe ser de tipo A_Fijar
+                                                || (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                                                    && negocioPadre != null
+                                                    && negocioPadre.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR
+                                                    && negocioPadre.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                                                )
+
                                                  // Filtro para ComercialId y ComercialCreadorId
                                                  && (
                                                      (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
