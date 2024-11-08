@@ -29,127 +29,144 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
         {
+            // Configuración del timeout de la consulta
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-
-            var crearFason = PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason);
-            var crearAgente = PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente);
-            var crearAcuerdos = PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos);
 
             try
             {
-                var fijacionId = (int)EnumTipoNegocio.FIJACION;
-                var confirmaId = (int)EnumBoletoCompraNet.CONFIRMA;
-                var ne = contexto.Set<Negocio>();
+                var queryBasicoConfirmas = from negocio in contexto.Set<Negocio>()
+                                               // Relacionamos los negocios de tipo FIJACION con sus negocios padres de tipo A_FIJAR usando ContratoSAP
+                                           join negocioPadre in contexto.Set<Negocio>()
+                                               on negocio.ContratoSAP equals negocioPadre.ContratoSAP into padreGroup
+                                           from negocioPadre in padreGroup.DefaultIfEmpty()
 
-                var queryBasicoConfirmas = from negocio in ne
+                                               // Luego, unimos con las confirmas para obtener la versión más reciente
                                            join confirma in (
                                                from c in contexto.Set<Confirma>()
+                                               where c.FechaAnulacion == null  // Solo incluimos confirmas no anuladas
                                                group c by c.NegocioId into g
                                                select g.OrderByDescending(c => c.Version).FirstOrDefault()
-                                           ) on negocio.Id equals confirma.NegocioId into c
-                                           from confirma in c.DefaultIfEmpty()
-                                           join np in (
-                                               from n in ne
-                                               join parent in ne
-                                                   on n.ContratoSAP equals parent.ContratoSAP
-                                               where parent.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR
-                                               && (
-                                                   (n.ComercialId != null && equipo.Contains(n.ComercialId.Value)) ||
-                                                   (n.ComercialCreadorId != null && equipo.Contains(n.ComercialCreadorId.Value))
-                                               )
-                                               select new
-                                               {
-                                                   n.ContratoSAP,
-                                                   parent.BoletoId,
-                                                   parent.BolsaId,
-                                                   parent.Canje
-                                               }
-                                           ) on negocio.ContratoSAP equals np.ContratoSAP into npGroup
-                                           from np in npGroup.DefaultIfEmpty()
+                                           ) on negocio.Id equals confirma.NegocioId into confirmaGroup
+                                           from confirma in confirmaGroup.DefaultIfEmpty()
 
-                                           join proveedorCorredor in contexto.Set<Proveedor>()
-                                               .Select(p => new { p.ProveedorId, p.RazonSocial })
-                                               on negocio.CorredorId equals proveedorCorredor.ProveedorId into pCorredor
-                                           from proveedorCorredor in pCorredor.DefaultIfEmpty()
+                                               // Filtros generales para obtener los negocios confirmados y con el estado adecuado
+                                           where negocio.ConfirmadoSAP == true
+                                                 && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
 
-                                           join proveedorVendedor in contexto.Set<Proveedor>()
-                                               .Select(p => new { p.ProveedorId, p.RazonSocial })
-                                               on negocio.ProveedorId equals proveedorVendedor.ProveedorId into pVendedor
-                                           from proveedorVendedor in pVendedor.DefaultIfEmpty()
+                                                 // Si el negocio es de tipo FIJACION, usamos los valores del negocio padre (A_FIJAR)
+                                                 && (
+                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
+                                                      negocioPadre != null && negocioPadre.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ||
+                                                     (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                                                 )
+                                                 // Filtro para ComercialId y ComercialCreadorId
+                                                 && (
+                                                     (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
+                                                     (negocio.ComercialCreadorId != null && equipo.Contains(negocio.ComercialCreadorId.Value))
+                                                 )
 
-                                           where
-                                           (
-                                               (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
-                                               (negocio.ComercialCreadorId != null && equipo.Contains(negocio.ComercialCreadorId.Value))
-                                           )
-                                           &&
-                                           (
-                                               (crearFason && negocio is Fason) ||
-                                               (crearAgente && negocio is AgenteCompra) ||
-                                               (crearAcuerdos && negocio is ContratoAcuerdo) ||
-                                               (!(negocio is Fason) && !(negocio is AgenteCompra) && !(negocio is ContratoAcuerdo))
-                                           )
-                                           && negocio.ConfirmadoSAP == true
-                                           && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
-                                           &&
-                                           (
-                                               (negocio.TipoNegocioId == fijacionId && np.BoletoId == confirmaId) ||
-                                               (negocio.TipoNegocioId != fijacionId && negocio.BoletoId == confirmaId)
-                                           )
+                                           // Ordenamos los resultados por ID de negocio de forma descendente
                                            orderby negocio.Id descending
+
+                                           // Selección final para la entidad BasicoConfirma
                                            select new BasicoConfirma
                                            {
+                                               // ID del negocio
                                                Id = negocio.Id,
-                                               Estado_Version = confirma.FechaAnulacion != null ? "Anulado" : (confirma.FechaGeneracion != null ? "Vigente" : "Pendiente"),
-                                               ClaseNegocioId = negocio is Contrato ? "1" : "2",
-                                               NegocioSAP = negocio is FijacionDePrecioContrato &&
-                                                            (negocio.EstadoId == (int)EnumEstadoContrato.Finalizado ||
-                                                             negocio.EstadoId == (int)EnumEstadoContrato.Eliminado)
-                                                            ? (negocio as FijacionDePrecioContrato).FijacionSAP
-                                                            : negocio.ContratoSAP,
+
+                                               // SAP del negocio
+                                               NegocioSAP = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).FijacionSAP
+                                                   : negocio.ContratoSAP,
+
                                                ContratoSAP = negocio.ContratoSAP,
-                                               TipoBoleto = negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).Contrato.Boleto.Descripcion : negocio.Boleto.Descripcion,
-                                               TipoNegocio = (negocio.TipoNegocio == null ? "" :
-                                               (negocio is Contrato && (negocio as Contrato).Madre == true) ? "CONVENIO" :
-                                               (negocio is Contrato && (negocio as Contrato).Madre == false) ? "FIJ. CONVENIO" :
-                                               (negocio is Contrato && (negocio as Contrato).EsFason == true) ? "FASON MP" :
-                                               (negocio is Contrato && (negocio as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
-                                               (negocio is ContratoAcuerdo && (negocio as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
-                                               (negocio is Contrato && (negocio as Contrato).Canje == true) ? "CANJE" :
-                                               (negocio is Contrato && (negocio as Contrato).PrestamoDevolucion == true) ? "PRESTAMO DEVOLUCION" :
-                                               (negocio is Contrato && (negocio as Contrato).Venta == true) ? "VENTA" :
-                                               (negocio is Contrato && (negocio as Contrato).TipoPosicionCBOTId == 3) ? "A FIJAR PASE" :
-                                               (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
-                                               (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE" :
-                                               (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).TipoPosicionCBOTId == 3) ? "FIJACION PASE" :
-                                               negocio.TipoNegocio.Descripcion),
-                                               Canje = negocio.TipoNegocioId == fijacionId ? (np.Canje == true ? "SI" : "NO") : (negocio.Canje == true ? "SI" : "NO"),
-                                               Bolsa = negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).Contrato.Bolsa.Descripcion : negocio.Bolsa.Descripcion,
+                                               FijacionSAP = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).FijacionSAP
+                                                   : string.Empty,
+
+                                               // Tipo de negocio y clasificación
+                                               ClaseNegocioId = negocio is Contrato ? "1" : "2",
+                                               TipoNegocioId = negocio.TipoNegocioId,
+                                               TipoNegocio = negocio.TipoNegocio != null ?
+                                                   (negocio is Contrato && (negocio as Contrato).Madre == true) ? "CONVENIO" :
+                                                   (negocio is Contrato && (negocio as Contrato).Madre == false) ? "FIJ. CONVENIO" :
+                                                   (negocio is Contrato && (negocio as Contrato).EsFason == true) ? "FASON MP" :
+                                                   (negocio is Contrato && (negocio as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
+                                                   (negocio is ContratoAcuerdo && (negocio as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
+                                                   (negocio is Contrato && (negocio as Contrato).Canje == true) ? "CANJE" :
+                                                   (negocio is Contrato && (negocio as Contrato).PrestamoDevolucion == true) ? "PRESTAMO DEVOLUCION" :
+                                                   (negocio is Contrato && (negocio as Contrato).Venta == true) ? "VENTA" :
+                                                   (negocio is Contrato && (negocio as Contrato).TipoPosicionCBOTId == 3) ? "A FIJAR PASE" :
+                                                   (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
+                                                   (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE" :
+                                                   (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).TipoPosicionCBOTId == 3) ? "FIJACION PASE" :
+                                                   negocio.TipoNegocio.Descripcion
+                                                   : "",
+
+                                               // Versión (la más alta de las confirmas)
+                                               Version = confirma != null && confirma.Version > 1 ? confirma.Version : 1,
+
+                                               // Estado de la versión (Anulado, Vigente, Pendiente)
+                                               Estado_Version = confirma != null && confirma.FechaAnulacion != null
+                                                   ? "Anulado"
+                                                   : (confirma != null && confirma.FechaGeneracion != null ? "Vigente" : "Pendiente"),
+
+                                               // ID y Descripción del Boleto (si es FIJACION, se extrae del negocio padre)
+                                               BoletoId = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).Contrato.BoletoId
+                                                   : negocio.BoletoId,
+                                               TipoBoleto = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).Contrato.Boleto.Descripcion
+                                                   : negocio.Boleto.Descripcion,
+
+                                               // Canje (dependiendo del tipo de negocio)
+                                               Canje = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                                                   ? (negocioPadre.Canje == true ? "SI" : "NO")
+                                                   : (negocio.Canje == true ? "SI" : "NO"),
+
+                                               // Bolsa
+                                               BolsaId = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).Contrato.BolsaId
+                                                   : negocio.BolsaId,
+                                               Bolsa = negocio is FijacionDePrecioContrato
+                                                   ? (negocio as FijacionDePrecioContrato).Contrato.Bolsa.Descripcion
+                                                   : negocio.Bolsa.Descripcion,
+
+                                               // Precio y moneda
                                                Precio = negocio.Precio,
-                                               Moneda = negocio.MonedaId == "ARP" ? "ARP" : (negocio.MonedaId == "USDM" ? "USD" : string.Empty),
+                                               Moneda = negocio.MonedaId.Trim() == "ARP" ? "ARP" :
+                                                        (negocio.MonedaId.Trim() == "USDM" ? "USD" : string.Empty),
+
+                                               // Fechas importantes
                                                FechaGeneracion = confirma.FechaGeneracion,
                                                FechaOperacion = negocio.FechaOperacion,
                                                FechaCarga = negocio.Fecha,
                                                FechaConfirmacion = negocio.FechaConfirmacion,
                                                FechaAnulacion = confirma.FechaAnulacion,
-                                               Corredor = proveedorCorredor.RazonSocial ?? "",
-                                               Vendedor = proveedorVendedor.RazonSocial ?? "",
-                                               TipoNegocioId = negocio.TipoNegocioId,
+
+                                               // Proveedor (Corredor y Vendedor)
+                                               Corredor = negocio.Corredor.RazonSocial ?? "",
+                                               Vendedor = negocio.Proveedor.RazonSocial ?? "",
+
+                                               // Material
+                                               MaterialId = negocio.MaterialId,
                                                Material = negocio.Material.Descripcion,
+
+                                               // Contratos
                                                ContratoVendedor = negocio.ContratoVendedor,
                                                ContratoCorredor = negocio.ContratoCorredor,
-                                               Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres,
-                                               Version = confirma.Version > 1 ? confirma.Version : 1,
-                                               MaterialId = negocio.MaterialId,
-                                               BoletoId = negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).Contrato.BoletoId : negocio.BoletoId,
 
+                                               // Comercial
+                                               Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres
                                            };
-                return queryBasicoConfirmas.ToDataSourceResult(request);               
-                
+
+                return queryBasicoConfirmas.ToDataSourceResult(request);
+
+
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Error en TraerConfirmasConFiltro: " + ex.Message);
+                Trace.WriteLine("Error en la consulta: " + ex.Message);
                 throw;
             }
         }

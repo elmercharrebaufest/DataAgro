@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug($"Obteniendo negocios MAT...");
                 TradeCaptureReportResult result = GetTradeCaptureReport(token, fecha, fecha);
                 logger.Debug($"Resultado obtenido: {result.ToJson()}");
-
+                
                 if (result.Code == "200")
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
@@ -120,7 +120,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ComercialId = 44,
                         ComercialCreadorId = 44, //Id DataAgro en prod
 
-                    }).Where(a => !string.IsNullOrEmpty(a.Posicion))
+                    }).Where(a => !string.IsNullOrEmpty(a.Posicion)) 
                     .ToList();
 
                     var materiales = repositorio.Listar<Material>();

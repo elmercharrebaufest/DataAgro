@@ -97,6 +97,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                     bool esCanje = contrato.Canje == true;
+                    string tipoDocumento = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "";
                     string nroContratoInterno = numeroSAP.TrimStart('0');
 
                     List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
@@ -241,10 +242,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         detalleContratoElement.AppendChild(unidadMedidaPrecioElement);
                     }
 
-                    if (contrato.CorredorId > 0)
-                    {
+                    if(tipoDocumento != "17"){
                         XmlElement porcComisionCompradorElement = xmlDoc.CreateElement("PorcComisionComprador");
-                        porcComisionCompradorElement.InnerText = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null;
+                        porcComisionCompradorElement.InnerText = contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty;
                         detalleContratoElement.AppendChild(porcComisionCompradorElement);
                     }
 
@@ -428,7 +428,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                         // Crear el elemento "PorcPago"
                         XmlElement porcPagoElement = xmlDoc.CreateElement("PorcPago");
-                        porcPagoElement.InnerText = contrato.PorcentajeDePago.HasValue ? contrato.PorcentajeDePago.Value.ToString() : string.Empty;
+                        porcPagoElement.InnerText = contrato.PorcentajeDePago.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty;
                         pagosElement.AppendChild(porcPagoElement);
 
                         detalleContratoElement.AppendChild(pagosElement);
@@ -484,7 +484,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         // Agregar otros elementos a "Insumos"
                         XmlElement monedaElement1 = xmlDoc.CreateElement("Moneda");
                         XmlAttribute codListaAttrMoneda = xmlDoc.CreateAttribute("CodLista");
-                        codListaAttrMoneda.Value = string.Empty;
+                        codListaAttrMoneda.Value = contrato.Monto.HasValue ? (contrato.MonedaCanjeId.Trim() == "ARP" ? "1" :"2"):string.Empty;
                         monedaElement1.Attributes.Append(codListaAttrMoneda);
                         insumosElement.AppendChild(monedaElement1);
 
@@ -626,21 +626,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     detalleContratoElement.AppendChild(produccionVendedorElement);
                     #endregion ProduccionVendedor
 
-                    #region TipoOperacion
-                    // Crear el elemento "TipoOperacion"
-                    XmlElement tipoOperacionElement = xmlDoc.CreateElement("TipoOperacion");
-
-                    // Crear el atributo "CodLista" y asignar el valor "1"
-                    XmlAttribute codListaAttr4 = xmlDoc.CreateAttribute("CodLista");
-                    codListaAttr4.Value = "1";
-
-                    // Agregar el atributo al elemento "TipoOperacion"
-                    tipoOperacionElement.Attributes.Append(codListaAttr4);
-
-                    // Finalmente, agregar "TipoOperacion" a "DetalleDocumento"
-                    detalleContratoElement.AppendChild(tipoOperacionElement);
-                    #endregion TipoOperacion
-
                     #region APRECIO
                     if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                     {
@@ -655,6 +640,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                         detalleContratoElement.AppendChild(aPrecioElement);
                     }
                     #endregion APRECIO
+
+                    #region TipoOperacion
+                    // Crear el elemento "TipoOperacion"
+                    XmlElement tipoOperacionElement = xmlDoc.CreateElement("TipoOperacion");
+
+                    // Crear el atributo "CodLista" y asignar el valor "1"
+                    XmlAttribute codListaAttr4 = xmlDoc.CreateAttribute("CodLista");
+                    codListaAttr4.Value = "1";
+
+                    // Agregar el atributo al elemento "TipoOperacion"
+                    tipoOperacionElement.Attributes.Append(codListaAttr4);
+
+                    // Finalmente, agregar "TipoOperacion" a "DetalleDocumento"
+                    detalleContratoElement.AppendChild(tipoOperacionElement);
+                    #endregion TipoOperacion
 
                     #region SioGranos
                     // Crear el elemento "SioGranos"
@@ -793,7 +793,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             },
                             TipoDocumento = new LoteDocumentoCabeceraDocumentoTipoDocumento()
                             {
-                                CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : esCanje ? "17" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "",
+                                CodLista = tipoDocumento,
                                 Text = new List<string>().ToArray()
                             },
                             Formulario = new LoteDocumentoCabeceraDocumentoFormulario()

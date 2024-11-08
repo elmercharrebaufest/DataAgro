@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
         bool Tiene2doCondicionalAsociado(int contratoId);
         int DevolverMilisegundos();
-        CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
+        CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? sinBoleto);
         List<ExcelValidatorResumeItem> AltaMasivaContratos(DataSet dsExcel, string contratoAcuerdo, int ComercialId);
         List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId);
         void ActualizarEstadoDeContratos();

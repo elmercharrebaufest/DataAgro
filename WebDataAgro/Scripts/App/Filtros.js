@@ -17,6 +17,7 @@ function TraerFiltrosConValores() {
     filtrosBusqSelectMultipleTexto(listaFiltros);
     filtrosBusqNumber(listaFiltros);
     filtrosBusqPesificable(listaFiltros);
+    filtrosBusqNumeroRango(listaFiltros);
 
 
     let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
@@ -555,3 +556,41 @@ function ArmarTabla(contratos) {
 }
 
 
+function filtrosBusqNumeroRango(listaFiltros) {
+
+    let filtroBusquedaNumeroRangoDesde = $(".filtroBusquedaNumeroRangoDesde");
+    let filtroBusquedaNumeroRangoHasta = $(".filtroBusquedaNumeroRangoHasta");
+
+    filtroBusquedaNumeroRangoDesde.each(function (e) {
+        if (filtroBusquedaNumeroRangoDesde[e].id != "") {
+
+            let campo = filtroBusquedaNumeroRangoDesde[e].name;
+            let valorDesde = $("#" + filtroBusquedaNumeroRangoDesde[e].id).val();
+            let valorHasta = $("#" + filtroBusquedaNumeroRangoHasta[e].id).val();
+
+            // Si "Hasta" tiene valor y "Desde" tiene valor numérico puro
+            if (valorDesde != "" && valorHasta != "" && !isNaN(valorDesde) && !isNaN(valorHasta)) {
+                listaFiltros.push(new FiltroHijo(campo, valorDesde.padStart(10, '0'), "gte"));
+                listaFiltros.push(new FiltroHijo(campo, valorHasta.padStart(10, '0'), "lte"));
+            }
+            // Si "Desde" tiene una lista de números separados por ";"
+            else if (valorDesde != "" && valorHasta == "") {
+                let listaNumeros = valorDesde.split(";").filter(function (x) { return x != "" });
+                if (listaNumeros.length > 0) {
+                    // Usamos "or" para que cualquiera de los valores sea válido
+                    let filtrosPorCadaNumero = listaNumeros.map(function (valor) {
+                        return new FiltroHijo(campo, valor.padStart(10, '0'), "eq");
+                    });
+
+                    if (filtrosPorCadaNumero.length > 0) {
+                        listaFiltros.push(new FiltroPadre("or", filtrosPorCadaNumero));
+                    }
+                }
+            }
+            // Si "Desde" tiene un valor numérico y "Hasta" está vacío
+            else if (valorDesde != "" && valorHasta == "") {
+                listaFiltros.push(new FiltroHijo(campo, valorDesde.padStart(10, '0'), "eq"));
+            }
+        }
+    });
+}

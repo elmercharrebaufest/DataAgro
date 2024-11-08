@@ -16,6 +16,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -4523,7 +4524,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), contrato, contratoSave));
 
-            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailproveedor + ". Contrato SAP:" + contrato.ContratoSAP);
+            logger.Debug($"Se envió email del contrato modificado ID {contrato.Id} a {emailproveedor.ToJson()} con copia a {lista.ToJson()}. Contrato SAP: {contrato.ContratoSAP}");
         }
 
         public void EnviarMailImpuestos(int contratoId)
@@ -4532,43 +4533,29 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (contratoDB != null && contratoDB.EstadoId == (int)EnumEstadoContrato.Finalizado && (!contratoDB.Provincia.Inscripto || !contratoDB.Destino.Localidad.Provincia.Inscripto) && contratoDB.TipoNegocioId != (int)EnumTipoNegocio.FIJACION)
             {
-                var lista = new List<string>();
-                var email = "";
-
-                logger.Debug("Enviando mail a Impuestos " + email);
-
-                var comercialRegistrado = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == contratoDB.ComercialId, x => new ComercialDto()
+                var comercial = new List<string>
                 {
-                    Email = x.Email
-                });
-
-                List<Comercial> comercialesImpuestos = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
-
-                List<string> emailComerciales = comercialesImpuestos.Select(cm => (string)cm.Email).ToList();
+                    mailManager.GetEmailUserActiveDirectory(contratoDB.Comercial.IdActiveDirectory)
+                };
+                List<string> usuariosImpuestos = repositorio.Listar<Comercial, string>(x => x.Email, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailImpuestos)));
 
                 var subject = $"Nuevo negocio con jurisdicción no inscripta: {contratoDB.ContratoSAP.TrimStart('0')}";
 
-                var provincias = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
-                var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion, ProvinciaId = x.Localidad.ProvinciaId }, x => x.CargaNegocios == true);
+                mailManager.EnviarMail(contratoDB.Comercial, usuariosImpuestos, subject, "", comercial, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contratoDB));
 
-                var procedencia = provincias.Find(x => x.Provinciaid == contratoDB.ProvinciaId);
-                var destino = provincias.Find(p => p.Provinciaid == destinos.Find(x => x.Id == contratoDB.DestinoId).ProvinciaId);
-
-                mailManager.EnviarMail(contratoDB.Comercial, emailComerciales, subject, "", lista, CuerpoMailImpuesto(httpContextManager.ObtenerPathLogoMail(), contratoDB, procedencia.Nombre, destino.Nombre));
-
-                logger.Debug("Se envió email del contrato ID " + contratoDB.Id + " a " + emailComerciales + ". Contrato SAP:" + contratoDB.ContratoSAP);
+                logger.Debug($"Se envió email del contrato ID {contratoDB.Id} al sector de impuestos: {usuariosImpuestos.ToJson()} con copia a {comercial.ToJson()}. Contrato SAP: {contratoDB.ContratoSAP}");
             }
         }
 
-        private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato, string procedencia, string destino)
+        private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
             htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad:N0} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
 
-            htmlBody += "Origen: " + procedencia + " <br /><br />  ";
-            htmlBody += "Destino: " + destino + " <br />";
+            htmlBody += "Origen: " + oContrato.Provincia.Nombre + " <br /><br />  ";
+            htmlBody += "Destino: " + oContrato.Destino.Localidad.Provincia.Nombre + " <br />";
             htmlBody += "<br /> <br />  Saludos Cordiales," +
             " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
             @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -7223,7 +7210,7 @@ namespace Molinos.DataAgro.Business.Managers
             return ms;
         }
 
-        public CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto)
+        public CcPpPendienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? sinBoleto)
         {
             var disponible = new CcPpPendienteAplicarDto();
             id = id ?? 0;
@@ -7235,7 +7222,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 DateTime hoyInclusive = DateTime.Today.AddDays(1);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro && x.FechaDesde <= hoyInclusive &&
-                x.MaterialId == materialId && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado));
+                x.MaterialId == materialId && x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
 
                 var pendienteDto = new CcPpPendienteAplicarDto()
                 {
@@ -7249,7 +7236,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (ccppPendientes != null && ccppPendientes.Count > 0)
                 {
                     var cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);
-                    var cantidadDisponible = negocioManager.DevolverCantidadDisponible(tieneSustentable, contratosPendientes, ccppPendientes, tieneBoleto.GetValueOrDefault());
+                    var cantidadDisponible = negocioManager.DevolverCantidadDisponible(tieneSustentable, contratosPendientes, ccppPendientes, sinBoleto.GetValueOrDefault());
                     disponible.CantidadDisponible = (decimal)cantidadDisponible < 0 ? 0 : (decimal)cantidadDisponible;
                     disponible.CantidadTotal = cantidadCartaDePorte;
                 }
