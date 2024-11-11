@@ -1312,6 +1312,9 @@
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HojaDeRutaYerbateraValidaResponseDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HuellaDigitalDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HumedimetroDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1532,6 +1535,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfFormatoDeImpresionDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfHuellaDigitalDtoT7DPfI5_P.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfHumedimetroDtoT7DPfI5_P.datasource">

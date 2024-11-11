@@ -729,6 +729,30 @@
   <wsdl:message name="IServicioRepositorio_ValidarCuitNestle_OutputMessage">
     <wsdl:part name="parameters" element="tns:ValidarCuitNestleResponse" />
   </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ObtenerRecorridoNoRechazadoPorIdInsumos_InputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerRecorridoNoRechazadoPorIdInsumos" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ObtenerRecorridoNoRechazadoPorIdInsumos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerRecorridoNoRechazadoPorIdInsumosResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ListarHuellaDigital_InputMessage">
+    <wsdl:part name="parameters" element="tns:ListarHuellaDigital" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ListarHuellaDigital_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ListarHuellaDigitalResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ObtenerHuellaDigital_InputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerHuellaDigital" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ObtenerHuellaDigital_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerHuellaDigitalResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ListarHuellaDigitalHistorico_InputMessage">
+    <wsdl:part name="parameters" element="tns:ListarHuellaDigitalHistorico" />
+  </wsdl:message>
+  <wsdl:message name="IServicioRepositorio_ListarHuellaDigitalHistorico_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ListarHuellaDigitalHistoricoResponse" />
+  </wsdl:message>
   <wsdl:message name="IServicioRepositorio_ListarDatosDeWorkflowsPendientes_InputMessage">
     <wsdl:part name="parameters" element="tns:ListarDatosDeWorkflowsPendientes" />
   </wsdl:message>
@@ -6571,6 +6595,22 @@
     <wsdl:operation name="ValidarCuitNestle">
       <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ValidarCuitNestle" message="tns:IServicioRepositorio_ValidarCuitNestle_InputMessage" />
       <wsdl:output wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ValidarCuitNestleResponse" message="tns:IServicioRepositorio_ValidarCuitNestle_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerRecorridoNoRechazadoPorIdInsumos">
+      <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerRecorridoNoRechazadoPorIdInsumos" message="tns:IServicioRepositorio_ObtenerRecorridoNoRechazadoPorIdInsumos_InputMessage" />
+      <wsdl:output wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerRecorridoNoRechazadoPorIdInsumosResponse" message="tns:IServicioRepositorio_ObtenerRecorridoNoRechazadoPorIdInsumos_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ListarHuellaDigital">
+      <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigital" message="tns:IServicioRepositorio_ListarHuellaDigital_InputMessage" />
+      <wsdl:output wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigitalResponse" message="tns:IServicioRepositorio_ListarHuellaDigital_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerHuellaDigital">
+      <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerHuellaDigital" message="tns:IServicioRepositorio_ObtenerHuellaDigital_InputMessage" />
+      <wsdl:output wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerHuellaDigitalResponse" message="tns:IServicioRepositorio_ObtenerHuellaDigital_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ListarHuellaDigitalHistorico">
+      <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigitalHistorico" message="tns:IServicioRepositorio_ListarHuellaDigitalHistorico_InputMessage" />
+      <wsdl:output wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigitalHistoricoResponse" message="tns:IServicioRepositorio_ListarHuellaDigitalHistorico_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="ListarDatosDeWorkflowsPendientes">
       <wsdl:input wsaw:Action="http://scato.molinos.com.ar/IServicioRepositorio/ListarDatosDeWorkflowsPendientes" message="tns:IServicioRepositorio_ListarDatosDeWorkflowsPendientes_InputMessage" />
