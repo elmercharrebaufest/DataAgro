@@ -103,16 +103,16 @@
   <setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
 
-	<setParameter name="Default" value="https://services.confirma.com.ar/LoteDocumentosService.svc" />
-	<setParameter name="Default1" value="https://services.confirma.com.ar/LoteDocumentosAsyncService.svc" />
-	<setParameter name="Default2" value="https://services.confirma.com.ar/ConsultaLoteService.svc" />
-	<setParameter name="Default3" value="https://services.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" />
-	<setParameter name="Default4" value="https://services.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
-	<setParameter name="Default5" value="https://services.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" />
-	<setParameter name="Default6" value="https://services.confirma.com.ar/ConsultaDocumentosService.svc" />
-	<setParameter name="Default7" value="https://services.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
-	<setParameter name="Default8" value="https://services.confirma.com.ar/ConsultaEmpresasService.svc" />
-	<setParameter name="Default9" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
-	<setParameter name="Default10" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
-	<setParameter name="Default11" value="https://services.confirma.com.ar/LoteBorradorService.svc" />
+	<setParameter name="Default Endpoint Confirma" value="https://services.confirma.com.ar/LoteDocumentosService.svc" />
+	<setParameter name="Default1 Endpoint Confirma" value="https://services.confirma.com.ar/LoteDocumentosAsyncService.svc" />
+	<setParameter name="Default2 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaLoteService.svc" />
+	<setParameter name="Default3 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" />
+	<setParameter name="Default4 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
+	<setParameter name="Default5 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" />
+	<setParameter name="Default6 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosService.svc" />
+	<setParameter name="Default7 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
+	<setParameter name="Default8 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaEmpresasService.svc" />
+	<setParameter name="Default9 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
+	<setParameter name="Default10 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
+	<setParameter name="Default11 Endpoint Confirma" value="https://services.confirma.com.ar/LoteBorradorService.svc" />
 </parameters>
