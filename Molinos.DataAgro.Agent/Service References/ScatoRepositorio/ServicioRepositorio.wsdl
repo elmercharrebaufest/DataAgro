@@ -1066,6 +1066,42 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ObtenerRecorridoNoRechazadoPorIdInsumos">
+      <soap:operation soapAction="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerRecorridoNoRechazadoPorIdInsumos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListarHuellaDigital">
+      <soap:operation soapAction="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigital" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerHuellaDigital">
+      <soap:operation soapAction="http://scato.molinos.com.ar/IServicioRepositorio/ObtenerHuellaDigital" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListarHuellaDigitalHistorico">
+      <soap:operation soapAction="http://scato.molinos.com.ar/IServicioRepositorio/ListarHuellaDigitalHistorico" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ListarDatosDeWorkflowsPendientes">
       <soap:operation soapAction="http://scato.molinos.com.ar/IServicioRepositorio/ListarDatosDeWorkflowsPendientes" style="document" />
       <wsdl:input>

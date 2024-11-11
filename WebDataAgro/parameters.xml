@@ -493,4 +493,77 @@
                            /@address" />
 	</parameter>
 
+	<parameter name="Default Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default']
+                           /@address" />
+	</parameter>
+	<parameter name="Default1 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default1']
+                           /@address" />
+	</parameter>
+	<parameter name="Default2 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default2']
+                           /@address" />
+	</parameter>
+	<parameter name="Default3 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default3']
+                           /@address" />
+	</parameter>
+	<parameter name="Default4 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default4']
+                           /@address" />
+	</parameter>
+	<parameter name="Default5 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default5']
+                           /@address" />
+	</parameter>
+	<parameter name="Default6 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default6']
+                           /@address" />
+	</parameter>
+	<parameter name="Default7 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default7']
+                           /@address" />
+	</parameter>
+	<parameter name="Default8 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default8']
+                           /@address" />
+	</parameter>
+	<parameter name="Default9 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default9']
+                           /@address" />
+	</parameter>
+	<parameter name="Default10 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default10']
+                           /@address" />
+	</parameter>
+	<parameter name="Default11 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Default11']
+                           /@address" />
+	</parameter>
+
 </parameters>
