@@ -1127,6 +1127,34 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ArrayOfChoferDto" nillable="true" type="tns:ArrayOfChoferDto" />
+  <xs:complexType name="ArrayOfHuellaDigitalDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HuellaDigitalDto" nillable="true" type="tns:HuellaDigitalDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfHuellaDigitalDto" nillable="true" type="tns:ArrayOfHuellaDigitalDto" />
+  <xs:complexType name="HuellaDigitalDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Acoplado" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Balanza" type="xs:int" />
+      <xs:element minOccurs="0" name="Centro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Chofer" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CuitChofer" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CuitTransportista" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Estado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EstadoRegistro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FechaHoraPesaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="LugarPesaje" type="xs:int" />
+      <xs:element minOccurs="0" name="Observaciones" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Patente" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PesoTara" type="xs:int" />
+      <xs:element minOccurs="0" name="Tipo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Transportista" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Usuario" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HuellaDigitalDto" nillable="true" type="tns:HuellaDigitalDto" />
   <xs:complexType name="ArrayOfInstanciaWorkflowDto">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="InstanciaWorkflowDto" nillable="true" type="tns:InstanciaWorkflowDto" />
@@ -7136,7 +7164,7 @@
       <xs:element minOccurs="0" name="IntermediarioFleteId" nillable="true" type="xs:int" />
       <xs:element minOccurs="0" name="KmARecorrer" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="LocalidadDestinoDescripcion" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="LocalidadDestinoId" type="xs:int" />
+      <xs:element minOccurs="0" name="LocalidadDestinoId" nillable="true" type="xs:int" />
       <xs:element minOccurs="0" name="MaterialDesc" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MaterialId" type="xs:int" />
       <xs:element minOccurs="0" name="MotivoDemora" nillable="true" type="xs:string" />
