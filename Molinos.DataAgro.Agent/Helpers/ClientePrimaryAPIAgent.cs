@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Autofac.Extras.NLog;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -13,6 +6,13 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -22,9 +22,9 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly ICache cache;
-        readonly String urlBase = ConfigurationManager.AppSettings["UrlBasePrimary"];
-        readonly String user = ConfigurationManager.AppSettings["UserPrimary"];
-        readonly String pass = ConfigurationManager.AppSettings["PassPrimary"];
+        readonly string urlBase = ConfigurationManager.AppSettings["UrlBasePrimary"];
+        readonly string user = ConfigurationManager.AppSettings["UserPrimary"];
+        readonly string pass = ConfigurationManager.AppSettings["PassPrimary"];
 
         public ClientePrimaryAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager, ICache cache)
         {
@@ -37,7 +37,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
-                // Create a new token
                 logger.Debug($"Gestionando Token...");
                 var token = new TokenPrimary();
                 var url = $"AuthToken/AuthToken?nombreUsuario={user}&password={pass}";
@@ -70,7 +69,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 var fecha = dia.ToString("yyyyMMdd");
                 var token = ReuseToken();
-                //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
                 {
                     throw new Exception(token.ErrorMessage + ", " + token.ErrorDescription);
@@ -79,7 +77,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug($"Obteniendo negocios MAT...");
                 TradeCaptureReportResult result = GetTradeCaptureReport(token, fecha, fecha);
                 logger.Debug($"Resultado obtenido: {result.ToJson()}");
-                
+
                 if (result.Code == "200")
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
@@ -100,7 +98,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     List<AgenteCompra> listaAgenteCompra = new List<AgenteCompra>();
                     var operadores = repositorio.Listar<Operador>();
-                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61 && a.TrdRptStatus == "0").Select(a => new AgenteCompra
+                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500" || b.Account == "281647") && a.TrdType == 61 && a.TrdRptStatus == "0").Select(a => new AgenteCompra
                     {
                         TipoNegocioId = 5,
                         Cantidad = ObtenerCantidad(a),
@@ -120,8 +118,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ComercialId = 44,
                         ComercialCreadorId = 44, //Id DataAgro en prod
 
-                    }).Where(a => !string.IsNullOrEmpty(a.Posicion)) 
-                    .ToList();
+                    }).Where(a => !string.IsNullOrEmpty(a.Posicion)).ToList();
 
                     var materiales = repositorio.Listar<Material>();
 
@@ -279,7 +276,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             try
             {
                 var token = ReuseToken();
-                //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
                 {
                     throw new Exception(token.ErrorMessage + ", " + token.ErrorDescription);
