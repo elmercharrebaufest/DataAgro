@@ -96,8 +96,9 @@ namespace WebDataAgro.Controllers
                     Siguientes = siguientes,
                     NegocioId = cupo.NegocioId,
                     ConDescarga = cupo.ConDescarga,
-                    Sustentable = cupo.Sustentable ?? false,
-                    EPA = cupo.EPA ?? false
+                    Sustentable = cupo.Sustentable,
+                    EPA = cupo.EPA,
+                    EUDR = cupo.EUDR
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 var centro = centroManager.TraerCentro(cupo.CentroId);
@@ -489,6 +490,7 @@ namespace WebDataAgro.Controllers
                 ConDescarga = cupo.ConDescarga,
                 Sustentable = cupo.Sustentable,
                 EPA = cupo.EPA,
+                EUDR = cupo.EUDR
             };
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -705,20 +707,20 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerEstablecimientos(string cuitProveedor, bool esEPA)
+        public ActionResult TraerEstablecimientos(string cuitProveedor, bool esEPAoEUDR)
         {
             return new JsonResult()
             {
-                Data = cupoManager.TraerEstablecimientos(cuitProveedor, esEPA),
+                Data = cupoManager.TraerEstablecimientos(cuitProveedor, esEPAoEUDR),
                 MaxJsonLength = Int32.MaxValue
             };
         }
         
-        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa)
+        public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa, bool eudr)
         {
             return new JsonResult()
             {
-                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId, sustentable, epa),
+                Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId, sustentable, epa, eudr),
                 MaxJsonLength = Int32.MaxValue, 
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };

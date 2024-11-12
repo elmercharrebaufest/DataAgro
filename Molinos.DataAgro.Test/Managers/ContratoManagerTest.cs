@@ -2982,6 +2982,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Compensacion = false,
                 Sustentable = false,
                 EPA = false,
+                EUDR = false,
                 FechaCierta = DateTime.Now,
                 ContratoAcuerdoId = 1,
                 DolarizadoExpress = false,
@@ -3061,6 +3062,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+
         [Test]
         public void ValidarCalidadModificadaOk()
         {

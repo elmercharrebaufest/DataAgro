@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class ReporteSojaEPADto
+    public class ReporteSojaEPAyEUDRDto
     {
         public double Precio { get; set; }
         public double Fijar { get; set; }

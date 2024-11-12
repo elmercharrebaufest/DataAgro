@@ -1,17 +1,12 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using static WebDataAgro.MvcApplication;
-using Filter = Kendo.DynamicLinq.Filter;
 
 namespace WebDataAgro.Controllers
 {

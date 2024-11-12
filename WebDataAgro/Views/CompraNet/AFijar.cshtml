@@ -785,10 +785,11 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
-                <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                 <label class="sojaEpa" style="width:120px">EPA</label>
-                <input id="epaId" class="campo-input-input sojaEpa" data-bind="checked:Parametros.epaId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
+                <input id="epaId" class="campo-input-input sojaEpa" data-bind="checked:Parametros.epaId, disabled: isControlDisabled" type="checkbox" />
+                <label class="sojaEudr" style="width:120px">EUDR</label>
+                <input id="eudrId" class="campo-input-input sojaEudr" data-bind="checked:Parametros.eudrId, disabled: isControlDisabled" type="checkbox" />
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="sustentableDiv tarifaAConvenirDiv fason acuerdo" hidden>

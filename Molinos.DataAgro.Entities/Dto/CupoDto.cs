@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -64,7 +61,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Cumplimiento { get; set; }
         public bool? ConDescarga { get; set; }
         public string Codigo { get; set; }
-        public bool? Sustentable { get; set; }
-        public bool? EPA { get; set; }
-    }  
+        public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
+    }
 }

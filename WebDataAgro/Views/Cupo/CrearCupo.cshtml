@@ -196,7 +196,7 @@ else if (!Html.ViewData.ModelState.IsValid)
                 <div class="col-sm-2 noRightPadding">
                     <label>Sustentable </label>
                 </div>
-                <div class="col-sm-4 ">
+                <div class="col-sm-2">
                     @Html.CheckBoxFor(x => x.Sustentable, new { @id = "Sustentable" })
                 </div>
             </div>
@@ -205,8 +205,17 @@ else if (!Html.ViewData.ModelState.IsValid)
                 <div class="col-sm-2 noRightPadding">
                     <label>EPA </label>
                 </div>
-                <div class="col-sm-4 ">
+                <div class="col-sm-2">
                     @Html.CheckBoxFor(x => x.EPA, new { @id = "EPA" })
+                </div>
+            </div>
+
+            <div id="EUDRDiv" hidden>
+                <div class="col-sm-2 noRightPadding">
+                    <label>EUDR </label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.CheckBoxFor(x => x.EUDR, new { @id = "EUDR" })
                 </div>
             </div>
         </div>

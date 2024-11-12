@@ -65,6 +65,7 @@ function InicializarCuposIndex() {
                     FleteProcedencia: { type: "boolean" },
                     Sustentable: { type: "boolean" },
                     EPA: { type: "boolean" },
+                    EUDR: { type: "boolean" },
                     ConDescarga: { type: "boolean" },
                     Cumplimiento: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
@@ -94,7 +95,7 @@ function InicializarCuposIndex() {
     $("#grid").kendoGrid({
        toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Cupos.xlsx",
+            fileName: "Reporte de Cupos.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -134,6 +135,7 @@ function InicializarCuposIndex() {
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "Sustentable", title: "Sustentable", type: "string", width: 150, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
             { field: "EPA", title: "EPA", type: "string", width: 150, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; } },
+            { field: "EUDR", title: "EUDR", type: "string", width: 150, template: function (dataItem) { return dataItem.EUDR ? "Si" : "No"; } },
             { field: "ConDescarga", title: "Con Descarga", type: "string", width: 150, template: function (dataItem) { return dataItem.ConDescarga ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
@@ -218,8 +220,9 @@ function InicializarCuposIndex() {
             var templateflete = kendo.template(this.columns[9].template);
             var templatesustentable = kendo.template(this.columns[10].template);
             var templateEPA = kendo.template(this.columns[11].template);
-            var templateConDescarga = kendo.template(this.columns[12].template);
-            var templateCumplimiento = kendo.template(this.columns[39].template);
+            var templateEUDR = kendo.template(this.columns[12].template);
+            var templateConDescarga = kendo.template(this.columns[13].template);
+            var templateCumplimiento = kendo.template(this.columns[40].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -233,11 +236,14 @@ function InicializarCuposIndex() {
                 var dataitemEPA = { EPA: row.cells[10].value };
                 row.cells[10].value = templateEPA(dataitemEPA);
 
-                var dataitemConDescarga = { ConDescarga: row.cells[11].value };
-                row.cells[11].value = templateConDescarga(dataitemConDescarga);
+                var dataitemEUDR = { EUDR: row.cells[11].value };
+                row.cells[11].value = templateEUDR(dataitemEUDR);
 
-                var dataitemCumplimiento = { Cumplimiento: row.cells[38].value };
-                row.cells[38].value = templateCumplimiento(dataitemCumplimiento);
+                var dataitemConDescarga = { ConDescarga: row.cells[12].value };
+                row.cells[12].value = templateConDescarga(dataitemConDescarga);
+
+                var dataitemCumplimiento = { Cumplimiento: row.cells[39].value };
+                row.cells[39].value = templateCumplimiento(dataitemCumplimiento);
 
                 //la fecha en chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
@@ -354,6 +360,9 @@ function deseleccionarRadioButtonSustentable() {
 }
 function deseleccionarRadioButtonEPA() {
     $('[name=EPA]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonEUDR() {
+    $('[name=EUDR]:checked').prop('checked', false);
 }
 function deseleccionarRadioButtonConDescarga() {
     $('[name=ConDescarga]:checked').prop('checked', false);

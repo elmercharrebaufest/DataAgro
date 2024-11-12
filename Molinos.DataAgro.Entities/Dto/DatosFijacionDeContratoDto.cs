@@ -50,8 +50,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool MercsDeposito { get; set; }
         public bool TarifaAConvenir { get; set; }
         public bool MercAplicada { get; set; }
-        public bool? EPA { get; set; }
-        public bool? Sustentable { get; set; }
+        public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public decimal? ImporteSustentable { get; set; }
         public Moneda MonedaSustentable { get; set; }
         public int? SustentableTipoDBId { get; set; }

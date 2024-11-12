@@ -593,6 +593,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Estado_Contrato = x.Estado.Descripcion,
                 Sustentable = x.Sustentable,
                 EPA = x.EPA,
+                EUDR = x.EUDR,
                 SustentableTipoDBId = x.SustentableTipoDBId,
                 SustentableTipoDB = x.SustentableTipoDB != null ? x.SustentableTipoDB.Descripcion : "",
                 Importe_Sustentable = x.ImporteSustentable,
@@ -865,6 +866,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ConDescarga = contrato.ConDescarga,
                 Sustentable = contrato.Sustentable,
                 EPA = contrato.EPA,
+                EUDR = contrato.EUDR,
                 ComercialCreadorId = contrato.ComercialCreadorId,
             };
 
@@ -1039,8 +1041,8 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 logger.Debug($"Datos ingresados para CartasDePortePendienteAplicar: {pendienteDto.ToJson()}");
                 var pendientes = ccppPendientesAgent.ListarCartasDePortePendienteAplicar(pendienteDto);
-                var sustentableOEPA = contrato.Sustentable | contrato.EPA;
-                double cantidadDisponible = DevolverCantidadDisponible(sustentableOEPA, contratosPendientes, pendientes, true);
+                var sustentable = contrato.Sustentable | contrato.EPA | contrato.EUDR;
+                double cantidadDisponible = DevolverCantidadDisponible(sustentable, contratosPendientes, pendientes, true);
                 logger.Debug($"Cantidad Disponible: {cantidadDisponible}");
 
                 if (contrato.Cantidad > cantidadDisponible)
@@ -1053,7 +1055,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public double DevolverCantidadDisponible(bool? sustentableOEPA, List<Contrato> contratosPendientes, List<CcPpPendienteAplicarDto> ccppPendientes, bool sinBoleto)
+        public double DevolverCantidadDisponible(bool sustentable, List<Contrato> contratosPendientes, List<CcPpPendienteAplicarDto> ccppPendientes, bool sinBoleto)
         {
             if (sinBoleto) ccppPendientes.RemoveAll(x => x.Region == "3");
             var cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);
@@ -1078,7 +1080,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
 
             //Soja Comun
-            if (sustentableOEPA != true)
+            if (!sustentable)
             {
                 cantidadCartaDePorte = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && !x.EPA).Sum(x => x.Cantidad);
                 cantidadContratoDeSAP = ccppPendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && !x.EPA && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);

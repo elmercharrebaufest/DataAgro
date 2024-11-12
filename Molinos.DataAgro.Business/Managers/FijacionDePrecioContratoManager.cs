@@ -1133,6 +1133,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FijacionDePrecioContratoId = fijac.Id,
                 Sustentable = false,
                 EPA = false,
+                EUDR = false,
                 Dolarizado = fijac.Dolarizado.Value,
                 Pesificado = false,
                 TrigoEspecial = fijac.TrigoEspecial,

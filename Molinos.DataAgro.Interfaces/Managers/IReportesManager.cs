@@ -1,5 +1,4 @@
 ﻿using Kendo.DynamicLinq;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
@@ -9,7 +8,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IReportesManager
     {
-
         Resultado GrabarReporte(Reportes oReporte);
 
         ReportesDto ObtenerReporte(string identificador);
@@ -28,16 +26,14 @@ namespace Molinos.DataAgro.Interfaces
 
         List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes,List<int> equipo);
+        List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes, List<int> equipo);
 
         List<ResultComprasBarrasReportes> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes, List<int> equipo);
-
 
         #region Objetivos
         List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes, List<int> equipo);
         List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes, List<int> equipo);
         #endregion
-
 
         List<ResulIndicadores> TraerBasedeDatos(ParamReportes oParamReportes);
 
@@ -57,7 +53,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
         List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0);
         ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
-        ReporteSojaEPADto TraerToneladasSojaEPA(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
+        ReporteSojaEPAyEUDRDto TraerToneladasSojaEPAyEUDR(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
         List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool TraerPosicionMaterialCampaña = false, bool verFijaciones = true);
         List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);
         List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);
@@ -65,13 +61,13 @@ namespace Molinos.DataAgro.Interfaces
         HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true);
         HedgeCargaObjetivoDto TraerUltimoHedgeObjetivo();
         HedgeTCPromedioDto TraerTcPromedio(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true);
-        List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta,List<int> materialId);
+        List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId);
         ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0, bool verFijaciones = true);
         ExcelDetallePosicionDto DetalleAgente(DateTime fecha, List<int> materialId);
         List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true);
-        string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0, bool verFijaciones = true);
-        string DetalleAgenteModal(DateTime fecha,List<int> materialId);
-        string DetallePosicionModalIds(List<int> negocios,string moned, int? verDepositoTipoNegocioa);
+        string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0, bool verFijaciones = true);
+        string DetalleAgenteModal(DateTime fecha, List<int> materialId);
+        string DetallePosicionModalIds(List<int> negocios, string moned, int? verDepositoTipoNegocioa);
         string SustentablePosicionModalIds(List<int> negocios, string moneda);
         void TraerPosicionNegocios(List<BasicoContrato> datos);
         ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId, int? MaterialId,
@@ -85,8 +81,8 @@ namespace Molinos.DataAgro.Interfaces
         ResultReportePagosDiferidos ObtenerDatosReportePagosDiferidos(DateTime desde, DateTime hasta);
         void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy);
         DataSourceResult BuscarDatosNegocioPesificacion(DataSourceRequest filtro, List<int> equipo);
-        Resultado ConfigurarExcedente(int id, bool excedente,int comercialId);
-       void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId, bool kgTotales, bool kgPesif);
+        Resultado ConfigurarExcedente(int id, bool excedente, int comercialId);
+        void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId, bool kgTotales, bool kgPesif);
         ReporteLocalidadesModel ObtenerDatosReporteLocalidades();
         ReporteProveedoresModel ObtenerDatosReporteProveedorComerciales(List<ComercialDto> comerciales);
     }

@@ -143,14 +143,27 @@ function InicializarCargaCupos() {
 
     });
     $("#Sustentable").change(function () {
-        if ($("#Sustentable").is(':checked') == true) {
-            $("#EPA").prop("checked", false);
+        if ($("#Sustentable").is(':checked')) {
+            $("#EPA").prop("checked", false).prop("disabled", false);
+            $("#EUDR").prop("checked", false).prop("disabled", false);
         }
         MostrarVisualizarStock();
     });
     $("#EPA").change(function () {
-        if ($("#EPA").is(':checked') == true) {
+        if ($("#EPA").is(':checked')) {
+            $("#EUDR").prop("checked", true).prop("disabled", true);
             $("#Sustentable").prop("checked", false);
+        } else {
+            $("#EUDR").prop("checked", false).prop("disabled", false);
+        }
+        MostrarVisualizarStock();
+    });
+    $("#EUDR").change(function () {
+        if ($("#EUDR").is(':checked')) {
+            $("#EPA").prop("checked", true).prop("disabled", true);
+            $("#Sustentable").prop("checked", false);
+        } else {
+            $("#EPA").prop("checked", false).prop("disabled", false);
         }
         MostrarVisualizarStock();
     });
@@ -177,9 +190,9 @@ function InicializarCargaCupos() {
         $("#guardarBtn").click(function () {
             if (fleteProcedencia && $("#NoPropio").val() == "False") {
                 if ($("#flete").is(':checked')) {
-                    $("#msjConfirmacion").html("El cupo tiene flete procedencia, desea mantener esta condición?");
+                    $("#msjConfirmacion").html("El cupo tiene flete procedencia, ¿desea mantener esta condición?");
                 } else {
-                    $("#msjConfirmacion").html("El cupo no tiene flete procedencia, desea mantener esta condición?");
+                    $("#msjConfirmacion").html("El cupo no tiene flete procedencia, ¿desea mantener esta condición?");
                 }
                 $('#fleteProcedenciaModal').modal('toggle');
             } else {
@@ -297,17 +310,21 @@ function checkSoja() {
         $("#Sustentable").prop("checked", false);
         $("#EPADiv").hide();
         $("#EPA").prop("checked", false);
+        $("#EUDRDiv").hide();
+        $("#EUDR").prop("checked", false);
     } else {
         $("#calidadDiv").show();
-
         if ($("#planta").val() == "1029") {
             $("#sustentableDiv").show();
             $("#EPADiv").show();
+            $("#EUDRDiv").show();
         } else {
             $("#sustentableDiv").hide();
             $("#Sustentable").prop("checked", false);
             $("#EPADiv").hide();
             $("#EPA").prop("checked", false);
+            $("#EUDRDiv").hide();
+            $("#EUDR").prop("checked", false);
         }
     }
 }
@@ -324,7 +341,7 @@ function cuposCreados(error, lista) {
             lista.unshift("Trigo libre de HB4");
         }
         //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
-        if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#planta").val() == "1029" && $("#material").val() == "3") {
+        if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#planta").val() == "1029" && $("#material").val() == "3") {
             MostrarVisualizarStock();
             VisualizarStock(true);
             $("#copy_btn2").show();
@@ -357,12 +374,12 @@ function makeUL(array) {
 }
 
 function copiarGenerados() {
-    var esEPA = $("#EPA").is(':checked');
+    var esEPAoEUDR = $("#EPA").is(':checked') || $("#EUDR").is(':checked');
     $("#copiar-cupos-generados-modal").empty();
     $("#copiar-cupos-generados-modal").append($("#cupos-generados-modal").html());
 
     //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
-    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#planta").val() == "1029" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#planta").val() == "1029" && $("#material").val() == "3") {
         var cuitProv = $("#buscadorProveedor").val().split('(');
         if (cuitProv[1] != null) {
             var cuitP = cuitProv[1].split(')');
@@ -370,14 +387,14 @@ function copiarGenerados() {
         else {
             cuitP = cuitProv;
         }
-        var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPA: esEPA });
+        var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPAoEUDR: esEPAoEUDR });
         if (result != null && result.length > 0) {
             var table = "<pre style='border: 0;    background-color: transparent;'>";
             table += '<div colspan = "">Cosecha ' + result[0].Cosecha + '</div>';
-            table += "<div>" + "Establecimiento".padEnd(25, ' ') + "Cantidad (Kg)".padEnd(25, ' ') + "Localidad(Provincia)" + " </div>"
+            table += "<div>" + "Establecimiento".padEnd(25, ' ') + "Cantidad (Kg)".padEnd(25, ' ') + "Localidad (Provincia)" + " </div>"
             for (var i = 0; i < result.length; i++) {
                 table += "<div>";
-                table += '<div>' + result[i].Establecimiento.padEnd(25, ' ') + kendo.toString(result[i].Cantidad, "n0").padEnd(25, ' ') + result[i].Localidad + '(' + result[i].Provincia + ')' + '</div>';
+                table += '<div>' + result[i].Establecimiento.padEnd(25, ' ') + kendo.toString(result[i].Cantidad, "n0").padEnd(25, ' ') + result[i].Localidad + ' (' + result[i].Provincia + ')' + '</div>';
                 table += "</div>";
             }
             table += "</pre>";
@@ -485,7 +502,7 @@ function copiarTablaEstablecimiento() {
 }
 
 function VisualizarStock(noabrir) {
-    var esEPA = $("#EPA").is(':checked');
+    var esEPAoEUDR = $("#EPA").is(':checked') || $("#EUDR").is(':checked');
     var cuitProv = $("#buscadorProveedor").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');
@@ -493,7 +510,7 @@ function VisualizarStock(noabrir) {
     else {
         cuitP = cuitProv;
     }
-    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPA: esEPA });
+    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPAoEUDR: esEPAoEUDR });
     if (result != null && result.length > 0) {
         stockDisponible = true;
         var table = "<tr>";
@@ -502,14 +519,14 @@ function VisualizarStock(noabrir) {
         table += "<tr>";
         table += "<th> Establecimiento</th>"
         table += "<th> Cantidad (Kg)</th>"
-        table += "<th> Localidad(Provincia) </th>"
+        table += "<th> Localidad (Provincia) </th>"
         table += "</tr>";
         for (var i = 0; i < result.length; i++) {
             table += "<tr>";
 
             table += '<td>' + result[i].Establecimiento + '</td>';
             table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';
-            table += '<td>' + result[i].Localidad + '(' + result[i].Provincia + ')' + '</td>';
+            table += '<td>' + result[i].Localidad + ' (' + result[i].Provincia + ')' + '</td>';
             table += "</tr>";
         }
 
@@ -527,8 +544,7 @@ function VisualizarStock(noabrir) {
 }
 
 function MostrarVisualizarStock() {
-    //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
-    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#planta").val() == "1029" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#planta").val() == "1029" && $("#material").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();
@@ -572,7 +588,7 @@ function copiarImagen() {
 
 
 function GuardarCupo() {
-    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#planta").val() == "1029" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#planta").val() == "1029" && $("#material").val() == "3") {
         VisualizarStock(true);
     } else {
         stockDisponible = true;
@@ -624,6 +640,7 @@ function GuardarCupo() {
 
                 Sustentable: $("#Sustentable").is(':checked'),
                 EPA: $("#EPA").is(':checked'),
+                EUDR: $("#EUDR").is(':checked')
             };
 
             var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });

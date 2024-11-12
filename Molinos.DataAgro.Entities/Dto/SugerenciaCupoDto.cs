@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int DestinoId { get; set; }
         public int CantidadDeCupos { get; set; }
         public int CantidadCupoOriginal { get; set; }
-        public decimal CantidadDeCuposMaximo { get { return this.CantidadDeCupos; } }
+        public decimal CantidadDeCuposMaximo { get { return CantidadDeCupos; } }
         public int? CantidadFleteProcedencia { get; set; }
         public string ZonaDescrip { get; set; }
         public bool Priorizado { get; set; }
@@ -58,11 +58,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CaratulaMAT { get; set; }
         public bool Sustentable { get; set; }
         public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public bool ConDescarga { get; set; }
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 

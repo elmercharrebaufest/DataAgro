@@ -280,7 +280,7 @@ function CargarGrilla() {
                 }, template: function (dataItem) {
                     var estadoContent = ''
                     var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
-                    var iconoEPA = dataItem.EPA == true ? botonEPA('fa-pagelines') : '';
+                    var iconoEPA = dataItem.EPA == true || dataItem.EUDR == true ? botonEPA('fa-pagelines') : '';
                     if (dataItem.EstadoId == 4) { //pendiente
                         if (dataItem.ConDescarga == true) {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' +
@@ -584,16 +584,31 @@ function InicializarElementos() {
     });
 
     $("#Sustentable").change(function () {
-        if ($("#Sustentable").is(':checked') == true) {
-            $("#EPA").prop("checked", false);
+        if ($("#Sustentable").is(':checked')) {
+            $("#EPA").prop("checked", false).prop("disabled", false);
+            $("#EUDR").prop("checked", false).prop("disabled", false);
         }
         MostrarVisualizarStock();
         buscarContratoSE();
     });
 
     $("#EPA").change(function () {
-        if ($("#EPA").is(':checked') == true) {
+        if ($("#EPA").is(':checked')) {
+            $("#EUDR").prop("checked", true).prop("disabled", true);
             $("#Sustentable").prop("checked", false);
+        } else {
+            $("#EUDR").prop("checked", false).prop("disabled", false);
+        }
+        MostrarVisualizarStock();
+        buscarContratoSE();
+    });
+
+    $("#EUDR").change(function () {
+        if ($("#EUDR").is(':checked')) {
+            $("#EPA").prop("checked", true).prop("disabled", true);
+            $("#Sustentable").prop("checked", false);
+        } else {
+            $("#EPA").prop("checked", false).prop("disabled", false);
         }
         MostrarVisualizarStock();
         buscarContratoSE();
@@ -673,6 +688,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     checkSoja();
     $("#Sustentable").prop("checked", false);
     $("#EPA").prop("checked", false);
+    $("#EUDR").prop("checked", false);
 
     // Si tiene permiso "Cupos_Acopios", establecer valores de "ProveedorIdSE" y buscadorProveedorSE
     if (Cupos_Acopios == "True") {
@@ -697,18 +713,23 @@ function checkSoja() {
         $("#sustentableDivSE").hide();
         $("#Sustentable").prop("checked", false);
         $("#EPADivSE").hide();
-        $("#EPA").prop("checked", false);
+        $("#EPA").prop("checked", false).prop("disabled", false);
+        $("#EUDRDivSE").hide();
+        $("#EUDR").prop("checked", false).prop("disabled", false);
     } else {
         $("#calidadDivSE").show();
 
         if ($("#CentroIdSE").val() == "1029") {
             $("#sustentableDivSE").show();
             $("#EPADivSE").show();
+            $("#EUDRDivSE").show();
         } else {
             $("#sustentableDivSE").hide();
             $("#Sustentable").prop("checked", false);
             $("#EPADivSE").hide();
             $("#EPA").prop("checked", false);
+            $("#EUDRDivSE").hide();
+            $("#EUDR").prop("checked", false);
         }
     }
 }
@@ -757,7 +778,7 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Complete el CUIT del destinatario."); return;
     }
 
-    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3" && grupoSegmentacion == "Productores") {
+    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3" && grupoSegmentacion == "Productores") {
         VisualizarStock(true);
         if (!stockDisponible) {
             MensErr("No se pudo guardar porque no existen establecimientos con stock disponible.");
@@ -806,6 +827,7 @@ function grabarSolicitudExtraordinaria() {
             ConDescarga: $("#ConDescarga").is(':checked'),
             Sustentable: $("#Sustentable").is(':checked'),
             EPA: $("#EPA").is(':checked'),
+            EUDR: $("#EUDR").is(':checked'),
             Dias: dataTabla,
             ContratoSAP: contratoSapSE,
             NegocioId: negocioIdSE,
@@ -938,7 +960,7 @@ function imageToBlob(imageURL) {
 }
 
 function VisualizarStock(noabrir) {
-    var esEPA = $("#EPA").is(':checked');
+    var esEPAoEUDR = $("#EPA").is(':checked') || $("#EUDR").is(':checked');
     var cuitProv = $("#buscadorProveedorSE").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');
@@ -946,7 +968,7 @@ function VisualizarStock(noabrir) {
     else {
         cuitP = cuitProv;
     }
-    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPA: esEPA });
+    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPAoEUDR: esEPAoEUDR });
     if (result != null && result.length > 0) {
         stockDisponible = true;
         //var cantidadCuposEstablecimientos = 0;
@@ -957,14 +979,14 @@ function VisualizarStock(noabrir) {
         table += "<tr>";
         table += "<th> Establecimiento</th>"
         table += "<th> Cantidad (Kg)</th>"
-        table += "<th> Localidad(Provincia) </th>"
+        table += "<th> Localidad (Provincia) </th>"
         table += "</tr>";
         for (var i = 0; i < result.length; i++) {
             table += "<tr>";
 
             table += '<td>' + result[i].Establecimiento + '</td>';
             table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';
-            table += '<td>' + result[i].Localidad + '(' + result[i].Provincia + ')' + '</td>';
+            table += '<td>' + result[i].Localidad + ' (' + result[i].Provincia + ')' + '</td>';
             table += "</tr>";
 
             //cantidadKilosEstablecimientos += result[i].Cantidad;
@@ -1000,8 +1022,7 @@ function VisualizarStock(noabrir) {
 }
 
 function MostrarVisualizarStock() {
-    //if ($("#buscadorProveedorSE").val() != "" && $("#CentroIdSE").val() == "1600" && $("#MaterialIdSE").val() == "3") {
-    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
+    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();
@@ -1074,7 +1095,7 @@ function botonSustentable(icono) {
     return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
 }
 function botonEPA(icono) {
-    return '<button data-toggle="tooltip" title="EPA" disabled><i class="fa ' + icono + '"></i></button>';
+    return '<button data-toggle="tooltip" title="EPA/EUDR" disabled><i class="fa ' + icono + '"></i></button>';
 }
 
 function OcultarCargaMasiva() {
@@ -1104,6 +1125,7 @@ function buscarContratoSE() {
     var estadoId = $('input[name="estadoContrato"]:checked').val();
     var sustentable = $("#Sustentable").is(':checked');
     var epa = $("#EPA").is(':checked');
+    var eudr = $("#EUDR").is(':checked');
     contratoSapSE = null; negocioIdSE = null; kgPendientes = 0; cuposRestantes = 0;
 
     if (!proveedorId || !materialId) {
@@ -1118,7 +1140,7 @@ function buscarContratoSE() {
     $.ajax({
         url: '/Cupo/ListarNegociosParaSolicitarCupo',
         type: 'GET',
-        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId, sustentable: sustentable, epa: epa },
+        data: { contratoSap: contratoSap, proveedorId: proveedorId, materialId: materialId, estadoId: estadoId, sustentable: sustentable, epa: epa, eudr: eudr },
         success: function (result) {
             $("#grid").empty();
             if (result && result.length > 0) {

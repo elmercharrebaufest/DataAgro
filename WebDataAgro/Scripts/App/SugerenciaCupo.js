@@ -2,6 +2,7 @@
 var sugerenciasADevolver = [];
 var sustentable = false;
 var epa = false;
+var eudr = false;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -403,9 +404,10 @@ function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial,
     $("#fleteProcedenciaModal").modal("show");
 }
 
-function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos, esSustentable, esEPA) {
-    sustentable = esSustentable == undefined ? false : true;
-    epa = esEPA == undefined ? false : true;
+function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos, esSustentable, esEPA, esEUDR) {
+    sustentable = esSustentable == undefined ? false : esSustentable;
+    epa = esEPA == undefined ? false : esEPA;
+    eudr = esEUDR == undefined ? false : esEUDR;
     aceptar = true;
     itemsConfirmados = new Array();
     itemsConfirmados.push({
@@ -438,9 +440,10 @@ function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos, esSus
 //    }, 250);
 //}
 
-function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc, esSustentable, esEPA) {
-    sustentable = esSustentable == undefined ? false : true;
-    epa = esEPA == undefined ? false : true;
+function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc, esSustentable, esEPA, esEUDR) {
+    sustentable = esSustentable == undefined ? false : esSustentable;
+    epa = esEPA == undefined ? false : esEPA;
+    eudr = esEUDR == undefined ? false : esEUDR;
     aceptar = false;
     $("#modSugerenciaId").val(id);
     $("#modMaterialId").val(materialId);
@@ -517,8 +520,8 @@ function mostrarResultados(result) {
     }
     if (cupos.length > 0) {
         var table = "";
-        if (sustentable || epa) {
-            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: itemsConfirmados[0].proveedorId, esEPA: epa });
+        if (sustentable || epa || eudr) {
+            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: itemsConfirmados[0].proveedorId, esEPAoEUDR: epa || eudr });
             if (result2 != null && result2.length > 0) {
                 table = "<tr>";
                 table += '<th colspan = "3">Cosecha ' + result2[0].Cosecha + '</th>';
@@ -526,13 +529,13 @@ function mostrarResultados(result) {
                 table += "<tr>";
                 table += "<th> Establecimiento</th>"
                 table += "<th> Cantidad (Kg)</th>"
-                table += "<th> Localidad(Provincia) </th>"
+                table += "<th> Localidad (Provincia) </th>"
                 table += "</tr>";
                 for (var i = 0; i < result2.length; i++) {
                     table += "<tr>";
                     table += '<td>' + result2[i].Establecimiento + '</td>';
                     table += '<td>' + kendo.toString(result2[i].Cantidad, "n0") + '</td>';
-                    table += '<td>' + result2[i].Localidad + '(' + result2[i].Provincia + ')' + '</td>';
+                    table += '<td>' + result2[i].Localidad + ' (' + result2[i].Provincia + ')' + '</td>';
                     table += "</tr>";
                 }
             }

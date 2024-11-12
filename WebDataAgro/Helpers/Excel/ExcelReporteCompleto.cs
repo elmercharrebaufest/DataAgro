@@ -253,7 +253,7 @@ namespace WebDataAgro.Helpers.Excel
             //celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
             celdasMerge = sheet.GetRow(1).GetCell(22);
-            celdasMerge.SetCellValue("SOJA EPA");
+            celdasMerge.SetCellValue("SOJA EPA/EUDR");
             celdasMerge.CellStyle = cellcolorTitles;
             #endregion
             #region row2
@@ -291,7 +291,7 @@ namespace WebDataAgro.Helpers.Excel
             c++;
             //CrearCelda(row, c, null, cellcolorTitles); c++;
             CrearCelda(row, c, null, null); c++;
-            //SOJA EPA
+            //SOJA EPA/EUDR
             CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
             CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
             CrearCelda(row, c, "Total", cellcolorTitles); c++;
@@ -337,9 +337,9 @@ namespace WebDataAgro.Helpers.Excel
                     CrearCelda(row, c, model.SojaSustentable.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, model.SojaSustentable.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, null, null); c++;
-                    CrearCelda(row, c, model.SojaEPA.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
-                    CrearCelda(row, c, model.SojaEPA.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
-                    CrearCelda(row, c, model.SojaEPA.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                 }
                 r++;
             }

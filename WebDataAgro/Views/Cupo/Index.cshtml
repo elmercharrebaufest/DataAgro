@@ -175,28 +175,9 @@
                 <label>Material</label>
             </div>
             <div class="col-md-4">
-                @Html.DropDownList("MaterialId", new SelectList(ViewBag.Materiales, "Value", "Text"), new { @class = "multiselect input", @id= "MaterialId" })
+                @Html.DropDownList("MaterialId", new SelectList(ViewBag.Materiales, "Value", "Text"), new { @class = "multiselect input", @id = "MaterialId" })
             </div>
         </div><!--FIN Proveedor y Material-->
-        <div class="row">
-            <div class="col-md-2">
-                <label>Soja Sustentable</label>
-            </div>
-            <div class="col-md-4 filtroBoleano" id="SustentableId" name="Sustentable">
-                Sí: @Html.RadioButton("Sustentable", true, new { @class = "filtroBoleano", @id = "Sustentable" })
-                No: @Html.RadioButton("Sustentable", false, new { @class = "" })
-                <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonSustentable()" style="margin-left:3%; font-size:20px;color:red"></i>
-            </div>
-
-            <div class="col-md-2">
-                <label>Soja EPA</label>
-            </div>
-            <div class="col-md-4 filtroBoleano" id="EPAId" name="EPA">
-                Sí: @Html.RadioButton("EPA", true, new { @class = "filtroBoleano", @id = "EPA" })
-                No: @Html.RadioButton("EPA", false, new { @class = "" })
-                <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
-            </div>
-        </div>
         <div class="row">
             <!--Codigo de Cupo y Estado-->
             <div class="col-md-2">
@@ -207,7 +188,7 @@
             </div>
 
             <div class="col-md-2">
-                <label>Codigo Cupo</label>
+                <label>Código de Cupo</label>
             </div>
             <div class="col-md-2">
                 @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
@@ -220,6 +201,34 @@
                 </button>
             </div>
         </div><!--FIN Codigo de Cupo y Estado-->
+        <div class="row">
+            <div class="col-md-2">
+                <label>Soja Sustentable</label>
+            </div>
+            <div class="col-md-2 filtroBoleano" id="SustentableId" name="Sustentable" style="margin-top:6px;">
+                Sí: @Html.RadioButton("Sustentable", true, new { @class = "filtroBoleano", @id = "Sustentable" })
+                No: @Html.RadioButton("Sustentable", false, new { @class = "" })
+                <i class="fa fa-close ocultarAnular" title="Limpiar" onclick="deseleccionarRadioButtonSustentable()" style="margin-left:3%; font-size:20px;color:red"></i>
+            </div>
+
+            <div class="col-md-2">
+                <label>Soja EPA</label>
+            </div>
+            <div class="col-md-2 filtroBoleano" id="EPAId" name="EPA" style="margin-top:6px;">
+                Sí: @Html.RadioButton("EPA", true, new { @class = "filtroBoleano", @id = "EPA" })
+                No: @Html.RadioButton("EPA", false, new { @class = "" })
+                <i class="fa fa-close ocultarAnular" title="Limpiar" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
+            </div>
+
+            <div class="col-md-2">
+                <label>Soja EUDR</label>
+            </div>
+            <div class="col-md-2 filtroBoleano" id="EUDRId" name="EUDR" style="margin-top:6px;">
+                Sí: @Html.RadioButton("EUDR", true, new { @class = "filtroBoleano", @id = "EUDR" })
+                No: @Html.RadioButton("EUDR", false, new { @class = "" })
+                <i class="fa fa-close ocultarAnular" title="Limpiar" onclick="deseleccionarRadioButtonEUDR()" style="margin-left:3%; font-size:20px;color:red"></i>
+            </div>
+        </div>
     </div><!--FIN Filtros-->
 
 </div>

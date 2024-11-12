@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTablaPorProveedor, List<DiaCupo> devoluciones, int materialId, string centroId, int comercialId);
 
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
-        List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPA);
+        List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPAoEUDR);
         void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
         void AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
@@ -69,6 +69,6 @@ namespace Molinos.DataAgro.Interfaces
         List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
         CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
         void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha);
-        List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa);
+        List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa, bool eudr);
     }
 }
