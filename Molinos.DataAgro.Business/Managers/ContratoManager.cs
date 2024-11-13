@@ -3981,13 +3981,13 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ActualizarContratoSAP(Contrato contrato)
         {
             var error = new Resultado();
-            logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.Id);
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
             if (contratoSave == null || contratoSave.Id == 0)
             {
-                error.Error("Contrato", "No existe el contrato en DataAgro");
+                error.Error("Contrato", $"El contrato {contrato.ContratoSAP} que se intentó modificar desde SAP no existe en Data Agro.");
                 return error;
             }
+            logger.Debug($"Actualizando ContratoSAP {contrato.ContratoSAP} en BD DataAgro con ID {contratoSave.Id}");
 
             contrato.TipoNegocioId = contratoSave.TipoNegocioId;
             contrato.ComercialId = contratoSave.ComercialId;
