@@ -319,7 +319,7 @@ namespace WebDataAgro.Services
             foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
             {
                 var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-                if (!((contratoSAP.EPA == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == 4))
+                if (!((contratoSAP.EPA == "X" || contratoSAP.EUDR == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == 4))
                 {
                     aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Importe = aper.Importe;
                     aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).MonedaId = aper.Moneda;
@@ -459,9 +459,10 @@ namespace WebDataAgro.Services
             {
                 contrato.StandardDeCalidadId = 7;
             }
-            contrato.Sustentable = contratoSAP.Sustentable == "X" && contratoSAP.EPA != "X";
+            contrato.Sustentable = contratoSAP.Sustentable == "X" && contratoSAP.EPA != "X" && contratoSAP.EUDR != "X";
             contrato.EPA = contratoSAP.EPA == "X";
-            if (contrato.EPA == true || contrato.Sustentable == true)
+            contrato.EUDR = contratoSAP.EUDR == "X";
+            if (contrato.EPA || contrato.EUDR || contrato.Sustentable)
             {
                 if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x => x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
                 {
@@ -1290,6 +1291,6 @@ namespace WebDataAgro.Services
                 throw;
             }
         }
-        
+
     }
 }
