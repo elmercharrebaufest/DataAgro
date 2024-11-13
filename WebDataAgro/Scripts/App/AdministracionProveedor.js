@@ -80,7 +80,6 @@ function InicializarElementos() {
         select: function (e) {
             if (e.dataItem.Id != 0) {
                 $("#buscadorResult").val(e.dataItem.Id);
-                $("#datos-proveedor").show();
                 $("#comercial-proveedor").show();
                 $("#divBotones").show();
                 
@@ -152,7 +151,6 @@ function CrearViewModel() {
 }
 function LimpiarViewModel() {
     $("#buscadorProveedor").val("");
-    $("#datos-proveedor").hide();
     $("#comercial-proveedor").hide();
     $("#divBotones").hide();
     $("#buscadorResult").val("");

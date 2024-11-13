@@ -1498,12 +1498,12 @@ namespace WebDataAgro.Helpers.Excel
             celda.SetCellValue("Comercial Asignado");
             celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
-            sheet.AutoSizeColumn(0);
-            sheet.AutoSizeColumn(1);
-            sheet.AutoSizeColumn(2);
-            sheet.AutoSizeColumn(3);
-            sheet.AutoSizeColumn(4);
-
+            // Establecer anchos personalizados para cada columna
+            sheet.SetColumnWidth(0, 15 * 256); // 15 caracteres para la columna "CUIT"
+            sheet.SetColumnWidth(1, 35 * 256); // 30 caracteres para la columna "Razon Social"
+            sheet.SetColumnWidth(2, 20 * 256); // 20 caracteres para la columna "Estado Home"
+            sheet.SetColumnWidth(3, 20 * 256); // 20 caracteres para la columna "Estado"
+            sheet.SetColumnWidth(4, 30 * 256); // 25 caracteres para la columna "Comercial Asignado"
 
             var estiloNegrita = workbook.CreateCellStyle();
             estiloNegrita.BorderBottom = BorderStyle.Thin;
