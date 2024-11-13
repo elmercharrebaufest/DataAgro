@@ -33,6 +33,6 @@ namespace Molinos.DataAgro.Interfaces
         List<Comercial> ListarComercialesOyTNorte();
         List<ComercialQry> ListarComercialesAsignanNegocios();
         List<Comercial> ListarComercialesRecibirSugerenciaFAQ();
-        DataSourceResult TraerComercialesProveedorReporte(int proveedorId, DataSourceRequest request);
+        DataSourceResult TraerComercialesProveedorReporte(int? proveedorId, DataSourceRequest request);
     }
 }

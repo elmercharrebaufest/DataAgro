@@ -424,7 +424,7 @@ namespace Molinos.DataAgro.Business
 
 
 
-        public DataSourceResult TraerComercialesProveedorReporte(int proveedorId, DataSourceRequest request)
+        public DataSourceResult TraerComercialesProveedorReporte(int? proveedorId, DataSourceRequest request)
         {
             var comerciales = repositorio.ObtenerConsultaEscalar(new BusquedaContactosComercialReporte(request, proveedorId));
 

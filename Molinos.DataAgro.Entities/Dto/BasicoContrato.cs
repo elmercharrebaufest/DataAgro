@@ -264,7 +264,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaHastaOriginalFormateado { get; set; }
         public List<ServicioValorDto> Servicios { get; set; }
         public bool ServicioModificado { get; set; }
-        public bool? Sustentable { get; set; }
+        public bool Sustentable { get; set; }
         public decimal? Importe_Sustentable { get; set; }
         public string MonedaId_Sustentable { get; set; }
         public string Moneda_Sustentable { get; set; }
@@ -272,7 +272,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaDesde_SustentableFormateado { get; set; }
         public DateTime? FechaHasta_Sustentable { get; set; }
         public string FechaHasta_SustentableFormateado { get; set; }
-        public bool? EPA { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public int? SustentableTipoDBId { get; set; }
         public string SustentableTipoDB { get; set; }
         public bool? ConDescarga { get; set; }

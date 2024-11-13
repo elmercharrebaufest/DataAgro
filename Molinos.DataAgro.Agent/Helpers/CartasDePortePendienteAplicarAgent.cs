@@ -125,7 +125,8 @@ namespace Molinos.DataAgro.Agent
                                 Region = item.REGION,
                                 Contrato = item.CONTRATO ?? "",
                                 KgContrato = item.KILOS_CONT,
-                                EPA = item.EPA == "X"
+                                EPA = item.EPA == "X",
+                                EUDR = item.EUDR == "X"
                             }).OrderBy(a => a.FechaIngresoDate).ToList();
                     }
                     return listaccpp;

@@ -80,6 +80,7 @@ function CreateGridInformeCompraNet() {
                     AnulaYReemplazaContratoSAP: { type: "number" },
                     Precio: { type: "number", format: "n2" },
                     EPA: { type: "boolean" },
+                    EUDR: { type: "boolean" },
                     ConDescarga: { type: "boolean" },
                     DolarExportador: { type: "boolean" },
                 }
@@ -211,24 +212,28 @@ function CreateGridInformeCompraNet() {
             },
 
             { field: "Comercial", title: "Comercial", width: 170 },
-            { field: "ComercialCreador", title: "Registro <br>Comercial", width: 170 },
+            { field: "ComercialCreador", title: "Comercial Creador", width: 170 },
             {
-                field: "Sustentable / EPA", columns: [
+                field: "Sustentable / EPA / EUDR", columns: [
                     {
                         field: "Sustentable", title: "Sust.", template: function (dataItem) {
-                            //return dataItem.Sustentable ? "Si" : (dataItem.TarifaAConvenir ? "Si" : "No");
                             return dataItem.Sustentable ? "Si" : "No";
-                        }, width: 80
+                        }, width: 70
                     },
                     {
                         field: "EPA", title: "EPA", template: function (dataItem) {
                             return dataItem.EPA ? "Si" : "No";
-                        }, width: 80
+                        }, width: 70
+                    },
+                    {
+                        field: "EUDR", title: "EUDR", template: function (dataItem) {
+                            return dataItem.EUDR ? "Si" : "No";
+                        }, width: 70
                     },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false, width: 80 },
-                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false, width: 80 },
+                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false, width: 70 },
                     {
-                        field: "SustentableTipoDBId", title: "Tipo descuento Sust/EPA", template: function (dataItem) {
+                        field: "SustentableTipoDBId", title: "Tipo de Descuento", template: function (dataItem) {
                             return dataItem.SustentableTipoDBId == null ? "" : dataItem.SustentableTipoDBId == 1 ? "Sobre precio" : "Por fuera de precio";
                         }, width: 110
                     },
@@ -254,7 +259,7 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Dolarizado", columns: [
-                    { field: "Dolarizado", title: "Dolar.", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; }, width: 80 },
+                    { field: "Dolarizado", title: "Dolarizado", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", filterable: false, width: 80, format: _DefaultDateTemplate, template: function (dataItem) {
                             return dataItem.Dolarizado ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
@@ -264,7 +269,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Dolarizado <br>Express", columns: [//48
+                field: "Dolarizado Express", columns: [//48
                     { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
@@ -275,7 +280,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Dolarizado <br>Corredor", columns: [
+                field: "Dolarizado Corredor", columns: [
                     { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
@@ -286,7 +291,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Pago Diferido<br> en pesos", columns: [
+                field: "Pago Diferido en Pesos", columns: [
                     { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; }, width: 80 },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false, width: 80 }
                 ]
@@ -300,12 +305,12 @@ function CreateGridInformeCompraNet() {
             { field: "FechaCierta", type: "date", title: "Fecha<br> Cierta", format: _DefaultDateTemplate, width: 80 },
             { field: "Rechazo", type: "string", title: "Motivo<br> Rechazo", width: 80 },
             { field: "ClasificacionDescripcion", type: "string", title: "Clasificación", width: 80 },
-            { field: "FechaOperacion", type: "date", title: "Fecha <br>Operacion", format: _DefaultDateTemplate, width: 80 },
-            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo <br>Operación<br> Anterior", width: 80 },
+            { field: "FechaOperacion", type: "date", title: "Fecha de<br>Operacion", format: _DefaultDateTemplate, width: 80 },
+            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo de<br>Operación<br> Anterior", width: 80 },
             { field: "DescripcionOperacionAnterior", type: "string", title: "Descripcion <br>Operación<br> Anterior", width: 80 },
             { field: "UsuarioConfirmador", type: "string", title: "Usuario <br>Confirmador", width: 80 },
             {
-                field: "FechaConfirmacion", type: "date", title: "Fecha <br>Confirmación", format: _DefaultDateTemplate, width: 120,
+                field: "FechaConfirmacion", type: "date", title: "Fecha de<br>Confirmación", format: _DefaultDateTemplate, width: 120,
 
                 template: function (dataItem) {
                     if (dataItem.FechaConfirmacion != null) {
@@ -315,15 +320,15 @@ function CreateGridInformeCompraNet() {
             },
 
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque <br>Electrónico", width: 80 },
-            { field: "PagoCBU", type: "string", title: "Pago Cbu", width: 470 },
+            { field: "PagoCBU", type: "string", title: "Pago CBU", width: 300 },
             { field: "ObligatoriedadCostoFinancieroDesc", title: "Obligatoriedad <br>Costo <br>Financiero", width: 80 },
-            { field: "PosicionCBOT", type: "string", title: "Posicion", width: 80 },
-            { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion", width: 80 },
-            { field: "UsuarioTercero", type: "string", title: "Usuario <br>Tercero", width: 150 },
-            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y <br>reemplaza", width: 180 },
+            { field: "PosicionCBOT", type: "string", title: "Posición", width: 80 },
+            { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posición", width: 80 },
+            { field: "UsuarioTercero", type: "string", title: "Usuario Tercero", width: 150 },
+            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y reemplaza", width: 170 },
             { field: "MotivoReemplazo", type: "string", title: "Motivo", width: 180 },
-            { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; }, width: 80 },
-            { field: "ObligatoriedadBonificacionDesc", title: "Obligatoriedad<br> bonificacion", width: 80},
+            { field: "Cesion", type: "string", title: "Cesión", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; }, width: 80 },
+            { field: "ObligatoriedadBonificacionDesc", title: "Obligatoriedad<br> bonificación", width: 80 },
             { field: "PrecioPonderado", title: "Precio<br> Ponderado", type: "number", format: "{0:n2}", width: 100 },
 
             { field: "Condicional", title: "Condicional", type: "string", template: function (dataItem) { return dataItem.Condicional ? "Si" : "No"; }, width: 80 },
@@ -331,22 +336,22 @@ function CreateGridInformeCompraNet() {
             { field: "CondicionalMonedaId", title: "Moneda", width: 80 },
             { field: "CondicionalCantidad", title: "Cantidad", type: "number", format: "{0:n0}", width: 80 },
             { field: "CondicionalFechaFormateado", title: "Fecha", type: "date", format: _DefaultDateTemplate, width: 80 },
-            { field: "CondicionalPosicion", title: "Posicion", type: "string", width: 80 },
+            { field: "CondicionalPosicion", title: "Posición", type: "string", width: 80 },
             { field: "CondicionalContratoSAP", title: "Condicional<br> Contrato", type: "string", width: 80 },
 
             { field: "RazonSocialProveedorComisionista", title: "Comisionista", type: "string", width: 300 },
             { field: "BoletoDescripcion", title: "Boleto", type: "string", width: 80 },
-            { field: "MercaderiaDescripcion", title: "Mercaderia en depósito", type: "string", width: 300 },
+            { field: "MercaderiaDescripcion", title: "Mercadería en <br>depósito", type: "string", width: 80 },
             {
-                field: "CantidadDeposito", title: "Cantidad en depósito", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
+                field: "CantidadDeposito", title: "Cantidad en <br>depósito", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
                     "class": "mobile-xs"
                 }
             },
-            { field: "FechaDolarizadoOriginalFormateado", type: "string", title: "Dolarizado <br>Original", width: 80,  },
+            { field: "FechaDolarizadoOriginalFormateado", type: "string", title: "Dolarizado <br>Original", width: 80, },
             { field: "FechaHastaOriginalFormateado", type: "string", title: "Hasta <br>Original", width: 80 },
             { field: "ConDescarga", type: "string", title: "Con <br>Descarga", template: function (dataItem) { return dataItem.ConDescarga ? "Si" : "No"; }, width: 80 },
             { field: "DolarExportador", type: "string", title: "Dolar <br>Exportador", template: function (dataItem) { return dataItem.DolarExportador ? "Si" : "No"; }, width: 80 },
-            
+
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
@@ -379,18 +384,19 @@ function CreateGridInformeCompraNet() {
                     Pizarra: row.cells[15].value,
                     Sustentable: row.cells[35].value,
                     EPA: row.cells[36].value,
-                    SustentableTipoDBId: row.cells[39].value,
-                    TarifaAConvenir: row.cells[40].value,
-                    Dolarizado: row.cells[43].value,
-                    DolarizadoExpress: row.cells[45].value,
+                    EUDR: row.cells[37].value,
+                    SustentableTipoDBId: row.cells[40].value,
+                    TarifaAConvenir: row.cells[41].value,
+                    Dolarizado: row.cells[44].value,
+                    DolarizadoExpress: row.cells[46].value,
                     DolarizadoCorredor: row.cells[47].value,
-                    Pesificado: row.cells[49].value,
-                    NoInformaSIO: row.cells[51].value,
-                    TrigoEspecial: row.cells[52].value,
-                    Cesion: row.cells[71].value,
-                    Condicional: row.cells[74].value,
-                    ConDescarga: row.cells[87].value,
-                    DolarExportador: row.cells[88].value,
+                    Pesificado: row.cells[50].value,
+                    NoInformaSIO: row.cells[52].value,
+                    TrigoEspecial: row.cells[53].value,
+                    Cesion: row.cells[72].value,
+                    Condicional: row.cells[81].value,
+                    ConDescarga: row.cells[88].value,
+                    DolarExportador: row.cells[89].value,
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -415,22 +421,23 @@ function CreateGridInformeCompraNet() {
                 row.cells[6].value = templateHora(dataItem);
                 row.cells[15].value = templatePizarra(dataItem);
                 row.cells[35].value = templateSustentable(dataItem);
-                row.cells[36].value = row.cells[36].value == true ? "Si" : "No";
-                row.cells[39].value = row.cells[39].value == null ? "" : row.cells[39].value == 1 ? "Sobre precio" : "Por fuera del precio";
-                row.cells[40].value = row.cells[40].value == true ? "Si" : "No";
-                row.cells[43].value = templateDolarizado(dataItem);
-                row.cells[44].value = row.cells[41].value == "Si" ? row.cells[42].value : "";
-                row.cells[45].value = templateDolarizadoExpress(dataItem);
-                row.cells[46].value = row.cells[43].value == "Si" ? row.cells[44].value : "";
-                row.cells[47].value = templateDolarizadoCorredor(dataItem);
-                row.cells[48].value = row.cells[45].value == "Si" ? row.cells[46].value : "";
-                row.cells[49].value = templatePesificado(dataItem);
-                row.cells[51].value = templateSIO(dataItem);
-                row.cells[52].value = templateTrigoEsp(dataItem);
-                row.cells[71].value = templateCesion(dataItem);
-                row.cells[74].value = templateCondicional(dataItem);
-                row.cells[87].value = templateConDescarga(dataItem);
-                row.cells[88].value = templateDolarExportador(dataItem);
+                row.cells[36].value = row.cells[36].value == true ? "Si" : "No"; //EPA
+                row.cells[37].value = row.cells[37].value == true ? "Si" : "No"; //EUDR
+                row.cells[40].value = row.cells[40].value == null ? "" : row.cells[39].value == 1 ? "Sobre precio" : "Por fuera del precio";
+                row.cells[41].value = row.cells[41].value == true ? "Si" : "No"; //tarifa a convenir
+                row.cells[44].value = templateDolarizado(dataItem);
+                row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
+                row.cells[46].value = templateDolarizadoExpress(dataItem);
+                row.cells[47].value = row.cells[46].value == "Si" ? row.cells[47].value : "";
+                row.cells[48].value = templateDolarizadoCorredor(dataItem);
+                row.cells[49].value = row.cells[48].value == "Si" ? row.cells[49].value : "";
+                row.cells[50].value = templatePesificado(dataItem);
+                row.cells[52].value = templateSIO(dataItem);
+                row.cells[53].value = templateTrigoEsp(dataItem);
+                row.cells[72].value = templateCesion(dataItem);
+                row.cells[75].value = templateCondicional(dataItem);
+                row.cells[88].value = templateConDescarga(dataItem);
+                row.cells[89].value = templateDolarExportador(dataItem);
             }
         },
         pageable: {

@@ -411,9 +411,17 @@
                                                         <i class='fa fa-solid fa-leaf' id="esSustentable"></i>
                                                     }
 
-                                                    @if (sugerencia.EPA)
+                                                    @if (sugerencia.EPA && !sugerencia.EUDR)
                                                     {
                                                         <i class='fa fa-pagelines' id="esEPA"></i>
+                                                    }
+                                                    @if (sugerencia.EUDR && !sugerencia.EPA)
+                                                    {
+                                                        <i class='fa fa-tree' id="esEUDR"></i>
+                                                    }
+                                                    @if (sugerencia.EPA && sugerencia.EUDR)
+                                                    {
+                                                        <i class='fa fa-etsy' id="esEPAEUDR"></i>
                                                     }
                                                 </td>
                                                 <td>@sugerencia.KgNegocio.ToString("N0")</td>
@@ -424,8 +432,8 @@
                                                 @*<td>@sugerencia.CantidadCupoOriginal</td>*@
                                                 <td>@sugerencia.CantidadDeCupos</td>
                                                 <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="s@(sugerencia.Id)" /></td>
-                                                <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerencia('s@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))', '@(sugerencia.CantidadDeCupos)', '@sugerencia.Sustentable', @sugerencia.EPA)">Aceptar Sugerencia</a></td>
-                                                <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerencia('@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))','@(sugerencia.CantidadDeCupos)','@(sugerencia.MaterialId)','@(sugerencia.MaterialDesc)', '@sugerencia.Sustentable', @sugerencia.EPA)">Modificar Sugerencia</a></td>
+                                                <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerencia('s@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))', '@(sugerencia.CantidadDeCupos)', '@sugerencia.Sustentable', @sugerencia.EPA, @sugerencia.EUDR)">Aceptar Sugerencia</a></td>
+                                                <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerencia('@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))','@(sugerencia.CantidadDeCupos)','@(sugerencia.MaterialId)','@(sugerencia.MaterialDesc)', '@sugerencia.Sustentable', @sugerencia.EPA, @sugerencia.EUDR)">Modificar Sugerencia</a></td>
                                                 <td><input type="text" class="kNumeric sugerenciaDevuelta" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="@(sugerencia.Id)-@(sugerencia.ProveedorDesc.Replace("'",""))-@(sugerencia.MaterialDesc)-@sugerencia.ContratoSAP-@(sugerencia.CantidadDeCupos)-@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))" /></td>
                                                 <td>@*<a class="linkCeleste" href="javascript:void(0);" onclick="DevolverSugerencia('d@(sugerencia.Id)')">Devolver Sugerencia</a>*@Cantidad a Devolver</td>
                                             </tr>

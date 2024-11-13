@@ -14,15 +14,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
     {
         private readonly DataSourceRequest request;
-        private readonly int proveedorId;
+        private readonly int? proveedorId;
 
-        public BusquedaContactosComercialReporte(DataSourceRequest request,int proveedorId)
+        public BusquedaContactosComercialReporte(DataSourceRequest request,int? proveedorId)
         {
             this.request = request;
             this.proveedorId = proveedorId;
         }
 
-        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, int proveedorId)
+        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, int? proveedorId)
         {
             var resultado =
              from prov in contexto.Set<Proveedor>()
@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
              join com in contexto.Set<Comercial>() on proCom.ComercialId equals com.ComercialId
              join estHom in contexto.Set<EstadoHome>() on prov.EstadoHome.Id equals estHom.Id
              join est in contexto.Set<Estado>() on prov.Estado.EstadoId equals est.EstadoId
-             where prov.ProveedorId.Equals(proveedorId)
+             where !proveedorId.HasValue || prov.ProveedorId == proveedorId.Value
 
              orderby proCom.ProveedorId
              select new DatosContactoProveedor()

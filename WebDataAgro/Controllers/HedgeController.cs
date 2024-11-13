@@ -325,7 +325,7 @@ namespace WebDataAgro.Controllers
                 HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(hoy, hoy, null),
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(hoy, hoy, null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
-                SojaEPA = mobjReportesManager.TraerToneladasSojaEPA(hoy, hoy),
+                SojaEPAyEUDR = mobjReportesManager.TraerToneladasSojaEPAyEUDR(hoy, hoy),
             };
         }
     }

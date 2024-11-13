@@ -206,7 +206,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>())).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>())).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPA(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaEPADto());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPAyEUDR(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaEPAyEUDRDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<bool>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>())).Returns(new List<HedgeMaterialDto>());
@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>())).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>())).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPA(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaEPADto());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPAyEUDR(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new ReporteSojaEPAyEUDRDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<bool>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>())).Returns(new List<HedgeMaterialDto>());

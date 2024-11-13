@@ -77,7 +77,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 decimal? precioNetoSustentable = null;
 
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId.HasValue)
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId.HasValue)
                 {
                     listaDescuentos.Add(new ZMPES5290
                     {
@@ -193,7 +193,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Calidades: " + calidad.ToJson());
 
                 var listaApertura = new List<ZMPES5440>();
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.TarifaAConvenir != true && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.TarifaAConvenir != true && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
                 {
                     listaApertura.Add(new ZMPES5440
                     {
@@ -252,7 +252,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
 
                 }
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId == 1)
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId == 1)
                 {
                     descuentoGeneralSobrePrecio = descuentoGeneralSobrePrecio ?? new DescuentoBonificacion
                     {
@@ -326,11 +326,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.MATERIAL = contrato.Material.Codigo;
                 rq2.IM_CONTRATO.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
                 rq2.IM_CONTRATO.PRECIO_PIZARRA = contrato.Precio;
-                rq2.IM_CONTRATO.PRECIO = (contrato.EPA == true || contrato.Sustentable == true) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
+                rq2.IM_CONTRATO.PRECIO = (contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
                 rq2.IM_CONTRATO.PROVEEDOR = contrato.Proveedor.CUIT;
                 rq2.IM_CONTRATO.PROVINCIA = contrato.ProvinciaId.ToString();
-                rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable == true || contrato.EPA == true ? "X" : "";
-                rq2.IM_CONTRATO.EPA = contrato.EPA == true ? "X" : "";
+                rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable || contrato.EPA || contrato.EUDR ? "X" : "";
+                rq2.IM_CONTRATO.EPA = contrato.EPA ? "X" : "";
+                rq2.IM_CONTRATO.EUDR = contrato.EUDR && !contrato.EPA ? "X" : "";
                 rq2.IM_CONTRATO.ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString;
                 rq2.IM_CONTRATO.FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.FechaOperacion.ToString("yyyy-MM-dd") : repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd");
                 rq2.IM_CONTRATO.USUARIO = contrato.Comercial.IdActiveDirectory;

@@ -18,10 +18,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+
         public List<string> Crear(Cupo cupo, int cantidadCupos)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -57,14 +58,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MATNR = cupo.Material.Codigo,
                             PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
                             DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
-                            PLANTA = cupo.Centro.CodigoSap == "1029" && (cupo.Sustentable == true || cupo.EPA == true) ? "1600" : cupo.Centro.CodigoSap,
+                            PLANTA = cupo.Centro.CodigoSap == "1029" && (cupo.Sustentable || cupo.EPA || cupo.EUDR) ? "1600" : cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,
                             OBSERVACIONES = cupo.Observaciones,
                             DESTINATARIO = cupo.Destinatario,
                             FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
                             CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
                         },
-                        IM_PROPUESTA = cupo.TipoNegocioId != null || cupo.NegocioId != null || cupo.ConfiguracionEspacioDinamicoId != null ? "X" : "",
+                        IM_PROPUESTA = "X", //Si se envía vacío la RFC responde "No hay cupos disponibles."
                         IM_EXCEPCION = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
                     };
 

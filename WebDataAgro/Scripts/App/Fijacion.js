@@ -270,7 +270,9 @@ function cargarDatosAFijarEnFijacion(afijar) {
     }
 
     if (afijar.Sustentable) $("#sustentable").text("Sí")
-    else if (afijar.EPA) $("#sustentable").text("EPA")
+    else if (afijar.EPA && !afijar.EUDR) $("#sustentable").text("EPA")
+    else if (afijar.EPA && afijar.EUDR) $("#sustentable").text("EPA/EUDR")
+    else if (!afijar.EPA && afijar.EUDR) $("#sustentable").text("EUDR")
     else $("#sustentable").text("No");
 }
 
@@ -5365,7 +5367,7 @@ function inicializarGrillaContratosPendientes() {
                 {
                     field: "Sustentable", title: "Sustentable", template: function (dataItem) {
                         return "<label  style=' font-weight: bold; color: " + dataItem.Color + "'> <strong>" +
-                            (dataItem.Sustentable ? "Sust." : dataItem.EPA ? "EPA" : "")
+                            (dataItem.Sustentable ? "Sust." : dataItem.EPA && !dataItem.EUDR ? "EPA" : !dataItem.EPA && dataItem.EUDR ? "EUDR" : dataItem.EPA && dataItem.EUDR ? "EPA/EUDR" : "")
                             + "</strong></label>"
                     }
                 }

@@ -627,7 +627,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     logger.Debug($"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene ContactoComercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial");
-                    return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = $"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene ContactoComercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial" } } };
+                    return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = $"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene Contacto Comercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial" } } };
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 var emailComerciales = "";
@@ -746,7 +746,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable ? " (Sustentable)" : oContrato.EPA && !oContrato.EUDR ? " (EPA)" : oContrato.EUDR && !oContrato.EPA ? " (EUDR)" : oContrato.EPA && oContrato.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.AnulaYReemplazaContrato != null && oContrato.AnulaYReemplazaContratoId != null)
             {
@@ -872,7 +872,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.Sustentable ? "SUSTENTABLE " : oContrato.EPA && oContrato.EUDR ? "EPA/EUDR " : !oContrato.EPA && oContrato.EUDR ? "EUDR " : "EPA ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
@@ -1018,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.TarifaAConvenir == true)
             {
-                htmlBody += $"Negocio {(oContrato.Sustentable == true ? "sustentable" : "EPA")} con tarifa a convenir antes de la entrega.<br />";
+                htmlBody += $"Negocio {(oContrato.Sustentable ? "sustentable" : oContrato.EPA && oContrato.EUDR ? "EPA/EUDR" : oContrato.EPA && !oContrato.EUDR ? "EPA" : !oContrato.EPA && oContrato.EUDR ? "EUDR" : "")} con tarifa a convenir antes de la entrega.<br />";
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1155,10 +1155,6 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Eliminado); // rechazado ??
             if (contrato != null)
             {
-                //if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
-                //{
-                //    htmlBody += "SUSTENTABLE <br />";
-                //}
                 if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
                     repositorio.Existe<Calidad>(x => x.NegocioId == contrato.Id && x.CalidadEspecialId == 4 && x.Valor == 2))))
@@ -1172,7 +1168,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
-                    htmlBody += (contrato.EPA == true ? "EPA " : "SUSTENTABLE ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                    htmlBody += (contrato.Sustentable ? "SUSTENTABLE " : contrato.EPA && contrato.EUDR ? "EPA/EUDR " : !contrato.EPA && contrato.EUDR ? "EUDR " : "EPA ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
                 }
                 if (contrato.Descuentos != null)
                 {
@@ -3945,7 +3941,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable ? " (Sustentable)" : oContrato.EPA && !oContrato.EUDR ? " (EPA)" : oContrato.EUDR && !oContrato.EPA ? " (EUDR)" : oContrato.EPA && oContrato.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.DestinoId != null)
             {
@@ -4042,7 +4038,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.Sustentable ? "SUSTENTABLE " : oContrato.EPA && oContrato.EUDR ? "EPA/EUDR " : !oContrato.EPA && oContrato.EUDR ? "EUDR " : "EPA ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
@@ -4428,10 +4424,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                     }
                 }
-                //if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
-                //{
-                //    htmlBody += "SUSTENTABLE <br />";
-                //}
+
                 if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
                     repositorio.Existe<Calidad>(x => x.NegocioId == contrato.Id && x.CalidadEspecialId == 4 && x.Valor == 2))))
@@ -4445,7 +4438,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
-                    htmlBody += (contrato.EPA == true ? "EPA " : "SUSTENTABLE ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                    htmlBody += (contrato.Sustentable ? "SUSTENTABLE " : contrato.EPA && contrato.EUDR ? "EPA/EUDR " : !contrato.EPA && contrato.EUDR ? "EUDR " : "EPA ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
                 }
             }
 
@@ -4553,7 +4546,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable ? " (Sustentable)" : oContrato.EPA && !oContrato.EUDR ? " (EPA)" : oContrato.EUDR && !oContrato.EPA ? " (EUDR)" : oContrato.EPA && oContrato.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
 
             if (oContrato.DestinoId != null)
@@ -4651,7 +4644,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.Sustentable ? "SUSTENTABLE " : oContrato.EPA && oContrato.EUDR ? "EPA/EUDR " : !oContrato.EPA && oContrato.EUDR ? "EUDR " : "EPA ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {

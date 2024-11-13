@@ -1,17 +1,13 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
-using Molinos.DataAgro.Entities.Seguridad;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -33,12 +29,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var queryCupos =
                 from cupo in contexto.Set<Cupo>()
-                where (equipo.Contains(cupo.ComercialId != null ? cupo.ComercialId.Value : 0) && !externo ) ||
+                where (equipo.Contains(cupo.ComercialId != null ? cupo.ComercialId.Value : 0) && !externo) ||
                 (externo && cupo.UsuarioCreador == nombreUsuario)
 
                 select new CupoDto
                 {
-
                     Id = cupo.Id,
                     ComercialId = cupo.ComercialId,
                     FechaIngreso = cupo.FechaIngreso,
@@ -67,7 +62,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MensajeError = cupo.ErrorStop,
                     Acopio = cupo.Centro.Acopio,
                     UsuarioCreador = cupo.UsuarioCreador,
-                    
                     CartaPorte = cupo.CartaPorte,
                     Chofer = cupo.Chofer,
                     CorredorComprador = cupo.CorredorComprador,
@@ -92,6 +86,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     EstadoOrden = cupo.EstadoCupo.Orden,
                     Sustentable = cupo.Sustentable,
                     EPA = cupo.EPA,
+                    EUDR = cupo.EUDR,
                     ConDescarga = cupo.ConDescarga,
                 };
 

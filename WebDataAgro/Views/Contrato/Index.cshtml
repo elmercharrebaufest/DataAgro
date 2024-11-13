@@ -228,15 +228,15 @@
             </span>
         </div>
         <div class="col-md-2">
+            <label>Dolarizado Express</label>
+            @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "DolarizadoExpress" })
+        </div>
+        <div class="col-md-2">
             <label>Días de Diferimiento</label>
             @Html.CheckBox("Pesificado", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "PesificadoId" })
         </div>
         <div class="col-md-3">
             @Html.TextBox("Dias_Pesificado", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Dias_PesificadoId" })
-        </div>
-        <div class="col-md-2">
-            <label>Dolarizado Express</label>
-            @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "DolarizadoExpress" })
         </div>
     </div>
     <div class="row">
@@ -248,11 +248,12 @@
             <label>Soja EPA</label>
             @Html.CheckBox("EPA", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "EPAId" })
         </div>
-        <div class="col-md-1">
-            <label></label>
-        </div>
         <div class="col-md-2">
-            <label>Importe Susten. o EPA</label>
+            <label>Soja EUDR</label>
+            @Html.CheckBox("EUDR", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "EUDRId" })
+        </div>
+        <div class="col-md-3">
+            <label>Importe Sustentable / EPA / EUDR</label>
         </div>
         <div class="col-md-3">
             @Html.TextBox("Importe_Sustentable", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Importe_SustentableId" })

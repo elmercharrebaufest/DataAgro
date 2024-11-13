@@ -664,11 +664,11 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerToneladasSojaEPATest()
         {
             var fecha = new DateTime(2018, 10, 26);
-            repositorioMock.Setup(y => y.ObtenerConsultaEscalar(It.IsAny<TraerToneladasSojaEPA>()))
-                .Returns(new ReporteSojaEPADto { Fijar = 1, Precio = 1, Total = 1 });
-            var result = target.TraerToneladasSojaEPA(fecha, fecha);
+            repositorioMock.Setup(y => y.ObtenerConsultaEscalar(It.IsAny<TraerToneladasSojaEPAyEUDR>()))
+                .Returns(new ReporteSojaEPAyEUDRDto { Fijar = 1, Precio = 1, Total = 1 });
+            var result = target.TraerToneladasSojaEPAyEUDR(fecha, fecha);
 
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasSojaEPA>()), Times.Once);
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasSojaEPAyEUDR>()), Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Fijar);
             Assert.AreEqual(1, result.Precio);

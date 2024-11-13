@@ -1,6 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -26,6 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Provincia { get; set; }
         public string Sustentable { get; set; }
         public string EPA { get; set; }
+        public string EUDR { get; set; }
         public string Especial { get; set; }
         public string Procedencia { get; set; }
         public string Centro { get; set; }
@@ -97,7 +96,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
         public string Cesion { get; set; }
-
         public string Condicional { get; set; }
         public decimal? CondicionalPrecio { get; set; }
         public string CondicionalMonedaId { get; set; }
@@ -116,6 +114,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal PorcentajeDesde { get; set; }
         public decimal PorcentajeHasta { get; set; }
     }
+
     public class DescuentoBonificacionSap
     {
         public string TipoPeriodo { get; set; }
@@ -137,6 +136,3 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Porcentaje { get; set; }
     }
 }
-
-
-

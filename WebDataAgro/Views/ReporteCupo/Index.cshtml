@@ -192,6 +192,14 @@
             <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonCumplimiento()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
 
+        <div class="col-md-2">
+            <label>Soja EUDR</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="EUDRId" name="EUDR">
+            Sí: @Html.RadioButton("EUDR", true, new { @class = "filtroBoleano ocultarAnular", @id = "EUDR" })
+            No: @Html.RadioButton("EUDR", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEUDR()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
     </div>
     <br />
 

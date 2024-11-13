@@ -652,6 +652,7 @@ function ObtenerDatos(error) {
     obj.Dolarizado = $("#tipoId").val() == "1" ? false : $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
     obj.EPA = $("#epaId").is(":checked") ? true : false;
+    obj.EUDR = $("#eudrId").is(":checked") ? true : false;
     obj.SustentableTipoDBId = $("#selectSustenTipoDB").val();
     obj.DiasPesificado = obj.TipoNegocioId != "3" ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
@@ -1097,7 +1098,7 @@ function DatosProveedor() {
 }
 
 function MostrarCcPpPendientesAplicar() {
-    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || $("#epaId").is(":checked")) && $("#selectSustenTipoDB").val() == 2) {
+    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || $("#epaId").is(":checked") || $("#eudrId").is(":checked")) && $("#selectSustenTipoDB").val() == 2) {
         $(".fechaHastaSustentableDiv").show();
         var cuitP = "";
         var cuitC = "";
@@ -1400,7 +1401,7 @@ function guardarCuposConDescarga() {
     $("#modalCargarCuposConDescarga").modal("hide");
 }
 
-// PARA VISUALIZAR STOCK SI ES EPA O SUSTENTABLE
+// PARA VISUALIZAR STOCK SI ES EPA, SUSTENTABLE O EUDR
 
 function mostrarResultados(result) {
     var error = new Array();
@@ -1415,8 +1416,8 @@ function mostrarResultados(result) {
 
     if (cupos.length > 0) {
         var table = "";
-        if ($("#sustentableId").is(":checked") || $("#epaId").is(":checked")) {
-            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: $("#proveedorId").val(), esEPA: $("#epaId").is(":checked") });
+        if ($("#sustentableId").is(":checked") || $("#epaId").is(":checked") || $("#eudrId").is(":checked")) {
+            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: $("#proveedorId").val(), esEPAoEUDR: $("#epaId").is(":checked") || $("#eudrId").is(":checked") });
             if (result2 != null && result2.length > 0) {
                 table = "<tr>";
                 table += '<th colspan = "3">Cosecha ' + result2[0].Cosecha + '</th>';
@@ -1424,13 +1425,13 @@ function mostrarResultados(result) {
                 table += "<tr>";
                 table += "<th> Establecimiento</th>"
                 table += "<th> Cantidad (Kg)</th>"
-                table += "<th> Localidad(Provincia) </th>"
+                table += "<th> Localidad (Provincia) </th>"
                 table += "</tr>";
                 for (var i = 0; i < result2.length; i++) {
                     table += "<tr>";
                     table += '<td>' + result2[i].Establecimiento + '</td>';
                     table += '<td>' + kendo.toString(result2[i].Cantidad, "n0") + '</td>';
-                    table += '<td>' + result2[i].Localidad + '(' + result2[i].Provincia + ')' + '</td>';
+                    table += '<td>' + result2[i].Localidad + ' (' + result2[i].Provincia + ')' + '</td>';
                     table += "</tr>";
                 }
             }

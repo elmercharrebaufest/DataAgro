@@ -115,7 +115,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 decimal? precioNetoSustentable = null;
 
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId.HasValue)
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId.HasValue)
                 {
                     listaDescuentos.Add(new ZMPES5290
                     {
@@ -255,7 +255,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     apModificado = true;
                 }
                 var listaApertura = new List<ZMPES5440>();
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.TarifaAConvenir != true && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.TarifaAConvenir != true && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
                 {
                     listaApertura.Add(new ZMPES5440
                     {
@@ -320,7 +320,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
 
-                if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId == 1)
+                if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId == 1)
                 {
                     descuentoGeneralSobrePrecio = descuentoGeneralSobrePrecio ?? new DescuentoBonificacion
                     {
@@ -398,6 +398,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.StandardDeCalidadId != contrato.StandardDeCalidadId ||
                     contratoGuardado.Sustentable != contrato.Sustentable ||
                     contratoGuardado.EPA != contrato.EPA ||
+                    contratoGuardado.EUDR != contrato.EUDR ||
                     contratoGuardado.TarifaAConvenir != contrato.TarifaAConvenir ||
                     contratoGuardado.TarifaFlete != contrato.TarifaFlete ||
                     contratoGuardado.TrigoEspecial != contrato.TrigoEspecial ||
@@ -486,11 +487,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo);
                 detalle.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
                 detalle.PRECIO_PIZARRA = contrato.Precio;
-                detalle.PRECIO = (contrato.EPA == true || contrato.Sustentable == true) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : contrato.PrecioNeto ?? contrato.Precio;
+                detalle.PRECIO = (contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : contrato.PrecioNeto ?? contrato.Precio;
                 detalle.PROVEEDOR = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT);
                 detalle.PROVINCIA = contrato.ProvinciaId.ToString();
-                detalle.SUSTENTABLE = contrato.Sustentable == true || contrato.EPA == true ? "X" : "";
-                detalle.EPA = contrato.EPA == true ? "X" : "";
+                detalle.SUSTENTABLE = contrato.Sustentable || contrato.EPA || contrato.EUDR ? "X" : "";
+                detalle.EPA = contrato.EPA ? "X" : ""; //si es twin (EPA+EUDR) se completa el campo EPA.
+                detalle.EUDR = contrato.EUDR && !contrato.EPA ? "X" : "";
                 detalle.ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap);
                 detalle.FECHA = contrato.FechaOperacion.ToString("yyyy-MM-dd");
                 detalle.USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory);

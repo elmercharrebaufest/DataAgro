@@ -1,12 +1,10 @@
-﻿using Molinos.DataAgro.Entities.Dto;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
     public class ReporteCompraNetModel
     {
         public List<ToneladasGranoTipoDto> ToneladasGranoTipo { get; set; }
-        public ReporteSojaSustDto SojaSustentable { get; set; }
         public List<PosicionComprasDto> PosicionCompras { get; set; }
         public List<PrecioCantidadDto> PrecioCantidad { get; set; }
         public List<PricingCampaniaDto> PricingCampania { get; set; }
@@ -14,7 +12,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public HedgeCargaObjetivoDto HedgeObjetivo { get; set; }
         public HedgeTCPromedioDto TCPromedioDto { get; set; }
         public AgenteCompraModel AgenteCompras { get; set; }
-        public ReporteSojaEPADto SojaEPA { get; set; }
+        public ReporteSojaSustDto SojaSustentable { get; set; }
+        public ReporteSojaEPAyEUDRDto SojaEPAyEUDR { get; set; }
     }
     public class HedgeMaterialModel
     {

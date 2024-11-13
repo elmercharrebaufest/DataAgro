@@ -28,8 +28,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public string UsuarioCreador { get; set; }
         public string MotivoRechazo { get; set; }
-
-
         public string EstadoPlanta { get; set; }
         public string CartaPorte { get; set; }
         public string CTG { get; set; }
@@ -90,12 +88,13 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("ComercialCreadorId")]
         public virtual Comercial ComercialCreador { get; set; }
         public int? ComercialCreadorId { get; set; }
-        public bool? Sustentable { get; set; }
-        public bool? EPA { get; set; }
+        public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }
