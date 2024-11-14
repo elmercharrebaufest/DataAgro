@@ -89,12 +89,12 @@ namespace Molinos.DataAgro.Test.Controllers
             precioPizarraManagerMock.Setup(x => x.TraerTodoPrecioPizarra()).Returns(new List<PrecioPizarraDto> {
             new PrecioPizarraDto{ Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MaterialId = 1, MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON"} });
 
-            precioPizarraManagerMock.Setup(x => x.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1)).Returns(new List<PrecioPizarraDto> {
+            precioPizarraManagerMock.Setup(x => x.TraerPrecioPizarraPorMaterialYPizarra(1, 1)).Returns(new List<PrecioPizarraDto> {
             new PrecioPizarraDto{ Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MaterialId = 1, MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON"} });
 
             var result = target.GrabarPrecioPizarra(precioPizarraModel) as PartialViewResult;
 
-            precioPizarraManagerMock.Verify(x => x.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1), Times.Once);
+            precioPizarraManagerMock.Verify(x => x.TraerPrecioPizarraPorMaterialYPizarra(1, 1), Times.Once);
             precioPizarraManagerMock.Verify(x => x.TraerTodoPrecioPizarra(), Times.Once);
             precioPizarraManagerMock.Verify(x => x.GrabarPrecioPizarra(It.IsAny<PrecioPizarra>(), false), Times.Once);
 
@@ -105,12 +105,12 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarPorPizarraYMaterial()
         {
-            precioPizarraManagerMock.Setup(x => x.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1)).Returns(new List<PrecioPizarraDto> {
+            precioPizarraManagerMock.Setup(x => x.TraerPrecioPizarraPorMaterialYPizarra(1, 1)).Returns(new List<PrecioPizarraDto> {
             new PrecioPizarraDto{ Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MaterialId = 1, MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON", Fecha = new DateTime(2019,8,6)} });
 
             var result = target.BuscarPorPizarraYMaterial(1, 1);
 
-            precioPizarraManagerMock.Verify(x => x.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1), Times.Once);
+            precioPizarraManagerMock.Verify(x => x.TraerPrecioPizarraPorMaterialYPizarra(1, 1), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
