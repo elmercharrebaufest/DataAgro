@@ -3410,70 +3410,70 @@ function mostrarEstadoInformesComerciales(cproductiva) {
     }
 
     for (cp of ultimasCampanias) {
-        if (cp.MaterialId == 1) {
-            if (cp.InformeActualizado == 1) {
+        if (cp.MaterialId == Materiales.MAIZ) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.ACTUALIZADO) {
                 $(".informe-maiz").html(cp.Campania + " ");
                 $(".informe-maiz").attr('style', 'color:#00A700; font-weight: bold');
                 $("#iconMaiz").addClass("fa fa-check-circle");
                 $("#iconMaiz").attr('style', 'color:#00A700');
             }
-            if (cp.InformeActualizado == 2) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.DESACTUALIZADO) {
                 $(".informe-maiz").html(cp.Campania + " ");
                 $(".informe-maiz").attr('style', 'color:red; font-weight: bold');
                 $("#iconMaiz").addClass("fa fa-exclamation-circle");
                 $("#iconMaiz").attr('style', 'color:red');
             }
         };
-        if (cp.MaterialId == 2) {
-            if (cp.InformeActualizado == 1) {
+        if (cp.MaterialId == Materiales.TRIGO) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.ACTUALIZADO) {
                 $(".informe-trigo").html(cp.Campania + " ");
                 $(".informe-trigo").attr('style', 'color:#00A700; font-weight: bold');
                 $("#iconTrigo").addClass("fa fa-check-circle");
                 $("#iconTrigo").attr('style', 'color:#00A700');
             }
-            if (cp.InformeActualizado == 2) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.DESACTUALIZADO) {
                 $(".informe-trigo").html(cp.Campania + " ");
                 $(".informe-trigo").attr('style', 'color:red; font-weight: bold');
                 $("#iconTrigo").addClass("fa fa-exclamation-circle");
                 $("#iconTrigo").attr('style', 'color:red');
             }
         };
-        if (cp.MaterialId == 3) {
-            if (cp.InformeActualizado == 1) {
+        if (cp.MaterialId == Materiales.SOJA) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.ACTUALIZADO) {
                 $(".informe-soja").html(cp.Campania + " ");
                 $(".informe-soja").attr('style', 'color:#00A700; font-weight: bold');
                 $("#iconSoja").addClass("fa fa-check-circle");
                 $("#iconSoja").attr('style', 'color:#00A700');
             }
-            if (cp.InformeActualizado == 2) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.DESACTUALIZADO) {
                 $(".informe-soja").html(cp.Campania + " ");
                 $(".informe-soja").attr('style', 'color:red; font-weight: bold');
                 $("#iconSoja").addClass("fa fa-exclamation-circle");
                 $("#iconSoja").attr('style', 'color:red');
             }
         };
-        if (cp.MaterialId == 4) {
-            if (cp.InformeActualizado == 1) {
+        if (cp.MaterialId == Materiales.GIRASOL) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.ACTUALIZADO) {
                 $(".informe-girasol").html(cp.Campania);
                 $(".informe-girasol").attr('style', 'color:#00A700; font-weight: bold');
                 $("#iconGirasol").addClass("fa fa-check-circle");
                 $("#iconGirasol").attr('style', 'color:#00A700');
             }
-            if (cp.InformeActualizado == 2) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.DESACTUALIZADO) {
                 $(".informe-girasol").html(cp.Campania + " ");
                 $(".informe-girasol").attr('style', 'color:red; font-weight: bold');
                 $("#iconGirasol").addClass("fa fa-exclamation-circle");
                 $("#iconGirasol").attr('style', 'color:red');
             }
         };
-        if (cp.MaterialId == 6) {
-            if (cp.InformeActualizado == 1) {
+        if (cp.MaterialId == Materiales.SORGO) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.ACTUALIZADO) {
                 $(".informe-sorgo").html(cp.Campania);
                 $(".informe-sorgo").attr('style', 'color:#00A700; font-weight: bold');
                 $("#iconSorgo").addClass("fa fa-check-circle");
                 $("#iconSorgo").attr('style', 'color:#00A700');
             }
-            if (cp.InformeActualizado == 2) {
+            if (cp.InformeActualizado == ESTADO_INF_COMERIAL.DESACTUALIZADO) {
                 $(".informe-sorgo").html(cp.Campania + " ");
                 $(".informe-sorgo").attr('style', 'color:red; font-weight: bold');
                 $("#iconSorgo").addClass("fa fa-exclamation-circle");

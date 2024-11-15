@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>(), It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
             .Returns(new List<PrecioPizarraDto>() { new PrecioPizarraDto { Id = 1 } });
 
-            var resultado = target.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1);
+            var resultado = target.TraerPrecioPizarraPorMaterialYPizarra(1, 1);
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>(), It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()));
 

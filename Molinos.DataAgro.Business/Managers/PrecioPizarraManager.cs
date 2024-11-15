@@ -15,18 +15,18 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class PrecioPizarraManager : IPrecioPizarraManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        private IPrecioPizarraAgent precioPizarraAgent;
-        private IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent;
+        private readonly IPrecioPizarraAgent precioPizarraAgent;
+        private readonly IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent,
+        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent precioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent,
             IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.precioPizarraAgent = crearPrecioPizarraAgent;
+            this.precioPizarraAgent = precioPizarraAgent;
             this.clienteBolsaRosarioAPIAgent = clienteBolsaRosarioAPIAgent;
             this.diasHabilesAgent = diasHabilesAgent;
         }
@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (!oEntityErrors.HayError)
             {
-                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "El precio se guardó correctamente."));
             }
             return oEntityErrors;
         }
@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
             });
         }
 
-        public List<PrecioPizarraDto> TraerTodoPrecioPizarraPorMaterialYPizarra(int materialId, int pizarraId)
+        public List<PrecioPizarraDto> TraerPrecioPizarraPorMaterialYPizarra(int materialId, int pizarraId)
         {
             return repositorio.Listar<PrecioPizarra, PrecioPizarraDto>(x => new PrecioPizarraDto
             {
@@ -172,7 +172,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.Remover<PrecioPizarra>(id);
                 repositorio.GuardarCambios();
-                result.Errores.Add(new ErrorMessage(200, "Se elimino correctamente"));
+                result.Errores.Add(new ErrorMessage(200, "El precio se eliminó correctamente."));
             }
             catch (Exception e)
             {
@@ -192,11 +192,24 @@ namespace Molinos.DataAgro.Business.Managers
             });
         }
 
+        private List<PrecioPizarraDto> TraerPrecioPizarraPorFecha(DateTime fecha)
+        {
+            return repositorio.Listar<PrecioPizarra, PrecioPizarraDto>(x => new PrecioPizarraDto
+            {
+                Id = x.Id,
+                MaterialId = x.MaterialId,
+                PizarraId = x.PizarraId,
+                MonedaId = x.MonedaId,
+                Precio = x.Precio,
+                UnidadMedida = x.UnidadMedida
+            }, x => x.FechaDesde == fecha);
+        }
+
         public void ActualizarPrecioPizarra(DateTime fecha, bool manual)
         {
             List<DataBCR> listaPreciosBCR;
             List<int> listIdMaterialesBCR = new List<int>();
-            List<int> precioPizarraFiltrado;
+            List<int> precioPizarraFiltrado = new List<int>();
             List<PrecioPizarra> precioPizarraFiltrado2;
 
             DateTime fechaParam = manual == true ? fecha : DateTime.Now.Date;
@@ -207,12 +220,9 @@ namespace Molinos.DataAgro.Business.Managers
             Comercial oComercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == activeCreador);
             var listMateriales = repositorio.Listar<Material, int>(x => x.MaterialId, y => y.MaterialId != (int)EnumMateriales.GIRASOL_AO);
 
-            if (manual)
+            if (!manual)
             {
-                precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => 1 == 2).Select(x => x.MaterialId).ToList();
-            }
-            else
-            {
+
                 precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != (int)EnumMateriales.GIRASOL_AO &&
                                                                                x.PizarraId == 1 &&
                                                                                x.FechaDesde == diaHabilAnterior).Select(x => x.MaterialId).ToList();
@@ -236,7 +246,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                                                                         x.PizarraId == 1 &&
                                                                                                         x.FechaDesde == diaHabilAnterior &&
                                                                                                         x.Precio == (int)Math.Round(lpBCR.precio_Cotizacion)).ToList();
-                    if (precioPizarraFiltrado1.Count > 0) {
+                    if (precioPizarraFiltrado1.Count > 0)
+                    {
                         idsMaterialesNoGuardar.Add(lpBCR.id_MaterialDA);
                         continue;
                     }
@@ -276,6 +287,41 @@ namespace Molinos.DataAgro.Business.Managers
 
                 Resultado oEntityErrors = GrabarPrecioPizarra(pp, manual);
             }
+
+            CompletarPrecioPizarraEnNegocios(diaHabilAnterior);
+        }
+
+        public void CompletarPrecioPizarraEnNegocios(DateTime fecha)
+        {
+            var negocios = repositorio.Listar<Contrato>(x => x.Pizarra == true && x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && x.Precio == 0).Where(x => x.FechaOperacion == fecha);
+
+            if (negocios.Any())
+            {
+                var preciosPizarra = TraerPrecioPizarraPorFecha(fecha);
+                if (preciosPizarra.Any())
+                {
+                    foreach (var negocio in negocios)
+                    {
+                        decimal redespacho = negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)?.Importe ?? 0;
+                        decimal comisionImporte = negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)?.Importe ?? 0;
+                        decimal comisionPorcentaje = (negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)?.Porcentaje ?? 0) / 100;
+                        decimal bonificacionImporte = negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones)?.Importe ?? 0;
+                        decimal bonificacionPorcentaje = (negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones)?.Porcentaje ?? 0) / 100;
+                        decimal financiero = negocio.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero)?.Importe ?? 0;
+                        decimal tarifaFlete = negocio.TarifaFlete ?? 0;
+                        decimal precioBase = preciosPizarra.Find(x => x.MaterialId == negocio.MaterialId)?.Precio ?? 0;
+                        if (comisionImporte > 0 && comisionPorcentaje > 0) comisionImporte = 0;
+                        if (bonificacionImporte > 0 && bonificacionImporte > 0) bonificacionImporte = 0; //para evitar error en el cálculo siguiente tomo solo uno de los valores que deberían ser equivalentes
+                        decimal precioNegocio = precioBase + redespacho + comisionImporte + (precioBase * comisionPorcentaje) + bonificacionImporte + (precioBase * bonificacionPorcentaje) + financiero - tarifaFlete;
+                        negocio.Precio = precioBase;
+                        negocio.PrecioNeto = precioNegocio;
+                    }
+                    repositorio.GuardarCambios();
+                    logger.Debug($"Se completó el precio pizarra de {negocios.Count()} negocios del día {fecha:dd/MM/yyyy}.");
+                }
+                else logger.Debug($"No hay precios pizarra guardados en la BD para el día {fecha:dd/MM/yyyy}.");
+            }
+            else logger.Debug($"No hay negocios del día {fecha:dd/MM/yyyy} sin precio para completar con el precio pizarra.");
         }
     }
 }

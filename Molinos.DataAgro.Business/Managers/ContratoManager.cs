@@ -6438,8 +6438,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable ? " (Sustentable)" 
-                : oContrato.EPA && !oContrato.EUDR ? " (EPA)" : oContrato.EUDR && !oContrato.EPA ? " (EUDR)" : oContrato.EPA && oContrato.EUDR  ? " (EPA/EUDR)" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable ? " (Sustentable)"
+                : oContrato.EPA && !oContrato.EUDR ? " (EPA)" : oContrato.EUDR && !oContrato.EPA ? " (EUDR)" : oContrato.EPA && oContrato.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.DestinoId != null)
             {
@@ -8439,7 +8439,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarEstadoDeContratos()
         {
-            var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP)).ToList();
+            var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
             if (contratos != null && contratos.Count > 0)
             {
                 logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
