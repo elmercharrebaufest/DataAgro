@@ -11,6 +11,7 @@ var paginaActividades = 1;
 var tomoDeAXRegistros = 2;
 var actividadHistoriaFiltro = null;
 var elemParaEliminarTrasEdicion = null;
+var cuit = "";
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -464,6 +465,8 @@ function armarContacto() {
     $(".detalle-contacto-header-estado-cantestrellas").append(estrellas);
     $(".contacto-detalle-basico-contenedor-razonsocial-span").html(basico[0].RazonSocial).attr('title', basico[0].RazonSocial);
     $(".contacto-detalle-basico-contenedor-cuit-span").html("(CUIT " + basico[0].CUIT + ")");
+    cuit = basico[0].CUIT;
+
     if (basico[0].NoOperable) {
         $(".span-contacto-no-operable-tooltip").html(basico[0].TooltipNoOperable);
         $(".contacto-detalle-basico-contenedor-operable").show();
@@ -3235,33 +3238,39 @@ function ImprimirReporte() {
     var oParam = {
         "ProveedorId": ProveedorId,
     }
-    var result = MSExecuteOnServer('/Proveedor/ImprimirReporteProveedor', oParam);
+    BlockUi('Generando PDF...');
+    setTimeout(function () {
+        var result = MSExecuteOnServer('/Proveedor/ImprimirReporteProveedor', oParam);
 
-    if (result != null) {
-        if (result.DownloadKey.length > 0) {
-            var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
-            window.location = url;
+        if (result != null) {
+            if (result.DownloadKey.length > 0) {
+                var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
+                window.location = url;
+            }
         }
-    }
+        $.unblockUI();
+    }, 100);
 }
 
 function ExportarPdf() {
     var oParam = {
         "ProveedorId": ProveedorId,
     }
-    var result = MSExecuteOnServer('/Proveedor/ImprimirReporteProveedor', oParam);
+    BlockUi('Generando PDF...');
+    setTimeout(function () {
+        var result = MSExecuteOnServer('/Proveedor/ImprimirReporteProveedor', oParam);
 
-    if (result != null) {
-        if (result.DownloadKey.length > 0) {
-            var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
-            window.location = url;
+        if (result != null) {
+            if (result.DownloadKey.length > 0) {
+                var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
+                window.location = url;
+            }
         }
-    }
+        $.unblockUI();
+    }, 100);
 }
 
 function armarEstablecimiento(establecimiento) {
-
-
     for (var ii in establecimiento) {
         (function (i) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] = grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] || {};
@@ -3287,11 +3296,8 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partido;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].campaña = establecimiento[i].campaña;
 
-
-
         })(ii);
     }
-
 
     grupoestablecimiento = [grupoestablecimiento];
     var capProdCantEstablecimiento = 0;
@@ -3304,7 +3310,6 @@ function armarEstablecimiento(establecimiento) {
             obj.localidad = grupoestablecimiento[0][i].LocalidadId;
             obj.localidadNom = grupoestablecimiento[0][i].Localidad + "(" + grupoestablecimiento[0][i].Provincia + ")";
             obj.partido = grupoestablecimiento[0][i].Partido;
-
 
             obj.archivo = grupoestablecimiento[0][i].KMZnombre;
 
@@ -3583,11 +3588,15 @@ function DevolverFiltroConTipoActividad(objFiltro) {
     return objFiltro;
 }
 
-function ActualizarProveedoresHomeCuit() {
-    var result = MSExecuteOnServer('/Proveedor/ActualizarProveedoresHomeCuit', { ProveedorId: ProveedorId });
-    if (result != null) {
-        MensInfoReload("Estado del Proveedor actualizado!");
-    } else {
-        MensErr("No se pudo actualizar el proveedor. Intente nuevamente y en caso de error comunicarse con sistemas.")
-    }
+function ActualizarEstadoProveedor() {
+    BlockUi('Actualizando...');
+    setTimeout(function () {
+        var result = MSExecuteOnServer('/Proveedor/ActualizarEstadoProveedor', { proveedorId: ProveedorId, proveedorCuit: cuit });
+        if (result != null) {
+            MensInfoReload("El estado del proveedor se actualizó correctamente.\n\n");
+        } else {
+            MensErr("No se pudo actualizar el proveedor. Intente nuevamente y, en caso de error, comunicarse con sistemas.")
+        }
+        $.unblockUI();
+    }, 150);
 }
