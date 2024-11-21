@@ -3234,24 +3234,6 @@ function actualizarCampaña(val) {
     }
 }
 
-function ImprimirReporte() {
-    var oParam = {
-        "ProveedorId": ProveedorId,
-    }
-    BlockUi('Generando PDF...');
-    setTimeout(function () {
-        var result = MSExecuteOnServer('/Proveedor/ImprimirReporteProveedor', oParam);
-
-        if (result != null) {
-            if (result.DownloadKey.length > 0) {
-                var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
-                window.location = url;
-            }
-        }
-        $.unblockUI();
-    }, 100);
-}
-
 function ExportarPdf() {
     var oParam = {
         "ProveedorId": ProveedorId,
