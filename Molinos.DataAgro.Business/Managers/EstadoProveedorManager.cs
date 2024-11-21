@@ -29,7 +29,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.Trim()).ToDictionary(x => x.Key); //puede haber más de un registro con el mismo CUIT
-                var proveedorEstados = repositorio.Listar<ProveedorEstado>().ToDictionary(x => (x.ComercialId, x.ProveedorId));
+                var proveedorEstados = repositorio.Listar<ProveedorEstado>().ToDictionary(x => new Tuple<int, int>(x.ComercialId, x.ProveedorId));
+
                 var crearEstadoProveedor = new List<ProveedorEstado>();
 
                 List<DatosProveedorAgentDto> datosDeProveedores = new List<DatosProveedorAgentDto>();
@@ -79,7 +80,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         foreach (var proveedor in proveedoresAgrupados)
                         {
-                            var clave = (comercial.ComercialId, proveedor.ProveedorId);
+                            var clave = new Tuple<int, int>(comercial.ComercialId, proveedor.ProveedorId);
 
                             if (proveedorEstados.TryGetValue(clave, out var proveedorEstado))
                             {
