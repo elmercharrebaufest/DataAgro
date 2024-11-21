@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a6129c53-57c0-475e-a0bf-f3ac3eb0da8c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="a6129c53-57c0-475e-a0bf-f3ac3eb0da8c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="C:\Mastersoft\DataAgro\1 Documentacion\Varios\Sap Wsdl\Riesgo Comercial GXQ.xml" Protocol="file" SourceId="1" />
+    <MetadataSource Address="http://gslopidevqa00.molinosagro.ad:50000/dir/wsdl?p=ic/a43d865fb15f3745a006bf5c689368d2" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" MetadataType="Wsdl" ID="fd3c28a5-9016-4216-916d-e5ae9670540a" SourceId="1" SourceUrl="file:///C:/Mastersoft/DataAgro/1 Documentacion/Varios/Sap Wsdl/Riesgo Comercial GXQ.xml" />
+    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL11.wsdl" MetadataType="Wsdl" ID="1f154724-4eb2-416e-892f-81dcee98060c" SourceId="1" SourceUrl="http://gslopidevqa00.molinosagro.ad:50000/dir/wsdl?p=ic/a43d865fb15f3745a006bf5c689368d2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ProcessEstadoTest()
         {
-            estadoProveedorMock.Setup(x => x.ActualizarProveedores());
+            estadoProveedorMock.Setup(x => x.ActualizarProveedores(null));
             var result = target.ProcessEstado() as ContentResult;
 
             Assert.NotNull(result);
