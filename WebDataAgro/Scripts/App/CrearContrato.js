@@ -3561,7 +3561,7 @@ function AsignarDatos() {
 
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#comercialFijacionId").data("kendoDropDownList")) $("#comercialFijacionId").data("kendoDropDownList").value(comercialId);
-    if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value(Materiales.SOJA.toString());
+    //if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value(Materiales.SOJA.toString()); //para mostrar soja por defecto
     if ($("#sustentableMonedaId").data("kendoDropDownList")) $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
     if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
@@ -3571,8 +3571,6 @@ function AsignarDatos() {
 
     CargarCalidadPorMaterial(materialId);
     MostrarServiciosYCalidades();
-    //Carga de datos
-
 }
 
 function LimpiarValidaciones() {
