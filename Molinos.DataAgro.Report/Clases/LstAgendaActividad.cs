@@ -55,21 +55,21 @@ namespace Molinos.DataAgro.Report.Clases
         public string GenerarExcel(List<ActividadExportar> oDatos)
         {
             var excel = new ExcelPackage();
-            var nombreArchivo = oDatos.Count > 0 ? ("Actividades-" + oDatos.First().Proveedor) : "Actividades";
+            var nombreArchivo = oDatos.Count > 0 ? ("Actividades-" + oDatos.First().proveedor) : "Actividades";
 
             if (oDatos.Count > 0)
             {
                 var query = oDatos.Select(x => new ActividadExportarExcel
                 {
                     ActividadId = x.ActividadId,
-                    TipoActividad = x.TipoActividad,
+                    TipoActividad = x.tipoActividad,
                     Detalle = x.Detalle,
                     FechaHoraActividad = x.FechaHoraActividad,
                     FechaHoraRecordatorio = x.FechaHoraRecordatorio,
-                    Comercial = x.Comercial,
-                    ContactoComercial = x.ContactoComercial,
+                    Comercial = x.comercial,
+                    ContactoComercial = x.contactoComercial,
                     FechaHoraRecordatorioFin = x.FechaHoraRecordatorioFin,
-                    Asunto = x.Asunto
+                    Asunto = x.asunto
                 });
 
                 var oColumnas = query.ToList();

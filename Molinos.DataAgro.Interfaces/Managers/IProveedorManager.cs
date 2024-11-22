@@ -3,6 +3,8 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
+using System.Threading.Tasks;
+
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IProveedorManager
@@ -19,15 +21,16 @@ namespace Molinos.DataAgro.Interfaces
 
         ProveedorNuevo TraerRazonSocial(string cuit);
 
-        Resultado GrabarRecordatorio(ActividadInsertarIni oParam);
+        Resultado GrabarRecordatorio(ActividadInsetarIni oParam);
 
         Resultado EliminarRecordatorio(int Id);
-
+        
         GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
-        StoredHistorialResult TraerHistorialActividad(HistorialActividad oParam, int ProveedorId, string ActividadId);
+        StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string ActividadId);
 
         GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
+
 
         List<ReporteProveedor> ObtenerReporteProveedor(string Valor, string idActiveDirectory);
 
@@ -46,12 +49,12 @@ namespace Molinos.DataAgro.Interfaces
         List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId);
         TraerProveedorResult TraerProveedorParaCorredor(string cuit);
         Resultado EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
-        Resultado EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar);
+        Resultado EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar);
         GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);
         GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
         bool ValidarProveedorEsCorredor(int idproveedor);
         string TraerCuit(int id);
-        GrabarProveedorResult GrabarRol(int id, List<Rol> roles, List<Comercial> comerciales);
+        GrabarProveedorResult GrabarRol(int id, List<Rol> roles,List<Comercial> comerciales);
         List<RolBasicoDto> TraerRolesProveedor(int id);
         bool ValidarDirecto(string cuit);
         DataSourceResult BuscarDatosProveedor(DataSourceRequest request, List<int> equipo);
@@ -77,9 +80,8 @@ namespace Molinos.DataAgro.Interfaces
         List<ProveedorDto> ListarProveedorTodos(string proveedor);
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo);
         void GrabarMailProveedor();
-        void ActualizarProveedoresHome(int ProveedorId = 0);
-        List<ActividadExportar> ExportarActividades(HistorialActividad oParam, string idActiveDirectory);
+        void ActualizarProveedoresHome(int ProveedorId=0);
+        List<ActividadExportar> ExportarActividades(HistorialActiviad oParam, string idActiveDirectory);
         ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion);
-        void ActualizarEstadoProveedor(int proveedorId, string proveedorCuit);
     }
 }

@@ -733,8 +733,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\CumplimientoCupos\SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS.wsdl" />
-    <None Include="Service References\DatosDelComercial\SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES11.wsdl" />
-    <None Include="Service References\DatosDelProveedor\SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR1.wsdl" />
     <None Include="Service References\DisponibilidadCupos\Molinos.DataAgro.Agent.DisponibilidadCupos.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -859,6 +857,7 @@
     <None Include="Service References\DatosDelProveedor\Molinos.DataAgro.Agent.DatosDelProveedor.Z_MPRFC_DATOS_PROVEEDORResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DatosDelProveedor\SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR.wsdl" />
     <None Include="Service References\FinalizarContrato\Molinos.DataAgro.Agent.FinalizarContrato.SI_ZMPWS_DATAAGRO_PRE_SLIPResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

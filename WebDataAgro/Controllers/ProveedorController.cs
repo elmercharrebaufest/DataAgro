@@ -159,7 +159,7 @@ namespace WebDataAgro.Controllers
             {
                 ActionView = "ErrorDePermisos";
             }
-            ViewBag.Deshabilitado = ProveedorId != 0 ? mobjProveedorManager.MostrarProveedorDeshabilitado(ProveedorId) : false;
+            ViewBag.Deshabilitado = ProveedorId != null ? mobjProveedorManager.MostrarProveedorDeshabilitado(ProveedorId) : false;
             ViewBag.MostrarEditar = mostrarEditar;
             ViewBag.MostrarAgenda = Agenda;
             ViewBag.ProveedorId = ProveedorId;
@@ -202,7 +202,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult CrearActividad(ActividadInsertarIni oParam)
+        public ActionResult CrearActividad(ActividadInsetarIni oParam)
         {
             oParam.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             oParam.UserName = GlobalVariables.IdActiveDirectoryCompleto;
@@ -360,7 +360,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActividad oParam)
+        public ActionResult TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActiviad oParam)
         {
             return new JsonResult()
             {
@@ -653,7 +653,7 @@ namespace WebDataAgro.Controllers
             return campos;
         }
 
-        public ActionResult ExportarActividadesExcel(HistorialActividad filtro)
+        public ActionResult ExportarActividadesExcel(HistorialActiviad filtro)
         {
             var model = new ReportesModel();
 
@@ -668,9 +668,9 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
-        public ActionResult ActualizarEstadoProveedor(int proveedorId, string proveedorCuit)
+        public ActionResult ActualizarProveedoresHomeCuit(int ProveedorId)
         {
-            mobjProveedorManager.ActualizarEstadoProveedor(proveedorId, proveedorCuit);
+            mobjProveedorManager.ActualizarProveedoresHome(ProveedorId);
 
             return new JsonResult()
             {

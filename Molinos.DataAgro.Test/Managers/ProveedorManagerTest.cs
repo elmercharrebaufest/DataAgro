@@ -35,7 +35,6 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IHttpContextManager> httpContextManagerMock;
         private Mock<IAltaTempranaAgent> altaTempranaMock;
         private Mock<IMailProveedorAgent> mailProveedorAgentMock;
-        private Mock<IEstadoProveedorManager> estadoProveedorManagerMock;
         private JavaScriptSerializer serializer;
 
 
@@ -61,10 +60,10 @@ namespace Molinos.DataAgro.Test.Managers
             httpContextManagerMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             altaTempranaMock = new Mock<IAltaTempranaAgent>();
             mailProveedorAgentMock = new Mock<IMailProveedorAgent>();
-            estadoProveedorManagerMock = new Mock<IEstadoProveedorManager>();
 
-            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
-                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object);
+            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object,
+                riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
+                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object);
 
 
             //para pasar el logDataA
@@ -125,7 +124,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()))
                 .Returns(new List<ActividadTraer>() { new ActividadTraer() });
-            var result = target.TraerHistorialActividad(new HistorialActividad(), 1, "a");
+            var result = target.TraerHistorialActividad(new HistorialActiviad(), 1, "a");
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()), Times.Once);
             Assert.NotNull(result);
@@ -782,7 +781,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             ConfigurationManager.AppSettings["AgendaCita"] = "2";
             var fecha = new DateTime(2019, 10, 10);
-            var actividad = new ActividadInsertarIni { ProveedorId = 1, ComercialId = 1, FechaYHoraActividad = fecha, FechaYHoraRecordatorio = fecha, TipoActividad = 1, ActividadId = 1 };
+            var actividad = new ActividadInsetarIni { ProveedorId = 1, ComercialId = 1, fechaYHoraActividad = fecha, fechaYHoraRecordatorio = fecha, tipoactividad = 1, ActividadId = 1 };
 
 
             //para pasar el logDataA
@@ -3390,7 +3389,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarRecordatorioConCitaOkTest()
         {
             var fecha = new DateTime(2019, 10, 10);
-            var actividad = new ActividadInsertarIni { ProveedorId = 1, ComercialId = 1, FechaYHoraActividad = fecha, FechaYHoraRecordatorio = fecha, TipoActividad = 1, ActividadId = 1, FechaYHoraRecordatorioFin = fecha };
+            var actividad = new ActividadInsetarIni { ProveedorId = 1, ComercialId = 1, fechaYHoraActividad = fecha, fechaYHoraRecordatorio = fecha, tipoactividad = 1, ActividadId = 1, fechaYHoraRecordatorioFin = fecha };
             ConfigurationManager.AppSettings["EmailAgenda"] = "1";
             ConfigurationManager.AppSettings["maildeUsuarios"] = "dataagro.baufest@gmail.com";
             ConfigurationManager.AppSettings["AgendaCita"] = "1";

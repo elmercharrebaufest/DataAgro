@@ -20,7 +20,7 @@ namespace WebDataAgro.Controllers
         private readonly IComprasManager comprasManager;
         private readonly ICapacidadProductivaManager capProdManager;
 
-        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager,
+        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, 
                                     IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager, ICapacidadProductivaManager capProdManager)
         {
             this.logger = log;
@@ -98,7 +98,7 @@ namespace WebDataAgro.Controllers
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessRg2300 - Fin. Lineas INSERTADAS: {lista.Count}");
+            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
             return Content("ok");
         }
 
@@ -175,7 +175,7 @@ namespace WebDataAgro.Controllers
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessSisa - Fin. Lineas INSERTADAS: {lineas}");
+            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lineas}");
             return Content("ok");
         }
 
@@ -229,7 +229,7 @@ namespace WebDataAgro.Controllers
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessFacacop - Fin. Lineas INSERTADAS: {lista.Count}");
+            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
             return Content("ok");
         }
 
@@ -240,10 +240,11 @@ namespace WebDataAgro.Controllers
             lock (_lockProcessEstado)
             {
                 logger.Info($"ProcessEstado - Iniciando");
-                estadoProveedorManager.ActualizarProveedores(null);
+                estadoProveedorManager.ActualizarProveedores();
                 logger.Info($"ProcessEstado - Finalizado");
                 return Content("ok");
             }
+
         }
 
         public ActionResult ProcessCompras()
