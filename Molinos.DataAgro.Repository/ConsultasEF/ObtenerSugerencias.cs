@@ -24,7 +24,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.comercialId = comercialId;
             this.materialId = materialId;
             this.centroId = centroId;
-
         }
         private static IList<SugerenciaCupoDto> Query(DbContext contexto, DateTime desde, DateTime hasta, int comercialId, int materialId, string centroId)
         {
@@ -56,8 +55,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PuntuacionTotal = sugerido.Puntuacion,
                     KgNegocio = sugerido.KgNegocio,
                     KgPendienteAplicar = sugerido.KgPendienteAplicar,
-                    Sustentable = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).Sustentable == true,
-                    EPA = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).EPA == true,
+                    Sustentable = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).Sustentable,
+                    EPA = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).EPA,
+                    EUDR = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).EUDR,
                     ConDescarga = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).ConDescarga == true
                 }).ToList();
 

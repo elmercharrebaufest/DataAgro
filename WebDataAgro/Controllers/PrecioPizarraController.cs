@@ -53,7 +53,7 @@ namespace WebDataAgro.Controllers
             return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
             {
                 Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
-                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
+                HistorialPrecioPizarra = oPrecioPizarraManager.TraerPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
                 Resultado = resultado
             });
         }
@@ -100,7 +100,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(materialId, pizarraId)
+                Data = oPrecioPizarraManager.TraerPrecioPizarraPorMaterialYPizarra(materialId, pizarraId)
             };
         }
 
@@ -128,7 +128,7 @@ namespace WebDataAgro.Controllers
             return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
             {
                 Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
-                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
+                HistorialPrecioPizarra = oPrecioPizarraManager.TraerPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
                 Resultado = resultado
             });
         }
@@ -151,7 +151,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = x.Descripcion,
                     Value = x.Id.ToString(),
-                    Selected = x.Codigo != "ROS" ? false : true
+                    Selected = x.Codigo == "ROS"
                 }).OrderBy(x => x.Value);
             ViewBag.Pizarra = pizarraListItems;
 
@@ -162,9 +162,17 @@ namespace WebDataAgro.Controllers
                 {
                     Text = x.Descripcion,
                     Value = x.MonedaId.ToString(),
-                    Selected = x.Descripcion == "ARP" ? true : false
+                    Selected = x.Descripcion == "ARP"
                 }).OrderBy(x => x.Value);
             ViewBag.Moneda = monedaListItems;
+        }
+
+        public ActionResult CompletarPrecioPizarraEnNegocios(string fecha)
+        {
+            logger.Info("INICIO CompletarPrecioPizarraEnNegocios");
+            oPrecioPizarraManager.CompletarPrecioPizarraEnNegocios(DateTime.ParseExact(fecha, "yyyyMMdd", null));
+            logger.Info("FIN CompletarPrecioPizarraEnNegocios");
+            return Content("ok");
         }
     }
 }

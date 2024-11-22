@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPA(fecha, fecha, 0)).Returns(new ReporteSojaEPADto());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPAyEUDR(fecha, fecha, 0)).Returns(new ReporteSojaEPAyEUDRDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, false, It.IsAny<bool>())).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, It.IsAny<bool>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<HedgeMaterialDto>());
@@ -88,14 +88,14 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>())).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPA(fecha, fecha, 0)).Returns(new ReporteSojaEPADto());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaEPAyEUDR(fecha, fecha, 0)).Returns(new ReporteSojaEPAyEUDRDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, false, It.IsAny<bool>())).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, It.IsAny<bool>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerUltimoHedgeObjetivo()).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, It.IsAny<bool>())).Returns(new HedgeTCPromedioDto());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, It.IsAny<bool>())).Returns(new HedgeCargaObjetivoDto());
-            reportesManagerMock.Setup(x => x.ObtenerDatosReporteCompraNet(fecha, fecha, "0", new List<int>() { 1, 2, 3, 4, 5 }, It.IsAny<bool>())).Returns(new ReporteCompraNetModel { AgenteCompras = new AgenteCompraModel { ListaOperadores = new List<AgenteCompraDto.OperadorCantidad>(), ListaAgenteCompras = new List<AgenteCompraDto>() }, HedgeMaterial = new List<HedgeMaterialModel>(), HedgeObjetivo = new HedgeCargaObjetivoDto(), PosicionCompras = new List<PosicionComprasDto>(), PrecioCantidad = new List<PrecioCantidadDto>(), PricingCampania = new List<PricingCampaniaDto>(), SojaSustentable = new ReporteSojaSustDto(), SojaEPA = new ReporteSojaEPADto(), TCPromedioDto = new HedgeTCPromedioDto(), ToneladasGranoTipo = new List<ToneladasGranoTipoDto>() });
+            reportesManagerMock.Setup(x => x.ObtenerDatosReporteCompraNet(fecha, fecha, "0", new List<int>() { 1, 2, 3, 4, 5 }, It.IsAny<bool>())).Returns(new ReporteCompraNetModel { AgenteCompras = new AgenteCompraModel { ListaOperadores = new List<AgenteCompraDto.OperadorCantidad>(), ListaAgenteCompras = new List<AgenteCompraDto>() }, HedgeMaterial = new List<HedgeMaterialModel>(), HedgeObjetivo = new HedgeCargaObjetivoDto(), PosicionCompras = new List<PosicionComprasDto>(), PrecioCantidad = new List<PrecioCantidadDto>(), PricingCampania = new List<PricingCampaniaDto>(), SojaSustentable = new ReporteSojaSustDto(), SojaEPAyEUDR = new ReporteSojaEPAyEUDRDto(), TCPromedioDto = new HedgeTCPromedioDto(), ToneladasGranoTipo = new List<ToneladasGranoTipoDto>() });
 
             var reportes = new ParamReportes() { ComercialActual = 1 };
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha, fecha, It.IsAny<bool>())).Returns(new List<ExcelPosicionMaterialDto>());

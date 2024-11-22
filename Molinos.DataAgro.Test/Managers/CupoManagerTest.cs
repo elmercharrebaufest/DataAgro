@@ -1100,7 +1100,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<Cupo> { new Cupo { EstadoCupoId = 1, NegocioId = 1 } });
 
-            var result = target.ListarNegociosParaSolicitarCupo("0002685378", 1534, 3, 0, false, false);
+            var result = target.ListarNegociosParaSolicitarCupo("0002685378", 1534, 3, 0, false, false, false);
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>()), Times.Once);
             contratoKgPendienteAgent.Verify(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()), Times.Once);
@@ -1121,7 +1121,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<Cupo> { new Cupo { EstadoCupoId = 1, NegocioId = 1 } });
 
-            var result = target.ListarNegociosParaSolicitarCupo(null, 1534, 3, 0, false, false);
+            var result = target.ListarNegociosParaSolicitarCupo(null, 1534, 3, 0, false, false, false);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, NegocioParaSolicitarCupo>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             contratoKgPendienteAgent.Verify(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>()), Times.Once);

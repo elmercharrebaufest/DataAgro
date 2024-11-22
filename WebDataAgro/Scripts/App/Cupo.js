@@ -175,7 +175,8 @@ function InicializarCuposIndex() {
                     FechaRegistro: { type: "date" },
                     FleteProcedencia: { type: "boolean" },
                     Sustentable: { type: "boolean" },
-                    EPA: { type: "boolean" }
+                    EPA: { type: "boolean" },
+                    EUDR: { type: "boolean" }
                 }
             }
         },
@@ -283,7 +284,7 @@ function InicializarCuposIndex() {
                 field: "EstadoCupo", type: "string", title: "Estado",
                 filterable: {
                     multi: true,
-                    dataSource: externo? estadoExterno: estados
+                    dataSource: externo ? estadoExterno : estados
                 },
 
                 width: 110,
@@ -382,10 +383,13 @@ function InicializarCuposIndex() {
             {
                 field: "EPA", title: "EPA", type: "string", width: 60, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; }
             },
+            {
+                field: "EUDR", title: "EUDR", type: "string", width: 60, template: function (dataItem) { return dataItem.EUDR ? "Si" : "No"; }
+            },
             //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
             { field: "EstadoOrden", type: "number", hidden: true },
-           
+
             { field: "CartaPorte", title: "Carta de Porte", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
             { field: "CuitOrigen", title: "CUIT Origen", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
             { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
@@ -1084,9 +1088,10 @@ function Filtrar() {
             //Filtro Registro
             if (item.field == 'FechaRegistro' && item.operator == 'gte') contratoSapFilters.filters.push({ field: 'FechaRegistro', operator: 'gte', value: item.value });
             if (item.field == 'FechaRegistro' && item.operator == 'lte') contratoSapFilters.filters.push({ field: 'FechaRegistro', operator: 'lte', value: item.value });
-            //EPA y Sustentable
+            //EPA, EUDR y Sustentable
             if (item.field == 'Sustentable') contratoSapFilters.filters.push({ field: 'Sustentable', operator: item.operator, value: item.value });
             if (item.field == 'EPA') contratoSapFilters.filters.push({ field: 'EPA', operator: item.operator, value: item.value });
+            if (item.field == 'EUDR') contratoSapFilters.filters.push({ field: 'EUDR', operator: item.operator, value: item.value });
 
             if (item.field == null) {
                 contratoSapFilters.filters.push(item);
@@ -1109,6 +1114,7 @@ function BorrarFiltro() {
     $("#FechaRegistroDesdeId").val("");
     $("#FechaRegistroHastaId").val("");
     deseleccionarRadioButtonEPA();
+    deseleccionarRadioButtonEUDR();
     deseleccionarRadioButtonSustentable();
     var grid = $('#gridCupo').data('kendoGrid');
     var dataSource = grid.dataSource;
@@ -1217,7 +1223,7 @@ function inicializarMultiSelectFiltros() {
 
     $("#FechaIngresoHastaId").kendoDatePicker({
         value: new Date(),
-        
+
         weekNumber: true
     });
 
@@ -1235,5 +1241,8 @@ function deseleccionarRadioButtonSustentable() {
 }
 function deseleccionarRadioButtonEPA() {
     $('[name=EPA]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonEUDR() {
+    $('[name=EUDR]:checked').prop('checked', false);
 }
 

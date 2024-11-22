@@ -154,10 +154,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? EsFason { get; set; }
         public decimal? PorcentajeDePago { get; set; }
         public string CaratulaExtension { get; set; }
-        public bool? Sustentable { get; set; }
+        public bool Sustentable { get; set; }
         public decimal? ImporteSustentable { get; set; } // Importe_Sustentable
         public string MonedaSustentableId { get; set; } // MonedaId_Sustentable 
-        public bool? EPA { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public int? SustentableTipoDBId { get; set; }
         public bool? ConDescarga { get; set; }
         public bool? DolarExportador { get; set; }

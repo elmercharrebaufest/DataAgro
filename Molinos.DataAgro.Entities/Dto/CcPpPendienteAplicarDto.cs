@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Warrant { get; set; }
         public bool Sustentable { get; set; }
         public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public string Region { get; set; }
         public string Contrato { get; set; }
         public decimal KgContrato { get; set; }

@@ -253,7 +253,7 @@ namespace WebDataAgro.Helpers.Excel
             //celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
             celdasMerge = sheet.GetRow(1).GetCell(22);
-            celdasMerge.SetCellValue("SOJA EPA");
+            celdasMerge.SetCellValue("SOJA EPA/EUDR");
             celdasMerge.CellStyle = cellcolorTitles;
             #endregion
             #region row2
@@ -291,7 +291,7 @@ namespace WebDataAgro.Helpers.Excel
             c++;
             //CrearCelda(row, c, null, cellcolorTitles); c++;
             CrearCelda(row, c, null, null); c++;
-            //SOJA EPA
+            //SOJA EPA/EUDR
             CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
             CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
             CrearCelda(row, c, "Total", cellcolorTitles); c++;
@@ -337,9 +337,9 @@ namespace WebDataAgro.Helpers.Excel
                     CrearCelda(row, c, model.SojaSustentable.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, model.SojaSustentable.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, null, null); c++;
-                    CrearCelda(row, c, model.SojaEPA.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
-                    CrearCelda(row, c, model.SojaEPA.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
-                    CrearCelda(row, c, model.SojaEPA.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPAyEUDR.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                 }
                 r++;
             }
@@ -1498,12 +1498,12 @@ namespace WebDataAgro.Helpers.Excel
             celda.SetCellValue("Comercial Asignado");
             celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
-            sheet.AutoSizeColumn(0);
-            sheet.AutoSizeColumn(1);
-            sheet.AutoSizeColumn(2);
-            sheet.AutoSizeColumn(3);
-            sheet.AutoSizeColumn(4);
-
+            // Establecer anchos personalizados para cada columna
+            sheet.SetColumnWidth(0, 15 * 256); // 15 caracteres para la columna "CUIT"
+            sheet.SetColumnWidth(1, 35 * 256); // 30 caracteres para la columna "Razon Social"
+            sheet.SetColumnWidth(2, 20 * 256); // 20 caracteres para la columna "Estado Home"
+            sheet.SetColumnWidth(3, 20 * 256); // 20 caracteres para la columna "Estado"
+            sheet.SetColumnWidth(4, 30 * 256); // 25 caracteres para la columna "Comercial Asignado"
 
             var estiloNegrita = workbook.CreateCellStyle();
             estiloNegrita.BorderBottom = BorderStyle.Thin;

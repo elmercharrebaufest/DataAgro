@@ -23,57 +23,57 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ProveedorId { get; set; }
     }
 
-    public class ActividadInsetarIni
+    public class ActividadInsertarIni
     {
-        public int tipoactividad { get; set; }
-        public string detalle { get; set; }
-        public DateTime? fechaYHoraRecordatorio { get; set; }
-        public DateTime? fechaYHoraRecordatorioFin { get; set; }
-        public string asunto { get; set; }
-        public DateTime fechaYHoraActividad { get; set; }
-        public int? contacto { get; set; }
-        public int enviar { get; set; }
+        public int TipoActividad { get; set; }
+        public string Detalle { get; set; }
+        public DateTime? FechaYHoraRecordatorio { get; set; }
+        public DateTime? FechaYHoraRecordatorioFin { get; set; }
+        public string Asunto { get; set; }
+        public DateTime FechaYHoraActividad { get; set; }
+        public int? Contacto { get; set; }
+        public int Enviar { get; set; }
         public int ActividadId { get; set; }
         public int ComercialId { get; set; }
         public int ProveedorId { get; set; }
         public string UserName { get; set; }
 
-        public ActividadInsetarIni()
+        public ActividadInsertarIni()
         {
-            this.fechaYHoraActividad = DateTime.Now;
-            this.fechaYHoraRecordatorio = null;
-            this.tipoactividad = 0;
-            this.detalle = "";
-            this.contacto = null;
-            this.enviar = 0;
-            this.ActividadId = 0;
-            this.ComercialId = 0;
-            this.ProveedorId = 0;
-            this.UserName = string.Empty;
+            FechaYHoraActividad = DateTime.Now;
+            FechaYHoraRecordatorio = null;
+            TipoActividad = 0;
+            Detalle = "";
+            Contacto = null;
+            Enviar = 0;
+            ActividadId = 0;
+            ComercialId = 0;
+            ProveedorId = 0;
+            UserName = string.Empty;
         }
     }
 
-    public class HistorialActiviad
+    public class HistorialActividad
     {
-        public string tipoactividad { get; set; }
-        public string detalle { get; set; }
-        public DateTime? fechaYHoraRecordatorio { get; set; }
-        public DateTime fechaYHoraActividad { get; set; }
-        public int? contacto { get; set; }
+        public string TipoActividad { get; set; }
+        public string Detalle { get; set; }
+        public DateTime? FechaYHoraRecordatorio { get; set; }
+        public DateTime FechaYHoraActividad { get; set; }
+        public int? Contacto { get; set; }
         public int ActividadId { get; set; }
         public int ProveedorId { get; set; }
-        public int cantidadRegistros { get; set; }
+        public int CantidadRegistros { get; set; }
 
-        public HistorialActiviad()
+        public HistorialActividad()
         {
-            this.fechaYHoraActividad = DateTime.Now;
-            this.fechaYHoraRecordatorio = null;
-            this.tipoactividad = "";
-            this.detalle = "";
-            this.contacto = null;
-            this.ActividadId = 0;
-            this.ProveedorId = 0;
-            this.cantidadRegistros = 0;
+            FechaYHoraActividad = DateTime.Now;
+            FechaYHoraRecordatorio = null;
+            TipoActividad = "";
+            Detalle = "";
+            Contacto = null;
+            ActividadId = 0;
+            ProveedorId = 0;
+            CantidadRegistros = 0;
         }
     }
 
@@ -81,18 +81,18 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ActividadId { get; set; }
         public int TipoActividadId { get; set; }
-        public string tipoActividad { get; set; }
+        public string TipoActividad { get; set; }
         public string Detalle { get; set; }
         public int ProveedorId { get; set; }
-        public string proveedor { get; set; }
+        public string Proveedor { get; set; }
         public DateTime FechaHoraActividad { get; set; }
         public DateTime? FechaHoraRecordatorio { get; set; }
         public int? ComercialId { get; set; }
-        public string comercial { get; set; }
+        public string Comercial { get; set; }
         public int? ContactoComercialId { get; set; }
-        public string contactoComercial { get; set; }
+        public string ContactoComercial { get; set; }
         public DateTime? FechaHoraRecordatorioFin { get; set; }
-        public string asunto { get; set; }
+        public string Asunto { get; set; }
     }
 
     public class ActividadExportarExcel

@@ -642,6 +642,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ComprasDetalle\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE1.wsdl" />
+    <None Include="Service References\Compras\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS11.wsdl" />
     <None Include="Service References\ConfirmaQAConsultaDocumentoRegistradoPdf\ConsultaDocumentoRegistradoPdfService.wsdl" />
     <None Include="Service References\ConfirmaQAConsultaDocumentosBorrador\ConsultaDocumentosBorradorService.wsdl" />
     <None Include="Service References\ConfirmaQAConsultaDocumentosControlFirmaXml\ConsultaDocumentosControlFirmaXmlService.wsdl" />
@@ -732,6 +733,8 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\CumplimientoCupos\SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS.wsdl" />
+    <None Include="Service References\DatosDelComercial\SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES11.wsdl" />
+    <None Include="Service References\DatosDelProveedor\SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR1.wsdl" />
     <None Include="Service References\DisponibilidadCupos\Molinos.DataAgro.Agent.DisponibilidadCupos.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -832,7 +835,6 @@
     <None Include="Service References\Compras\Molinos.DataAgro.Agent.Compras.Z_MPRFC_DATOS_COMPRASResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Compras\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS.wsdl" />
     <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -851,14 +853,12 @@
     <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.Z_MPRFC_DATOS_COMERCIALResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DatosDelComercial\SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES.wsdl" />
     <None Include="Service References\DatosDelProveedor\Molinos.DataAgro.Agent.DatosDelProveedor.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\DatosDelProveedor\Molinos.DataAgro.Agent.DatosDelProveedor.Z_MPRFC_DATOS_PROVEEDORResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DatosDelProveedor\SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR.wsdl" />
     <None Include="Service References\FinalizarContrato\Molinos.DataAgro.Agent.FinalizarContrato.SI_ZMPWS_DATAAGRO_PRE_SLIPResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -897,7 +897,7 @@
     <None Include="Service References\RiesgoComercial\Molinos.DataAgro.Agent.RiesgoComercial.Z_MPRFC_RIESGO_COMERCIALResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" />
+    <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL11.wsdl" />
     <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ActividadConCargaAutomaticaDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

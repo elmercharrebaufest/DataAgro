@@ -17,8 +17,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
-        readonly String urlBCR = ConfigurationManager.AppSettings["UrlBaseBolsaRosario"];
-        readonly String versionClienteBCR = ConfigurationManager.AppSettings["VersionClienteBolsaRosario"];
+        readonly string urlBCR = ConfigurationManager.AppSettings["UrlBaseBolsaRosario"];
+        readonly string versionClienteBCR = ConfigurationManager.AppSettings["VersionClienteBolsaRosario"];
 
         public ClienteBolsaRosarioAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager)
         {
@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
-                logger.Debug($"Gestionando Token BCR...");
+                logger.Debug($"Gestionando Token BCR para traer precios pizarra...");
                 Configuracion datosConfiguracion = repositorio.Obtener<Configuracion>(1);
                 var client = new RestClient(urlBCR + "v" + versionClienteBCR + "/Login");
                 client.Timeout = -1;
@@ -42,14 +42,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                 IRestResponse response = client.Execute(request);
                 Console.WriteLine(response.Content);
                 var result = JsonConvert.DeserializeObject<TokenBCR>(response.Content);
-                var token = result.data.token;
-                logger.Debug($"Token obtenido: {token}");
 
                 List<DataBCR> listPrecios = new List<DataBCR>();
 
-                //int[] idMateriales = new int[4] { 1, 2, 20, 21 };
                 if (result != null)
                 {
+                    var token = result.Data.Token;
+                    logger.Debug($"Token obtenido: {token}");
                     string nombresMateriales = "";
                     List<Material> materiales = repositorio.Listar<Material>();
                     for (int i = 0; i < arrIdMateriales.Length; i++)
@@ -83,6 +82,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+                else logger.Debug($"La respuesta de la API de la bolsa de Rosario fue vacía.");
 
                 return listPrecios;
             }

@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -19,8 +18,8 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -28,22 +27,20 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var establecimientos = new List<EstablecimientoStockDto>()
-                {
-
-                };
+                var establecimientos = new List<EstablecimientoStockDto>() { };
                 for (int i = 0; i < 4; i++)
                 {
                     var e = new EstablecimientoStockDto
                     {
-                        Cantidad = ((i % 2) == 0 ? 56000 : 56000 * 2),
+                        Cantidad = (i % 2) == 0 ? 56000 : 56000 * 2,
                         //Cantidad = ((i % 2) == 0 ? 56000 : 56000 * -1),
                         //Cantidad = 56000,
                         Establecimiento = "CAPALDI",
                         Cosecha = "19-20",
                         Localidad = "Buenos Aires",
                         Provincia = "Buenos Aires",
-                        CodigoEstablecimiento = ((i % 2) == 0 ? "45000" : "720000"),
+                        CodigoEstablecimiento = (i % 2) == 0 ? "45000" : "720000",
+                        Anulado = false
                     };
                     establecimientos.Add(e);
                 }
@@ -65,14 +62,15 @@ namespace Molinos.DataAgro.Agent
                         Cosecha = x.Cosecha,
                         Provincia = x.Provincia,
                         Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-').Last().Split('(').First(),
-                        CodigoEstablecimiento = x.CodigoEstablecimiento
+                        CodigoEstablecimiento = x.CodigoEstablecimiento,
+                        Anulado = x.EstablecimientoAnulado
                     }).OrderBy(x => x.Cantidad).ToList();
                     respuesta = ValidarEstablecimiento(respuesta);
                     return respuesta;
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e.Message);
+                    logger.Error("Error en ListarEstablecimientos - ", e.Message);
                     throw;
                 }
             }
@@ -85,9 +83,7 @@ namespace Molinos.DataAgro.Agent
             {
                 foreach (var establecimiento in establecimientoStockDtos)
                 {
-                    int number;
-
-                    bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
+                    bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out int number);
                     if (success /*&& number < 90000*/)
                     {
                         establecimientos.Add(establecimiento);

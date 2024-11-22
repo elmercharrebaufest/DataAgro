@@ -97,11 +97,11 @@ function CargarPizarraHistorico() {
                 var linea = '<tr><td>' + data[i].Pizarra + '</td>';
                 linea += '<td>' + kendo.toString(data[i].FechaDesde, "dd/MM/yyyy hh:mm tt") + '</td>';
                 linea += '<td>' + kendo.toString(data[i].FechaHasta, "dd/MM/yyyy hh:mm tt") + '</td>';
-                linea += '<td>' + data[i].Precio + '</td>';
+                linea += '<td>' + data[i].Precio.toLocaleString('es-ES') + '</td>';
                 linea += '<td>' + data[i].Moneda + '</td>';
                 linea += '<td>' + data[i].UnidadMedida + '</td>';
                 linea += '<td>' + data[i].Material + '</td>';
-                linea += '<td> <a class="fa fa-minus-circle danger" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#listaPrecioPizarra" href="/PrecioPizarra/EliminarPrecio/' + data[i].Id + '"> </a></td></tr>';
+                linea += '<td> <a class="fa fa-minus-circle danger" data-ajax="true" title="Eliminar precio" data-ajax-mode="replace" data-ajax-update="#listaPrecioPizarra" href="/PrecioPizarra/EliminarPrecio/' + data[i].Id + '"> </a></td></tr>';
                 tabla.append(linea);
             }
         }
@@ -121,9 +121,9 @@ function ActualizarPrecioPizarraBCR() {
 
     var data = MSExecuteOnServer('/PrecioPizarra/ActualizarPrecioPizarra', { fecha: fechaActualizaPrecio, manual: true });
     if (data == "Ok") {
-        MensInfo("Actualización de Precio Pizarra finalizó correctamente!");
+        MensInfo("La actualización de precios pizarra finalizó correctamente.\n\n");
     } else {
-        MensInfo("Actualización de Precio Pizarra no se ejecutó correctamente.");
+        MensInfo("La actualización de precios pizarra tuvo un error en su ejecución.\n\n");
     }
 }
 

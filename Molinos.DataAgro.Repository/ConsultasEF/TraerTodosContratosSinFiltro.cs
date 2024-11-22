@@ -88,6 +88,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.Sustentable : contrato.Sustentable,
                         EPA = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.EPA : contrato.EPA,
+                        EUDR = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.EUDR : contrato.EUDR,
                         SustentableTipoDBId = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.SustentableTipoDBId : contrato.SustentableTipoDBId,
                         Importe_Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.ImporteSustentable : contrato.ImporteSustentable,
                         MonedaId_Sustentable = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.MonedaSustentableId : contrato.MonedaSustentableId,

@@ -45,8 +45,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DiaCupo> Dias { get; set; }
         public int CantidadFleteProcedenciaOriginal { get; set; }
         public int CantidadDeCupoOriginal { get; set; }
-        public bool? Sustentable { get; set; }
-        public bool? EPA { get; set; }
+        public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public string ContratoSAP { get; set; }
         public double KgPendientes { get; set; }
         public int CuposRestantes { get; set; }

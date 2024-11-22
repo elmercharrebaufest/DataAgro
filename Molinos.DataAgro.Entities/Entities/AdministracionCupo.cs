@@ -29,8 +29,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaDecision { get; set; }
         public bool? ConDescarga { get; set; }
         public string Motivo { get; set; }
-        public bool? Sustentable { get; set; }
-        public bool? EPA { get; set; }
+        public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
+        public bool EUDR { get; set; }
         public int? NegocioId { get; set; }
         [ForeignKey("SugerenciaCupoId")]
         public virtual SugerenciaCupo SugerenciaCupo { get; set; }

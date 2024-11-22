@@ -1,16 +1,16 @@
-﻿using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ContratosParaFijacion;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Helpers;
 using System.Globalization;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP", e);
+                    logger.Error("Error comunicacion SAP ", e);
                     throw e;
                 }
             }
@@ -270,8 +270,8 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "";
                     contratoParaFijacion.Calidades = calidades;
                     contratoParaFijacion.Clasificacion = contrato.CLASIFICACION;
-                    contratoParaFijacion.Cesion = contrato.CESION == "X" ? true : false;
-                    contratoParaFijacion.Anticipo = contrato.ANTICIPO == "X" ? true : false;
+                    contratoParaFijacion.Cesion = contrato.CESION == "X";
+                    contratoParaFijacion.Anticipo = contrato.ANTICIPO == "X";
                     contratoParaFijacion.Aperturas = aperturas;
                     contratoParaFijacion.Bonificaciones = bonificaciones;
                     contratoParaFijacion.Virtual = false;
@@ -290,8 +290,9 @@ namespace Molinos.DataAgro.Agent
                         var idContratoConAnulaYReemplaza = contDA.Id;
                         existeConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contDA.Id);
                         contratoParaFijacion.ProveedorComisionistaId = contDA.ProveedorComisionistaId ?? null;
-                        contratoParaFijacion.EPA = contDA.EPA;
                         contratoParaFijacion.Sustentable = contDA.Sustentable;
+                        contratoParaFijacion.EPA = contDA.EPA;
+                        contratoParaFijacion.EUDR = contDA.EUDR;
                         contratoParaFijacion.MonedaSustentable = contDA.MonedaSustentable;
                         contratoParaFijacion.ImporteSustentable = contDA.ImporteSustentable;
                         contratoParaFijacion.SustentableTipoDBId = contDA.SustentableTipoDBId;

@@ -21,6 +21,8 @@ using System.Data.SqlClient;
 using System.Net.Mail;
 using System.Configuration;
 using System.Net;
+using System.Globalization;
+using System.Threading;
 
 namespace WebDataAgro
 {
@@ -33,6 +35,14 @@ namespace WebDataAgro
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(KendoGridMvcRequest), new KendoGridMvcModelBinder());
+
+            var cultureInfo = new CultureInfo("es-AR");
+            cultureInfo.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
+            cultureInfo.DateTimeFormat.LongDatePattern = "dddd, dd 'de' MMMM 'de' yyyy";
+            cultureInfo.DateTimeFormat.ShortTimePattern = "HH:mm";
+            cultureInfo.DateTimeFormat.LongTimePattern = "HH:mm:ss";
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
             // Habilita TLS 1.2
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

@@ -398,6 +398,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ContratoSAP + "'" + ',' +
         "'" + dataItem.Negocio + "'" + ',' +
         "'" + dataItem.EPA + "'" + ',' +
+        "'" + dataItem.EUDR + "'" + ',' +
         "'" + dataItem.SustentableTipoDBId + "'" + ',' +
         "'" + dataItem.Sustentable + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
@@ -934,7 +935,7 @@ function CreateGridInformeCompraNet() {
                 } else if ((view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)
                     || (view[i].MaterialId == 1 && view[i].StandardCalidadId == 1)
                     || (view[i].MaterialId == 2 && (view[i].StandardCalidadId == 1 || view[i].StandardCalidadId == 2))
-                    || (view[i].MaterialId == 3 && (view[i].StandardCalidadId == 2 || view[i].Sustentable == true || view[i].EPA == true))
+                    || (view[i].MaterialId == 3 && (view[i].StandardCalidadId == 2 || view[i].Sustentable == true || view[i].EPA == true || view[i].EUDR == true))
                     || ((view[i].MaterialId == 4 || view[i].MaterialId == 5) && view[i].StandardCalidadId == 6)) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("calidadEspecialOSustentable");
@@ -1057,10 +1058,13 @@ function CreateGridInformeCompraNet() {
                 }, width: 60, minResizableWidth: 60, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
-                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
-                }, template: "#=Material##if(Sustentable){#<br><br>##<i data-toggle='tooltip' title='Sustentable' class='fa fa-solid fa-leaf fa-2x'></i>#}##" +
-                    "if(EPA){#<br><br>##<i data-toggle='tooltip' title='EPA' class='fa fa-pagelines fa-2x'></i>#}##" +
-                    "if(DolarExportador){#<br><br>##<i data-toggle='tooltip' title='Dolar Exportador' class='glyphicon glyphicon-usd'></i>#}#"
+                    return "<span><label><span>#= data.Material || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
+                }, template: "#= Material # " +
+                    "# if (Sustentable) { # <br><br><i>Sustent.</i> # } #" +
+                    "# if (EPA && !EUDR) { # <br><br><i>EPA</i> # } #" +
+                    "# if (EUDR && !EPA) { # <br><br><i>EUDR</i> # } #" +
+                    "# if (EUDR && EPA) { # <br><br><i>EPA/EUDR</i> # } #" +
+                    "# if (DolarExportador) { # <br><br><i data-toggle='tooltip' title='Dolar Exportador' class='glyphicon glyphicon-usd'></i> # } #"
             },
             {
                 field: "Cantidad", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
@@ -2377,7 +2381,7 @@ function GuardarAmpliacion(ampliacion) {
 }
 
 function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
-    campana, provincia, localidad, nro_SAP, negocio, EPA, SustentableTipoDBId, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
+    campana, provincia, localidad, nro_SAP, negocio, EPA, EUDR, SustentableTipoDBId, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
@@ -2673,7 +2677,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
 
-    if (EPA == "true") {
+    if (EPA == "true" && EUDR != "true") {
         if (tarifaAConvenir == "true") {
             $("#visualizar_epaPrecio").text("Tarifa a Convenir");
         } else {
@@ -2686,6 +2690,34 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         }
     } else {
         $("#visualizar_epaPrecio").text("null")
+    }
+    if (EPA == "true" && EUDR == "true") {
+        if (tarifaAConvenir == "true") {
+            $("#visualizar_epaEudrPrecio").text("Tarifa a Convenir");
+        } else {
+            if (SustentableTipoDBId == 1) {
+                $("#visualizar_epaEudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
+
+            } else if (SustentableTipoDBId == 2) {
+                $("#visualizar_epaEudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
+            } else $("#visualizar_epaEudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+        }
+    } else {
+        $("#visualizar_epaEudrPrecio").text("null")
+    }
+    if (EPA != "true" && EUDR == "true") {
+        if (tarifaAConvenir == "true") {
+            $("#visualizar_eudrPrecio").text("Tarifa a Convenir");
+        } else {
+            if (SustentableTipoDBId == 1) {
+                $("#visualizar_eudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
+
+            } else if (SustentableTipoDBId == 2) {
+                $("#visualizar_eudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
+            } else $("#visualizar_eudrPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+        }
+    } else {
+        $("#visualizar_eudrPrecio").text("null")
     }
     if (sustentable == "true") {
         if (tarifaAConvenir == "true") {
@@ -2769,11 +2801,15 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     visualizacionRowDoble("dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha", "dolarizadoFechaOriginalDivVisualizar", "visualizar_dolarizadoOriginalFecha");
     visualizacionRowSimple("sustentableDivVisualizar", "visualizar_sustentablePrecio");
     visualizacionRowSimple("epaDivVisualizar", "visualizar_epaPrecio");
+    visualizacionRowSimple("eudrDivVisualizar", "visualizar_eudrPrecio");
+    visualizacionRowSimple("epaEudrDivVisualizar", "visualizar_epaEudrPrecio");
     visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "establecimientoDivVisualizar", "visualizar_establecimiento");
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
         $("#visualizar_epaPrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
+        $("#visualizar_eudrPrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
+        $("#visualizar_epaEudrPrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
     }
 
 
@@ -3222,7 +3258,7 @@ function visualizacionRowDoble(div1, span1, div2, span2) {
     }
 }
 
-//function visualizacionRowSimple(dato, idDiv, idText) {  //se usaba sólo en visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
+//function visualizacionRowSimple(dato, idDiv, idText) {  //se usaba sï¿½lo en visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
 //    if (dato === "undefined" || dato === "null" || dato === "false" || dato === "") {
 //        $("#" + idDiv).hide();
 //    }
@@ -3361,10 +3397,10 @@ function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio, kilos) {
     }
 
     //if (kilos && kilos > 0) {
-    //    $("#espaciolineas").html("Usted está intentando preanular una <b>Fijación Virtual</b> de " + proveedor +
+    //    $("#espaciolineas").html("Usted estï¿½ intentando preanular una <b>Fijaciï¿½n Virtual</b> de " + proveedor +
     //        " con " + kendo.toString(kilos, "n") + " kg de saldo sobre " + + " kg." +
-    //        "<br>Si prosigue se hará una anulación parcial."+
-    //        "<br>¿Desea proseguir?"
+    //        "<br>Si prosigue se harï¿½ una anulaciï¿½n parcial."+
+    //        "<br>ï¿½Desea proseguir?"
     //    );
 
     //}
@@ -3998,7 +4034,7 @@ $("#copiar-cupos-btn").on("click", function () {
         var cupoSap = $(this).find("td:eq(1)").text();
         copia += cupoSap + "\n";
     });
-    // Copiar el cupoSAP al portapapeles y cambiar ícono del botón
+    // Copiar el cupoSAP al portapapeles y cambiar ï¿½cono del botï¿½n
     navigator.clipboard.writeText(copia);
     $("#copiar-cupos-btn i").removeClass("fa-copy").addClass("fa-check");
 });

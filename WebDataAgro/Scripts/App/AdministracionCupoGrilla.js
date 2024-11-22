@@ -131,7 +131,7 @@ function CargarGrillaConfig() {
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "Material", type: "string", minResizableWidth: 100, width: 150, editable: function (dataItem) {
+                field: "Material", type: "string", minResizableWidth: 100, width: 130, editable: function (dataItem) {
                     return false;
                 }, filterable: {
                     multi: true, dataSource: [{
@@ -185,12 +185,12 @@ function CargarGrillaConfig() {
                 }, width: 130, template: "#=Centro#",
             },
             {
-                field: "Fecha", title: "Fecha Sugerida", width: 150, format: _DefaultDateTemplate, type: "date", editable: function (dataItem) {
+                field: "Fecha", title: "Fecha Sugerida", width: 140, format: _DefaultDateTemplate, type: "date", editable: function (dataItem) {
                     return false;
                 }
             },
             {
-                field: "FechaCreacionConHora", title: "Fecha Creacion", width: 150, template: function (dataItem) {
+                field: "FechaCreacionConHora", title: "Fecha de Creación", width: 145, template: function (dataItem) {
                     if (dataItem.FechaCreacion == null) {
                         return "";
                     }
@@ -201,7 +201,7 @@ function CargarGrillaConfig() {
                 }
             },
             {
-                field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "150px",
+                field: "CantidadDeCupo", title: "Cantid. de Cupos", width: 140,
                 filterable: { extra: false },
                 editor: function (container, options) {
                     // create an input element
@@ -217,7 +217,7 @@ function CargarGrillaConfig() {
                 }
             },
             {
-                field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia", width: "150px",
+                field: "CantidadFleteProcedencia", title: "Cant. Flete Procedencia", width: "150px",
                 filterable: { extra: false },
                 editor: function (container, options) {
                     // create an input element
@@ -234,7 +234,7 @@ function CargarGrillaConfig() {
                 }
             },
             {
-                field: "Observacion", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },
+                field: "Observacion", title: "Observación", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },
             },
             {
                 field: "Estado", title: "Estado", width: 150, editable: function (dataItem) {
@@ -253,33 +253,33 @@ function CargarGrillaConfig() {
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
-                    var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
-                    var iconoEPA = dataItem.EPA == true ? botonEPA('fa-pagelines') : '';
+                    var iconoSustentable = dataItem.Sustentable ? botonSustentable('fa-solid fa-leaf') : '';
+                    var iconoEPAEUDR = dataItem.EPA || dataItem.EUDR ? botonEPA('fa-pagelines') : '';
                     if (dataItem.EstadoId == 4) { //pendiente
                         return '<div class="status pendiente" style="text-align: center;">Pendiente'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
                             botonAprobar(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend') +
-                            iconoSustentable + iconoEPA;
+                            iconoSustentable + iconoEPAEUDR;
                     }
                     if (dataItem.EstadoId == 3) { //confirmado                       
                         return '<div class="status confirmado" style="text-align: center;">Confirmado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
-                            iconoSustentable + iconoEPA;
+                            iconoSustentable + iconoEPAEUDR;
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         return '<div class="status borrado" style="text-align: center;">Rechazado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>' +
-                            iconoSustentable + iconoEPA;
+                            iconoSustentable + iconoEPAEUDR;
                     }
                     if (dataItem.EstadoId == 1) { //anulado
                         return '<div class="status anulado" style="text-align: center;">Anulado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>' +
-                            iconoSustentable + iconoEPA;
+                            iconoSustentable + iconoEPAEUDR;
                     }
                 }
             }
@@ -475,7 +475,7 @@ function botonSustentable(icono) {
     return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
 }
 function botonEPA(icono) {
-    return '<button data-toggle="tooltip" title="EPA" disabled><i class="fa ' + icono + '"></i></button>';
+    return '<button data-toggle="tooltip" title="EPA/EUDR" disabled><i class="fa ' + icono + '"></i></button>';
 }
 
 function ModalAceptarSugerencia(id) {

@@ -63,7 +63,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult ReporteProveedorComerciales(int IdProveedor)
+        public ActionResult ReporteProveedorComerciales(int? IdProveedor)
         {
             var request = new DataSourceRequest();
 

@@ -309,7 +309,7 @@
     <Compile Include="Dto\PuestoApoderadoDto.cs" />
     <Compile Include="Dto\ReporteProveedores.cs" />
     <Compile Include="Dto\ReporteLocalidades.cs" />
-    <Compile Include="Dto\ReporteSojaEPADto.cs" />
+    <Compile Include="Dto\ReporteSojaEPAyEUDRDto.cs" />
     <Compile Include="Dto\ResearchCoeficienteCultivoDto.cs" />
     <Compile Include="Dto\ResearchCondicionCultivoDto.cs" />
     <Compile Include="Dto\ResearchCondicionDto.cs" />
@@ -567,7 +567,7 @@
     <Compile Include="Entities\ManualesLogVisitas.cs" />
     <Compile Include="Entities\PuestoApoderado.cs" />
     <Compile Include="Entities\PantallaEnUso.cs" />
-    <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
+    <Compile Include="Entities\ReporteCompraNetSojaEPAyEUDR.cs" />
     <Compile Include="Entities\Research.cs" />
     <Compile Include="Entities\ResearchCoeficienteCultivo.cs" />
     <Compile Include="Entities\ResearchCondicion.cs" />

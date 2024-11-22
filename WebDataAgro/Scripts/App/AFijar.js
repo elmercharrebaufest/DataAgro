@@ -932,14 +932,17 @@ function InicializarElementos() {
             if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
                 $(".sojaEpa").show();
+                $(".sojaEudr").show();
             } else {
                 $(".sojaSustentable").hide();
                 $(".sojaEpa").hide();
+                $(".sojaEudr").hide();
                 $(".sustentableDiv").hide();
                 $(".sustenTipoDB").hide();
                 $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
                 $("#sustentableId").prop('checked', false);
                 $("#epaId").prop('checked', false);
+                $("#eudrId").prop('checked', false);
                 $("#divSustentableSinTarifa").hide();
             }
             if ($("#material").val() === "2" && $("#tipoId").val() === "4") {
@@ -2474,7 +2477,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-            EPATipoDB();
+            SustentableTipoDB();
         }
     });
     //FIN INICIALIZARELEMENTOS
@@ -2976,7 +2979,6 @@ function LimpiarValidaciones() {
     $("#errprovinciaId").css("display", "none");
     $("#errLocalidadId").css("display", "none");
     $("#errBaseId").css("display", "none");
-    $("#errsustentableId").css("display", "none");
     $("#errsustentablePrecioId").css("display", "none");
     $("#errsustentableMonedaId").css("display", "none");
     //$("#errdolarizadoId").css("display", "none");
@@ -3949,14 +3951,26 @@ function CargarDatosEditar(contrato, hijo) {
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
 
-    if (contrato.Sustentable == true || contrato.EPA == true) {
+    if (contrato.Sustentable == true || contrato.EPA == true || contrato.EUDR == true) {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value(contrato.Importe_Sustentable);
         $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
         if (contrato.Sustentable) {
             $("#sustentableId").prop("checked", true);
             $(".sojaEpa").hide();
+            $(".sojaEudr").hide();
             $(".sustenTipoDB").show();
-        } else {
+        } else if (contrato.EPA && !contrato.EUDR) {
+            $("#epaId").prop("checked", true);
+            $(".sojaSustentable").hide();
+            //$(".sojaEudr").hide();
+            $(".sustenTipoDB").show();
+        } else if (contrato.EUDR && !contrato.EPA) {
+            $("#eudrId").prop("checked", true);
+            $(".sojaSustentable").hide();
+            //$(".sojaEpa").hide();
+            $(".sustenTipoDB").show();
+        } else if (contrato.EUDR && contrato.EPA) {
+            $("#eudrId").prop("checked", true);
             $("#epaId").prop("checked", true);
             $(".sojaSustentable").hide();
             $(".sustenTipoDB").show();
@@ -4274,7 +4288,7 @@ function GuardarAperturaDePrecio() {
         viewModel.Descuentos.push(newdescuento);
     }
     DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
-    if ($("#epaId").is(":checked") == true && $("#selectSustenTipoDB").data("kendoDropDownList").value() == 1) {
+    if (($("#epaId").is(":checked") == true || $("#eudrId").is(":checked") == true) && $("#selectSustenTipoDB").data("kendoDropDownList").value() == 1) {
         $("#selectSustenTipoDB").data("kendoDropDownList").trigger("change");
     }
 }
@@ -4855,6 +4869,7 @@ function ocultarSiHayCanje() {
     $("#pagoDiferidoDiv").hide();
     $("#sustentableId").prop("checked", false);
     $("#epaId").prop("checked", false);
+    $("#eudrId").prop("checked", false);
     $("#compensacionDiv").hide();
     $("#compensacionId").prop("checked", false);
     $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
@@ -4999,39 +5014,58 @@ function HayMercaderia() {
         $("#cantidadDeposito").data("kendoNumericTextBox").value("");
     }
 }
-function HaySustentable() {
-    if ($("#sustentableId").is(":checked")) {
-        $(".sojaEpa").hide();
-        $(".sustentableDiv").show();
-        $(".sustenTipoDB").show();
-    } else if ($("#epaId").is(":checked")) {
-        $(".sojaSustentable").hide();
-        $(".sustentableDiv").show();
-        $(".sustenTipoDB").show();
-    } else {
-        $(".sustentableDiv").hide();
-        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-        $("#sustentablePrecioId").addClass("disabled").prop("disabled", false);
-        $("#sustentableMonedaId").data("kendoDropDownList").value("");
-        $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
-        $(".fechaHastaSustentableDiv").hide();
-        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
-        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
-        $(".sojaSustentable").show();
-        $(".sojaEpa").show();
-        $(".sustenTipoDB").hide();
-        $("#selectSustenTipoDB").data("kendoDropDownList").value("");
-        $("#tarifaAConvenirId").prop("checked", false);
-        $("#divSustentableSinTarifa").hide();
-    }
 
+$("#sustentableId").change(function () {
+    if ($("#sustentableId").is(':checked')) {
+        $(".sojaEpa").hide();
+        $(".sojaEudr").hide();
+        MostrarBonificacionSoja();
+    } else {
+        OcultarBonificacionSoja()
+    }
+});
+$("#epaId").change(function () {
+    if ($("#epaId").is(':checked')) {
+        $("#eudrId").prop("checked", true).prop("disabled", true);
+        $(".sojaSustentable").hide();
+        MostrarBonificacionSoja();
+    } else {
+        OcultarBonificacionSoja()
+    }
+});
+$("#eudrId").change(function () {
+    if ($("#eudrId").is(':checked')) {
+        $("#epaId").prop("checked", true).prop("disabled", true);
+        $(".sojaSustentable").hide();
+        MostrarBonificacionSoja();
+    } else {
+        OcultarBonificacionSoja()
+    }
+});
+
+function MostrarBonificacionSoja() {
+    $(".sustentableDiv").show();
+    $(".sustenTipoDB").show();
     CompletarCantidadDisponibleDeposito();
-    //var maniana = new Date();
-    //if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
-    //    $("#mercsDepositoDiv").hide();
-    //} else {
-    //    $("#mercsDepositoDiv").show();
-    //}
+}
+function OcultarBonificacionSoja() {
+    $(".sustentableDiv").hide();
+    $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+    $("#sustentablePrecioId").addClass("disabled").prop("disabled", false);
+    $("#sustentableMonedaId").data("kendoDropDownList").value("");
+    $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
+    $(".fechaHastaSustentableDiv").hide();
+    $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+    $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+    $(".sojaSustentable").show();
+    $(".sojaEpa").show();
+    $(".sojaEudr").show();
+    $(".sustenTipoDB").hide();
+    $("#selectSustenTipoDB").data("kendoDropDownList").value("");
+    $("#divSustentableSinTarifa").hide();
+    $("#tarifaAConvenirId").prop("checked", false);
+    $("#eudrId").prop("checked", false).prop("disabled", false);
+    $("#epaId").prop("checked", false).prop("disabled", false);
 }
 function HayTarifaAConvenir() {
     if ($("#tarifaAConvenirId").is(":checked")) {
@@ -5600,7 +5634,7 @@ function CompletarCantidadDisponibleDeposito() {
             cuitC = cuitCorr;
         }
         Id = Id != "" ? Id : 0;
-        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), sinBoleto: $("#sinBoletoId").is(':checked') };
+        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked") || $("#eudrId").is(":checked"), sinBoleto: $("#sinBoletoId").is(':checked') };
         var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
         if (disponible != null && disponible.CantidadDisponible != null) {
             $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadDisponible);
@@ -5627,7 +5661,7 @@ function ValidarCantidad() {
     }
 }
 
-function EPATipoDB() {
+function SustentableTipoDB() {
     if ($("#selectSustenTipoDB").val() == 1) { //sobre precio
         var monedaContrato = $("#precioMonedaAFijarId").val();
         if (monedaContrato != $("#sustentableMonedaId").data("kendoDropDownList").value()) {

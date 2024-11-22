@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="e5921e95-695d-432e-a110-baa7d03be42f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="e5921e95-695d-432e-a110-baa7d03be42f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="C:\Mastersoft\DataAgro\1 Documentacion\Varios\Sap Wsdl\Datos Comerciales GXQ.xml" Protocol="file" SourceId="1" />
+    <MetadataSource Address="http://gslopidevqa00.molinosagro.ad:50000/dir/wsdl?p=ic/e3dff23927b33e819b6ce4ce76788fe8" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES.wsdl" MetadataType="Wsdl" ID="330f095d-5ad9-456c-b44b-c5b39f8f1991" SourceId="1" SourceUrl="file:///C:/Mastersoft/DataAgro/1 Documentacion/Varios/Sap Wsdl/Datos Comerciales GXQ.xml" />
+    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES11.wsdl" MetadataType="Wsdl" ID="9d4e629a-0f84-43a0-9a33-3b4887fccf09" SourceId="1" SourceUrl="http://gslopidevqa00.molinosagro.ad:50000/dir/wsdl?p=ic/e3dff23927b33e819b6ce4ce76788fe8" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

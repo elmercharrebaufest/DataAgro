@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>(), It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
             .Returns(new List<PrecioPizarraDto>() { new PrecioPizarraDto { Id = 1 } });
 
-            var resultado = target.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1);
+            var resultado = target.TraerPrecioPizarraPorMaterialYPizarra(1, 1);
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>(), It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()));
 
@@ -168,18 +168,21 @@ namespace Molinos.DataAgro.Test.Managers
                     id_MaterialDA = 1,
                     fecha_Operacion_Pizarra = new DateTime(2019, 8, 6) } });
 
-            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>()))
-                .Returns(new Moneda() { MonedaId = "ARP  " });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>())).Returns(new Moneda() { MonedaId = "ARP  " });
 
-            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Pizarra, bool>>>()))
-                .Returns(new Pizarra() { Id = 1 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Pizarra, bool>>>())).Returns(new Pizarra() { Id = 1 });
 
             precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("OK");
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<Contrato> { new Contrato { Id = 1, Pizarra = true, TipoNegocioId = 2, Precio = 0, MaterialId = 3, AperturaPrecio = new List<AperturaPrecio>(), TarifaFlete = 550 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>(), It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<PrecioPizarraDto>() { new PrecioPizarraDto { Id = 1, MaterialId = 3, Precio = 50000 } });
 
             target.ActualizarPrecioPizarra(new DateTime(2019, 8, 6), false);
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioPizarra>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
     }
 }

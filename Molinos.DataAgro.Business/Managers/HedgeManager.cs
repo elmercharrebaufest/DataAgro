@@ -440,7 +440,7 @@ namespace Molinos.DataAgro.Business
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = reportesManager.TraerTcPromedio(fechaDesde, fechaHasta, null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
-                SojaEPA = reportesManager.TraerToneladasSojaEPA(fechaDesde, fechaHasta, idCentro),
+                SojaEPAyEUDR = reportesManager.TraerToneladasSojaEPAyEUDR(fechaDesde, fechaHasta, idCentro),
             };
         }
 
@@ -475,7 +475,7 @@ namespace Molinos.DataAgro.Business
                 HedgeObjetivo = reportesManager.TraerHedgeObjetivo(hoy, hoy, null),
                 TCPromedioDto = reportesManager.TraerTcPromedio(hoy, hoy, null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
-                SojaEPA = reportesManager.TraerToneladasSojaEPA(hoy, hoy),
+                SojaEPAyEUDR = reportesManager.TraerToneladasSojaEPAyEUDR(hoy, hoy),
             };
         }
 
@@ -898,12 +898,12 @@ namespace Molinos.DataAgro.Business
             var headTrSojaEPA = "font-size: 12px; font-weight: bold;color: #FFFFFF;text-align: center; background: #017940; border-left: none !important;border-right: 0px !important;";
             var bodyTdSojaEPA = "font-size: 15px;border-left: 0px !important;  border-right: 0px !important;";
 
-            if (Model.SojaEPA.Total > 0)
+            if (Model.SojaEPAyEUDR.Total > 0)
             {
                 htmlBody += $"<table style='{tableSojaEPA}'  class='sojaEPA'>";
                 htmlBody += "<thead>";
                 htmlBody += $"<tr style='{headTrSojaEPA} {tableTdTrSojaEPA}' >";
-                htmlBody += $"<th style='{headTrSojaEPA} {tableTdTrSojaEPA}'  colspan='3'>SOJA EPA</th>";
+                htmlBody += $"<th style='{headTrSojaEPA} {tableTdTrSojaEPA}'  colspan='3'>SOJA EPA/EUDR</th>";
                 htmlBody += "</tr>";
                 htmlBody += $"<tr style='{headTrSojaEPA} {tableTdTrSojaEPA}' class='borde'>";
                 htmlBody += $"<th style='{headTrSojaEPA} {tableTdTrSojaEPA}'>A Precio</th>";
@@ -911,9 +911,9 @@ namespace Molinos.DataAgro.Business
                 htmlBody += $"<th style='{headTrSojaEPA} {tableTdTrSojaEPA}'>Total</th>";
                 htmlBody += "</tr></thead><tbody>";
                 htmlBody += "<tr>";
-                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPA.Precio.ToString("N0") + "</td>";
-                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPA.Fijar.ToString("N0") + "</td>";
-                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPA.Total.ToString("N0") + "</td>";
+                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPAyEUDR.Precio.ToString("N0") + "</td>";
+                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPAyEUDR.Fijar.ToString("N0") + "</td>";
+                htmlBody += $"<td style='{bodyTdSojaEPA} {tableTdTrSojaEPA}'>" + Model.SojaEPAyEUDR.Total.ToString("N0") + "</td>";
                 htmlBody += "</tr>";
                 htmlBody += "</tbody>";
                 htmlBody += "</table><br><br>";
