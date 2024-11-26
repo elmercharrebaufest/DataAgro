@@ -1196,6 +1196,15 @@ function cargarCombos() {
             })(ii);
         }
 
+        var comercial = $("#txtcomercial2")
+        comercial.empty();
+        $("<option>").text('- Elegir').val('null').appendTo(comercial);
+        for (var ii in datos.come) {
+            (function (i) {
+                $("<option>").text(datos.come[i].Nombre).val(datos.come[i].ComercialId).appendTo(comercial);
+            })(ii);
+        }
+
         var grupos = {};
         for (var jj in datos.segm) {
             (function (j) {
