@@ -81,5 +81,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ActividadExportar> ExportarActividades(HistorialActividad oParam, string idActiveDirectory);
         ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion);
         void ActualizarEstadoProveedor(int proveedorId, string proveedorCuit);
+        List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial, List<int> equipo);
     }
 }

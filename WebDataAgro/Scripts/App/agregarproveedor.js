@@ -960,7 +960,7 @@ function armarSelects(result) {
         }
         obj.granos = [];
 
-        for (var i = 0; i < (cantGrano + 1); i++) {
+        for (var i = 0; i <= cantGrano; i++) {
             if (($("#campaña" + i).val() && $("#campaña" + i).val() != "null") || ($("#grano" + i).val() && $("#grano" + i).val() != "null")) {
                 obj.granos.push({
                     granoId: $("#grano" + i).val(),

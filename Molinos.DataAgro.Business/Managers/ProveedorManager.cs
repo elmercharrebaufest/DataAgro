@@ -170,11 +170,11 @@ namespace Molinos.DataAgro.Business.Managers
                     var campActual = campaniasPorMaterial.Where(x => x.MaterialId == res.CapacidadProductiva[i].MaterialId).FirstOrDefault().CampañaId;
                     if (res.CapacidadProductiva[i].CampaniaId >= campActual)
                     {
-                        res.CapacidadProductiva[i].InformeActualizado = 1; //actualizado
+                        res.CapacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.ACTUALIZADO;
                     }
                     else if (res.CapacidadProductiva[i].CampaniaId < campActual)
                     {
-                        res.CapacidadProductiva[i].InformeActualizado = 2; //desactualizado. Si queda nulo, nunca tuvo informe para ese material.
+                        res.CapacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.DESACTUALIZADO;
                     }
                 }
             }
