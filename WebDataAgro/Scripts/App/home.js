@@ -29,7 +29,7 @@ $(document).ready(function () {
         dataValueField: "Value",
         filter: "contains"
     });
-
+    VerificarInformesComerciales();
 });
 
 function MostrarTooltip(e) {
@@ -1253,3 +1253,39 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
     ArmarCamapaña(result.Campaña);
     ArmarObjetivo(result.Objetivo.Objetivos, result.Campaña);
 }
+
+function VerificarInformesComerciales() {
+    var result = MSExecuteOnServer('/Home/VerificarInformesComerciales');
+
+    if (result == null || result.lenght == 0) return;
+
+    $("#cuerpo-carga-cupos").empty();
+
+    result.forEach(x => {
+        const fila = `
+            <tr>
+                <td>${x.RazonSocial}</td>
+                <td>${x.CUIT}</td>
+                <td>${x.NombreComercial}</td>
+                <td>
+                    <button class="btn btn-primary abrir-solapa" data-proveedor-id="${x.ProveedorId}">
+                        Abrir Inf.Com.
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        $("#cuerpo-carga-cupos").append(fila);
+    })
+
+    $("#modalInformesComercialesPendientes").modal("show");
+}
+
+$(document).on('click', '.abrir-solapa', function () {
+    // Obtener el ProveedorId del botón clickeado
+    const proveedorId = $(this).data('proveedor-id');
+
+    const baseUrl = `${window.location.origin}/Proveedor/Agregar?ProveedorId=${proveedorId}`;
+
+    window.location.href = baseUrl;
+});

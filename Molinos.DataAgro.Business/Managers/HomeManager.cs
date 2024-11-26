@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -18,14 +19,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ICampañaManager mobCampaña;
         private readonly IObjetivoManager objetivoManager;
+        private readonly IProveedorManager proveedorManager;
         private readonly ILogger logger;
 
-        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager)
+        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager, IProveedorManager proveedorManager)
         {
             this.logger = logger;
             this.mobCampaña = campañaManager;
             this.objetivoManager = objetivoManager;
             this.repositorio = repositorio;
+            this.proveedorManager = proveedorManager;
         }
 
         public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> equipo)
@@ -467,7 +470,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultadoFinal.OrderBy(x => x.Comercial).ThenBy(x => x.Proveedor).ToList();
         }
-        
+
         private static void AgregarAlResultadoActividad(List<ActividadComercial> resultadoFinal, List<ActividadComercial> lista)
         {
             foreach (var itemNuevo in lista)
@@ -487,7 +490,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
-        
+
         private List<ObjetivoCampania> ObjetivoCampania(List<int> equipo)
         {
             var objetivoCampania = new List<ObjetivoCampania>();
@@ -526,7 +529,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return objetivoCampania;
         }
-        
+
         public List<int> ListarTodosLosComercialesConMismaZona(int comercialId)
         {
             var grupoId = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x => x.GrupoDeComprasId.Value);
@@ -911,7 +914,83 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return lista;
         }
+
+        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, List<int> equipo)
+        {
+            logger.Info("INICIO ProveedoresConCapProdDesactualizada");
+            List<CapacidadProductivaDesactualizadaDto> proveedoresConCapProdDesactualizada = new List<CapacidadProductivaDesactualizadaDto>();
+
+            List<Comercial> comerciales = repositorio.Listar<Comercial>(x => x.EmpleadorACargoId == comercialId || x.ComercialId == comercialId);
+
+            List<ProveedorDto> proveedores = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto()
+            {
+                ProveedorId = x.ProveedorId,
+                RazonSocial = x.RazonSocial,
+                CUIT = x.CUIT
+            });
+
+            List<int> comercialesId = comerciales.Select(x => x.ComercialId).ToList();
+            List<ProveedorComercial> proveedoresComerciales = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId));
+            List<MaterialDto> campaniasPorMaterial = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId });
+            IEnumerable<int> todosProveedoresId = proveedoresComerciales.Where(pc => comercialesId.Contains(pc.ComercialId)).Select(pc => pc.ProveedorId);
+
+            List<CapacidadProductivaDto> capacidadProductiva2 = repositorio.Listar<CapacidadProductiva, CapacidadProductivaDto>(x => new CapacidadProductivaDto
+            {
+                ProveedorId = x.ProveedorId,
+                MaterialId = x.MaterialId,
+                CampaniaId = x.CampaniaId,
+                Material = x.Material.Descripcion,
+                Campania = x.Campania.Descripcion,
+                Cantidad = x.Cantidad,
+                UnidadMedida = x.UnidadMedida,
+                Porcentaje = x.Porcentaje,
+                FechaActualizacion = x.FechaActualizacion
+            }, x => todosProveedoresId.Contains(x.ProveedorId)).OrderByDescending(x => x.CampaniaId).ThenByDescending(x => x.MaterialId).ToList();
+
+            comercialesId.ForEach(com =>
+            {
+                IEnumerable<int> proveedoresId = proveedoresComerciales.Where(pc => pc.ComercialId == com).Select(pc => pc.ProveedorId);
+                List<ProveedorDto> proveedoresFiltrados = proveedores.Where(p => proveedoresId.Contains(p.ProveedorId)).ToList();
+                Comercial comercial = comerciales.FirstOrDefault(c => c.ComercialId == com);
+
+                proveedoresFiltrados.ForEach(prov =>
+                {
+                    List<CompraDto> compraDetalle = proveedorManager.TraerTodoCompraProveedor(prov.ProveedorId, comercial, equipo);
+                    List<CapacidadProductivaDto> capacidadProductiva = capacidadProductiva2.Where(cp => cp.ProveedorId == prov.ProveedorId).ToList();
+
+                    for (int i = 0; i < capacidadProductiva.Count; i++)
+                    {
+                        int? campaniaActualId = campaniasPorMaterial.Where(x => x.MaterialId == capacidadProductiva[i].MaterialId).Select(x => x.CampañaId).FirstOrDefault() ?? 0;
+
+                        if (capacidadProductiva[i].CampaniaId >= campaniaActualId)
+                            capacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.ACTUALIZADO;
+                        else
+                        {
+                            capacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.DESACTUALIZADO;
+
+                            proveedoresConCapProdDesactualizada.Add(new CapacidadProductivaDesactualizadaDto
+                            {
+                                ProveedorId = prov.ProveedorId,
+                                RazonSocial = prov.RazonSocial,
+                                CUIT = prov.CUIT,
+                                NombreComercial = (comercial.Nombres + ' ' + comercial.Apellido).ToUpper(),
+                            });
+                        }
+                    }
+                });
+            });
+
+            logger.Info("FIN ProveedoresConCapProdDesactualizada");
+
+            return proveedoresConCapProdDesactualizada
+                .GroupBy(p => new { p.CUIT, p.RazonSocial })
+                .Select(grupo => grupo.First())
+                .OrderBy(x => x.RazonSocial)
+                .ToList();
+        }
+
     }
+
     public class FakeHome
     {
         public int Id { set; get; }

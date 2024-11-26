@@ -250,6 +250,7 @@
     <Reference Include="System.Xml.ReaderWriter" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Enums\EnumEstadoInformeComercial.cs" />
     <Compile Include="Common\Enums\EnumBoletoCompraNet.cs" />
     <Compile Include="Common\Enums\EnumBolsaCompraNet.cs" />
     <Compile Include="Common\Enums\EnumCalidadEspecial.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Dto\BasicoConfirma.cs" />
+    <Compile Include="Dto\CapacidadProductivaDesactualizadaDto.cs" />
     <Compile Include="Dto\ConfirmaParteDto.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />

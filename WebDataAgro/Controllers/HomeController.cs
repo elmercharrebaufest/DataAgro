@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
 using System.Web.Mvc;
@@ -25,9 +26,6 @@ namespace WebDataAgro.Controllers
         private readonly ILogger logger;
         private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager,
             IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
@@ -38,7 +36,6 @@ namespace WebDataAgro.Controllers
             this.objetivoManager = objetivoManager;
             this.logger = logger;
         }
-
 
         public ActionResult Index()
         {
@@ -76,8 +73,8 @@ namespace WebDataAgro.Controllers
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {proveedorZonaPropia}");
             logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona.ToJson()}");
 
-            var equipo = verTodos ? GlobalVariables.EquipoReal : 
-                proveedorZonaPropia ? comercialesConMismaZona : 
+            var equipo = verTodos ? GlobalVariables.EquipoReal :
+                proveedorZonaPropia ? comercialesConMismaZona :
                 GlobalVariables.Equipo;
 
             logger.Debug($"Equipo final tomado según permisos: {equipo.ToJson()}");
@@ -368,6 +365,20 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult VerificarInformesComerciales()
+        {
+            int comercialId = GlobalVariables.ComercialId;
+            List<int> equipo = GlobalVariables.Equipo;
+
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(comercialId, equipo);
+
+            return new JsonResult()
+            {
+                Data = ProveedoresConCapProdDesactualizada,
                 MaxJsonLength = Int32.MaxValue
             };
         }
