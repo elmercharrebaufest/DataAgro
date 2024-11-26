@@ -331,7 +331,7 @@ function inicializarGrafico(val, campaña) {
                         var ToneladasAux = campfiltr[0].grano[i].Total.toString().split(".");
                         if (ToneladasAux.length > 1) {
                             ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                            ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+                            ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
                             ToneladasAux = ToneladasAux.join(",");
                         }
                         else {
@@ -367,7 +367,7 @@ function inicializarGrafico(val, campaña) {
                                 var ToneladasAux = campfiltr[i].grano[r].Total.split(".");
                                 if (ToneladasAux.length > 1) {
                                     ToneladasAux[0] = ToneladasAux[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                                    ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+                                    ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
                                     ToneladasAux = ToneladasAux.join(",");
                                 }
                                 else {
