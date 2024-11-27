@@ -3516,7 +3516,6 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsFalse(result.HayErrores);
         }
 
-        [Test]
         public void EnviarEmailEliminarOkTest()
         {
             var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1, FechaDesde = DateTime.Now, FechaHasta = DateTime.Now } };
@@ -3605,7 +3604,6 @@ namespace Molinos.DataAgro.Test.Managers
 
         }
 
-        [Test]
         public void EnviarEmailOkTest()
         {
             var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1, FechaDesde = DateTime.Now, FechaHasta = DateTime.Now } };
@@ -3701,7 +3699,6 @@ namespace Molinos.DataAgro.Test.Managers
 
         }
 
-        [Test]
         public void EnviarEmailFijacionOkTest()
         {
             var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1 } };

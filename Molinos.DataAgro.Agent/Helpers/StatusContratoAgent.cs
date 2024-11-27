@@ -68,13 +68,15 @@ namespace Molinos.DataAgro.Agent
 
                     long numsio = 0;
                     long.TryParse(valor2.NUM_SIO, out numsio);
-                    logger.Debug($"CONTRATO: {valor2.CONTRATO}. EX_STATUS: {valor2.STATUS}. NUM_SIO: {numsio}. MENSAJE: {valor2.MENSAJE}");
+                    logger.Debug($"CONTRATO: {valor2.CONTRATO}. EX_STATUS: {valor2.STATUS}. NUM_SIO: {numsio}. MENSAJE: {valor2.MENSAJE}. FECHA_CONFIRMADO_SAP: {valor2.FECHA_CONFIR}");
                     var estado = new EstadoSAPDto()
                     {
                         ContratoSap = valor2.CONTRATO,
                         NumeroSio = numsio,
                         Status = valor2.STATUS,
-                        Mensaje = valor2.MENSAJE
+                        Mensaje = valor2.MENSAJE,
+                        FechaConfirmadoSAP = string.IsNullOrEmpty(valor2.FECHA_CONFIR) ? null : DateTime.ParseExact(valor2.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
+
                     };
                     return estado;
 
@@ -107,7 +109,7 @@ namespace Molinos.DataAgro.Agent
                     };
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
-                    
+
                     if (activarLogDebug)
                     {
                         logger.Debug(rq.ToXml());
@@ -122,13 +124,14 @@ namespace Molinos.DataAgro.Agent
                         {
                             long numsio = 0;
                             long.TryParse(item.NUM_SIO, out numsio);
-                            logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}");
+                            logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
                             var estado = new EstadoSAPDto()
                             {
                                 NumeroSio = numsio,
                                 Status = item.STATUS,
                                 ContratoSap = item.CONTRATO,
-                                Mensaje = item.MENSAJE
+                                Mensaje = item.MENSAJE,
+                                FechaConfirmadoSAP = string.IsNullOrEmpty(item.FECHA_CONFIR) ? null : DateTime.ParseExact(item.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
                             };
                             estados.Add(estado);
                         }

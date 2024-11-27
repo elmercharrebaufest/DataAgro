@@ -23,8 +23,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Corredor { get; set; }
         public string Vendedor { get; set; }
         public string Canje { get; set; }
-        public decimal Precio {  get; set; }
-        public string Moneda {  get; set; }
+        public decimal Precio { get; set; }
+        public string Moneda { get; set; }
         public int? TipoNegocioId { get; set; }
         public string Material { get; set; }
         public string ContratoVendedor { get; set; }
@@ -35,5 +35,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClaseNegocioId { get; set; }
         public int MaterialId { get; set; }
         public int? BoletoId { get; set; }
+        public DateTime? FechaConfirmadoSAP { get; set; }
     }
 }

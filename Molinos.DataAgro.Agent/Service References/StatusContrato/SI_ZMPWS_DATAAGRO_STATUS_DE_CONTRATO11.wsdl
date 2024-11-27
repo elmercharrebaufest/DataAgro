@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" name="SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation />
   <wsp:UsingPolicy wsdl:required="true" />
   <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO" />
@@ -60,6 +60,7 @@
           <xsd:element name="FECHA_SIO" type="rfc:date10" />
           <xsd:element name="FE_VUELTA" type="rfc:date10" />
           <xsd:element name="MENSAJE" type="rfc:char50" />
+          <xsd:element name="FECHA_CONFIR" type="rfc:date10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7000">

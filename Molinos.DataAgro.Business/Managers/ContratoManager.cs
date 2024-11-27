@@ -8448,7 +8448,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var res = estados.FirstOrDefault(a => a.ContratoSap == contrato.ContratoSAP);
                     if (res != null)
+                    {
                         contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+                        contrato.FechaConfirmadoSAP = res.FechaConfirmadoSAP;
+                    }
                 }
                 repositorio.GuardarCambios();
             }
