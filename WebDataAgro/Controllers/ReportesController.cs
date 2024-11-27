@@ -209,6 +209,9 @@ namespace WebDataAgro.Controllers
 
             //var oLstContacto = new LstContacto(mobjMSContext);
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarComprasMapaExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -242,6 +245,9 @@ namespace WebDataAgro.Controllers
                 oFiltros = oParamReportes
             };
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarComprasMapaExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -268,6 +274,9 @@ namespace WebDataAgro.Controllers
                 Lista = ListaResult,
                 oFiltros = oParamReportes
             };
+
+            if (datos.Lista.Count <= 0)
+                return Json(model);
 
             var identif = await oLstIndicadores.GenerarComprasMapaExcelAsync(datos);
 
@@ -303,6 +312,9 @@ namespace WebDataAgro.Controllers
 
             //var oLstContacto = new LstContacto(mobjMSContext);
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarComprasBarraExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -335,6 +347,9 @@ namespace WebDataAgro.Controllers
             };
 
             //var oLstContacto = new LstContacto(mobjMSContext);
+
+            if (datos.Lista.Count <= 0)
+                return Json(model);
 
             var identif = await oLstIndicadores.GenerarObjetivosDBExcelAsync(datos);
 
@@ -376,6 +391,9 @@ namespace WebDataAgro.Controllers
 
             //var oLstContacto = new LstContacto(mobjMSContext);
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarObjetivosGaugeExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -415,6 +433,9 @@ namespace WebDataAgro.Controllers
             };
 
             //var oLstContacto = new LstContacto(mobjMSContext);
+
+            if(datos.Lista.Count <= 0)
+                return Json(model);
 
             var identif = await oLstIndicadores.GenerarProduccionMapaExcelAsync(datos);
 
@@ -457,6 +478,9 @@ namespace WebDataAgro.Controllers
 
             //var oLstContacto = new LstContacto(mobjMSContext);
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarProduccionBarraExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -498,6 +522,9 @@ namespace WebDataAgro.Controllers
 
             //var oLstContacto = new LstContacto(mobjMSContext);
 
+            if (datos.Lista.Count <= 0)
+                return Json(model);
+
             var identif = await oLstIndicadores.GenerarAcopioMapaExcelAsync(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
@@ -537,6 +564,9 @@ namespace WebDataAgro.Controllers
             };
 
             //var oLstContacto = new LstContacto(mobjMSContext);
+
+            if (datos.Lista.Count <= 0)
+                return Json(model);
 
             var identif = await oLstIndicadores.GenerarAcopioBarraExcelAsync(datos);
 
