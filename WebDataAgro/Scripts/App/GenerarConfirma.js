@@ -5,17 +5,17 @@ $(document).ready(function () {
 });
 
 function inicializarFiltros() {
-    var hoy = new Date(); 
+    var hoy = new Date();
     var ayer = new Date(hoy);
-    ayer.setDate(hoy.getDate() - 1); 
+    ayer.setDate(hoy.getDate() - 1);
 
-    $("#FechaConfirmacionDesde").kendoDatePicker({
+    $("#FechaConfirmadoSAPDesde").kendoDatePicker({
         weekNumber: true,
         format: "dd/MM/yyyy",
         value: ayer
     });
 
-    $("#FechaConfirmacionHasta").kendoDatePicker({
+    $("#FechaConfirmadoSAPHasta").kendoDatePicker({
         weekNumber: true,
         format: "dd/MM/yyyy",
         value: hoy
@@ -74,7 +74,7 @@ function inicializarGrillaContratos() {
                     Estado_Version: { type: "string" },
                     FechaGeneracion: { type: "date" },
                     FechaOperacion: { type: "date" },
-                    FechaConfirmacion: { type: "date" },
+                    FechaConfirmadoSAP: { type: "date" },
                     FechaAnulacion: { type: "date" },
                     ContratoVendedor: { type: "string" },
                     ContratoCorredor: { type: "string" },
@@ -141,7 +141,7 @@ function inicializarGrillaContratos() {
                 { field: "Estado_Version", title: "Estado V.", width: 150 },
                 { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
                 { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
-                { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150 },
+                { field: "FechaConfirmadoSAP", title: "Fecha Confirmación", width: 150 },
                 { field: "FechaAnulacion", title: "Fecha Anulación", width: 150 },
                 { field: "ContratoVendedor", title: "Contrato Vendedor", width: 150 },
                 { field: "ContratoCorredor", title: "Contrato Corredor", width: 150 },
@@ -269,7 +269,7 @@ function inicializarGrillaContratos() {
             },
             { field: "FechaGeneracion", title: "F. Generación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Generación" }, type: "date" },
             { field: "FechaOperacion", title: "F. Operación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" }, type: "date" },
-            { field: "FechaConfirmacion", title: "F. Confirmación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" }, type: "date" },
+            { field: "FechaConfirmadoSAP", title: "F. Confirmación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" }, type: "date" },
             { field: "FechaAnulacion", title: "F. Anulación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Anulación" }, type: "date" },
             { field: "ContratoVendedor", title: "C. Vendedor", width: 80, headerAttributes: { "title": "Contrato Vendedor" }, type: "string" },
             { field: "ContratoCorredor", title: "C. Corredor", width: 80, headerAttributes: { "title": "Contrato Corredor" }, type: "string" },
@@ -496,8 +496,8 @@ function esContratoDesdeValido() {
 
 // Función para validar fechas y contratos
 function validarFechasYContratos() {
-    var fechaDesde = $("#FechaConfirmacionDesde").data("kendoDatePicker").value();
-    var fechaHasta = $("#FechaConfirmacionHasta").data("kendoDatePicker").value();
+    var fechaDesde = $("#FechaConfirmadoSAPDesde").data("kendoDatePicker").value();
+    var fechaHasta = $("#FechaConfirmadoSAPHasta").data("kendoDatePicker").value();
     var contratoDesde = ($("#NegocioSAP-desde").val().endsWith(';') ? $("#NegocioSAP-desde").val().slice(0, -1) : $("#NegocioSAP-desde").val()).trim();
     var contratoHasta = $("#NegocioSAP-hasta").val().trim();
 

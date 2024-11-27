@@ -2,17 +2,13 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
-using Molinos.DataAgro.Entities.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Transactions;
-using System.Web.Http.Results;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -157,13 +153,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            ContratoCorredor = negocio.ContratoCorredor,
 
                            // Comercial
-                           Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres
+                           Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres,
+                           FechaConfirmadoSAP = negocio.FechaConfirmadoSAP,
                        };
 
                 return queryBasicoConfirmas.ToDataSourceResult(request);
-
-
-
             }
             catch (Exception ex)
             {
@@ -171,7 +165,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 throw;
             }
         }
-
 
         public virtual DataSourceResult Ejecutar(DbContext contexto)
         {
