@@ -915,6 +915,18 @@ namespace Molinos.DataAgro.Business.Managers
             return lista;
         }
 
+        /// <summary>
+        /// Obtiene una lista de proveedores cuya capacidad productiva está desactualizada 
+        /// en función de la campaña y materiales asociados. 
+        /// Se consideran los proveedores asignados a un comercial específico y se evalúan 
+        /// las capacidades productivas respecto a su actualización más reciente.
+        /// </summary>
+        /// <param name="comercialId">ID del comercial al que están asignados los proveedores.</param>
+        /// <param name="equipo">Lista de IDs de equipo involucrados.</param>
+        /// <returns>
+        /// Lista de objetos CapacidadProductivaDesactualizadaDto que contienen información 
+        /// de proveedores con capacidad productiva desactualizada.
+        /// </returns>
         public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, List<int> equipo)
         {
             logger.Info("INICIO ProveedoresConCapProdDesactualizada");
