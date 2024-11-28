@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Agent
                         NumeroSio = numsio,
                         Status = valor2.STATUS,
                         Mensaje = valor2.MENSAJE,
-                        FechaConfirmadoSAP = string.IsNullOrEmpty(valor2.FECHA_CONFIR) ? null : DateTime.ParseExact(valor2.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
+                        FechaConfirmadoSAP = string.IsNullOrEmpty(valor2.FECHA_CONFIR) || valor2.FECHA_CONFIR == "0000-00-00" ? null : DateTime.ParseExact(valor2.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
 
                     };
                     return estado;
@@ -131,7 +131,7 @@ namespace Molinos.DataAgro.Agent
                                 Status = item.STATUS,
                                 ContratoSap = item.CONTRATO,
                                 Mensaje = item.MENSAJE,
-                                FechaConfirmadoSAP = string.IsNullOrEmpty(item.FECHA_CONFIR) ? null : DateTime.ParseExact(item.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
+                                FechaConfirmadoSAP = string.IsNullOrEmpty(item.FECHA_CONFIR) || item.FECHA_CONFIR == "0000-00-00" ? null : DateTime.ParseExact(item.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
                             };
                             estados.Add(estado);
                         }

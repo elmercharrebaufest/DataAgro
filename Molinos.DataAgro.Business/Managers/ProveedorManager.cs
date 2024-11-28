@@ -3789,6 +3789,15 @@ namespace Molinos.DataAgro.Business.Managers
             return compraDto.OrderBy(x => x.Material).ThenByDescending(x => x.Campana).ToList();
         }
 
+        /// <summary>
+        /// Obtiene el detalle de todas las compras realizadas por un proveedor en función del comercial y los equipos asignados.
+        /// </summary>
+        /// <param name="proveedorId">ID del proveedor a consultar.</param>
+        /// <param name="oComercial">Objeto Comercial asociado al proveedor.</param>
+        /// <param name="equipo">Lista de IDs de equipos relacionados.</param>
+        /// <returns>
+        /// Lista de objetos CompraDto con detalles de las compras organizados por campaña y material.
+        /// </returns>
         public List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial, List<int> equipo)
         {
 
