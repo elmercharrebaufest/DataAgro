@@ -553,19 +553,19 @@ function OcultarActividadesMobile() {
 }
 
 // Detectar cuando la página ha cargado y hacer clic en el elemento
-$(document).ready(function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const proveedorId = urlParams.get('ProveedorId');
+//$(document).ready(function () {
+//    const urlParams = new URLSearchParams(window.location.search);
+//    const proveedorId = urlParams.get('ProveedorId');
 
-    if (proveedorId) {
-        setTimeout(() => {
-            const produccionTab = $('#produccion');
+//    if (proveedorId) {
+//        setTimeout(() => {
+//            const produccionTab = $('#produccion');
 
-            if (produccionTab.length) {
-                produccionTab.trigger('click');
-            } else {
-                console.error('El elemento con id="produccion" no se encuentra en el DOM.');
-            }
-        }, 500);
-    }
-});
+//            if (produccionTab.length) {
+//                produccionTab.trigger('click');
+//            } else {
+//                console.error('El elemento con id="produccion" no se encuentra en el DOM.');
+//            }
+//        }, 500);
+//    }
+//});
