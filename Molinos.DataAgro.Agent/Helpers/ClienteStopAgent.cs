@@ -135,6 +135,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
+                logger.Error("Error al modificar Cupo", e);
                 throw;
             }
         }
@@ -156,6 +157,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
+                logger.Error("Error al consultar turnos activos", e);
                 throw;
             }
         }
