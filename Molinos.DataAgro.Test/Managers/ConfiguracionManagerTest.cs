@@ -28,7 +28,6 @@ namespace Molinos.DataAgro.Test.Managers
         private ConfiguracionManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
-        private Mock<IComercialManager> comercialManagerMock;
 
         [SetUp]
         public void SetUp()

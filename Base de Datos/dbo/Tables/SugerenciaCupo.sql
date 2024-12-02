@@ -30,58 +30,56 @@
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Negocio] FOREIGN KEY([NegocioId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Negocio] FOREIGN KEY([NegocioId])
 REFERENCES [dbo].[Negocio] ([Id])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Negocio]
 GO
 
-
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Material] FOREIGN KEY([MaterialId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Material] FOREIGN KEY([MaterialId])
 REFERENCES [dbo].[Material] ([MaterialId])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Material]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_TipoNegocio] FOREIGN KEY([TipoNegocioId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_TipoNegocio] FOREIGN KEY([TipoNegocioId])
 REFERENCES [dbo].[TipoNegocio] ([TipoNegocioId])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_TipoNegocio]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Moneda] FOREIGN KEY([MonedaId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Moneda] FOREIGN KEY([MonedaId])
 REFERENCES [dbo].[Moneda] ([MonedaId])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Moneda]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Proveedor] FOREIGN KEY([ProveedorId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Proveedor] FOREIGN KEY([ProveedorId])
 REFERENCES [dbo].[Proveedor] ([ProveedorId])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Moneda]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_ZonaCupo] FOREIGN KEY([ZonaCupoId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_ZonaCupo] FOREIGN KEY([ZonaCupoId])
 REFERENCES [dbo].[ZonaCupo] ([Id])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_ZonaCupo]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Comercial] FOREIGN KEY([ComercialId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Comercial] FOREIGN KEY([ComercialId])
 REFERENCES [dbo].[Comercial] ([ComercialId])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Comercial]
 GO
 
-
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_ConfiguracionEspacioDinamico] FOREIGN KEY([ConfiguracionEspacioDinamicoId])
+ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_ConfiguracionEspacioDinamico] FOREIGN KEY([ConfiguracionEspacioDinamicoId])
 REFERENCES [dbo].[ConfiguracionEspacioDinamico] ([Id])
 GO
 

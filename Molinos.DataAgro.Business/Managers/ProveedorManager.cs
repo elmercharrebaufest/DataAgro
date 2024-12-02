@@ -85,12 +85,11 @@ namespace Molinos.DataAgro.Business.Managers
                             ToneladasObjetivos = x.Sum(s => s.ToneladasObjetivos)
                         })
                         .Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
-                    //xGrupoCompras = xGrupoCompras.Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
                     res.ObjetivosTraerPorProveedorId = xGrupoCompras;
                 }
                 else
                 {
-                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.HasValue ? x.ComercialId.Value : 0) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
+                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId ?? 0)).ToList();
                 }
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
                 {
@@ -108,9 +107,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Provincia = x.Acopio.Localidad.Provincia.Nombre
                 }, x => x.Acopio.ProveedorId == ProveedorId);
                 var campoacopio = repositorio.SelStore<CampoProduccionAcopio>("DataAgro_CampoProduccionAcopioPorProveedorId", 0, ProveedorId);
-                res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).ToList();
-                res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).ToList();
-
+                res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).OrderByDescending(x => x.CampañaId).ThenByDescending(x => x.Id).ToList();
+                res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).OrderByDescending(x => x.CampañaId).ThenByDescending(x => x.Id).ToList();
                 res.DatosContacto = DevolverDatosContacto(ProveedorId);
                 res.Historial = Comprar(ProveedorId, UsuarioDirectory, equipo);
                 res.CanalesDeOperacion = repositorio.Listar<ProveedorCanalOperacion, CanalOperacion>(x => x.CanalOperacion, x => x.ProveedorId == ProveedorId);
@@ -183,7 +181,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
-
 
             foreach (var aux in res.BasicoProveedorTraerPorProveedores)
             {
