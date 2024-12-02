@@ -250,6 +250,8 @@
     <Reference Include="System.Xml.ReaderWriter" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Enums\EnumEstado.cs" />
+    <Compile Include="Common\Enums\EnumEstadoHome.cs" />
     <Compile Include="Common\Enums\EnumEstadoInformeComercial.cs" />
     <Compile Include="Common\Enums\EnumBoletoCompraNet.cs" />
     <Compile Include="Common\Enums\EnumBolsaCompraNet.cs" />

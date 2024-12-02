@@ -4,6 +4,7 @@
     {
         public int ProveedorId { get; set; }
         public string CUIT { get; set; }
+        public string Cosecha { get; set; }
         public string RazonSocial { get; set; }
         public string NombreComercial { get; set; }
     }

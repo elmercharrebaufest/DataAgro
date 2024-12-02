@@ -1266,10 +1266,11 @@ function VerificarInformesComerciales() {
             <tr>
                 <td>${x.RazonSocial}</td>
                 <td>${x.CUIT}</td>
+                <td>${x.Cosecha}</td>
                 <td>${x.NombreComercial}</td>
                 <td>
                     <button class="btn btn-primary abrir-solapa" data-proveedor-id="${x.ProveedorId}">
-                        Abrir Inf.Com.
+                        Cargar Inf Com
                     </button>
                 </td>
             </tr>

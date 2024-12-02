@@ -598,11 +598,11 @@ namespace Molinos.DataAgro.Business.Managers
                 año = int.Parse(DateTime.Now.Year.ToString().Substring(0, 2) + mat.Campaña.Descripcion.Substring(3, 2)) + 1;
                 var fechaCorteCampaña = new DateTime(año, 04, 01);
 
-                ///Clase doc
-                ///ZPAF A Fijar
-                ///ZFAS MP-Fason
-                ///ZFJ$ A Precio
-                ///ZHIJ Contrato hijo (negocio.Madre == false // que no es lo mismo que != true en este caso puntual...)
+                /* Clase doc
+                ZPAF A Fijar
+                ZFAS MP-Fason
+                ZFJ$ A Precio
+                ZHIJ Contrato hijo (negocio.Madre == false // que no es lo mismo que != true en este caso puntual...) */
                 var detalle = new CompraDto
                 {
                     Campana = mat.Campaña.Descripcion,// c.Select(x => x.Campana.Descripcion).FirstOrDefault(),
@@ -917,22 +917,25 @@ namespace Molinos.DataAgro.Business.Managers
 
         /// <summary>
         /// Obtiene una lista de proveedores cuya capacidad productiva está desactualizada 
-        /// en función de la campaña y materiales asociados. 
-        /// Se consideran los proveedores asignados a un comercial específico y se evalúan 
-        /// las capacidades productivas respecto a su actualización más reciente.
+        /// en función de la campaña y materiales asociados.
+        /// Los proveedores evaluados están asignados a un comercial específico, y se consideran
+        /// condiciones como el estado del proveedor y la actualización de informes comerciales.
         /// </summary>
-        /// <param name="comercialId">ID del comercial al que están asignados los proveedores.</param>
-        /// <param name="equipo">Lista de IDs de equipo involucrados.</param>
+        /// <param name="comercialId">
+        /// ID del comercial al que están asignados los proveedores a evaluar.
+        /// </param>
+        /// <param name="equipo">
+        /// Lista de IDs de equipo utilizados para filtrar los proveedores relacionados.
+        /// </param>
         /// <returns>
-        /// Lista de objetos CapacidadProductivaDesactualizadaDto que contienen información 
-        /// de proveedores con capacidad productiva desactualizada.
+        /// Una lista de objetos <see cref="CapacidadProductivaDesactualizadaDto"/> que contienen
+        /// información sobre los proveedores con capacidad productiva desactualizada, como
+        /// RazonSocial, CUIT, campaña y datos del comercial asignado.
         /// </returns>
         public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, List<int> equipo)
         {
             logger.Info("INICIO ProveedoresConCapProdDesactualizada");
             List<CapacidadProductivaDesactualizadaDto> proveedoresConCapProdDesactualizada = new List<CapacidadProductivaDesactualizadaDto>();
-
-            List<Comercial> comerciales = repositorio.Listar<Comercial>(x => x.EmpleadorACargoId == comercialId || x.ComercialId == comercialId);
 
             List<ProveedorDto> proveedores = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto()
             {
@@ -941,12 +944,14 @@ namespace Molinos.DataAgro.Business.Managers
                 CUIT = x.CUIT
             });
 
+            List<CampañaDto> campanias = repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
+            List<Comercial> comerciales = repositorio.Listar<Comercial>(x => x.EmpleadorACargoId == comercialId || x.ComercialId == comercialId);
             List<int> comercialesId = comerciales.Select(x => x.ComercialId).ToList();
             List<ProveedorComercial> proveedoresComerciales = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId));
             List<MaterialDto> campaniasPorMaterial = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId });
             IEnumerable<int> todosProveedoresId = proveedoresComerciales.Where(pc => comercialesId.Contains(pc.ComercialId)).Select(pc => pc.ProveedorId);
 
-            List<CapacidadProductivaDto> capacidadProductiva2 = repositorio.Listar<CapacidadProductiva, CapacidadProductivaDto>(x => new CapacidadProductivaDto
+            List<CapacidadProductivaDto> capacidadProductivaTodos = repositorio.Listar<CapacidadProductiva, CapacidadProductivaDto>(x => new CapacidadProductivaDto
             {
                 ProveedorId = x.ProveedorId,
                 MaterialId = x.MaterialId,
@@ -962,13 +967,18 @@ namespace Molinos.DataAgro.Business.Managers
             comercialesId.ForEach(com =>
             {
                 IEnumerable<int> proveedoresId = proveedoresComerciales.Where(pc => pc.ComercialId == com).Select(pc => pc.ProveedorId);
-                List<ProveedorDto> proveedoresFiltrados = proveedores.Where(p => proveedoresId.Contains(p.ProveedorId)).ToList();
+
+                List<ProveedorDto> proveedoresFiltrados = proveedores.Where(p => proveedoresId.Contains(p.ProveedorId) &&
+                                                                                 p.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
+                                                                                 p.Deshabilitado != true &&
+                                                                                 p.EstadoId != (int)EnumEstado.BAJA).ToList();
+
                 Comercial comercial = comerciales.FirstOrDefault(c => c.ComercialId == com);
 
                 proveedoresFiltrados.ForEach(prov =>
                 {
-                    List<CompraDto> compraDetalle = proveedorManager.TraerTodoCompraProveedor(prov.ProveedorId, comercial, equipo);
-                    List<CapacidadProductivaDto> capacidadProductiva = capacidadProductiva2.Where(cp => cp.ProveedorId == prov.ProveedorId).ToList();
+                    //List<CompraDto> compraDetalle = proveedorManager.TraerTodoCompraProveedor(prov.ProveedorId, comercial, equipo);
+                    List<CapacidadProductivaDto> capacidadProductiva = capacidadProductivaTodos.Where(cp => cp.ProveedorId == prov.ProveedorId).ToList();
 
                     for (int i = 0; i < capacidadProductiva.Count; i++)
                     {
@@ -984,6 +994,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 ProveedorId = prov.ProveedorId,
                                 RazonSocial = prov.RazonSocial,
+                                Cosecha = campanias.FirstOrDefault(x => x.CampañaId == capacidadProductiva[i].CampaniaId).Descripcion,
                                 CUIT = prov.CUIT,
                                 NombreComercial = (comercial.Nombres + ' ' + comercial.Apellido).ToUpper(),
                             });
