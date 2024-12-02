@@ -1789,7 +1789,7 @@ function armarFuncionalidades() {
         $("#modalSalir").modal();
     });
 
-    $(".formulario-footer-cancelar").click(function () {
+    $(document).on("click", ".formulario-footer-cancelar", function () {
         $("#modalSalir").modal();
     });
 
@@ -2022,7 +2022,7 @@ function armarFuncionalidades() {
         }
     });
 
-    $(".formulario-footer-siguiente").click(function () {
+    $(document).on("click", ".formulario-footer-siguiente", function () {
         if ($("#formulario-basico").is(":visible")) {
             $("#formulario-basico").fadeOut("slow", function () {
                 $("#formulario-contacto").fadeIn("slow");
@@ -2063,16 +2063,13 @@ function armarFuncionalidades() {
 
             $("#produccion").removeClass("whc-selected");
             $("#almacenamiento").addClass("whc-selected");
-
-            $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
-            $(".formulario-footer-siguiente").hide();
         } else if ($("#formulario-almacenamiento").is(":visible")) {
             $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#formulario-estsablecimiento").fadeIn("slow");
+                $("#formulario-establecimiento").fadeIn("slow");
             });
 
             $("#almacenamiento").removeClass("whc-selected");
-            $("#estsablecimiento").addClass("whc-selected");
+            $("#establecimiento").addClass("whc-selected");
 
             $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
             $(".formulario-footer-siguiente").hide();
@@ -2299,7 +2296,7 @@ function armarFuncionalidades() {
             buscarRazonSocial(valor);
     });
 
-    $(".formulario-footer-guardar-contacto").click(function () {
+    $(document).on("click", ".formulario-footer-guardar-contacto", function () {
         if (cambios.CampaniaId.length > 0) {
             $(this).removeClass("guardar-proveedor");
             $("#modalGenerarInforme").modal('show');
