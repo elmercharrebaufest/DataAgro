@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -932,7 +933,7 @@ namespace Molinos.DataAgro.Business.Managers
         /// información sobre los proveedores con capacidad productiva desactualizada, como
         /// RazonSocial, CUIT, campaña y datos del comercial asignado.
         /// </returns>
-        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, List<int> equipo)
+        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId)
         {
             logger.Info("INICIO ProveedoresConCapProdDesactualizada");
             List<CapacidadProductivaDesactualizadaDto> proveedoresConCapProdDesactualizada = new List<CapacidadProductivaDesactualizadaDto>();
@@ -1012,6 +1013,51 @@ namespace Molinos.DataAgro.Business.Managers
                 .ToList();
         }
 
+        public byte[] ExportarListadoAXls(List<CapacidadProductivaDesactualizadaDto> listado)
+        {
+            var sb = new StringBuilder();
+
+            // Inicio del archivo XML
+            sb.AppendLine(@"<?xml version=""1.0""?>");
+            sb.AppendLine(@"<?mso-application progid=""Excel.Sheet""?>");
+            sb.AppendLine(@"<Workbook xmlns=""urn:schemas-microsoft-com:office:spreadsheet""");
+            sb.AppendLine(@" xmlns:o=""urn:schemas-microsoft-com:office:office""");
+            sb.AppendLine(@" xmlns:x=""urn:schemas-microsoft-com:office:excel""");
+            sb.AppendLine(@" xmlns:ss=""urn:schemas-microsoft-com:office:spreadsheet"">");
+            sb.AppendLine(@" <Worksheet ss:Name=""Capacidad Productiva"">");
+            sb.AppendLine(@"  <Table>");
+
+            // Agregar encabezados
+            sb.AppendLine(@"   <Row>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Proveedor ID</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">CUIT</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Cosecha</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Razón Social</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Nombre Comercial</Data></Cell>");
+            sb.AppendLine(@"   </Row>");
+
+            // Agregar datos
+            foreach (var item in listado)
+            {
+                sb.AppendLine(@"   <Row>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""Number"">{item.ProveedorId}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.CUIT}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.Cosecha}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.RazonSocial}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.NombreComercial}</Data></Cell>");
+                sb.AppendLine(@"   </Row>");
+            }
+
+            // Cierre del archivo XML
+            sb.AppendLine(@"  </Table>");
+            sb.AppendLine(@" </Worksheet>");
+            sb.AppendLine(@"</Workbook>");
+
+            // Convertir el contenido a un byte array
+            byte[] archivoBytes = Encoding.UTF8.GetBytes(sb.ToString());
+
+            return archivoBytes;
+        }
     }
 
     public class FakeHome

@@ -197,10 +197,6 @@ $(document).ready(function () {
 
 });
 
-function htmlEncode(value) {
-    if (value == null) value = "";
-    return $('<div/>').text(value.toString().replace(/(\r\n|\n|\r)/gm, " ")).html();
-}
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
@@ -377,6 +373,14 @@ function botonAprobar(dataItem, icono) {
     }
 }
 
+function htmlEncode(value) {
+    if (!value) return "";
+    return $('<div/>').text(value.toString().trim()).html()
+        .replace(/["]/g, "&quot;")
+        .replace(/[']/g, "`")
+        .replace(/(\r\n|\n|\r)/gm, " ");
+}
+
 function botonVisualizar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Visualizar" onclick="ModalVisualizar(' +
         "'" + dataItem.Id + "'" + ',' +
@@ -409,7 +413,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.NoInformaSIO + "'" + ',' +
         "'" + dataItem.CalidadDescripcion + "'" + ',' +
         "'" + dataItem.Estado + "'" + ',' +
-        "'" + (dataItem.Observacion == '' ? "" + "'" + ',' : htmlEncode(dataItem.Observacion.replace(/["]/g, '``')) + "'" + ',') +
+        "'" + htmlEncode(dataItem.Observacion) + "'" + ',' +
         "'" + dataItem.Moneda + "'" + ',' +
         "'" + dataItem.Moneda_Sustentable + "'" + ',' +
         "'" + dataItem.DestinoId + "'" + ',' +
@@ -449,13 +453,13 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.NivelTarifa + "'" + ',' +
         "'" + dataItem.TarifaFlete + "'" + ',' +
         "'" + dataItem.Compensacion + "'" + ',' +
-        "'" + $.trim((dataItem.Rechazo == null ? "" : dataItem.Rechazo.replace(/\n+/g, ' '))) + "'" + ',' +
+        "'" + htmlEncode(dataItem.Rechazo) + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaCierta) + "'" + ',' +
         "'" + dataItem.PorcentajeDePago + "'" + ',' +
         "'" + dataItem.TipoAgenteCompraId + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaOperacion) + "'" + ',' +
         "'" + dataItem.MotivoOperacionAnterior + "'" + ',' +
-        "'" + dataItem.DescripcionOperacionAnterior + "'" + ',' +
+        "'" + htmlEncode(dataItem.DescripcionOperacionAnterior) + "'" + ',' +
         "'" + dataItem.PagoCBU + "'" + ',' +
         "'" + dataItem.ChequeElectronicoValor + "'" + ',' +
         "'" + dataItem.CalidadTercero + "'" + ',' +
@@ -467,7 +471,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Insumo + "'" + ',' +
         "'" + dataItem.PrestamoDevolucion + "'" + ',' +
         "'" + dataItem.PlantaDestinoDescripcion + "'" + ',' +
-        "'" + dataItem.ObservacionTercero + "'" + ',' +
+        "'" + htmlEncode(dataItem.ObservacionTercero) + "'" + ',' +
         "'" + dataItem.SustentableTercero + "'" + ',' +
         "'" + dataItem.Venta + "'" + ',' +
         "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +
@@ -477,7 +481,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
         "'" + dataItem.ProveedorCreador + "'" + ',' +
         "'" + dataItem.Cesion + "'" + ',' +
-        "'" + (dataItem.MotivoReemplazo == null ? "" + "'" + ',' : htmlEncode(dataItem.MotivoReemplazo.replace(/["]/g, '``')) + "'" + ',') +
+        "'" + htmlEncode(dataItem.MotivoReemplazo) + "'" + ',' +
         "'" + dataItem.AnulaYReemplazaContratoSAP + "'" + ',' +
         "'" + dataItem.ObligatoriedadBonificacionDesc + "'" + ',' +
         "'" + dataItem.Condicional + "'" + ',' +
@@ -488,7 +492,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CondicionalPrecio + "'" + ',' +
         "'" + dataItem.CondicionalContratoSAP + "'" + ',' +
         "'" + dataItem.MailVentaBoleto + "'" + ',' +
-        "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" + ',' +
+        "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista) + "'" + ',' +
         "'" + dataItem.KgMinimo + "'" + ',' +
         "'" + dataItem.KgMaximo + "'" + ',' +
         "'" + dataItem.ConDescarga + "'" + ',' +
@@ -500,7 +504,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.FasonId + "'" + ',' +
         "'" + dataItem.Estado + "'" + ',' +
         "'" + dataItem.MaterialId + "'" + ',' +
-        "'" + htmlEncode(dataItem.Virtual == null ? "" : dataItem.Virtual) + "'" + ',' +
+        "'" + dataItem.Virtual + "'" + ',' +
         "'" + dataItem.CantidadDeposito + "'" + ',' +
         "'" + dataItem.FechaDolarizadoOriginalFormateado + "'" + ',' +
         "'" + dataItem.FechaHastaOriginalFormateado + "'" + ',' +
@@ -2733,7 +2737,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     } else {
         $("#visualizar_sustentablePrecio").text("null")
     }
-    if (fechaDesdeSustentable != null && fechaHastaSustentable != null && fechaDesdeSustentable != "//" && fechaHastaSustentable != "//") {
+    if (fechaDesdeSustentable != null && fechaHastaSustentable != null && fechaDesdeSustentable != '' && fechaHastaSustentable != '') {
         $("#visualizar_sustentableDesde").text(fechaDesdeSustentable);
         $("#visualizar_sustentableHasta").text(fechaHastaSustentable);
         $("#sustentableDivVisualizarHasta").show();

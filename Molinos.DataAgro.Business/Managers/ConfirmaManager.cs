@@ -832,7 +832,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaGeneracion = a.FechaGeneracion.Day + "/" + a.FechaGeneracion.Month + "/" + a.FechaGeneracion.Year,
                     IsWebService = a.IsWebService,
                 }, null, 0, null, Entities.Helpers.DirOrden.Asc).OrderByDescending(x => x.FechaGeneracion)
-                .Where(c => !c.IsWebService).ToList();
+                .ToList();
             return result;
         }
 

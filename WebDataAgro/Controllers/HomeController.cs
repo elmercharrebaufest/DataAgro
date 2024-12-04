@@ -371,16 +371,22 @@ namespace WebDataAgro.Controllers
 
         public ActionResult VerificarInformesComerciales()
         {
-            int comercialId = GlobalVariables.ComercialId;
-            List<int> equipo = GlobalVariables.Equipo;
-
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(comercialId, equipo);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
 
             return new JsonResult()
             {
                 Data = ProveedoresConCapProdDesactualizada,
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public ActionResult ExportarCapProdDesactualizadas()
+        {
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
+
+            byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
+
+            return File(archivoBytes, "application/vnd.ms-excel", "CapacidadProductiva.xls");
         }
     }
 }
