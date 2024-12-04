@@ -3582,3 +3582,8 @@ function ActualizarEstadoProveedor() {
         $.unblockUI();
     }, 150);
 }
+
+function DirigirAProduccion(proveedorId) {
+    sessionStorage.setItem('pantallaActiva', 'produccion');
+    window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + proveedorId;
+}
