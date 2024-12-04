@@ -954,6 +954,10 @@ function armarFunciones() {
             $(".lista-contacto-no-operable-tooltip-arrow").hide();
         }
     });
+
+    $("#abrirModalInformesFaltantes").click(function () {
+        VerificarInformesComerciales();
+    });
 }
 
 function exportar(value) {
