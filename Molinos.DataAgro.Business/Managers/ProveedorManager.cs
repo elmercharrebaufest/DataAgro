@@ -1082,26 +1082,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pizarra";
             }
-            //else if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
-            //{
-            //    htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
-            //}
             else
             {
-                Decimal precio = 0;
-                AperturaPrecio aperturaPrecio = oFijacionDePrecioContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecio.Descripcion.Contains("Comisiones"));
-                if (aperturaPrecio != null)
-                {
-                    Decimal porcentaje = aperturaPrecio.Porcentaje / 100;
-                    Decimal importe = (decimal)(aperturaPrecio.Porcentaje > 0 ? porcentaje * oFijacionDePrecioContrato.PrecioNeto / (1 + porcentaje) : aperturaPrecio.Importe);
-                    precio = oFijacionDePrecioContrato.Precio + importe;
-                }
-                else
-                {
-                    precio = oFijacionDePrecioContrato.Precio;
-                }
-                htmlBody += Split(precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
-                //htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
+                htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
