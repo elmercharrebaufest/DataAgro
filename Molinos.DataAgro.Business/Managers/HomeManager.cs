@@ -925,9 +925,6 @@ namespace Molinos.DataAgro.Business.Managers
         /// <param name="comercialId">
         /// ID del comercial al que están asignados los proveedores a evaluar.
         /// </param>
-        /// <param name="equipo">
-        /// Lista de IDs de equipo utilizados para filtrar los proveedores relacionados.
-        /// </param>
         /// <returns>
         /// Una lista de objetos <see cref="CapacidadProductivaDesactualizadaDto"/> que contienen
         /// información sobre los proveedores con capacidad productiva desactualizada, como

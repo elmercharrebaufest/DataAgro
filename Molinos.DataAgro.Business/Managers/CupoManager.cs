@@ -37,10 +37,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IEliminarCupoAgent eliminarCupoAgent;
         private readonly IClienteStopAgent clienteStopAgent;
         private readonly IModificarCupoAgent modificarCupoAgent;
-        private readonly IProveedorManager proveedorManager;
         private readonly IMailManager mailManager;
         private readonly IServicioCriterios servicioCriterios;
-        private readonly IDisponibilidadCuposAgent disponibilidadCuposAgent;
         private readonly ICriterioCDWarrantAgent cdWarrant;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IComercialManager comercialManager;
@@ -50,15 +48,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
         private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
         private readonly ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent;
-        private readonly ICentroManager centroManager;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
-            IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
-            IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
+            IMailManager mailManager, IServicioCriterios servicioCriterios,
+            ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
             IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent,
-            ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent, ICentroManager centroManager, Func<ICupoManager> cupoManagerInj)
+            ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -66,10 +63,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.eliminarCupoAgent = eliminarCupoAgent;
             this.clienteStopAgent = clienteStopAgent;
             this.modificarCupoAgent = modificarCupoAgent;
-            this.proveedorManager = proveedorManager;
             this.mailManager = mailManager;
             this.servicioCriterios = servicioCriterios;
-            this.disponibilidadCuposAgent = disponibilidadCuposAgent;
             this.cdWarrant = cdWarrant;
             this.logDataAgroManager = logDataAgroManager;
             this.comercialManager = comercialManager;
@@ -79,8 +74,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.cumplimientoCuposAgent = cumplimientoCuposAgent;
             this.contratoKgPendienteAgent = contratoKgPendienteAgent;
             this.cartasDePortePendienteAplicarAgent = cartasDePortePendienteAplicarAgent;
-            this.centroManager = centroManager;
         }
+
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias, bool validarDisponibilidad = true)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
@@ -665,7 +660,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private async Task<List<CupoEliminarResult>> EliminarCupoStopAsync(List<int> listaIdCupos, string comercial, bool enviarMail, TokenStop token = null, RepositorioEF repo = null)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             Configuracion datosConfiguracion = r.Obtener<Configuracion>(1);
             List<CupoEliminarResult> listaResultado = new List<CupoEliminarResult>();
             List<Task<CupoEliminarResult>> tareasConsulta = new List<Task<CupoEliminarResult>>();
@@ -974,7 +969,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CupoDto> ObtenerCupos(List<int> id, RepositorioEF repo)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             return r.Listar<Cupo, CupoDto>(x => new CupoDto
             {
                 Id = x.Id,
@@ -1200,8 +1195,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -1230,12 +1224,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos)
         {
-            LinkedResource store = new LinkedResource(filePath);
-            store.ContentId = Guid.NewGuid().ToString();
-            LinkedResource img = new LinkedResource(circular);
-            img.ContentId = Guid.NewGuid().ToString();
-            LinkedResource res = new LinkedResource(molinos);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource store = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
+            LinkedResource img = new LinkedResource(circular) { ContentId = Guid.NewGuid().ToString() };
+            LinkedResource res = new LinkedResource(molinos) { ContentId = Guid.NewGuid().ToString() };
+
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -1268,7 +1260,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable ? " (Sustentable)" 
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable ? " (Sustentable)"
                 : cupo.EPA && !cupo.EUDR ? " (EPA)" : cupo.EUDR && !cupo.EPA ? " (EUDR)" : cupo.EPA && cupo.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
 
             htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'." + "<br>" + (cupo.EPA || cupo.EUDR ? "<p> SOJA EPA/EUDR: no se reciben camiones escalables chasis acoplado ni bateas. Solamente escalables Tolva y camiones comunes.</p></td></tr>" : "</td></tr>");
@@ -1324,12 +1316,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailNoPropio(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos)
         {
-            LinkedResource store = new LinkedResource(filePath);
-            store.ContentId = Guid.NewGuid().ToString();
-            LinkedResource img = new LinkedResource(circular);
-            img.ContentId = Guid.NewGuid().ToString();
-            LinkedResource res = new LinkedResource(molinos);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource store = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
+            LinkedResource img = new LinkedResource(circular) { ContentId = Guid.NewGuid().ToString() };
+            LinkedResource res = new LinkedResource(molinos) { ContentId = Guid.NewGuid().ToString() };
+
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -1362,7 +1352,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + cupo.Centro.RazonSocial + " - " + cupo.Centro.CUIT + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable ? " (Sustentable)" 
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable ? " (Sustentable)"
                 : cupo.EPA && !cupo.EUDR ? " (EPA)" : cupo.EUDR && !cupo.EPA ? " (EUDR)" : cupo.EPA && cupo.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
 
             if (cupo.MaterialId == (int)EnumMateriales.MAIZ || cupo.MaterialId == (int)EnumMateriales.TRIGO || (cupo.MaterialId == (int)EnumMateriales.SOJA && (cupo.Sustentable || cupo.EPA || cupo.EUDR)) || cupo.Observaciones != null)
@@ -1431,8 +1421,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public string Td(ref int linea, int largo = 1)
         {
-            string td1 = "";
-            string td2 = "";
+            string td1, td2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 td1 = "<td colspan=\"" + largo + "\" style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
@@ -1455,8 +1444,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string TrEncabezado(Cupo c, ref int linea)
         {
-            string style1 = "";
-            string style2 = "";
+            string style1, style2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
@@ -2487,7 +2475,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             int materialIdSugerencia = sugerenciasAceptadas.FirstOrDefault().MaterialId;
             var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -2811,7 +2799,7 @@ namespace Molinos.DataAgro.Business.Managers
                 int idPrimeraSugerencia = ids.FirstOrDefault();
                 int materialId = repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia) != null ? repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia).MaterialId : 0;
                 var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
-                var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+                var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
                 if (validarSiHayCierre)
                 {
                     resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
@@ -2868,13 +2856,13 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        private void darFormatoAlFiltro(IEnumerable<Filter> filtros)
+        private void DarFormatoAlFiltro(IEnumerable<Filter> filtros)
         {
             filtros.ToList().ForEach(p =>
             {
                 if (p.Value == null)
                 {
-                    darFormatoAlFiltro(p.Filters);
+                    DarFormatoAlFiltro(p.Filters);
                 }
                 else
                 {
@@ -2885,11 +2873,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             });
-            convertirFechaDe<CupoDto>(filtros);
-            convertirBool<CupoDto>(filtros);
+            ConvertirFechaDe<CupoDto>(filtros);
+            ConvertirBool<CupoDto>(filtros);
         }
 
-        private void convertirFechaDe<TAlgunDto>(IEnumerable<Filter> filtros)
+        private void ConvertirFechaDe<TAlgunDto>(IEnumerable<Filter> filtros)
         {
             var propiedadesConFechas = typeof(TAlgunDto).GetProperties().Where(x => x.PropertyType == typeof(DateTime)).ToList();
 
@@ -2900,7 +2888,7 @@ namespace Molinos.DataAgro.Business.Managers
             });
         }
 
-        private void convertirBool<TAlgunDto>(IEnumerable<Filter> filtros)
+        private void ConvertirBool<TAlgunDto>(IEnumerable<Filter> filtros)
         {
 
             var propiedadesConBool = typeof(TAlgunDto).GetProperties().Where(x => x.PropertyType == typeof(bool)).ToList();
@@ -2940,7 +2928,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaSugerida = a.FechaSugerida,
                 MaterialId = a.MaterialId,
                 MaterialDesc = a.Material.Descripcion,
-                MonedaId = a.MonedaId == null ? "" : a.MonedaId,
+                MonedaId = a.MonedaId ?? "",
                 MonedaDesc = a.MonedaId == null ? "" : a.Moneda.Descripcion,
                 PuntuacionTotal = a.Puntuacion,
                 ProveedorId = a.ProveedorId,
@@ -3224,7 +3212,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { x.ProveedorId, x.ComercialId });
 
             foreach (var p in cupos)
             {
@@ -3265,8 +3253,7 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailSinCtg(String filePath, List<Cupo> cupos, Comercial comercial)
         {
             var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -3303,15 +3290,6 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
-
-        //public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
-        //{ // Disponibilidad obtenida de SAP
-        //    List<DisponibilidadCuposDto> resultado = disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
-        //    List<DisponibilidadCuposDto> resultadoNoPropios = TraerCupoDisponibilidadNoPropios(fechaDesde, fechaHasta, zonaId, centroId, materialId);
-
-        //    resultado.AddRange(resultadoNoPropios);
-        //    return resultado;
-        //}
 
         public List<DisponibilidadCuposDto> TraerDisponibilidadCupo(DateTime? fechaDesde, DateTime? fechaHasta, List<string> centroId, string materialId)
         { // Disponibilidad obtenida de Data Agro
@@ -3632,8 +3610,7 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailRechazarCupo(String filePath, Cupo cupo, Comercial comercial)
         {
             var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -3672,7 +3649,6 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new CupoResult { ListaCupos = new List<string>() };
             var listaCupos = new List<string>();
             var errorSap = new Resultado();
-            var cuposConSap = new List<Cupo>();
             var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
             try
             {
@@ -4791,9 +4767,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailAnulacionCupo(String filePath, Resultado resultado, DateTime momento, List<CupoDto> conError, List<CupoDto> ok)
         {
-            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -4997,9 +4971,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailProveedorAnulacionCupo(String filePath, List<CupoDto> cupos)
         {
-            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -5094,8 +5066,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailSugerenciasPendientesPorComercial(String filePath, int comercialId)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -5455,7 +5426,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == s.MaterialId).FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -5724,7 +5695,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             List<CupoResult> resultado = new List<CupoResult>();
             var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -5795,7 +5766,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             int materialIdSugerencia = items.FirstOrDefault().materialId.GetValueOrDefault();
             var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -6003,7 +5974,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             int materialIdSugerencia = sugerenciasAceptadasDesdeElFront.FirstOrDefault().materialId.GetValueOrDefault();
             var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -6645,9 +6616,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailNegociosAlgoritmo(String filePath)
         {
-            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
 
             string htmlBody = "";
             htmlBody += "En el presente mail se detalla adjunto el resultado de los negocios que el algoritmo tomó para priorizar. <br />";

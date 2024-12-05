@@ -227,9 +227,10 @@ namespace Molinos.DataAgro.Business.Managers
         public BaseDeDatosReturn TraerDatosGrillaBD(ParamReportes oParamReportes, List<int> equipo)
         {
 
-            BaseDeDatosReturn datosGrilla = new BaseDeDatosReturn();
-
-            datosGrilla.valoresGrilla = repositorio.SelStore<valoresGrilla>("DataAgro_IndicadoresBaseDeDatos_Traer", 0, oParamReportes.FechaDesde, oParamReportes.FechaHasta, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Cosecha, oParamReportes.Toneladas, oParamReportes.Comercial, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParamReportes.Grano);
+            BaseDeDatosReturn datosGrilla = new BaseDeDatosReturn()
+            {
+                valoresGrilla = repositorio.SelStore<valoresGrilla>("DataAgro_IndicadoresBaseDeDatos_Traer", 0, oParamReportes.FechaDesde, oParamReportes.FechaHasta, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Cosecha, oParamReportes.Toneladas, oParamReportes.Comercial, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParamReportes.Grano),
+            };
 
             datosGrilla.graficoBaseDatos = datosGrilla.valoresGrilla.GroupBy(x => x.Segmentación).Select(x => new graficoBaseDatos()
             {
@@ -861,27 +862,33 @@ namespace Molinos.DataAgro.Business.Managers
 
         public ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechadesde, DateTime fechaHasta, int? calidad, int centroId = 0, bool verFijaciones = true)
         {
-            var excel = new ExcelDetallePosicionDto();
-            excel.Headers = typeof(DetalleContratoDto).GetProperties().Select(p => Text.ResourceManager.GetString(p.Name)).ToArray();
-            excel.Data = ConvertirListadetalleContratoAListaString(TraerDetallePosicion(materialId, mes, anio, fechadesde, fechaHasta, calidad, centroId, verFijaciones), mes, anio);
-            excel.Name = "Detalle Posicion de Negocios de " + (EnumMeses)Enum.ToObject(typeof(EnumMeses), mes) + " " + anio + ".xlsx";
-            excel.SheetName = "Posicion";
+            var excel = new ExcelDetallePosicionDto()
+            {
+                Headers = typeof(DetalleContratoDto).GetProperties().Select(p => Text.ResourceManager.GetString(p.Name)).ToArray(),
+                Data = ConvertirListadetalleContratoAListaString(TraerDetallePosicion(materialId, mes, anio, fechadesde, fechaHasta, calidad, centroId, verFijaciones), mes, anio),
+                Name = "Detalle Posicion de Negocios de " + (EnumMeses)Enum.ToObject(typeof(EnumMeses), mes) + " " + anio + ".xlsx",
+                SheetName = "Posicion",
+            };
             return excel;
         }
 
         public ExcelDetallePosicionDto DetalleAgente(DateTime fecha, List<int> materialId)
         {
-            var excel = new ExcelDetallePosicionDto();
-            excel.Headers = typeof(DetalleAgenteDto).GetProperties().Select(p => Text.ResourceManager.GetString(p.Name)).ToArray();
-            excel.Data = ConvertirListaAgente(TraerDetalleAgente(fecha, materialId));
-            excel.Name = "Detalle Agente de Compras.xlsx";
-            excel.SheetName = "Agente";
+            var excel = new ExcelDetallePosicionDto()
+            {
+                Headers = typeof(DetalleAgenteDto).GetProperties().Select(p => Text.ResourceManager.GetString(p.Name)).ToArray(),
+                Data = ConvertirListaAgente(TraerDetalleAgente(fecha, materialId)),
+                Name = "Detalle Agente de Compras.xlsx",
+                SheetName = "Agente",
+            };
             return excel;
         }
+
         public List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true)
         {
             return repositorio.ListarConsulta(new TraerPosicionMaterialMes(fechaDesde, fechaHasta, verFijaciones));
         }
+
         private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId = 0)
         {
             var posicionKilos = new List<PosicionKilos>();
@@ -998,7 +1005,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private static void ObtenerPosicionMaterialBase(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId, List<PosicionKilos> posicionKilos)
         {
-            var standard = calidad.HasValue ? calidad.Value : 1;
+            var standard = calidad ?? 1;
             precioPizarra = precioPizarra.Where(x => x.MaterialId == materialId && x.FechaHasta <= fechaHasta).ToList();
             var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fechaHoy = fechaDesde.Date;
@@ -1179,9 +1186,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var cont in contratos)
             {
-                var posKil = new PosicionKilos();
-                posKil.NegocioId = cont.Id;
-                posKil.TipoNegocioId = cont.TipoNegocioId;
+                var posKil = new PosicionKilos()
+                {
+                    NegocioId = cont.Id,
+                    TipoNegocioId = cont.TipoNegocioId,
+                };
+
                 if ((cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
                     cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
                     cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion) || cont.FijacionContratoConDescarga)
@@ -1409,9 +1419,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var cont in contratos)
             {
-                var posKil = new PosicionKilos();
-                posKil.NegocioId = cont.Id;
-                posKil.TipoNegocioId = cont.TipoNegocioId;
+                var posKil = new PosicionKilos()
+                {
+                    NegocioId = cont.Id,
+                    TipoNegocioId = cont.TipoNegocioId,
+                };
+
                 if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
                     cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
                     cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
@@ -2965,10 +2978,10 @@ namespace Molinos.DataAgro.Business.Managers
                         Contrato = item.ContratoSAP,
                         CuitCorredor = item.Corredor == null ? "" : item.Corredor.CUIT,
                         CuitVendedor = item.Proveedor.CUIT,
-                        Dolarizado = item.Corredor == null ? true : false,
+                        Dolarizado = item.Corredor == null,
                         DolarizadoExpress = false,
                         FechaFijacion = item.HastaFijacion,
-                        DolarizadoNoProductor = item.Corredor == null ? false : true,
+                        DolarizadoNoProductor = item.Corredor != null,
                         FechaUltimaAplicacion = null,
                         Fijacion = "",
                         KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)) : 0,
@@ -3409,7 +3422,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Contrato = x.Contrato,
                 Fijacion = x.Fijacion,
                 NegocioId = x.NegocioId,
-                EsOperacionDirecta = string.IsNullOrEmpty(x.CuitCorredor) ? true : false,
+                EsOperacionDirecta = string.IsNullOrEmpty(x.CuitCorredor),
                 Clasificacion = x.Clasificacion,
                 KgVencimientoPesificable = x.KgVencimientoPesificable,
                 FechaHastaDolarizado = x.FechaHastaDolarizado,
@@ -3635,18 +3648,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailPesificadoVencidoVendedor(String filePath, ReportePesificadoDto corredor, DateTime instruccion, bool tieneCorredor)
         {
-            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
-            string th;
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-            {
-                th = "<th style=\"border: 0px solid #AAAAAA; padding: 3px 2px;\">";
-            }
-            else
-            {
-                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
-            }
+            LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
+
             var p = "<p>";
             var thHead = "style=\"font-size: 15px; font-weight: bold;color: #FFFFFF; text-align: center;border-left: 0px solid #D0E4F5; " +
                 "border: 0px solid #AAAAAA;padding: 3px 2px;\"";
