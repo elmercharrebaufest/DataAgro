@@ -37,7 +37,7 @@ insert into #Valores(Prov,Cl)
 
 select distinct prv.Nombre, p.cuit
 
-from proveedor p
+from Proveedor p
 
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 
@@ -47,7 +47,7 @@ inner join CampañaMaterial cm on p.ProveedorId= cm.ProveedorId
 
 inner join Localidad loc on p.LocalidadId= loc.LocalidadId
 
-inner join provincia prv on loc.ProvinciaId = prv.ProvinciaId
+inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 
 where ((@MaterialId is null) or (cm.MaterialId= @MaterialId))
 
@@ -69,8 +69,8 @@ and p.LocalidadId is not null
 update #Valores
 set Tn= b.tn
 from
-(select  p.cuit,prv.Nombre as Provincia, sum (cmm.toneladas) as Tn 
-from proveedor p
+(select  p.CUIT,prv.Nombre as Provincia, sum (cmm.toneladas) as Tn 
+from Proveedor p
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join CampañaMaterial cm on p.ProveedorId= cm.ProveedorId
@@ -79,7 +79,7 @@ inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId=cmm.CampañaMater
 
 inner join Localidad loc on p.LocalidadId= loc.LocalidadId
 
-inner join provincia prv on loc.ProvinciaId = prv.ProvinciaId
+inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 

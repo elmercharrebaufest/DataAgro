@@ -13,16 +13,15 @@ namespace Molinos.DataAgro.Agent
 {
     public class AltaTempranaAgent : IAltaTempranaAgent
     {
-        public AltaTempranaAgent(ILogger logger, IRepositorio repositorio)
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+
+        public AltaTempranaAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
-        readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
 
         public AltaTempranaNRCODto ObtenerAlta(string cuit, string tipoProv)
         {

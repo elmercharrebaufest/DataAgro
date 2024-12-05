@@ -41,8 +41,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var token = new TokenPrimary();
                 var url = $"AuthToken/AuthToken?nombreUsuario={user}&password={pass}";
 
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(urlBase);
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new Uri(urlBase),
+                };
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -238,8 +240,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private TradeCaptureReportResult GetTradeCaptureReport(TokenPrimary token, string desde, string hasta)
         {
             var url = $"PosTrade/TradeCaptureReport?DateFrom={desde}&DateTo={hasta}&MarketID=&MarketSegmentID=&CFICode";
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlBase);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlBase) };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", token.Value);
 
@@ -257,8 +258,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             //var url = $"/PreTrade/SecurityList?cFICode={cFICode}";
             //var url = $"/PreTrade/SecurityList?marketSegmentID=Agropecuario";
             var url = $"/PreTrade/SecurityList";
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlBase);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlBase) };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", token.Value);
 
@@ -300,8 +300,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private MarketDataResult MarketData(TokenPrimary token, string fecha)
         {
             var url = $"PosTrade/MarketData?mdEntryType=5&ClearingBusinessDate={fecha}";
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlBase);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlBase) };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", token.Value);
 

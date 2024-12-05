@@ -92,10 +92,11 @@ namespace Molinos.DataAgro.Entities.Dto
             return result;
         }
     }
+
     public class OrdenarFiltros
     {
-        public string field { get; set; }
-        public string dir { get; set; }
+        public string Field { get; set; }
+        public string Dir { get; set; }
     }
 }
 

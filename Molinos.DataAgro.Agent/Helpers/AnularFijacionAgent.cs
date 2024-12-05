@@ -14,20 +14,17 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class AnularFijacionAgent : IAnularFijacionAgent
     {
-        private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
-        private readonly ITipoDeCambioAgent tipoCambioAgent;
-
-        public AnularFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent, ITipoDeCambioAgent tipoCambioAgent)
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        
+        public AnularFijacionAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.contratosParaFijacionAgent = contratosParaFijacionAgent;
-            this.tipoCambioAgent = tipoCambioAgent;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public string AnularFijacion(FijacionDePrecioContrato fijacion)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")

@@ -8,10 +8,10 @@ AS
 declare @table as table(item int )
 
 insert into @table 
-select item FROM dbo.Split(@Proveedores, ',') 
+select Item FROM dbo.Split(@Proveedores, ',') 
 
-SELECT p.cuit as cuit,
-	p.razonsocial,
+SELECT p.CUIT as cuit,
+	p.RazonSocial,
 	M.Descripcion Material,
 	C.Descripcion Campaña,
 	cast(CM.ToneladasObjetivos as varchar(1000)) as Tonelada

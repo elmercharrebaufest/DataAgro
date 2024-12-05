@@ -48,15 +48,15 @@ BEGIN
 	INSERT INTO @ProveedorEstado 
 	select 
 		distinct t.ProveedorId , 
-		case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 4) 
+		case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 4) 
 		then 4 else 
-			case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 5) 
+			case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 5) 
 			then 5  else
-					case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 1) 
+					case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 1) 
 					then 1  else
-							case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 2) 
+							case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 2) 
 							then 2 else
-								case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 3) 
+								case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 3) 
 								then 3  else
 										(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.ProveedorId)
 								ENd

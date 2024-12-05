@@ -11,7 +11,7 @@ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres 
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
-select p.cuit,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
+select p.CUIT,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
 case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
@@ -33,8 +33,8 @@ isnull(prv.Nombre,'SIN PROVINCIA' )as Provincia
 
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
-inner join proveedor p on p.ProveedorId= cm.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join Proveedor p on p.ProveedorId= cm.ProveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 inner join Material m on cm.MaterialId = m.MaterialId

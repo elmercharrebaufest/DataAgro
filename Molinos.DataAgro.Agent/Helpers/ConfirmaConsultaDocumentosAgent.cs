@@ -16,9 +16,9 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        String UserConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
-        String PassConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
-        String AmbientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
+        private readonly string UserConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
+        private readonly string PassConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
+        private readonly string AmbientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
 
         public ConfirmaConsultaDocumentosAgent(ILogger logger, IRepositorio repositorio)
         {

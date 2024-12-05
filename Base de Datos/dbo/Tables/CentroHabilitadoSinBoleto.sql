@@ -4,6 +4,6 @@
     [TipoNegocioId] INT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_CentroHabilitadoSinBoleto] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CentroHabilitadoSinBoleto_Centro] FOREIGN KEY ([CentroId]) REFERENCES [dbo].[Centro] ([Id]),
-    CONSTRAINT [FK_CentroHabilitadoSinBoleto_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [dbo].[TipoNegocio] ([TiponegocioId])
+    CONSTRAINT [FK_CentroHabilitadoSinBoleto_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [dbo].[TipoNegocio] ([TipoNegocioId])
 );
 

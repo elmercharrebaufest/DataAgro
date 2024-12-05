@@ -32,7 +32,7 @@ set Compras =  b.Toneladas,
 Porcentaje= (b.Toneladas * 100) /objetivo
 from (select cm.MaterialId as MaterialId,cm.campañaId as CampañaId,p.cuit , sum(cmm.Toneladas) as Toneladas
 from CampañaMaterial cm
-inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId = cmm.CampañaMaterialId and cmm.comercialId in ( select ComercialId from @EmpleadoTable)
+inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId = cmm.CampañaMaterialId and cmm.ComercialId in ( select ComercialId from @EmpleadoTable)
 inner join Proveedor p on cm.ProveedorId = p.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
@@ -69,7 +69,7 @@ from #Valor val
 inner join proveedor p on val.CUIT = p.CUIT
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-left join localidad loc on p.localidadId= loc.localidadId
+left join localidad loc on p.LocalidadId= loc.LocalidadId
 left join Provincia prv on loc.ProvinciaId=prv.ProvinciaId
 inner join Material m on val.MaterialId = m.MaterialId
 inner join Campaña c on val.CampañaId = c.CampañaId
@@ -98,7 +98,7 @@ from #Valor val
 inner join proveedor p on val.CUIT = p.CUIT
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-left join localidad loc on p.localidadId= loc.localidadId
+left join localidad loc on p.LocalidadId= loc.LocalidadId
 left join Provincia prv on loc.ProvinciaId=prv.ProvinciaId
 inner join Material m on val.MaterialId = m.MaterialId
 inner join Campaña c on val.CampañaId = c.CampañaId

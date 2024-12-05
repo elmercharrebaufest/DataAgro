@@ -10,7 +10,7 @@ declare @Informes TABLE (proveedor BIgINT, TonMaiz BIgINT default(0) ,TonTrigo B
 
 insert into @Informes (proveedor)
 select i.ProveedorId as ProveedorId
-from informecomercial i
+from Informecomercial i
 where  exists ( select 1 from @InformeSecuencia where Item = i.informeComercialId) 
 group by i.ProveedorId
 
@@ -19,7 +19,7 @@ set TonMaiz = b.Toneladas
 from 
 (
 select i.ProveedorId as ProveedorId, sum(Toneladas) Toneladas
-from informecomercial i
+from Informecomercial i
 inner join InformeComercialProduccion ip on i.InformeComercialId =ip.InformeComercialId 
 where  ip.MaterialId = 1  and  exists ( select 1 from @InformeSecuencia where Item = i.informeComercialId) 
 group by i.ProveedorId

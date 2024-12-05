@@ -16,15 +16,13 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        private readonly ILogDataAgroManager logDataAgroManager;
         readonly string urlBCR = ConfigurationManager.AppSettings["UrlBaseBolsaRosario"];
         readonly string versionClienteBCR = ConfigurationManager.AppSettings["VersionClienteBolsaRosario"];
 
-        public ClienteBolsaRosarioAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager)
+        public ClienteBolsaRosarioAPIAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.logDataAgroManager = logDataAgroManager;
         }
 
         public List<DataBCR> ConsultarPrecios(DateTime fecha, int[] arrIdMateriales)
@@ -33,8 +31,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 logger.Debug($"Gestionando Token BCR para traer precios pizarra...");
                 Configuracion datosConfiguracion = repositorio.Obtener<Configuracion>(1);
-                var client = new RestClient(urlBCR + "v" + versionClienteBCR + "/Login");
-                client.Timeout = -1;
+                var client = new RestClient(urlBCR + "v" + versionClienteBCR + "/Login") { Timeout = -1 };
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("api_key", datosConfiguracion.ApiKeyBolsaRosario);
                 request.AddHeader("secret", datosConfiguracion.SecretBolsaRosario);

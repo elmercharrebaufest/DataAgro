@@ -288,7 +288,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             var resultado = new Resultado();
             try
             {
@@ -647,14 +647,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     else
                     {
-                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        if (error == null)
-                        {
-                            error = new ErrorStop
-                            {
-                                userMessage = "No se pudo modificar en STOP."
-                            };
-                        }
+                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString()) ?? new ErrorStop { userMessage = "No se pudo modificar en STOP." };
                         cupo.ErrorStop = error.userMessage;
                         logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
                         throw new Exception("Error Stop: " + error.userMessage);

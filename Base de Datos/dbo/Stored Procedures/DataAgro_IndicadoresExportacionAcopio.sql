@@ -19,7 +19,7 @@ insert into #Valores(Prov,Cl)
 
 select distinct prv.Nombre, p.cuit 
 
-from proveedor p
+from Proveedor p
 
 inner join Acopio cp on p.ProveedorId = cp.ProveedorId
 

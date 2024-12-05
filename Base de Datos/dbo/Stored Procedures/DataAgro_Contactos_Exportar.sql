@@ -17,7 +17,7 @@ Telefono3  varchar(255),Telefono4 varchar(255),ComercialAcargo varchar(100), Fec
 RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255),Faccop int, Calificacion int, GrupoDeCompras varchar(255), FechaAlta DATETIME, EstadoCuit  int)  
   
  insert into @table   
- select item FROM dbo.Split(@Proveedores, ',')   
+ select Item FROM dbo.Split(@Proveedores, ',')   
   
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Email1,Email2,Email3,Email4,Telefono1,Telefono2,Telefono3  
  ,telefono4,ComercialAcargo,FechaUltimoContacto,RiesgoComercialSap,Estado,Situacion,Faccop, Calificacion, GrupoDeCompras, FechaAlta,EstadoCuit)  
@@ -56,15 +56,15 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
  from (  
  select   
 distinct t.ProveedorId ,   
-case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
+case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
 then 4 else   
-    case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
+    case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
     then 5  else  
-            case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
+            case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
             then 1  else  
-                    case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
+                    case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
                     then 2 else  
-                        case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
+                        case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.EstadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))   
                         then 3  else  
                                 (select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.ProveedorId)  
                         ENd  

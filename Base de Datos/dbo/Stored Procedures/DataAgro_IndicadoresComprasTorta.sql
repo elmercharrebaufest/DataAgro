@@ -20,7 +20,7 @@ insert into @ProveedoresTable(ProveedorId)
 select distinct p.ProveedorId
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
-inner join proveedor p on p.ProveedorId= cm.ProveedorId
+inner join Proveedor p on p.ProveedorId= cm.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
@@ -34,8 +34,8 @@ and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 select  seg.Descripcion as Provincia,count(p.proveedorId)as cuit,0 as Tonelada
 into #Valor
 from @ProveedoresTable pt
-inner join proveedor p on p.proveedorId = pt.proveedorId
-inner join segmentacion seg on p.SegmentacionId=seg.SegmentacionId
+inner join Proveedor p on p.proveedorId = pt.proveedorId
+inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 group by seg.Descripcion
 
 
@@ -43,12 +43,12 @@ select seg.Descripcion as Segmentacion, sum(cmm.toneladas)as Tonelada
 into #Tonelada
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
-inner join proveedor p on p.ProveedorId= cm.ProveedorId
+inner join Proveedor p on p.ProveedorId= cm.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
-inner join segmentacion seg on p.SegmentacionId=seg.SegmentacionId
+inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 where   ((@MaterialId is null) or (CM.MaterialId=@MaterialId ))
 and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId)) 
