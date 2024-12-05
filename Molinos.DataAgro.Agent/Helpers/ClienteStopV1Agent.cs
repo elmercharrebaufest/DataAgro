@@ -61,8 +61,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         }
         private TokenStop CreateTokenAsync(string clave)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlStop);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             try
@@ -96,8 +95,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public void CrearCupo(List<string> cupos)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlStop);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             try
@@ -173,8 +171,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
             if (datosConfiguracion.ConexionConsultaStop.HasValue && datosConfiguracion.ConexionConsultaStop.Value)
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(urlStop);
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 try
@@ -270,7 +267,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             var resultado = new Resultado();
             try
             {
@@ -358,8 +355,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    HttpClient client = new HttpClient();
-                    client.BaseAddress = new Uri(urlStop);
+                    HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
@@ -493,8 +489,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    HttpClient client = new HttpClient();
-                    client.BaseAddress = new Uri(urlStop);
+                    HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -580,8 +575,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public void ModificarCupo(Cupo cupo)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlStop);
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
@@ -620,14 +614,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     else
                     {
-                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        if (error == null)
-                        {
-                            error = new ErrorStop
-                            {
-                                userMessage = "No se pudo modificar en STOP."
-                            };
-                        }
+                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString()) ?? new ErrorStop { userMessage = "No se pudo modificar en STOP." };
                         cupo.ErrorStop = error.userMessage;
                         logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
                         throw new Exception("Error Stop: " + error.userMessage);
@@ -653,8 +640,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    HttpClient client = new HttpClient();
-                    client.BaseAddress = new Uri(urlStop);
+                    HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

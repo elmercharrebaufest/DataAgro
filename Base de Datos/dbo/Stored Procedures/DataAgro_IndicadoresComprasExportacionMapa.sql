@@ -57,21 +57,21 @@ p.RazonSocial as razonSocial
 
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
-inner join proveedor p on p.ProveedorId= cm.ProveedorId
+inner join Proveedor p on p.ProveedorId= cm.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Localidad loc on p.LocalidadId= loc.LocalidadId
-inner join provincia prv on loc.ProvinciaId = prv.ProvinciaId
+inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
-inner join segmentacion seg on p.segmentacionId=seg.segmentacionId
+inner join Segmentacion seg on p.segmentacionId=seg.segmentacionId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
-and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@ComercialId is null) or (pc.ComercialId= @ComercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and (( @ProvinciaId is null) 
-	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.provinciaId)))
+	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.ProvinciaId)))
 and p.LocalidadId is not null
 
 ORDER BY P.CUIT

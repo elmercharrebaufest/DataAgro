@@ -15,15 +15,16 @@ namespace Molinos.DataAgro.Agent
 {
     public class CapacidadProductivaAgent : ICapacidadProductivaAgent
     {
+        private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public CapacidadProductivaAgent(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
             this.logger = logger;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly IRepositorio repositorio;
-        private readonly ILogger logger;
 
         public string ObtenerCapacidadProductiva(string cuit, decimal cantidad, string centro, string cosecha, string material)
         {

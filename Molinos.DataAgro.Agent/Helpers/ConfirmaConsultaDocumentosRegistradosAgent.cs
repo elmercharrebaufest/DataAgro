@@ -1,12 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -14,9 +9,9 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        String UserConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
-        String PassConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
-        String PINConfirma = ConfigurationManager.AppSettings["ConfirmaPIN"];
+        private readonly string UserConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
+        private readonly string PassConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
+        private readonly string PINConfirma = ConfigurationManager.AppSettings["ConfirmaPIN"];
 
         public ConfirmaConsultaDocumentosRegistradosAgent(ILogger logger, IRepositorio repositorio)
         {

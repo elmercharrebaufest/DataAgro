@@ -6,12 +6,12 @@ as
 declare @table as table(item int )
 
  insert into @table 
- select item FROM dbo.Split(@Proveedores, ',') 
+ select Item FROM dbo.Split(@Proveedores, ',') 
 
 
  SELECT  
 		pr.cuit as Cuit,
-		pr.razonsocial as RazonSocial,
+		pr.RazonSocial as RazonSocial,
 		TA.Descripcion AS TipoActividad,    
 		A.Detalle as DetalleContacto,  
 		A.Asunto as Asunto,

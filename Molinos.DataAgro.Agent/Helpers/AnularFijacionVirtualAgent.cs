@@ -11,21 +11,22 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class AnularFijacionVirtualAgent : IAnularFijacionVirtualAgent
     {
+        private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public AnularFijacionVirtualAgent(IRepositorio repositorio, ILogger logger)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly IRepositorio repositorio;
-        private readonly ILogger logger;
 
         public string AnularFijacionVirtual(FijacionDePrecioContrato fijacion, string comercial)
         {
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-                var resp = "OK";                
+                var resp = "OK";
                 return resp;
             }
             else
@@ -40,12 +41,12 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var rq = new SI_ZMPWS_DATAAGRO_ANULAR_FIJ_VIR_CANJERequest()
                     {
-                       Z_MPRFC_ANULAR_FIJ_VIR_CANJE = new Z_MPRFC_ANULAR_FIJ_VIR_CANJE
-                       {
-                          IM_CONTRNUM = fijacion.ContratoSAP.Substring(3),
-                          IM_NRO_FIJ = fijacion.FijacionSAP.Substring(10),
-                          IM_UNAME = comercial.ToUpper()
-                       }
+                        Z_MPRFC_ANULAR_FIJ_VIR_CANJE = new Z_MPRFC_ANULAR_FIJ_VIR_CANJE
+                        {
+                            IM_CONTRNUM = fijacion.ContratoSAP.Substring(3),
+                            IM_NRO_FIJ = fijacion.FijacionSAP.Substring(10),
+                            IM_UNAME = comercial.ToUpper()
+                        }
                     };
                     var log = new Log
                     {

@@ -57,7 +57,7 @@
     CONSTRAINT [FK_Cupo_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_Cupo_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_Cupo_ZonaCupo] FOREIGN KEY (ZonaCupoId) REFERENCES [ZonaCupo]([Id]),
-    CONSTRAINT [FK_Cupo_EstadoCupo] FOREIGN KEY (estadoCupoId) REFERENCES [EstadoCupo]([Id]),
+    CONSTRAINT [FK_Cupo_EstadoCupo] FOREIGN KEY (EstadoCupoId) REFERENCES [EstadoCupo]([Id]),
     CONSTRAINT [FK_Cupo_Negocio] FOREIGN KEY (NegocioId) REFERENCES [Negocio]([Id]),
     CONSTRAINT [FK_Cupo_TipoNegocio] FOREIGN KEY (TipoNegocioId) REFERENCES [TipoNegocio]([TipoNegocioId]),
     CONSTRAINT [FK_Cupo_ConfiguracionEspacioDinamico] FOREIGN KEY (ConfiguracionEspacioDinamicoId) REFERENCES [ConfiguracionEspacioDinamico]([Id]),

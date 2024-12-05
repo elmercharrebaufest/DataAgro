@@ -37,9 +37,9 @@ insert into #Valores(Prov,Cl)
 
 select distinct prv.Nombre, p.cuit 
 
-from proveedor p
+from Proveedor p
 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 
@@ -76,7 +76,7 @@ from
 
 from proveedor p
 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 

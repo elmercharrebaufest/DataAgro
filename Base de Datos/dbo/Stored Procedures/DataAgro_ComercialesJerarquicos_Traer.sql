@@ -7,7 +7,7 @@ AS
 declare @table as table(item int )
 
 insert into @table 
- select item FROM dbo.Split(@comercialId, ',') 
+ select Item FROM dbo.Split(@comercialId, ',') 
 
  SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory,GrupoDeComprasId
     FROM Comercial  

@@ -169,18 +169,18 @@ and ((@proveedorId is null) or (p.ProveedorId =@proveedorId))
 
 if((select count(CUIT) from #Prueba) > 1)
 begin 
-	select ROW_NUMBER() over (partition by p.cuit order by  p.cuit asc) as Id, p.cuit, p.CampañaCampo,MaterialCampo,
+	select ROW_NUMBER() over (partition by p.CUIT order by  p.CUIT asc) as Id, p.CUIT, p.CampañaCampo,MaterialCampo,
 	LocalidadCampo,ProvinciaCampo
 	INTO #CANTIDAD
 	from #Prueba p
-	group by p.cuit,p.CampañaCampo,MaterialCampo,LocalidadCampo,ProvinciaCampo
+	group by p.CUIT,p.CampañaCampo,MaterialCampo,LocalidadCampo,ProvinciaCampo
 
-	select cuit, MIN(ID) AS ID
+	select CUIT, MIN(ID) AS ID
 	INTO #CANTIDADPORCUIT
 	from #CANTIDAD
-	group by cuit
+	group by CUIT
 
-	select p.cuit, count(p.CampañaCampo) AS CantidadDeRepeticiones
+	select p.CUIT, count(p.CampañaCampo) AS CantidadDeRepeticiones
 	into #Divisiones
 	from #Prueba p,
 	( select C.CUIT, C.CampañaCampo,C.MaterialCampo,C.LocalidadCampo,C.ProvinciaCampo 
@@ -188,12 +188,12 @@ begin
 	INNER JOIN  #CANTIDADPORCUIT D ON C.CUIT = D.CUIT AND C.Id=D.ID	) c
 	where p.CampañaCampo =c.CampañaCampo and p.MaterialCampo = c.MaterialCampo 
 	and p.LocalidadCampo = c.LocalidadCampo and p.ProvinciaCampo = c.ProvinciaCampo AND P.CUIT = C.CUIT
-	group by p.cuit
+	group by p.CUIT
 
-	select cuit,MaterialCampaña,Campaña, count(MaterialCampaña) as CantidadCom
+	select CUIT,MaterialCampaña,Campaña, count(MaterialCampaña) as CantidadCom
 	into #CantidadCompradas
 	from #Prueba p
-	group by cuit,MaterialCampaña,Campaña
+	group by CUIT,MaterialCampaña,Campaña
 
 	--select * from #CantidadCompradas
 
@@ -202,13 +202,13 @@ begin
 	TonCampo = (cast(TonCampo as float)/ d.CantidadDeRepeticiones),
 	TonAcopio = (cast(TonAcopio as float)/ d.CantidadDeRepeticiones)
 	from #Divisiones d
-	where d.CUIT = #Prueba.cuit
+	where d.CUIT = #Prueba.CUIT
 
 	update #Prueba 
 	set ToneladasCompradas = (cast(ToneladasCompradas as float)/ d.CantidadCom),
 	ToneladasObjetivo = (cast(ToneladasObjetivo as float)/ d.CantidadCom)
 	from #CantidadCompradas d
-	where d.CUIT = #Prueba.cuit and d.MaterialCampaña = #Prueba.MaterialCampaña and d.Campaña  = #Prueba.Campaña 
+	where d.CUIT = #Prueba.CUIT and d.MaterialCampaña = #Prueba.MaterialCampaña and d.Campaña  = #Prueba.Campaña 
 
 
 	SELECT  p.CUIT,
@@ -233,7 +233,7 @@ begin
 		ProvinciaAcopio
 	FROM #Prueba p
 	--left join #Divisiones d on p.CUIT = d.CUIT
-	left join #CantidadCompradas cc on p.cuit = cc.cuit and cc.MaterialCampaña = p.MaterialCampaña and cc.Campaña  = p.Campaña 
+	left join #CantidadCompradas cc on p.CUIT = cc.CUIT and cc.MaterialCampaña = p.MaterialCampaña and cc.Campaña  = p.Campaña 
 	ORDER BY p.CUIT
 
 	DROP TABLE #Divisiones
