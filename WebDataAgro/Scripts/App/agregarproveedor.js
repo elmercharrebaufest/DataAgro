@@ -2026,6 +2026,7 @@ function armarSelects(result) {
 
         capProdCant++;
         recalcularSegmentacion();
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");
     });
 
     $("#guardarCapProd-almacenamiento").click(function () {
@@ -3299,6 +3300,7 @@ function armarSelectGrano(obj) {
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
         var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
+        resultGrano = resultGrano.slice(0, 3);
         if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
                 (function (i) {

@@ -461,11 +461,17 @@ function armarProduccion(campoacopio) {
             $("#eliminarGrano" + fila).click(function () {
                 eliminarGrano(this);
             });
+
             $("#grano" + fila).val(grano.MaterialId);
             $("#grano" + fila).trigger("change");
-            $("#campaña" + fila).val(grano.CampañaId);
             $("#hectareas" + fila).val(grano.HectareasPorcentaje);
             $("#toneladas" + fila).val(grano.Toneladas);
+            var elemento = resultInit.gran.find(item => item.MaterialId == grano.MaterialId);
+            if (elemento) {
+                $("#campaña" + fila).val(elemento.CampañaIdActual);
+            } else {
+                $("#campaña" + fila).val(grano.CampañaId);
+            }
             fila++;
         })
         cantGrano = fila - 1;
@@ -828,16 +834,3 @@ function eliminarObjetivo(elem) {
             $("#toneladasObjetivo" + val).val("");
     }
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    var footer = document.querySelector(".formulario-footer");
-    var produccion = document.querySelector("#formulario-produccion");
-    if (footer && produccion) {
-        var clonedFooter = footer.cloneNode(true);
-        var target = produccion.querySelector(".datos-produccion-cap-prod-guardados");
-        if (target && target.innerHTML.trim() !== "") {
-            target.parentNode.insertBefore(clonedFooter, target);
-            target.insertAdjacentHTML("beforebegin", "<br>");
-        }
-    }
-});

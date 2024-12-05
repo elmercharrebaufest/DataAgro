@@ -1272,7 +1272,7 @@ namespace Molinos.DataAgro.Business.Managers
                 cope = repositorio.Listar<CanalOperacion, CanalOperacionQry>(
                     x => new CanalOperacionQry { CanalOperacionId = x.CanalOperacionId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 gran = repositorio.Listar<Material, MaterialQry>(
-                    x => new MaterialQry { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion }),
+                    x => new MaterialQry { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion, CampañaIdActual = x.CampañaId.Value }),
                 dest = repositorio.Listar<Destinatario, DestinatarioQry>(
                     x => new DestinatarioQry { DestinatarioId = x.DestinatarioId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 cond = repositorio.Listar<Condicion, CondicionQry>(
