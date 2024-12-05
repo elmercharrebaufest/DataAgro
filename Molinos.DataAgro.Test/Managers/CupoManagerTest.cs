@@ -80,10 +80,10 @@ namespace Molinos.DataAgro.Test.Managers
             ConfigurationManager.AppSettings["nroPlantaRuca"] = "1";
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
-                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
+                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object,
+                mailManagerMock.Object, servicioCriterioMock.Object, criterioCDWarrantAgentMock.Object,
                 logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object,
-                cumplimientoCuposAgent.Object, contratoKgPendienteAgent.Object, cartasDePortePendienteAplicarAgent.Object, centroManager.Object, cupoManagerInj.Object);
+                cumplimientoCuposAgent.Object, contratoKgPendienteAgent.Object, cartasDePortePendienteAplicarAgent.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true, ClaveStop = "4A756BD0-3911-868D-408C-FFC3D2A73C13" });
         }
 
