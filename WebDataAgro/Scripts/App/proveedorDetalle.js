@@ -2374,12 +2374,12 @@ function buscarLocalidad(val) {
 
 function armarSelectsCombos(resultDatos) {
     var grupos = {};
-    for (var jj in resultDatos.segm) {
+    for (var jj in resultDatos.Segmentacion) {
         (function (j) {
-            grupos[resultDatos.segm[j].Grupo] = grupos[resultDatos.segm[j].Grupo] || [];
-            grupos[resultDatos.segm[j].Grupo].push({
-                SegmentacionId: resultDatos.segm[j].SegmentacionId,
-                Descripcion: resultDatos.segm[j].Descripcion
+            grupos[resultDatos.Segmentacion[j].Grupo] = grupos[resultDatos.Segmentacion[j].Grupo] || [];
+            grupos[resultDatos.Segmentacion[j].Grupo].push({
+                SegmentacionId: resultDatos.Segmentacion[j].SegmentacionId,
+                Descripcion: resultDatos.Segmentacion[j].Descripcion
             });
         })(jj);
     }
@@ -2409,9 +2409,9 @@ function armarSelectsCombos(resultDatos) {
     var htmlTipoTelefono = "";
     htmlTipoTelefono += '<select class="campo-input-select" id="TipoTelefono1"';
     htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-    for (var ii in resultDatos.tiptel) {
+    for (var ii in resultDatos.TipoTelefono) {
         (function (i) {
-            htmlTipoTelefono += '<option value="' + resultDatos.tiptel[i].TipoTelefonoId + '">' + resultDatos.tiptel[i].Descripcion + '</option>';
+            htmlTipoTelefono += '<option value="' + resultDatos.TipoTelefono[i].TipoTelefonoId + '">' + resultDatos.TipoTelefono[i].Descripcion + '</option>';
         })(ii);
     }
     htmlTipoTelefono += '<input type="text" placeholder="Telefono" class="campo-input-text" id="Telefono1" />'
@@ -2476,9 +2476,9 @@ function armarSelectsCombos(resultDatos) {
     var htmlTipoTelefono = "";
     htmlTipoTelefono += '<select class="campo-input-select concom-campo-tiptelefono" id="concom-TipoTelefono1"';
     htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-    for (var ii in resultDatos.tiptel) {
+    for (var ii in resultDatos.TipoTelefono) {
         (function (i) {
-            htmlTipoTelefono += '<option value="' + resultDatos.tiptel[i].TipoTelefonoId + '">' + resultDatos.tiptel[i].Descripcion + '</option>';
+            htmlTipoTelefono += '<option value="' + resultDatos.TipoTelefono[i].TipoTelefonoId + '">' + resultDatos.TipoTelefono[i].Descripcion + '</option>';
         })(ii);
     }
     htmlTipoTelefono += '<input type="text" placeholder="Telefono" class="campo-input-text" id="Telefono1" />'
@@ -2500,9 +2500,9 @@ function armarSelectsCombos(resultDatos) {
     var htmlTipoActividad = "";
     htmlTipoActividad += '<select class"campo-tipoactividad" id="tipo-actividad">';
     htmlTipoActividad += '<option value = "null">Seleccione...</option>';
-    for (var ii in resultDatos.tipoact) {
+    for (var ii in resultDatos.TipoActividad) {
         (function (i) {
-            htmlTipoActividad += '<option value="' + resultDatos.tipoact[i].TipoActividadId + '">' + resultDatos.tipoact[i].Descripcion + '</option>';
+            htmlTipoActividad += '<option value="' + resultDatos.TipoActividad[i].TipoActividadId + '">' + resultDatos.TipoActividad[i].Descripcion + '</option>';
         })(ii);
     }
     htmlTipoActividad += '</select>';

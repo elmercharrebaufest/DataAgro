@@ -1255,23 +1255,16 @@ namespace Molinos.DataAgro.Business.Managers
                     }).OrderBy(y => y.Grupo).ToList();
             var DatosCombo = new DatosIniProveedor
             {
-                segm = ocultarCampos ? repositorio.Listar<Segmentacion, SegmentacionQry>(
-                    x => new SegmentacionQry
-                    {
-                        SegmentacionId = x.SegmentacionId,
-                        Descripcion = x.Descripcion,
-                        Grupo = x.Grupo
-                    },
-                    x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
-                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores").OrderBy(y => y.Grupo).ToList() : segmentacion,
-                tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
+                Segmentacion = ocultarCampos ? segmentacion.Where(x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
+                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores").ToList() : segmentacion,
+                TipoTelefono = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
                     x => new TipoTelefonoQry { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
                 prov = repositorio.Listar<Provincia, ProvinciaQry>(
                     x => new ProvinciaQry { Provinciaid = x.ProvinciaId, Nombre = x.Nombre }),
-                loc = new List<LocalidadQry>(),
-                cope = repositorio.Listar<CanalOperacion, CanalOperacionQry>(
+                Localidad = new List<LocalidadQry>(),
+                CanalOperacion = repositorio.Listar<CanalOperacion, CanalOperacionQry>(
                     x => new CanalOperacionQry { CanalOperacionId = x.CanalOperacionId, Descripcion = x.Descripcion, Inhabilitado = false }),
-                gran = repositorio.Listar<Material, MaterialQry>(
+                Material = repositorio.Listar<Material, MaterialQry>(
                     x => new MaterialQry { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion, CampañaIdActual = x.CampañaId.Value }),
                 dest = repositorio.Listar<Destinatario, DestinatarioQry>(
                     x => new DestinatarioQry { DestinatarioId = x.DestinatarioId, Descripcion = x.Descripcion, Inhabilitado = false }),
@@ -1279,7 +1272,7 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new CondicionQry { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 inte = repositorio.Listar<Interes, InteresQry>(
                     x => new InteresQry { InteresId = x.InteresId, Descripcion = x.Descripcion }),
-                tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(
+                TipoActividad = repositorio.Listar<TipoActividad, TipoActividadQry>(
                     x => new TipoActividadQry { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
                 concom = repositorio.Listar<ContactoComercial, ContactoComercialQry>(
                     x => new ContactoComercialQry { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres + " " + x.Apellido }, x => x.ProveedorId == ProveedorId),
@@ -1291,7 +1284,7 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
                 comercial = repositorio.Listar<Comercial, ComercialDto>(
                     x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido }),
-                tiposApoderados = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
+                TipoApoderado = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
                     x => new PuestoApoderadoDto { Id = x.Id, Descripcion = x.Descripcion }),
             };
 

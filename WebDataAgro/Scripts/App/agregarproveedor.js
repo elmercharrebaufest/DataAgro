@@ -1231,25 +1231,25 @@ function armarSelects(result) {
     var htmlTipoApoderado = "";
     htmlTipoApoderado += '<select class="campo-input-select" id="concom-puestoapoderado">';
     htmlTipoApoderado += '<option value = "null">Seleccione...</option>';
-    result.tiposApoderados.sort(function (a, b) {
+    result.TipoApoderado.sort(function (a, b) {
         var textA = a.Descripcion.toUpperCase();
         var textB = b.Descripcion.toUpperCase();
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
-    for (j in result.tiposApoderados) {
-        htmlTipoApoderado += '<option value="' + result.tiposApoderados[j].Id + '">' + result.tiposApoderados[j].Descripcion + '</option>';
+    for (j in result.TipoApoderado) {
+        htmlTipoApoderado += '<option value="' + result.TipoApoderado[j].Id + '">' + result.TipoApoderado[j].Descripcion + '</option>';
     }
     htmlTipoApoderado += '</select>';
     $(".concom-puestoapoderado").append(htmlTipoApoderado);
     //Fin Carga Select PuestoApoderado
 
     var grupos = {};
-    for (var jj in result.segm) {
+    for (var jj in result.Segmentacion) {
         (function (j) {
-            grupos[result.segm[j].Grupo] = grupos[result.segm[j].Grupo] || [];
-            grupos[result.segm[j].Grupo].push({
-                SegmentacionId: result.segm[j].SegmentacionId,
-                Descripcion: result.segm[j].Descripcion
+            grupos[result.Segmentacion[j].Grupo] = grupos[result.Segmentacion[j].Grupo] || [];
+            grupos[result.Segmentacion[j].Grupo].push({
+                SegmentacionId: result.Segmentacion[j].SegmentacionId,
+                Descripcion: result.Segmentacion[j].Descripcion
             });
         })(jj);
     }
@@ -1294,11 +1294,11 @@ function armarSelects(result) {
     htmlTipoTelefonocc += '<select  class="campo-input-select" id="concom-TipoTelefono1">';
     htmlTipoTelefonocc += '<option value = "null">Seleccione...</option>';
 
-    for (ii in result.tiptel) {
+    for (ii in result.TipoTelefono) {
         (function (i) {
-            htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
-            if (result.tiptel[i].Descripcion != "Otros" && result.tiptel[i].Descripcion != "Emergencia") {
-                htmlTipoTelefonocc += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+            htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
+            if (result.TipoTelefono[i].Descripcion != "Otros" && result.TipoTelefono[i].Descripcion != "Emergencia") {
+                htmlTipoTelefonocc += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
             }
         })(ii);
     }
@@ -1677,9 +1677,9 @@ function armarSelects(result) {
             var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono2">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
+            for (var ii in resultInit.TipoTelefono) {
                 (function (i) {
-                    htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+                    htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
                 })(ii);
             }
             htmlTipoTelefono += '</select>'
@@ -1701,9 +1701,9 @@ function armarSelects(result) {
             htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono3">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (ii in resultInit.tiptel) {
+            for (ii in resultInit.TipoTelefono) {
                 (function (i) {
-                    htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+                    htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
                 })(ii);
             }
             htmlTipoTelefono += '</select>'
@@ -1725,9 +1725,9 @@ function armarSelects(result) {
             htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono4">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (ii in resultInit.tiptel) {
+            for (ii in resultInit.TipoTelefono) {
                 (function (i) {
-                    htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+                    htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
                 })(ii);
             }
             htmlTipoTelefono += '</select>'
@@ -1755,10 +1755,10 @@ function armarSelects(result) {
             var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono2">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
+            for (var ii in resultInit.TipoTelefono) {
                 (function (i) {
-                    if (result.tiptel[i].Descripcion != "Otros" && result.tiptel[i].Descripcion != "Emergencia") {
-                        htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+                    if (result.TipoTelefono[i].Descripcion != "Otros" && result.TipoTelefono[i].Descripcion != "Emergencia") {
+                        htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
                     }
                 })(ii);
             }
@@ -1781,10 +1781,10 @@ function armarSelects(result) {
             htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono3">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (ii in resultInit.tiptel) {
+            for (ii in resultInit.TipoTelefono) {
                 (function (i) {
-                    if (result.tiptel[i].Descripcion != "Otros" && result.tiptel[i].Descripcion != "Emergencia") {
-                        htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
+                    if (result.TipoTelefono[i].Descripcion != "Otros" && result.TipoTelefono[i].Descripcion != "Emergencia") {
+                        htmlTipoTelefono += '<option value="' + result.TipoTelefono[i].TipoTelefonoId + '">' + result.TipoTelefono[i].Descripcion + '</option>';
                     }
                 })(ii);
             }
@@ -2816,9 +2816,9 @@ function editarContactoComercial(id) {
                 var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
                 htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono' + i + '">';
                 htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-                for (var jj in resultInit.tiptel) {
+                for (var jj in resultInit.TipoTelefono) {
                     (function (j) {
-                        htmlTipoTelefono += '<option value="' + resultInit.tiptel[j].TipoTelefonoId + '">' + resultInit.tiptel[j].Descripcion + '</option>';
+                        htmlTipoTelefono += '<option value="' + resultInit.TipoTelefono[j].TipoTelefonoId + '">' + resultInit.TipoTelefono[j].Descripcion + '</option>';
                     })(jj);
                 }
                 htmlTipoTelefono += '</select>'

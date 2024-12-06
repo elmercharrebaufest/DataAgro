@@ -100,8 +100,8 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<MaterialesQry> mat { get; set; }
         public List<CampañaQry> camp { get; set; }
-        public List<SegmentacionQry> segm { get; set; }
-        public List<TipoActividadQry> tipoact { get; set; }
+        public List<SegmentacionQry> Segmentacion { get; set; }
+        public List<TipoActividadQry> TipoActividad { get; set; }
         public List<EstadoQry> est { get; set; }
         public List<CondicionPreferenteQry> cond { get; set; }
         public List<ComercialQry> come { get; set; }
@@ -111,8 +111,8 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             mat = new List<MaterialesQry>();
             camp = new List<CampañaQry>();
-            segm = new List<SegmentacionQry>();
-            tipoact = new List<TipoActividadQry>();
+            Segmentacion = new List<SegmentacionQry>();
+            TipoActividad = new List<TipoActividadQry>();
             est = new List<EstadoQry>();
             cond = new List<CondicionPreferenteQry>();
             come = new List<ComercialQry>();
@@ -124,7 +124,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<MaterialesQry> mat { get; set; }
         public List<CampañaQry> camp { get; set; }
-        public List<SegmentacionQry> segm { get; set; }
+        public List<SegmentacionQry> Segmentacion { get; set; }
         public List<ComercialQry> come { get; set; }
         public List<ProvinciaQry> provs { get; set; }
         public List<EstadoICQry> estic { get; set; }
@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             mat = new List<MaterialesQry>();
             camp = new List<CampañaQry>();
-            segm = new List<SegmentacionQry>();
+            Segmentacion = new List<SegmentacionQry>();
             come = new List<ComercialQry>();
             provs = new List<ProvinciaQry>();
             estic = new List<EstadoICQry>();

@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 come = new List<ComercialQry>() { new ComercialQry() },
                 estic = new List<EstadoICQry>() { new EstadoICQry() },
                 provs = new List<ProvinciaQry>() { new ProvinciaQry() },
-                segm = new List<SegmentacionQry>() { new SegmentacionQry() }
+                Segmentacion = new List<SegmentacionQry>() { new SegmentacionQry() }
             });
             var result = target.TraerDatosCombo();
 
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"CampañaId\":0,\"Descripcion\":null}],\"segm\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Inscripto\":false,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"CampañaId\":0,\"Descripcion\":null}],\"Segmentacion\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Inscripto\":false,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

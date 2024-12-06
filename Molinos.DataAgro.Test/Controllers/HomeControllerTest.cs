@@ -105,8 +105,8 @@ namespace Molinos.DataAgro.Test.Controllers
             {
                 mat = new List<MaterialesQry>(),
                 camp = new List<CampañaQry>(),
-                segm = new List<SegmentacionQry>(),
-                tipoact = new List<TipoActividadQry>(),
+                Segmentacion = new List<SegmentacionQry>(),
+                TipoActividad = new List<TipoActividadQry>(),
                 est = new List<EstadoQry>(),
                 cond = new List<CondicionPreferenteQry>(),
                 come = new List<ComercialQry>(),
