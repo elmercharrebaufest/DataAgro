@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden, Inscripto = x.Inscripto }, null, 0, "Orden");
 
-            datosCombo.loc = new List<LocalidadQry>();
+            datosCombo.Localidad = new List<LocalidadQry>();
 
             if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {

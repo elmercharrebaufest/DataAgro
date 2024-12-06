@@ -101,7 +101,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Provinciaid = x.ProvinciaId
             });
 
-            Datos.segm = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry
+            Datos.Segmentacion = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry
             {
                 Descripcion = x.Descripcion,
                 Grupo = x.Grupo,

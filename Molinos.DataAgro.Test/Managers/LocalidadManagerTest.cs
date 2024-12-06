@@ -85,11 +85,11 @@ namespace Molinos.DataAgro.Test.Managers
         //public void GrabarLocalidadOk()
         //{
         //    var prov = new Provincia { ProvinciaId = 1, Nombre = "a", Orden = 1 };
-        //    var loc = new Localidad { LocalidadId = 1, Nombre = "a", ProvinciaId = 1, CodLocalidad = "10", Provincia = prov };
+        //    var Localidad = new Localidad { LocalidadId = 1, Nombre = "a", ProvinciaId = 1, CodLocalidad = "10", Provincia = prov };
         //    repositorioMock.Setup(y => y.Obtener<Localidad>(It.IsAny<int>()))
         //        .Returns(new Localidad { LocalidadId = 1 });
 
-        //    var resultado = target.GrabarLocalidad(loc);
+        //    var resultado = target.GrabarLocalidad(Localidad);
         //    repositorioMock.Verify(x => x.Obtener<Localidad>(It.IsAny<int>()), Times.Once);
         //    repositorioMock.Verify(x => x.Agregar(It.IsAny<Localidad>()), Times.Never);
         //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -102,11 +102,11 @@ namespace Molinos.DataAgro.Test.Managers
         //public void GrabarLocalidadNuevaOk()
         //{
         //    var prov = new Provincia { ProvinciaId = 1, Nombre = "a", Orden = 1 };
-        //    var loc = new Localidad { LocalidadId = 0, Nombre = "a", ProvinciaId = 1, CodLocalidad = "10", Provincia = prov };
+        //    var Localidad = new Localidad { LocalidadId = 0, Nombre = "a", ProvinciaId = 1, CodLocalidad = "10", Provincia = prov };
         //    repositorioMock.Setup(y => y.Obtener<Localidad>(It.IsAny<int>()))
         //        .Returns(new Localidad { LocalidadId = 1 });
 
-        //    var resultado = target.GrabarLocalidad(loc);
+        //    var resultado = target.GrabarLocalidad(Localidad);
         //    repositorioMock.Verify(x => x.Obtener<Localidad>(It.IsAny<int>()), Times.Never);
         //    repositorioMock.Verify(x => x.Agregar(It.IsAny<Localidad>()), Times.Once);
         //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);

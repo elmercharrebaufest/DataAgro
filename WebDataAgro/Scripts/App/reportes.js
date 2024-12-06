@@ -1206,12 +1206,12 @@ function cargarCombos() {
         }
 
         var grupos = {};
-        for (var jj in datos.segm) {
+        for (var jj in datos.Segmentacion) {
             (function (j) {
-                grupos[datos.segm[j].Grupo] = grupos[datos.segm[j].Grupo] || [];
-                grupos[datos.segm[j].Grupo].push({
-                    SegmentacionId: datos.segm[j].SegmentacionId,
-                    Descripcion: datos.segm[j].Descripcion
+                grupos[datos.Segmentacion[j].Grupo] = grupos[datos.Segmentacion[j].Grupo] || [];
+                grupos[datos.Segmentacion[j].Grupo].push({
+                    SegmentacionId: datos.Segmentacion[j].SegmentacionId,
+                    Descripcion: datos.Segmentacion[j].Descripcion
                 });
             })(jj);
         }
@@ -1269,9 +1269,9 @@ function cargarCombos() {
 			var segmentacion = $("#txtsegmentacion")
 			segmentacion.empty();
 			$("<option>").text('- Elegir').val('null').appendTo(segmentacion);
-			for (var ii in datos.segm) {
+			for (var ii in datos.Segmentacion) {
 				(function (i) {
-					$("<option>").text(datos.segm[i].Descripcion).val("" + datos.segm[i].SegmentacionId).appendTo(segmentacion);
+					$("<option>").text(datos.Segmentacion[i].Descripcion).val("" + datos.Segmentacion[i].SegmentacionId).appendTo(segmentacion);
 				})(ii);
 			}
 		*/

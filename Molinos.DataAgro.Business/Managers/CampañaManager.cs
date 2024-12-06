@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Business
             //&& (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1)
             var campañaConfigurada = ConfigurationManager.AppSettings["CampanaDesde"].ToString();
             var campañaEnAdelante = repositorio.Obtener<Campaña, int>(x => x.Descripcion == campañaConfigurada, x => x.CampañaId);
-            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Asc);
+            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Desc);
         }
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)

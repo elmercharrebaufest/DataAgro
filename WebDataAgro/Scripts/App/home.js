@@ -858,12 +858,12 @@ function armarSelects(result) {
     $(".material-granos").append(htmlGranos);
 
     var grupos = {};
-    for (var jj in result.segm) {
+    for (var jj in result.Segmentacion) {
         (function (j) {
-            grupos[result.segm[j].Grupo] = grupos[result.segm[j].Grupo] || [];
-            grupos[result.segm[j].Grupo].push({
-                SegmentacionId: result.segm[j].SegmentacionId,
-                Descripcion: result.segm[j].Descripcion
+            grupos[result.Segmentacion[j].Grupo] = grupos[result.Segmentacion[j].Grupo] || [];
+            grupos[result.Segmentacion[j].Grupo].push({
+                SegmentacionId: result.Segmentacion[j].SegmentacionId,
+                Descripcion: result.Segmentacion[j].Descripcion
             });
         })(jj);
     }
@@ -899,9 +899,9 @@ function armarSelects(result) {
     /*var htmlTipoActividad = "";
     htmlTipoActividad += '<select multiple class"campo-tipoactividad" id="tipo-actividad">';
     htmlTipoActividad += '<option value="null">Todos</option>';
-    for (var ii in result.tipoact) {
+    for (var ii in result.TipoActividad) {
         (function (i) {
-            htmlTipoActividad += '<option value="' + result.tipoact[i].TipoActividadId + '">' + result.tipoact[i].Descripcion + '</option>';
+            htmlTipoActividad += '<option value="' + result.TipoActividad[i].TipoActividadId + '">' + result.TipoActividad[i].Descripcion + '</option>';
         })(ii);
     }
     htmlTipoActividad += '</select>';
