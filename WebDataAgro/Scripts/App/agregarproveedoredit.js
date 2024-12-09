@@ -434,9 +434,9 @@ function armarProduccion(campoacopio) {
             htmlCampañaGrano += '<div class="linea' + fila + ' campo-granos"  style="position:relative;">'
                 + '<select class="campo-input-select campo-sin-span grano" id="grano' + fila + '">'
                 + '<option disabled selected value="">Seleccionar...</option>';
-            for (var ii in resultInit.gran) {
+            for (var ii in resultInit.Material) {
                 (function (i) {
-                    htmlCampañaGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                    htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
                 })(ii);
             }
             htmlCampañaGrano += '</select>'
@@ -466,7 +466,7 @@ function armarProduccion(campoacopio) {
             $("#grano" + fila).trigger("change");
             $("#hectareas" + fila).val(grano.HectareasPorcentaje);
             $("#toneladas" + fila).val(grano.Toneladas);
-            var elemento = resultInit.gran.find(item => item.MaterialId == grano.MaterialId);
+            var elemento = resultInit.Material.find(item => item.MaterialId == grano.MaterialId);
             if (elemento) {
                 $("#campaña" + fila).val(elemento.CampañaIdActual);
             } else {
@@ -781,9 +781,9 @@ function armarObjetivos(objetivo) {
             htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
                 + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
                 + '<option disabled selected value="">Seleccionar...</option>';
-            for (var ii in resultInit.gran) {
+            for (var ii in resultInit.Material) {
                 (function (i) {
-                    htmlCampañaGranoObjetivo += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                    htmlCampañaGranoObjetivo += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
                 })(ii);
             }
 
