@@ -389,9 +389,9 @@ function armarSelects(result) {
     var htmlCampañaGrano = "";
     htmlCampañaGrano += '<select class="campo-input-select campo-sin-span grano" id="grano0">';
     htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
-    for (ii in result.gran) {
+    for (ii in result.Material) {
         (function (i) {
-            htmlCampañaGrano += '<option value="' + result.gran[i].MaterialId + '">' + result.gran[i].Descripcion + '</option>';
+            htmlCampañaGrano += '<option value="' + result.Material[i].MaterialId + '">' + result.Material[i].Descripcion + '</option>';
         })(ii);
     }
     htmlCampañaGrano += '</select>';
@@ -496,9 +496,9 @@ function armarSelects(result) {
     var htmlCampañaGranoAlmacenamientoGrano = "";
     htmlCampañaGranoAlmacenamientoGrano += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos0">';
     htmlCampañaGranoAlmacenamientoGrano += '<option value = "null">Seleccione...</option>';
-    for (ii in resultInit.gran) {
+    for (ii in resultInit.Material) {
         (function (i) {
-            htmlCampañaGranoAlmacenamientoGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+            htmlCampañaGranoAlmacenamientoGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
         })(ii);
     }
     htmlCampañaGranoAlmacenamientoGrano += '</select>';
@@ -861,9 +861,9 @@ function armarSelects(result) {
     var htmlCampañaObjetivo = "";
     htmlCampañaObjetivo += '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo0">';
     htmlCampañaObjetivo += '<option value = "null">Seleccione...</option>';
-    for (ii in result.gran) {
+    for (ii in result.Material) {
         (function (i) {
-            htmlCampañaObjetivo += '<option value="' + result.gran[i].MaterialId + '">' + result.gran[i].Descripcion + '</option>';
+            htmlCampañaObjetivo += '<option value="' + result.Material[i].MaterialId + '">' + result.Material[i].Descripcion + '</option>';
         })(ii);
     }
     htmlCampañaObjetivo += '</select>';
@@ -1717,9 +1717,9 @@ function editarAlmacenamiento(id) {
         htmlCampañaGrano += '<div class="lineaAlmacenamientoGranos' + i + ' campo-granos-almacenamientograno" style="position:relative;">';
         htmlCampañaGrano += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos' + i + '">';
         htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
-        for (var ii in resultInit.gran) {
+        for (var ii in resultInit.Material) {
             (function (i) {
-                htmlCampañaGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
             })(ii);
         }
         htmlCampañaGrano += '</select>';
@@ -2091,9 +2091,9 @@ function armarFuncionalidades() {
         htmlCampañaGrano += '<div class="linea' + cantGrano + ' campo-granos"  style="position:relative;">'
             + '<select class="campo-input-select campo-sin-span grano" id="grano' + cantGrano + '">'
             + '<option disabled selected value="">Seleccionar...</option>';
-        for (var ii in resultInit.gran) {
+        for (var ii in resultInit.Material) {
             (function (i) {
-                htmlCampañaGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
             })(ii);
         }
         htmlCampañaGrano += '</select>' +
@@ -2173,9 +2173,9 @@ function armarFuncionalidades() {
         htmlCampañaGranoAlmacenamiento += '<div class="lineaAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + ' campo-granos-almacenamientograno"   style="position:relative;">';
         htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + '">';
         htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
-        for (var ii in resultInit.gran) {
+        for (var ii in resultInit.Material) {
             (function (i) {
-                htmlCampañaGranoAlmacenamiento += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                htmlCampañaGranoAlmacenamiento += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
             })(ii);
         }
         htmlCampañaGranoAlmacenamiento += '</select>'
@@ -2214,9 +2214,9 @@ function armarFuncionalidades() {
         htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
             + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
             + '<option disabled selected value="">Seleccionar...</option>';
-        for (var ii in resultInit.gran) {
+        for (var ii in resultInit.Material) {
             (function (i) {
-                htmlCampañaGranoObjetivo += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                htmlCampañaGranoObjetivo += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
             })(ii);
         }
 
@@ -2812,7 +2812,7 @@ function InicializarDatos() {
     var result = resultInit = MSExecuteOnServer('/Proveedor/Iniciliazar', Datos);
 
     if (result != null) {
-        resultGranos = result.gran;
+        resultGranos = result.Material;
         armarSelects(result);
         AutocompleteProcedenciaProduccion();
         AutocompleteProcedenciaAlmacenamiento();
@@ -2935,9 +2935,9 @@ function AutocompleteProcedenciaEstablecimiento() {
     var htmlestablecimientoMaterial = "";
     htmlestablecimientoMaterial += '<select class="campo-input-select campo-sin-span" id="material-establecimiento" style="width: 100%!important;margin-top: -5px;">';
     htmlestablecimientoMaterial += '<option value = "null">Seleccione...</option>';
-    for (ii in resultInit.gran) {
+    for (ii in resultInit.Material) {
         (function (i) {
-            htmlestablecimientoMaterial += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+            htmlestablecimientoMaterial += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
         })(ii);
     }
     htmlestablecimientoMaterial += '</select>';

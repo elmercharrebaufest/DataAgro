@@ -722,9 +722,9 @@ function armarObjetivos(objetivo) {
             htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
                 + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
                 + '<option disabled selected value="">Seleccionar...</option>';
-            for (var ii in resultInit.gran) {
+            for (var ii in resultInit.Material) {
                 (function (i) {
-                    htmlCampañaGranoObjetivo += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+                    htmlCampañaGranoObjetivo += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
                 })(ii);
             }
 
