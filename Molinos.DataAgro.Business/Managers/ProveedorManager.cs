@@ -1085,26 +1085,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pizarra";
             }
-            //else if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
-            //{
-            //    htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
-            //}
             else
             {
-                Decimal precio = 0;
-                AperturaPrecio aperturaPrecio = oFijacionDePrecioContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecio.Descripcion.Contains("Comisiones"));
-                if (aperturaPrecio != null)
-                {
-                    Decimal porcentaje = aperturaPrecio.Porcentaje / 100;
-                    Decimal importe = (decimal)(aperturaPrecio.Porcentaje > 0 ? porcentaje * oFijacionDePrecioContrato.PrecioNeto / (1 + porcentaje) : aperturaPrecio.Importe);
-                    precio = oFijacionDePrecioContrato.Precio + importe;
-                }
-                else
-                {
-                    precio = oFijacionDePrecioContrato.Precio;
-                }
-                htmlBody += Split(precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
-                //htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
+                htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
@@ -1275,31 +1258,24 @@ namespace Molinos.DataAgro.Business.Managers
                     }).OrderBy(y => y.Grupo).ToList();
             var DatosCombo = new DatosIniProveedor
             {
-                segm = ocultarCampos ? repositorio.Listar<Segmentacion, SegmentacionQry>(
-                    x => new SegmentacionQry
-                    {
-                        SegmentacionId = x.SegmentacionId,
-                        Descripcion = x.Descripcion,
-                        Grupo = x.Grupo
-                    },
-                    x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
-                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores").OrderBy(y => y.Grupo).ToList() : segmentacion,
-                tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
+                Segmentacion = ocultarCampos ? segmentacion.Where(x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
+                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores").ToList() : segmentacion,
+                TipoTelefono = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
                     x => new TipoTelefonoQry { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
                 prov = repositorio.Listar<Provincia, ProvinciaQry>(
                     x => new ProvinciaQry { Provinciaid = x.ProvinciaId, Nombre = x.Nombre }),
-                loc = new List<LocalidadQry>(),
-                cope = repositorio.Listar<CanalOperacion, CanalOperacionQry>(
+                Localidad = new List<LocalidadQry>(),
+                CanalOperacion = repositorio.Listar<CanalOperacion, CanalOperacionQry>(
                     x => new CanalOperacionQry { CanalOperacionId = x.CanalOperacionId, Descripcion = x.Descripcion, Inhabilitado = false }),
-                gran = repositorio.Listar<Material, MaterialQry>(
-                    x => new MaterialQry { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion }),
+                Material = repositorio.Listar<Material, MaterialQry>(
+                    x => new MaterialQry { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion, CampañaIdActual = x.CampañaId.Value }),
                 dest = repositorio.Listar<Destinatario, DestinatarioQry>(
                     x => new DestinatarioQry { DestinatarioId = x.DestinatarioId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 cond = repositorio.Listar<Condicion, CondicionQry>(
                     x => new CondicionQry { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 inte = repositorio.Listar<Interes, InteresQry>(
                     x => new InteresQry { InteresId = x.InteresId, Descripcion = x.Descripcion }),
-                tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(
+                TipoActividad = repositorio.Listar<TipoActividad, TipoActividadQry>(
                     x => new TipoActividadQry { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
                 concom = repositorio.Listar<ContactoComercial, ContactoComercialQry>(
                     x => new ContactoComercialQry { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres + " " + x.Apellido }, x => x.ProveedorId == ProveedorId),
@@ -1311,7 +1287,7 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
                 comercial = repositorio.Listar<Comercial, ComercialDto>(
                     x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido }),
-                tiposApoderados = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
+                TipoApoderado = repositorio.Listar<PuestoApoderado, PuestoApoderadoDto>(
                     x => new PuestoApoderadoDto { Id = x.Id, Descripcion = x.Descripcion }),
             };
 
@@ -3789,6 +3765,15 @@ namespace Molinos.DataAgro.Business.Managers
             return compraDto.OrderBy(x => x.Material).ThenByDescending(x => x.Campana).ToList();
         }
 
+        /// <summary>
+        /// Obtiene el detalle de todas las compras realizadas por un proveedor en función del comercial y los equipos asignados.
+        /// </summary>
+        /// <param name="proveedorId">ID del proveedor a consultar.</param>
+        /// <param name="oComercial">Objeto Comercial asociado al proveedor.</param>
+        /// <param name="equipo">Lista de IDs de equipos relacionados.</param>
+        /// <returns>
+        /// Lista de objetos CompraDto con detalles de las compras organizados por campaña y material.
+        /// </returns>
         public List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial, List<int> equipo)
         {
 

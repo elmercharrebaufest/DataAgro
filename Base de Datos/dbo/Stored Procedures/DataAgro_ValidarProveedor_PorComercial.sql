@@ -28,7 +28,7 @@ AS
   WHERE pc.ProveedorId = @proveedorId 
 
 
-if ((select COUNT(val) from #valor)> 0)
+if ((select COUNT(Val) from #valor)> 0)
 begin
    select cast(1 as int) as valor
 end

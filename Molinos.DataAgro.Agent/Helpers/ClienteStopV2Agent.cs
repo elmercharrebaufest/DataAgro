@@ -259,36 +259,36 @@ namespace Molinos.DataAgro.Agent.Helpers
         private int ConsultarCupo(string cupo, int terminalId, string token)
         {
             return 1;//parche por que no funciona la consulta de cupos por idStop
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlStop);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("token", token);
-            HttpResponseMessage response = client.GetAsync(
-                            $"v{versionApi}/turnos/{terminalId}/{cupo}").Result;
-            response.EnsureSuccessStatusCode();
-            var res = response.Content.ReadAsAsync<dynamic>().Result;
-            var jObject = JObject.Parse(res.ToString());
-            ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-            //logger.Debug("jObject.ToString(): " + jObject.ToString());
-            if (!respuesta.isError)
-            {
-                RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
-                //logger.Debug(model.ToJson());
+            //HttpClient client = new HttpClient();
+            //client.BaseAddress = new Uri(urlStop);
+            //client.DefaultRequestHeaders.Accept.Clear();
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //client.DefaultRequestHeaders.Add("token", token);
+            //HttpResponseMessage response = client.GetAsync(
+            //                $"v{versionApi}/turnos/{terminalId}/{cupo}").Result;
+            //response.EnsureSuccessStatusCode();
+            //var res = response.Content.ReadAsAsync<dynamic>().Result;
+            //var jObject = JObject.Parse(res.ToString());
+            //ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+            ////logger.Debug("jObject.ToString(): " + jObject.ToString());
+            //if (!respuesta.isError)
+            //{
+            //    RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
+            //    //logger.Debug(model.ToJson());
 
-                return model.idCupoEstado;
-            }
-            else
-            {
-                ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                logger.Debug(error.ToJson());
-                throw new Exception(error.userMessage);
-            }
+            //    return model.idCupoEstado;
+            //}
+            //else
+            //{
+            //    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+            //    logger.Debug(error.ToJson());
+            //    throw new Exception(error.userMessage);
+            //}
         }
 
         public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             var resultado = new Resultado();
             try
             {
@@ -647,14 +647,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     else
                     {
-                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        if (error == null)
-                        {
-                            error = new ErrorStop
-                            {
-                                userMessage = "No se pudo modificar en STOP."
-                            };
-                        }
+                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString()) ?? new ErrorStop { userMessage = "No se pudo modificar en STOP." };
                         cupo.ErrorStop = error.userMessage;
                         logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
                         throw new Exception("Error Stop: " + error.userMessage);

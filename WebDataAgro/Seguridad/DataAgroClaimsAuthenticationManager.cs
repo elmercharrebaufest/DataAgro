@@ -1,16 +1,13 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Repository;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security;
 using System.Security.Claims;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using WebGrease.Css.Extensions;
 
@@ -91,10 +88,8 @@ namespace WebDataAgro.Seguridad
             }
             catch (Exception e)
             {
-                //log.Error("error agregando roles al usuario {0}", nombreUsuario);
-                //log.Error(e);
+                log.Error("Error agregando roles al usuario", e);
             }
-
 
             var ci = new ClaimsIdentity(((ClaimsIdentity)incomingPrincipal.Identity).Claims, "Negotiate");
             var transformedPrincipal = new ClaimsPrincipal(ci);

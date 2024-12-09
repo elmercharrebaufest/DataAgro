@@ -11,7 +11,7 @@ AS
 (  
  SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory  ,GrupoDeComprasId
     FROM Comercial    
-	WHERE ComercialId = @comercialId   
+	WHERE ComercialId = @ComercialId   
  UNION ALL   
     --RECURSIVIDAD  
 	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargoId, A.IdActiveDirectory  , a.GrupoDeComprasId

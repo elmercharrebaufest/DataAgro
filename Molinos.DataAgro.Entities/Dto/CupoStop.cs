@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Web.Script.Serialization;
+﻿using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -23,14 +20,14 @@ namespace Molinos.DataAgro.Entities.Dto
         // V2
 
         public string cuitOrigen { get; set; }
-        public string cuitIntermediario { get; set; }
+        public string CuitIntermediario { get; set; }
         public string CuitRemComercialProductor { get; set; }
         public string CuitCorredorVentaSecundaria { get; set; }
         public string CuitCorredorVentaPrimaria { get; set; }
         //public int? nroPlantaRucaOrigen { get; set; }
 
     }
-    public partial class ModificarCupo :CupoStop
+    public partial class ModificarCupo : CupoStop
     {
 
         public int idCupo { get; set; }
@@ -38,7 +35,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string estado { get; set; }
     }
     public partial class RespuestaCupoStop : ModificarCupo
-    {     
+    {
         public string creado { get; set; }
         public string estadoEnPlanta { get; set; }
         public string cartaPorte { get; set; }
@@ -51,7 +48,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string cuitRemComercial { get; set; }
         public string cuitMercadoATerminoAfip { get; set; }
         public string cosecha { get; set; }
-        public string pesoNetoEstimado  { get; set; }
+        public string pesoNetoEstimado { get; set; }
         public string kmRecorrer { get; set; }
         public string cuitIntermediarioFleteAfip { get; set; }
         public string cuitTransportistaAfip { get; set; }
@@ -63,55 +60,55 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class RespuestaCupoNoPropioStop : RespuestaCupoStop
     {
-        public string cuitDestinatarioAfip { get; set; }
-        public string cuitDestinoAfip { get; set; }
-        public string cuitIntermediarioAfip { get; set; }
-        public string cuitRemComercialAfip { get; set; }
-        public string cuitRepresentanteEntregadorAfip { get; set; }
-        public string esAnulado { get; set; }
-        public string esRechazado { get; set; }
-        public long? idCuitOrigen { get; set; }
-        public long? idCuitIntermediario { get; set; }
-        public long? idCuitMercadoATermino { get; set; }
-        public long? idCuitRemComercial { get; set; }
-        public long? idCuitCorredorV { get; set; }
-        public long? idCuitCorredorC { get; set; }
-        public long? idCuitRepresentanteEntregador { get; set; }
-        public long? idCuitDestino { get; set; }
-        public long? idCuitDestinatario { get; set; }
-        public long? idCuitIntermediarioFlete { get; set; }
-        public long? idCuitTransportista { get; set; }
-        public long? idCuitChofer { get; set; }
-        public string fechaCP_Carga { get; set; }//fecha
-        public string fechaCP_Vto { get; set; }//fecha
-        public long? idTurnoDetalle { get; set; }
-        public string renspa { get; set; }
-        public decimal? pesoOriginal { get; set; }
-        public string validaKM { get; set; }
-        public int? cantHorasSalidaCamion { get; set; }
-        public string dominio { get; set; }
-        public string dominio_1 { get; set; }
-        public string dominio_2 { get; set; }
-        public string nroContrato { get; set; }
-        public string nroPlantaRuca { get; set; }
-        public int? idEstadoEnPlanta { get; set; }
-        public  string modificado { get; set; } // fecha
-        public int? creadoPor { get; set; }
-        public int? modificadoPor { get; set; }
-        public string consultadoXAFIP { get; set; }
-        public string fechaActivado { get; set; } // fecha
-        public string fechaArribado { get; set; } // fecha
-        public string fechaRechazado { get; set; } // fecha
-        public string fechaDesviadoD { get; set; } // fecha
-        public string fechaRegresado { get; set; } // fecha
-        public string fechaDesviadoO { get; set; } // fecha
-        public string fechaAnulado { get; set; } // fecha 
-        public string fechaConfirmado { get; set; } // fecha
-        public string fechaDescargado { get; set; } // fecha
-        public string fechaReActivado { get; set; } // fecha
-        public string fechaTomado { get; set; } // fecha
-        public string ultima_latitud { get; set; }
-        public string ultima_longitud { get; set; }
+        public string CuitDestinatarioAfip { get; set; }
+        public string CuitDestinoAfip { get; set; }
+        public string CuitIntermediarioAfip { get; set; }
+        public string CuitRemComercialAfip { get; set; }
+        public string CuitRepresentanteEntregadorAfip { get; set; }
+        public string EsAnulado { get; set; }
+        public string EsRechazado { get; set; }
+        public long? IdCuitOrigen { get; set; }
+        public long? IdCuitIntermediario { get; set; }
+        public long? IdCuitMercadoATermino { get; set; }
+        public long? IdCuitRemComercial { get; set; }
+        public long? IdCuitCorredorV { get; set; }
+        public long? IdCuitCorredorC { get; set; }
+        public long? IdCuitRepresentanteEntregador { get; set; }
+        public long? IdCuitDestino { get; set; }
+        public long? IdCuitDestinatario { get; set; }
+        public long? IdCuitIntermediarioFlete { get; set; }
+        public long? IdCuitTransportista { get; set; }
+        public long? IdCuitChofer { get; set; }
+        public string FechaCP_Carga { get; set; }//fecha
+        public string FechaCP_Vto { get; set; }//fecha
+        public long? IdTurnoDetalle { get; set; }
+        public string Renspa { get; set; }
+        public decimal? PesoOriginal { get; set; }
+        public string ValidaKM { get; set; }
+        public int? CantHorasSalidaCamion { get; set; }
+        public string Dominio { get; set; }
+        public string Dominio_1 { get; set; }
+        public string Dominio_2 { get; set; }
+        public string NroContrato { get; set; }
+        public string NroPlantaRuca { get; set; }
+        public int? IdEstadoEnPlanta { get; set; }
+        public string Modificado { get; set; } // fecha
+        public int? CreadoPor { get; set; }
+        public int? ModificadoPor { get; set; }
+        public string ConsultadoXAFIP { get; set; }
+        public string FechaActivado { get; set; } // fecha
+        public string FechaArribado { get; set; } // fecha
+        public string FechaRechazado { get; set; } // fecha
+        public string FechaDesviadoD { get; set; } // fecha
+        public string FechaRegresado { get; set; } // fecha
+        public string FechaDesviadoO { get; set; } // fecha
+        public string FechaAnulado { get; set; } // fecha 
+        public string FechaConfirmado { get; set; } // fecha
+        public string FechaDescargado { get; set; } // fecha
+        public string FechaReActivado { get; set; } // fecha
+        public string FechaTomado { get; set; } // fecha
+        public string Ultima_latitud { get; set; }
+        public string Ultima_longitud { get; set; }
 
     }
 
@@ -120,9 +117,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<RespuestaCupoStop> results { get; set; }
     }
 
-    public partial class ConsultaTurnosActivosStop 
-    { 
-        public int count { get; set; }
+    public partial class ConsultaTurnosActivosStop
+    {
+        public int Count { get; set; }
         public List<RespuestaCupoNoPropioStop> data { get; set; }
     }
     public partial class ResultadoStop
@@ -132,11 +129,11 @@ namespace Molinos.DataAgro.Entities.Dto
     }
     public partial class ErrorStop
     {
-        public string status { get; set; }
-        public string developerMessage { get; set; }
+        public string Status { get; set; }
+        public string DeveloperMessage { get; set; }
         public string userMessage { get; set; }
         public string errorCode { get; set; }
-        public string moreInfo { get; set; }
+        public string MoreInfo { get; set; }
     }
 }
 

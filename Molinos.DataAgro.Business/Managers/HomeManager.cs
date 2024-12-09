@@ -236,9 +236,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }),
 
-                segm = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }),
+                Segmentacion = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }),
 
-                tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
+                TipoActividad = repositorio.Listar<TipoActividad, TipoActividadQry>(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
 
                 est = repositorio.Listar<Estado, EstadoQry>(x => new EstadoQry() { EstadoId = x.EstadoId, Descripcion = x.Descripcion }),
 

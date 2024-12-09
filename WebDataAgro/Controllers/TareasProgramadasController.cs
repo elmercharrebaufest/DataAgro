@@ -392,7 +392,7 @@ namespace WebDataAgro.Controllers
             }
             confirmaManager.EnviarMailConfirma(dia);
             logger.Info("FIN EnviarMailConfirma");
-            
+
             return Content("ok");
         }
 

@@ -8,7 +8,7 @@ as
 declare @table as table(item int )
 
 insert into @table 
-select item FROM dbo.Split(@Proveedores, ',') 
+select Item FROM dbo.Split(@Proveedores, ',') 
 
 SELECT 
 	pr.CUIT,

@@ -3,14 +3,14 @@
 as
 
 
-declare @table as table(item int )
+declare @table as table(Item int )
 
  insert into @table 
- select item FROM dbo.Split(@Proveedores, ',') 
+ select Item FROM dbo.Split(@Proveedores, ',') 
 
 SELECT
-		pr.cuit as cuit,
-		pr.razonsocial,
+		pr.CUIT as cuit,
+		pr.RazonSocial,
 		L.Nombre Localidad,
 		P.Nombre Provincia,
 		CA.Descripcion CampañaPlanta,

@@ -22,13 +22,13 @@ insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @Comercial
  
 insert into @Proveedores(Item)
 select distinct p.ProveedorId 
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Segmentacion s on  p.SegmentacionId = s.SegmentacionId
 left join Campo ca on p.ProveedorId = ca.ProveedorId
 left join CampoMaterial cam on cam.CampoId= ca.CampoId
-where cast(p.fechaAlta as date) between @fechaDesde and @fechaHasta
+where cast(p.FechaAlta as date) between @fechaDesde and @fechaHasta
 
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
@@ -45,7 +45,7 @@ and ((@Toneladas is null) or (@Toneladas ='0')
 
 and (( @MaterialId is null) or ( cam.MaterialId= @MaterialId  ))
 
-and (( @Mes is null) or ( MONTH (p.fechaAlta) = @Mes  ))
+and (( @Mes is null) or ( MONTH (p.FechaAlta) = @Mes  ))
 
 /*and ((@ComercialId is null) 
 	or (@ComercialId  ='0')
@@ -81,7 +81,7 @@ p.cuit as Cuit,
 p.razonsocial as RazonSocial,
 est.descripcion as Estado,
 case when  s.grupo ='Productores' then 'Productores ' + s.Descripcion   else s.Descripcion end as Segmentación,
-p.fechaAlta as FechaAlta, 
+p.FechaAlta as FechaAlta, 
 e.Apellido + ' ' + e.Nombres as Comercial,
 isnull(M.Descripcion,'Sin Material') as Grano, 
 isnull(SUM(CP.Toneladas),0) as Toneladas
@@ -101,4 +101,4 @@ and ( @CampañaId is null or exists (select 1 from CampoMaterial cp3 where cp3.C
 
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
-Group by p.cuit, p.razonsocial, est.descripcion, s.descripcion,s.grupo, p.fechaAlta, e.Apellido + ' ' + e.Nombres, M.Descripcion
+Group by p.cuit, p.razonsocial, est.descripcion, s.descripcion,s.grupo, p.FechaAlta, e.Apellido + ' ' + e.Nombres, M.Descripcion

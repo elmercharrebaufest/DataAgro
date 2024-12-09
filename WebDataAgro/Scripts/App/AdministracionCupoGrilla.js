@@ -68,6 +68,7 @@ function CargarGrillaConfig() {
         pageSize: 20,
     };
     var classExterno = externo ? "hide" : "";
+
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         parameterMap: function (options, operation) {
@@ -94,155 +95,13 @@ function CargarGrillaConfig() {
             }
         },
         columns: [
-            { selectable: true, width: "50px" },
+            { selectable: true, width: "40px" },
             {
-                field: "TipoAdministracionCupo", type: "string", title: "Tipo", width: 70,
-                editable: function (dataItem) { return false; }, filterable: {
-                    multi: true, dataSource: [{
-                        TipoAdministracionCupo: "Extraordinaria"
-                    }, {
-                        TipoAdministracionCupo: "Algoritmo"
-                    }]
-                }, width: 130, template: "#=TipoAdministracionCupo#",
-            },
-            {
-                field: "Proveedor", type: "string", minResizableWidth: 100, width: 150,
-                editable: function (dataItem) { return false; },
-                headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
-                template: function (dataItem) {
-                    if (dataItem.EstadoId == 4) {
-                        return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 3) {
-                        return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 2) {
-                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 1) {
-                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
-                    }
-                },
-                filterable: { ui: createMultiSelectProveedor, extra: false }
-            },
-            {
-                field: "Comercial", type: "string", title: "Comercial", width: 150, editable: function (dataItem) {
-                    return false;
-                }, filterable: { ui: createMultiSelectComercial, extra: false }, headerAttributes: {
-                    "class": classExterno
-                },
-                attributes: { "class": "mobile-xs " + classExterno }
-            },
-            {
-                field: "Material", type: "string", minResizableWidth: 100, width: 130, editable: function (dataItem) {
-                    return false;
-                }, filterable: {
-                    multi: true, dataSource: [{
-                        Material: "Maiz"
-                    }, {
-                        Material: "Trigo"
-                    }, {
-                        Material: "Soja"
-                    }, {
-                        Material: "Girasol"
-                    }, {
-                        Material: "Sorgo"
-                    }]
-                }, width: 95, attributes: {
-                    "class": "mobile-xs"
-                }, itemTemplate: function (e) {
-                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
-                }, template: "#=Material#"
-            },
-            {
-                field: "Zona", title: "Zona", type: "string", editable: function (dataItem) {
-                    return false;
-                }, width: 150,
-                filterable: {
-                    multi: true,
-
-                    dataSource: [
-                        { ZonaCupo: "CORREDOR BS AS" },
-                        { ZonaCupo: "CORREDOR ROSARIO" },
-                        { ZonaCupo: "Fasones CAGSA/MOLCA, YPF y AMAGGI" },
-                        { ZonaCupo: "MAT-ROFEX" },
-                        { ZonaCupo: "ORIG INTERIOR CENTRO" },
-                        { ZonaCupo: "ORIG INTERIOR NORTE" },
-                        { ZonaCupo: "ORIG INTERIOR SUR" },
-                        { ZonaCupo: "PRODUCCION PROPIA" },
-                        { ZonaCupo: "REDESPACHOS" },
-                        { ZonaCupo: "SOLIDARIDAD" }],
-                    itemTemplate: function (e) {
-
-                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.ZonaCupo#'/><span>#= data.ZonaCupo|| data.all #</span></label></span><br>";
-                    }
-                },
-            },
-            {
-                field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 150, editable: function (dataItem) {
-                    return false;
-                }, filterable: {
-                    multi: true, dataSource: Centros.map(function (centro) {
-                        return { Centro: centro };
-                    })
-                }, width: 130, template: "#=Centro#",
-            },
-            {
-                field: "Fecha", title: "Fecha Sugerida", width: 140, format: _DefaultDateTemplate, type: "date", editable: function (dataItem) {
-                    return false;
-                }
-            },
-            {
-                field: "FechaCreacionConHora", title: "Fecha de Creación", width: 145, template: function (dataItem) {
-                    if (dataItem.FechaCreacion == null) {
-                        return "";
-                    }
-                    return kendo.toString(dataItem.FechaCreacion, "dd/MM/yyyy") + " " + dataItem.Hora;
-                },
-                type: "date", editable: function (dataItem) {
-                    return false;
-                }
-            },
-            {
-                field: "CantidadDeCupo", title: "Cantid. de Cupos", width: 140,
-                filterable: { extra: false },
-                editor: function (container, options) {
-                    // create an input element
-                    var input = $("<input name='" + options.field + "'/>");
-                    // append it to the container
-                    input.appendTo(container);
-                    $("#CantidadDeCupo").val(options.model.CantidadDeCupo);
-                    // initialize a Kendo UI numeric text box and set max value
-                    input.kendoNumericTextBox({
-                        max: options.model.CantidadDeCupoMax,
-                        min: 0
-                    });
-                }
-            },
-            {
-                field: "CantidadFleteProcedencia", title: "Cant. Flete Procedencia", width: "150px",
-                filterable: { extra: false },
-                editor: function (container, options) {
-                    // create an input element
-                    var input = $("<input name='" + options.field + "'/>");
-                    // append it to the container
-                    input.appendTo(container);
-
-                    $("#CantidadCupoFlete").val(options.model.CantidadFleteProcedencia);
-                    // initialize a Kendo UI numeric text box and set max value
-                    input.kendoNumericTextBox({
-                        max: options.model.CantidadFleteProcedenciaMax,
-                        min: 0
-                    });
-                }
-            },
-            {
-                field: "Observacion", title: "Observación", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },
-            },
-            {
-                field: "Estado", title: "Estado", width: 150, editable: function (dataItem) {
+                field: "Estado", title: "Estado", width: 130, editable: function (dataItem) {
                     return false;
                 },
                 filterable: {
                     multi: true,
-
                     dataSource: [
                         { Estado: "Aceptado" },
                         { Estado: "Rechazado" },
@@ -282,6 +141,147 @@ function CargarGrillaConfig() {
                             iconoSustentable + iconoEPAEUDR;
                     }
                 }
+            },
+            {
+                field: "CantidadDeCupo", title: "Cantidad", width: 90,
+                filterable: { extra: false },
+                headerAttributes: {
+                    title: "Cantidad de Cupos"
+                },
+                editor: function (container, options) {
+                    var input = $("<input name='" + options.field + "'/>");
+                    input.appendTo(container);
+                    $("#CantidadDeCupo").val(options.model.CantidadDeCupo);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        max: options.model.CantidadDeCupoMax,
+                        min: 0
+                    });
+                }
+            },
+            {
+                field: "Proveedor", type: "string", minResizableWidth: 100, width: 150,
+                editable: function (dataItem) { return false; },
+                headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
+                template: function (dataItem) {
+                    if (dataItem.EstadoId == 4) {
+                        return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.EstadoId == 3) {
+                        return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.EstadoId == 2) {
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.EstadoId == 1) {
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
+                    }
+                },
+                filterable: { ui: createMultiSelectProveedor, extra: false }
+            },
+            {
+                field: "Comercial", type: "string", title: "Comercial", width: 140, editable: function (dataItem) {
+                    return false;
+                }, filterable: { ui: createMultiSelectComercial, extra: false }, headerAttributes: {
+                    "class": classExterno
+                },
+                attributes: { "class": "mobile-xs " + classExterno }
+            },
+            {
+                field: "Material", type: "string", minResizableWidth: 100, width: 85, editable: function (dataItem) {
+                    return false;
+                }, filterable: {
+                    multi: true, dataSource: [{
+                        Material: "Maiz"
+                    }, {
+                        Material: "Trigo"
+                    }, {
+                        Material: "Soja"
+                    }, {
+                        Material: "Girasol"
+                    }, {
+                        Material: "Sorgo"
+                    }]
+                }, attributes: {
+                    "class": "mobile-xs"
+                }, itemTemplate: function (e) {
+                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
+                }, template: "#=Material#"
+            },
+            {
+                field: "Zona", title: "Zona", type: "string", width: 145, editable: function (dataItem) {
+                    return false;
+                },
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { ZonaCupo: "CORREDOR BS AS" },
+                        { ZonaCupo: "CORREDOR ROSARIO" },
+                        { ZonaCupo: "Fasones CAGSA/MOLCA, YPF y AMAGGI" },
+                        { ZonaCupo: "MAT-ROFEX" },
+                        { ZonaCupo: "ORIG INTERIOR CENTRO" },
+                        { ZonaCupo: "ORIG INTERIOR NORTE" },
+                        { ZonaCupo: "ORIG INTERIOR SUR" },
+                        { ZonaCupo: "PRODUCCION PROPIA" },
+                        { ZonaCupo: "REDESPACHOS" },
+                        { ZonaCupo: "SOLIDARIDAD" }],
+                    itemTemplate: function (e) {
+
+                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.ZonaCupo#'/><span>#= data.ZonaCupo|| data.all #</span></label></span><br>";
+                    }
+                },
+            },
+            {
+                field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 130, editable: function (dataItem) {
+                    return false;
+                }, filterable: {
+                    multi: true, dataSource: Centros.map(function (centro) {
+                        return { Centro: centro };
+                    })
+                }, template: "#=Centro#",
+            },
+            {
+                field: "Fecha", title: "Fecha Sugerida", width: 140, format: _DefaultDateTemplate, type: "date", editable: function (dataItem) {
+                    return false;
+                }
+            },
+            {
+                field: "FechaCreacionConHora", title: "Fecha de Creación", width: 145, template: function (dataItem) {
+                    if (dataItem.FechaCreacion == null) {
+                        return "";
+                    }
+                    return kendo.toString(dataItem.FechaCreacion, "dd/MM/yyyy") + " " + dataItem.Hora;
+                },
+                type: "date", editable: function (dataItem) {
+                    return false;
+                }
+            },
+            {
+                field: "Observacion", title: "Observaciones", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },
+            },
+            {
+                field: "CantidadFleteProcedencia", title: "Flete", width: "85px",
+                filterable: { extra: false },
+                headerAttributes: {
+                    title: "Cantidad de Flete Procedencia"
+                },
+                editor: function (container, options) {
+                    var input = $("<input name='" + options.field + "'/>");
+                    input.appendTo(container);
+                    $("#CantidadCupoFlete").val(options.model.CantidadFleteProcedencia);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        max: options.model.CantidadFleteProcedenciaMax,
+                        min: 0
+                    });
+                }
+            },
+            {
+                field: "TipoAdministracionCupo", type: "string", title: "Tipo", width: 90,
+                editable: function (dataItem) { return false; }, filterable: {
+                    multi: true, dataSource: [{
+                        TipoAdministracionCupo: "Extraordinaria"
+                    }, {
+                        TipoAdministracionCupo: "Algoritmo"
+                    }]
+                }, template: "#=TipoAdministracionCupo#",
             }
         ],
         editable: true,

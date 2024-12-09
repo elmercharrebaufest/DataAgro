@@ -29,11 +29,11 @@ case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else 
 ,emp.Apellido + ' ' + emp.Nombres as Comercial,p.razonSocial
 
 from CampoMaterial cm
-inner join campo cp on cp.CampoId=cm.CampoId
-inner join proveedor p on p.ProveedorId= cp.ProveedorId
+inner join Campo cp on cp.CampoId=cm.CampoId
+inner join Proveedor p on p.ProveedorId= cp.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-inner join segmentacion seg on p.segmentacionId=seg.segmentacionId
+inner join Segmentacion seg on p.segmentacionId=seg.segmentacionId
 inner join Localidad loc on cp.LocalidadId=loc.LocalidadId
 inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId 
 inner join Material m on cm.MaterialId = m.MaterialId

@@ -149,7 +149,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"segm\":[],\"tiptel\":[],\"prov\":[],\"loc\":[],\"cope\":[],\"gran\":[],\"dest\":[],\"cond\":[],\"inte\":[],\"tipoact\":[],\"concom\":[],\"ClasComNet\":[],\"BoleComNet\":[],\"BolsComNet\":[],\"comercial\":[],\"tiposApoderados\":[]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Segmentacion\":[],\"TipoTelefono\":[],\"prov\":[],\"Localidad\":[],\"CanalOperacion\":[],\"Material\":[],\"dest\":[],\"cond\":[],\"inte\":[],\"TipoActividad\":[],\"concom\":[],\"ClasComNet\":[],\"BoleComNet\":[],\"BolsComNet\":[],\"comercial\":[],\"TipoApoderado\":[]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

@@ -15,9 +15,9 @@ create table #Valor (MaterialId int,CampañaId int,CUIT float , Objetivo float, 
 
 insert into  #Valor (MaterialId,CUIT,Objetivo,CampañaId)
 select  MaterialId,p.cuit, sum(ToneladasObjetivos) as Objetivo,CampañaId
-from objetivo o
+from Objetivo o
 inner join Proveedor p on o.ProveedorId = p.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (o.campañaId = @CampañaId))
 and ((@MaterialId is null) or (o.MaterialId = @MaterialId))
@@ -32,7 +32,7 @@ from (select cm.MaterialId as MaterialId,cm.campañaId as CampañaId,p.cuit , su
 from CampañaMaterial cm
 inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId = cmm.CampañaMaterialId and cmm.comercialId in ( select ComercialId from @EmpleadoTable)
 inner join Proveedor p on cm.ProveedorId = p.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (cm.campañaId = @CampañaId))
 and ((@MaterialId is null) or (cm.MaterialId = @MaterialId))

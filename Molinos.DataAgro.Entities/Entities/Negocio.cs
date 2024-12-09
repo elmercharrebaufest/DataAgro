@@ -282,5 +282,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("NivelTarifaId")]
         public virtual NivelTarifa NivelTarifa { get; set; }
+        public DateTime? FechaConfirmadoSAP { get; set; }
     }
 }

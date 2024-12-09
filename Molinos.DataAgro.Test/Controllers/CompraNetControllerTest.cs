@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"clasenegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[],\"BoletoVenta\":[],\"MinutosCronometroConDescarga\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"clasenegocio\":[],\"material\":[],\"prov\":[],\"Localidad\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[],\"BoletoVenta\":[],\"MinutosCronometroConDescarga\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1112,7 +1112,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             contratoManagerMock.Verify(x => x.ValidarStatus(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoSap\":null,\"Status\":\"OK\",\"NumeroSio\":0,\"Mensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoSap\":null,\"Status\":\"OK\",\"NumeroSio\":0,\"Mensaje\":null,\"FechaConfirmadoSAP\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 

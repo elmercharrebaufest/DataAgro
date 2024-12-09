@@ -71,8 +71,8 @@ namespace WebDataAgro.Controllers
             ViewBag.Campania = campaniaListItems;
 
             var comercial = mobjComercialManager.TraerTodoComercial();
-            comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) || 
-                                                                  a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) || 
+            comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) ||
+                                                                  a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) ||
                                                                   a.Rol.ToUpper().Contains("Mesa".ToUpper())) && a.Deshabilitado != true).ToList();
             var comercialListItems = comercial.Comercial.Select(
                x => new SelectListItem
@@ -143,7 +143,7 @@ namespace WebDataAgro.Controllers
                 ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             }
             oParam.ComercialId = ComercialId.Value;
-            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios, 
+            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios,
                 contactoComercial, direccion, codigoPostal, localidadId);
 
             if (!entityError.HayErrores)
@@ -204,7 +204,7 @@ namespace WebDataAgro.Controllers
 
             var identif = oLstIndicadores.GenerarInformesExcel(odatos);
 
-            var d = mobjInformeComercialManager.GrabarCapacidadProductiva(oParamReportes.Informes);
+            mobjInformeComercialManager.GrabarCapacidadProductiva(oParamReportes.Informes);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 

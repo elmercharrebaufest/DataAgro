@@ -12,7 +12,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id { get; set; }
         public int NegocioId { get; set; }
         public int ComercialId { get; set; }
-        public string FechaGeneracion { get; set; }
+        public DateTime FechaGeneracion { get; set; }
         public bool IsWebService { get; set; }
+        public string FechaGeneracionGrilla { get; set; }
     }
 }

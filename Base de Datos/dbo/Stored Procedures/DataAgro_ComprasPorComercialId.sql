@@ -1,7 +1,7 @@
 ﻿
 CREATE PROCEDURE [dbo].[DataAgro_ComprasPorComercialId]
 (
-	@comercialId varchar(max),
+	@ComercialId varchar(max),
 	@CampañaMaterialId int
 )
 AS

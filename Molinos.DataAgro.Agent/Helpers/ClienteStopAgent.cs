@@ -24,14 +24,14 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
-        readonly String urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
-        readonly String versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
         private readonly Func<ICupoManager> cupoManagerInj;
         private readonly ClienteStopV1Agent clienteStopV1Agent;
         private readonly ClienteStopV2Agent clienteStopV2Agent;
+        private readonly string urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
+        private readonly string versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
 
         public ClienteStopAgent(ILogger logger, IRepositorio repositorio, Func<ICupoManager> cupoManagerInj,
-            ILogDataAgroManager logDataAgroManager)//, IClienteStopV1Agent clienteStopV1Agent, IClienteStopV2Agent clienteStopV2Agent)
+            ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -135,6 +135,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
+                logger.Error("Error al modificar Cupo", e);
                 throw;
             }
         }
@@ -156,6 +157,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
+                logger.Error("Error al consultar turnos activos", e);
                 throw;
             }
         }
@@ -163,7 +165,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public TokenStop ObtenerTokenStop(RepositorioEF repo = null)
         {
-            var r = repo != null ? repo : repositorio;
+            var r = repo ?? repositorio;
             var datosConfiguracion = r.Obtener<Configuracion>(1);
             logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
 

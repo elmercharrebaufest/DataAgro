@@ -89,7 +89,7 @@ and (( @Calificacion is null) or (@Materiales= '0' and cam.CampoMaterialid is no
 		
 and ((@Tonelada is null) or (@Tonelada ='0')
 	or  (
-			(exists(select 1 from @ToneladaSecuencia where item = 1)) and (
+			(exists(select 1 from @ToneladaSecuencia where Item = 1)) and (
 				(
 				( select SUM(camMat.Toneladas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  
 				+
@@ -98,7 +98,7 @@ and ((@Tonelada is null) or (@Tonelada ='0')
 				between 1 and 2500 )
 		)
 	or  (
-			(exists(select 1 from @ToneladaSecuencia where item = 2)) and (
+			(exists(select 1 from @ToneladaSecuencia where Item = 2)) and (
 				( 
 				( select SUM(camMat.Toneladas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  
 				+
@@ -107,7 +107,7 @@ and ((@Tonelada is null) or (@Tonelada ='0')
 				between 2501 and 5000)
 		)
 	or  (
-			(exists(select 1 from @ToneladaSecuencia where item = 3)) and (
+			(exists(select 1 from @ToneladaSecuencia where Item = 3)) and (
 				(
 				( select SUM(camMat.Toneladas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )    
 				+
@@ -119,13 +119,13 @@ and ((@Tonelada is null) or (@Tonelada ='0')
 and ((@Hectarea is null) 
 	or (@Hectarea  ='0')
 	or  (
-			(exists(select 1 from @HectareaSecuencia where item = 1)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  between 1 and 500 )
+			(exists(select 1 from @HectareaSecuencia where Item = 1)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  between 1 and 500 )
 		)
 	or  (
-			(exists(select 1 from @HectareaSecuencia where item = 2)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  between 501 and 1000)
+			(exists(select 1 from @HectareaSecuencia where Item = 2)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )  between 501 and 1000)
 		)
 	or  (
-			(exists(select 1 from @HectareaSecuencia where item = 3)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )    > 1000)
+			(exists(select 1 from @HectareaSecuencia where Item = 3)) and (( select SUM(camMat.Hectareas) from CampoMaterial camMat where camMat.CampoId = cam.CampoId )    > 1000)
 		)
 	)
 and ((@ComercialFiltro is null) 
@@ -140,28 +140,28 @@ DECLARE @ProveedorEstadoHome TABLE(ProveedorId INT, EstadoId INT)
 
 INSERT INTO @ProveedorEstado 
 select 
-	distinct t.item , 
-	case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+	distinct t.Item , 
+	case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 	then 4 else 
-		case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+		case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 		then 5  else
-				case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+				case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 				then 1  else
-						case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+						case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 						then 2 else
-							case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))
+							case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))
 							then 3  else
-									(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.item)
+									(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.Item)
 							ENd
 						ENd
 				ENd
 		ENd
 	ENd as Estado
 	from @Proveedores t 
-	LEFT join ProveedorEstado pe on t.item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
+	LEFT join ProveedorEstado pe on t.Item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
 
 INSERT INTO @ProveedorEstadoHome
-SELECT DISTINCT t.item, p.EstadoHomeId
+SELECT DISTINCT t.Item, p.EstadoHomeId
 FROM @Proveedores t 
 LEFT JOIN Proveedor p ON t.Item=p.ProveedorId
 LEFT JOIN EstadoHome eh ON p.EstadoHomeId=eh.Id

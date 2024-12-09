@@ -18,7 +18,7 @@ com.Nombres + ' ' + com.Apellido as Comercial,
 			FOR XML PATH('')
 		), 1, 0, '')) AS Materiales
 
-from informecomercial ic
+from Informecomercial ic
 inner join Proveedor p on ic.proveedorId =  p.ProveedorId
 inner join Campaña c on ic.campañaId = c.campañaId
 inner join Comercial com on ic.comercialId = com.ComercialId

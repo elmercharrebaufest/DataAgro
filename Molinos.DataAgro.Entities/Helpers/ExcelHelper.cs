@@ -67,9 +67,8 @@ namespace Molinos.DataAgro.Entities.Helpers
                     return new DataTable();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
                 throw;
             }
 

@@ -5,40 +5,40 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class DatosIniProveedor
     {
-        public List<SegmentacionQry> segm { get; set; }
-        public List<TipoTelefonoQry> tiptel { get; set; }
+        public List<SegmentacionQry> Segmentacion { get; set; }
+        public List<TipoTelefonoQry> TipoTelefono { get; set; }
         public List<ProvinciaQry> prov { get; set; }
-        public List<LocalidadQry> loc { get; set; }
-        public List<CanalOperacionQry> cope { get; set; }
-        public List<MaterialQry> gran { get; set; }
+        public List<LocalidadQry> Localidad { get; set; }
+        public List<CanalOperacionQry> CanalOperacion { get; set; }
+        public List<MaterialQry> Material { get; set; }
         public List<DestinatarioQry> dest { get; set; }
         public List<CondicionQry> cond { get; set; }
         public List<InteresQry> inte { get; set; }
-        public List<TipoActividadQry> tipoact { get; set; }
+        public List<TipoActividadQry> TipoActividad { get; set; }
         public List<ContactoComercialQry> concom { get; set; }
         public List<ClasificacionCompraNetQry> ClasComNet { get; set; }
         public List<BoletoCompraNetQry> BoleComNet { get; set; }
         public List<BolsaCompraNetQry> BolsComNet { get; set; }
         public List<ComercialDto> comercial { get; set; }
-        public List<PuestoApoderadoDto> tiposApoderados { get; set; }
+        public List<PuestoApoderadoDto> TipoApoderado { get; set; }
         public DatosIniProveedor()
         {
-            segm = new List<SegmentacionQry>();
-            tiptel = new List<TipoTelefonoQry>();
+            Segmentacion = new List<SegmentacionQry>();
+            TipoTelefono = new List<TipoTelefonoQry>();
             prov = new List<ProvinciaQry>();
-            loc = new List<LocalidadQry>();
-            cope = new List<CanalOperacionQry>();
-            gran = new List<MaterialQry>();
+            Localidad = new List<LocalidadQry>();
+            CanalOperacion = new List<CanalOperacionQry>();
+            Material = new List<MaterialQry>();
             dest = new List<DestinatarioQry>();
             cond = new List<CondicionQry>();
             inte = new List<InteresQry>();
-            tipoact = new List<TipoActividadQry>();
+            TipoActividad = new List<TipoActividadQry>();
             concom = new List<ContactoComercialQry>();
             ClasComNet = new List<ClasificacionCompraNetQry>();
             BoleComNet = new List<BoletoCompraNetQry>();
             BolsComNet = new List<BolsaCompraNetQry>();
             comercial = new List<ComercialDto>();
-            tiposApoderados = new List<PuestoApoderadoDto>();
+            TipoApoderado = new List<PuestoApoderadoDto>();
         }
     }
 
