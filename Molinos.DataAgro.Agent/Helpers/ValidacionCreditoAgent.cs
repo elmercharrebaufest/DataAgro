@@ -12,21 +12,22 @@ namespace Molinos.DataAgro.Agent
 {
     public class ValidacionCreditoAgent : IValidacionCreditoAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ValidacionCreditoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public ValidarCreditoDto ValidarCredito(string cuit)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return new ValidarCreditoDto { Moneda = "ARP", Monto = 100000000};
+                return new ValidarCreditoDto { Moneda = "ARP", Monto = 100000000 };
             }
             else
             {
@@ -38,7 +39,7 @@ namespace Molinos.DataAgro.Agent
 
                     var rq = new Z_MPRFC_VALIDAR_CREDITO()
                     {
-                        IM_CUIT = cuit,                         
+                        IM_CUIT = cuit,
                     };
                     var log = new Log
                     {
@@ -56,10 +57,10 @@ namespace Molinos.DataAgro.Agent
                     repositorio.GuardarCambios();
                     var credito = new ValidarCreditoDto
                     {
-                       Cuit = valor.EX_CUIT,
-                       Monto = valor.EX_MONTO,
-                       Moneda = valor.EX_MONEDA
-                    };             
+                        Cuit = valor.EX_CUIT,
+                        Monto = valor.EX_MONTO,
+                        Moneda = valor.EX_MONEDA
+                    };
                     return credito;
                 }
                 catch (Exception e)

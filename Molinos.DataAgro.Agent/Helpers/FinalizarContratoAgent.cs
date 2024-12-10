@@ -18,8 +18,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly ILogger logger;
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public FinalizarContratoAgent(ILogger logger, IRepositorio repositorio, ITipoDeCambioAgent tipoCambioAgent, IDiasHabilesAgent diasHabilesAgent)
         {
@@ -39,9 +39,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 var resp = "";
                 resp = repositorio.ObtenerMayor<Negocio, int>(x => x.ContratoSAP != null && x.ContratoSAP != "", x => x.Id).ContratoSAP;
-                long numsap = 0;
-                long.TryParse(resp, out numsap);
-                numsap = numsap + 1;
+                long.TryParse(resp, out long numsap);
+                numsap++;
                 resp = numsap.ToString().PadLeft(10, '0');
                 return resp;
             }
@@ -210,7 +209,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                             IMPORTE = apertura.Importe,
-                            MONEDA = contrato.TipoNegocioId == 2 ? (contrato.Moneda != null ? contrato.Moneda.MonedaId : null) : apertura.MonedaId,
+                            MONEDA = contrato.TipoNegocioId == 2 ? contrato.Moneda?.MonedaId : apertura.MonedaId,
                             PORC = apertura.Porcentaje
                         });
                     }
@@ -389,16 +388,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.IM_CONTRATO.CANJE = contrato.Canje == true ? "X" : "";
                 rq2.IM_CONTRATO.DESC_INSUMOS = contrato.Insumo;
                 rq2.IM_CONTRATO.MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId;
-                rq2.IM_CONTRATO.MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0;
+                rq2.IM_CONTRATO.MONTO_DEUDA = contrato.Monto ?? 0;
                 rq2.IM_CONTRATO.POSICION_CBOT = contrato.PosicionCBOT ?? "";
                 rq2.IM_CONTRATO.FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "";
                 rq2.IM_CONTRATO.TERCERO = contrato.ProveedorCreadorId != null ? "X" : "";
                 rq2.IM_CONTRATO.ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP;
                 rq2.IM_CONTRATO.CONDICIONAL = contrato.Condicional == true ? "X" : "";
                 rq2.IM_CONTRATO.FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "";
-                rq2.IM_CONTRATO.MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "";
-                rq2.IM_CONTRATO.MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "";
-                rq2.IM_CONTRATO.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
+                rq2.IM_CONTRATO.MES_COND_MAT = contrato.CondicionalPosicion ?? "";
+                rq2.IM_CONTRATO.MONEDA_COND = contrato.CondicionalMonedaId ?? "";
+                rq2.IM_CONTRATO.PRECIO_COND = contrato.CondicionalPrecio ?? 0;
                 rq2.IM_CONTRATO.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
                 rq2.IM_CONTRATO.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
                 rq2.IM_CONTRATO.COND_PAGO = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";

@@ -12,15 +12,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class ValidarLiquidacionParaFijacionAgent : IValidarLiquidacionParaFijacionAgent
     {
-        public ValidarLiquidacionParaFijacionAgent(ILogger logger, IRepositorio repositorio)
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
+        public ValidarLiquidacionParaFijacionAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public string Validar(string contratoSap, string fijacion)
         {
@@ -41,7 +40,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
                     };
                     logger.Debug(rq.ToXml());
-                    
+
                     var valor = agent.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION(rq);
                     logger.Debug(valor.ToXml());
 

@@ -16,7 +16,7 @@ create table #Valor (MaterialId int,CampañaId int,CUIT float , Objetivo float, 
 
 insert into  #Valor (MaterialId,CUIT,Objetivo,CampañaId)
 select  MaterialId,p.cuit, sum(ToneladasObjetivos) as Objetivo,CampañaId
-from objetivo o
+from Objetivo o
 inner join Proveedor p on o.ProveedorId = p.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId

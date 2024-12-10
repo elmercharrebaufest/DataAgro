@@ -16,19 +16,20 @@ namespace Molinos.DataAgro.Agent
 {
     public class ContratosParaFijacionAgent : IContratosParaFijacionAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ContratosParaFijacionAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
-            filtro = filtro == null ? "" : filtro;
+            filtro = filtro ?? "";
             var datosContratos = new List<DatosFijacionDeContratoDto>();
             var hoy = DateTime.Now.Date;
             Z_MPRFC_CONTRATO_PEND_FIJACIONResponse devolucion;
@@ -249,7 +250,7 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault() != null ?
                         campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault().CampañaId : 0;
                     contratoParaFijacion.Posicion = contrato.POSICION;
-                    contratoParaFijacion.PagoDiferido = contrato.PAGO_DIF_ARP == "X" ? true : false;
+                    contratoParaFijacion.PagoDiferido = contrato.PAGO_DIF_ARP == "X";
                     contratoParaFijacion.Centro = centro.Id;
                     contratoParaFijacion.ARecibirSinPrecio = contrato.A_RECIBIR_SIN_PRECIO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                     contratoParaFijacion.RecibidoSinFijar = contrato.RECIBIDO_SIN_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));

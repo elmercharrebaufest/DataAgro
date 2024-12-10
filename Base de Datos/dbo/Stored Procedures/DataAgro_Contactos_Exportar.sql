@@ -20,7 +20,7 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
  select Item FROM dbo.Split(@Proveedores, ',')   
   
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Email1,Email2,Email3,Email4,Telefono1,Telefono2,Telefono3  
- ,telefono4,ComercialAcargo,FechaUltimoContacto,RiesgoComercialSap,Estado,Situacion,Faccop, Calificacion, GrupoDeCompras, FechaAlta,EstadoCuit)  
+ ,Telefono4,ComercialAcargo,FechaUltimoContacto,RiesgoComercialSap,Estado,Situacion,Faccop, Calificacion, GrupoDeCompras, FechaAlta,EstadoCuit)  
  select    
  p.ProveedorId,   
  p.CUIT as CUIT,   

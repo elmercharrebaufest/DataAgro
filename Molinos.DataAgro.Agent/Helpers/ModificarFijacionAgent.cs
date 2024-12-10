@@ -1,28 +1,26 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ModificarFijacion;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class ModificarFijacionAgent : IModificarFijacionAgent
     {
         private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ModificarFijacionAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string Modificar(FijacionDePrecioContrato contratoGuardado)
         {
@@ -51,7 +49,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
                         IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
                         IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
-                        IM_FECHA_LIMITE = fechaDolarizadoString,  
+                        IM_FECHA_LIMITE = fechaDolarizadoString,
                         IM_DIAS_DIFERIM = contratoGuardado.DiasPesificado != null ? contratoGuardado.DiasPesificado.ToString() : "0"
                     };
 

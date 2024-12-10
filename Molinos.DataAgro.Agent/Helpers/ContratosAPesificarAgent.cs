@@ -17,14 +17,15 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
         public ContratosAPesificarAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
+
         public List<PesificarAgentDto> ConsultarPorUnProveedor(string cuit)
         {
             //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -123,10 +124,10 @@ namespace Molinos.DataAgro.Agent
                 FechaFijacion = dev.FECHA_FIJACION == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_FIJACION, "yyyy-MM-dd", provider),
                 FechaHastaDolarizado = dev.FECHA_HASTA_DOL == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_HASTA_DOL, "yyyy-MM-dd", provider),
                 FechaUltimaAplicacion = dev.FECHA_ULT_APLI == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_ULT_APLI, "yyyy-MM-dd", provider),
-                DolarizadoNoProductor = dev.DOLARIZADO_NO_PROD == "NO" ? false : true,
+                DolarizadoNoProductor = dev.DOLARIZADO_NO_PROD != "NO",
                 CuitCorredor = dev.CUIT_CORREDOR,
                 CuitVendedor = dev.CUIT_VENDEDOR,
-                DolarizadoExpress = dev.DOLARIZADO_EXPRESS == "NO" ? false : true,
+                DolarizadoExpress = dev.DOLARIZADO_EXPRESS != "NO",
                 Moneda = dev.MONEDA,
                 KgNoPesificable = dev.PES_NO_VEN < 0 ? (dev.PES_NO_VEN + dev.PES_VENCIDA) : dev.PES_NO_VEN,
                 KgVencimientoPesificable = dev.PES_VENCIDA < 0 ? 0 : dev.PES_VENCIDA,
@@ -144,7 +145,7 @@ namespace Molinos.DataAgro.Agent
                 CantidadLiquidada = dev.CANT_LIQUIDADA,
                 CantidadRecibida = dev.CANT_RECIBIDA,
                 ConPrecio = dev.CON_PRECIO,
-                
+
             };
             var fecha = new DateTime(1753, 1, 1);
             if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)

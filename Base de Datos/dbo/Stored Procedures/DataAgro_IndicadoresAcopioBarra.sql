@@ -30,7 +30,7 @@ select c.cantidad,c.toneladas
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
 from Proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -48,8 +48,8 @@ set MasTn10000= c.toneladas,
 	MasCl10000 = c.cantidad
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -70,8 +70,8 @@ set MasTn20000= c.toneladas,
 	MasCl20000 = c.cantidad
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -91,7 +91,7 @@ set MasTn40000= c.toneladas,
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
 from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId

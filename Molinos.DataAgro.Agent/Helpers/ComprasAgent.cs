@@ -65,13 +65,15 @@ namespace Molinos.DataAgro.Agent
         }
         private CompraAgentDto ConvertirADto(ZMPES5130 dev)
         {
-            var compraAgent = new CompraAgentDto();
-            compraAgent.VENDEDOR = dev.VENDEDOR;
-            compraAgent.TN_COMPRADAS = dev.TN_COMPRADAS;
-            compraAgent.MES = dev.MES;
-            compraAgent.ANIO = dev.ANIO;
-            compraAgent.MATERIAL = dev.MATERIAL;
-            compraAgent.COSECHA = dev.COSECHA;
+            var compraAgent = new CompraAgentDto
+            {
+                VENDEDOR = dev.VENDEDOR,
+                TN_COMPRADAS = dev.TN_COMPRADAS,
+                MES = dev.MES,
+                ANIO = dev.ANIO,
+                MATERIAL = dev.MATERIAL,
+                COSECHA = dev.COSECHA
+            };
             return compraAgent;
         }
     }

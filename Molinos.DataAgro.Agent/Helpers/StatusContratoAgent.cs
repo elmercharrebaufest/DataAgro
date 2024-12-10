@@ -3,7 +3,6 @@ using Molinos.DataAgro.Agent.StatusContrato;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,16 +11,15 @@ namespace Molinos.DataAgro.Agent
 {
     public class StatusContratoAgent : IStatusContratoAgent
     {
-        public StatusContratoAgent(ILogger logger, IRepositorio repositorio)
-        {
-            this.logger = logger;
-            this.repositorio = repositorio;
-        }
+        private readonly ILogger logger;
         readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
         readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
         readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+
+        public StatusContratoAgent(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public EstadoSAPDto ValidarEstado(string contratoSap)
         {
@@ -66,8 +64,7 @@ namespace Molinos.DataAgro.Agent
                     //parche hasta que se haga para varios
                     var valor2 = valor.EX_SALIDA[0];
 
-                    long numsio = 0;
-                    long.TryParse(valor2.NUM_SIO, out numsio);
+                    long.TryParse(valor2.NUM_SIO, out long numsio);
                     logger.Debug($"CONTRATO: {valor2.CONTRATO}. EX_STATUS: {valor2.STATUS}. NUM_SIO: {numsio}. MENSAJE: {valor2.MENSAJE}. FECHA_CONFIRMADO_SAP: {valor2.FECHA_CONFIR}");
                     var estado = new EstadoSAPDto()
                     {
@@ -122,8 +119,7 @@ namespace Molinos.DataAgro.Agent
                     {
                         foreach (var item in valor.EX_SALIDA)
                         {
-                            long numsio = 0;
-                            long.TryParse(item.NUM_SIO, out numsio);
+                            long.TryParse(item.NUM_SIO, out long numsio);
                             logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
                             var estado = new EstadoSAPDto()
                             {

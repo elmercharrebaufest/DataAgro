@@ -47,8 +47,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 foreach (var user in users)
                 {
-                    ZMPES5150 us = new ZMPES5150();
-                    us.USUARIO = user;
+                    ZMPES5150 us = new ZMPES5150() { USUARIO = user };
                     valor.Add(us);
                 }
                 SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();

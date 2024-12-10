@@ -11,10 +11,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class PrecioPizarraAgent : IPrecioPizarraAgent
     {
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public PrecioPizarraAgent(ILogger logger, IRepositorio repositorio)
         {
@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.repositorio = repositorio;
         }
 
-        public string Crear(Molinos.DataAgro.Entities.Entities.PrecioPizarra precioPizarra)
+        public string Crear(Entities.Entities.PrecioPizarra precioPizarra)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {

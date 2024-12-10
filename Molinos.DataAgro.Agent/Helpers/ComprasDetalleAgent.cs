@@ -15,14 +15,12 @@ namespace Molinos.DataAgro.Agent
     public class ComprasDetalleAgent : IComprasDetalleAgent
     {
         private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
         private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
         private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public ComprasDetalleAgent(ILogger logger, IRepositorio repositorio)
+        public ComprasDetalleAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
 
         public List<CompraDetalleAgentDto> Comprar(string CUIT, string UsuarioComercial)
