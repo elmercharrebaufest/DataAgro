@@ -10,7 +10,7 @@ declare @table as table(item int )
 
 
  SELECT  
-		pr.cuit as Cuit,
+		pr.CUIT as Cuit,
 		pr.RazonSocial as RazonSocial,
 		TA.Descripcion AS TipoActividad,    
 		A.Detalle as DetalleContacto,  

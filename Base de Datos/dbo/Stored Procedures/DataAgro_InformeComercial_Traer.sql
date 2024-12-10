@@ -8,7 +8,7 @@ AS
 
 select ProveedorId,MaterialId,Material,CampañaId, Campaña   
 from (
-select distinct c.ProveedorId as ProveedorId, m.MaterialId,m.descripcion as Material,camp.CampañaId,camp.descripcion as Campaña
+select distinct c.ProveedorId as ProveedorId, m.MaterialId,m.Descripcion as Material,camp.CampañaId,camp.Descripcion as Campaña
 from Campo c  
 inner join CampoMaterial cm on c.CampoId = cm.CampoId  
 inner join Material m on m.materialId = cm.MaterialId   

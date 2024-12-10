@@ -17,11 +17,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 
@@ -35,7 +35,7 @@ create table #Valores(Prov varchar(200),Cl bigint,Tn Float)
 
 insert into #Valores(Prov,Cl)
 
-select distinct prv.Nombre, p.cuit 
+select distinct prv.Nombre, p.CUIT 
 
 from Proveedor p
 
@@ -72,7 +72,7 @@ update #Valores
 
 set Tn= b.tn
 from
-(select  p.cuit,prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
+(select  p.CUIT,prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
 
 from Proveedor p
 
@@ -103,7 +103,7 @@ and cp.LocalidadId is not null and prv.ProvinciaId is not null
 
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
-group by p.cuit ,prv.Nombre)  b
+group by p.CUIT ,prv.Nombre)  b
 
 where #Valores.Cl= b.CUIT and #Valores.Prov = b.Prov
  

@@ -19,7 +19,7 @@ com.Nombres + ' ' + com.Apellido as Comercial,
 		), 1, 0, '')) AS Materiales
 
 from Informecomercial ic
-inner join Proveedor p on ic.proveedorId =  p.ProveedorId
-inner join Campaña c on ic.campañaId = c.campañaId
-inner join Comercial com on ic.comercialId = com.ComercialId
+inner join Proveedor p on ic.ProveedorId =  p.ProveedorId
+inner join Campaña c on ic.CampañaId = c.CampañaId
+inner join Comercial com on ic.ComercialId = com.ComercialId
 where ic.EstadoId = 1

@@ -273,7 +273,7 @@ namespace Molinos.DataAgro.Business.Managers
                 valor.Consignatario = oProveedor.Consignatario ?? false;
                 valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
                 valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
-                valor.Corredor = oProveedor.SegmentacionId == 5 || oProveedor.SegmentacionId == 7 ? true : false;
+                valor.Corredor = oProveedor.SegmentacionId == 5 || oProveedor.SegmentacionId == 7;
             }
             catch (Exception e)
             {
@@ -342,9 +342,10 @@ namespace Molinos.DataAgro.Business.Managers
                     ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
                 }
 
-                var oMensaje = new MailMessage();
-
-                oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
+                var oMensaje = new MailMessage
+                {
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
 
                 if (ConfigurationManager.AppSettings["EmailAgenda"] == "1")
                 {
@@ -421,8 +422,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -552,8 +552,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -679,8 +678,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -711,8 +709,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -951,7 +951,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "PRECIO PACTADO <br />";
                 foreach (var precio in oContrato.PrecioPactado)
                 {
-                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado.HasValue ? precio.ImportePactado.Value : 0);
+                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado ?? 0);
                     htmlBody += " Si la entrega se realiza entre el " + precio.FechaDesde.Value.ToString("dd/MM/yyyy") + " y el " + precio.FechaHasta.Value.ToString("dd/MM/yyyy") +
                                             " el precio será " + calculoPrecio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
                                             "<br />"; if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
@@ -1047,8 +1047,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -1213,8 +1215,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string Td(ref int linea)
         {
-            string td1 = "";
-            string td2 = "";
+            string td1, td2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
@@ -1944,7 +1945,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     }
                                 }
 
-                                oProveedorSave.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
+                                oProveedorSave.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA));
                             }
                         }
                     }
@@ -2410,8 +2411,10 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto, NuevoProveedor proveedor)
         {
             string urlMOA = ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"].ToString();
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string htmlBody = "Estimado <b>" + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "</b><br /><br />";
             htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con " + proveedor.basicos.RazonSocial + " ( " + proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión de Molinos Agro S.A. <br /><br />  ";
             htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
@@ -2964,8 +2967,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var listMaterial = hist.GroupBy(z => z.MATERIAL).ToList();
 
-                var ct = new campañaTotal();
-                ct.Nombre = "0";
+                var ct = new campañaTotal
+                {
+                    Nombre = "0"
+                };
 
                 var list = new List<GranoHistorial>();
                 foreach (var mat in listMaterial)
@@ -2998,8 +3003,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var ca in listCampaña)
                 {
-                    ct = new campañaTotal();
-                    ct.Nombre = ca.Key;
+                    ct = new campañaTotal
+                    {
+                        Nombre = ca.Key
+                    };
                     var materiales = hist.Where(x => x.COSECHA == ca.Key).GroupBy(z => z.MATERIAL);
 
                     foreach (var m in materiales)
@@ -3286,7 +3293,7 @@ namespace Molinos.DataAgro.Business.Managers
                 basicos = oParam.basicos,
                 contacto = oParam.contacto,
                 contactocomercial = oParam.contactocomercial,
-                produccion = oParam.produccion != null ? oParam.produccion : new Produccion(),
+                produccion = oParam.produccion ?? new Produccion(),
                 almacenamiento = new Almacenamiento()
 
             };
@@ -3612,20 +3619,22 @@ namespace Molinos.DataAgro.Business.Managers
                     CampoDetalle campoDetalle = campoDetalles.Where(x => x.ImportId == campo.ImportId).FirstOrDefault();
                     if (campoDetalle == null)
                     {
-                        campoDetalle = new CampoDetalle();
-                        campoDetalle.ProveedorId = campo.proveedorId;
-                        campoDetalle.Nombre = campo.nombre;
-                        campoDetalle.LocalidadId = campo.localidadId;
-                        campoDetalle.Longitud = campo.longitud;
-                        campoDetalle.Latitud = campo.latitud;
-                        campoDetalle.NroItem = 1;
-                        campoDetalle.MaterialId = 3;
-                        campoDetalle.ImportId = campo.ImportId;
-                        campoDetalle.HectareasTotales = campo.htotales;
-                        campoDetalle.HectareasCultivables = campo.hcultivables;
-                        campoDetalle.ComercialId = campo.comercialId;
-                        campoDetalle.Rinde = campo.rinde;
-                        campoDetalle.CampañaId = campo.campañaId;
+                        campoDetalle = new CampoDetalle
+                        {
+                            ProveedorId = campo.proveedorId,
+                            Nombre = campo.nombre,
+                            LocalidadId = campo.localidadId,
+                            Longitud = campo.longitud,
+                            Latitud = campo.latitud,
+                            NroItem = 1,
+                            MaterialId = 3,
+                            ImportId = campo.ImportId,
+                            HectareasTotales = campo.htotales,
+                            HectareasCultivables = campo.hcultivables,
+                            ComercialId = campo.comercialId,
+                            Rinde = campo.rinde,
+                            CampañaId = campo.campañaId
+                        };
                         repositorio.Agregar(campoDetalle);
                     }
                     else
@@ -3890,8 +3899,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContratoCanje(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -4259,8 +4270,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailFijacionVirtual(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial, bool eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {

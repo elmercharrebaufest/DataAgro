@@ -19,11 +19,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 
@@ -69,9 +69,9 @@ and p.LocalidadId is not null
 update #Valores
 set Tn= b.tn
 from
-(select  p.CUIT,prv.Nombre as Provincia, sum (cmm.toneladas) as Tn 
+(select  p.CUIT,prv.Nombre as Provincia, sum (cmm.Toneladas) as Tn 
 from Proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join CampañaMaterial cm on p.ProveedorId= cm.ProveedorId
 
@@ -90,7 +90,7 @@ and ((@SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is 
 
 --and ((@ProvinciaId is null) or (p.provinciaId = @ProvinciaId))
 and (( @ProvinciaId is null) --or (@ProvinciaId= '0' and p.provinciaId is not null) 
-	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.provinciaId)))
+	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.ProvinciaId)))
 
 and p.LocalidadId is not null
 

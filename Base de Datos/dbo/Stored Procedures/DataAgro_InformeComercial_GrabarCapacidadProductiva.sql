@@ -9,6 +9,6 @@ insert into @InformeSecuencia (Item) select Item  from dbo.Split (@inf,',')
 
 update InformeComercial
 set EstadoId= 2
-where InformeComercialId in (select item from @InformeSecuencia)
+where InformeComercialId in (select Item from @InformeSecuencia)
 
 select 1 as Res

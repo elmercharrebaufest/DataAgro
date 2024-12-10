@@ -37,7 +37,7 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
  p.FechaUltimoContacto as FechaUltimoContacto,  
  p.RiesgoComercialSap as RiesgoComercialSap,   
  NULL AS Estado,   
- (select top 1 EstadoCuit from SISA rg where rg.CUIT= p.cuit) as Situacion,(case when f.Id is null then 0 else 1 end) as Faccop,  
+ (select top 1 EstadoCuit from SISA rg where rg.CUIT= p.CUIT) as Situacion,(case when f.Id is null then 0 else 1 end) as Faccop,  
  p.Calificacion,  
  gdc.Descripcion as GrupoDecompras,  
  p.FechaAlta  ,
