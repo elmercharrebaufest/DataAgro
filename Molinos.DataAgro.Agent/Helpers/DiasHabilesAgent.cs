@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Agent
         {
             var fecha = new List<DateTime>();
             var anterior = DateTime.Today.AddMonths(-12);
-            
+
             DateTime diaAnterior = anterior;
             while (diaAnterior <= DateTime.Now.Date)
             {

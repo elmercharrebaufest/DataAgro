@@ -12,15 +12,15 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class CumplimientoCuposAgent : ICumplimientoCuposAgent
     {
-        public CumplimientoCuposAgent(ILogger logger, IRepositorio repositorio)
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
+        public CumplimientoCuposAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
-        readonly String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public List<CumplimientoCupoDto> Ejecutar(List<string> cupos, DateTime? fecha)
         {
             try

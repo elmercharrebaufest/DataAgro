@@ -5,23 +5,23 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class ModificarCupoAgent : IModificarCupoAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ModificarCupoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public string Modificar(Cupo cupo)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -43,10 +43,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : "",
                         IM_DESTINATARIO = cupo.Destinatario,
                         IM_OBSERVACIONES = cupo.Observaciones,
-                        IM_PROVEEDOR= corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
+                        IM_PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
                         IM_DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
                         IM_CODIGO = cupo.CupoSap,
-                        IM_FLETE_PROC= cupo.FleteProcedencia == true? "S" : "N",
+                        IM_FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
                         IM_EXCEPCION = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
                     };
 

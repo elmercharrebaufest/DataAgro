@@ -74,7 +74,7 @@ set Tn= b.tn
 from
 (select  p.cuit,prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
 
-from proveedor p
+from Proveedor p
 
 inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 

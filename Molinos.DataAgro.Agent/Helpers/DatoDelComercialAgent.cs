@@ -19,9 +19,8 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public DatoDelComercialAgent(ILogger logger, IRepositorio repositorio)
         {
@@ -58,7 +57,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES(rq);
                 logger.Debug(valor1.ToXml());
 
-                return new DatosComercialAgentDto {EX_GRUPO_COMPRAS=valor1.EX_GRUPO_COMPRAS,EX_ZONA=valor1.EX_ZONA };
+                return new DatosComercialAgentDto { EX_GRUPO_COMPRAS = valor1.EX_GRUPO_COMPRAS, EX_ZONA = valor1.EX_ZONA };
             }
             catch (Exception ex)
             {

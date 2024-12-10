@@ -3,7 +3,6 @@ using Molinos.DataAgro.Agent.ObtenerMailProveedor;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,7 +18,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
         readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
-        
+
         public List<MailProveedorDto> Ejecutar(List<string> cuits)
         {
             try
@@ -45,8 +44,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     lista.Add(new MailProveedorDto()
                     {
                         Cuit = item.CUIT,
-                        Pesificado = (!(item.REMARK.ToUpper().Contains("BOLETO")  || 
-                        item.REMARK.ToUpper().Contains("CUPO") || item.REMARK.ToUpper().Contains("NDNCDIFTC")) || item.FLGDEFAULT == "X" ) ? item.MAIL : "",
+                        Pesificado = (!(item.REMARK.ToUpper().Contains("BOLETO") ||
+                        item.REMARK.ToUpper().Contains("CUPO") || item.REMARK.ToUpper().Contains("NDNCDIFTC")) || item.FLGDEFAULT == "X") ? item.MAIL : "",
                         DireccionSap = item.DIRECCION.DIRECCION,
                         LocalidadSap = item.DIRECCION.LOCALIDAD,
                         ProvinciaSap = item.DIRECCION.PROVINCIA,

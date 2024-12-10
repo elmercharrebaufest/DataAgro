@@ -35,7 +35,7 @@ create table #Valores(Prov varchar(200),Cl bigint,Tn Float)
 
 insert into #Valores(Prov,Cl)
 
-select distinct prv.Nombre, p.cuit
+select distinct prv.Nombre, p.CUIT
 
 from Proveedor p
 
@@ -94,7 +94,7 @@ and (( @ProvinciaId is null) --or (@ProvinciaId= '0' and p.provinciaId is not nu
 
 and p.LocalidadId is not null
 
-group by p.cuit,prv.Nombre ) b
+group by p.CUIT,prv.Nombre ) b
 
 where #Valores.Cl= b.CUIT  and b.Provincia= #Valores.Prov
 

@@ -1,12 +1,9 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.TipoDeCambio;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -14,14 +11,14 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public TipoDeCambioAgent(ILogger logger, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.diasHabilesAgent = diasHabilesAgent;
         }
-
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public decimal TraerTipoDeCambio(DateTime? fecha, string typeOfRate)
         {

@@ -21,7 +21,7 @@ select distinct p.ProveedorId
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
 inner join Proveedor p on p.ProveedorId= cm.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
@@ -31,10 +31,10 @@ and ((@CampañaId is null) or (cm.CampañaId = @CampañaId))
 and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 
 
-select  seg.Descripcion as Provincia,count(p.proveedorId)as cuit,0 as Tonelada
+select  seg.Descripcion as Provincia,count(p.ProveedorId)as cuit,0 as Tonelada
 into #Valor
 from @ProveedoresTable pt
-inner join Proveedor p on p.proveedorId = pt.proveedorId
+inner join Proveedor p on p.ProveedorId = pt.ProveedorId
 inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 group by seg.Descripcion
 
@@ -44,7 +44,7 @@ into #Tonelada
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
 inner join Proveedor p on p.ProveedorId= cm.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
