@@ -11,10 +11,13 @@
                 </button>
                 <h1 class="modal-title" id="CargaCupos"></h1>
                 <div class="status confirmado-modal">
-                    <div>Informes Comerciales faltantes</div>
+                    <div class="titulo-modal">Informes Comerciales faltantes</div>
                 </div>
-                <div class="status confirmado-modal">
-                    <a href="/Home/ExportarCapProdDesactualizadas" class="btn btn-primary">Descargar Excel</a>
+                <div class="exportarExcelInfComPendientes">
+                    <a href="/Home/ExportarCapProdDesactualizadas" id="exportarExcelInfComPendientesId" class="exportar-contactos">
+                        <img src="~/Content/Images/descargar-pdf-excel.png" />
+                        <span>Exportar a Excel</span>
+                    </a>
                 </div>
             </div>
             <div class="modal-body">
@@ -37,8 +40,22 @@
 </div>
 
 <style>
+    .titulo-modal {
+        font-size: .8rem !important;
+    }
+
     .modal-body {
         max-height: 70vh;
         overflow-y: auto;
+    }
+
+    .exportarExcelInfComPendientes {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    th, td {
+        font-size: .8rem !important;
+        text-align: left !important;
     }
 </style>
