@@ -6565,7 +6565,7 @@ function APrecioConAgenteDeCompra() {
         if ($("#ventaId").is(":checked"))
             $(".venta").hide();
     } else {
-        $("#fechaOperacionMotivoDiv").hide();
+        //$("#fechaOperacionMotivoDiv").hide();
         $("#motivoAnterior").data("kendoDropDownList").text("");
         $("#motivoAnterior").data("kendoDropDownList").trigger("change");
         $("#descripcionMotivoAnterior").val("");
