@@ -17,11 +17,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 
@@ -52,7 +52,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
 
-and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null)
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
 and (( @ProvinciaId is null) 

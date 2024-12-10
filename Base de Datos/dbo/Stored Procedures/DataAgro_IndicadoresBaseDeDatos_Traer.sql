@@ -78,7 +78,7 @@ LEFT join ProveedorEstado pe on t.Item = pe.ProveedorId and pe.ComercialId in (s
 
 select 
 p.CUIT as Cuit,
-p.razonsocial as RazonSocial,
+p.RazonSocial as RazonSocial,
 est.Descripcion as Estado,
 case when  s.Grupo ='Productores' then 'Productores ' + s.Descripcion   else s.Descripcion end as Segmentación,
 p.FechaAlta as FechaAlta, 

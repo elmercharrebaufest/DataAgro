@@ -81,7 +81,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) between 20000 and 40000 )b) c
+having sum(cmm.Toneladas) between 20000 and 40000 )b) c
 
 
 
@@ -101,7 +101,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) > 40000 )b) c
+having sum(cmm.Toneladas) > 40000 )b) c
 
 
 

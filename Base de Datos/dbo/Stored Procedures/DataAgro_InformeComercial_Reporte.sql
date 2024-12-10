@@ -33,17 +33,17 @@ left join
 	from InformeComercial i
 	inner join InformeComercialProduccion d on d.InformeComercialId = i.InformeComercialId
 ) a on cm.MaterialId = a.MaterialId and cm.CampañaId = a.CampañaId and c.ProveedorId = a.ProveedorId
-inner join Proveedor p on p.Proveedorid = c.Proveedorid
-inner join Proveedorcomercial pc on pc.ProveedorId = p.ProveedorId
+inner join Proveedor p on p.ProveedorId = c.ProveedorId
+inner join ProveedorComercial pc on pc.ProveedorId = p.ProveedorId
 inner join Comercial ccc on ccc.ComercialId = pc.ComercialId
 where a.ProveedorId is null 
 and a.MaterialId is null 
 and a.CampañaId is null
 AND (@MaterialID is null or cm.MaterialId = @MaterialId)
-AND (@cuit is null or P.CUIT like '%'+@Cuit+'%')
+AND (@Cuit is null or P.CUIT like '%'+@Cuit+'%')
 AND (@ComercialGenerador is null or exists(select 1 from @EmpleadoTable e where e.ComercialId =  ccc.ComercialId) )
 AND (@ComercialID is null or @ComercialID =  ccc.ComercialId )
-AND (@EstadoID is null or @EstadoID = -1)
+AND (@EstadoId is null or @EstadoId = -1)
 
 UNION
 
@@ -57,9 +57,9 @@ select
 	icp.MensajeSap Observaciones,
 	ic.InformeComercialId InformeComercialId
 from InformeComercial ic
-inner join Informecomercialestado ie on ie.EstadoInformeId = ic.EstadoId
+inner join InformeComercialEstado ie on ie.EstadoInformeId = ic.EstadoId
 inner join Proveedor p on p.ProveedorId = ic.ProveedorId
-inner join Proveedorcomercial pc on pc.ProveedorId = p.ProveedorId
+inner join ProveedorComercial pc on pc.ProveedorId = p.ProveedorId
 inner join Comercial c on c.ComercialId = pc.ComercialId
 inner JOIN InformeComercialProduccion icp on icp.InformeComercialId = IC.InformeComercialId
 inner join Material m on m.MaterialId = icp.MaterialId
@@ -67,6 +67,6 @@ WHERE (@cuit is null or P.CUIT like '%'+@Cuit+'%')
 AND (@ComercialGenerador is null or exists(select 1 from @EmpleadoTable e where e.ComercialId =  c.ComercialId) )
 AND (@ComercialID is null or c.ComercialId = @ComercialID )
 and (@MaterialId is null or @MaterialId = icp.MaterialId)
-AND (@EstadoID is null or @EstadoID = ic.EstadoId)
+AND (@EstadoId is null or @EstadoId = ic.EstadoId)
 ) A
 Order by A.RazonSocial

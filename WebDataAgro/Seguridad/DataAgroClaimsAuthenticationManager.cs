@@ -88,7 +88,7 @@ namespace WebDataAgro.Seguridad
             }
             catch (Exception e)
             {
-                log.Error("Error agregando roles al usuario", e);
+                log.Error(e, "Error agregando roles al usuario");
             }
 
             var ci = new ClaimsIdentity(((ClaimsIdentity)incomingPrincipal.Identity).Claims, "Negotiate");
