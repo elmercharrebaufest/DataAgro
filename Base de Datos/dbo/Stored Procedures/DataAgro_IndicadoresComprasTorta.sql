@@ -39,7 +39,7 @@ inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 group by seg.Descripcion
 
 
-select seg.Descripcion as Segmentacion, sum(cmm.toneladas)as Tonelada
+select seg.Descripcion as Segmentacion, sum(cmm.Toneladas)as Tonelada
 into #Tonelada
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
@@ -55,9 +55,9 @@ and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId))
 group by seg.Descripcion
 
 
-select case when seg.grupo ='Productores' then 'Productores ' + v.Provincia   else v.Provincia end Provincia,   v.cuit, ton.Tonelada
+select case when seg.Grupo ='Productores' then 'Productores ' + v.Provincia   else v.Provincia end Provincia,   v.cuit, ton.Tonelada
 from #Valor v
-inner join segmentacion seg on v.Provincia=seg.Descripcion
+inner join Segmentacion seg on v.Provincia=seg.Descripcion
 inner join #Tonelada ton on ton.Segmentacion= v.Provincia
 order by ton.Tonelada desc
 

@@ -18,7 +18,7 @@ create table #Valores(Prov varchar(200),Cl varchar(200),Tn Float )
 
 insert into #Valores(Prov,Cl)
 
-select distinct prv.Nombre, p.cuit 
+select distinct prv.Nombre, p.CUIT 
 
 from Proveedor p
 
@@ -48,9 +48,9 @@ update #Valores
 
 set Tn= b.tn
 from
-(select  p.cuit, sum (cm.Toneladas) as Tn 
+(select  p.CUIT, sum (cm.Toneladas) as Tn 
 
-from proveedor p
+from Proveedor p
 
 inner join Campo cp on p.ProveedorId = cp.ProveedorId
 
@@ -77,7 +77,7 @@ and cp.LocalidadId is not null and prv.ProvinciaId is not null
 
 
 
-group by p.cuit )  b
+group by p.CUIT )  b
 
 where #Valores.Cl= b.CUIT
 

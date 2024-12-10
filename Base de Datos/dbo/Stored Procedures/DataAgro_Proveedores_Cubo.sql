@@ -116,8 +116,8 @@ into #Prueba
 from proveedor p
 inner join [ProveedorComercial] pc on p.ProveedorId  = pc.ProveedorId
 inner join #Empleados emp on pc.ComercialId = emp.ComercialId
-left join [Localidad] l on p.localidadId = l.localidadId
-left join [Provincia] pr on pr.provinciaid = l.provinciaid
+left join [Localidad] l on p.LocalidadId = l.LocalidadId
+left join [Provincia] pr on pr.ProvinciaId = l.ProvinciaId
 inner join [Segmentacion] s on s.segmentacionId = p.segmentacionId
 left join [ContactoComercial] cc on cc.ProveedorId =p.ProveedorId
 left join @ProveedorEstado PEE ON PEE.ProveedorID = p.ProveedorId
@@ -139,14 +139,14 @@ left join Material matObj on cm.MaterialId = matCamp.[MaterialId]*/
 --Campos
 left join [Campo] ca on ca.[ProveedorId] = p.[ProveedorId] 
 left join [Localidad] lca on ca.localidadId = lca.localidadId
-left join [Provincia] prca on prca.provinciaid = lca.provinciaid
+left join [Provincia] prca on prca.ProvinciaId = lca.ProvinciaId
 left join [CampoMaterial] caMat on caMat.[CampoId] = ca.[CampoId]
 left join [Material] matCa on caMat.[MaterialId] = matCa.[MaterialId]
 left join [Campaña] CCa on caMat.[CampañaId] = CCa.[CampañaId]
 --Acopio
 left join Acopio ac on ac.[ProveedorId] = p.[ProveedorId] 
 left join [Localidad] lcac on ac.localidadId = lcac.localidadId
-left join [Provincia] prac on prac.provinciaid = lcac.provinciaid
+left join [Provincia] prac on prac.ProvinciaId = lcac.ProvinciaId
 left join AcopioMaterial acMat on acMat.AcopioId = ac.AcopioId
 left join [Campaña] Cac on acMat.[CampañaId] = Cac.[CampañaId]
 where 1=1
@@ -154,9 +154,9 @@ where 1=1
 and ((@EstadoId is null) or (p.EstadoId =@EstadoId))
 and ((@SegmentacionId is null) or (p.SegmentacionId =@SegmentacionId))
 --Provincia y localidad
-and ((@provinciaId is null) or (prca.provinciaid =@provinciaId))
+and ((@provinciaId is null) or (prca.ProvinciaId =@provinciaId))
 and ((@LocalidadId is null) or (ca.localidadId =@LocalidadId))
-and ((@provinciaId is null) or (prac.provinciaid =@provinciaId))
+and ((@provinciaId is null) or (prac.ProvinciaId =@provinciaId))
 and ((@LocalidadId is null) or (ac.localidadId =@LocalidadId))
 --Material
 and ((@material is null) or (cm.MaterialId =@material))

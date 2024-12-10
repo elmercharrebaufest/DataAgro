@@ -17,11 +17,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 

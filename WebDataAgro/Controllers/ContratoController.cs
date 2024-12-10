@@ -97,13 +97,13 @@ namespace WebDataAgro.Controllers
             var proveedores = mobjProveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
-        
+
         public ActionResult ListarCorredor(string text = "")
         {
             var corredores = mobjProveedorManager.ListarCorredor(text);
             return Json(corredores.Select(x => new { CorredorId = x.ProveedorId, Corredor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
-        
+
         private void FillViewBag()
         {
 
@@ -190,7 +190,7 @@ namespace WebDataAgro.Controllers
 
 
         }
-        
+
         public ActionResult ListarClasificacion(string text = "")
         {
             var clasificaciones = mobjContratoManager.TraerDatosCombo().Clasificacion.Select(x => new { ClasificacionId = x.Id.ToString(), Clasificacion = x.Descripcion }).ToList();

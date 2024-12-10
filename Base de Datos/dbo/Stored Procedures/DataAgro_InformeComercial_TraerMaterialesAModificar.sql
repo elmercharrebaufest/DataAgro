@@ -20,9 +20,9 @@ inner join Material m on m.materialId = cm.MaterialId and m.CampañaId = cm.Camp
 inner join Campaña camp on  m.CampañaId = camp.CampañaId
 left join 
 (
-	select distinct i.informeComercialId , i.proveedorId,d.MaterialId as MaterialId, i.CampañaId
+	select distinct i.informeComercialId , i.ProveedorId,d.MaterialId as MaterialId, i.CampañaId
 	from InformeComercial i
 	inner join InformeComercialProduccion d on d.InformeComercialId = i.InformeComercialId
 	where i.ProveedorId = @ProveedorId
-) a on cm.MaterialId = a.MaterialId and cm.CampañaId = a.CampañaId and c.proveedorId = a.proveedorId
-where c.ProveedorId = @ProveedorId and ((a.proveedorId is null and a.MaterialId is null and a.CampañaId is null) or(informeComercialId = @InformeComercialId ))
+) a on cm.MaterialId = a.MaterialId and cm.CampañaId = a.CampañaId and c.ProveedorId = a.ProveedorId
+where c.ProveedorId = @ProveedorId and ((a.ProveedorId is null and a.MaterialId is null and a.CampañaId is null) or(informeComercialId = @InformeComercialId ))

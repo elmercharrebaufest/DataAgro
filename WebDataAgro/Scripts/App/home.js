@@ -1287,9 +1287,9 @@ function VerificarInformesComerciales() {
 }
 
 $(document).on('click', '.abrir-solapa', function () {
+    sessionStorage.setItem('pantallaActiva', 'produccion');
     // Obtener el ProveedorId del botón clickeado
     const proveedorId = $(this).data('proveedor-id');
-
     const baseUrl = `${window.location.origin}/Proveedor/Agregar?ProveedorId=${proveedorId}`;
 
     window.location.href = baseUrl;

@@ -55,32 +55,32 @@ DECLARE @ProveedorEstado TABLE(ProveedorId INT, EstadoId INT)
 
 INSERT INTO @ProveedorEstado 
 select 
-distinct t.item , 
-case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.EstadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+distinct t.Item , 
+case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 then 4 else 
-	case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.EstadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+	case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 	then 5  else
-			case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.EstadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+			case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 			then 1  else
-					case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.EstadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+					case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 					then 2 else
-						case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.EstadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+						case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 						then 3  else
-								(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.item)
+								(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.Item)
 						ENd
 					ENd
 			ENd
 	ENd
 ENd as Estado
 from @Proveedores t 
-LEFT join ProveedorEstado pe on t.item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
+LEFT join ProveedorEstado pe on t.Item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
 
 
 select 
-p.cuit as Cuit,
+p.CUIT as Cuit,
 p.razonsocial as RazonSocial,
-est.descripcion as Estado,
-case when  s.grupo ='Productores' then 'Productores ' + s.Descripcion   else s.Descripcion end as Segmentación,
+est.Descripcion as Estado,
+case when  s.Grupo ='Productores' then 'Productores ' + s.Descripcion   else s.Descripcion end as Segmentación,
 p.FechaAlta as FechaAlta, 
 e.Apellido + ' ' + e.Nombres as Comercial,
 isnull(M.Descripcion,'Sin Material') as Grano, 
@@ -101,4 +101,4 @@ and ( @CampañaId is null or exists (select 1 from CampoMaterial cp3 where cp3.C
 
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
-Group by p.cuit, p.razonsocial, est.descripcion, s.descripcion,s.grupo, p.FechaAlta, e.Apellido + ' ' + e.Nombres, M.Descripcion
+Group by p.CUIT, p.RazonSocial, est.Descripcion, s.Descripcion,s.Grupo, p.FechaAlta, e.Apellido + ' ' + e.Nombres, M.Descripcion

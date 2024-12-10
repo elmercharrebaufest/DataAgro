@@ -9,7 +9,7 @@ namespace WebDataAgro.Models
 
         public DatosIniAbmOperadorModel()
         {
-            this.Datos = new DatosIniAbmOperador();
+            Datos = new DatosIniAbmOperador();
         }
     }
 
@@ -19,7 +19,7 @@ namespace WebDataAgro.Models
 
         public ResultIniOperadorModel()
         {
-            this.Datos = new List<OperadorIni>();
+            Datos = new List<OperadorIni>();
         }
     }
 
@@ -34,7 +34,7 @@ namespace WebDataAgro.Models
 
         public AbmOperadorResult()
         {
-            this.Operador = new OperadorDto();
+            Operador = new OperadorDto();
         }
     }
 

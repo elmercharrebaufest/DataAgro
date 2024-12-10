@@ -37,7 +37,7 @@ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmenta
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
-select p.cuit,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,prv.Nombre as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
+select p.cuit,cmm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,prv.Nombre as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
 when cmm.Mes=2 then 'FEBRERO' 
 when cmm.Mes=3 then 'MARZO' 
@@ -52,13 +52,13 @@ when cmm.Mes=11 then 'NOVIEMBRE'
 when cmm.Mes=12 then 'DICIEMBRE' 
 else 'SIN MES'
 end  as Mes,
-case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación,
+case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación,
 p.RazonSocial as razonSocial
 
 from CampañaMaterialPorMes cmm
 inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
 inner join Proveedor p on p.ProveedorId= cm.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Localidad loc on p.LocalidadId= loc.LocalidadId
 inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId

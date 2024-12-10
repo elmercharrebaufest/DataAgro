@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         UsuarioId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.UsuarioId : contrato.UsuarioId,
                         ContratoSAP = contrato.ContratoSAP,
                         Ampliaciones = contrato.Ampliaciones,
-                        Cuit = contrato.Proveedor == null ? "" : contrato.Proveedor.CUIT,
+                        Cuit = contrato.Proveedor != null ? contrato.Proveedor.CUIT : contrato is AgenteCompra && (contrato as AgenteCompra).Operador.ProveedorId.HasValue ? (contrato as AgenteCompra).Operador.Proveedor.CUIT : "",
                         Proveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : !string.IsNullOrEmpty(contrato.Proveedor.Alias) ? contrato.Proveedor.Alias + " - " + contrato.Proveedor.RazonSocial : contrato.Proveedor.RazonSocial,
                         Corredor = contrato.Corredor == null ? "" : !string.IsNullOrEmpty(contrato.Corredor.Alias) ? contrato.Corredor.Alias + " - " + contrato.Corredor.RazonSocial : contrato.Corredor.RazonSocial,
                         CUITCorredor = contrato.Corredor == null ? "" : contrato.Corredor.CUIT,
@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         LocalidadId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.LocalidadId : contrato.LocalidadId,
                         Provincia = contrato.Provincia == null ? "" : contrato.Provincia.Nombre,
                         Localidad = contrato.Localidad == null ? "" : contrato.Localidad.Nombre,
-                        TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" :
+                        TipoNegocio = contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" :
                         (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" :
                         (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
                         (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE" :
                         (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId == 3) ? "FIJACION PASE" :
-                        contrato.TipoNegocio.Descripcion),
+                        contrato.TipoNegocio.Descripcion,
                         Observacion = contrato.Observacion ?? "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.Sustentable : contrato.Sustentable,
@@ -270,7 +270,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
                             TipoPeriodoDBId = y.TipoPeriodoDBId
                         }).ToList()
-            };
+                    };
 
                 return queryNegocios;
             }

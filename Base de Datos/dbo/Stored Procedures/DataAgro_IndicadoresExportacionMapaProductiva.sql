@@ -31,19 +31,19 @@ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmenta
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
-select p.cuit,cm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,
+select p.CUIT,cm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,
 prv.Nombre as Provincia,
 case when cp.ArrendaPropia= 1 then 'Propia' else 'Alquilada' end 'PropiaAlquilada',
 case when cp.HabilitadoSojaSustentable= 1 then 'Si' else 'No' end 'SojaSustentable',
-case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
-,emp.Apellido + ' ' + emp.Nombres as Comercial,p.razonSocial
+case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+,emp.Apellido + ' ' + emp.Nombres as Comercial,p.RazonSocial
 
 from CampoMaterial cm
-inner join campo cp on cp.CampoId=cm.CampoId
-inner join proveedor p on p.ProveedorId= cp.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join Campo cp on cp.CampoId=cm.CampoId
+inner join Proveedor p on p.ProveedorId= cp.ProveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-inner join segmentacion seg on p.segmentacionId=seg.segmentacionId
+inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 inner join Localidad loc on cp.LocalidadId=loc.LocalidadId
 inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId 
 inner join Material m on cm.MaterialId = m.MaterialId
@@ -58,6 +58,6 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 and (( @ProvinciaId is null) 
 	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.ProvinciaId)))
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
-and loc.provinciaId is not null
+and loc.ProvinciaId is not null
 
 ORDER BY P.CUIT

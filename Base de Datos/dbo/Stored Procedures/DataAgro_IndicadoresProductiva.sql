@@ -39,9 +39,9 @@ insert into #Valores(Prov,Cl)
 
 select distinct prv.Nombre, p.cuit 
 
-from proveedor p
+from Proveedor p
 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 
@@ -69,12 +69,12 @@ update #Valores
 set Tn= b.tn
 from
 (select  p.cuit,prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
-from proveedor p
+from Proveedor p
 inner join Campo cp on p.ProveedorId = cp.ProveedorId
 inner join CampoMaterial cm on cp.CampoId = cm.CampoId
 inner join Localidad loc on cp.LocalidadId=loc.LocalidadId
 inner join Provincia prv on loc.ProvinciaId=prv.ProvinciaId 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))

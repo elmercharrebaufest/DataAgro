@@ -17,7 +17,7 @@ create table #Valores(Prov varchar(200),Cl varchar(200),Tn Float)
 
 insert into #Valores(Prov,Cl)
 
-select distinct prv.Nombre, p.cuit 
+select distinct prv.Nombre, p.CUIT 
 
 from Proveedor p
 
@@ -48,7 +48,7 @@ update #Valores
 
 set Tn= b.tn
 from
-(select  p.cuit, sum (cm.Toneladas) as Tn 
+(select  p.CUIT, sum (cm.Toneladas) as Tn 
 
 from Proveedor p
 
