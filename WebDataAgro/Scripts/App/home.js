@@ -29,7 +29,7 @@ $(document).ready(function () {
         dataValueField: "Value",
         filter: "contains"
     });
-    VerificarInformesComerciales();
+    ValidarInformeComercialApertura();
 });
 
 function MostrarTooltip(e) {
@@ -1294,3 +1294,18 @@ $(document).on('click', '.abrir-solapa', function () {
 
     window.location.href = baseUrl;
 });
+
+//Informes Comerciales Apertura
+
+function GrabarInformeComercialApertura() {
+    MSExecuteOnServer('/Home/GrabarInformeComercialApertura');
+}
+function ValidarInformeComercialApertura() {
+    var resultado = MSExecuteOnServer('/Home/TraerInformeComercialApertura');
+    if (resultado != null) {
+        if (resultado.Id == -1 || resultado.Id > 0) {
+            GrabarInformeComercialApertura();
+            VerificarInformesComerciales();
+        }
+    }
+}

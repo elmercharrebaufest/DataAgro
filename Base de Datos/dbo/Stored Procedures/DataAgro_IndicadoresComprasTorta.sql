@@ -26,9 +26,9 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
 
-where((@MaterialId is null) or (CM.MaterialId=@MaterialId ))
+where((@MaterialId is null) or (CM.MaterialId=@MaterialId))
 and ((@CampañaId is null) or (cm.CampañaId = @CampañaId))
-and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@ComercialId is null) or (pc.ComercialId= @ComercialId))
 
 
 select  seg.Descripcion as Provincia,count(p.ProveedorId)as cuit,0 as Tonelada
@@ -55,7 +55,7 @@ and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId))
 group by seg.Descripcion
 
 
-select case when seg.Grupo ='Productores' then 'Productores ' + v.Provincia   else v.Provincia end Provincia,   v.cuit, ton.Tonelada
+select case when seg.Grupo ='Productores' then 'Productores ' + v.Provincia   else v.Provincia end Provincia, v.cuit, ton.Tonelada
 from #Valor v
 inner join Segmentacion seg on v.Provincia=seg.Descripcion
 inner join #Tonelada ton on ton.Segmentacion= v.Provincia

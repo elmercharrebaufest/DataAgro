@@ -1,5 +1,4 @@
-﻿
-CREATE procedure [dbo].[Reporte_ComprasBarra_Traer]
+﻿CREATE procedure [dbo].[Reporte_ComprasBarra_Traer]
  
  @Mes int= null,
  @SegmentacionId VARCHAR(max) ,
@@ -36,7 +35,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
 group by p.CUIT
-having sum(cmm.toneladas) > 10000 )b
+having sum(cmm.Toneladas) > 10000 )b
 
 
 update #Valores
@@ -56,7 +55,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
 group by p.CUIT
-having sum(cmm.toneladas) between 5000 and 10000 )b) c
+having sum(cmm.Toneladas) between 5000 and 10000 )b) c
 
 
 update #Valores
@@ -76,7 +75,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
 group by p.CUIT
-having sum(cmm.toneladas) < 5000 )b) c
+having sum(cmm.Toneladas) < 5000 )b) c
 
 
 

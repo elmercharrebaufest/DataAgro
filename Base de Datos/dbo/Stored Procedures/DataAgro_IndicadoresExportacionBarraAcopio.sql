@@ -8,7 +8,7 @@
  
 as
 
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int);
+declare @EmpleadoTable TABLE (ComercialId int, Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int);
 
 declare @SegmentacionSecuencia TABLE (Item INT)    
 
@@ -22,7 +22,7 @@ create table #Valores(Criterio varchar(100),Toneladas float,Cuit varchar(100),Ma
 
 
 insert into #Valores (Criterio,Cuit ,Toneladas ,Material,Campaña,Provincia,Segmentación,Comercial,razonSocial)
-select 'Mas de 40000 TN55.',p.CUIT,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
+select 'Mas de 40000 TN55.',p.CUIT,cm.Toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
 prv.Nombre as Provincia,
 case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial,p.RazonSocial
@@ -40,7 +40,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
-and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@ComercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and p.CUIT in (
@@ -55,7 +55,7 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.CUIT
-having sum(cmm.toneladas) > 40000 )
+having sum(cmm.Toneladas) > 40000 )
 
 ORDER BY P.CUIT
 
@@ -94,7 +94,7 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.CUIT
-having sum(cmm.toneladas) between 20000 and 40000 )
+having sum(cmm.Toneladas) between 20000 and 40000 )
 
 ORDER BY P.CUIT
 
@@ -134,7 +134,7 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.CUIT
-having sum(cmm.toneladas) between 10000 and 20000 )
+having sum(cmm.Toneladas) between 10000 and 20000 )
 
 ORDER BY P.CUIT
 

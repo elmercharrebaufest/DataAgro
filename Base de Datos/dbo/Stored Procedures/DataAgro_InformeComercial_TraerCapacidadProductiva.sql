@@ -1,5 +1,4 @@
-﻿
-CREATE PROCEDURE [dbo].[DataAgro_InformeComercial_TraerCapacidadProductiva]
+﻿CREATE PROCEDURE [dbo].[DataAgro_InformeComercial_TraerCapacidadProductiva]
 	@inf varchar(MAX)
 as
 
@@ -10,7 +9,7 @@ declare @Informes TABLE (proveedor BIgINT, TonMaiz BIgINT default(0) ,TonTrigo B
 
 insert into @Informes (proveedor)
 select i.ProveedorId as ProveedorId
-from Informecomercial i
+from InformeComercial i
 where  exists ( select 1 from @InformeSecuencia where Item = i.InformeComercialId) 
 group by i.ProveedorId
 
@@ -19,7 +18,7 @@ set TonMaiz = b.Toneladas
 from 
 (
 select i.ProveedorId as ProveedorId, sum(Toneladas) Toneladas
-from Informecomercial i
+from InformeComercial i
 inner join InformeComercialProduccion ip on i.InformeComercialId =ip.InformeComercialId 
 where  ip.MaterialId = 1  and  exists ( select 1 from @InformeSecuencia where Item = i.InformeComercialId) 
 group by i.ProveedorId
@@ -47,7 +46,7 @@ set TonSoja = b.Toneladas
 from 
 (
 select i.ProveedorId as ProveedorId, sum(Toneladas) Toneladas
-from informecomercial i
+from InformeComercial i
 inner join InformeComercialProduccion ip on i.InformeComercialId =ip.InformeComercialId 
 where  ip.MaterialId = 3  and  exists ( select 1 from @InformeSecuencia where Item = i.InformeComercialId) 
 group by i.ProveedorId
@@ -55,7 +54,7 @@ group by i.ProveedorId
 where proveedor= b.ProveedorId
 
 select P.CUIT as proveedor
-,cast(tonmaiz as decimal(18,2)) as Maiz
+,cast(TonMaiz as decimal(18,2)) as Maiz
 ,cast(TonTrigo as decimal(18,2)) as Trigo
 ,cast(TonSoja as decimal(18,2)) as Soja  
 from @Informes i

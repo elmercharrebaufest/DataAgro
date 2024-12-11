@@ -12,7 +12,7 @@ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 select p.CUIT,cmm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
-case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
 when cmm.Mes=2 then 'FEBRERO' 

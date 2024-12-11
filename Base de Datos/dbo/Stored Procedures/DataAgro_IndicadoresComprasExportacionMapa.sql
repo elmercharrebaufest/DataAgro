@@ -1,5 +1,4 @@
-﻿
-CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]  
 
 @ProvinciaId int =null  ,
 
@@ -24,11 +23,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 
@@ -37,7 +36,7 @@ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmenta
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
-select p.cuit,cmm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,prv.Nombre as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
+select p.CUIT,cmm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,prv.Nombre as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
 when cmm.Mes=2 then 'FEBRERO' 
 when cmm.Mes=3 then 'MARZO' 

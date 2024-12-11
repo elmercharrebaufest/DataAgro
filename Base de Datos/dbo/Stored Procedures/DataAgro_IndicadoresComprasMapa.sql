@@ -39,7 +39,7 @@ select distinct prv.Nombre, p.CUIT
 
 from Proveedor p
 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 
@@ -52,12 +52,12 @@ inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 where ((@MaterialId is null) or (cm.MaterialId= @MaterialId))
 
 and ((@CampañaId is null) or (cm.CampañaId= @CampañaId))
-and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@ComercialId is null) or (pc.ComercialId= @ComercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
 and (( @ProvinciaId is null) 
-	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.provinciaId)))
+	or (exists ( select 1 from @ProvinciaSecuencia where Item = loc.ProvinciaId)))
 
 
 and p.LocalidadId is not null
@@ -84,7 +84,7 @@ inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 
 and ((@CampañaId is null) or (cm.CampañaId= @CampañaId))
-and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@ComercialId is null) or (pc.ComercialId= @ComercialId))
 and ((@SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
@@ -100,7 +100,7 @@ where #Valores.Cl= b.CUIT  and b.Provincia= #Valores.Prov
 
  
 
-select   max(Prov)  as Provincia, sum(tn) as Tonelada,count(CL) as Cuit
+select   max(Prov)  as Provincia, sum(tn) as Tonelada,count(CL) as CUIT
 
 from #Valores
 
