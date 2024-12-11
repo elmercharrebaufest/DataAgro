@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
@@ -22,18 +23,20 @@ namespace WebDataAgro.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeManager mobjHomeManager;
+        private readonly IInformeComercialAperturaManager mobjInformeComercialAperturaManager;
         private readonly IObjetivoManager objetivoManager;
         private readonly ILogger logger;
         private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager,
-            IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
+            IHomeManager homeManager, IObjetivoManager objetivoManager, IInformeComercialAperturaManager mobjInformeComercialAperturaManager, ILogger logger)
         {
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
             this.objetivoManager = objetivoManager;
+            this.mobjInformeComercialAperturaManager = mobjInformeComercialAperturaManager;
             this.logger = logger;
         }
 
@@ -388,5 +391,31 @@ namespace WebDataAgro.Controllers
 
             return File(archivoBytes, "application/vnd.ms-excel", "CapacidadProductiva.xls");
         }
+        #region Informes Comerciales
+        public ActionResult GrabarInformeComercialApertura()
+        {
+            InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
+            informeComercialApertura.ComercialId = GlobalVariables.ComercialId;
+            informeComercialApertura.FechaApertura = DateTime.Now.Date.AddDays(1);
+            var model = new Resultado();
+            model = mobjInformeComercialAperturaManager.GrabarInformeComercialApertura(informeComercialApertura);
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerInformeComercialApertura()
+        {
+            var model = new InformeComercialAperturaDto();
+                model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        #endregion
+
     }
 }

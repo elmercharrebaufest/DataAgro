@@ -301,6 +301,7 @@
     <Compile Include="Dto\EstadoHomeDto.cs" />
     <Compile Include="Dto\FormulaTipoNegocioExcluidoDto.cs" />
     <Compile Include="Dto\HedgeMargenMoliendaDto.cs" />
+    <Compile Include="Dto\InformeComercialAperturaDto.cs" />
     <Compile Include="Dto\LogAnulacionContratoDto.cs" />
     <Compile Include="Dto\ManualesDto.cs" />
     <Compile Include="Dto\ManualesLogVisitas.cs" />
@@ -566,6 +567,7 @@
     <Compile Include="Entities\EstadoHome.cs" />
     <Compile Include="Entities\FormulaTipoNegocioExcluido.cs" />
     <Compile Include="Entities\HedgeMargenMolienda.cs" />
+    <Compile Include="Entities\InformeComercialApertura.cs" />
     <Compile Include="Entities\LogAnulacionContrato.cs" />
     <Compile Include="Entities\Manuales.cs" />
     <Compile Include="Entities\ManualesLogVisitas.cs" />
