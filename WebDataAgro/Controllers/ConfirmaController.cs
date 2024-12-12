@@ -81,9 +81,9 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public ActionResult ListarConfirmas()//Para pantalla descargar
+        public ActionResult ListarConfirmas(string filtroArchivo = "")//Para pantalla descargar
         {
-            List<ConfirmaArchivoDto> confirmas = confirmaManager.ListarConfirmas();
+            List<ConfirmaArchivoDto> confirmas = confirmaManager.ListarConfirmas(filtroArchivo);
 
             var json = new JsonResult()
             {

@@ -58,14 +58,19 @@ $(document).ready(function () {
 
     IniciarListaConfirmas();
 
-    $("#filtrogrilla").on("keyup", function () {
-        var grid = $("#grid").data("kendoGrid");
-        isFiltered = true;
-        grid.clearSelection();
-        var value = $(this).val().toLowerCase();
-        $("table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+    $("#filtrogrilla").bind("paste", function (e) {//En caso de Pegar Codigos
+        e.preventDefault();
+        if (e.originalEvent.clipboardData !== undefined) {
+            clipText = e.originalEvent.clipboardData.getData('text/plain');
+        } else {
+            clipText = window.clipboardData.getData('text');
+        }
+        $("#filtrogrilla").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+        IniciarListaConfirmas();
+    });
+
+    $("#filtrogrilla").on("blur", function () {
+        IniciarListaConfirmas();
     });
 
     // Sobrescribimos el evento de "Select All" para manejar solo lo visible
@@ -106,8 +111,10 @@ function IniciarListaConfirmas() {
 function ArmarGrillaConfirmasDesacargas() {
 
     var grid = $("#grid").data("kendoGrid");
+    var filtroArchivo = $("#filtrogrilla").val();
+    filtroArchivo = filtroArchivo.replaceAll(';', ',');
 
-    var confirmas = MSExecuteOnServer("/Confirma/ListarConfirmas");
+    var confirmas = MSExecuteOnServer("/Confirma/ListarConfirmas?filtroArchivo=" + filtroArchivo);
 
     var data = new kendo.data.DataSource({
         data: confirmas
