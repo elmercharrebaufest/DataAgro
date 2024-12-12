@@ -551,3 +551,12 @@ function OcultarActividadesMobile() {
         $(".contenedor-principal-widget").show();
     }
 }
+
+function toggleChatbot() {
+    var modal = document.getElementById('chatbot-modal');
+    if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+    } else {
+        modal.style.display = 'flex';
+    }
+}
