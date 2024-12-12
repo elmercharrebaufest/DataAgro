@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Mail;
-using System.Web;
 using System.Web.WebPages;
 using System.Xml.Linq;
 
@@ -739,7 +738,7 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
-                FechaGeneracion = fechaGeneracionUltimoConfirma == null ? default : (DateTime)fechaGeneracionUltimoConfirma,
+                FechaGeneracion = fechaGeneracionUltimoConfirma == null ? default(DateTime) : (DateTime)fechaGeneracionUltimoConfirma,
                 IsWebService = webServicesOK,
                 ContratoSAP = itemNegocio.ContratoSAP,
                 FijacionSAP = itemNegocio.FijacionSAP,
