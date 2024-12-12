@@ -35,15 +35,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IEnviarBoletoAgent oEnviarBoletoAgent;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         private readonly IServicioClausulas servicioClausula;
-        private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
-        private readonly IConfirmaLoteDocumentosAgent confirmaLoteDocumentosAgent;
         private readonly IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent;
         private readonly string pathConfirmas;
 
         public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
             IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
-            IServicioClausulas servicioClausula, IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent, IConfirmaLoteDocumentosAgent confirmaLoteDocumentosAgent,
-            IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent)
+            IServicioClausulas servicioClausula, IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -53,8 +50,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
             this.oEnviarBoletoAgent = oEnviarBoletoAgent;
-            this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
-            this.confirmaLoteDocumentosAgent = confirmaLoteDocumentosAgent;
             this.confirmaLoteBorradorAgent = confirmaLoteBorradorAgent;
             pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
         }
@@ -145,7 +140,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var contrato in contratos)
                 {
                     var mensaje = ValidarContrato(contrato);
-                    var esValido = mensaje == "" ? true : false;
+                    var esValido = mensaje == "";
                     if (!esValido)
                     {
                         logger.Info($"Generacion Confirma: No es valido el Negocio SAP {contrato.Negocio}");
@@ -277,7 +272,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (boleto.Estado_Version == "Anulado")
                 {
                     boleto.Estado_Version = "Pendiente";
-                    boleto.Version = boleto.Version + 1;
+                    boleto.Version++;
                     boleto.FechaAnulacion = null;
                     boleto.FechaGeneracion = null;
                     boleto.UsuarioAnulacion = null;
@@ -744,7 +739,7 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioSAP = itemNegocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? itemNegocio.FijacionSAP : itemNegocio.ContratoSAP,
                 Generado = generado,
                 Mensaje = mensaje,
-                FechaGeneracion = fechaGeneracionUltimoConfirma == null ? default(DateTime) : (DateTime)fechaGeneracionUltimoConfirma,
+                FechaGeneracion = fechaGeneracionUltimoConfirma == null ? default : (DateTime)fechaGeneracionUltimoConfirma,
                 IsWebService = webServicesOK,
                 ContratoSAP = itemNegocio.ContratoSAP,
                 FijacionSAP = itemNegocio.FijacionSAP,
