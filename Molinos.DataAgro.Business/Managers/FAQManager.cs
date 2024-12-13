@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Business
 {
     public class FAQManager : IFAQManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IComercialManager mobjComercial;
         private readonly IMailManager mailManager;

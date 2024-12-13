@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Business
 {
     public class CondicionManager : ICondicionManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public CondicionManager(ILogger logger, IRepositorio repositorio)
@@ -21,10 +21,6 @@ namespace Molinos.DataAgro.Business
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
 
         public ResultIniCondicion TraerTodoCondicion()
         {
@@ -41,8 +37,8 @@ namespace Molinos.DataAgro.Business
 
         public CondicionDto TraerCondicion(int intCondicionId)
         {
-            return repositorio.Obtener<Condicion, CondicionDto>(x => x.CondicionId == intCondicionId, 
-                x => new CondicionDto { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = x.Inhabilitado}) ?? new CondicionDto();
+            return repositorio.Obtener<Condicion, CondicionDto>(x => x.CondicionId == intCondicionId,
+                x => new CondicionDto { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = x.Inhabilitado }) ?? new CondicionDto();
         }
 
         public Resultado GrabarCondicion(Condicion oCondicion)
@@ -117,7 +113,7 @@ namespace Molinos.DataAgro.Business
                 resultado.Error("Descripcion", "Existe un registro de iguales carecteristicas.");
             }
             return resultado;
-        } 
+        }
         #endregion
 
     }

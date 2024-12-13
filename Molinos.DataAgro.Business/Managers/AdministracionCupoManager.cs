@@ -22,20 +22,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ICupoManager cupoManager;
         private readonly IMailManager mailManager;
-        private readonly IComercialManager comercialManager;
         private readonly IHttpContextManager httpContextManager;
-        private readonly IConfiguracionManager configuracionManager;
 
         public AdministracionCupoManager(ILogger logger, IRepositorio repositorio, ICupoManager cupoManager,
-            IMailManager mailManager, IComercialManager comercialManager, IHttpContextManager httpContextManager, IConfiguracionManager configuracionManager)
+            IMailManager mailManager, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.cupoManager = cupoManager;
             this.mailManager = mailManager;
-            this.comercialManager = comercialManager;
             this.httpContextManager = httpContextManager;
-            this.configuracionManager = configuracionManager;
         }
 
         public KendoGrid<AdministracionCupoDto> TraerTodaAdministracionCupo(KendoGridMvcRequest request, int? comercialId)
@@ -337,9 +333,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailSolicitudAceptada(String filePath, AdministracionCupo solicitud, int cantidad, int cantidadFp, List<string> listaCupo, Comercial comercial)
         {
-            var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -375,7 +372,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "(*)<strong> Cupos con flete procedencia </strong> <br />";
             }
-            //"<br /><br /> En el caso que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
             htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -466,13 +462,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailSolicitudRechazo(String filePath, AdministracionCupo solicitud, Comercial comercial)
         {
-            var emailAdmin = "";
-            if (comercial.IdActiveDirectory != "")
+            LinkedResource res = new LinkedResource(filePath)
             {
-                emailAdmin = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            }
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -497,7 +490,6 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + (solicitud.Sustentable ? " (Sustentable)"
                 : solicitud.EPA && solicitud.EUDR ? " (EPA/EUDR)" : solicitud.EPA && !solicitud.EUDR ? " (EPA)" : !solicitud.EPA && solicitud.EUDR ? " (EUDR)" : "") + "</td></tr>";
             htmlBody += "</table>";
-            //"<br /><br /> En el caso que sea necesario, comuníquese con  " + (comercial.IdActiveDirectory != ""? (comercial.Nombres + " " + comercial.Apellido + (emailAdmin != "" && emailAdmin != null ? "(" + emailAdmin + ")." : ".")): "un administrador" )+
             htmlBody += "<br /> <br />  Saludos Cordiales," +
               " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
               @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -548,7 +540,7 @@ namespace Molinos.DataAgro.Business.Managers
             bool activarLogDebug = false;
             if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
             {
-                activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
+                activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
             }
 
             CupoResult resultados = new CupoResult();

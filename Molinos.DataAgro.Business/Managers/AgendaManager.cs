@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class AgendaManager : IAgendaManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public AgendaManager(ILogger logger, IRepositorio repositorio)
@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<AgendaStore> VistaPreviaAgenda(RptActividadAgendaParam oParam)
         {
             var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == oParam.ActiveDirectoryId, x => x.ComercialId);
-            var data =  repositorio.SelStore<AgendaStore>("DataAgro_TraerAgenda", 0, comercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
+            var data = repositorio.SelStore<AgendaStore>("DataAgro_TraerAgenda", 0, comercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
             return data;
         }
     }

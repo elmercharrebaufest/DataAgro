@@ -5,24 +5,19 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Business
 {
     public class FijacionDePrecioManager : IFijacionDePrecioManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public FijacionDePrecioManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
 
         public DatosIniAbmFijacionDePrecio TraerDatosIniciales()
         {
@@ -33,7 +28,7 @@ namespace Molinos.DataAgro.Business
                 Material = qry.GetMaterialCombo()
             };
         }
-        
+
         public ResultIniFijacionDePrecio TraerTodoFijacionDePrecio()
         {
             var oResult = new ResultIniFijacionDePrecio();
@@ -52,7 +47,7 @@ namespace Molinos.DataAgro.Business
 
         public FijacionDePrecioDto TraerFijacionDePrecio(int intFijacionId)
         {
-            return repositorio.Obtener<FijacionDePrecio, FijacionDePrecioDto>(x => x.FijacionId == intFijacionId, 
+            return repositorio.Obtener<FijacionDePrecio, FijacionDePrecioDto>(x => x.FijacionId == intFijacionId,
                 x => new FijacionDePrecioDto
                 {
                     Fecha = x.Fecha,
@@ -74,7 +69,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            
+
             if (oFijacionDePrecio.FijacionId != 0)
             {
                 var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecio>(oFijacionDePrecio.FijacionId);
@@ -120,7 +115,3 @@ namespace Molinos.DataAgro.Business
         }
     }
 }
-
-
-
-

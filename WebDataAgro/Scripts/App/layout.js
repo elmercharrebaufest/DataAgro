@@ -538,7 +538,7 @@ function notifyMe(dataFromServer) {
         notification.onclick = function () {
             window.open(dataFromServer.url);
         };
-        setTimeout(notification.close.bind(notification), 7000);
+        setTimeout(notification.close.bind(notification), 100);
     }
 }
 

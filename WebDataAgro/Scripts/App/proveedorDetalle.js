@@ -1073,7 +1073,7 @@ function armarContacto() {
     if (MostrarAgenda) {
         setTimeout(function () {
             $("#agenda").trigger("click");
-        }, 300);
+        }, 100);
     }
     if (basico[0].GrupoSegmentacion === "Corredores") {
         armarDetalleCorredor(datos);
@@ -1565,7 +1565,7 @@ function armarEstilosyFuncionesDetalle() {
 
         setTimeout(function () {
             $("#gridCapacidadProd").data("kendoGrid").dataSource.page(1);
-        }, 1000);
+        }, 100);
 
     });
 
@@ -2719,7 +2719,7 @@ function reArmarAgenda() {
     if (MostrarAgenda) {
         setTimeout(function () {
             $("#agenda").trigger("click");
-        }, 1000);
+        }, 100);
     }
 }
 

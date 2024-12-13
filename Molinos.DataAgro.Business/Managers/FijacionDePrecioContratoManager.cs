@@ -25,7 +25,6 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IPushNotificationManager mobjNotification;
         private readonly IFinalizarFijacionAgent oFinalizarFijacionAgent;
         private readonly IContratosParaFijacionAgent oContratosParaFijacionAgent;
-        private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
@@ -56,7 +55,6 @@ namespace Molinos.DataAgro.Business.Managers
             IPushNotificationManager oMSNotification,
             IFinalizarFijacionAgent oFinalizarFijacionAgent,
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
-            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent,
             IDiasHabilesAgent diasHabilesAgent, IConfiguracionManager configuracionManager,
@@ -74,7 +72,6 @@ namespace Molinos.DataAgro.Business.Managers
             mobjNotification = oMSNotification;
             this.oFinalizarFijacionAgent = oFinalizarFijacionAgent;
             this.oContratosParaFijacionAgent = oContratosParaFijacionAgent;
-            this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.mailManager = mailManager;
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
@@ -659,7 +656,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oFijacionDePrecio.FechaDolarizado != null)
                 {
-                    oFijacionDePrecioSave.DolarizadoCorredor = oFijacionDePrecioSave.ClasificacionContrato.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null ? true : false;
+                    oFijacionDePrecioSave.DolarizadoCorredor = oFijacionDePrecioSave.ClasificacionContrato.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null;
                 }
                 else
                 {
@@ -1094,7 +1091,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = fijac.Id,
                 Negocio = fijac.FijacionSAP,
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
-                ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
+                ContratoId = fijac.ContratoId ?? 0,
                 ProveedorId = fijac.ProveedorId ?? 0,
                 CorredorId = fijac.CorredorId ?? 0,
                 ComercialId = fijac.ComercialId,
@@ -1345,8 +1342,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private AlternateView CuerpoMailFijacion(string filePath, FijacionDePrecioContrato fijacion)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             var mail = "";
             try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD" + e.Message); }
 
@@ -1947,9 +1946,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (ValidarFijacionDisponibleParaAnular(oFijacionSave, oEntityErrors))
                     {
-                        var respuesta = anularFijacion.AnularFijacion(oFijacionSave);
-                        //if (respuesta.Contains("OK"))
-                        //{
                         try
                         {
                             oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
@@ -1960,9 +1956,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             logger.Error(e);
                             oEntityErrors.Error("", e.Message);
-
                         }
-
                     }
                 }
             }

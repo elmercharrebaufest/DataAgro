@@ -38,14 +38,11 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMaterialManager> materialManagerMock;
         private Mock<ITipoNegocioManager> tipoNegocioManagerMock;
         private Mock<ICampañaManager> oMSCampaniaManagerMock;
-        private Mock<IProvinciaManager> provinciaManagerMock;
-        private Mock<ILocalidadManager> localidadManagerMock;
         private Mock<IPushNotificationManager> pushNotificacionManagerMock;
         private Mock<IDiferencialManager> diferencialManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IFinalizarContratoAgent> finalizarContratoAgentMock;
         private Mock<IDiasHabilesAgent> diasHabilesMock;
-        private Mock<IRelacionCorredorProveedorAgent> relacionCorredorProveedorAgentMock;
         private Mock<IEliminarContratoAgent> eliminarContratoAgentMock;
         private Mock<IConfiguracionManager> configuracionManagermock;
         private Mock<IAltaTempranaAgent> altaTempranaAgentMock;
@@ -58,7 +55,6 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
         private Mock<IListaCBUProveedorAgent> cbuAgentMock;
-        private Mock<IModificarFijacionAgent> modificarFijacionAgentMock;
         private Mock<ICartasDePortePendienteAplicarAgent> ccppPendienteAplicarAgentMock;
         private Mock<IHttpContextManager> contextoMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
@@ -130,14 +126,11 @@ namespace Molinos.DataAgro.Test.Managers
             materialManagerMock = new Mock<IMaterialManager>();
             tipoNegocioManagerMock = new Mock<ITipoNegocioManager>();
             oMSCampaniaManagerMock = new Mock<ICampañaManager>();
-            provinciaManagerMock = new Mock<IProvinciaManager>();
-            localidadManagerMock = new Mock<ILocalidadManager>();
             pushNotificacionManagerMock = new Mock<IPushNotificationManager>();
             diferencialManagerMock = new Mock<IDiferencialManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             finalizarContratoAgentMock = new Mock<IFinalizarContratoAgent>();
             diasHabilesMock = new Mock<IDiasHabilesAgent>();
-            relacionCorredorProveedorAgentMock = new Mock<IRelacionCorredorProveedorAgent>();
             eliminarContratoAgentMock = new Mock<IEliminarContratoAgent>();
             configuracionManagermock = new Mock<IConfiguracionManager>();
             altaTempranaAgentMock = new Mock<IAltaTempranaAgent>();
@@ -150,14 +143,12 @@ namespace Molinos.DataAgro.Test.Managers
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
             cbuAgentMock = new Mock<IListaCBUProveedorAgent>();
-            modificarFijacionAgentMock = new Mock<IModificarFijacionAgent>();
             ccppPendienteAplicarAgentMock = new Mock<ICartasDePortePendienteAplicarAgent>();
             contextoMock = new Mock<IHttpContextManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
             capacidadProductivaDisponibleAgent = new Mock<ICapacidadProductivaDisponibleAgent>();
             negocioManagerMock = new Mock<INegocioManager>();
-            contratosParaFijacionAgent = new Mock<IContratosParaFijacionAgent>();
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
             centroManagerMock = new Mock<ICentroManager>();
             cupoManagerMock = new Mock<ICupoManager>();
@@ -165,13 +156,12 @@ namespace Molinos.DataAgro.Test.Managers
 
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
-                oMSCampaniaManagerMock.Object, provinciaManagerMock.Object,
-                localidadManagerMock.Object, proveedorManagerMock.Object,
+                oMSCampaniaManagerMock.Object,
+                proveedorManagerMock.Object,
                 comercialManagerMock.Object, pushNotificacionManagerMock.Object,
                 diferencialManagerMock.Object,
                 finalizarContratoAgentMock.Object,
                 diasHabilesMock.Object,
-                relacionCorredorProveedorAgentMock.Object,
                 eliminarContratoAgentMock.Object,
                 configuracionManagermock.Object,
                 capacidadProductivaAgentMock.Object,
@@ -179,10 +169,10 @@ namespace Molinos.DataAgro.Test.Managers
                 diasHabilesAgentMock.Object, modificarContratoAgentMock.Object,
                 mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object,
                 validarPagoAgente.Object, cbuAgentMock.Object,
-                modificarFijacionAgentMock.Object, ccppPendienteAplicarAgentMock.Object,
+                ccppPendienteAplicarAgentMock.Object,
                 contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
                 capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object,
-                contratosParaFijacionAgent.Object, configuracionInternaManagerMock.Object,
+                configuracionInternaManagerMock.Object,
                 centroManagerMock.Object, cupoManagerMock.Object);
         }
 
@@ -943,7 +933,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecio = new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } } });
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
 
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
@@ -967,7 +956,6 @@ namespace Molinos.DataAgro.Test.Managers
                 diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, i));
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
@@ -1531,7 +1519,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecio = new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } } });
 
             repositorioMock.Setup(y => y.Listar<Contrato, int>(It.IsAny<Expression<Func<Contrato, int>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -4816,7 +4803,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
-        
+
         [Test]
         public void ObtenerDatosMercaderiaEnDepositoOk()
         {

@@ -8,14 +8,14 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ConfiguracionEspacioDinamicoManager : IConfiguracionEspacioDinamicoManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+
         public ConfiguracionEspacioDinamicoManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;

@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class FacacopManager : IFacacopManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public FacacopManager(ILogger logger, IRepositorio repositorio)

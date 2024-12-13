@@ -1,19 +1,16 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
     public class CanalOperacionManager : ICanalOperacionManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public CanalOperacionManager(ILogger logger, IRepositorio repositorio)
@@ -21,10 +18,6 @@ namespace Molinos.DataAgro.Business
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
 
         public ResultIniCanalOperacion TraerTodoCanalOperacion()
         {
@@ -66,7 +59,7 @@ namespace Molinos.DataAgro.Business
             {
                 return validacion;
             }
-            
+
             if (oCanalOperacion.CanalOperacionId != 0)
             {
                 var oCanalOperacionSave = repositorio.Obtener<CanalOperacion>(oCanalOperacion.CanalOperacionId);
@@ -120,7 +113,7 @@ namespace Molinos.DataAgro.Business
                 resultado.Error("Descripcion", "Existe un registro de iguales carecteristicas.");
             }
             return resultado;
-        } 
+        }
         #endregion
 
     }
