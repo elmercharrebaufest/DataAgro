@@ -1,29 +1,18 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Criterios;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Mail;
-using System.Reflection;
-using System.Web;
-using System.Web.Script.Serialization;
-
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -35,10 +24,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IMailManager> mailManagerMock;
-        private Mock<IComercialManager> comercialManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IHttpContextManager> contextoMock;
-        private Mock<IConfiguracionManager> configuracionManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -46,13 +33,11 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             mailManagerMock = new Mock<IMailManager>();
-            comercialManagerMock = new Mock<IComercialManager>();
             cupoManagerMock = new Mock<ICupoManager>();
             contextoMock = new Mock<IHttpContextManager>();
-            configuracionManagerMock = new Mock<IConfiguracionManager>();
 
             target = new AdministracionCupoManager(logger.Object, repositorioMock.Object, cupoManagerMock.Object,
-                mailManagerMock.Object, comercialManagerMock.Object, contextoMock.Object, configuracionManagerMock.Object);
+                mailManagerMock.Object, contextoMock.Object);
         }
 
         [Test]

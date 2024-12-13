@@ -538,7 +538,7 @@ function notifyMe(dataFromServer) {
         notification.onclick = function () {
             window.open(dataFromServer.url);
         };
-        setTimeout(notification.close.bind(notification), 7000);
+        setTimeout(notification.close.bind(notification), 100);
     }
 }
 
@@ -549,5 +549,14 @@ function OcultarActividadesMobile() {
         $(".contenedor-principal-widget").hide();
     } else {
         $(".contenedor-principal-widget").show();
+    }
+}
+
+function toggleChatbot() {
+    var modal = document.getElementById('chatbot-modal');
+    if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+    } else {
+        modal.style.display = 'flex';
     }
 }

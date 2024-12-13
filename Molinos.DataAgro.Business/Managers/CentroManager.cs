@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Business
 
     public class CentroManager : ICentroManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public CentroManager(ILogger logger, IRepositorio repositorio)
@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Business
                     CodigoConfirma = x.CodigoConfirma,
                     CUIT = x.CUIT,
                     RazonSocial = x.RazonSocial
-                    
+
                 }, null, 0, "Descripcion")
             };
         }

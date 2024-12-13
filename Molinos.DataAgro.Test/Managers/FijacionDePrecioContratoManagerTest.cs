@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -7,13 +6,10 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -32,7 +28,6 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IPushNotificationManager> pushNotificacionManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IFinalizarFijacionAgent> finalizarFijacionAgentMock;
-        private Mock<IRelacionCorredorProveedorAgent> relacionCorredorProveedorAgentMock;
         private Mock<IContratosParaFijacionAgent> contratosParaFijacionMock;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
@@ -64,7 +59,6 @@ namespace Molinos.DataAgro.Test.Managers
             pushNotificacionManagerMock = new Mock<IPushNotificationManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             finalizarFijacionAgentMock = new Mock<IFinalizarFijacionAgent>();
-            relacionCorredorProveedorAgentMock = new Mock<IRelacionCorredorProveedorAgent>();
             contratosParaFijacionMock = new Mock<IContratosParaFijacionAgent>();
             mailManagerMock = new Mock<IMailManager>();
             configuracionManagerMock = new Mock<IConfiguracionManager>();
@@ -91,7 +85,7 @@ namespace Molinos.DataAgro.Test.Managers
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
                 pushNotificacionManagerMock.Object, finalizarFijacionAgentMock.Object,
-                contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
+                contratosParaFijacionMock.Object,
                 mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
                 modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object,
                 tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object,
@@ -568,7 +562,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
 
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { CodigoSap = "RE", Descripcion = "Redespacho", Id = 2 } });
 
@@ -605,7 +598,6 @@ namespace Molinos.DataAgro.Test.Managers
             };
 
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
             var result = target.FinalizarFijacion(It.IsAny<int>(), It.IsAny<string>());
 
@@ -641,7 +633,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
 
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<AperturaPrecio>());
 
@@ -683,7 +674,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
 
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<AperturaPrecio>());
 
@@ -860,7 +850,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
 
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { CodigoSap = "RE", Descripcion = "Redespacho", Id = 2 } });
 
@@ -1171,7 +1160,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnFijacion3()
         {
-            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now};
+            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,
@@ -1295,7 +1284,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void BuscarComisionEnAfijar3()
         {
-            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now};
+            var negocio = new BasicoContrato { FechaOperacion = DateTime.Now, ContratoId = 1, ComercialId = 1, TipoNegocioId = 3, PorcentajeComision = 0, ImporteComision = 0, Precio = 100, MonedaId = "ARP  ", Fecha = DateTime.Now };
             var fijacionSave = new FijacionDePrecioContrato
             {
                 Id = 1,

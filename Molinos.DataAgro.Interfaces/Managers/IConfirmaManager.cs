@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
         string ObtenerNombreArchivoConfirma(string codigoSAP);
         byte[] ObtenerArchivoXML(string nombreArchivo);
         void EnviarMailConfirma(DateTime fecha);
-        List<ConfirmaArchivoDto> ListarConfirmas();
+        List<ConfirmaArchivoDto> ListarConfirmas(string filtroArchivo);
         List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico);
         string CorregirFormatoFecha(string cadena);
         DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo);

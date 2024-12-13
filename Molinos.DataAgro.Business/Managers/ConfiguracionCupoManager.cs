@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public Resultado GrabarConfiguracionCupo(ConfiguracionCupo configuracion, List<DiaCupo> dias)
         {
-            logger.Debug($"GrabarConfiguracionCupo"); 
+            logger.Debug($"GrabarConfiguracionCupo");
             logger.Debug($"configuracion: {configuracion.ToJson()}");
             logger.Debug($"dias: {dias.ToJson()}");
             var oEntityErrors = Validar(configuracion, dias);
@@ -165,7 +165,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (actualizarSugerencia)
                     {
-                        
+
                         cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, cupoManager.ObtenerFormulaDto(configuracion.MaterialId), configuracion);
                     }
                 }
@@ -412,12 +412,12 @@ namespace Molinos.DataAgro.Business.Managers
                                        x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
                                        x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
-            var consumidosDescarga = repositorio.Listar<Cupo>(x => x.CentroId == configuracion.CentroId && 
-                                                                   x.MaterialId == configuracion.MaterialId && 
+            var consumidosDescarga = repositorio.Listar<Cupo>(x => x.CentroId == configuracion.CentroId &&
+                                                                   x.MaterialId == configuracion.MaterialId &&
                                                                    x.FechaIngreso == configuracion.Fecha &&
                                                                    x.ConDescarga == true &&
                                                                    x.NegocioId != null &&
-                                                                   x.EstadoCupoId != 4 && 
+                                                                   x.EstadoCupoId != 4 &&
                                                                    x.EstadoCupoId != 9);
 
             foreach (var zona in zonas)
@@ -651,10 +651,11 @@ namespace Molinos.DataAgro.Business.Managers
             List<LimiteCupoDto> limites = TraerLimites((int)id);
             logger.Debug($"limites: {limites.ToJson()}");
             var totConsumidos = limites.Sum(x => x.Consumidos);
-            if (totConsumidos > limite) {
-                errores.Error("Limite", "El nuevo límite de cupos ("+ limite + ") no puede ser menor a los cupos consumidos ("+ totConsumidos + ").");
+            if (totConsumidos > limite)
+            {
+                errores.Error("Limite", "El nuevo límite de cupos (" + limite + ") no puede ser menor a los cupos consumidos (" + totConsumidos + ").");
             }
-            if (errores.Errores.Count>0)
+            if (errores.Errores.Count > 0)
             {
                 return errores;
             }
@@ -676,7 +677,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 LimiteCupo = configuracionDto.LimiteCupo,
                 LimiteAlgoritmo = configuracionDto.LimiteAlgoritmo,
-                CierreCupera = configuracionDto.CierreCupera != null ? configuracionDto.CierreCupera.Value : false,
+                CierreCupera = configuracionDto.CierreCupera != null && configuracionDto.CierreCupera.Value,
                 LiberarCupera = configuracionDto.LiberarCupera,
                 Id = configuracionDto.Id,
                 Fecha = configuracionDto.Fecha,

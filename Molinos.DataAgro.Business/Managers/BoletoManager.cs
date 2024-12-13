@@ -32,7 +32,6 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
-        private readonly IContratosConfirmadosAgent oContratosConfirmadosAgent;
         private readonly IEnviarBoletoAgent oEnviarBoletoAgent;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         private readonly IMailManager mailManager;
@@ -40,12 +39,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulas servicioClausula;
         private readonly IStatusContratoAgent status;
 
-        public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
+        public BoletoManager(IRepositorio repositorio, ILogger logger, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
             IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
         {
             this.repositorio = repositorio;
             this.logger = logger;
-            this.oContratosConfirmadosAgent = oContratosConfirmadosAgent;
             this.oConsultarEstadoBoletoAgent = oConsultarEstadoBoletoAgent;
             this.oEnviarBoletoAgent = oEnviarBoletoAgent;
             this.mailManager = mailManager;

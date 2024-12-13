@@ -813,8 +813,10 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public List<ConfirmaArchivoDto> ListarConfirmas() //Pantalla descargas
+        public List<ConfirmaArchivoDto> ListarConfirmas(string filtroArchivo) //Pantalla descargas
         {
+            string[] filtros = filtroArchivo.Split(',');
+
             var result = repositorio.Listar<Confirma, ConfirmaArchivoDto>(a => new ConfirmaArchivoDto
             {
                 Id = a.Id,
@@ -824,7 +826,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Nombre = a.Archivo,
                 FechaGeneracion = a.FechaGeneracion,
                 IsWebService = a.IsWebService,
-            }).OrderByDescending(x => x.FechaGeneracion).OrderByDescending(x => x.Nombre);
+            })
+            .Where(x => filtroArchivo.Length == 0 || filtros.Length > 1 && filtros.Contains(x.Nombre))
+            .OrderByDescending(x => x.FechaGeneracion).OrderByDescending(x => x.Nombre);
 
             foreach (var confirma in result)
             {
