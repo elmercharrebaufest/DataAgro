@@ -68,7 +68,17 @@ namespace WebDataAgro.Seguridad
                     var usuario = repositorio.ObtenerNoTracking<Proveedor>(u => u.CUIT == nombreUsuario);
                     if (usuario != null)
                     {
-                        foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        //foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        //{
+                        //    identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                        //}
+
+                        var permisos = usuario.RolesAsociados
+                            .SelectMany(rol => rol.PermisosAsociados)
+                            .Distinct()
+                            .ToList();
+
+                        foreach (var permiso in permisos)
                         {
                             identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
                         }
@@ -79,7 +89,17 @@ namespace WebDataAgro.Seguridad
                     var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
                     if (usuario != null && usuario.Deshabilitado != true)
                     {
-                        foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        //foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        //{
+                        //    identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                        //}
+
+                        var permisos = usuario.RolesAsociados
+                            .SelectMany(rol => rol.PermisosAsociados)
+                            .Distinct()
+                            .ToList();
+
+                        foreach (var permiso in permisos)
                         {
                             identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
                         }
