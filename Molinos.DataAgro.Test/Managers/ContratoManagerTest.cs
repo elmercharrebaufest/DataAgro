@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
         private Mock<ICentroManager> centroManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
+        private Mock<IVisualizarCapacidadProductivaAgent> capProdAgentMock;
 
         private Contrato CrearContrato()
         {
@@ -152,7 +153,7 @@ namespace Molinos.DataAgro.Test.Managers
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
             centroManagerMock = new Mock<ICentroManager>();
             cupoManagerMock = new Mock<ICupoManager>();
-
+            capProdAgentMock = new Mock<IVisualizarCapacidadProductivaAgent>();
 
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
@@ -173,7 +174,7 @@ namespace Molinos.DataAgro.Test.Managers
                 contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
                 capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object,
                 configuracionInternaManagerMock.Object,
-                centroManagerMock.Object, cupoManagerMock.Object);
+                centroManagerMock.Object, cupoManagerMock.Object, capProdAgentMock.Object);
         }
 
         [Test]
@@ -5114,6 +5115,18 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });
             status.Setup(x => x.ValidarEstados(It.IsAny<List<string>>())).Returns(new List<EstadoSAPDto> { new EstadoSAPDto { NumeroSio = 0, Status = "", ContratoSap = "" } });
             target.ActualizarEstadoDeContratos();
+        }
+
+        [Test]
+        public void ValidarCapacidadProductivaTest()
+        {
+            var negocio = new Contrato { ProveedorId = 12, Proveedor = new Proveedor { RazonSocial = "Proveedor S.A." }, CampanaId = 10, Campana = new Campaña { Descripcion = "Campaña" }, MaterialId = 1, Material = new Material { Descripcion = "Maiz" } };
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()))
+                .Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 12, MaterialId = 1, CampaniaId = 9 } });
+            var result = target.ValidarCapacidadProductiva(negocio);
+            capProdAgentMock.Verify(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+            Assert.IsNotEmpty(result.Errores);
         }
     }
 }

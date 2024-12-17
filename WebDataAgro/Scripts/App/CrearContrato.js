@@ -45,12 +45,8 @@ function InicializarBordesRojos() {
     });
 
     if ($('#precioId').val() > 0) {
-        //var originalChangeEvent = $.data($('#precioId')[0], 'events').change[0].handler;
-
         $('#precioId').off('change');
-
         $("select.required-box, input.required-box").trigger("change");
-
         $('#precioId').on('change', ComprobarRangoPrecio);
     }
     else {
@@ -252,9 +248,10 @@ function InicializarElementos() {
         autoWidth: true,
         filter: "contains",
         change: function () {
-
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+                if ($("#material").val() && $("#campanaId").val())
+                    ValidarCapacidadProductiva();
             }
             if ($("#buscadorProveedor").val() == "") {
                 $("#proveedorId").val("");
@@ -1031,11 +1028,12 @@ function InicializarElementos() {
                         }
                     }
                 }
+                if ($("#material").val() && $("#campanaId").val())
+                    ValidarCapacidadProductiva();
             }
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
-
         }
     });
 
@@ -1171,6 +1169,8 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val())
+                ValidarCapacidadProductiva();
         }
     });
 
