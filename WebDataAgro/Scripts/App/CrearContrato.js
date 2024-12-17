@@ -2067,6 +2067,7 @@ function InicializarElementos() {
 
 
     $(".formulario-footer-guardar-contrato").click(function () {
+        $("#guardarBtn").prop('disabled', true);
         BlockUi('Guardando...');
         var error = false;
         var objeto = ObtenerDatos(error);
@@ -2074,6 +2075,7 @@ function InicializarElementos() {
             setTimeout(GrabarContrato(objeto), 250);
         } else {
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         }
     });
 
@@ -3643,11 +3645,13 @@ function GrabarContrato(nuevoContrato) {
             if (cantidadCamiones > cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es mayor a la necesaria.");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
             if (cantidadCamiones < cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es menor a la necesaria.");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
         }
@@ -3655,12 +3659,14 @@ function GrabarContrato(nuevoContrato) {
         if ($("#conDescargaId").is(":checked") == true && !dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0) && Id == "") {
             MensErr("No hay cupos o fletes con descarga configurados.\n\n");
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
             return;
         }
 
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El contrato madre es obligatorio al fijar el convenio");
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         } else {
             if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarCostoFinanciero").modal('show');
@@ -3705,6 +3711,7 @@ function GrabarContrato(nuevoContrato) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         }
         else {
             if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
@@ -3729,6 +3736,7 @@ function GrabarContrato(nuevoContrato) {
         }
     }
     $.unblockUI();
+    $("#guardarBtn").prop('disabled', false);
 }
 
 function grabarContrato(objeto) {
@@ -6038,6 +6046,7 @@ function EstablecerCostoFinanciero() {
     var costoFinancieroActual = $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value();
     if ($("#pesificadoId").is(":checked") && $("#pesificadoDiasId").val() == '' && c < 7) {
         MensErr("La cantidad de días de Pago Diferido debe ser mayor o igual a 7");
+        $("#guardarBtn").prop('disabled', false);
     } else {
 
         var tasa = 0;
@@ -6069,6 +6078,7 @@ function EstablecerCostoFinanciero() {
                     }
                 } else {
                     MensAlerta("Debe completar el costo financiero de forma manual");
+                    $("#guardarBtn").prop('disabled', false);
                 }
             }
         }

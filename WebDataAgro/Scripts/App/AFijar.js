@@ -1774,6 +1774,7 @@ function InicializarElementos() {
 
 
     $(".formulario-footer-guardar-contrato").click(function () {
+        $("#guardarBtn").prop('disabled', true);
         BlockUi('Guardando...');
         var error = false;
         var objeto = ObtenerDatos(error);
@@ -1784,6 +1785,7 @@ function InicializarElementos() {
             setTimeout(GrabarContrato(objeto), 250);
         } else {
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         }
     });
 
@@ -3034,17 +3036,20 @@ function GrabarContrato(nuevoContrato) {
             if (cantidadCamiones > cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es mayor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
             if (cantidadCamiones < cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es menor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
         }
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         } else {
             if ($("#aperturaPrecioImporteBonificacionesId").val() == "0" && $("#tipoPosicionCBOTId").data("kendoDropDownList").value() == "3" && $("#estado").val() != "5" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarBonificacion").modal('show');
@@ -3076,6 +3081,7 @@ function GrabarContrato(nuevoContrato) {
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
+            $("#guardarBtn").prop('disabled', false);
             $.unblockUI();
         }
         else {
@@ -3098,6 +3104,7 @@ function GrabarContrato(nuevoContrato) {
         }
     }
     $.unblockUI();
+    $("#guardarBtn").prop('disabled', false);
 }
 
 function editarContrato(id, tipoId, siguientes) {
