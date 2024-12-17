@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -59,6 +60,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private readonly ICentroManager centroManager;
         private readonly ICupoManager cupoManager;
+        private readonly IVisualizarCapacidadProductivaAgent capacidadProductivaAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -75,7 +77,7 @@ namespace Molinos.DataAgro.Business.Managers
             IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
             ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent, INegocioManager negocioManager,
             IConfiguracionInternaManager configuracionInternaManager,
-            ICentroManager centroManager, ICupoManager cupoManager)
+            ICentroManager centroManager, ICupoManager cupoManager, IVisualizarCapacidadProductivaAgent capacidadProductivaAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -108,6 +110,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.configuracionInternaManager = configuracionInternaManager;
             this.centroManager = centroManager;
             this.cupoManager = cupoManager;
+            this.capacidadProductivaAgent = capacidadProductivaAgent;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -1469,6 +1472,11 @@ namespace Molinos.DataAgro.Business.Managers
             //        oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
             //    }
             //}
+
+            if (oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
+            {
+                oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
+            }
 
             return oErrorMessages;
         }
@@ -9071,6 +9079,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
                 return string.Empty;
+        }
+
+        public Resultado ValidarCapacidadProductiva(Contrato negocio)
+        {
+            var resultado = new Resultado();
+            var capProd = capacidadProductivaAgent.VisualizarCapacidadProductiva(negocio.ProveedorId.Value).Find(x => x.MaterialId == negocio.MaterialId && x.CampaniaId == negocio.CampanaId);
+            if (capProd == null)
+            {
+                resultado.Error("InformeComercial", $"El proveedor {negocio.Proveedor.RazonSocial} no tiene capacidad productiva informada en SAP para {negocio.Material.Descripcion} en la campaña {negocio.Campana.Descripcion}. No se puede cargar el contrato.\n\n\n");
+            }
+            return resultado;
         }
     }
 }

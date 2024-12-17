@@ -960,7 +960,7 @@ function InicializarElementos() {
                 $("#establecimientoDiv").hide();
                 $("#mercsDepositoDiv").hide();
                 $("#guardarBtn").empty();
-                $("#guardarBtn").append("Guardar Fijacion");
+                $("#guardarBtn").val("Guardar Fijacion");
                 if (fijacionVirtual != true) {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
@@ -2098,8 +2098,10 @@ function InicializarElementos() {
     $("#fechaOperacionId").val(date);
     $("#fechaHastaId").val(datehasta);
     $("#fechaFijacionId").val(date);
-
+    
     $(".formulario-footer-guardar-contrato").click(function () {
+        $("#guardarBtn").prop('disabled', true);
+
         BlockUi('Guardando...');
         var error = false;
         var objeto = ObtenerDatos(error);
@@ -2107,6 +2109,7 @@ function InicializarElementos() {
             setTimeout(GrabarContrato(objeto), 250);
         } else {
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         }
     });
 
@@ -3225,16 +3228,19 @@ function GrabarContrato(nuevoContrato) {
             if (cantidadCamiones > cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es mayor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
             if (cantidadCamiones < cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es menor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
         }
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
+            $("#guardarBtn").prop('disabled', false);
             $.unblockUI();
         } else {
             result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
@@ -3256,6 +3262,7 @@ function GrabarContrato(nuevoContrato) {
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
+            $("#guardarBtn").prop('disabled', false);
             $.unblockUI();
         }
         else {
@@ -3268,6 +3275,7 @@ function GrabarContrato(nuevoContrato) {
             }
         }
     }
+    $("#guardarBtn").prop('disabled', false);
     $.unblockUI();
 }
 
@@ -4931,6 +4939,7 @@ function datosAfijar() {
 
 function EstablecerCostoFinanciero() {
     if ($("#estado").val() == 5) {
+        $("#guardarBtn").prop('disabled', false);
         return false;
     }
     var c = Number($("#diasDiferidoFijacionId").val());
@@ -4973,6 +4982,7 @@ function EstablecerCostoFinanciero() {
             }
         }
     }
+    $("#guardarBtn").prop('disabled', false);
 }
 
 function SetearDiaPesificado() {

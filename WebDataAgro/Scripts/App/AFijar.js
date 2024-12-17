@@ -244,6 +244,8 @@ function InicializarElementos() {
             HayCanje();
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+                if ($("#material").val() && $("#campanaId").val())
+                    ValidarCapacidadProductiva();
             }
             $("#contratoId").val("");
             $(".datoscontrato").hide();
@@ -967,6 +969,8 @@ function InicializarElementos() {
                 var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
                 CargarAutomaticamenteLaComision(compraNet);
+                if ($("material").val() && $("#campanaId").val())
+                    ValidarCapacidadProductiva();
             }
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
@@ -1040,6 +1044,8 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1])
+                ValidarCapacidadProductiva();
         }
     });
 
@@ -1774,6 +1780,7 @@ function InicializarElementos() {
 
 
     $(".formulario-footer-guardar-contrato").click(function () {
+        $("#guardarBtn").prop('disabled', true);
         BlockUi('Guardando...');
         var error = false;
         var objeto = ObtenerDatos(error);
@@ -1784,6 +1791,7 @@ function InicializarElementos() {
             setTimeout(GrabarContrato(objeto), 250);
         } else {
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         }
     });
 
@@ -3034,17 +3042,20 @@ function GrabarContrato(nuevoContrato) {
             if (cantidadCamiones > cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es mayor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
             if (cantidadCamiones < cantidadCamionesNecesarios) {
                 MensErr("La cantidad de camiones ingresados es menor a la necesaria");
                 $.unblockUI();
+                $("#guardarBtn").prop('disabled', false);
                 return;
             }
         }
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
+            $("#guardarBtn").prop('disabled', false);
         } else {
             if ($("#aperturaPrecioImporteBonificacionesId").val() == "0" && $("#tipoPosicionCBOTId").data("kendoDropDownList").value() == "3" && $("#estado").val() != "5" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarBonificacion").modal('show');
@@ -3076,6 +3087,7 @@ function GrabarContrato(nuevoContrato) {
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
+            $("#guardarBtn").prop('disabled', false);
             $.unblockUI();
         }
         else {
@@ -3098,6 +3110,7 @@ function GrabarContrato(nuevoContrato) {
         }
     }
     $.unblockUI();
+    $("#guardarBtn").prop('disabled', false);
 }
 
 function editarContrato(id, tipoId, siguientes) {

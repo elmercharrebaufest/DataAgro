@@ -1192,8 +1192,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
-
         public JsonResult ObtenerCapacidadProductivaPendiente(int proveedorId)
         {
             var lista = mobjContratoManager.ObtenerCapacidadProductivaPendiente(proveedorId);
@@ -1568,6 +1566,15 @@ namespace WebDataAgro.Controllers
                     MaxJsonLength = Int32.MaxValue
                 };
             }
+        }
+        public ActionResult ValidarCapacidadProductiva(Contrato negocio)
+        {
+            var result = mobjContratoManager.ValidarCapacidadProductiva(negocio);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
         }
     }
 }
