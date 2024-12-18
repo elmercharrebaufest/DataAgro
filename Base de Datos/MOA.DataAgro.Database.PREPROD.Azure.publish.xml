@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<IncludeCompositeObjects>True</IncludeCompositeObjects>
+		<TargetDatabaseName>DataAgroPRE</TargetDatabaseName>
+		<DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
+		<TargetConnectionString>Data Source=APPAGLQA.molinosagro.ad,1450; Integrated Security=False; User Id=DATAAGROPREUSR; Password=Z327wce$5OC5; initial catalog=DataAgroPRE; Pooling=False; Trust Server Certificate=True;</TargetConnectionString>
+		<ProfileVersionNumber>1</ProfileVersionNumber>
+		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
+		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
+	</PropertyGroup>
+</Project>
