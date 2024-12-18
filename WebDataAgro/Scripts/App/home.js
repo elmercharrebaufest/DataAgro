@@ -1261,12 +1261,14 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
 function VerificarInformesComerciales() {
     var result = MSExecuteOnServer('/Home/VerificarInformesComerciales');
 
-    if (result == null || result.length == 0) return;
+    if (result == null || result.length == 0) {
+        document.getElementById("abrirModalInformesFaltantes").setAttribute("title", "Todos los informes están actualizados!");
+    }
+    else {
+        $("#tabla-inf-comercial").empty();
 
-    $("#cuerpo-carga-cupos").empty();
-
-    result.forEach(x => {
-        const fila = `
+        result.forEach(x => {
+            const fila = `
             <tr>
                 <td>${x.RazonSocial}</td>
                 <td>${x.CUIT}</td>
@@ -1280,26 +1282,25 @@ function VerificarInformesComerciales() {
             </tr>
         `;
 
-        $("#cuerpo-carga-cupos").append(fila);
-    })
+            $("#tabla-inf-comercial").append(fila);
+        })
 
-    $("#modalInformesComercialesPendientes").modal("show");
+        $("#modalInformesComercialesPendientes").modal("show");
+    }
 }
 
 $(document).on('click', '.abrir-solapa', function () {
     sessionStorage.setItem('pantallaActiva', 'produccion');
-    // Obtener el ProveedorId del botón clickeado
     const proveedorId = $(this).data('proveedor-id');
     const baseUrl = `${window.location.origin}/Proveedor/Agregar?ProveedorId=${proveedorId}`;
 
     window.location.href = baseUrl;
 });
 
-//Informes Comerciales Apertura
-
 function GrabarInformeComercialApertura() {
     MSExecuteOnServer('/Home/GrabarInformeComercialApertura');
 }
+
 function ValidarInformeComercialApertura() {
     var resultado = MSExecuteOnServer('/Home/TraerInformeComercialApertura');
     if (resultado != null) {

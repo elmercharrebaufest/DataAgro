@@ -389,7 +389,7 @@ namespace WebDataAgro.Controllers
 
             byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
 
-            return File(archivoBytes, "application/vnd.ms-excel", "CapacidadProductiva.xls");
+            return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
         #region Informes Comerciales
         public ActionResult GrabarInformeComercialApertura()
