@@ -1028,9 +1028,9 @@ namespace Molinos.DataAgro.Business.Managers
             sb.AppendLine(@"   <Row>");
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Proveedor ID</Data></Cell>");
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">CUIT</Data></Cell>");
-            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Cosecha</Data></Cell>");
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Razón Social</Data></Cell>");
-            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Nombre Comercial</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Cosecha</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Comercial a Cargo</Data></Cell>");
             sb.AppendLine(@"   </Row>");
 
             // Agregar datos
@@ -1039,8 +1039,8 @@ namespace Molinos.DataAgro.Business.Managers
                 sb.AppendLine(@"   <Row>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""Number"">{item.ProveedorId}</Data></Cell>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.CUIT}</Data></Cell>");
-                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.Cosecha}</Data></Cell>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.RazonSocial}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.Cosecha}</Data></Cell>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.NombreComercial}</Data></Cell>");
                 sb.AppendLine(@"   </Row>");
             }
