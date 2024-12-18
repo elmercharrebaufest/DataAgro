@@ -250,7 +250,7 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                if ($("#material").val() && $("#campanaId").val())
+                if ($("#material").val() && $("#campanaId").val() && !$("#ventaId").is(":checked"))
                     ValidarCapacidadProductiva();
             }
             if ($("#buscadorProveedor").val() == "") {
@@ -990,7 +990,7 @@ function InicializarElementos() {
             $("#datosContrato").hide();
 
             var cuitAux = $("#buscadorProveedor").val().split('(');
-            if (cuitAux[0] != "") {
+            if (cuitAux[1]) {
                 var cuit = cuitAux[1].split(')');
                 var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
@@ -1028,7 +1028,7 @@ function InicializarElementos() {
                         }
                     }
                 }
-                if ($("#material").val() && $("#campanaId").val())
+                if ($("#material").val() && $("#campanaId").val() && !$("#ventaId").is(":checked"))
                     ValidarCapacidadProductiva();
             }
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
@@ -1169,7 +1169,7 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val())
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && !$("#ventaId").is(":checked"))
                 ValidarCapacidadProductiva();
         }
     });
@@ -3777,22 +3777,24 @@ function editarContrato(id, tipoId, siguientes) {
 
 function obtenerLocalidadProvincia() {
     if ($("#buscadorProveedor").val() != "" && !$("#sinBoletoId").is(":checked")) {
-        let cuitProvAux = $("#buscadorProveedor").val().split('(');
-        let cuitProv = cuitProvAux[1].split(')');
-        if (cuitProv[0] != null && $("#material").val() != "" && $("#campanaId").val() != "") {
-            let localidadProvincia = MSExecuteOnServer('/CompraNet/ObtenerProvinciaLocalidadProv', {
-                CUIT: cuitProv[0],
-                MaterialId: $("#material").val(),
-                CampanaId: $("#campanaId").val(),
-                Consignatario: $("#consignatarioId").val()
-            });
-            if (localidadProvincia != null) {
-                if (localidadProvincia.LocalidadId != "" && localidadProvincia.CUIT != "") {
-                    $("#LocalidadCrearContrato").val(localidadProvincia.Localidad + "(" + localidadProvincia.Provincia + ")");
-                    HabilitarEstablecimiento();
-                } else {
-                    $("#LocalidadCrearContrato").val("");
-                    HabilitarEstablecimiento();
+        let cuitAux = $("#buscadorProveedor").val().split('(');
+        if (cuitAux[1]) {
+            let cuitProv = cuitAux[1].split(')');
+            if (cuitProv[0] != null && $("#material").val() != "" && $("#campanaId").val() != "") {
+                let localidadProvincia = MSExecuteOnServer('/CompraNet/ObtenerProvinciaLocalidadProv', {
+                    CUIT: cuitProv[0],
+                    MaterialId: $("#material").val(),
+                    CampanaId: $("#campanaId").val(),
+                    Consignatario: $("#consignatarioId").val()
+                });
+                if (localidadProvincia != null) {
+                    if (localidadProvincia.LocalidadId != "" && localidadProvincia.CUIT != "") {
+                        $("#LocalidadCrearContrato").val(localidadProvincia.Localidad + "(" + localidadProvincia.Provincia + ")");
+                        HabilitarEstablecimiento();
+                    } else {
+                        $("#LocalidadCrearContrato").val("");
+                        HabilitarEstablecimiento();
+                    }
                 }
             }
         }
@@ -6314,7 +6316,7 @@ function CargarAutomaticamenteLaComision(compraNet) {
 
 function ObtenerDatosProveedor() {
     var cuitAux = $("#buscadorProveedor").val().split('(');
-    if (cuitAux[0] != "") {
+    if (cuitAux[1]) {
         var cuit = cuitAux[1].split(')');
         var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
         return compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
