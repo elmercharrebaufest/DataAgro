@@ -58,12 +58,12 @@ namespace Molinos.DataAgro.Business.Managers
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
                 if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.Pendiente)
                 {
-                    resultado.Error("Solicitud", "La solicitud no puede ser editada porque no se encuentra en estado pendiente");
+                    resultado.Error("Solicitud", "La solicitud no se puede editar porque no se encuentra en estado pendiente.\n\n");
                     return resultado;
                 }
                 if (solicitud.CantidadCupo != cantidadOriginal || solicitud.CantidadFleteProcedencia != cantidadFleteOriginal)
                 {
-                    resultado.Error("Solicitud", $"- La solicitud con fecha {solicitud.Fecha.ToString("dd-MM-yyyy")}, proveedor {solicitud.Proveedor.RazonSocial} y destino {solicitud.Centro.Descripcion} no puede ser confirmada/aceptada porque ha sido editada por el usuario.<br /><br />");
+                    resultado.Error("Solicitud", $"La solicitud con fecha {solicitud.Fecha:dd-MM-yyyy}, proveedor {solicitud.Proveedor.RazonSocial} y destino {solicitud.Centro.Descripcion} no se puede aceptar porque fue editada.\n\n");
                     return resultado;
                 }
 
@@ -130,18 +130,18 @@ namespace Molinos.DataAgro.Business.Managers
                     };
                     if (cantidad > 0)
                     {
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GrabarCupo() - 1 - Algoritmo ");
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GrabarCupo() - Algoritmo ");
                         result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidad, Fecha = solicitud.Fecha } });
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GrabarCupo() - 1 - Algoritmo ");
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GrabarCupo() - Algoritmo ");
                     }
 
 
                     if (cantidadFp > 0)
                     {
                         cupo.FleteProcedencia = true;
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GrabarCupo() - 2 - Algoritmo ");
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GrabarCupo() con FleteProcedencia - Algoritmo ");
                         CupoResult result2 = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadFp, Fecha = solicitud.Fecha } });
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GrabarCupo() - 2 - Algoritmo ");
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GrabarCupo() con FleteProcedencia - Algoritmo ");
 
                         result.Errores.AddRange(result2.Errores);
                         for (int i = 0; i < result2.ListaCupos.Count; i++)
@@ -156,9 +156,6 @@ namespace Molinos.DataAgro.Business.Managers
                         solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado;
                         solicitud.FechaDecision = DateTime.Now;
                         solicitud.Motivo = motivo;
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarMailSolicitudAceptada() - 1 - Algoritmo ");
-                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, result.ListaCupos, active);
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarMailSolicitudAceptada() - 1 - Algoritmo ");
                         solicitud.CantidadCupo = cantidad;
                         solicitud.CantidadFleteProcedencia = cantidadFp;
                     }
@@ -235,12 +232,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (resultado.ListaCupos.Count > 0)
                         solicitud.Motivo = motivo;
-                    if (resultado.ListaCupos.Count > 0)
-                    {
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
-                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
-                    }
 
                     if (!resultado.HayError)
                     {
@@ -278,11 +269,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private void EnviarMailSolicitudAceptada(AdministracionCupo solicitud, int cantidad, int cantidadFp, List<string> listaCupo, string active)
+        private void EnviarMailSolicitudAceptada(AdministracionCupo solicitud, int cantidad, int cantidadFp, List<string> listaCupo, string active) //obsoleto por el ticket DAT100-2418
         {
             try
             {
-
                 var lista = new List<string>();
                 var comercial = new List<string>();
                 var c = repositorio.Obtener<Comercial, string>(x => x.ComercialId == solicitud.ComercialCreadorId, x => x.IdActiveDirectory);
