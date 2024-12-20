@@ -5,7 +5,7 @@
 	<!--Para TFS-->
 	<!--<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; Initial Catalog=DataagroPRE; Integrated Security=True " />-->
 	<!--Para AZURE-->
-	<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroPRE; Pooling=False" />
+	<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroPRE" />
 
 	<setParameter name="SmtpServer Key" value="smtpnuevo.molinosagro.com.ar" />
 	<setParameter name="SmtpServerPort Key" value="25" />
