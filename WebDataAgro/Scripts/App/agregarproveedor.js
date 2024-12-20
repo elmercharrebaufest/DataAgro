@@ -1913,7 +1913,9 @@ function armarSelects(result) {
         }
         obj.granos = [];
 
-        for (var i = 0; i <= cantGrano; i++) {
+        for (var i = 0; i < cantGrano; i++) {
+            if (!ValidarGranoProduccion(i))
+                return false;
             if (($("#campaña" + i).val() && $("#campaña" + i).val() != "null") || ($("#grano" + i).val() && $("#grano" + i).val() != "null")) {
                 obj.granos.push({
                     granoId: $("#grano" + i).val(),
@@ -1929,9 +1931,6 @@ function armarSelects(result) {
                 cambios.CampaniaDesc.push($("#campaña" + i).find('option:selected').text());
             }
         }
-
-        if (!ValidarGranoProduccion(cantGrano))
-            return false;
 
         obj.archivo = $("#kmz").val();
         obj.archivoFile = document.getElementById("kmz").files[0];
