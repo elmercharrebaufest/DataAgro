@@ -1913,10 +1913,10 @@ function armarSelects(result) {
         }
         obj.granos = [];
 
-        for (var i = 0; i < cantGrano; i++) {
-            if (!ValidarGranoProduccion(i))
-                return false;
+        for (var i = 0; i <= cantGrano; i++) {
             if (($("#campaña" + i).val() && $("#campaña" + i).val() != "null") || ($("#grano" + i).val() && $("#grano" + i).val() != "null")) {
+                if (!ValidarGranoProduccion(i))
+                    return false;
                 obj.granos.push({
                     granoId: $("#grano" + i).val(),
                     grano: $("#grano" + i).find('option:selected').text(),
