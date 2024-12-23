@@ -5,7 +5,10 @@
 	<!--Para TFS-->
 	<!--<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; Initial Catalog=DataAgroDEV; Integrated Security=True " />-->
 	<!--Para AZURE-->
-	<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; Initial Catalog=DataAgroDEV" />
+	<!--<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; User ID=DATAAGRODEVUSR; Password='3:FqDN46JSBj'; Initial Catalog=DataAgroDEV; Pooling=False" />-->
+	<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; User ID=DATAAGRODEVUSR; Password='3:FqDN46JSBj'; Initial Catalog=DataAgroDEV " />
+	<!--<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; User ID=molinosagro\dataagrot; Password=MOA.Test; Initial Catalog=DataAgroDEV " />-->
+	<!--<setParameter name="DataAgro-Web.config Connection String" value="Data Source=APPAGLQA.molinosagro.ad,1450; Initial Catalog=DataAgroDEV" />-->
 	
 	<setParameter name="SmtpServer Key" value="smtpnuevo.molinosagro.com.ar" />
 	<setParameter name="SmtpServerPort Key" value="25" />
@@ -62,8 +65,9 @@
 	<setParameter name="ValorPruebaConfirma Key" value="0" />
 	<setParameter name="ActivarConfirmaWS Key" value="1" />
 
-	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
 	<!--QA2 de SCATO-->
+	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
+	
 	<setParameter name="HTTP_Port Service Endpoint Address"  value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port1 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />
 	<setParameter name="HTTP_Port2 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR&amp;interfaceNamespace=namespace%3Adataagro" />
