@@ -1473,7 +1473,7 @@ namespace Molinos.DataAgro.Business.Managers
             //    }
             //}
 
-            if (oParam.Venta != true && oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
+            if (oParam.ClasificacionId == (int)EnumClasificacionCompraNet.Productor && oParam.Venta != true && oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
             {
                 oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
             }

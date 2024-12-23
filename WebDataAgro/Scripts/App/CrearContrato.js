@@ -250,7 +250,7 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                if ($("#material").val() && $("#campanaId").val() && !$("#ventaId").is(":checked"))
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
                     ValidarCapacidadProductiva();
             }
             if ($("#buscadorProveedor").val() == "") {
@@ -286,7 +286,7 @@ function InicializarElementos() {
                     var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
                     $("#proveedorId").val(compraNet.ProveedorId);
                     $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
-                    if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
+                    if ($("#clasificacion").val() == CLASIFICACION.ACOPIADOR || $("#clasificacion").val() == CLASIFICACION.OTROS) {
                         $("#consignatarioId").prop("checked", compraNet.Consignatario);
                         $("#planCanjeId").prop("checked", compraNet.PlanCanje);
                     }
@@ -406,7 +406,7 @@ function InicializarElementos() {
                     $("#consignatarioId").prop("checked", false);
                 }
             }
-            if ($("#clasificacion").val() == '1') {  //SI ES PRODUCTOR
+            if ($("#clasificacion").val() == CLASIFICACION.PRODUCTOR) {
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
                 } else {
@@ -424,11 +424,6 @@ function InicializarElementos() {
                     $("#dolarizadoExpressId").prop("disabled", false);
 
                 }
-                //if (!$("#dolarizadoExpressId").is(":checked")) {
-                //    $("#dolarizadoId").prop("disabled", false);           
-                //    $("#dolarizadoDiv").hide();
-                //    $("#dolarizadoFechaId").val("");
-                //}
                 if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
                     $("#pagoDirectoDiv").hide();
                     $("#pagoDirectoId").prop("checked", false);
@@ -1028,7 +1023,7 @@ function InicializarElementos() {
                         }
                     }
                 }
-                if ($("#material").val() && $("#campanaId").val() && !$("#ventaId").is(":checked"))
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
                     ValidarCapacidadProductiva();
             }
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
@@ -1102,7 +1097,7 @@ function InicializarElementos() {
                 $("#pesificadoId").prop("checked", false);
                 $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
 
-                if ($("#clasificacion").val() == "1" && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
+                if ($("#clasificacion").val() == CLASIFICACION.PRODUCTOR && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
                     $("#dolarizadoExpressDiv").show();
                 } else {
                     $("#dolarizadoExpressDiv").hide();
@@ -1169,7 +1164,7 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && !$("#ventaId").is(":checked"))
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
                 ValidarCapacidadProductiva();
         }
     });
@@ -1285,7 +1280,6 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-
             if (this.value() == 1) {
                 $("#CapacidadProductivaPendienteDiv").show();
                 $("#consignatarioDiv").hide();
@@ -1296,9 +1290,7 @@ function InicializarElementos() {
                     if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#tipoId").val() != "6") {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
-                        //$("#pagoDolarizadoDiv").show();
                         $("#dolarizadoDiv").show();
-
                     }
                     if ($("#tipoId").val() == "1") {
                         $("#dolarizadoExpressDiv").show();
@@ -1312,9 +1304,9 @@ function InicializarElementos() {
                 }
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
-                } else {
-                    //$("#chequeElectronicoDiv").show(); //MOSTRAR
                 }
+                if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#CapacidadProductivaPendienteDiv").hide();
@@ -1932,9 +1924,8 @@ function InicializarElementos() {
                 }
                 if (!$("#dolarizadoExpressId").is(":checked") && $("#precioMonedaId").val() == "USDM ") {
                     $("#pagoDolarizadoDiv").show();
-                    if ($("#clasificacion").val() == 1 && $("#tipoId").val() != "6") {
+                    if ($("#clasificacion").val() == CLASIFICACION.PRODUCTOR && $("#tipoId").val() != "6") {
                         $("#dolarizadoExpressDiv").show();
-
                     }
                 }
 
@@ -5408,14 +5399,14 @@ function ValidarAlta() {
     if ($("#ventaId").is(":checked") != true) {
         if (altaTemprana) {
 
-            if ($("#clasificacion").val() == 2 &&
+            if ($("#clasificacion").val() == CLASIFICACION.ACOPIADOR &&
                 (($("#planCanjeId").is(':checked') && altaTemprana.Ruca.Acopiador.PlanCanje == "NO") ||
                     ($("#consignatarioId").is(':checked') && altaTemprana.Ruca.Acopiador.Consignatario == "NO") ||
                     ($("#planCanjeId").is(':not(:checked)') && $("#consignatarioId").is(':not(:checked)') && altaTemprana.Ruca.Acopiador.Directo == "NO"))) {
                 MensInfo("No está habilitado en Ruca");
                 return;
             }
-            if ($("#clasificacion").val() == 3 &&
+            if ($("#clasificacion").val() == CLASIFICACION.OTROS &&
                 (($("#planCanjeId").is(':checked') && altaTemprana.Ruca.Otros.PlanCanje == "NO") ||
                     ($("#consignatarioId").is(':checked') && altaTemprana.Ruca.Otros.Consignatario == "NO") ||
                     ($("#planCanjeId").is(':not(:checked)') && $("#consignatarioId").is(':not(:checked)') && altaTemprana.Ruca.Otros.Directo == "NO"))) {
@@ -5807,7 +5798,7 @@ function HayVenta() {
         $("#pagoDiferidoDiv").show();
         $("#compensacionDiv").show();
         $("#pagosDiv").show();
-        if ($("#clasificacion").val() != "1") {
+        if ($("#clasificacion").val() != CLASIFICACION.PRODUCTOR) {
             $("#planCanjeDiv").show();
         }
         $("#baseDiv").show();
@@ -5817,7 +5808,7 @@ function HayVenta() {
         if ($("#precioMonedaId").val() == "ARP  ") {
             $("#pagoDolarizadoDiv").show();
         }
-        if ($("#clasificacion").val() != "1") {
+        if ($("#clasificacion").val() != CLASIFICACION.PRODUCTOR) {
             $("#consignatarioDiv").show();
         }
         $(".compensacionDiv").show();

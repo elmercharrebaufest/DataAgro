@@ -969,7 +969,7 @@ function InicializarElementos() {
                 var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
                 CargarAutomaticamenteLaComision(compraNet);
-                if ($("material").val() && $("#campanaId").val())
+                if ($("material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
                     ValidarCapacidadProductiva();
             }
             CompletarCantidadDisponibleDeposito();
@@ -1031,20 +1031,13 @@ function InicializarElementos() {
         dataValueField: "MonedaId"
     });
 
-    //$("#precioMonedaId").closest('.k-dropdown.k-widget').keydown(function (e) {
-    //    if (e.keyCode == 46) {
-    //        var dropdownlist = $("#precioMonedaId").data("kendoDropDownList");
-    //        dropdownlist.text("");
-    //    }
-    //});
-
     $("#campanaId").kendoDropDownList({
         optionLabel: "SELECCIONE UNA CAMPAÑA...",
         dataTextField: "Descripcion",
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1])
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
                 ValidarCapacidadProductiva();
         }
     });
@@ -1155,6 +1148,7 @@ function InicializarElementos() {
     });
 
     $("#consignatarioDiv").hide();
+
     $("#clasificacion").kendoDropDownList({
         optionLabel: "SELECCIONE LA CLASIFICACIÓN...",
         dataTextField: "Descripcion",
@@ -1166,43 +1160,12 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);
-                if (/*$("#fechaCiertaId").val() == "" && */$("#buscadorCorredor").val() == "") {
-                    //if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#tipoId").val() != "6") {
-                    //    $("#dolarizadoExpressDiv").show();
-                    //    $("#dolarizadoExpressId").attr("disabled", false);
-                    //    //$("#pagoDolarizadoDiv").show();
-                    //    $("#dolarizadoDiv").show();
-
-                    //}
-                    //if ($("#tipoId").val() == "1" && !$("#canjeId").is(":checked")) {
-                    //    $("#dolarizadoExpressDiv").show();
-                    //    $("#dolarizadoExpressId").attr("disabled", false);
-                    //}
-                } else {
-                    //$("#dolarizadoExpressDiv").hide();
-                    //$("#dolarizadoExpressId").prop("checked", false);
-                    //$("#dolarizadoFechaId").val("");
-
-                }
+                if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
+                    ValidarCapacidadProductiva();
             } else {
                 $("#CapacidadProductivaPendienteDiv").hide();
-                //if (!$("#pesificadoId").is(":checked")) {
-                //    $("#fechaCiertaDiv").show();
-                //}
-                //$("#pagoDolarizadoDiv").hide();
-                //$("#dolarizadoId").prop("checked", false);
                 $("#consignatarioDiv").show();
-                //if ($("#dolarizadoId").is(":checked")) {
-                //    $("#dolarizadoDiv").show();
-                //} else {
-                //    $("#dolarizadoDiv").hide();
-                //    $("#dolarizadoFechaId").val("");
-                //}
-                //$("#dolarizadoDiv").hide();
-
                 $("#planCanjeDiv").show();
-                //$("#dolarizadoExpressDiv").hide();
-                //$("#dolarizadoExpressId").prop("checked", false);
             }
             ValidarAlta();
             ValidarProveedorSisa();
