@@ -372,6 +372,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        #region Informes Comerciales
         public ActionResult VerificarInformesComerciales()
         {
             List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
@@ -391,7 +392,7 @@ namespace WebDataAgro.Controllers
 
             return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
-        #region Informes Comerciales
+
         public ActionResult GrabarInformeComercialApertura()
         {
             InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
@@ -405,6 +406,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerInformeComercialApertura()
         {
             var model = new InformeComercialAperturaDto();
