@@ -120,7 +120,7 @@ namespace Molinos.DataAgro.Agent
                         foreach (var item in valor.EX_SALIDA)
                         {
                             long.TryParse(item.NUM_SIO, out long numsio);
-                            logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
+                            //logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
                             var estado = new EstadoSAPDto()
                             {
                                 NumeroSio = numsio,
