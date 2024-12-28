@@ -23,6 +23,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -49,6 +50,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         private Mock<IModificarContratoAgent> modificarContratoAgentMock;
         private Mock<IMailManager> mailManagerMock;
+        private JavaScriptSerializer serializer;
         private Mock<IStatusContratoAgent> status;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
@@ -59,6 +61,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
         private Mock<ICapacidadProductivaDisponibleAgent> capacidadProductivaDisponibleAgent;
         private Mock<INegocioManager> negocioManagerMock;
+        private Mock<IContratosParaFijacionAgent> contratosParaFijacionAgent;
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
         private Mock<ICentroManager> centroManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
@@ -121,6 +124,7 @@ namespace Molinos.DataAgro.Test.Managers
             ConfigurationManager.AppSettings["CredentialPassword"] = "Hola1234";
             ConfigurationManager.AppSettings["CargaDesdeBLEND"] = "2024-02-19";
             ConfigurationManager.AppSettings["ActivarBLEND"] = "Si";
+            this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             comercialManagerMock = new Mock<IComercialManager>();
@@ -4469,10 +4473,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerContratosReporteAFijarPaseTestOk()
         {
-            var result = new DataSourceResult
-            {
-                Data = new List<ReporteAfijarPaseDto> { new ReporteAfijarPaseDto { Negocio = "1", Cantidad = 10 } }
-            };
+            var result = new DataSourceResult();
+            result.Data = new List<ReporteAfijarPaseDto> { new ReporteAfijarPaseDto { Negocio = "1", Cantidad = 10 } };
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerContratosReporteAFijarPase>())).Returns(result);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                .Returns(new List<BasicoContrato>() { new BasicoContrato { ContratoSAP = "1", Cantidad = 1 } });
