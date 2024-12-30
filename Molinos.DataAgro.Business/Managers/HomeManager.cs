@@ -917,7 +917,25 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return lista;
         }
-
+        private List<Comercial> ObtenerComercialesDependientesPorNivel(IList<Comercial> listaComercial, List<Comercial> comerciales)
+        {
+            List<Comercial> comercialesDependientes = new List<Comercial>();
+            foreach(var comercial in listaComercial)
+            {
+                comercialesDependientes.Add(comercial);
+                var dependenciaNivel1 = comerciales.Where(x => x.EmpleadorACargoId == comercial.ComercialId);
+                foreach (var nive1 in dependenciaNivel1)
+                {
+                    comercialesDependientes.Add(nive1);
+                    var dependenciaNivel2 = comerciales.Where(x => x.EmpleadorACargoId == nive1.ComercialId);
+                    foreach (var nivel1 in dependenciaNivel2)
+                    {
+                        comercialesDependientes.Add(nive1);
+                    }
+                }
+            }
+            return comercialesDependientes;
+        }
         /// <summary>
         /// Obtiene una lista de proveedores cuya capacidad productiva está desactualizada en función de la campaña actual.
         /// Los proveedores evaluados están asignados a un comercial específico, y se consideran
@@ -930,10 +948,11 @@ namespace Molinos.DataAgro.Business.Managers
         /// Una lista de objetos <see cref="CapacidadProductivaDesactualizadaDto"/> con
         /// información sobre los proveedores con capacidad productiva desactualizada.
         /// </returns>
-        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId)
+        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, bool esAdministrador)
         {
             logger.Info("INICIO ProveedoresConCapProdDesactualizada");
             List<CapacidadProductivaDesactualizadaDto> proveedoresConCapProdDesactualizada = new List<CapacidadProductivaDesactualizadaDto>();
+            List<int> comercialesId = new List<int>();
 
             List<int> proveedoresId = repositorio.Listar<Proveedor, int>(p => p.ProveedorId, p => p.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO
             && p.Deshabilitado != true && p.EstadoId != (int)EnumEstado.BAJA && p.Segmentacion.Grupo == "Productores");
@@ -941,7 +960,40 @@ namespace Molinos.DataAgro.Business.Managers
             var campanias = repositorio.Listar<Campaña>();
             var materialCampaniaActual = repositorio.Obtener<Material>(m => m.MaterialId == (int)EnumMateriales.SOJA); //se toma la campaña de soja como la actual
 
-            List<int> comercialesId = repositorio.Listar<Comercial, int>(c => c.ComercialId, x => x.EmpleadorACargoId == comercialId || x.ComercialId == comercialId); //se verán los proveedores propios y los de subordinados directos
+            if (esAdministrador)
+            {
+                comercialesId = repositorio.Listar<Comercial, int>(c => c.ComercialId, x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
+            }
+            else
+            {
+                var comercialesFiltro = repositorio.Listar<Comercial>(x => x.EmpleadorACargoId == comercialId);
+                if (comercialesFiltro.Count == 1 && comercialesFiltro.Count !=0)
+                {
+                    comercialesId = repositorio.Listar<Comercial, int>(c => c.ComercialId, x => x.EmpleadorACargoId == comercialId || x.ComercialId == comercialId); //se verán los proveedores propios y los de subordinados directos
+                }
+                else
+                {
+                    var comerciales = repositorio.Listar<Comercial>(x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
+                    foreach (var comercial in comercialesFiltro)
+                    {
+                        if (comercial.EmpleadorACargoId == 0 || comercial.EmpleadorACargoId == null)
+                        {
+                            comercialesId.Add(comercial.ComercialId);
+                        }
+                        else
+                        {
+                            comercialesId.Add(comercial.ComercialId);
+                            var comercialesDependientes = comerciales.Where(x => x.EmpleadorACargoId == comercial.ComercialId).ToList();
+                            if (comercialesDependientes.Count() > 0)
+                            {
+                                var comercialesDependendientes = ObtenerComercialesDependientesPorNivel(comercialesDependientes, comerciales);
+                                foreach (var dependientes in comercialesDependendientes)
+                                    comercialesId.Add(dependientes.ComercialId);
+                            }
+                        }
+                    }
+                }
+            }
 
             var proveedoresPorComercial = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId) && proveedoresId.Contains(x.ProveedorId))
                 .GroupBy(pc => pc.ProveedorId).Select(grupo => grupo.First()).OrderBy(x => x.Proveedor.RazonSocial); //evito proveedores repetidos
