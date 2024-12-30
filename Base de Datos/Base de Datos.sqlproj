@@ -369,6 +369,10 @@
     <None Include="Molinos.DataAgro.DatabaseQa2.gvicsqlTest2016.publish.xml" />
     <None Include="Molinos.DataAgro.Database.local.publish.xml" />
     <None Include="Molinos.DataAgro.Database.PROD.publish.xml" />
+    <None Include="MOA.DataAgro.Database.QA2.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.QA.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.PROD.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.PREPROD.Azure.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />

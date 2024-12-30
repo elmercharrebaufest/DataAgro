@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -9,7 +10,8 @@ namespace Molinos.DataAgro.Repository
     {
         public static void SqlBulkInsert(this DbContext session, DataTable dataTable, string tableName)
         {
-            var conn = session.Database.Connection.ConnectionString;
+            var conn = ConfigurationManager.ConnectionStrings["DataAgro"].ConnectionString; //ANTES: session.Database.Connection.ConnectionString;
+
             using (var copy = new SqlBulkCopy(conn))
             {
                 copy.BulkCopyTimeout = 10000;
@@ -43,7 +45,7 @@ namespace Molinos.DataAgro.Repository
                         if (setColumns != string.Empty)
                         {
                             setColumns += ",";
-                            columnasParaLaTemporal += ","; 
+                            columnasParaLaTemporal += ",";
                         }
 
                         setColumns += "T." + column.ColumnName + " = Temp." + column.ColumnName;
@@ -55,7 +57,7 @@ namespace Molinos.DataAgro.Repository
                     }
                 }
 
-               
+
                 if (idType != string.Empty)
                 {
                     command.CommandText = string.Format(@"Select top 0 {2} Into ##TmpTable{0} From {0};
@@ -78,7 +80,7 @@ namespace Molinos.DataAgro.Repository
                 command.CommandTimeout = 300;
                 command.CommandText = string.Format(@"UPDATE T SET {1} FROM {0} T INNER JOIN ##TmpTable{0} Temp ON Temp.{2} = T.{2} {3};
                                                       DROP TABLE ##TmpTable{0};
-                ", tableName, setColumns, columnaJoin,where);
+                ", tableName, setColumns, columnaJoin, where);
                 command.ExecuteNonQuery();
             }
         }
