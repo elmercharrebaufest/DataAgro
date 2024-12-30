@@ -375,7 +375,8 @@ namespace WebDataAgro.Controllers
         #region Informes Comerciales
         public ActionResult VerificarInformesComerciales()
         {
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
 
             return new JsonResult()
             {
@@ -386,7 +387,8 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ExportarCapProdDesactualizadas()
         {
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
 
             byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
 
