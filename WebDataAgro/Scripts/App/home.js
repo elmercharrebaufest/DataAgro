@@ -6,6 +6,7 @@ var pagina = 1;
 var visualiza;
 var datosCompra;
 var huboFiltro = false;
+var totalPaginas = 0;
 var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
     var elem = $(str + " input[name='" + nam + "']");
@@ -453,6 +454,8 @@ function actualizarContactos(contactos) {
     $(".cont-habilitado").html(contactos.TotalHabilitadoContactos);
     $(".cont-legajo-irregular").html(contactos.TotalLegajoIrregularContactos);
     $(".cont-no-habilitado").html(contactos.TotalNoHabilitadoContactos);
+    totalPaginas = contactos.TotalPaginas;
+    console.log('totalPaginas-->>', totalPaginas);
 }
 
 //function ObtenerEstadoActual() {
@@ -645,25 +648,25 @@ function setChangeChecks() {
 
 function TraerSiguiente() {
     pagina += 1;
-    filtro.pagina = pagina
-    $("#verMasContactos").hide();
-    $("#cargandoContactos").show();
-    function callback(result) {
-        if (result != null) {
-            if (ExistsErrorMessages(result.Errores)) {
-                ShowTooltipMessages("err", result.Errores);
+    if (totalPaginas != pagina && totalPaginas >= pagina) {
+        filtro.pagina = pagina
+        $("#verMasContactos").hide();
+        $("#cargandoContactos").show();
+        function callback(result) {
+            if (result != null) {
+                if (ExistsErrorMessages(result.Errores)) {
+                    ShowTooltipMessages("err", result.Errores);
+                }
+                else {
+                    conts = result.Contactos.Contactos;
+                    ArmarContactos(conts);
+                }
             }
-            else {
-                conts = result.Contactos.Contactos;
-                ArmarContactos(conts);
-            }
+            $("#cargandoContactos").hide();
+            $("#verMasContactos").show();
         }
-        $("#cargandoContactos").hide();
-        $("#verMasContactos").show();
+        var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
     }
-    var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
-
-
 }
 
 function ArmarCamapaña(campañas) {

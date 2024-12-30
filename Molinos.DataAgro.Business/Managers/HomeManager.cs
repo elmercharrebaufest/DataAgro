@@ -67,6 +67,7 @@ namespace Molinos.DataAgro.Business.Managers
                 res.TotalHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.CUIT).Distinct().Count();
                 res.TotalLegajoIrregularContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.CUIT).Distinct().Count();
                 res.TotalNoHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.CUIT).Distinct().Count();
+                res.TotalPaginas = 1;
             }
             else
             {
@@ -81,6 +82,7 @@ namespace Molinos.DataAgro.Business.Managers
                 res.TotalHabilitadoContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.Cuit).Distinct().Count();
                 res.TotalLegajoIrregularContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.Cuit).Distinct().Count();
                 res.TotalNoHabilitadoContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.Cuit).Distinct().Count();
+                res.TotalPaginas = 1;
             }
 
 
