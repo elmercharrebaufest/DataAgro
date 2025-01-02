@@ -372,9 +372,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        #region Informes Comerciales
         public ActionResult VerificarInformesComerciales()
         {
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
 
             return new JsonResult()
             {
@@ -385,13 +387,14 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ExportarCapProdDesactualizadas()
         {
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId);
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
 
             byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
 
             return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
-        #region Informes Comerciales
+
         public ActionResult GrabarInformeComercialApertura()
         {
             InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
@@ -405,6 +408,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult TraerInformeComercialApertura()
         {
             var model = new InformeComercialAperturaDto();
