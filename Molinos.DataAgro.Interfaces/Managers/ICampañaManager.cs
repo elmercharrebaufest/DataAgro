@@ -22,5 +22,7 @@ namespace Molinos.DataAgro.Interfaces
 
         List<CampañaDto> TraerTodoCampania();
 
+        List<CampañaDto> TraerCampañaPorMaterialCapacidadProductiva(int materialId, int proveedorId);
+
     }
 }

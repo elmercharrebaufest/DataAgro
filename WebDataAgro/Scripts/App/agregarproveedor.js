@@ -358,7 +358,8 @@ function armarFuncionalidades() {
         $("#grano" + cantGrano + "").change(function (x) {
             var obj = {
                 MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("grano")[1]
+                elemId: $(this).prop("id").split("grano")[1],
+                ProveedorId: ProveedorId
             };
             armarSelectGrano(obj);
         });
@@ -1396,7 +1397,8 @@ function armarSelects(result) {
     $("#grano0").change(function (x) {
         var obj = {
             MaterialId: $(this).val(),
-            elemId: $(this).prop("id").split("grano")[1]
+            elemId: $(this).prop("id").split("grano")[1],
+            ProveedorId: ProveedorId
         };
         armarSelectGrano(obj);
     });
@@ -2479,7 +2481,7 @@ function editarCampoProduccion(id) {
     }
 
     $("#campoid").val(obj.CampoId ? obj.CampoId : 0);
-
+    console.log('pruebaaaaaaa');
     var cantGranos = obj.granos.length;
     $("#grano0").val(obj.granos.length ? obj.granos[0].granoId : "null");
     $("#grano0").trigger("change");
@@ -2513,7 +2515,8 @@ function editarCampoProduccion(id) {
         $("#grano" + i + "").change(function (x) {
             var obj = {
                 MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("grano")[1]
+                elemId: $(this).prop("id").split("grano")[1],
+                ProveedorId: ProveedorId
             };
             armarSelectGrano(obj);
         });
@@ -3298,7 +3301,8 @@ function armarSelectGrano(obj) {
         text: "Seleccione..."
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
-        var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
+        var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterialCapacidadProductiva', { materialId: obj.MaterialId, proveedorId: obj.ProveedorId });
+        var sugerido = resultGrano.find(x => x.Sugerido == true);
         resultGrano = resultGrano.slice(0, 3);
         if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
@@ -3315,6 +3319,9 @@ function armarSelectGrano(obj) {
                         }));
                     }
                 })(ii);
+            }
+            if (sugerido != null || sugerido != undefined) {
+                elem.val(sugerido.CampañaId);
             }
         }
     }
