@@ -453,7 +453,8 @@ function armarProduccion(campoacopio) {
             $("#grano" + fila + "").change(function (x) {
                 var obj = {
                     MaterialId: $(this).val(),
-                    elemId: $(this).prop("id").split("grano")[1]
+                    elemId: $(this).prop("id").split("grano")[1],
+                    ProveedorId: ProveedorId
                 };
                 armarSelectGrano(obj);
             });
@@ -466,12 +467,12 @@ function armarProduccion(campoacopio) {
             $("#grano" + fila).trigger("change");
             $("#hectareas" + fila).val(grano.HectareasPorcentaje);
             $("#toneladas" + fila).val(grano.Toneladas);
-            var elemento = resultInit.Material.find(item => item.MaterialId == grano.MaterialId);
-            if (elemento) {
-                $("#campaña" + fila).val(elemento.CampañaIdActual);
-            } else {
-                $("#campaña" + fila).val(grano.CampañaId);
-            }
+            //var elemento = resultInit.Material.find(item => item.MaterialId == grano.MaterialId);
+            //if (elemento) {
+            //    $("#campaña" + fila).val(elemento.CampañaIdActual);
+            //} else {
+            //    $("#campaña" + fila).val(grano.CampañaId);
+            //}
             fila++;
         })
         cantGrano = fila - 1;
