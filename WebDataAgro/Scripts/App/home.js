@@ -1262,9 +1262,10 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
 }
 
 function VerificarInformesComerciales() {
+    BlockUi('Cargando...');
     var result = MSExecuteOnServer('/Home/VerificarInformesComerciales');
-
     if (result == null || result.length == 0) {
+        $.unblockUI();
         document.getElementById("abrirModalInformesFaltantes").setAttribute("title", "Todos los informes están actualizados!");
     }
     else {
@@ -1277,6 +1278,7 @@ function VerificarInformesComerciales() {
                 <td>${x.CUIT}</td>
                 <td>${x.Cosecha}</td>
                 <td>${x.NombreComercial}</td>
+                <td>${x.SupervisorComercial}</td>
                 <td>
                     <button class="btn btn-primary abrir-solapa" data-proveedor-id="${x.ProveedorId}">
                         Cargar Inf Com
@@ -1287,7 +1289,7 @@ function VerificarInformesComerciales() {
 
             $("#tabla-inf-comercial").append(fila);
         })
-
+        $.unblockUI();
         $("#modalInformesComercialesPendientes").modal("show");
     }
 }
