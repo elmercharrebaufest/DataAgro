@@ -283,6 +283,7 @@
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Dto\BasicoConfirma.cs" />
     <Compile Include="Dto\CapacidadProductivaDesactualizadaDto.cs" />
+    <Compile Include="Dto\ComercialEmpleadorACargoDto.cs" />
     <Compile Include="Dto\ConfirmaParteDto.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
