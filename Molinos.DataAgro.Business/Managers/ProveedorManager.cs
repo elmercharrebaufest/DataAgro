@@ -33,9 +33,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly IMailProveedorAgent mailProveedorAgent;
         private readonly IEstadoProveedorManager estadoProveedorManager;
+        private readonly IVisualizarCapacidadProductivaAgent capProdAgent;
+
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent, IMailManager mailManager,
-            ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager)
+            ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager,
+            IVisualizarCapacidadProductivaAgent capProdAgent)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -48,6 +51,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.altaTempranaAgent = altaTempranaAgent;
             this.mailProveedorAgent = mailProveedorAgent;
             this.estadoProveedorManager = estadoProveedorManager;
+            this.capProdAgent = capProdAgent;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActividad oParam, int ProveedorId, string actividadId)
@@ -5245,7 +5249,37 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarEstadoProveedor(int proveedorId, string proveedorCuit)
         {
             ActualizarProveedoresHome(proveedorId);
+            ActualizarCapacidadProductivaPorProveedor(proveedorId);
             estadoProveedorManager.ActualizarProveedores(proveedorCuit);
+        }
+
+        private void ActualizarCapacidadProductivaPorProveedor(int proveedorId)
+        {
+            List<CapacidadProductivaDto> listaCP = new List<CapacidadProductivaDto>();
+            var proveedorSeleccionado = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+
+            listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(proveedorSeleccionado.ProveedorId));
+            var listaCapacidadProductiva = repositorio.Listar<CapacidadProductiva>(x => x.ProveedorId == proveedorSeleccionado.ProveedorId);
+
+            foreach (var capacidadProductiva in listaCapacidadProductiva)
+            {
+                repositorio.Remover<CapacidadProductiva>(capacidadProductiva);
+            }
+            repositorio.GuardarCambios();
+
+            foreach (var cp in listaCP)
+            {
+                CapacidadProductiva capacidadProductiva = new CapacidadProductiva();
+                capacidadProductiva.ProveedorId = cp.ProveedorId;
+                capacidadProductiva.MaterialId = cp.MaterialId;
+                capacidadProductiva.CampaniaId = cp.CampaniaId;
+                capacidadProductiva.Cantidad = cp.Cantidad;
+                capacidadProductiva.UnidadMedida = cp.UnidadMedida;
+                capacidadProductiva.Porcentaje = cp.Porcentaje;
+                capacidadProductiva.FechaActualizacion = cp.FechaActualizacion;
+                repositorio.Agregar(capacidadProductiva);
+            }
+            repositorio.GuardarCambios();
         }
     }
 

@@ -995,6 +995,22 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            List<ComercialEmpleadorACargoDto> listaComercialEmpleadorACargo = new List<ComercialEmpleadorACargoDto>();
+            var listaComercialPersonaACargo = repositorio.Listar<Comercial>(x => comercialesId.Contains(x.ComercialId));
+            foreach(var personaACargo in listaComercialPersonaACargo)
+            {
+                if (personaACargo.EmpleadorACargoId != null)
+                {
+                    var empleadorACargo = repositorio.Obtener<Comercial>(x => x.ComercialId == personaACargo.EmpleadorACargoId);
+                    listaComercialEmpleadorACargo.Add(new ComercialEmpleadorACargoDto
+                    {
+                        ComercialId = personaACargo.ComercialId,
+                        EmpleadorACargo = $"{empleadorACargo.Nombres} {empleadorACargo.Apellido}".ToUpper(),
+                        EmpleadorACargoId = personaACargo.EmpleadorACargoId
+                    });
+                }
+            }
+
             var proveedoresPorComercial = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId) && proveedoresId.Contains(x.ProveedorId))
                 .GroupBy(pc => pc.ProveedorId).Select(grupo => grupo.First()).OrderBy(x => x.Proveedor.RazonSocial); //evito proveedores repetidos
             var proveedoresPorComercialId = proveedoresPorComercial.Select(pc => pc.ProveedorId);
@@ -1009,6 +1025,7 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var prov in proveedoresPorComercial)
             {
                 var capacidadProductivaProv = capacidadProductiva.FirstOrDefault(cp => cp.ProveedorId == prov.ProveedorId);
+                var empleadoACargo = listaComercialEmpleadorACargo.FirstOrDefault(x => x.ComercialId == prov.ComercialId);
                 if (capacidadProductivaProv != null)
                 {
                     if (DateTime.Today.AddMonths(3) < campanias.First(x => x.CampañaId == capacidadProductivaProv.CampaniaId).Hasta)
@@ -1024,6 +1041,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Cosecha = campaniaSiguiente.Descripcion,
                             CUIT = prov.Proveedor.CUIT,
                             NombreComercial = $"{prov.Comercial.Nombres} {prov.Comercial.Apellido}".ToUpper(),
+                            SupervisorComercial = empleadoACargo!=null? empleadoACargo.EmpleadorACargo : string.Empty
                         });
                     }
                 }
@@ -1036,6 +1054,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cosecha = campanias.First(x => x.CampañaId == materialCampaniaActual.CampañaId.Value).Descripcion,
                         CUIT = prov.Proveedor.CUIT,
                         NombreComercial = $"{prov.Comercial.Nombres} {prov.Comercial.Apellido}".ToUpper(),
+                        SupervisorComercial = empleadoACargo != null ? empleadoACargo.EmpleadorACargo : string.Empty
                     });
                 }
             };
@@ -1065,6 +1084,7 @@ namespace Molinos.DataAgro.Business.Managers
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Razón Social</Data></Cell>");
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Cosecha Pendiente</Data></Cell>");
             sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Comercial a Cargo</Data></Cell>");
+            sb.AppendLine(@"    <Cell><Data ss:Type=""String"">Empleador a Cargo</Data></Cell>");
             sb.AppendLine(@"   </Row>");
 
             // Agregar datos
@@ -1075,6 +1095,7 @@ namespace Molinos.DataAgro.Business.Managers
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.RazonSocial}</Data></Cell>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.Cosecha}</Data></Cell>");
                 sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.NombreComercial}</Data></Cell>");
+                sb.AppendLine($@"    <Cell><Data ss:Type=""String"">{item.SupervisorComercial}</Data></Cell>");
                 sb.AppendLine(@"   </Row>");
             }
 

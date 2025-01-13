@@ -7,5 +7,7 @@
         public string Cosecha { get; set; }
         public string RazonSocial { get; set; }
         public string NombreComercial { get; set; }
+        public string SupervisorComercial { get; set; }
+
     }
 }
