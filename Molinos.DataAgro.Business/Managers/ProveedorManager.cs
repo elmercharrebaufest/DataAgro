@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent, IMailManager mailManager,
-            ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager, 
+            ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager,
             IVisualizarCapacidadProductivaAgent capProdAgent)
         {
             this.logger = logger;
@@ -5260,8 +5260,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(proveedorSeleccionado.ProveedorId));
             var listaCapacidadProductiva = repositorio.Listar<CapacidadProductiva>(x => x.ProveedorId == proveedorSeleccionado.ProveedorId);
-            
-            foreach(var capacidadProductiva in listaCapacidadProductiva)
+
+            foreach (var capacidadProductiva in listaCapacidadProductiva)
             {
                 repositorio.Remover<CapacidadProductiva>(capacidadProductiva);
             }
