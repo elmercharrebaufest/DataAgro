@@ -1025,6 +1025,9 @@ function InicializarElementos() {
                 }
                 if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
                     ValidarCapacidadProductiva();
+
+                if (!ValidarComisionEnCentro())
+                    BorrarComisionSiEsAcopio();
             }
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             CompletarCantidadDisponibleDeposito();
