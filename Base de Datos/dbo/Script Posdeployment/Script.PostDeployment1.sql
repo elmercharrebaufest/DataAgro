@@ -560,3 +560,14 @@ BEGIN
     CREATE NONCLUSTERED INDEX NDX_AperturaPrecio_NegocioId_Porcentaje
     ON [dbo].[AperturaPrecio] ([ConceptoAperturaPrecioId],[NegocioId],[Porcentaje])
 END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_fecha'
+    AND object_id = OBJECT_ID('[dbo].[log]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_fecha
+    ON [dbo].[log] ([fecha])
+END;

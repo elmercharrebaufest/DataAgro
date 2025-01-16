@@ -4,27 +4,28 @@ using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class LogManager : ILogManager
     {
         private readonly IRepositorio repositorio;
-        public LogManager (IRepositorio repositorio)
+        public LogManager(IRepositorio repositorio)
         {
             this.repositorio = repositorio;
         }
         public List<LogDto> TraerTodoLog(DateTime hoy)
         {
-           
+            // Ajustamos las fechas para el rango del día completo
+            var fechaInicio = hoy.Date;
+            var fechaFin = hoy.Date.AddDays(1).AddTicks(-1);
+
             return repositorio.Listar<Log, LogDto>(x => new LogDto
             {
                 Id = x.Id,
                 Fecha = x.Fecha,
                 Xml = x.Xml
-               
-            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy, 0, "Fecha");
+            }, x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin, 0, "Fecha");
         }
     }
 }
