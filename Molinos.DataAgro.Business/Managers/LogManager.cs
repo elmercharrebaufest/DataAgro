@@ -4,6 +4,7 @@ using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -25,7 +26,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = x.Id,
                 Fecha = x.Fecha,
                 Xml = x.Xml
-            }, x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin, 0, "Fecha");
+            }, x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin, 0, "Fecha").OrderByDescending(x => x.Fecha).ToList();
         }
     }
 }
