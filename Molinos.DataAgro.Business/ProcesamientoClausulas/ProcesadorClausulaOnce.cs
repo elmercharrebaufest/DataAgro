@@ -24,8 +24,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             var res = new ResultadoClausula();
 
-            var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
-            var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
+            // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
+            bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId !=null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true: false) : false;
+
+
+            var descuentoGeneralSobrePrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+            var descuentoGeneralFueraPrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
 
             if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
             {
