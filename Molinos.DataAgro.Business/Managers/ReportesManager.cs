@@ -601,7 +601,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId, bool verFijaciones = true)
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
-
+            // Acopios que no se suman en Acopio: Vicentin Virtual, Bahia Blanca y ahora Rosario Norte/Sur, opción comprador
             var negocio = repositorio.Listar<Contrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
@@ -611,8 +611,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
-                SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") && (x.Destino.CodigoSap != "1168")) ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074" && x.Destino.CodigoSap != "1168") ? Math.Round(x.Cantidad / 1000) : 0,
+                SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074" || x.Destino.CodigoSap == "1068") && (x.Destino.CodigoSap != "1168")) ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074" && x.Destino.CodigoSap != "1168" && x.Destino.CodigoSap != "1068") ? Math.Round(x.Cantidad / 1000) : 0,
                 BahiaBlanca = (x.Destino.CodigoSap == "1168") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
