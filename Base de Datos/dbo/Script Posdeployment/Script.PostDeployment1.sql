@@ -571,3 +571,39 @@ BEGIN
     CREATE NONCLUSTERED INDEX NDX_fecha
     ON [dbo].[log] ([fecha])
 END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_Discriminator_EstadoId_ContratoSAP'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_Discriminator_EstadoId_ContratoSAP
+    ON [dbo].[Negocio] ([Discriminator],[EstadoId],[ContratoSAP])
+    INCLUDE ([ConfirmadoSAP],[FechaConfirmadoSAP])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_EstadoCupoId
+    ON [dbo].[Cupo] ([EstadoCupoId])
+    INCLUDE ([CentroId],[FechaIngreso])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_CentroId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_CentroId
+    ON [dbo].[Cupo] ([CentroId])
+    INCLUDE ([FechaIngreso],[EstadoCupoId])
+END;

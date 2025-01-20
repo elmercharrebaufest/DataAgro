@@ -8454,7 +8454,18 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarEstadoDeContratos()
         {
-            var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
+            //var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
+
+            var contratos = repositorio.Listar<Contrato, ContratoActualizarEstadoDeContratosDto>(x => new ContratoActualizarEstadoDeContratosDto
+            {
+                ContratoSAP = x.ContratoSAP,
+                ConfirmadoSAP = x.ConfirmadoSAP,
+                FechaConfirmadoSAP = x.FechaConfirmadoSAP,
+            }, x => x.ConfirmadoSAP != true
+            && !string.IsNullOrEmpty(x.ContratoSAP)
+            && x.EstadoId != (int)EnumEstadoContrato.Rechazado
+            && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
+
             if (contratos != null && contratos.Count > 0)
             {
                 logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
@@ -8470,6 +8481,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.GuardarCambios();
             }
+        }
+
+        public partial class ContratoActualizarEstadoDeContratosDto
+        {
+            public string ContratoSAP { get; set; }
+            public bool? ConfirmadoSAP { get; set; }
+            public DateTime? FechaConfirmadoSAP { get; set; }
+
         }
 
         public List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId)
