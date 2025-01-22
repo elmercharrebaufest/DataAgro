@@ -332,6 +332,23 @@
 						match="/configuration/appSettings/add[@key='UrlBaseDataAgro']
                            /@value" />
 	</parameter>
+
+	<parameter name="UrlBasePrimary Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='UrlBasePrimary']
+                           /@value" />
+	</parameter>
+	<parameter name="UserPrimary Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='UserPrimary']
+                           /@value" />
+	</parameter>
+	<parameter name="PassPrimary Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='PassPrimary']
+                           /@value" />
+	</parameter>
+	
 	<parameter name="HTTP_Port19 Service Endpoint Address">
 		<parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
