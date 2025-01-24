@@ -487,3 +487,145 @@ insert into Log (Fecha, Xml) values (CURRENT_TIMESTAMP, CONCAT('PRUEBA',' - ',CU
 
 --Centro
 --UPDATE Centro SET CentroPropio = 1 WHERE Descripcion IN ('San Lorenzo', 'Pergamino', 'Bandera', 'La Cautiva', 'Lincoln', 'Chivilcoy', 'Rio del Valle', 'General Pinedo', 'Vicentin Virtual', 'Rio del Valle (Planta Soto)');
+
+-- INDICES provistos por Algeiba
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'ProveedorId_CampanaId_MaterialId'
+    AND object_id = OBJECT_ID('[dbo].[CampanaMaterialDetallePorMes]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX ProveedorId_CampanaId_MaterialId
+    ON [dbo].[CampanaMaterialDetallePorMes] ([ProveedorId],[CampanaId],[MaterialId])
+    WITH (SORT_IN_TEMPDB = ON, ONLINE = OFF, FILLFACTOR = 90) ON [PRIMARY];
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'ndx_ID_FechaOperacion_AnulaYReemplazaContratoId'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX ndx_ID_FechaOperacion_AnulaYReemplazaContratoId
+    ON [dbo].[Negocio] ([Id],[FechaOperacion],[AnulaYReemplazaContratoId],[DestinoId],[EstadoId],[TipoNegocioId],[Discriminator],[MaterialId],[OcultarEnTablero],[Pizarra],[PrestamoDevolucion],[TipoPosicionCBOTId],[TipoAgenteCompraId],[Venta])
+    INCLUDE ([Cantidad], [Precio], [MonedaId], [PrecioNeto], [PrecioNetoPonderado], [Condicional])
+    WITH (SORT_IN_TEMPDB = ON, ONLINE = OFF, FILLFACTOR = 90) ON [PRIMARY];
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'ndx_TipoAgenteCompraId_OcultarEnTablero'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX ndx_TipoAgenteCompraId_OcultarEnTablero
+    ON [dbo].[Negocio] ([TipoAgenteCompraId],[OcultarEnTablero],[AnulaYReemplazaContratoId],[MaterialId],[EstadoId])
+    INCLUDE ([TipoNegocioId],[Cantidad],[Precio],[MonedaId],[DestinoId],[ContratoAcuerdoId],[Pizarra],[PrecioNeto],[Discriminator],[FechaOperacion],[PrestamoDevolucion],[Venta],[TipoPosicionCBOTId],[PrecioNetoPonderado],[Condicional]);
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'ndx_ProveedorId_EsPrincipal'
+    AND object_id = OBJECT_ID('[dbo].[ContactoComercial]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX ndx_ProveedorId_EsPrincipal
+    ON [dbo].[ContactoComercial] ([ProveedorId],[EsPrincipal])
+    INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_OcultarEnTablero_EstadoId'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_OcultarEnTablero_EstadoId
+    ON [dbo].[Negocio] ([OcultarEnTablero],[EstadoId])
+    INCLUDE ([MaterialId],[TipoNegocioId],[Cantidad],[Precio],[MonedaId],[Fecha],[ComercialId],[ComercialCreadorId],[ContratoAcuerdoId],[Pizarra],[PrecioNeto],[TipoAgenteCompraId],[Discriminator],[FechaOperacion],[Canje],[TipoPosicionCBOTId],[AnulaYReemplazaContratoId],[PrecioNetoPonderado],[Condicional]);
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_AperturaPrecio_NegocioId_Porcentaje'
+    AND object_id = OBJECT_ID('[dbo].[AperturaPrecio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_AperturaPrecio_NegocioId_Porcentaje
+    ON [dbo].[AperturaPrecio] ([ConceptoAperturaPrecioId],[NegocioId],[Porcentaje])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_fecha'
+    AND object_id = OBJECT_ID('[dbo].[log]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_fecha
+    ON [dbo].[log] ([fecha])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_Discriminator_EstadoId_ContratoSAP'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_Discriminator_EstadoId_ContratoSAP
+    ON [dbo].[Negocio] ([Discriminator],[EstadoId],[ContratoSAP])
+    INCLUDE ([ConfirmadoSAP],[FechaConfirmadoSAP])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_EstadoCupoId
+    ON [dbo].[Cupo] ([EstadoCupoId])
+    INCLUDE ([CentroId],[FechaIngreso])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_CentroId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_CentroId
+    ON [dbo].[Cupo] ([CentroId])
+    INCLUDE ([FechaIngreso],[EstadoCupoId])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
+END;

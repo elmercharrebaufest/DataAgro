@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -261,11 +262,28 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private void GenerarLimiteZona(ConfiguracionCupo configuracion, List<ZonaCupo> zonas)
         {
-            var totalNeogcios = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && x.EstadoId == 5 && x.MaterialId == configuracion.MaterialId && x.DestinoId == configuracion.CentroId).Sum(x => x.Cantidad);
+            var totalNeogcios = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && 
+                                                                  x.EstadoId   == 5 && 
+                                                                  x.MaterialId == configuracion.MaterialId &&
+                                                                  x.DestinoId == configuracion.CentroId && 
+                                                                  (
+                                                                    (x.Venta == null ? false : x.Venta) == false || 
+                                                                    (x.PrestamoDevolucion == null ? false : x.PrestamoDevolucion) == false
+                                                                  )
+                                                                  ).Sum(x => x.Cantidad);
             for (int i = 0; i < zonas.Count(); i++)
             {
                 var zonaCupo = zonas[i].Descripcion;
-                var totalZona = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && x.EstadoId == 5 && x.Comercial.GrupoDeCompras.Descripcion == zonaCupo && x.MaterialId == configuracion.MaterialId && x.DestinoId == configuracion.CentroId).Sum(x => x.Cantidad);
+                var totalZona = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && 
+                                                                  x.EstadoId == 5 && 
+                                                                  x.Comercial.GrupoDeCompras.Descripcion == zonaCupo && 
+                                                                  x.MaterialId == configuracion.MaterialId &&
+                                                                  x.DestinoId == configuracion.CentroId && 
+                                                                  (
+                                                                    (x.Venta == null ? false : x.Venta) == false ||
+                                                                    (x.PrestamoDevolucion == null ? false : x.PrestamoDevolucion) == false
+                                                                  )
+                                                                  ).Sum(x => x.Cantidad);
                 var porcentajeZona = (totalZona * 100) / totalNeogcios;
                 if (double.IsNaN(porcentajeZona))
                 {
