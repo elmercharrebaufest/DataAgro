@@ -1,14 +1,11 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using System;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IVisualizarCapacidadProductivaAgent
     {
-        List<CapacidadProductivaDto> VisualizarCapacidadProductiva(int proveedorID);
+        List<CapacidadProductivaDto> VisualizarCapacidadProductiva(int proveedorID, ProveedorDto proveedorDto = null, List<Material> materialesList = null, List<Campaña> campaniasList = null);
     }
 }
