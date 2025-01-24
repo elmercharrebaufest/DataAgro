@@ -266,10 +266,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                                   x.EstadoId   == 5 && 
                                                                   x.MaterialId == configuracion.MaterialId &&
                                                                   x.DestinoId == configuracion.CentroId && 
-                                                                  (
-                                                                    (x.Venta == null ? false : x.Venta) == false || 
-                                                                    (x.PrestamoDevolucion == null ? false : x.PrestamoDevolucion) == false
-                                                                  )
+                                                                  x.Venta != true &&
+                                                                  x.PrestamoDevolucion != true
                                                                   ).Sum(x => x.Cantidad);
             for (int i = 0; i < zonas.Count(); i++)
             {
@@ -278,11 +276,9 @@ namespace Molinos.DataAgro.Business.Managers
                                                                   x.EstadoId == 5 && 
                                                                   x.Comercial.GrupoDeCompras.Descripcion == zonaCupo && 
                                                                   x.MaterialId == configuracion.MaterialId &&
-                                                                  x.DestinoId == configuracion.CentroId && 
-                                                                  (
-                                                                    (x.Venta == null ? false : x.Venta) == false ||
-                                                                    (x.PrestamoDevolucion == null ? false : x.PrestamoDevolucion) == false
-                                                                  )
+                                                                  x.DestinoId == configuracion.CentroId &&
+                                                                  x.Venta != true &&
+                                                                  x.PrestamoDevolucion != true
                                                                   ).Sum(x => x.Cantidad);
                 var porcentajeZona = (totalZona * 100) / totalNeogcios;
                 if (double.IsNaN(porcentajeZona))
