@@ -372,7 +372,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -418,7 +418,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -479,7 +479,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -574,7 +574,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<DescuentoBonificacion>()), Times.Exactly(1));
@@ -645,7 +645,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             Assert.That(resultado.HayError);
@@ -711,7 +711,7 @@ namespace Molinos.DataAgro.Test.Managers
                 }
             });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             Assert.That(resultado.HayError);
@@ -769,7 +769,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { CentroPropio = true, Acopio = false, Descripcion = "Centro", Id = 1, ValidaRedespacho = false });
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -810,7 +810,7 @@ namespace Molinos.DataAgro.Test.Managers
                 }
             });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -2634,7 +2634,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContratoBase);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 12, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 12, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.ActualizarContratoFinalizado(oContrato);
 
@@ -2775,7 +2775,7 @@ namespace Molinos.DataAgro.Test.Managers
             modificarContratoAgentMock.Setup(x => x.Modificar(oContrato, oContratoBase)).Returns("Ok");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.ActualizarContratoFinalizado(oContrato);
 
@@ -3866,7 +3866,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var res = target.AprobarContrato(1);
 
@@ -4075,7 +4075,7 @@ namespace Molinos.DataAgro.Test.Managers
                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<List<string>>())).Verifiable();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContratoMasivo(contratos);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -4178,7 +4178,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = true, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -4250,7 +4250,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = true, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -4322,7 +4322,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = true, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -4459,7 +4459,7 @@ namespace Molinos.DataAgro.Test.Managers
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -4569,7 +4569,7 @@ namespace Molinos.DataAgro.Test.Managers
             proveedorManagerMock.Setup(y => y.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>())).Returns(new StoredPorProveedorResult { BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { new BasicoProveedor { RazonSocial = "a", Comision = 1 } } });
             configuracionInternaManagerMock.Setup(y => y.TraerPagosDiferido()).Returns(new List<HabilitacionPagoDiferidoDto> { new HabilitacionPagoDiferidoDto { CantidadDia = 90, Tasa = 50 } });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContratoAPrecioTercero(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -4648,7 +4648,7 @@ namespace Molinos.DataAgro.Test.Managers
             proveedorManagerMock.Setup(y => y.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>())).Returns(new StoredPorProveedorResult { BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { new BasicoProveedor { RazonSocial = "a", Comision = 1 } } });
             configuracionInternaManagerMock.Setup(y => y.TraerPagosDiferido()).Returns(new List<HabilitacionPagoDiferidoDto> { new HabilitacionPagoDiferidoDto { CantidadDia = 90, Tasa = 50 } });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContratoAFijarTercero(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -4689,7 +4689,7 @@ namespace Molinos.DataAgro.Test.Managers
                 }
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -4736,7 +4736,7 @@ namespace Molinos.DataAgro.Test.Managers
                 }
             });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -4823,7 +4823,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Contrato>() { new Contrato { Cantidad = 1000 } });
             ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPendienteAplicarDto>() { pendiente });
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -5078,7 +5078,7 @@ namespace Molinos.DataAgro.Test.Managers
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<List<string>>())).Verifiable();
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>())).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 3, CampaniaId = 9 } });
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 3, CampaniaId = 9 } });
 
             var resultado = target.AltaMasivaContratos(dsExcel, "010101", WebDataAgro.MvcApplication.GlobalVariables.ComercialId);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -5147,10 +5147,10 @@ namespace Molinos.DataAgro.Test.Managers
         public void ValidarCapacidadProductivaTest()
         {
             var negocio = new Contrato { ProveedorId = 12, Proveedor = new Proveedor { RazonSocial = "Proveedor S.A." }, CampanaId = 10, Campana = new Campaña { Descripcion = "Campaña" }, MaterialId = 1, Material = new Material { Descripcion = "Maiz" } };
-            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()))
+            capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null))
                 .Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 12, MaterialId = 1, CampaniaId = 9 } });
             var result = target.ValidarCapacidadProductiva(negocio);
-            capProdAgentMock.Verify(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()), Times.Once);
+            capProdAgentMock.Verify(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null), Times.Once);
             Assert.NotNull(result);
             Assert.IsNotEmpty(result.Errores);
         }

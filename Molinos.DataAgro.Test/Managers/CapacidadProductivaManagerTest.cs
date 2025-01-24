@@ -36,10 +36,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ObtenerCapacidadProductivaTest()
         {
-            capProductivaAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()))
+            capProductivaAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null))
                 .Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1 } });
             var resultado = target.ObtenerCapacidadProductiva(1);
-            capProductivaAgentMock.Verify(x => x.VisualizarCapacidadProductiva(It.IsAny<int>()), Times.Once);
+            capProductivaAgentMock.Verify(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null), Times.Once);
 
             Assert.NotNull(resultado);
             Assert.AreEqual(1, resultado.FirstOrDefault().ProveedorId);

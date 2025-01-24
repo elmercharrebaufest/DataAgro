@@ -25,19 +25,33 @@ namespace Molinos.DataAgro.Agent
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
-        public List<CapacidadProductivaDto> VisualizarCapacidadProductiva(int proveedorID)
+        public List<CapacidadProductivaDto> VisualizarCapacidadProductiva(int proveedorID, ProveedorDto proveedorDto, List<Material> materialesList, List<Campaña> campaniasList)
         {
             try
             {
-                var proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => proveedorID == x.ProveedorId, x => new ProveedorDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT, RazonSocial = x.RazonSocial });
-                var agent = new SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVAClient();
+                ProveedorDto proveedor = null;
+                List<Material> materiales = null;
+                List<Campaña> cosecha = null;
 
+                if (proveedorDto != null && materialesList != null && campaniasList != null)
+                {
+                    proveedor = proveedorDto;
+                    materiales = materialesList;
+                    cosecha = campaniasList;
+                }
+                else
+                {
+                    proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => proveedorID == x.ProveedorId, x => new ProveedorDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT, RazonSocial = x.RazonSocial });
+                    materiales = repositorio.Listar<Material>();
+                    cosecha = repositorio.Listar<Campaña>();
+                }
+
+                var agent = new SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVAClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
+
                 var response = agent.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA(new Z_MPRFC_VISU_CAP_PRODUCTIVA { IM_CUIT = proveedor.CUIT });
                 List<CapacidadProductivaDto> lista = new List<CapacidadProductivaDto>();
-                var materiales = repositorio.Listar<Material>();
-                var cosecha = repositorio.Listar<Campaña>();
 
                 foreach (var item in response.EX_SALIDA)
                 {
