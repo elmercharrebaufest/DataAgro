@@ -1,21 +1,12 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -27,7 +18,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly Func<ICupoManager> cupoManagerInj;
         private readonly ClienteStopV1Agent clienteStopV1Agent;
         private readonly ClienteStopV2Agent clienteStopV2Agent;
-        private readonly string urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
         private readonly string versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
 
         public ClienteStopAgent(ILogger logger, IRepositorio repositorio, Func<ICupoManager> cupoManagerInj,
@@ -59,6 +49,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw e;
             }
         }
+
         public void TransmitirJobCupos()
         {
             try

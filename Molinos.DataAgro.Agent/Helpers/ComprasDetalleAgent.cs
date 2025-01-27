@@ -1,14 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ComprasDetalle;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -89,9 +85,8 @@ namespace Molinos.DataAgro.Agent
                 logger.Error(e);
                 return compra;
             }
-
-
         }
+
         private CompraDetalleAgentDto ConvertirADto(ZMPES5620 dev)
         {
             var compraAgent = new CompraDetalleAgentDto

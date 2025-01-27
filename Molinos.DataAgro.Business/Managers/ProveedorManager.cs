@@ -373,8 +373,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (comercial != null)
                 {
                     oMensaje.Body = oMensaje.Body + "\r\nContacto: " + (!string.IsNullOrEmpty(comercial.Nombres) ? comercial.Nombres : "") + " " + (!string.IsNullOrEmpty(comercial.Apellido) ? comercial.Apellido : "");
-                    oMensaje.Body = oMensaje.Body + (comercial.Telefono1 != null ? " Tel: " + comercial.Telefono1 : "");
-                    oMensaje.Body = oMensaje.Body + (!string.IsNullOrEmpty(comercial.Email1) ? " Email: " + comercial.Email1 : "");
+                    oMensaje.Body += (comercial.Telefono1 != null ? " Tel: " + comercial.Telefono1 : "");
+                    oMensaje.Body += (!string.IsNullOrEmpty(comercial.Email1) ? " Email: " + comercial.Email1 : "");
                 }
                 oMensaje.Body = oMensaje.Body + "\r\nDetalle: " + oParam.Detalle;
 
@@ -3403,8 +3403,8 @@ namespace Molinos.DataAgro.Business.Managers
                                    (proveedorUpdate.BoletoCompraNetId != (proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId)) ||
                                    (proveedorUpdate.BolsaCompraNetId != (proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId)) ||
                                    (proveedorUpdate.Consignatario != proveedor.basicos.Consignatario) ||
-                                   (proveedorUpdate.CodigoPostal != (proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal)) ||
-                                   (proveedorUpdate.Direccion != (proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion)) ||
+                                   (proveedorUpdate.CodigoPostal != (proveedor.contacto.codpost ?? proveedorUpdate.CodigoPostal)) ||
+                                   (proveedorUpdate.Direccion != (proveedor.contacto.direccion ?? proveedorUpdate.Direccion)) ||
                                    (proveedorUpdate.ProvinciaId != (proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId)) ||
                                    (proveedorUpdate.LocalidadId != (proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId))
                                    )
@@ -3419,8 +3419,8 @@ namespace Molinos.DataAgro.Business.Managers
                             proveedorUpdate.BoletoCompraNetId = proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId;
                             proveedorUpdate.BolsaCompraNetId = proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId;
                             proveedorUpdate.Consignatario = proveedor.basicos.Consignatario;
-                            proveedorUpdate.CodigoPostal = proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal;
-                            proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
+                            proveedorUpdate.CodigoPostal = proveedor.contacto.codpost ?? proveedorUpdate.CodigoPostal;
+                            proveedorUpdate.Direccion = proveedor.contacto.direccion ?? proveedorUpdate.Direccion;
                             proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
                             proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
 
@@ -3475,7 +3475,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var proveedorCorredor = new CorredorProveedor()
                             {
-                                ProveedorId = cor.ProveedorId.HasValue ? cor.ProveedorId.Value : repositorio.Obtener<Proveedor, int>(x => x.CUIT == cor.basicos.cuit && x.RazonSocial == cor.basicos.RazonSocial && x.Segmentacion.Grupo != "Corredores", x => x.ProveedorId),
+                                ProveedorId = cor.ProveedorId ?? repositorio.Obtener<Proveedor, int>(x => x.CUIT == cor.basicos.cuit && x.RazonSocial == cor.basicos.RazonSocial && x.Segmentacion.Grupo != "Corredores", x => x.ProveedorId),
                                 CorredorId = corredorId,
                             };
                             repositorio.Agregar(proveedorCorredor);
@@ -4476,7 +4476,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
-            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null ? true : false;
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null;
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
@@ -4512,8 +4512,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContratoPrestamoDevolucion(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -5154,21 +5156,23 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var i in listHistorialActiviad)
                 {
-                    ActividadExportar actividadExp = new ActividadExportar();
-                    actividadExp.ActividadId = i.ActividadId;
-                    actividadExp.TipoActividadId = i.TipoActividadId;
-                    actividadExp.TipoActividad = i.TipoActividadId > 0 ? listTipoActividad.Where(x => x.TipoActividadId == i.TipoActividadId).First().Descripcion : "";
-                    actividadExp.Detalle = i.Detalle;
-                    actividadExp.ProveedorId = i.ProveedorId;
-                    actividadExp.Proveedor = i.ProveedorId > 0 ? i.Proveedor.RazonSocial : "";
-                    actividadExp.FechaHoraActividad = i.FechaHoraActividad;
-                    actividadExp.FechaHoraRecordatorio = i.FechaHoraRecordatorio;
-                    actividadExp.ComercialId = i.ComercialId;
-                    actividadExp.Comercial = i.ComercialId > 0 ? String.Concat(i.Comercial.Apellido, ' ', i.Comercial.Nombres) : "";
-                    actividadExp.ContactoComercialId = i.ContactoComercialId;
-                    actividadExp.ContactoComercial = i.ContactoComercialId > 0 ? String.Concat(i.ContactoComercial.Apellido, ' ', i.ContactoComercial.Nombres) : "";
-                    actividadExp.FechaHoraRecordatorioFin = i.FechaHoraRecordatorioFin;
-                    actividadExp.Asunto = i.asunto;
+                    ActividadExportar actividadExp = new ActividadExportar
+                    {
+                        ActividadId = i.ActividadId,
+                        TipoActividadId = i.TipoActividadId,
+                        TipoActividad = i.TipoActividadId > 0 ? listTipoActividad.Where(x => x.TipoActividadId == i.TipoActividadId).First().Descripcion : "",
+                        Detalle = i.Detalle,
+                        ProveedorId = i.ProveedorId,
+                        Proveedor = i.ProveedorId > 0 ? i.Proveedor.RazonSocial : "",
+                        FechaHoraActividad = i.FechaHoraActividad,
+                        FechaHoraRecordatorio = i.FechaHoraRecordatorio,
+                        ComercialId = i.ComercialId,
+                        Comercial = i.ComercialId > 0 ? String.Concat(i.Comercial.Apellido, ' ', i.Comercial.Nombres) : "",
+                        ContactoComercialId = i.ContactoComercialId,
+                        ContactoComercial = i.ContactoComercialId > 0 ? String.Concat(i.ContactoComercial.Apellido, ' ', i.ContactoComercial.Nombres) : "",
+                        FechaHoraRecordatorioFin = i.FechaHoraRecordatorioFin,
+                        Asunto = i.asunto
+                    };
                     listActividadExportar.Add(actividadExp);
                 }
 
@@ -5269,14 +5273,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var cp in listaCP)
             {
-                CapacidadProductiva capacidadProductiva = new CapacidadProductiva();
-                capacidadProductiva.ProveedorId = cp.ProveedorId;
-                capacidadProductiva.MaterialId = cp.MaterialId;
-                capacidadProductiva.CampaniaId = cp.CampaniaId;
-                capacidadProductiva.Cantidad = cp.Cantidad;
-                capacidadProductiva.UnidadMedida = cp.UnidadMedida;
-                capacidadProductiva.Porcentaje = cp.Porcentaje;
-                capacidadProductiva.FechaActualizacion = cp.FechaActualizacion;
+                CapacidadProductiva capacidadProductiva = new CapacidadProductiva
+                {
+                    ProveedorId = cp.ProveedorId,
+                    MaterialId = cp.MaterialId,
+                    CampaniaId = cp.CampaniaId,
+                    Cantidad = cp.Cantidad,
+                    UnidadMedida = cp.UnidadMedida,
+                    Porcentaje = cp.Porcentaje,
+                    FechaActualizacion = cp.FechaActualizacion
+                };
                 repositorio.Agregar(capacidadProductiva);
             }
             repositorio.GuardarCambios();

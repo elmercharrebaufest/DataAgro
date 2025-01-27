@@ -7,9 +7,9 @@ using System.IO;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class AzureAgent: IAzureAgent
+    public class AzureAgent : IAzureAgent
     {
-        readonly String connectionStringAzure = ConfigurationManager.AppSettings["ConnectionStringAzure"];
+        private readonly string connectionStringAzure = ConfigurationManager.AppSettings["ConnectionStringAzure"];
         private const string NOMBRE_CONTENEDOR = "research";
 
         public string GenerarTokenSAS()
@@ -40,7 +40,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             return cloudBlobContainer;
         }
 
-        public string GuardarImagenEnAzure(CloudBlobContainer cloudBlobContainer, string rutaArchivo, byte[] imageBytes) {
+        public string GuardarImagenEnAzure(CloudBlobContainer cloudBlobContainer, string rutaArchivo, byte[] imageBytes)
+        {
             string blobUri = "";
             CloudBlockBlob blob = cloudBlobContainer.GetBlockBlobReference(rutaArchivo);
 
