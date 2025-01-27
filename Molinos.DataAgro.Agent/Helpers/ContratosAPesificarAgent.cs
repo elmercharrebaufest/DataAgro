@@ -28,15 +28,8 @@ namespace Molinos.DataAgro.Agent
 
         public List<PesificarAgentDto> ConsultarPorUnProveedor(string cuit)
         {
-            //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            //{
-
-            //    return new List<PesificarAgentDto>();
-            //}
             try
             {
-
-
                 var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
@@ -73,14 +66,8 @@ namespace Molinos.DataAgro.Agent
 
         public List<PesificarAgentDto> ConsultarTodo(List<string> cuits)
         {
-            //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            //{
-            //    return new List<PesificarAgentDto>();
-            //}
             try
             {
-
-
                 var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
@@ -88,7 +75,6 @@ namespace Molinos.DataAgro.Agent
                 //cuits = new List<string> { "0068514169" };
                 logger.Debug("Cuits pesificados " + cuits.ToXml());
                 var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
-
 
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
                 var pesificado = new List<PesificarAgentDto>();
@@ -109,7 +95,6 @@ namespace Molinos.DataAgro.Agent
                 throw;
             }
         }
-
 
         private PesificarAgentDto ConvertirADto(ZMPES6360 dev)
         {
@@ -136,7 +121,7 @@ namespace Molinos.DataAgro.Agent
                 NombreCorredor = dev.NOM_CORREDOR,
                 NombreVendedor = dev.NOM_VEND,
                 Unidad = dev.UNIDAD,
-                Dolarizado = dev.DOLARIZADO == "NO" ? false : true,
+                Dolarizado = dev.DOLARIZADO != "NO",
                 Clasificacion = dev.CLASIFICACION,
                 Anticipo = dev.ANTICIPO,
                 Status = dev.STATUS == "" ? "S" : dev.STATUS,

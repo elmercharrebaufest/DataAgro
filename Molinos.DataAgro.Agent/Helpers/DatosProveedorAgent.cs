@@ -16,8 +16,8 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public DatosProveedorAgent(ILogger logger, IRepositorio repositorio)
         {

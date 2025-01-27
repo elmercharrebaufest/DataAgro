@@ -1,13 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.InsertarFijacionesVirtuales;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 

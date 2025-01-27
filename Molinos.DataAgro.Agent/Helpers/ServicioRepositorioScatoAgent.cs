@@ -3,7 +3,6 @@ using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

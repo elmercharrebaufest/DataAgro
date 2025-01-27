@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             var servicios = contrato.Servicios ?? new List<Servicio>();
             calidad = calidad ?? new List<Calidad>();
             logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
+
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
                 var resp = "";
@@ -308,8 +309,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 });
                 logger.Debug("Cargando contrato");
-                var rq2 = new Z_MPRFC_PRE_SLIP();
-                rq2.IM_CONTRATO = new ZMPES5270();
+                var rq2 = new Z_MPRFC_PRE_SLIP
+                {
+                    IM_CONTRATO = new ZMPES5270()
+                };
                 rq2.IM_CONTRATO.CANTIDAD = Convert.ToDecimal(cantidadAbsoluta);
                 rq2.IM_CONTRATO.CONTR_DATAAGRO = contrato.Id.ToString();
                 rq2.IM_CONTRATO.COSECHA = contrato.Campana.Descripcion;

@@ -14,16 +14,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class EnviarCapacidadProductivaSAPAgent : IEnviarCapacidadProductivaSAPAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public EnviarCapacidadProductivaSAPAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public string EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> capProd)
         {
