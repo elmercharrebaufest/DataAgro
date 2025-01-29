@@ -742,8 +742,15 @@ namespace Molinos.DataAgro.Business
         public void EnviarMailInformeComercial(string identificador)
         {
             var pdf = repositorio.Obtener<Reportes, ReportesDto>(x => x.Identificador == identificador, x => new ReportesDto { Identificador = x.Identificador, Contenido = x.Contenido, FileName = x.FileName });
-            var razonSocial = pdf.FileName.Substring(pdf.FileName.IndexOf('-') + 1);
-            razonSocial = razonSocial.Remove(razonSocial.Length - 4);
+            //var razonSocial = pdf.FileName.Substring(pdf.FileName.IndexOf('-') + 1);
+            string razonSocial = string.Empty;
+            string cuit = string.Empty;
+            string nombreArchivo = string.Empty;
+            string fechaGeneracion = pdf.Identificador.Equals(string.Empty)? string.Empty : pdf.Identificador.ToString().Substring(0, 8);
+            var splitArchivo = pdf.FileName.Split('-');
+            cuit = splitArchivo[0].Trim();
+            razonSocial = splitArchivo[1].Trim().Remove(razonSocial.Length - 4);
+            nombreArchivo = cuit + " Informe Comercial " + razonSocial + " " + fechaGeneracion + ".pdf";
             try
             {
                 var context = new DataAgroDbContext();
@@ -770,7 +777,7 @@ namespace Molinos.DataAgro.Business
                 var mail = ConfigurationManager.AppSettings["EmailInformeComercial"].ToString().Split(';').ToList();
                 var asunto = "Nuevo Informe Comercial:" + razonSocial;
 
-                mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, "Informe Comercial" + razonSocial + ".pdf");
+                mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, nombreArchivo);
 
             }
             catch (Exception e)

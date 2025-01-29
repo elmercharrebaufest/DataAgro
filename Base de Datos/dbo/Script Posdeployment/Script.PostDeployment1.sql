@@ -675,3 +675,18 @@ BEGIN
     ON [dbo].[Proveedor] ([FechaAlta])
     INCLUDE ([CUIT])
 END;
+
+-- CREACION DE NUEVO ROL Y PERMISO POR ROL
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Corredor Informe Comercial')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Corredor Informe Comercial')
+   END
+
+DECLARE @RolId int
+ SELECT @RolId = Id from Rol 
+  WHERE Descripcion = 'Corredor Informe Comercial'
+
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolId and Permiso = 921)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolId, 921)
+   END
