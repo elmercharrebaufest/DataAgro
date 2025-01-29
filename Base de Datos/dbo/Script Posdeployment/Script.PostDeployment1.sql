@@ -629,3 +629,64 @@ BEGIN
     CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
     ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
 END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_Pizarra_Discriminator_OcultarEnTablero_MaterialId_EstadoId_FechaOperacion'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_Pizarra_Discriminator_OcultarEnTablero_MaterialId_EstadoId_FechaOperacion
+    ON [dbo].[Negocio] ([Pizarra],[Discriminator],[OcultarEnTablero],[MaterialId],[EstadoId],[FechaOperacion])
+    INCLUDE ([Canje])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_NegocioId'
+    AND object_id = OBJECT_ID('[dbo].[Servicio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_NegocioId
+    ON [dbo].[Servicio] ([NegocioId])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_NegocioId'
+    AND object_id = OBJECT_ID('[dbo].[Calidad]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_NegocioId
+    ON [dbo].[Calidad] ([NegocioId])
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_FechaAlta'
+    AND object_id = OBJECT_ID('[dbo].[Proveedor]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_FechaAlta
+    ON [dbo].[Proveedor] ([FechaAlta])
+    INCLUDE ([CUIT])
+END;
+
+-- CREACION DE NUEVO ROL Y PERMISO POR ROL
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Corredor Informe Comercial')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Corredor Informe Comercial')
+   END
+
+DECLARE @RolId int
+ SELECT @RolId = Id from Rol 
+  WHERE Descripcion = 'Corredor Informe Comercial'
+
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolId and Permiso = 921)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolId, 921)
+   END

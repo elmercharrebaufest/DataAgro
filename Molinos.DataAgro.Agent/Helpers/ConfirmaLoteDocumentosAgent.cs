@@ -21,13 +21,13 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IRepositorio repositorio;
         private readonly IStatusContratoAgent status;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
-        string userConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
-        string passConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
-        string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
-        string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
-        string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
-        string cuit1 = "30646328450";
-        string cuit2 = "30500120882";
+        private readonly string userConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
+        private readonly string passConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
+        private readonly string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
+        private readonly string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
+        private readonly string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
+        private readonly string cuit1 = "30646328450";
+        private readonly string cuit2 = "30500120882";
 
         public ConfirmaLoteDocumentosAgent(ILogger logger, IRepositorio repositorio, IStatusContratoAgent status, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
         {

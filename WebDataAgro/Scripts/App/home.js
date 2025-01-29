@@ -1262,20 +1262,20 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
 }
 
 function VerificarInformesComerciales() {
-    BlockUi('Cargando...');
-    var result = MSExecuteOnServer('/Home/VerificarInformesComerciales');
-    if (result == null || result.length == 0) {
-        $.unblockUI();
-        document.getElementById("abrirModalInformesFaltantes").setAttribute("title", "Todos los informes están actualizados!");
-    }
-    else {
-        $("#tabla-inf-comercial").empty();
+    var funcReturn = function (result) {
+        if (result == null || result.length == 0) {
+            document.getElementById("abrirModalInformesFaltantes").setAttribute("title", "Todos los informes están actualizados!");
+        }
+        else {
+            $("#modalInformesComercialesPendientes").modal("show");
+            $("#tabla-inf-comercial").empty();
 
-        result.forEach(x => {
-            const fila = `
+            result.forEach(x => {
+                const fila = `
             <tr>
                 <td>${x.RazonSocial}</td>
                 <td>${x.CUIT}</td>
+                <td>${x.Corredor}</td>
                 <td>${x.Cosecha}</td>
                 <td>${x.NombreComercial}</td>
                 <td>${x.SupervisorComercial}</td>
@@ -1287,13 +1287,14 @@ function VerificarInformesComerciales() {
             </tr>
         `;
 
-            $("#tabla-inf-comercial").append(fila);
-        })
-        $.unblockUI();
-        $("#modalInformesComercialesPendientes").modal("show");
+                $("#tabla-inf-comercial").append(fila);
+            })
+        }
     }
-}
 
+    MSExecuteOnServerAsync('/Home/VerificarInformesComerciales', null, funcReturn, true);
+
+}
 $(document).on('click', '.abrir-solapa', function () {
     sessionStorage.setItem('pantallaActiva', 'produccion');
     const proveedorId = $(this).data('proveedor-id');

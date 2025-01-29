@@ -8,6 +8,6 @@
         public string RazonSocial { get; set; }
         public string NombreComercial { get; set; }
         public string SupervisorComercial { get; set; }
-
+        public string Corredor { get; set; }
     }
 }

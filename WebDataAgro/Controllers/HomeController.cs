@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -376,7 +377,8 @@ namespace WebDataAgro.Controllers
         public ActionResult VerificarInformesComerciales()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
+            bool esCorredorInformeComercial = PermisosHelper.Is(PermisosDataAgro.Corredor_Informe_Comercial);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador, esCorredorInformeComercial);
 
             return new JsonResult()
             {
@@ -388,7 +390,8 @@ namespace WebDataAgro.Controllers
         public ActionResult ExportarCapProdDesactualizadas()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
+            bool esCorredorInformeComercial = PermisosHelper.Is(PermisosDataAgro.Corredor_Informe_Comercial);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador, esCorredorInformeComercial);
 
             byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
 

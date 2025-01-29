@@ -12,9 +12,9 @@ namespace Molinos.DataAgro.Agent
     public class StatusContratoAgent : IStatusContratoAgent
     {
         private readonly ILogger logger;
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
 
         public StatusContratoAgent(ILogger logger)
         {
