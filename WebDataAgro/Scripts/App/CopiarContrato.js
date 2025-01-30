@@ -609,16 +609,11 @@ function ObtenerDatos(error) {
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Id = Id == null || Id == undefined || Id == "" ? 0 : Id;
     obj.MaterialId = $("#material").val() || 0;
-    obj.Material = {
-        MaterialId: $("#material").val() || 0,
-        Descripcion: $("#material").val() ? $('#material').data("kendoDropDownList").dataItem().Descripcion : ""
-    };
     obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val();
     obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
     obj.PrecioNeto = $("#precioTotalApertura").val();
     obj.FechaEntrega = (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2" || obj.TipoNegocioId == "6") ? $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val()) : null;
     obj.CampanaId = $("#campanaId").val();
-    obj.Campana = { CampañaId: $("#campanaId").val(), Descripcion: $('#campanaId').data("kendoDropDownList").dataItem().Descripcion };
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
     obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
@@ -740,7 +735,6 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId != "5") {
         obj.ProveedorId = proveedorId;
         obj.CorredorId = corredorId;
-        obj.Proveedor = { ProveedorId: proveedorId, RazonSocial: razonSocial };
     }
 
     if ($("#LocalidadCrearContrato").val() != "") {
