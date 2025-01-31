@@ -676,17 +676,19 @@ BEGIN
     INCLUDE ([CUIT])
 END;
 
--- CREACION DE NUEVO ROL Y PERMISO POR ROL
-IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Corredor Informe Comercial')
+
+-- CREACION DE NUEVO ROL Y PERMISO POR ROL DE VISUALIZAR CONTRATO FASON
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Visualizar Contratos Fason')
    BEGIN
-		INSERT INTO Rol (Descripcion)VALUES('Corredor Informe Comercial')
+		INSERT INTO Rol (Descripcion)VALUES('Visualizar Contratos Fason')
    END
 
-DECLARE @RolId int
- SELECT @RolId = Id from Rol 
-  WHERE Descripcion = 'Corredor Informe Comercial'
+DECLARE @RolVisCtoFasonId int
+ SELECT @RolVisCtoFasonId = Id from Rol 
+  WHERE Descripcion = 'Visualizar Contratos Fason'
 
-IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolId and Permiso = 921)
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permiso = 312)
    BEGIN
-		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolId, 921)
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolVisCtoFasonId, 312)
    END
+

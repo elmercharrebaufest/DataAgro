@@ -74,7 +74,7 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/kendo").Include(
                         "~/Scripts/kendo/jszip.min.js",
-                        "~/Scripts/kendo/kendo.web.min.js",
+                        "~/Scripts/kendo/kendo.all.min.js",
                         // "~/Scripts/kendo/kendo.timezones.min.js", // uncomment if using the Scheduler
                         "~/Scripts/kendo/cultures/kendo.culture.es-AR.min.js"));
 
