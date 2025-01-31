@@ -676,11 +676,6 @@ BEGIN
     INCLUDE ([CUIT])
 END;
 
--- CREACION DE NUEVO ROL Y PERMISO POR ROL
-IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Corredor Informe Comercial')
-   BEGIN
-		INSERT INTO Rol (Descripcion)VALUES('Corredor Informe Comercial')
-   END
 
 -- CREACION DE NUEVO ROL Y PERMISO POR ROL DE VISUALIZAR CONTRATO FASON
 IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Visualizar Contratos Fason')
