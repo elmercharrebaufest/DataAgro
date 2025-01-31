@@ -388,10 +388,5 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Confirma
         [Display(ResourceType = typeof(Text), Name = "Confirma")]
         Confirma = 920,
-
-
-        //Corredor Informe Comercial
-        [Display(ResourceType = typeof(Text), Name = "Corredor_Informe_Comercial")]
-        Corredor_Informe_Comercial = 921,
     }
 }

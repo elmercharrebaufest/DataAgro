@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarPostItResult GuardarPostIt(PostIt post);
         List<CompraDto> TraerTodoCompraDetalle(List<int> equipo, int? comercialId, int? zonaId);
         List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo);
-        List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, bool esAdministrador, bool esCorredorInformeComercial);
+        List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, bool esAdministrador);
         byte[] ExportarListadoAXls(List<CapacidadProductivaDesactualizadaDto> listado);
     }
 }

@@ -377,9 +377,7 @@ namespace WebDataAgro.Controllers
         public ActionResult VerificarInformesComerciales()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
-            bool esCorredorInformeComercial = PermisosHelper.Is(PermisosDataAgro.Corredor_Informe_Comercial);
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador, esCorredorInformeComercial);
-
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
             return new JsonResult()
             {
                 Data = ProveedoresConCapProdDesactualizada,
@@ -390,11 +388,8 @@ namespace WebDataAgro.Controllers
         public ActionResult ExportarCapProdDesactualizadas()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
-            bool esCorredorInformeComercial = PermisosHelper.Is(PermisosDataAgro.Corredor_Informe_Comercial);
-            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador, esCorredorInformeComercial);
-
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
             byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
-
             return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
 
