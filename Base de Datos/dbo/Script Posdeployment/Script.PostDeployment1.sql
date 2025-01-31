@@ -691,4 +691,3 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permi
    BEGIN
 		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolVisCtoFasonId, 312)
    END
-

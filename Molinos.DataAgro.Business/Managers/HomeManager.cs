@@ -948,7 +948,7 @@ namespace Molinos.DataAgro.Business.Managers
         /// Una lista de objetos <see cref="CapacidadProductivaDesactualizadaDto"/> con
         /// información sobre los proveedores con capacidad productiva desactualizada.
         /// </returns>
-        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, bool esAdministrador, bool esCorredorInformeComercial)
+        public List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada(int comercialId, bool esAdministrador)
         {
             logger.Info("INICIO ProveedoresConCapProdDesactualizada");
             List<CapacidadProductivaDesactualizadaDto> proveedoresConCapProdDesactualizada = new List<CapacidadProductivaDesactualizadaDto>();
@@ -970,49 +970,22 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    if (esCorredorInformeComercial)
+                    var comerciales = repositorio.Listar<Comercial>(x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
+                    foreach (var comercial in comercialesFiltro)
                     {
-                        var filtroCorredoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId, x => x.ComercialId == comercialId &&
-                                                                                                                                        x.Proveedor.Segmentacion.Grupo.Equals("Corredores") &&
-                                                                                                                                        x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
-                                                                                                                                        x.Proveedor.Deshabilitado != true &&
-                                                                                                                                        x.Proveedor.EstadoId != (int)EnumEstado.BAJA
-                                                                                                                                        );
-                        var filtroProductoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId,
-                                                                                                                    x => x.ComercialId == comercialId &&
-                                                                                                                    x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
-                                                                                                                    x.Proveedor.Deshabilitado != true &&
-                                                                                                                    x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
-                                                                                                                    x.Proveedor.Segmentacion.Grupo == "Productores");
-
-                        var filtroProveedoresPorCorredor = repositorio.Listar<CorredorProveedor, int>(x => x.ProveedorId,
-                                                                                                           x => filtroCorredoresPorProveedorComercial.Contains(x.CorredorId) &&
-                                                                                                           x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
-                                                                                                           x.Proveedor.Deshabilitado != true &&
-                                                                                                           x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
-                                                                                                           x.Proveedor.Segmentacion.Grupo == "Productores");
-                        foreach (int proveedor in filtroProveedoresPorCorredor) proveedoresId.Add(proveedor);
-                        foreach (int proveedor in filtroProductoresPorProveedorComercial) proveedoresId.Add(proveedor);
-                    }
-                    else
-                    {
-                        var comerciales = repositorio.Listar<Comercial>(x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
-                        foreach (var comercial in comercialesFiltro)
+                        if (comercial.EmpleadorACargoId == 0 || comercial.EmpleadorACargoId == null)
                         {
-                            if (comercial.EmpleadorACargoId == 0 || comercial.EmpleadorACargoId == null)
+                            comercialesId.Add(comercial.ComercialId);
+                        }
+                        else
+                        {
+                            comercialesId.Add(comercial.ComercialId);
+                            var comercialesDependientes = comerciales.Where(x => x.EmpleadorACargoId == comercial.ComercialId).ToList();
+                            if (comercialesDependientes.Count() > 0)
                             {
-                                comercialesId.Add(comercial.ComercialId);
-                            }
-                            else
-                            {
-                                comercialesId.Add(comercial.ComercialId);
-                                var comercialesDependientes = comerciales.Where(x => x.EmpleadorACargoId == comercial.ComercialId).ToList();
-                                if (comercialesDependientes.Count() > 0)
-                                {
-                                    var comercialesDependendientes = ObtenerComercialesDependientesPorNivel(comercialesDependientes, comerciales);
-                                    foreach (var dependientes in comercialesDependendientes)
-                                        comercialesId.Add(dependientes.ComercialId);
-                                }
+                                var comercialesDependendientes = ObtenerComercialesDependientesPorNivel(comercialesDependientes, comerciales);
+                                foreach (var dependientes in comercialesDependendientes)
+                                    comercialesId.Add(dependientes.ComercialId);
                             }
                         }
                     }
