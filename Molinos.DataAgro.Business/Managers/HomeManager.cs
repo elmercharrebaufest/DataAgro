@@ -956,6 +956,8 @@ namespace Molinos.DataAgro.Business.Managers
             List<int> proveedoresId = new List<int>();
             var campanias = repositorio.Listar<Campaña>();
             var materialCampaniaActual = repositorio.Obtener<Material>(m => m.MaterialId == (int)EnumMateriales.SOJA); //se toma la campaña de soja como la actual
+            var comercialActual = repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId);
+
 
             if (esAdministrador)
             {
@@ -1016,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 }
             }
-
+            comercialesId.Add(comercialId);
             List<ComercialEmpleadorACargoDto> listaComercialEmpleadorACargo = new List<ComercialEmpleadorACargoDto>();
             var listaComercialPersonaACargo = repositorio.Listar<Comercial>(x => comercialesId.Contains(x.ComercialId));
             foreach (var personaACargo in listaComercialPersonaACargo)
@@ -1056,6 +1058,23 @@ namespace Molinos.DataAgro.Business.Managers
                     Deshabilitado = filtro.Proveedor.Deshabilitado,
                 });
             }
+
+            foreach (var proveedorId in proveedoresId)
+            {   
+                var filtro = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+                listaFiltroProveedoresPorComercial.Add(new FiltroProveedoresPorComercialDto
+                {
+                    ComercialId = comercialId,
+                    CUIT = filtro.CUIT,
+                    ProveedorId = filtro.ProveedorId,
+                    RazonSocial = filtro.RazonSocial,
+                    NombreComercial = $"{comercialActual.Nombres} {comercialActual.Apellido}".ToUpper(),
+                    EstadoHomeId = filtro.EstadoHomeId,
+                    EstadoId = filtro.EstadoId,
+                    Deshabilitado = filtro.Deshabilitado,
+                });
+            }
+
             listaFiltroProveedoresPorComercial = listaFiltroProveedoresPorComercial.Where(x => x.EstadoId != (int)EnumEstado.BAJA & x.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO && x.Deshabilitado != true).ToList();
             foreach (var filtro in listaFiltroProveedoresPorComercial)
             {
