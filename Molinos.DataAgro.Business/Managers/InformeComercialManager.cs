@@ -749,7 +749,8 @@ namespace Molinos.DataAgro.Business
             string fechaGeneracion = pdf.Identificador.Equals(string.Empty)? string.Empty : pdf.Identificador.ToString().Substring(0, 8);
             var splitArchivo = pdf.FileName.Split('-');
             cuit = splitArchivo[0].Trim();
-            razonSocial = splitArchivo[1].Trim().Remove(razonSocial.Length - 4);
+            razonSocial = splitArchivo[1].Trim();
+            razonSocial = razonSocial.Remove(razonSocial.Length - 4);
             nombreArchivo = cuit + " Informe Comercial " + razonSocial + " " + fechaGeneracion + ".pdf";
             try
             {
