@@ -4931,9 +4931,12 @@ function datosAfijar() {
     Id = Id != "" ? Id : 0;
     var esVirtual = $("#virtualId").is(":checked") ? true : false;
     var datos = { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id, esVirtual: esVirtual };
-    if (datos.materialId == "") {
-        return null;
+
+    if (datos.materialId == "" || datos.materialId == null) {
+        datos.materialId = "0";
+        return false;
     }
+
     return MSExecuteOnServer('/CompraNet/ObtenerFijacionesAutomaticas', datos);
 }
 
@@ -5174,17 +5177,22 @@ function ArmarGrillaContratosPendientes() {
     }
     Id = Id != "" ? Id : 0;
     var esVirtual = $("#virtualId").is(":checked") ? true : false;
+    var materialId = $('#material').data("kendoDropDownList").value();
+    if (materialId == "" || materialId == null)
+        materialId = "0";
+        return false;
+
     var contratos = MSExecuteOnServer("/Compranet/ObtenerFijacionesAutomaticas", {
 
         cuitProveedor: cuitP[0],
         cuitCorredor: cuitC[0],
-        materialId: $('#material').data("kendoDropDownList").value(),
+        materialId: materialId,
         filtro: $('#contratoId').val(),
         fijacionId: Id,
         esVirtual: esVirtual
     });
     //consultarBonificacionAfijar(contratos);
-
+    console.log('contratos--->>>', contratos);
     var data = new kendo.data.DataSource({
         data: contratos
     });
