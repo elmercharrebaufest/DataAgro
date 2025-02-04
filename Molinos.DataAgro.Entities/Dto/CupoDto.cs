@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaIngreso { get; set; }
         public DateTime HoraIngreso { get; set; }
         public string CupoSap { get; set; }
-        public string CupoStop { get; set; }
+        public int CupoStop { get; set; }
         public int ZonaCupoId { get; set; }
         public string ZonaCupo { get; set; }
         public string ZonaCupoSap { get; set; }
@@ -26,13 +26,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Fason { get; set; }
         public string Destinatario { get; set; }
         public DateTime FechaGeneracion { get; set; }
-        public DateTime? FechaRegistro { get; set; }
+        public DateTime? FechaRegistro => FechaGeneracion.Date;
         public int EstadoCupoId { get; set; }
         public string EstadoCupo { get; set; }
         public string MensajeError { get; set; }
         public bool Acopio { get; set; }
         public string Fecha { get; set; }
-        public string Hora { get; set; }
+        public string Hora => FechaGeneracion.ToString("HH:mm") ?? string.Empty;
         public int EstadoOrden { get; set; }
         public string UsuarioCreador { get; set; }
         public string MotivoRechazo { get; set; }
