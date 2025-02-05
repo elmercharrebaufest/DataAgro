@@ -31,46 +31,107 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var descuentoGeneralSobrePrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
             var descuentoGeneralFueraPrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
 
+            res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
+            res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
+
+            if (!esPosicionCBOT)
+            {
+                if (clausula.Basico.EPA || clausula.Basico.Sustentable)
+                {
+                    if (clausula.Basico.SustentableTipoDBId == 1)
+                    {
+                        res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
+                    }
+                    if (clausula.Basico.SustentableTipoDBId == 2)
+                    {
+                        res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio)
+        {
+            string clausula = string.Empty;
             if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
             {
-                res.Texto += $"Se bonificará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se bonificará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
             }
             if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
             {
-                res.Texto += $"Se descontará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se descontará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
             }
             if (descuentoGeneralSobrePrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
-                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe,descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
+                clausula += $"Se bonificará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
             }
             if (descuentoGeneralSobrePrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
+                clausula += $"Se descontará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
                     $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
             }
+            return clausula;
+        }
 
-
+        private string DevolverClausulaBonificacionFueraPrecio(DescuentoBonificacionDto descuentoGeneralFueraPrecio)
+        {
+            string clausula = string.Empty;
             if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
             {
-                res.Texto += $"Se bonificará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se bonificará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
             }
             if (descuentoGeneralFueraPrecio?.Porcentaje < 0)
             {
-                res.Texto += $"Se descontará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se descontará por fuera del precio el {descuentoGeneralFueraPrecio.Porcentaje}% por tonelada. ";
             }
             if (descuentoGeneralFueraPrecio?.Importe > 0)
             {
-                res.Texto += $"Se bonificará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
-                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralFueraPrecio.Importe,descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
+                clausula += $"Se bonificará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
+                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralFueraPrecio.Importe, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
             }
             if (descuentoGeneralFueraPrecio?.Importe < 0)
             {
-                res.Texto += $"Se descontará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
+                clausula += $"Se descontará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda)} {ValorAbsoluto(descuentoGeneralFueraPrecio.Importe)}" +
                     $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralFueraPrecio.Importe, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
             }
-            return res;
+            return clausula;
         }
+
+        private string DevolverClausulaBonificacionSobrePrecioAdicionales(BasicoContrato descuentoGeneralSobrePrecio)
+        {
+            string clausula = string.Empty;
+            if (descuentoGeneralSobrePrecio?.Importe_Sustentable > 0)
+            {
+                clausula += $"Se bonificará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda_Sustentable)} {ValorAbsoluto((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
+            }
+            if (descuentoGeneralSobrePrecio?.Importe_Sustentable < 0)
+            {
+                clausula += $"Se descontará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda_Sustentable)} {ValorAbsoluto((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralSobrePrecio?.Importe_Sustentable, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
+            }
+            return clausula;
+        }
+
+        private string DevolverClausulaBonificacionFueraPrecioAdicionales(BasicoContrato descuentoGeneralFueraPrecio)
+        {
+            string clausula = string.Empty;
+            if (descuentoGeneralFueraPrecio?.Importe_Sustentable > 0)
+            {
+                clausula += $"Se bonificará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda_Sustentable)} {ValorAbsoluto((decimal)descuentoGeneralFueraPrecio.Importe_Sustentable)}" +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralFueraPrecio?.Importe_Sustentable, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
+            }
+            if (descuentoGeneralFueraPrecio?.Importe_Sustentable < 0)
+            {
+                clausula += $"Se descontará por fuera del precio {DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda_Sustentable)} {ValorAbsoluto((decimal)descuentoGeneralFueraPrecio.Importe_Sustentable)}" +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralFueraPrecio?.Importe_Sustentable, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
+            }
+            return clausula;
+        }
+
 
         private decimal ValorAbsoluto(decimal numero)
         {
