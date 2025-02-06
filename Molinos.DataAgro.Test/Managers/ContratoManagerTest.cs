@@ -5146,6 +5146,9 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ValidarCapacidadProductivaTest()
         {
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>())).Returns(new Proveedor { RazonSocial = "Juan Perez" });
+            repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>())).Returns(new Material { Descripcion = "Soja" });
+            repositorioMock.Setup(y => y.Obtener<Campaña>(It.IsAny<int>())).Returns(new Campaña { Descripcion = "22-23" });
             var negocio = new Contrato { ProveedorId = 12, Proveedor = new Proveedor { RazonSocial = "Proveedor S.A." }, CampanaId = 10, Campana = new Campaña { Descripcion = "Campaña" }, MaterialId = 1, Material = new Material { Descripcion = "Maiz" } };
             capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null))
                 .Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 12, MaterialId = 1, CampaniaId = 9 } });

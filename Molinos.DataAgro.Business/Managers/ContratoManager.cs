@@ -9106,7 +9106,10 @@ namespace Molinos.DataAgro.Business.Managers
             var capProd = capacidadProductivaAgent.VisualizarCapacidadProductiva(negocio.ProveedorId.Value).Find(x => x.MaterialId == negocio.MaterialId && x.CampaniaId == negocio.CampanaId);
             if (capProd == null)
             {
-                resultado.Error("InformeComercial", $"El proveedor {negocio.Proveedor.RazonSocial} no tiene capacidad productiva informada en SAP para {negocio.Material.Descripcion} en la campaña {negocio.Campana.Descripcion}. No se puede cargar el contrato.\n\n\n");
+                string proveedorNegocio = negocio.ProveedorId != null ? repositorio.Obtener<Proveedor>(negocio.ProveedorId).RazonSocial : "";
+                string materialNegocio = repositorio.Obtener<Material>(negocio.MaterialId).Descripcion;
+                string campanaNegocio = negocio.CampanaId != null ? repositorio.Obtener<Campaña>(negocio.CampanaId).Descripcion : "";
+                resultado.Error("InformeComercial", $"El proveedor {proveedorNegocio} no tiene capacidad productiva informada en SAP para {materialNegocio} en la campaña {campanaNegocio}. No se puede cargar el contrato.\n\n\n");
             }
             return resultado;
         }
