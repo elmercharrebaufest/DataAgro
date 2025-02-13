@@ -2098,7 +2098,7 @@ function InicializarElementos() {
     $("#fechaOperacionId").val(date);
     $("#fechaHastaId").val(datehasta);
     $("#fechaFijacionId").val(date);
-    
+
     $(".formulario-footer-guardar-contrato").click(function () {
         $("#guardarBtn").prop('disabled', true);
 
@@ -5178,9 +5178,10 @@ function ArmarGrillaContratosPendientes() {
     Id = Id != "" ? Id : 0;
     var esVirtual = $("#virtualId").is(":checked") ? true : false;
     var materialId = $('#material').data("kendoDropDownList").value();
-    if (materialId == "" || materialId == null)
+    if (materialId == "" || materialId == null) {
         materialId = "0";
         return false;
+    }
 
     var contratos = MSExecuteOnServer("/Compranet/ObtenerFijacionesAutomaticas", {
 
