@@ -18,11 +18,10 @@
     [CupoStop]				INT NULL,
     [CreacionStop]			VARCHAR(50) NULL,
     [ErrorStop]				VARCHAR(MAX) NULL,
-
     [TipoNegocioId] INT NULL , 
     [ConfiguracionEspacioDinamicoId] INT NULL, 
     [NegocioId] INT NULL, 
-    [UsuarioCreador] varchar(100) NULL, 
+    [UsuarioCreador] NVARCHAR(100) NULL, 
     [MotivoRechazo] VARCHAR(MAX) NULL, 
     [EstadoPlanta] NVARCHAR(MAX) NULL, 
     [CartaPorte] NVARCHAR(MAX) NULL, 
