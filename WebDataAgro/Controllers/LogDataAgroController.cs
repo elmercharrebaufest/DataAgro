@@ -1,27 +1,18 @@
 ﻿using DiffPlex.DiffBuilder;
 using Kendo.DynamicLinq;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
-using System.Collections.Generic;
-using System.Reflection;
-using Newtonsoft.Json;
-using System.Collections;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace WebDataAgro.Controllers
 {
@@ -32,7 +23,6 @@ namespace WebDataAgro.Controllers
         private readonly IReportesManager reportesManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IProveedorManager proveedorManager;
-
 
         public LogDataAgroController(ILogDataAgroManager logDataAgroManager, IReportesManager reportesManager, IComercialManager mobjComercialManager, IProveedorManager proveedorManager)
         {

@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Business
 {
     public class AreaInfluenciaManager : IAreaInfluenciaManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public AreaInfluenciaManager(ILogger logger, IRepositorio repositorio)
@@ -30,12 +30,12 @@ namespace Molinos.DataAgro.Business
                 }, null, 15, "Descripcion")
             };
         }
-        
+
         public AreaInfluenciaDto TraerAreaInfluencia(int intAreaInfluenciaId)
         {
             return repositorio.Obtener<AreaInfluencia, AreaInfluenciaDto>(x => x.AreaInfluenciaId == intAreaInfluenciaId, x => new AreaInfluenciaDto { AreaInfluenciaId = x.AreaInfluenciaId, Descripcion = x.Descripcion }) ?? new AreaInfluenciaDto();
         }
-        
+
         public Resultado GrabarAreaInfluencia(AreaInfluencia oAreaInfluencia)
         {
             var oEntityErrors = new Resultado();
@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            
+
             if (oAreaInfluencia.AreaInfluenciaId != 0)
             {
                 var oAreaInfluenciaSave = repositorio.Obtener<AreaInfluencia>(oAreaInfluencia.AreaInfluenciaId);

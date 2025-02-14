@@ -37,7 +37,7 @@ function InicializarCuposIndex() {
                 url: '/ReporteCupo/BuscaDatosTabla',
                 data: function () {
                     let defaultFiltros = [
-                        { field: "FechaRegistro", operator: "eq", value: new Date() }
+                        { field: "FechaGeneracion", operator: "eq", value: new Date() }
                     ];
 
                     let filtroCompleto = TraerFiltrosConValores();
@@ -91,9 +91,9 @@ function InicializarCuposIndex() {
         ],
         serverFiltering: true
     };
-   
+
     $("#grid").kendoGrid({
-       toolbar: ["excel"],
+        toolbar: ["excel"],
         excel: {
             fileName: "Reporte de Cupos.xlsx",
             allPages: true
@@ -250,7 +250,7 @@ function InicializarCuposIndex() {
 
                 if (fecha != null) {
                     fecha = fecha.setHours(fecha.getHours() + 1);
-                    row.cells[0].value = new Date( fecha);
+                    row.cells[0].value = new Date(fecha);
                 }
             }
         },

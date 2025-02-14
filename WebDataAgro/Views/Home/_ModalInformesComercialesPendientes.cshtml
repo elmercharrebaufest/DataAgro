@@ -1,0 +1,64 @@
+@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalInformesComercialesPendientes" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title"></h1>
+                <div class="status confirmado-modal">
+                    <div class="titulo-modal">Informes Comerciales faltantes</div>
+                </div>
+                <div class="exportarExcelInfComPendientes">
+                    <a href="/Home/ExportarCapProdDesactualizadas" id="exportarExcelInfComPendientesId" class="exportar-contactos">
+                        <img src="~/Content/Images/descargar-pdf-excel.png" />
+                        <span>Exportar a Excel</span>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Razón Social</th>
+                                <th>CUIT</th>
+                                <th>Corredor</th>
+                                <th>Cosecha Pendiente</th>
+                                <th>Comercial</th>
+                                <th>Empleador a Cargo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-inf-comercial"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .titulo-modal {
+        font-size: .8rem !important;
+    }
+
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .exportarExcelInfComPendientes {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    th, td {
+        font-size: .8rem !important;
+        text-align: left !important;
+        vertical-align: middle !important;
+    }
+</style>

@@ -8,19 +8,14 @@ namespace Molinos.DataAgro.Business
 {
     public class CubProveedoresManager : ICubProveedoresManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-
 
         public CubProveedoresManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
 
         public DatosIniCubProveedores TraerDatosIniciales(List<int> equipo)
         {

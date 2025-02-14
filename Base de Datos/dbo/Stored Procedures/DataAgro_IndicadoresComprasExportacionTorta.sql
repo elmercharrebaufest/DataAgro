@@ -11,8 +11,8 @@ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres 
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
-select p.CUIT,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
-case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+select p.CUIT,cmm.Toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
+case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
 when cmm.Mes=2 then 'FEBRERO' 
@@ -36,11 +36,11 @@ inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
 inner join Proveedor p on p.ProveedorId= cm.ProveedorId
 inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-inner join segmentacion seg on p.SegmentacionId=seg.SegmentacionId
+inner join Segmentacion seg on p.SegmentacionId=seg.SegmentacionId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
 left join Localidad loc on p.LocalidadId= loc.LocalidadId
-left join provincia prv on loc.ProvinciaId = prv.ProvinciaId
+left join Provincia prv on loc.ProvinciaId = prv.ProvinciaId
 
 where   ( (@MaterialId is null) or (CM.MaterialId=@MaterialId ))
 

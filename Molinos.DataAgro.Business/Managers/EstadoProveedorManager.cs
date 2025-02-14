@@ -33,7 +33,10 @@ namespace Molinos.DataAgro.Business.Managers
                 var crearEstadoProvedor = new List<ProveedorEstado>();
                 foreach (string userSap in comerciales.Keys)
                 {
-                    try
+                    var listaComerciales = comerciales.Keys.ToList();
+                    int tamanioLote = 30; //se seleccionan algunos porque si se consulta la RFC con todos, da server error
+
+                    for (int i = 0; i < listaComerciales.Count; i += tamanioLote)
                     {
                         logger.Debug("Obteniendo datos de usuario SAP " + userSap);
 

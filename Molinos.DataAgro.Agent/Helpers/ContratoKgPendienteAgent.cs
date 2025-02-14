@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca;
 using Molinos.DataAgro.Agent.ContratoKgPendientes;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -15,15 +14,16 @@ namespace Molinos.DataAgro.Agent
 {
     public class ContratoKgPendienteAgent : IContratoKgPendienteAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ContratoKgPendienteAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public List<ContratoKgPendiente> Consultar(List<ContratoKgPendiente> contratos)
         {
@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Agent
             {
                 for (int i = 0; i < contratos.Count(); i++)
                 {
-                    contratos[i].KgPendiente = (i+1) * 100000;
+                    contratos[i].KgPendiente = (i + 1) * 100000;
                 }
                 return contratos;
             }

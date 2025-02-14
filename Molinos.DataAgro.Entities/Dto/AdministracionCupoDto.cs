@@ -36,9 +36,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Observacion { get; set; }
         public int? ComercialCreadorId { get; set; }
         public DateTime? FechaCreacion { get; set; }
+        public DateTime? FechaCreacionSinHora => FechaCreacion?.Date;
         public DateTime? FechaDecision { get; set; }
         public int? SugerenciaCupoId { get; set; }
-        public string Hora { get; set; }
+        public string Hora => FechaCreacion?.ToString("HH:mm") ?? string.Empty;
         public bool? ConDescarga { get; set; }
         public DateTime? FechaCreacionConHora { get; set; }
         public string Calidad { get; set; }

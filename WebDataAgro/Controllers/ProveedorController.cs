@@ -360,7 +360,16 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActiviad oParam)
+        public ActionResult TraerCampañaPorMaterialCapacidadProductiva(int materialId, int proveedorId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjCampañaManager.TraerCampañaPorMaterialCapacidadProductiva(materialId, proveedorId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActividad oParam)
         {
             return new JsonResult()
             {

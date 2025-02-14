@@ -141,15 +141,15 @@ DECLARE @ProveedorEstadoHome TABLE(ProveedorId INT, EstadoId INT)
 INSERT INTO @ProveedorEstado 
 select 
 	distinct t.Item , 
-	case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+	case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 	then 4 else 
-		case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+		case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 		then 5  else
-				case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+				case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 				then 1  else
-						case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+						case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
 						then 2 else
-							case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))
+							case when exists(select 1 from ProveedorEstado pee where t.Item = pee.ProveedorId and  pee.EstadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))
 							then 3  else
 									(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.Item)
 							ENd

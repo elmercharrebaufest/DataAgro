@@ -1,19 +1,14 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -29,7 +24,6 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IHedgeManager> hedgeManagerMock;
         private Mock<IMailManager> mailManagerManagerMock;
-        private Mock<IReportesManager> reportesManagerManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -39,10 +33,9 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             hedgeManagerMock = new Mock<IHedgeManager>();
-            reportesManagerManagerMock = new Mock<IReportesManager>();
             mailManagerManagerMock = new Mock<IMailManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new DiferencialManager(logger.Object, repositorioMock.Object, mailManagerManagerMock.Object, reportesManagerManagerMock.Object, hedgeManagerMock.Object);
+            target = new DiferencialManager(logger.Object, repositorioMock.Object, mailManagerManagerMock.Object, hedgeManagerMock.Object);
         }
 
         [Test]
@@ -118,7 +111,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
 
-     
+
 
     }
 }

@@ -6,6 +6,7 @@ var pagina = 1;
 var visualiza;
 var datosCompra;
 var huboFiltro = false;
+var totalPaginas = 0;
 var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
     var elem = $(str + " input[name='" + nam + "']");
@@ -29,7 +30,7 @@ $(document).ready(function () {
         dataValueField: "Value",
         filter: "contains"
     });
-
+    ValidarInformeComercialApertura();
 });
 
 function MostrarTooltip(e) {
@@ -453,6 +454,8 @@ function actualizarContactos(contactos) {
     $(".cont-habilitado").html(contactos.TotalHabilitadoContactos);
     $(".cont-legajo-irregular").html(contactos.TotalLegajoIrregularContactos);
     $(".cont-no-habilitado").html(contactos.TotalNoHabilitadoContactos);
+    totalPaginas = contactos.TotalPaginas;
+    console.log('totalPaginas-->>', totalPaginas);
 }
 
 //function ObtenerEstadoActual() {
@@ -645,25 +648,25 @@ function setChangeChecks() {
 
 function TraerSiguiente() {
     pagina += 1;
-    filtro.pagina = pagina
-    $("#verMasContactos").hide();
-    $("#cargandoContactos").show();
-    function callback(result) {
-        if (result != null) {
-            if (ExistsErrorMessages(result.Errores)) {
-                ShowTooltipMessages("err", result.Errores);
+    if (totalPaginas != pagina && totalPaginas >= pagina) {
+        filtro.pagina = pagina
+        $("#verMasContactos").hide();
+        $("#cargandoContactos").show();
+        function callback(result) {
+            if (result != null) {
+                if (ExistsErrorMessages(result.Errores)) {
+                    ShowTooltipMessages("err", result.Errores);
+                }
+                else {
+                    conts = result.Contactos.Contactos;
+                    ArmarContactos(conts);
+                }
             }
-            else {
-                conts = result.Contactos.Contactos;
-                ArmarContactos(conts);
-            }
+            $("#cargandoContactos").hide();
+            $("#verMasContactos").show();
         }
-        $("#cargandoContactos").hide();
-        $("#verMasContactos").show();
+        var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
     }
-    var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
-
-
 }
 
 function ArmarCamapaña(campañas) {
@@ -742,7 +745,7 @@ function FormatearNumeros(ton) {
     var ToneladasAux = ton.toString().split(".");
     if (ToneladasAux.length > 1) {
         ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+        ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
         ToneladasAux = ToneladasAux.join(",");
     }
     else {
@@ -953,6 +956,10 @@ function armarFunciones() {
             $(".lista-contacto-no-operable-tooltip").hide();
             $(".lista-contacto-no-operable-tooltip-arrow").hide();
         }
+    });
+
+    $("#abrirModalInformesFaltantes").click(function () {
+        VerificarInformesComerciales();
     });
 }
 
@@ -1252,4 +1259,60 @@ function ActualizarCompraObjetivoDetalle(comercial, zona) {
 
     ArmarCamapaña(result.Campaña);
     ArmarObjetivo(result.Objetivo.Objetivos, result.Campaña);
+}
+
+function VerificarInformesComerciales() {
+    var funcReturn = function (result) {
+        if (result == null || result.length == 0) {
+            document.getElementById("abrirModalInformesFaltantes").setAttribute("title", "Todos los informes están actualizados!");
+        }
+        else {
+            $("#modalInformesComercialesPendientes").modal("show");
+            $("#tabla-inf-comercial").empty();
+
+            result.forEach(x => {
+                const fila = `
+            <tr>
+                <td>${x.RazonSocial}</td>
+                <td>${x.CUIT}</td>
+                <td>${x.Corredor}</td>
+                <td>${x.Cosecha}</td>
+                <td>${x.NombreComercial}</td>
+                <td>${x.SupervisorComercial}</td>
+                <td>
+                    <button class="btn btn-primary abrir-solapa" data-proveedor-id="${x.ProveedorId}">
+                        Cargar Inf Com
+                    </button>
+                </td>
+            </tr>
+        `;
+
+                $("#tabla-inf-comercial").append(fila);
+            })
+        }
+    }
+
+    MSExecuteOnServerAsync('/Home/VerificarInformesComerciales', null, funcReturn, true);
+
+}
+$(document).on('click', '.abrir-solapa', function () {
+    sessionStorage.setItem('pantallaActiva', 'produccion');
+    const proveedorId = $(this).data('proveedor-id');
+    const baseUrl = `${window.location.origin}/Proveedor/Agregar?ProveedorId=${proveedorId}`;
+
+    window.location.href = baseUrl;
+});
+
+function GrabarInformeComercialApertura() {
+    MSExecuteOnServer('/Home/GrabarInformeComercialApertura');
+}
+
+function ValidarInformeComercialApertura() {
+    var resultado = MSExecuteOnServer('/Home/TraerInformeComercialApertura');
+    if (resultado != null) {
+        if (resultado.Id == -1 || resultado.Id > 0) {
+            GrabarInformeComercialApertura();
+            VerificarInformesComerciales();
+        }
+    }
 }

@@ -10,17 +10,16 @@ CREATE TABLE [dbo].[BoletoCompraNetProvincia](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[BoletoCompraNetProvincia]  WITH CHECK ADD  CONSTRAINT [FK_BoletoCompraNetProvincia_BolsaCompraNet] FOREIGN KEY([BoletoCompraNetId])
+ALTER TABLE [dbo].[BoletoCompraNetProvincia] ADD  CONSTRAINT [FK_BoletoCompraNetProvincia_BolsaCompraNet] FOREIGN KEY([BoletoCompraNetId])
 REFERENCES [dbo].[BolsaCompraNet] ([Id])
 GO
 
 ALTER TABLE [dbo].[BoletoCompraNetProvincia] CHECK CONSTRAINT [FK_BoletoCompraNetProvincia_BolsaCompraNet]
 GO
 
-ALTER TABLE [dbo].[BoletoCompraNetProvincia]  WITH CHECK ADD  CONSTRAINT [FK_BoletoCompraNetProvincia_Provincia] FOREIGN KEY([ProvinciaId])
+ALTER TABLE [dbo].[BoletoCompraNetProvincia] ADD CONSTRAINT [FK_BoletoCompraNetProvincia_Provincia] FOREIGN KEY([ProvinciaId])
 REFERENCES [dbo].[Provincia] ([ProvinciaId])
 GO
 
 ALTER TABLE [dbo].[BoletoCompraNetProvincia] CHECK CONSTRAINT [FK_BoletoCompraNetProvincia_Provincia]
 GO
-

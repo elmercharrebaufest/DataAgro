@@ -441,7 +441,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
-                Proveedor = x.Proveedor.RazonSocial,
+                Proveedor = x.ProveedorId != null ? x.Proveedor.RazonSocial : "",
                 ProveedorId = x.ProveedorId ?? 0,
                 PrecioNeto = x.PrecioNeto,
                 Moneda = x.Moneda.Descripcion,

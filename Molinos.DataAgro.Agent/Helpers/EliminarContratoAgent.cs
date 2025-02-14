@@ -10,19 +10,20 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class EliminarContratoAgent : IEliminarContratoAgent
     {
+        private readonly ILogger logger;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public EliminarContratoAgent(ILogger logger)
         {
             this.logger = logger;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string Eliminar(Contrato contrato)
         {
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-                var resp = "";
+                string resp;
                 if (contrato.NoInformaSio.HasValue && contrato.NoInformaSio.Value)
                 {
                     resp = "Error al borrar contrato" + contrato.ContratoSAP + " - Campos NUM_SIO y/o STATUS con datos";

@@ -11,7 +11,7 @@ declare @table as table(item int )
 	  
 SELECT
  pr.CUIT as cuit,  
- pr.razonsocial,  
+ pr.RazonSocial,  
  C.Descripcion Campaña,  
  M.Descripcion as Material,  
  cast(ToneladaAplicada  as varchar(20)) as Toneladas,  

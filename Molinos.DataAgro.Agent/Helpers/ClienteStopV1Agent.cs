@@ -14,8 +14,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -24,7 +22,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
-        readonly String urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
+        private readonly string urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
         private readonly Func<ICupoManager> cupoManagerInj;
 
         public ClienteStopV1Agent(ILogger logger, IRepositorio repositorio, Func<ICupoManager> cupoManagerInj,
@@ -35,6 +33,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logDataAgroManager = logDataAgroManager;
             this.cupoManagerInj = cupoManagerInj;
         }
+
         public TokenStop ObtenerToken(string clave)
         {
             try
@@ -51,6 +50,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
+
         private void LogError(Exception e)
         {
             if (string.IsNullOrEmpty(e.Message))
@@ -59,6 +59,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 LogError(e.InnerException);
             }
         }
+
         private TokenStop CreateTokenAsync(string clave)
         {
             HttpClient client = new HttpClient() { BaseAddress = new Uri(urlStop) };
@@ -166,6 +167,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
+
         public void TransmitirJobCupos()
         {
             var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
@@ -236,6 +238,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
             }
         }
+
         public int ConsultarCupo(string cupo, int terminalId, string token)
         {
             return 1;//parche por que no funciona la consulta de cupos por idStop
@@ -275,9 +278,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                logger.Debug("1.repositorio: " + repositorio);
-                logger.Debug("2.repo param: " + repo);
-                logger.Debug("3.r: " + r);
                 var datosConfiguracion = r.Obtener<Configuracion>(1);
                 logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
                 TokenStop token;

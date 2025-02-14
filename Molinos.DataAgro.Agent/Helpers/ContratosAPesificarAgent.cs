@@ -17,25 +17,19 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
         public ContratosAPesificarAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
+
         public List<PesificarAgentDto> ConsultarPorUnProveedor(string cuit)
         {
-            //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            //{
-
-            //    return new List<PesificarAgentDto>();
-            //}
             try
             {
-
-
                 var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
@@ -72,14 +66,8 @@ namespace Molinos.DataAgro.Agent
 
         public List<PesificarAgentDto> ConsultarTodo(List<string> cuits)
         {
-            //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            //{
-            //    return new List<PesificarAgentDto>();
-            //}
             try
             {
-
-
                 var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
@@ -87,7 +75,6 @@ namespace Molinos.DataAgro.Agent
                 //cuits = new List<string> { "0068514169" };
                 logger.Debug("Cuits pesificados " + cuits.ToXml());
                 var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
-
 
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
                 var pesificado = new List<PesificarAgentDto>();
@@ -109,7 +96,6 @@ namespace Molinos.DataAgro.Agent
             }
         }
 
-
         private PesificarAgentDto ConvertirADto(ZMPES6360 dev)
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
@@ -123,10 +109,10 @@ namespace Molinos.DataAgro.Agent
                 FechaFijacion = dev.FECHA_FIJACION == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_FIJACION, "yyyy-MM-dd", provider),
                 FechaHastaDolarizado = dev.FECHA_HASTA_DOL == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_HASTA_DOL, "yyyy-MM-dd", provider),
                 FechaUltimaAplicacion = dev.FECHA_ULT_APLI == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FECHA_ULT_APLI, "yyyy-MM-dd", provider),
-                DolarizadoNoProductor = dev.DOLARIZADO_NO_PROD == "NO" ? false : true,
+                DolarizadoNoProductor = dev.DOLARIZADO_NO_PROD != "NO",
                 CuitCorredor = dev.CUIT_CORREDOR,
                 CuitVendedor = dev.CUIT_VENDEDOR,
-                DolarizadoExpress = dev.DOLARIZADO_EXPRESS == "NO" ? false : true,
+                DolarizadoExpress = dev.DOLARIZADO_EXPRESS != "NO",
                 Moneda = dev.MONEDA,
                 KgNoPesificable = dev.PES_NO_VEN < 0 ? (dev.PES_NO_VEN + dev.PES_VENCIDA) : dev.PES_NO_VEN,
                 KgVencimientoPesificable = dev.PES_VENCIDA < 0 ? 0 : dev.PES_VENCIDA,
@@ -135,7 +121,7 @@ namespace Molinos.DataAgro.Agent
                 NombreCorredor = dev.NOM_CORREDOR,
                 NombreVendedor = dev.NOM_VEND,
                 Unidad = dev.UNIDAD,
-                Dolarizado = dev.DOLARIZADO == "NO" ? false : true,
+                Dolarizado = dev.DOLARIZADO != "NO",
                 Clasificacion = dev.CLASIFICACION,
                 Anticipo = dev.ANTICIPO,
                 Status = dev.STATUS == "" ? "S" : dev.STATUS,
@@ -144,7 +130,7 @@ namespace Molinos.DataAgro.Agent
                 CantidadLiquidada = dev.CANT_LIQUIDADA,
                 CantidadRecibida = dev.CANT_RECIBIDA,
                 ConPrecio = dev.CON_PRECIO,
-                
+
             };
             var fecha = new DateTime(1753, 1, 1);
             if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)

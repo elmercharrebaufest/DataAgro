@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
@@ -26,15 +25,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return capProdAgent.VisualizarCapacidadProductiva(proveedorId);
         }
-        
+
         public void ActualizarCapacidadProductiva()
         {
             List<CapacidadProductivaDto> listaCP = new List<CapacidadProductivaDto>();
-            var proveedoresTodos = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, SegmentacionId = x.SegmentacionId });
+            List<ProveedorDto> proveedoresTodos = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, SegmentacionId = x.SegmentacionId });
+            List<Material> materiales = repositorio.Listar<Material>();
+            List<Campaña> cosechas = repositorio.Listar<Campaña>();
 
             foreach (ProveedorDto p in proveedoresTodos)
             {
-                listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(p.ProveedorId));
+                listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(p.ProveedorId, p, materiales, cosechas));
             }
 
             repositorio.TruncarTabla<CapacidadProductiva>();

@@ -597,7 +597,6 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
 
 function ObtenerDatos(error) {
     var obj = {};
-
     var hoy = new Date();
     var anio = hoy.getFullYear();
     var mes = hoy.getMonth();
@@ -607,10 +606,9 @@ function ObtenerDatos(error) {
     var maniana = new Date();
     maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
 
-
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Id = Id == null || Id == undefined || Id == "" ? 0 : Id;
-    obj.MaterialId = $("#material").val() == null || $("#material").val() == undefined || $("#material").val() == "" ? 0 : $("#material").val();
+    obj.MaterialId = $("#material").val() || 0;
     obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val();
     obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
     obj.PrecioNeto = $("#precioTotalApertura").val();
@@ -619,8 +617,6 @@ function ObtenerDatos(error) {
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
     obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
-
-
     //} else {
     //    obj.FechaDesde = formatearFecha(hoy);
     //    obj.FechaHasta = formatearFecha(maniana);
@@ -712,6 +708,7 @@ function ObtenerDatos(error) {
 
     var proveedorId;
     var corredorId;
+    var razonSocial;
     if ($("#buscadorProveedor").val() != "") {
         var cuitAux = $("#buscadorProveedor").val().split('(');
         if (cuitAux[1]) {
@@ -722,6 +719,7 @@ function ObtenerDatos(error) {
                 $.unblockUI();
                 return;
             }
+            razonSocial = cuitAux[0].trim();
         } else {
             proveedorId = -1;
         }
@@ -1496,4 +1494,45 @@ function cancelarCuposConDescarga() {
     }
 
     $("#modalCargarCuposConDescarga").modal("hide");
+}
+
+function ValidarCapacidadProductiva() {
+    var cuitAux = $("#buscadorProveedor").val().split('(');
+    var negocio = {
+        MaterialId: $("#material").val(),
+        Material: { Descripcion: $('#material').data("kendoDropDownList").dataItem().Descripcion },
+        CampanaId: $("#campanaId").val(),
+        Campana: { Descripcion: $('#campanaId').data("kendoDropDownList").dataItem().Descripcion },
+        ProveedorId: $("#proveedorId").val(),
+        Proveedor: { RazonSocial: cuitAux[0].trim() }
+    };
+    var result = MSExecuteOnServer('/CompraNet/ValidarCapacidadProductiva', negocio);
+    if (result.HayError)
+        AlertaCapProd(result.Errores[0].Message)
+}
+
+function AlertaCapProd(mensaje) {
+    BootstrapDialog.show({
+        title: 'Alerta de Capacidad Productiva',
+        message: "\n" + mensaje,
+        draggable: true,
+        type: BootstrapDialog.TYPE_WARNING,
+        buttons: [
+            {
+                label: 'Ir a Cargar Informe',
+                cssClass: 'k-button',
+                action: function () {
+                    sessionStorage.setItem('pantallaActiva', 'produccion');
+                    window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + $("#proveedorId").val();
+                }
+            },
+            {
+                label: 'Volver a CompraNet',
+                cssClass: 'k-button',
+                action: function () {
+                    window.location.href = window.location.origin + "/CompraNet";
+                }
+            }
+        ]
+    });
 }

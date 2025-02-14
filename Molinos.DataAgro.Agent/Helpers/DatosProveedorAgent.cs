@@ -17,8 +17,8 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public DatosProveedorAgent(ILogger logger, IRepositorio repositorio)
         {
@@ -48,8 +48,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 foreach(var user in users)
                 {
-                    ZMPES5150 us = new ZMPES5150();
-                    us.USUARIO = user;
+                    ZMPES5150 us = new ZMPES5150() { USUARIO = user };
                     valor.Add(us);
                 }
                 SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();

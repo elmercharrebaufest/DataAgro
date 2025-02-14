@@ -36,6 +36,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TotalHabilitadoContactos { get; set; }
         public int TotalLegajoIrregularContactos { get; set; }
         public int TotalNoHabilitadoContactos { get; set; }
+        public int TotalPaginas { get; set; }
     }
 
 

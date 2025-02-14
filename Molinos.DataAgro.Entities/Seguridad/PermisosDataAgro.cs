@@ -388,6 +388,5 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Confirma
         [Display(ResourceType = typeof(Text), Name = "Confirma")]
         Confirma = 920,
-
     }
 }

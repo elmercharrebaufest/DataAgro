@@ -27,7 +27,6 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
         private Mock<IMaterialManager> materialManagerMock;
         private Mock<IPizarraManager> pizarraManagerMock;
-        private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> loggerMock;
         private JavaScriptSerializer serializer;
 

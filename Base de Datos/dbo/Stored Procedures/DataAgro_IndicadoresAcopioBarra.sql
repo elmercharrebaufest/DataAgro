@@ -30,7 +30,7 @@ select c.cantidad,c.toneladas
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
 from Proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -40,7 +40,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) < 10000)b) c
+having sum(cmm.Toneladas) < 10000)b) c
 
 
 update #Valores
@@ -48,8 +48,8 @@ set MasTn10000= c.toneladas,
 	MasCl10000 = c.cantidad
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -59,7 +59,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) between 10000 and 20000 )b) c
+having sum(cmm.Toneladas) between 10000 and 20000 )b) c
 
 
 
@@ -70,8 +70,8 @@ set MasTn20000= c.toneladas,
 	MasCl20000 = c.cantidad
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -81,7 +81,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) between 20000 and 40000 )b) c
+having sum(cmm.Toneladas) between 20000 and 40000 )b) c
 
 
 
@@ -90,8 +90,8 @@ set MasTn40000= c.toneladas,
 	MasCl40000 = c.cantidad
 from (select count(b.CUIT) as cantidad,sum(b.Toneladas) as toneladas
 from (select p.CUIT,sum(cmm.Toneladas) as Toneladas
-from proveedor p
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+from Proveedor p
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
@@ -101,7 +101,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
 group by p.CUIT
-having sum(cmm.toneladas) > 40000 )b) c
+having sum(cmm.Toneladas) > 40000 )b) c
 
 
 

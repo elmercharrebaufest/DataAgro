@@ -5,30 +5,30 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class EliminarCupoAgent:IEliminarCupoAgent
+    public class EliminarCupoAgent : IEliminarCupoAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public EliminarCupoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public string Eliminar(string cupoSap, string comercial)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 try
                 {
-                    if (repositorio.Existe<Cupo>(x=>x.CupoSap == cupoSap))
+                    if (repositorio.Existe<Cupo>(x => x.CupoSap == cupoSap))
                     {
                         return "OK";
                     }

@@ -24,12 +24,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         public ReporteSojaSustDto Ejecutar(DbContext contexto)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = fechaDesde.Date;
-            var fechaManana = fechaHasta.Date;
+            
+            // Ajustamos las fechas para el rango del día completo
+            var fechaInicio = fechaDesde.Date;
+            var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
 
             var contratos = contexto.Set<Contrato>().Where(x =>
             x.OcultarEnTablero == false &&
-            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
+            x.FechaOperacion >= fechaInicio && x.FechaOperacion <= fechaFin &&
             (x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Con_Error || x.EstadoId == (int)EnumEstadoContrato.Finalizado) &&
             (x.ImporteSustentable != null && x.MonedaSustentableId != null) && x.Sustentable &&
             (centroId == 0 || x.DestinoId == centroId) &&

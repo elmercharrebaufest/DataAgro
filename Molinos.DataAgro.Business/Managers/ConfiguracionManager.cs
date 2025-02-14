@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Business.Managers
     public partial class ConfiguracionManager : IConfiguracionManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public ConfiguracionManager(IRepositorio repositorio, ILogger logger)
         {
@@ -106,11 +106,11 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logger.Debug("ExigirNegocioEnSolExt se guardó correctamente con valor "+valor+".");
+                logger.Debug("ExigirNegocioEnSolExt se guardó correctamente con valor " + valor + ".");
             }
             catch (Exception ex)
             {
-                resultado.Error("Error:E000", "Guardado incorrecto"+ex);
+                resultado.Error("Error:E000", "Guardado incorrecto" + ex);
                 throw;
             }
 

@@ -2,24 +2,21 @@
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent
 {
     public class RelacionCorredorProveedorAgent : IRelacionCorredorProveedorAgent
     {
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public RelacionCorredorProveedorAgent(IRepositorio repositorio)
         {
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly IRepositorio repositorio;
+
         public bool ObtenerRelacionCorredorProveedor(string cuitCorredor, string cuitProveedor)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")

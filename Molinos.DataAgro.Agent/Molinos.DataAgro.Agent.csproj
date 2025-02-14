@@ -586,6 +586,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\WS_GAQ_sin_PI\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -2251,6 +2256,343 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\VisualizarCapacidadProductiva\SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA.wsdl" />
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMpfrcValLiqParFijacionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMpfrcValLiqParFijacionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcActCapacidadProdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcActCapacidadProdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAcuerdosGeneradosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAcuerdosGeneradosResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAdminCuposResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAdminCuposResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAltaTempranaNRCoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAltaTempranaNRCoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnulacionContratoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnulacionContratoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularBoletoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularBoletoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularCuposResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularCuposResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularFijVirCanjeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcAnularFijVirCanjeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCapacidadProductivaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCapacidadProductivaResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCapacProductivaDispoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCapacProductivaDispoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCcppPendienteAplicarResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCcppPendienteAplicarResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCdWarrantsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCdWarrantsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCompraCreditoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCompraCreditoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultaPagManResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultaPagManResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultarEstadoBoletResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultarEstadoBoletResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultarRpResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcConsultarRpResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratoCanjeGeneResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratoCanjeGeneResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratoPendFijacionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratoPendFijacionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratosConfirmadosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcContratosConfirmadosResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCrearCuposResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCrearCuposResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCumplimientoCuposResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcCumplimientoCuposResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosCertificacionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosCertificacionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComercialResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComercialResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComprasDetalleResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComprasDetalleResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComprasResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosComprasResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosIdPagoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosIdPagoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosProveedorResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDatosProveedorResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDisponibilidadCuposResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcDisponibilidadCuposResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcEnviarBoletosGeneResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcEnviarBoletosGeneResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcIndicarKgPendientesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcIndicarKgPendientesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcInsertarFijVirCanjeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcInsertarFijVirCanjeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcListaCbuProveedorResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcListaCbuProveedorResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcListaProveedoresResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcListaProveedoresResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModContCtrBoletoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModContCtrBoletoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarContratoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarContratoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarCupoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarCupoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarFijacionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcModificarFijacionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcObtenerMailsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcObtenerMailsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcPrecioPizarraResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcPrecioPizarraResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcPreSlipResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcPreSlipResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRazonSocialProveedorResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRazonSocialProveedorResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRegistrarFijacionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRegistrarFijacionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRegOrdProcesamientoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRegOrdProcesamientoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRiesgoComercialResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcRiesgoComercialResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcSeguimientoBoletoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcSeguimientoBoletoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcStatusDeContratoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcStatusDeContratoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcTipoDeCambioResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcTipoDeCambioResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarCantAcuerdoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarCantAcuerdoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarCreditoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarCreditoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarDocProcPagoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarDocProcPagoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqComisionesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqComisionesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqFinalResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqFinalResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqParcialResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarLiqParcialResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarPesificacionesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcValidarPesificacionesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcVisuCapProductivaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcVisuCapProductivaResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\z_mp_ws_dataagro_directo.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AcuerdosGenerados\" />
@@ -2314,6 +2656,7 @@
     <WCFMetadataStorage Include="Service References\ValidarLiquidacionParcial\" />
     <WCFMetadataStorage Include="Service References\ValidarPesificaciones\" />
     <WCFMetadataStorage Include="Service References\VisualizarCapacidadProductiva\" />
+    <WCFMetadataStorage Include="Service References\WS_GAQ_sin_PI\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -2828,6 +3171,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </Content>
+    <None Include="Service References\WS_GAQ_sin_PI\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\WS_GAQ_sin_PI\configuration.svcinfo" />
+    <None Include="Service References\WS_GAQ_sin_PI\configuration91.svcinfo" />
     <None Include="Service References\ConfirmaQALoteBorradorService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

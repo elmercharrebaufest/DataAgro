@@ -13,14 +13,15 @@ namespace Molinos.DataAgro.Agent.Helpers
     public class EnviarBoletoAgent : IEnviarBoletoAgent
     {
         private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public EnviarBoletoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
 
         public string EnviarBoleto(BoletoDto boleto)
         {
@@ -67,7 +68,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 log = repositorio.Obtener<Log>(logId.Id);
                 log.Xml += devolucion.ToXml();
-                repositorio.GuardarCambios();              
+                repositorio.GuardarCambios();
 
                 return devolucion.EX_MENSAJE;
 

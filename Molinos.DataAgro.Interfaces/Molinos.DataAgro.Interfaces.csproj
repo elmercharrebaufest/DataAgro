@@ -281,6 +281,7 @@
     <Compile Include="Managers\IFAQManager.cs" />
     <Compile Include="Managers\IHabilitacionBoletoManager.cs" />
     <Compile Include="Managers\IConfiguracionBolsaManager.cs" />
+    <Compile Include="Managers\IInformeComercialAperturaManager.cs" />
     <Compile Include="Managers\IReporteEvolucionFijacionManager.cs" />
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />

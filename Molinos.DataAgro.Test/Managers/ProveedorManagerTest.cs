@@ -35,8 +35,9 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IHttpContextManager> httpContextManagerMock;
         private Mock<IAltaTempranaAgent> altaTempranaMock;
         private Mock<IMailProveedorAgent> mailProveedorAgentMock;
+        private Mock<IEstadoProveedorManager> estadoProveedorManagerMock;
+        private Mock<IVisualizarCapacidadProductivaAgent> visualizarCapacidadProductivaAgentMock;
         private JavaScriptSerializer serializer;
-
 
         [SetUp]
         public void SetUp()
@@ -60,10 +61,11 @@ namespace Molinos.DataAgro.Test.Managers
             httpContextManagerMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             altaTempranaMock = new Mock<IAltaTempranaAgent>();
             mailProveedorAgentMock = new Mock<IMailProveedorAgent>();
+            estadoProveedorManagerMock = new Mock<IEstadoProveedorManager>();
+            visualizarCapacidadProductivaAgentMock = new Mock<IVisualizarCapacidadProductivaAgent>();
 
-            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object,
-                riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
-                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object);
+            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
+                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object, visualizarCapacidadProductivaAgentMock.Object);
 
 
             //para pasar el logDataA
@@ -3822,7 +3824,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ContactoComercial> { new ContactoComercial { Email1 = "dataagro.baufest@gmail.com" } });
             mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>()))
                .Returns("dataagro.baufest@gmail.com");
-            
+
             Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
             new Claim(ClaimTypes.Role, PermisosDataAgro.VerCorredorComercial.ToString())
             });
@@ -4026,12 +4028,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Equals(null);
 
             altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(new AltaTempranaNRCODto { 
-                    Mensaje = "", 
-                    AuthGralMP = "MP01", 
-                    AuthSociedadMP= "MP01", 
-                    PeticionBorradoSociedad="", 
-                    FechaActualizacionLegajo= "20.01.2022" });
+                .Returns(new AltaTempranaNRCODto
+                {
+                    Mensaje = "",
+                    AuthGralMP = "MP01",
+                    AuthSociedadMP = "MP01",
+                    PeticionBorradoSociedad = "",
+                    FechaActualizacionLegajo = "20.01.2022"
+                });
         }
 
         [Test]
@@ -4044,7 +4048,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<EstadoHome, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(
-                new List<EstadoHome> { 
+                new List<EstadoHome> {
                     new EstadoHome { Id = 2, Descripcion = "Legajo irregular", Color = "yellow" } });
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -4052,7 +4056,7 @@ namespace Molinos.DataAgro.Test.Managers
                 new List<SISA> {
                     new SISA { Id = 1, EstadoCuit = 3, SituacionCategoria = "AL" } });
 
-            repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT="1" });
+            repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT = "1" });
 
             altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(new AltaTempranaNRCODto

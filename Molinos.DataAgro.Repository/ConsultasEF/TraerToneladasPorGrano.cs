@@ -29,13 +29,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         public ToneladasGranoTipoDto Ejecutar(DbContext contexto)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = fechaDesde.Date;
-            var fechaManana = fechaHasta.Date;
+            
+            // Ajustamos las fechas para el rango del día completo
+            var fechaInicio = fechaDesde.Date;
+            var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
+
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1);
-            var toneladasPorGrano = new ToneladasGranoTipoDto();
-            toneladasPorGrano.ListNewAgente = new List<int>();
-            toneladasPorGrano.ListDispAgente = new List<int>();
-            toneladasPorGrano.ListFrwAgente = new List<int>();
+            var toneladasPorGrano = new ToneladasGranoTipoDto
+            {
+                ListNewAgente = new List<int>(),
+                ListDispAgente = new List<int>(),
+                ListFrwAgente = new List<int>()
+            };
             //var posicion = contexto.Set<Contrato>()
             //    .Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
             //    && DbFunctions.TruncateTime(x.Fecha) <= fechaManana 
@@ -148,11 +153,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
             //toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
-            var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero == false 
-                && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy 
-                && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana 
-                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) 
-                && x.MaterialId == materialId && (centroId == 0 || centroId == 1) 
+            var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero == false
+                && x.FechaOperacion >= fechaInicio
+                && x.FechaOperacion <= fechaFin
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+                && x.MaterialId == materialId && (centroId == 0 || centroId == 1)
                 && (calidad == null || calidad == 3))
                 .Select(x => new NegocioToneladasPosicionDto
                 {
@@ -164,6 +169,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CampanaId = x.CampanaId ?? 0,
                     MaterialCampanaId = x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0
                 }).ToList();
+
             foreach (var age in agente)
             {
                 var pos = age.PosicionString.Split('.');

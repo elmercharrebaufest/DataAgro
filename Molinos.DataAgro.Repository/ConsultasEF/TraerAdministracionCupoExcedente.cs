@@ -4,7 +4,6 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
 
@@ -48,9 +47,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoAdministracionCupo = cupo.TipoAdministracionCupo.Descripcion,
                     TipoAdministracionCupoId = cupo.TipoAdministracionCupoId,
                     Observacion = cupo.Observacion,
-                    FechaCreacion = DbFunctions.TruncateTime(cupo.FechaCreacion),
+                    FechaCreacion = cupo.FechaCreacion,
                     FechaDecision = cupo.FechaDecision,
-                    Hora = SqlFunctions.DateName("hh", cupo.FechaCreacion) + ":" + DbFunctions.Right("00" + SqlFunctions.DateName("n", cupo.FechaCreacion), 2),
                     ConDescarga = cupo.ConDescarga,
                     FechaCreacionConHora = cupo.FechaCreacion,
                     CantidadFleteProcedenciaOriginal = cupo.CantidadFleteProcedencia,

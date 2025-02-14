@@ -5,10 +5,13 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -21,24 +24,22 @@ namespace WebDataAgro.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeManager mobjHomeManager;
+        private readonly IInformeComercialAperturaManager mobjInformeComercialAperturaManager;
         private readonly IObjetivoManager objetivoManager;
         private readonly ILogger logger;
         private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager,
-            IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
+            IHomeManager homeManager, IObjetivoManager objetivoManager, IInformeComercialAperturaManager mobjInformeComercialAperturaManager, ILogger logger)
         {
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
             this.objetivoManager = objetivoManager;
+            this.mobjInformeComercialAperturaManager = mobjInformeComercialAperturaManager;
             this.logger = logger;
         }
-
 
         public ActionResult Index()
         {
@@ -76,8 +77,8 @@ namespace WebDataAgro.Controllers
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {proveedorZonaPropia}");
             logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona.ToJson()}");
 
-            var equipo = verTodos ? GlobalVariables.EquipoReal : 
-                proveedorZonaPropia ? comercialesConMismaZona : 
+            var equipo = verTodos ? GlobalVariables.EquipoReal :
+                proveedorZonaPropia ? comercialesConMismaZona :
                 GlobalVariables.Equipo;
 
             logger.Debug($"Equipo final tomado según permisos: {equipo.ToJson()}");
@@ -371,5 +372,52 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        #region Informes Comerciales
+        public ActionResult VerificarInformesComerciales()
+        {
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
+            return new JsonResult()
+            {
+                Data = ProveedoresConCapProdDesactualizada,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ExportarCapProdDesactualizadas()
+        {
+            bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
+            List<CapacidadProductivaDesactualizadaDto> ProveedoresConCapProdDesactualizada = mobjHomeManager.ProveedoresConCapProdDesactualizada(GlobalVariables.ComercialId, esAdministrador);
+            byte[] archivoBytes = mobjHomeManager.ExportarListadoAXls(ProveedoresConCapProdDesactualizada);
+            return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
+        }
+
+        public ActionResult GrabarInformeComercialApertura()
+        {
+            InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
+            informeComercialApertura.ComercialId = GlobalVariables.ComercialId;
+            informeComercialApertura.FechaApertura = DateTime.Now.Date.AddDays(1);
+            var model = new Resultado();
+            model = mobjInformeComercialAperturaManager.GrabarInformeComercialApertura(informeComercialApertura);
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerInformeComercialApertura()
+        {
+            var model = new InformeComercialAperturaDto();
+                model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        #endregion
+
     }
 }

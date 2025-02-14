@@ -15,22 +15,24 @@ namespace Molinos.DataAgro.Agent
 {
     public class CriterioCDWarrantAgent : ICriterioCDWarrantAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public CriterioCDWarrantAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public List<BasicoContrato> ConsultarContratoWarrant(DateTime desde, DateTime hasta)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var contrato = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato {
-                    ContratoSAP = x.ContratoSAP,                    
+                var contrato = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
+                {
+                    ContratoSAP = x.ContratoSAP,
                 }, x => DbFunctions.TruncateTime(x.Fecha) >= desde && DbFunctions.TruncateTime(x.Fecha) <= hasta);
                 return contrato;
             }
@@ -57,7 +59,8 @@ namespace Molinos.DataAgro.Agent
                     //logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_CD_WARRANTS(rq);
-                    var listaResp = valor.EX_SALIDA.Select(x=> new BasicoContrato {
+                    var listaResp = valor.EX_SALIDA.Select(x => new BasicoContrato
+                    {
                         ContratoSAP = x.CONTRATO,
                         Material = materiales.FirstOrDefault(a => a.Codigo == x.MATERIAL) == null ? x.MATERIAL : materiales.FirstOrDefault(a => a.Codigo == x.MATERIAL).Descripcion,
                         Cantidad = (double)x.KILOS,
@@ -72,7 +75,8 @@ namespace Molinos.DataAgro.Agent
 
                     return listaResp;
 
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     logger.Error(e.Message);
                     throw;

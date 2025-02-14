@@ -330,7 +330,7 @@ function inicializarGrafico(val, campaña) {
                         var ToneladasAux = campfiltr[0].grano[i].Total.toString().split(".");
                         if (ToneladasAux.length > 1) {
                             ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                            ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+                            ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
                             ToneladasAux = ToneladasAux.join(",");
                         }
                         else {
@@ -366,7 +366,7 @@ function inicializarGrafico(val, campaña) {
                                 var ToneladasAux = campfiltr[i].grano[r].Total.split(".");
                                 if (ToneladasAux.length > 1) {
                                     ToneladasAux[0] = ToneladasAux[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                                    ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+                                    ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
                                     ToneladasAux = ToneladasAux.join(",");
                                 }
                                 else {
@@ -1070,7 +1070,7 @@ function armarContacto() {
     if (MostrarAgenda) {
         setTimeout(function () {
             $("#agenda").trigger("click");
-        }, 300);
+        }, 100);
     }
     if (basico[0].GrupoSegmentacion === "Corredores") {
         armarDetalleCorredor(datos);
@@ -1562,7 +1562,7 @@ function armarEstilosyFuncionesDetalle() {
 
         setTimeout(function () {
             $("#gridCapacidadProd").data("kendoGrid").dataSource.page(1);
-        }, 1000);
+        }, 100);
 
     });
 
@@ -2716,7 +2716,7 @@ function reArmarAgenda() {
     if (MostrarAgenda) {
         setTimeout(function () {
             $("#agenda").trigger("click");
-        }, 1000);
+        }, 100);
     }
 }
 
@@ -3569,11 +3569,20 @@ function DevolverFiltroConTipoActividad(objFiltro) {
     return objFiltro;
 }
 
-function ActualizarProveedoresHomeCuit() {
-    var result = MSExecuteOnServer('/Proveedor/ActualizarProveedoresHomeCuit', { ProveedorId: ProveedorId });
-    if (result != null) {
-        MensInfoReload("Estado del Proveedor actualizado!");
-    } else {
-        MensErr("No se pudo actualizar el proveedor. Intente nuevamente y en caso de error comunicarse con sistemas.")
-    }
+function ActualizarEstadoProveedor() {
+    BlockUi('Actualizando...');
+    setTimeout(function () {
+        var result = MSExecuteOnServer('/Proveedor/ActualizarEstadoProveedor', { proveedorId: ProveedorId, proveedorCuit: cuit });
+        if (result != null) {
+            MensInfoReload("El estado del proveedor se actualizó correctamente.\n\n");
+        } else {
+            MensErr("No se pudo actualizar el proveedor. Intente nuevamente y, en caso de error, comunicarse con sistemas.")
+        }
+        $.unblockUI();
+    }, 150);
+}
+
+function DirigirAProduccion(proveedorId) {
+    sessionStorage.setItem('pantallaActiva', 'produccion');
+    window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + proveedorId;
 }

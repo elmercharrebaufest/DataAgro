@@ -504,7 +504,7 @@ function GrabarCorredor(nuevoCorredor) {
                     } else {
                         window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
                     }
-                }, 5000);
+                }, 500);
                 
             } else {
                 MensErr(result.Errores[0].Message);

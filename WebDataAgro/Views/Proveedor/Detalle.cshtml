@@ -27,9 +27,9 @@
     </div>
     <div class="row">
         <div class="col-lg-3">
-            <div class="row" style="display: flex;">
+            <div class="row primera-fila">
                 <div class="detalle-contacto-header-estadoHome"></div>
-                <button class="btn btn-primary" onclick="ActualizarProveedoresHomeCuit()" style="margin-left: 20px;">Actualizar Estado</button>
+                <button class="btn btn-primary btn-proveedor" onclick="ActualizarEstadoProveedor()" style="margin-left: 20px;">Actualizar Estado</button>
             </div>
             <div class="detalle-contacto-header-estado">
                 <span>Estado: </span><span class="detalle-contacto-header-estado-span"> </span><span class="detalle-contacto-header-estado-cantestrellas"></span>
@@ -153,12 +153,14 @@
                     </div>
                 </a>
             </div>
-
             <div class="contacto-detalle-comercial">
                 <div><span><b>Comercial: </b></span><span class="comecial-a-cargo"></span></div>
                 <div><span class="grupo-de-compras"></span></div>
             </div>
             <hr noshade />
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <button class="btn btn-primary btn-proveedor" onclick="DirigirAProduccion(ProveedorId)" style="">Cargar Informe</button>
+            </div>
             <div>
                 <p style="text-align:center; font-size:14px"><b>Estado de Informes Comerciales<br />por material y campaña</b></p>
                 <span>Último informe de <b>Soja</b>: </span><span class="informe-soja" style="color: #757575">Sin datos.</span><span id="iconSoja" aria-hidden="true"></span><br />

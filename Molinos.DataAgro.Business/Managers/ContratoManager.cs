@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -16,7 +17,6 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -34,15 +34,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMaterialManager mobjMaterialManager;
         private readonly ITipoNegocioManager mobjTipoNegocioManager;
         private readonly ICampañaManager mobjCampaniaManager;
-        private readonly IProvinciaManager mobjProvinciaManager;
-        private readonly ILocalidadManager mobjLocalidadManager;
         private readonly IProveedorManager mobjProveedorManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
         private readonly IDiferencialManager diferencialManager;
         private readonly IFinalizarContratoAgent oFinalizarContratoAgent;
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
-        private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
         private readonly IConfiguracionManager configuracionManager;
         private readonly ICapacidadProductivaAgent capacidadProductiva;
@@ -54,42 +51,38 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
         private readonly IListaCBUProveedorAgent cbuAgent;
-        private readonly IModificarFijacionAgent modificarFijacionAgent;
         private readonly ICartasDePortePendienteAplicarAgent ccppAgent;
         private readonly IHttpContextManager httpContextManager;
         private readonly IValidacionCreditoAgent validarCreditoAgente;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent;
         private readonly INegocioManager negocioManager;
-        private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private readonly ICentroManager centroManager;
         private readonly ICupoManager cupoManager;
+        private readonly IVisualizarCapacidadProductivaAgent capacidadProductivaAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
-            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
-            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
+            ICampañaManager oMSCampaniaManager, IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager, IPushNotificationManager oMSNotification,
             IDiferencialManager diferencialManager, IFinalizarContratoAgent oFinalizarContratoAgent,
-            IDiasHabilesAgent oDiasHabilesAgent, IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
+            IDiasHabilesAgent oDiasHabilesAgent,
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
             IMailManager mailManager, IStatusContratoAgent status, ILogDataAgroManager logDataAgroManager,
-            IValidarDocProcPagoAgent validarPagoAgente, IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
+            IValidarDocProcPagoAgent validarPagoAgente, IListaCBUProveedorAgent cbuAgent,
             ICartasDePortePendienteAplicarAgent ccppAgent, IHttpContextManager httpContextManager,
             IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
             ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent, INegocioManager negocioManager,
-            IContratosParaFijacionAgent contratosParaFijacionAgent, IConfiguracionInternaManager configuracionInternaManager,
-            ICentroManager centroManager, ICupoManager cupoManager)
+            IConfiguracionInternaManager configuracionInternaManager,
+            ICentroManager centroManager, ICupoManager cupoManager, IVisualizarCapacidadProductivaAgent capacidadProductivaAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             mobjMaterialManager = oMSMaterialManager;
             mobjCampaniaManager = oMSCampaniaManager;
-            mobjProvinciaManager = oMSProvinciaManager;
-            mobjLocalidadManager = oMSLocalidadManager;
             mobjProveedorManager = oMSProveedorManager;
             mobjComercialManager = oMSComercialManager;
             mobjTipoNegocioManager = oMSTipoNegocioManager;
@@ -97,7 +90,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.diferencialManager = diferencialManager;
             this.oFinalizarContratoAgent = oFinalizarContratoAgent;
             this.oDiasHabilesAgent = oDiasHabilesAgent;
-            this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
             this.configuracionManager = configuracionManager;
             this.altaTempranaAgent = altaTempranaAgent;
@@ -109,17 +101,16 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
             this.cbuAgent = cbuAgent;
-            this.modificarFijacionAgent = modificarFijacionAgent;
             this.ccppAgent = ccppAgent;
             this.httpContextManager = httpContextManager;
             this.validarCreditoAgente = validarCreditoAgente;
             this.tipoCambioAgent = tipoCambioAgent;
             this.capacidadProductivaDisponibleAgent = capacidadProductivaDisponibleAgent;
             this.negocioManager = negocioManager;
-            this.contratosParaFijacionAgent = contratosParaFijacionAgent;
             this.configuracionInternaManager = configuracionInternaManager;
             this.centroManager = centroManager;
             this.cupoManager = cupoManager;
+            this.capacidadProductivaAgent = capacidadProductivaAgent;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -1482,6 +1473,11 @@ namespace Molinos.DataAgro.Business.Managers
             //    }
             //}
 
+            if (oParam.ClasificacionId == (int)EnumClasificacionCompraNet.Productor && oParam.Venta != true && oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
+            {
+                oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
+            }
+
             return oErrorMessages;
         }
 
@@ -2485,13 +2481,13 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var serviciosContrato = oContratoSave.Servicios.Select(s => new
                         {
-                            Id = s.Id,
-                            ServicioValor = s.ServicioValor,
-                            Importe = s.Importe,
-                            MonedaId = s.MonedaId,
-                            NegocioId = s.NegocioId,
-                            Desde = s.Desde,
-                            Hasta = s.Hasta
+                            s.Id,
+                            s.ServicioValor,
+                            s.Importe,
+                            s.MonedaId,
+                            s.NegocioId,
+                            s.Desde,
+                            s.Hasta
                         }).ToList();
 
                         logger.Debug("Servicios oContratoSave: " + serviciosContrato.ToJson());
@@ -3167,7 +3163,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Madre = x.Madre,
                 EsFason = x.EsFason,
                 ContratoMadre = x.ContratoMadre,
-                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+                Pizarra = x.Pizarra ?? false,
                 StandardDeCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido = x.PagoDiferido,
@@ -3259,8 +3255,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Monto = x.Monto,
                 MonedaCanjeId = x.MonedaCanjeId,
                 Insumo = x.Insumo,
-                PrestamoDevolucion = x.PrestamoDevolucion.HasValue ? x.PrestamoDevolucion.Value : false,
-                PlantaDestinoId = x.PlantaDestinoId.HasValue ? x.PlantaDestinoId.Value : 0,
+                PrestamoDevolucion = x.PrestamoDevolucion ?? false,
+                PlantaDestinoId = x.PlantaDestinoId ?? 0,
                 PlantaDestinoDescripcion = !x.PlantaDestinoId.HasValue ? "" : x.Destino.Descripcion,
                 SustentableTercero = x.SustentableTercero,
                 Venta = x.Venta,
@@ -3447,8 +3443,10 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailContrato(string filePath, List<AvisoContratoDto> contratosPendientes, string idActiveDirectory)
         {
             var nombreApellido = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == idActiveDirectory, x => x.Nombres + " " + x.Apellido);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th = "<th style=\"border: 1px solid white; color: white; text-align:center; background-color: #017940; padding: 5px 0; width: 175px;\">";
             string td = "<td style=\"border: 1px solid white; color: black; text-align:center; background-color: #a4e751; padding: 5px 0; width: 175px;\">";
             string htmlBody = "";
@@ -3697,8 +3695,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -3726,8 +3723,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailSIO(string filePath, Contrato contrato, string idActiveDirectory)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             Comercial comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             string htmlBody = "";
             htmlBody += "Por el presente mail se solicita anular el contrato " + contrato.ContratoSAP.TrimStart('0') + " de  SIO Granos. <br /><br />  ";
@@ -4554,8 +4553,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailImpuesto(String filePath, Contrato oContrato)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string htmlBody = "";
             htmlBody += $"En el presente mail se informa la creación del contrato número {oContrato.ContratoSAP.TrimStart('0')} de {oContrato.Cantidad:N0} kg de {oContrato.Material.Descripcion} con procedencia o destino en una jurisdicción donde MOA no está inscripto. <br /><br />  ";
 
@@ -4575,8 +4576,10 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, Contrato contratoSave)
         {
             var emailComercial = mailManager.GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory);
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             string th1;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
@@ -5020,8 +5023,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         private string Td(ref int linea)
         {
-            string td1 = "";
-            string td2 = "";
+            string td1;
+            string td2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
@@ -5045,8 +5048,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         private string TdCambio(ref int linea)
         {
-            string td1 = "";
-            string td2 = "";
+            string td1;
+            string td2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 td1 = "<td style=\"border: 2px solid white; color:white; background-color: #F62459; padding: 5px 0; width: 250px;\">";
@@ -5114,9 +5117,11 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, proyeccion);
                 var basicoSave = TransformarABasicoContrato(contratoSave);
-                var contratos = new List<BasicoContrato>();
-                contratos.Add(contrato);
-                contratos.Add(basicoSave);
+                var contratos = new List<BasicoContrato>
+                {
+                    contrato,
+                    basicoSave
+                };
                 return contratos;
             }
             catch (Exception e)
@@ -5925,14 +5930,16 @@ namespace Molinos.DataAgro.Business.Managers
                 item.FechaEntrega = acuerdo.FechaHasta;
                 item.DesdeFijacion = acuerdo.DesdeFijacion;
                 item.HastaFijacion = acuerdo.HastaFijacion;
-                Contrato contrato = new Contrato();
-                contrato.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
-                contrato.ContratoCorredor = item.ContratoCorredor;
-                contrato.ContratoVendedor = item.ContratoVendedor;
-                contrato.MaterialId = item.MaterialId;
-                contrato.CampanaId = item.CampanaId;
-                contrato.FechaOperacion = item.FechaOperacion.Value;
-                contrato.Fecha = DateTime.Now;
+                Contrato contrato = new Contrato
+                {
+                    GrupoCompra = comercial.GrupoDeComprasId ?? 0,
+                    ContratoCorredor = item.ContratoCorredor,
+                    ContratoVendedor = item.ContratoVendedor,
+                    MaterialId = item.MaterialId,
+                    CampanaId = item.CampanaId,
+                    FechaOperacion = item.FechaOperacion.Value,
+                    Fecha = DateTime.Now
+                };
                 if (item.FechaOperacion.Value.Date < DateTime.Today)
                 {
                     contrato.MotivoOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
@@ -6105,8 +6112,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailAltaMasiva(string filePath, List<GrabarContratoResult> results, List<BasicoContrato> contratos)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -6355,8 +6364,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContratoVenta(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar, decimal importe)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             //string style1;
             string style2;
@@ -6765,7 +6776,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (TipoNegocioId != 2) return true;
             var estado = status.ValidarEstado(contratoSAP);
-            return string.IsNullOrEmpty(estado.Status) ? false : true;
+            return !string.IsNullOrEmpty(estado.Status);
         }
 
         public List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int contratoId)
@@ -6910,7 +6921,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public bool EsUnContratoAsociado(int negocioId)
         {
-            return repositorio.Obtener<NegocioAsociado>(x => x.AsociadoId == negocioId) == null ? false : true;
+            return repositorio.Obtener<NegocioAsociado>(x => x.AsociadoId == negocioId) != null;
         }
 
         public string ValidarProveedor(int proveedorId, int clasificacion, bool planCanje = false, bool consignatario = false)
@@ -7355,9 +7366,11 @@ namespace Molinos.DataAgro.Business.Managers
                         foreach (var item in resultValidation.RowsResult)
                         {
                             List<string> errorsList = new List<string>();
-                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem();
-                            erroresItem.ContratoCorredor = item.ContratoCorredor;
-                            erroresItem.Row = item.Row;
+                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem
+                            {
+                                ContratoCorredor = item.ContratoCorredor,
+                                Row = item.Row
+                            };
 
                             foreach (var item2 in item.ItemsResult)
                             {
@@ -7582,9 +7595,11 @@ namespace Molinos.DataAgro.Business.Managers
                         foreach (var item in resultValidation.RowsResult)
                         {
                             List<string> errorsList = new List<string>();
-                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem();
-                            erroresItem.ContratoCorredor = item.ContratoCorredor;
-                            erroresItem.Row = item.Row;
+                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem
+                            {
+                                ContratoCorredor = item.ContratoCorredor,
+                                Row = item.Row
+                            };
 
                             foreach (var item2 in item.ItemsResult)
                             {
@@ -8439,7 +8454,18 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarEstadoDeContratos()
         {
-            var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
+            //var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
+
+            var contratos = repositorio.Listar<Contrato, ContratoActualizarEstadoDeContratosDto>(x => new ContratoActualizarEstadoDeContratosDto
+            {
+                ContratoSAP = x.ContratoSAP,
+                ConfirmadoSAP = x.ConfirmadoSAP,
+                FechaConfirmadoSAP = x.FechaConfirmadoSAP,
+            }, x => x.ConfirmadoSAP != true
+            && !string.IsNullOrEmpty(x.ContratoSAP)
+            && x.EstadoId != (int)EnumEstadoContrato.Rechazado
+            && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
+
             if (contratos != null && contratos.Count > 0)
             {
                 logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
@@ -8457,6 +8483,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+        public partial class ContratoActualizarEstadoDeContratosDto
+        {
+            public string ContratoSAP { get; set; }
+            public bool? ConfirmadoSAP { get; set; }
+            public DateTime? FechaConfirmadoSAP { get; set; }
+
+        }
+
         public List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerServicios(materialId, centroId)).ToList();
@@ -8470,13 +8504,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var serviciosContrato = servicios.Select(s => new
                 {
-                    Id = s.Id,
-                    ServicioValor = s.ServicioValor,
-                    Importe = s.Importe,
-                    MonedaId = s.MonedaId,
-                    NegocioId = s.NegocioId,
-                    Desde = s.Desde,
-                    Hasta = s.Hasta
+                    s.Id,
+                    s.ServicioValor,
+                    s.Importe,
+                    s.MonedaId,
+                    s.NegocioId,
+                    s.Desde,
+                    s.Hasta
                 }).ToList();
                 logger.Debug("Servicios en INI-GrabarServicioModificado(): " + (serviciosContrato.Count() > 15 ? serviciosContrato.ToJson() : (serviciosContrato.Count() + " servicios")));
 
@@ -8494,13 +8528,13 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var serviciosContrato2 = servicios.Select(s => new
                 {
-                    Id = s.Id,
-                    ServicioValor = s.ServicioValor,
-                    Importe = s.Importe,
-                    MonedaId = s.MonedaId,
-                    NegocioId = s.NegocioId,
-                    Desde = s.Desde,
-                    Hasta = s.Hasta
+                    s.Id,
+                    s.ServicioValor,
+                    s.Importe,
+                    s.MonedaId,
+                    s.NegocioId,
+                    s.Desde,
+                    s.Hasta
                 }).ToList();
                 logger.Debug("Servicios en FIN-GrabarServicioModificado(): " + (serviciosContrato2.Count() > 15 ? serviciosContrato2.ToJson() : (serviciosContrato2.Count() + " servicios")));
             }
@@ -8816,9 +8850,11 @@ namespace Molinos.DataAgro.Business.Managers
                         foreach (var item in resultValidation.RowsResult)
                         {
                             List<string> errorsList = new List<string>();
-                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem();
-                            erroresItem.ContratoCorredor = item.ContratoCorredor;
-                            erroresItem.Row = item.Row;
+                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem
+                            {
+                                ContratoCorredor = item.ContratoCorredor,
+                                Row = item.Row
+                            };
 
                             foreach (var item2 in item.ItemsResult)
                             {
@@ -9062,6 +9098,20 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
                 return string.Empty;
+        }
+
+        public Resultado ValidarCapacidadProductiva(Contrato negocio)
+        {
+            var resultado = new Resultado();
+            var capProd = capacidadProductivaAgent.VisualizarCapacidadProductiva(negocio.ProveedorId.Value).Find(x => x.MaterialId == negocio.MaterialId && x.CampaniaId == negocio.CampanaId);
+            if (capProd == null)
+            {
+                string proveedorNegocio = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == negocio.ProveedorId, x => x.RazonSocial);
+                string materialNegocio = repositorio.Obtener<Material, string>(x => x.MaterialId == negocio.MaterialId, x => x.Descripcion);
+                string campanaNegocio = repositorio.Obtener<Campaña, string>(x => x.CampañaId == negocio.CampanaId, x => x.Descripcion);
+                resultado.Error("InformeComercial", $"El proveedor {proveedorNegocio} no tiene capacidad productiva informada en SAP para {materialNegocio} en la campaña {campanaNegocio}. No se puede cargar el contrato.\n\n\n");
+            }
+            return resultado;
         }
     }
 }
