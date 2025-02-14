@@ -19,13 +19,6 @@ IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Product
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Acopiador') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Acopiador'); END
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Otros') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Otros'); END
 
---Centro
---IF NOT EXISTS (select 1 from Centro where Descripcion = 'San Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('San Lorenzo', '1029'); END
---IF NOT EXISTS (select 1 from Centro where Descripcion = 'Pergamino') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Pergamino', '1035'); END
---IF NOT EXISTS (select 1 from Centro where Descripcion = 'Bandera') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Bandera', '1127'); END
---IF NOT EXISTS (select 1 from Centro where Descripcion = 'La Cautiva') BEGIN insert into Centro(Descripcion,CodigoSap) values ('La Cautiva', '1126'); END
---IF NOT EXISTS (select 1 from Centro where Descripcion = 'Lincoln') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Lincoln', '1036'); END
-
 --EstadoContrato
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Pendiente') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Pendiente', 1); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Confirmado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Confirmado', 2); END
@@ -57,7 +50,6 @@ IF NOT EXISTS (select 1 from CondicionFijacion where Descripcion = 'MERCADO MOA'
 --CalidadesEspeciales
 IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Dañados') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Dañados','MPSOJGDA',3); END
 IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Granos verdes') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Granos verdes','MPSOJGVE',3); END
---IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Cuerpos extraños') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Cuerpos extraños','MPSOJCEX',3); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPMAZGRA') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Grado','MPMAZGRA',1); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPTRPGRA') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Grado','MPTRPGRA',2); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPGIRCEX'AND MaterialId=4) BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Materia Extraña','MPGIRCEX',4); END
@@ -69,8 +61,6 @@ IF NOT EXISTS (select 1 from TipoDB where Descripcion = 'Por Fuera del Precio') 
 
 --TipoPeriodoDB
 IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Generales') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Generales','G'); END
---IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Por Fecha de Entrega') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Por Fecha de Entrega','E'); END
---IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Por Fecha de Fijación') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Por Fecha de Fijación','F'); END
 
 --Tipo Negocio
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'FASON') BEGIN insert into TipoNegocio (Descripcion) values ('FASON'); END
@@ -247,8 +237,6 @@ IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'Anteriore
 --Configuracion
 Update Configuracion set RedespachoMaximoARP = isnull(RedespachoMaximoARP, 1000), RedespachoMaximoUSDM = isnull(RedespachoMaximoUSDM, 60)
 
---BoletoVenta
-
 --CondicionDePagoFijacionVenta
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirma') BEGIN insert into BoletoVenta (Descripcion) values ('Confirma'); END
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Físico') BEGIN insert into BoletoVenta (Descripcion) values ('Físico'); END
@@ -359,7 +347,6 @@ IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 Mater
 
 IF NOT EXISTS (select 1 from Rol where Descripcion = 'Recibir Sugerencia FAQ') BEGIN insert into Rol (Descripcion) values ('Recibir Sugerencia FAQ'); END
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END
-
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Algoritmo de Cupos') and Permiso = 735) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Algoritmo de Cupos'), 735); END
 
 --ResearchCoeficienteCultivo
@@ -482,13 +469,22 @@ IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN 
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END
 
---PRUEBA
-insert into Log (Fecha, Xml) values (CURRENT_TIMESTAMP, CONCAT('PRUEBA',' - ',CURRENT_TIMESTAMP));
+-- CREACION DE NUEVO ROL Y PERMISO POR ROL DE VISUALIZAR CONTRATO FASON
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Visualizar Contratos Fason')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Visualizar Contratos Fason')
+   END
 
---Centro
---UPDATE Centro SET CentroPropio = 1 WHERE Descripcion IN ('San Lorenzo', 'Pergamino', 'Bandera', 'La Cautiva', 'Lincoln', 'Chivilcoy', 'Rio del Valle', 'General Pinedo', 'Vicentin Virtual', 'Rio del Valle (Planta Soto)');
+DECLARE @RolVisCtoFasonId int
+ SELECT @RolVisCtoFasonId = Id from Rol 
+  WHERE Descripcion = 'Visualizar Contratos Fason'
 
--- INDICES provistos por Algeiba
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permiso = 312)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolVisCtoFasonId, 312)
+   END
+
+-- INICIO - Índices provistos por Algeiba
 IF NOT EXISTS (
     SELECT 1 
     FROM sys.indexes 
@@ -536,6 +532,41 @@ BEGIN
     CREATE NONCLUSTERED INDEX ndx_ProveedorId_EsPrincipal
     ON [dbo].[ContactoComercial] ([ProveedorId],[EsPrincipal])
     INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
+END;
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
+END;
+-- FIN - Índices provistos por Algeiba
+
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_ComercialId'
+    AND object_id = OBJECT_ID('[dbo].[InformeComercialApertura]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX [NDX_ComercialId]
+    ON [dbo].[InformeComercialApertura] ([ComercialId])
+    INCLUDE ([Id],[FechaApertura])
 END;
 
 IF NOT EXISTS (
@@ -611,28 +642,6 @@ END;
 IF NOT EXISTS (
     SELECT 1 
     FROM sys.indexes 
-    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
-    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
-END;
-
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
-    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
-END;
-
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
     WHERE name = 'NDX_Pizarra_Discriminator_OcultarEnTablero_MaterialId_EstadoId_FechaOperacion'
     AND object_id = OBJECT_ID('[dbo].[Negocio]')
 )
@@ -676,22 +685,17 @@ BEGIN
     INCLUDE ([CUIT])
 END;
 
-
--- CREACION DE NUEVO ROL Y PERMISO POR ROL DE VISUALIZAR CONTRATO FASON
-IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Visualizar Contratos Fason')
-   BEGIN
-		INSERT INTO Rol (Descripcion)VALUES('Visualizar Contratos Fason')
-   END
-
-DECLARE @RolVisCtoFasonId int
- SELECT @RolVisCtoFasonId = Id from Rol 
-  WHERE Descripcion = 'Visualizar Contratos Fason'
-
-IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permiso = 312)
-   BEGIN
-		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolVisCtoFasonId, 312)
-   END
-
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'NDX_Discriminator'
+    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX NDX_Discriminator
+    ON [dbo].[Negocio] ([Discriminator])
+    INCLUDE ([Fecha],[ComercialId],[ComercialCreadorId])
+END;
 
 IF NOT EXISTS (
     SELECT 1 
