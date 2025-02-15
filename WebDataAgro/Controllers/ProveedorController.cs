@@ -202,7 +202,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult CrearActividad(ActividadInsetarIni oParam)
+        public ActionResult CrearActividad(ActividadInsertarIni oParam)
         {
             oParam.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             oParam.UserName = GlobalVariables.IdActiveDirectoryCompleto;
@@ -662,7 +662,7 @@ namespace WebDataAgro.Controllers
             return campos;
         }
 
-        public ActionResult ExportarActividadesExcel(HistorialActiviad filtro)
+        public ActionResult ExportarActividadesExcel(HistorialActividad filtro)
         {
             var model = new ReportesModel();
 

@@ -5,6 +5,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IEstadoProveedorManager
     {
-        void ActualizarProveedores();
+        void ActualizarProveedores(string cuit);
     }
 }

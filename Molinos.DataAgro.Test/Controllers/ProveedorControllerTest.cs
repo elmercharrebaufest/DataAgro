@@ -180,13 +180,13 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearActividadTest()
         {
-            var param = new ActividadInsetarIni { UserName = "dominio\\nombre", ComercialId = 1 };
+            var param = new ActividadInsertarIni { UserName = "dominio\\nombre", ComercialId = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
             proveedorManagerMock.Setup(x => x.GrabarRecordatorio(param)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.CrearActividad(new ActividadInsetarIni());
+            var result = target.CrearActividad(new ActividadInsertarIni());
 
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
-            proveedorManagerMock.Verify(x => x.GrabarRecordatorio(It.IsAny<ActividadInsetarIni>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.GrabarRecordatorio(It.IsAny<ActividadInsertarIni>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -338,11 +338,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerFiltrosTest()
         {
-            var histo = new HistorialActiviad { ActividadId = 1, ProveedorId = 1, tipoactividad = "A" };
+            var histo = new HistorialActividad { ActividadId = 1, ProveedorId = 1, TipoActividad = "A" };
             proveedorManagerMock.Setup(x => x.TraerHistorialActividad(histo, 1, "A")).Returns(new StoredHistorialResult());
             var result = target.TraerFiltros("A", 1, histo);
 
-            proveedorManagerMock.Verify(x => x.TraerHistorialActividad(It.IsAny<HistorialActiviad>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.TraerHistorialActividad(It.IsAny<HistorialActividad>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Acopio = new List<CampoProduccionAcopio>(),
                 ObjetivosTraerPorProveedorId = new List<ObjetivosTraer>()
             };
-            var histo = new HistorialActiviad { ActividadId = 1, ProveedorId = 1, tipoactividad = "A" };
+            var histo = new HistorialActividad { ActividadId = 1, ProveedorId = 1, TipoActividad = "A" };
             proveedorManagerMock.Setup(x => x.TraerProveedor(1, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo)).Returns(prov);
             var result = target.ImprimirReporteProveedor(1);
 

@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()))
                 .Returns(new List<ActividadTraer>() { new ActividadTraer() });
-            var result = target.TraerHistorialActividad(new HistorialActiviad(), 1, "a");
+            var result = target.TraerHistorialActividad(new HistorialActividad(), 1, "a");
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()), Times.Once);
             Assert.NotNull(result);
@@ -783,7 +783,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             ConfigurationManager.AppSettings["AgendaCita"] = "2";
             var fecha = new DateTime(2019, 10, 10);
-            var actividad = new ActividadInsetarIni { ProveedorId = 1, ComercialId = 1, fechaYHoraActividad = fecha, fechaYHoraRecordatorio = fecha, tipoactividad = 1, ActividadId = 1 };
+            var actividad = new ActividadInsertarIni { ProveedorId = 1, ComercialId = 1, FechaYHoraActividad = fecha, FechaYHoraRecordatorio = fecha, TipoActividad = 1, ActividadId = 1 };
 
 
             //para pasar el logDataA
@@ -3391,7 +3391,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarRecordatorioConCitaOkTest()
         {
             var fecha = new DateTime(2019, 10, 10);
-            var actividad = new ActividadInsetarIni { ProveedorId = 1, ComercialId = 1, fechaYHoraActividad = fecha, fechaYHoraRecordatorio = fecha, tipoactividad = 1, ActividadId = 1, fechaYHoraRecordatorioFin = fecha };
+            var actividad = new ActividadInsertarIni { ProveedorId = 1, ComercialId = 1, FechaYHoraActividad = fecha, FechaYHoraRecordatorio = fecha, TipoActividad = 1, ActividadId = 1, FechaYHoraRecordatorioFin = fecha };
             ConfigurationManager.AppSettings["EmailAgenda"] = "1";
             ConfigurationManager.AppSettings["maildeUsuarios"] = "dataagro.baufest@gmail.com";
             ConfigurationManager.AppSettings["AgendaCita"] = "1";
