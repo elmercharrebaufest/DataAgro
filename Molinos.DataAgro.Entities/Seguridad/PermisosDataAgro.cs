@@ -388,5 +388,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Confirma
         [Display(ResourceType = typeof(Text), Name = "Confirma")]
         Confirma = 920,
+
+        //Ver_Todos_Contactos_x_Proveedor
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Contactos_Por_Proveedor")]
+        Ver_Todos_Contactos_x_Proveedor = 921,
     }
 }

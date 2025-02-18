@@ -931,3 +931,17 @@ BEGIN
     ON [dbo].[AdministracionCupo] ([Excedente],[Fecha])
     INCLUDE ([ComercialId])
 END;
+-- CREACION DE NUEVO ROL Y PERMISO PARA INFORME COMERCIAL ADMINISTRADOR
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Ver todos los contactos por proveedor')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Ver todos los contactos por proveedor')
+   END
+
+DECLARE @RolTodosContactos int
+ SELECT @RolTodosContactos = Id from Rol 
+  WHERE Descripcion = 'Ver todos los contactos por proveedor'
+
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolTodosContactos and Permiso = 921)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolTodosContactos, 921)
+   END
