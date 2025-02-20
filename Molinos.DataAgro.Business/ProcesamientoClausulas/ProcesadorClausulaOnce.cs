@@ -27,8 +27,6 @@ namespace Molinos.DataAgro.Business.Procesamiento
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
             bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId !=null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true: false) : false;
 
-            var bonificacionAperturaPrecio = clausula.Basico.AperturaPrecios!=null ? clausula.Basico.AperturaPrecios.Find(x=> x.ConceptoAperturaPrecioId == 4) : new AperturaPrecioDto();
-
             var descuentoGeneralSobrePrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
             var descuentoGeneralFueraPrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
 
@@ -39,52 +37,18 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 if (clausula.Basico.EPA || clausula.Basico.Sustentable)
                 {
-                    if (clausula.Basico.Descuentos.Count > 0)
+                    if (clausula.Basico.SustentableTipoDBId == 1)
                     {
-                        if (clausula.Basico.SustentableTipoDBId == 1)
-                        {
-                            res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
-                        }
-                        if (clausula.Basico.SustentableTipoDBId == 2)
-                        {
-                            res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
-                        }
+                        res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
                     }
-                    else
+                    if (clausula.Basico.SustentableTipoDBId == 2)
                     {
-                        if (bonificacionAperturaPrecio.Id > 0)
-                        {
-                            res.Texto += DevolverClausulaBonificacionAperturaPrecio(bonificacionAperturaPrecio);
-                        }
+                        res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
                     }
                 }
             }
 
             return res;
-        }
-
-        private string DevolverClausulaBonificacionAperturaPrecio(AperturaPrecioDto bonificacionAperturaPrecio)
-        {
-            string clausula = string.Empty;
-            if (bonificacionAperturaPrecio?.Importe > 0)
-            {
-                clausula += $"Se bonificará sobre el precio {DivisaSimbolica(bonificacionAperturaPrecio.Moneda)} {ValorAbsoluto(bonificacionAperturaPrecio.Importe)} " +
-                    $" ({DevolverNumeroEnLetrasConDivisa(bonificacionAperturaPrecio.Importe, bonificacionAperturaPrecio.Moneda)}) por tonelada. ";
-            }
-            if (bonificacionAperturaPrecio?.Importe < 0)
-            {
-                clausula += $"Se descontará sobre el precio {DivisaSimbolica(bonificacionAperturaPrecio.Moneda)} {ValorAbsoluto(bonificacionAperturaPrecio.Importe)} " +
-                    $" ({DevolverNumeroEnLetrasConDivisa(bonificacionAperturaPrecio.Importe, bonificacionAperturaPrecio.Moneda)}) por tonelada. ";
-            }
-            if (bonificacionAperturaPrecio?.Porcentaje > 0)
-            {
-                clausula += $"Se bonificará sobre el precio el {bonificacionAperturaPrecio.Porcentaje}% por tonelada. ";
-            }
-            if (bonificacionAperturaPrecio?.Porcentaje < 0)
-            {
-                clausula += $"Se descontará sobre el precio el {bonificacionAperturaPrecio.Porcentaje}% por tonelada. ";
-            }
-            return clausula;
         }
 
         private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio)
