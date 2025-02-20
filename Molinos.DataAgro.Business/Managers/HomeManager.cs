@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var res = new ResultIniContacto();
             res.Contactos = new List<ContactoIni>();
-            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
+            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) || PermisosHelper.Is(PermisosDataAgro.Ver_Todos_Contactos_x_Proveedor))
             {
                 var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 50, pagina, oParam.Campaña,
                     oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             oParam.Estado = null;
-            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
+            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) || PermisosHelper.Is(PermisosDataAgro.Ver_Todos_Contactos_x_Proveedor))
             {
                 var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
