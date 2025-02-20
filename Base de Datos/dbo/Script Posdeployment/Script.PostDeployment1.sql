@@ -331,6 +331,8 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuenta')
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYUno',51 , 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYDos',52 , 1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYTres',53 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYCuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYCuatro',54 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCincuentaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCincuentaYCinco',55 , 1); END
 
 --EstadoHome
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Habilitado') BEGIN insert into EstadoHome (Descripcion, Color) values ('Habilitado', 'green'); END
