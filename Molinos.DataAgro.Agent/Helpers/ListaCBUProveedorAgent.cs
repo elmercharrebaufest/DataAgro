@@ -14,15 +14,16 @@ namespace Molinos.DataAgro.Agent
 {
     public class ListaCBUProveedorAgent : IListaCBUProveedorAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public ListaCBUProveedorAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public List<PagoCBUDto> ListarCBU(string cuit, string filtro)
         {
@@ -44,7 +45,7 @@ namespace Molinos.DataAgro.Agent
 
                     var rq = new Z_MPRFC_LISTA_CBU_PROVEEDOR
                     {
-                       IM_CUIT = new ZMPES6280[] { new ZMPES6280 { CUIT = cuit } }   
+                        IM_CUIT = new ZMPES6280[] { new ZMPES6280 { CUIT = cuit } }
                     };
                     var log = new Log
                     {
@@ -65,11 +66,11 @@ namespace Molinos.DataAgro.Agent
                             Cbu = item.BANKN,
                             Cuit = item.CUIT,
                             Koinh = item.KOINH,
-                            Pago = item.KOINH+"-"+item.BANKN + " " + item.BVTYP + " " + item.BANKA,
-                            NombreBanco = item.BVTYP 
+                            Pago = item.KOINH + "-" + item.BANKN + " " + item.BVTYP + " " + item.BANKA,
+                            NombreBanco = item.BVTYP
                         };
                         listaCbus.Add(cbus);
-                    }                
+                    }
 
                     logger.Debug(valor.ToXml());
                     log = repositorio.Obtener<Log>(logId.Id);

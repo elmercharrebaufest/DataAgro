@@ -3,7 +3,6 @@ using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,15 +12,12 @@ namespace Molinos.DataAgro.Agent
 {
     public class ServicioRepositorioScatoAgent : IServicioRepositorioScatoAgent
     {
-        public ServicioRepositorioScatoAgent(ILogger logger, IRepositorio repositorio)
+        private readonly ILogger logger;
+
+        public ServicioRepositorioScatoAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public List<EstablecimientoStockDto> ListarEstablecimientos(string cuitProveedor, string campania)
         {

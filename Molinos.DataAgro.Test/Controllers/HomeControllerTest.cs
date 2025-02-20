@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -26,6 +27,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<IObjetivoManager> objetivoManagerMock;
         private Mock<ILogger> logMock;
+        private Mock<IInformeComercialAperturaManager> mobjInformeComercialAperturaManager;
 
         private JavaScriptSerializer serializer;
 
@@ -37,11 +39,13 @@ namespace Molinos.DataAgro.Test.Controllers
             comercialManagerMock = new Mock<IComercialManager>();
             homeManagerMock = new Mock<IHomeManager>();
             objetivoManagerMock = new Mock<IObjetivoManager>();
+            mobjInformeComercialAperturaManager = new Mock<IInformeComercialAperturaManager>();
             logMock = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["comercialId"] = 1;
             target = new HomeController(comercialManagerMock.Object, reportesManagerMock.Object, 
-                homeManagerMock.Object, objetivoManagerMock.Object, logMock.Object);
+                homeManagerMock.Object, objetivoManagerMock.Object, mobjInformeComercialAperturaManager.Object,
+                logMock.Object);
         }
 
         [Test]

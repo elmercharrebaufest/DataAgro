@@ -13,19 +13,16 @@ namespace Molinos.DataAgro.Business
 {
     public class DiferencialManager : IDiferencialManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        private IMailManager mailManager;
-        private IReportesManager mobjReportesManager;
-        private IHedgeManager hedgeManager;
+        private readonly IMailManager mailManager;
+        private readonly IHedgeManager hedgeManager;
 
-        public DiferencialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager,
-            IReportesManager mobjReportesManager, IHedgeManager hedgeManager)
+        public DiferencialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IHedgeManager hedgeManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
-            this.mobjReportesManager = mobjReportesManager;
             this.hedgeManager = hedgeManager;
         }
 

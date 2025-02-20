@@ -18,11 +18,11 @@ if (@ProvinciaId is not null)
 begin 
 	if (@ProvinciaId = 0 or @ProvinciaId = 1)
 	begin 
-	   insert into @ProvinciaSecuencia (item) values(0)
-	   insert into @ProvinciaSecuencia (item) values(1)
+	   insert into @ProvinciaSecuencia (Item) values(0)
+	   insert into @ProvinciaSecuencia (Item) values(1)
 	end
 	else
-		insert into @ProvinciaSecuencia (item) values(@ProvinciaId)
+		insert into @ProvinciaSecuencia (Item) values(@ProvinciaId)
 
 end
 
@@ -37,11 +37,11 @@ create table #Valores(Prov varchar(200),Cl bigint,Tn Float)
 
 insert into #Valores(Prov,Cl)
 
-select distinct prv.Nombre, p.cuit 
+select distinct prv.Nombre, p.CUIT
 
-from proveedor p
+from Proveedor p
 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 
@@ -68,13 +68,13 @@ and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 update #Valores
 set Tn= b.tn
 from
-(select  p.cuit,prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
-from proveedor p
+(select  p.CUIT, prv.Nombre as Prov, sum (cm.Toneladas) as Tn 
+from Proveedor p
 inner join Campo cp on p.ProveedorId = cp.ProveedorId
 inner join CampoMaterial cm on cp.CampoId = cm.CampoId
 inner join Localidad loc on cp.LocalidadId=loc.LocalidadId
 inner join Provincia prv on loc.ProvinciaId=prv.ProvinciaId 
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
@@ -88,7 +88,7 @@ and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
 
 and cp.LocalidadId is not null
-group by p.cuit,prv.Nombre )  b
+group by p.CUIT, prv.Nombre)  b
 where #Valores.Cl = b.CUIT and #Valores.Prov = b.Prov
 
 select  Prov  as Provincia, sum(tn) as Tonelada,count(CL) as Cuit

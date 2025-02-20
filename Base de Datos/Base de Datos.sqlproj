@@ -359,6 +359,7 @@
     <Build Include="dbo\Tables\ConfirmaAltaEstadoDocumento.sql" />
     <Build Include="dbo\Tables\ConfirmaAltaEstadoLote.sql" />
     <Build Include="dbo\Tables\ConfirmaAltaEstado.sql" />
+    <Build Include="dbo\Tables\InformeComercialApertura.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

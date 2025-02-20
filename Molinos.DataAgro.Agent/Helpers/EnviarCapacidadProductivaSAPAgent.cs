@@ -14,16 +14,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class EnviarCapacidadProductivaSAPAgent : IEnviarCapacidadProductivaSAPAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public EnviarCapacidadProductivaSAPAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public string EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> capProd)
         {
@@ -39,8 +39,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-                var porComercialyProv = capProd.GroupBy(item => new { item.UsuarioSAP, item.Cuit } );
-                
+                var porComercialyProv = capProd.GroupBy(item => new { item.UsuarioSAP, item.Cuit });
+
                 var devolucion = new Z_MPRFC_ACT_CAPACIDAD_PRODResponse();
 
                 foreach (var item in porComercialyProv)
@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     repositorio.GuardarCambios();
                     logger.Debug("EnviarCapacidadProductivaSAP - Respuesta: " + devolucion.ToXml());
                 }
-                
+
                 return devolucion.EX_MENSAJE;
             }
             catch (Exception e)

@@ -1,28 +1,22 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ComprasDetalle;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
     public class ComprasDetalleAgent : IComprasDetalleAgent
     {
         private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
         private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
         private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public ComprasDetalleAgent(ILogger logger, IRepositorio repositorio)
+        public ComprasDetalleAgent(ILogger logger)
         {
             this.logger = logger;
-            this.repositorio = repositorio;
         }
 
         public List<CompraDetalleAgentDto> Comprar(string CUIT, string UsuarioComercial)
@@ -91,9 +85,8 @@ namespace Molinos.DataAgro.Agent
                 logger.Error(e);
                 return compra;
             }
-
-
         }
+
         private CompraDetalleAgentDto ConvertirADto(ZMPES5620 dev)
         {
             var compraAgent = new CompraDetalleAgentDto

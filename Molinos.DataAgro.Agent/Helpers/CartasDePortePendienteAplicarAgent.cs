@@ -14,15 +14,16 @@ namespace Molinos.DataAgro.Agent
 {
     public class CartasDePortePendienteAplicarAgent : ICartasDePortePendienteAplicarAgent
     {
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public CartasDePortePendienteAplicarAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         private string ObtenerCodigoProveedor(string cuit, bool esCorredor = false)
         {
@@ -30,6 +31,7 @@ namespace Molinos.DataAgro.Agent
 
             return prefix + cuit.Remove(cuit.Length - 1).Remove(0, 2);
         }
+
         public List<CcPpPendienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPendienteAplicarDto req)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")

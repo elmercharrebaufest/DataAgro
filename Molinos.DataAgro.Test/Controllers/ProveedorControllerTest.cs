@@ -51,9 +51,9 @@ namespace Molinos.DataAgro.Test.Controllers
             repositorioMock = new Mock<IRepositorio>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ProveedorController(proveedorManagerMock.Object, 
-                homeManagerMock.Object, campanaManagerMock.Object, 
-                comercialManagerMock.Object, reportesManagerMock.Object, 
+            target = new ProveedorController(proveedorManagerMock.Object,
+                homeManagerMock.Object, campanaManagerMock.Object,
+                comercialManagerMock.Object, reportesManagerMock.Object,
                 localidadManagerMock.Object, provinciaManagerMock.Object, informeComercialManagerMock.Object, repositorioMock.Object);
         }
 
@@ -180,13 +180,13 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearActividadTest()
         {
-            var param = new ActividadInsetarIni { UserName = "dominio\\nombre", ComercialId = 1 };
+            var param = new ActividadInsertarIni { UserName = "dominio\\nombre", ComercialId = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
             proveedorManagerMock.Setup(x => x.GrabarRecordatorio(param)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.CrearActividad(new ActividadInsetarIni());
+            var result = target.CrearActividad(new ActividadInsertarIni());
 
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
-            proveedorManagerMock.Verify(x => x.GrabarRecordatorio(It.IsAny<ActividadInsetarIni>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.GrabarRecordatorio(It.IsAny<ActividadInsertarIni>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -224,7 +224,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarProveedorNuevoTest()
         {
             var prove = new NuevoProveedor { ProveedorId = 0, basicos = new Basico { cuit = "111", RazonSocial = "A", } };
-            var modificados = new CampaniaDto { CampaniaId = new List<int> { 9 }, CampaniaDesc = new List<string> { "20-21" }, ComercialId = 57  };
+            var modificados = new CampaniaDto { CampaniaId = new List<int> { 9 }, CampaniaDesc = new List<string> { "20-21" }, ComercialId = 57 };
             proveedorManagerMock.Setup(x => x.GrabarNuevoProveedor(prove, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 2, Errores = new List<ErrorMessage>() });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercial, int>>>(), It.IsAny<Expression<Func<InformeComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -278,7 +278,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             informeComercialManagerMock.Setup(x => x.EliminarInformes(It.IsAny<int>())).Returns(new Resultado());
             informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>())).Returns(new InformeResult { InformeId = 1 });
-            informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>())).Returns(new RptInformeComercialInfo { CUIT = "333333333", RazonSocial = "PARISI"});
+            informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>())).Returns(new RptInformeComercialInfo { CUIT = "333333333", RazonSocial = "PARISI" });
             informeComercialManagerMock.Setup(x => x.EnviarMailInformeComercial("downloadKey"));
 
             var result = target.GrabarProveedor(prove, modificados) as JsonResult;
@@ -290,7 +290,7 @@ namespace Molinos.DataAgro.Test.Controllers
             informeComercialManagerMock.Verify(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.EnviarMailInformeComercial(It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
-            
+
             var model = serializer.Deserialize<GrabarProveedorResult>(serializer.Serialize(result.Data));
             Assert.AreEqual(false, model.HayErrores);
             Assert.AreEqual(1, model.DownloadKey.Count);
@@ -306,7 +306,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -332,17 +332,17 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
         public void TraerFiltrosTest()
         {
-            var histo = new HistorialActiviad { ActividadId = 1, ProveedorId = 1, tipoactividad = "A" };
+            var histo = new HistorialActividad { ActividadId = 1, ProveedorId = 1, TipoActividad = "A" };
             proveedorManagerMock.Setup(x => x.TraerHistorialActividad(histo, 1, "A")).Returns(new StoredHistorialResult());
             var result = target.TraerFiltros("A", 1, histo);
 
-            proveedorManagerMock.Verify(x => x.TraerHistorialActividad(It.IsAny<HistorialActiviad>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.TraerHistorialActividad(It.IsAny<HistorialActividad>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Acopio = new List<CampoProduccionAcopio>(),
                 ObjetivosTraerPorProveedorId = new List<ObjetivosTraer>()
             };
-            var histo = new HistorialActiviad { ActividadId = 1, ProveedorId = 1, tipoactividad = "A" };
+            var histo = new HistorialActividad { ActividadId = 1, ProveedorId = 1, TipoActividad = "A" };
             proveedorManagerMock.Setup(x => x.TraerProveedor(1, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo)).Returns(prov);
             var result = target.ImprimirReporteProveedor(1);
 
@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -470,6 +470,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Localidad\":\"A\",\"CodLocalidad\":null,\"Provincia\":\"B\",\"Partido\":null,\"Descripcion\":null,\"PartidoId\":0,\"ProvinciaId\":2,\"Filtro\":\"a|AG\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void TraerProveedoresCorredorTest()
         {
@@ -483,6 +484,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"CUIT\":\"A\",\"RazonSocial\":null,\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":2,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"Direccion\":null,\"CodigoPostal\":\"1\",\"ClasificacionCompraNetId\":1,\"ClasificacionDescripcion\":null,\"ProveedorCorredorId\":1,\"Consignatario\":null,\"NoOperable\":null,\"Operando\":null,\"TooltipNoOperable\":null,\"EstadoCuit\":null,\"RiesgoComercialSap\":null,\"Facacop\":false,\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void TraerProveedorParaCorredorTest()
         {
@@ -493,9 +495,10 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"EstadoId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void GrabarCorredorUpdateTest()
         {
@@ -511,6 +514,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual(false, model.HayErrores);
             Assert.AreEqual(0, model.DownloadKey.Count);
         }
+
         [Test]
         public void GrabarCorredorNuevoTest()
         {

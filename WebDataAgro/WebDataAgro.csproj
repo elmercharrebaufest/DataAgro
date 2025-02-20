@@ -2988,6 +2988,7 @@
     <Content Include="Views\HabilitacionBoleto\_ListaBoletoCompraNetProvincia.cshtml" />
     <Content Include="Views\HabilitacionBoleto\AgregarBoletoProvinciaModal.cshtml" />
     <Content Include="Views\Confirma\GestionarClausulas.cshtml" />
+    <Content Include="Views\Home\_ModalInformesComercialesPendientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

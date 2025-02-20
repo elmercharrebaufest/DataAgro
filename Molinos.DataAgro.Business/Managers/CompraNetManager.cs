@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Business
 
     public class CompraNetManager : ICompraNetManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public CompraNetManager(ILogger logger, IRepositorio repositorio)
@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Business
             else
             {
                 var suscripcion = repositorio.Listar<SuscripcionComercial>(x => x.ComercialId == comercialId);
-                foreach(var susc in suscripcion)
+                foreach (var susc in suscripcion)
                 {
                     repositorio.Remover(susc);
                 }

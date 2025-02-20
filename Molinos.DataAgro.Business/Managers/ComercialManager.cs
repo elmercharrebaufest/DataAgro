@@ -8,8 +8,6 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,7 +18,7 @@ namespace Molinos.DataAgro.Business
 {
     public class ComercialManager : IComercialManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IDatoDelComercialAgent oDatoDelComercialAgent;
 
@@ -287,7 +285,7 @@ namespace Molinos.DataAgro.Business
         }
         public bool EsCupera(string activeDirectoryId)
         {
-            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera.HasValue ? x.Cupera.Value : false);
+            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera ?? false);
         }
         public EquipoDto ListarEquipo(string idActiveDirectory)
         {

@@ -33,7 +33,1001 @@ $(document).ready(function () {
     kendo.culture("es-AR");
     armarFuncionalidades();
     InicializarDatos();
+
+    const pantallaActiva = sessionStorage.getItem('pantallaActiva');
+    if (pantallaActiva) {
+        limpiarSelected();
+        $(`#${pantallaActiva}`).addClass("whc-selected");
+        esconderForms("formulario-produccion");
+        sessionStorage.removeItem('pantallaActiva');
+    }
 });
+
+function armarFuncionalidades() {
+    $(".page-sidebar-menu").attr('style', 'display:none!important');
+    $(".page-sidebar").attr('style', 'display:none!important');
+    $(".page-content").css({
+        'margin-left': 0
+    });
+    $(".atras-nav").show();
+    $(".nav-bar-segundo a span").css({
+        'vertical-align': 'middle'
+    });
+    $(".navbarsegundo-bread").html("Agregar contacto");
+    $("#AgregarContacto").hide();
+    $("#AgregarContacto2").hide();
+
+    $(".atras-nav").click(function () {
+        $("#modalSalir").modal();
+    });
+
+    $($(".logoheader-nav").parent()).click(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $($(".logoheader-nav").parent()).blur();
+        $("#modalSalir").modal();
+    });
+
+    $(".miscontactos-nav").parent().click(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $($(".logoheader-nav").parent()).blur();
+        $("#modalSalir").modal();
+    });
+
+    $(document).on("click", ".formulario-footer-cancelar", function () {
+        $("#modalSalir").modal();
+    });
+
+    $(".modal-salir-sin-guardar").click(function () {
+        if (ProveedorId) {
+            window.location.href = window.location.origin + "/Proveedor/Detalle?ProveedorId=" + ProveedorId;
+        } else {
+            window.location.href = "http://" + window.location.href.split("\/")[2];
+        }
+    });
+
+    $(".modal-cancelar").click(function () {
+        $("#modalSalir").modal('hide');
+    });
+
+    $("label[for='kmz']").hover(function () {
+        $("label[for='kmz']").css({
+            'background-color': 'white',
+            border: '1px solid #017940'
+        });
+        $("label[for='kmz'] img").attr('src', "../content/images/upload.png");
+        $("label[for='kmz'] .campo-span").css({
+            color: '#017940'
+        });
+    }, function () {
+        $("label[for='kmz']").css({
+            'background-color': '#017940'
+        });
+        $("label[for='kmz'] img").attr('src', "../content/images/uploadb.png");
+        $("label[for='kmz'] .campo-span").css({
+            color: '#fff',
+            border: 'none'
+        });
+    });
+
+    $("#kmz").change(function (x) {
+        $(".label-field").html("Archivo subido");
+    });
+
+    $("label[for='kmz-almacenamiento']").hover(function () {
+        $("label[for='kmz-almacenamiento']").css({
+            'background-color': 'white',
+            border: '1px solid #017940'
+        });
+        $("label[for='kmz-almacenamiento'] img").attr('src', "../content/images/upload.png");
+        $("label[for='kmz-almacenamiento'] .campo-span").css({
+            color: '#017940'
+        });
+    }, function () {
+        $("label[for='kmz-almacenamiento']").css({
+            'background-color': '#017940'
+        });
+        $("label[for='kmz-almacenamiento'] img").attr('src', "../content/images/uploadb.png");
+        $("label[for='kmz-almacenamiento'] .campo-span").css({
+            color: '#fff',
+            border: 'none'
+        });
+    });
+
+    $("#kmz-almacenamiento").change(function (x) {
+        $(".label-field").html("Archivo subido");
+    });
+
+    $("label[for='kmz-establecimiento']").hover(function () {
+        $("label[for='kmz-establecimiento']").css({
+            'background-color': 'white',
+            border: '1px solid #017940'
+        });
+        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/upload.png");
+        $("label[for='kmz-establecimiento'] .campo-span").css({
+            color: '#017940'
+        });
+    }, function () {
+        $("label[for='kmz-establecimiento']").css({
+            'background-color': '#017940'
+        });
+        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/uploadb.png");
+        $("label[for='kmz-establecimiento'] .campo-span").css({
+            color: '#fff',
+            border: 'none'
+        });
+    });
+    $("#kmz-establecimiento").change(function (x) {
+        $(".label-field").html("Archivo subido");
+    });
+    $("#contacto").click(function () {
+        limpiarSelected();
+        $("#contacto").addClass("whc-selected");
+
+        esconderForms("formulario-contacto");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").show();
+    });
+
+    $("#contactocomercial").click(function () {
+        limpiarSelected();
+        $("#contactocomercial").addClass("whc-selected");
+
+        esconderForms("formulario-contactocomercial");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").show();
+    });
+
+    $("#produccion").click(function () {
+        limpiarSelected();
+        $("#produccion").addClass("whc-selected");
+
+        esconderForms("formulario-produccion");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").show();
+    });
+
+    $("#almacenamiento").click(function () {
+        limpiarSelected();
+        $("#almacenamiento").addClass("whc-selected");
+        esconderForms("formulario-almacenamiento");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").hide();
+    });
+
+    $("#establecimiento").click(function () {
+        limpiarSelected();
+        $("#establecimiento").addClass("whc-selected");
+        esconderForms("formulario-establecimiento");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").hide();
+    });
+
+    $("#proveedores-corredor").click(function () {
+        limpiarSelected();
+        $("#proveedores-corredor").addClass("whc-selected");
+
+        esconderForms("formulario-proveedorescorredor");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").removeClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").hide();
+    });
+
+    $("#agregarMail").click(function () {
+        if (!($("#Email2") && $("#Email2").length > 0)) {
+            if (!validateEmail($("#Email1").val())) {
+                MensErr("El Email no es válido");
+                return false;
+            }
+
+            var div = "";
+            div += '<div class="formulario-campo">'
+                + '<input type="text" class="campo-input-text" id="Email2" style="margin-right:0px;" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail2" />'
+                + '</div>';
+            $(".contacto-basico-emails").append(div);
+
+            $("#eliminarMail2").click(function () {
+                $(this).parent().remove();
+            });
+        } else if (!($("#Email3") && $("#Email3").length > 0)) {
+            if (!validateEmail($("#Email2").val())) {
+                MensErr("El Email no es válido");
+                return false;
+            }
+
+            div = "";
+            div += '<div class="formulario-campo">'
+                + '<input type="text" class="campo-input-text" id="Email3" style="margin-right:0px;" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail3" />'
+                + '</div>';
+            $(".contacto-basico-emails").append(div);
+
+            $("#eliminarMail3").click(function () {
+                $(this).parent().remove();
+            });
+        } else if (!($("#Email4") && $("#Email4").length > 0)) {
+            if (!validateEmail($("#Email3").val())) {
+                MensErr("El Email no es válido");
+                return false;
+            }
+
+            div = "";
+            div += '<div class="formulario-campo">'
+                + '<input type="text" class="campo-input-text" id="Email4" style="margin-right:0px;" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail4" />'
+                + '</div>';
+            $(".contacto-basico-emails").append(div);
+
+            $("#eliminarMail4").click(function () {
+                $(this).parent().remove();
+            });
+        } else {
+            MensInfo("No se pueden agregar mas de 4 correos electrónicos.");
+        }
+    });
+
+    $(document).on("click", ".formulario-footer-siguiente", function () {
+        if ($("#formulario-basico").is(":visible")) {
+            $("#formulario-basico").fadeOut("slow", function () {
+                $("#formulario-contacto").fadeIn("slow");
+            });
+
+            $("#basico").removeClass("whc-selected");
+            $("#contacto").addClass("whc-selected");
+        } else if ($("#formulario-contacto").is(":visible")) {
+            $("#formulario-contacto").fadeOut("slow", function () {
+                $("#formulario-contactocomercial").fadeIn("slow");
+            });
+
+            $("#contacto").removeClass("whc-selected");
+            $("#contactocomercial").addClass("whc-selected");
+        } else if ($("#formulario-contactocomercial").is(":visible")) {
+            if ($("#produccion").is(":visible")) {
+                $("#formulario-contactocomercial").fadeOut("slow", function () {
+                    $("#formulario-produccion").fadeIn("slow");
+                });
+
+                $("#contactocomercial").removeClass("whc-selected");
+                $("#produccion").addClass("whc-selected");
+            } else {
+                $("#formulario-contactocomercial").fadeOut("slow", function () {
+                    $("#formulario-proveedorescorredor").fadeIn("slow");
+                });
+
+                $("#contactocomercial").removeClass("whc-selected");
+                $("#proveedores-corredor").addClass("whc-selected");
+
+                $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
+                $(".formulario-footer-siguiente").hide();
+            }
+        } else if ($("#formulario-produccion").is(":visible")) {
+            $("#formulario-produccion").fadeOut("slow", function () {
+                $("#formulario-almacenamiento").fadeIn("slow");
+            });
+
+            $("#produccion").removeClass("whc-selected");
+            $("#almacenamiento").addClass("whc-selected");
+        } else if ($("#formulario-almacenamiento").is(":visible")) {
+            $("#formulario-almacenamiento").fadeOut("slow", function () {
+                $("#formulario-establecimiento").fadeIn("slow");
+            });
+
+            $("#almacenamiento").removeClass("whc-selected");
+            $("#establecimiento").addClass("whc-selected");
+
+            $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
+            $(".formulario-footer-siguiente").hide();
+        }
+    });
+
+    $(".agregargrano").click(function () {
+        var id = $(".campo-granos:last-of-type").attr("class").split(" ")[0].split("linea")[1];
+        if (!ValidarGranoProduccion(id))
+            return false;
+
+        cantGrano++;
+
+        var htmlCampañaGrano = "";
+
+        htmlCampañaGrano += '<div class="linea' + cantGrano + ' campo-granos"  style="position:relative;">'
+            + '<select class="campo-input-select campo-sin-span grano" id="grano' + cantGrano + '">'
+            + '<option disabled selected value="">Seleccionar...</option>';
+        for (var ii in resultInit.Material) {
+            (function (i) {
+                htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
+            })(ii);
+        }
+        htmlCampañaGrano += '</select>' +
+            '<select class="campo-input-select campo-sin-span grano" id="campaña' + cantGrano + '">';
+        htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
+        htmlCampañaGrano += '</select>'
+            + '<input type="text" class="campo-input-text hectareas" style="margin-left: 20px;" id="hectareas' + cantGrano + '" />'
+            + '<input type="text" class="campo-input-text toneladas" id="toneladas' + cantGrano + '" />'
+            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano" id="eliminarGrano' + cantGrano + '" />'
+            + '</div>';
+
+        $("#formulario-produccion .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGrano);
+
+        $("#grano" + cantGrano + "").change(function (x) {
+            var obj = {
+                MaterialId: $(this).val(),
+                elemId: $(this).prop("id").split("grano")[1],
+                ProveedorId: ProveedorId
+            };
+            armarSelectGrano(obj);
+        });
+
+        $("#eliminarGrano" + cantGrano).click(function () {
+            eliminarGrano(this);
+        });
+    });
+
+    $(".agregargrano-almacenamiento").click(function () {
+        var id = $(".campo-granos-almacenamiento:last-of-type").attr("class").split(" ")[0].split("lineaAlmacenamiento")[1];
+        if (!ValidarGranoAlmacenamiento(cantGranoAlmacenamiento))
+            return false;
+
+        cantGranoAlmacenamiento++;
+
+        var htmlCampañaGranoAlmacenamiento = "";
+        htmlCampañaGranoAlmacenamiento += '<div class="lineaAlmacenamiento' + cantGranoAlmacenamiento + ' campo-granos-almacenamiento"  style="position:relative;">';
+        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamiento' + cantGranoAlmacenamiento + '">';
+        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
+        for (var ii in resultCampaña) {
+            (function (i) {
+                htmlCampañaGranoAlmacenamiento += '<option value="' + resultCampaña[i].CampañaId + '">' + resultCampaña[i].Descripcion + '</option>';
+            })(ii);
+        }
+        htmlCampañaGranoAlmacenamiento += '</select>' +
+            '<input type="text" class="campo-input-text toneladasAlmacenamiento" id="toneladasAlmacenamiento' + cantGranoAlmacenamiento + '" />';
+
+        htmlCampañaGranoAlmacenamiento += '<div class="almacenamiento-hectareas-linea">' +
+            '<div class="formulario-campo-radio">' +
+            '<label for="hectareas-arrendadas' + cantGranoAlmacenamiento + '"><input id="hectareas-arrendadas' + cantGranoAlmacenamiento + '" type="radio" name="hectareas' + cantGranoAlmacenamiento + '" value="1"> Alquiladas</label>' +
+            '<label for="hectareas-propias' + cantGranoAlmacenamiento + '"><input id="hectareas-propias' + cantGranoAlmacenamiento + '" type="radio" name="hectareas' + cantGranoAlmacenamiento + '" value="0"> Propias</label>' +
+            '</div>' +
+
+            '</div>' +
+            '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano-almacenamiento" id="eliminarGrano-almacenamiento' + cantGranoAlmacenamiento + '" />' +
+            '</div>';
+
+        $("#formulario-almacenamiento .datos-almacenamiento-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoAlmacenamiento);
+
+        $("#campañaAlmacenamiento" + cantGranoAlmacenamiento + "").change(function (x) {
+            var obj = {
+                CampañaId: $(this).val(),
+                elemId: $(this).prop("id").split("campañaAlmacenamiento")[1]
+            };
+            armarSelectGranoAlmacenamiento(obj);
+        });
+
+        $("#eliminarGrano-almacenamiento" + cantGranoAlmacenamiento).click(function () {
+            eliminarGranoAlmacenamiento(this);
+        });
+    });
+
+    $(".agregargrano-almacenamientograno").click(function () {
+        var id = $(".campo-granos-almacenamientograno:last-of-type").attr("class").split(" ")[0].split("lineaAlmacenamientoGranos")[1];
+
+        cantGranoAlmacenamientoGrano++;
+
+        var htmlCampañaGranoAlmacenamiento = "";
+        htmlCampañaGranoAlmacenamiento += '<div class="lineaAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + ' campo-granos-almacenamientograno"   style="position:relative;">';
+        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + '">';
+        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
+        for (var ii in resultInit.Material) {
+            (function (i) {
+                htmlCampañaGranoAlmacenamiento += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
+            })(ii);
+        }
+        htmlCampañaGranoAlmacenamiento += '</select>'
+        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + '">';
+        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
+
+        htmlCampañaGranoAlmacenamiento += '</select>' +
+            '<input type="text" class="campo-input-text toneladasAlmacenamiento" id="toneladasAlmacenamientoGrano' + cantGranoAlmacenamientoGrano + '" />'
+            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano-almacenamientograno" id="eliminarGrano-almacenamientograno' + cantGranoAlmacenamientoGrano + '" />' +
+            '</div>';
+
+        $("#formulario-almacenamiento .datos-almacenamiento-cap-prod-editor-granosalm-cantidades-grupo").append(htmlCampañaGranoAlmacenamiento);
+
+        $("#granoAlmacenamientoGranos" + cantGranoAlmacenamientoGrano + "").change(function (x) {
+            var obj = {
+                MaterialId: $(this).val(),
+                elemId: $(this).prop("id").split("granoAlmacenamientoGranos")[1]
+            };
+            armarSelectGranoAlmacenamientoGrano(obj);
+        });
+
+        $("#eliminarGrano-almacenamientograno" + cantGranoAlmacenamientoGrano).click(function () {
+            eliminarGranoAlmacenamientoGrano(this);
+        });
+    });
+
+    $(".agregargranoObjetivo").click(function () {
+        var id = $(".ObjetivoGranos:last-of-type").attr("class").split(" ")[0].split("lineaObjetivos")[1];
+        if (!ValidarGranoObjetivo(id))
+            return false;
+
+        cantGranoObjetivo++;
+
+        var htmlCampañaGranoObjetivo = "";
+
+        htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
+            + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
+            + '<option disabled selected value="">Seleccionar...</option>';
+        for (var ii in resultInit.Material) {
+            (function (i) {
+                htmlCampañaGranoObjetivo += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
+            })(ii);
+        }
+
+        htmlCampañaGranoObjetivo += '</select>'
+            + '<select class="campo-input-select campo-sin-span grano" id="campañaObjetivo' + cantGranoObjetivo + '">';
+        htmlCampañaGranoObjetivo += '<option value = "null">Seleccione...</option>';
+
+        htmlCampañaGranoObjetivo += '</select>'
+            + '<input type="text" class="campo-input-text toneladasObjetivo" style="margin-left: 20px;" id="toneladasObjetivo' + cantGranoObjetivo + '" />'
+            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivos" id="eliminarObjetivo' + cantGranoObjetivo + '" />'
+            + '</div>';
+
+        $("#formulario-contacto .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoObjetivo);
+
+        $("#granoObjetivo" + cantGranoObjetivo + "").change(function (x) {
+            var obj = {
+                MaterialId: $(this).val(),
+                elemId: $(this).prop("id").split("granoObjetivo")[1]
+            };
+            armarSelectGranoObjetivo(obj);
+        });
+
+        $("#eliminarObjetivo" + cantGranoObjetivo).click(function () {
+            eliminarObjetivo(this);
+        });
+    });
+
+    $("#eliminarObjetivo0").click(function () {
+        var val = 0;
+        var obj = {
+            granoId: $("#granoObjetivo" + val).val(),
+            grano: $("#granoObjetivo" + val).find('option:selected').text(),
+            campañaId: $("#campañaObjetivo" + val).val(),
+            campaña: $("#campañaObjetivo" + val).find('option:selected').text(),
+            toneladasObjetivo: $("#toneladasObjetivo" + val).val()
+        };
+
+        if (obj.granoId != "null" && obj.campañaId != "null")
+            aEliminarObjetivos.push(obj);
+
+        if (val > 0) {
+            $(".lineaObjetivos" + val).remove();
+            val--;
+        } else {
+            $("#granoObjetivo" + val).val("null"),
+                $("#campañaObjetivo" + val).val("null"),
+                $("#toneladasObjetivo" + val).val("")
+        }
+    });
+    $("#eliminarGrano0").click(function () {
+        var val = 0;
+        var obj = {
+            granoId: $("#grano" + val).val(),
+            grano: $("#grano" + val).find('option:selected').text(),
+            campañaId: $("#campaña" + val).val(),
+            campaña: $("#campaña" + val).find('option:selected').text(),
+            hectareas: $("#hectareas" + val).val(),
+            toneladas: $("#toneladas" + val).val(),
+            CampoId: $("#campoid").val()
+        };
+
+        if (obj.granoId != "null" && obj.campañaId != "null")
+            aEliminarGranos.push(obj);
+
+        if (val > 0) {
+            $(".linea" + val).remove();
+            val--;
+        } else {
+            $("#grano" + val).val("null");
+            $("#campaña" + val).val("null");
+            $("#toneladas" + val).val("");
+            $("#hectareas" + val).val("");
+        }
+    });
+
+    $("#cuit").blur(function (ev) {
+        $("#cuit").val($("#cuit").val().split(" ").join(''));
+        var valor = $("#cuit").val();
+        if (valor.length > 10)
+            buscarRazonSocial(valor);
+    });
+
+    $(document).on("click", ".formulario-footer-guardar-contacto", function () {
+        if (cambios.CampaniaId.length > 0) {
+            $(this).removeClass("guardar-proveedor");
+            $("#modalGenerarInforme").modal('show');
+        } else {
+            if ($(this).hasClass("guardar-proveedor")) {
+                if (comprobarInputs()) {
+                    if (cantContactoComercial == 0) {
+                        if (validar() && ValidarContactoComercial()) {
+                            ObtenerDatos();
+                        }
+                    } else if (validar()) {
+                        ObtenerDatos();
+                    }
+                }
+            } else if ($(this).hasClass("guardar-corredor")) {
+                DatosCorredor();
+            }
+        }
+    });
+
+    $("#concom-agregarMail").click(function () {
+        if (!($("#concom-email2") && $("#concom-email2").length > 0)) {
+            if (!validateEmail($("#concom-email1").val())) {
+                MensErr("El Email no es válido");
+                return false;
+            }
+
+            var div = "";
+            div += '<div class="formulario-campo">'
+                + '<input type="text" class="campo-input-text" id="concom-email2" style="margin-right: 50px;margin-top: 5px;" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail2" />'
+                + '</div>';
+            $(".concom-campo-email").append(div);
+
+            $("#concom-eliminarMail2").click(function () {
+                $(this).parent().remove();
+            });
+        } else if (!($("#concom-email3") && $("#concom-email3").length > 0)) {
+            if (!validateEmail($("#concom-email2").val())) {
+                MensErr("El segundo Email no es válido");
+                return false;
+            }
+            div = "";
+            div += '<div class="formulario-campo">'
+                + '<input type="text" class="campo-input-text" id="concom-email3" style="margin-right: 50px;margin-top: 5px;" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail3" />'
+                + '</div>';
+            $(".concom-campo-email").append(div);
+
+            $("#concom-eliminarMail3").click(function () {
+                $(this).parent().remove();
+            });
+        } else {
+            MensInfo("No se pueden agregar mas de 3 correos electrónicos.");
+        }
+    });
+
+    $("#comisionista").change(function () {
+        if ($("#comisionista").is(":checked") == true) {
+            $("#comisionistaDiv").hide();
+            //$("#buscadorProveedor").val("")
+            //MensAlerta("Un proveedor comisionista no puede Operar con Comisionista.")
+        } else {
+            $("#comisionistaDiv").show();
+        }
+    });
+
+    //Evento Oculta EsApoderado Secccion $("body").on( "change","#concom-esapoderado", function() {
+    $("body").on("change", "#concom-esapoderado", function () {
+        if ($("#concom-esapoderado").is(":checked") == true) {
+            $(".concom-puestoapoderadoDiv").show();
+            $(".concom-cuitDiv").show();
+            $(".concom-desdeDiv").show();
+            $(".concom-hastaDiv").show();
+        } else {
+            $(".concom-puestoapoderadoDiv").hide();
+            $(".concom-cuitDiv").hide();
+            $(".concom-desdeDiv").hide();
+            $(".concom-hastaDiv").hide();
+        }
+    });
+    //Fin Evento
+
+    $("#GuardarContactoComercial").click(function () {
+        if (!ValidarContactoComercial())
+            return false;
+
+        var obj = {};
+        obj.nombre = $("#concom-nombre").val();
+        obj.apellido = $("#concom-apellido").val();
+        obj.cuit = $("#concom-cuit").val();
+        obj.desde = $("#concom-desde").val();
+        obj.hasta = $("#concom-hasta").val();
+        obj.esApoderado = $("#concom-esapoderado").is(":checked") ? true : false;
+        obj.puestoApoderadoId = $("#concom-puestoapoderado").val();
+        obj.emails = [];
+        if (($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) ||
+            ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) ||
+            ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val())) {
+            if ($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) {
+                if (!validateEmail($("#concom-email1").val())) {
+                    MensErr("El primer Email no es válido");
+                    return false;
+                }
+                obj.emails.push($("#concom-email1").val());
+            } else {
+                obj.emails.push(null);
+            }
+
+            if ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) {
+                if (!validateEmail($("#concom-email2").val())) {
+                    MensErr("El segundo Email no es válido");
+                    return false;
+                }
+                obj.emails.push($("#concom-email2").val());
+            } else {
+                obj.emails.push(null);
+            }
+
+            if ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val()) {
+                if (!validateEmail($("#concom-email3").val())) {
+                    MensErr("El tercer Email no es válido");
+                    return false;
+                }
+                obj.emails.push($("#concom-email3").val());
+            } else {
+                obj.emails.push(null);
+            }
+        } else {
+            obj.emails.push(null);
+            obj.emails.push(null);
+            obj.emails.push(null);
+        }
+
+        obj.telefonos = [];
+        if (!$("#concom-esapoderado").is(":checked") && ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) ||
+            ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) ||
+            ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val())) {
+            if ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) {
+                if (((!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null") && ($("#concom-Telefono1").val() && $("#concom-Telefono1").val() !== "")) || (($("#concom-TipoTelefono1").val() && $("#concom-TipoTelefono1").val() !== "null") && (!$("#concom-Telefono1").val() && $("#concom-Telefono1").val() === ""))) {
+                    MensErr("El contacto comercial debe tener bien cargado el primer número de teléfono");
+                    return false;
+                }
+
+                if (!validateNumber($("#concom-Telefono1").val())) {
+                    MensErr("El primer número de teléfono no es válido");
+                    return false;
+                }
+
+                obj.telefonos.push({
+                    tipoTelefono: $("#concom-TipoTelefono1").val(),
+                    telefono: $("#concom-Telefono1").val()
+                });
+            } else {
+                obj.telefonos.push({
+                    tipoTelefono: null,
+                    telefono: null
+                });
+            }
+            if ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) {
+                if (((!$("#concom-TipoTelefono2").val() || $("#concom-TipoTelefono2").val() === "null") && ($("#concom-Telefono2").val() && $("#concom-Telefono2").val() !== "")) || (($("#concom-TipoTelefono2").val() && $("#concom-TipoTelefono2").val() !== "null") && (!$("#concom-Telefono2").val() && $("#concom-Telefono2").val() === ""))) {
+                    MensErr("El contacto comercial debe tener bien cargado el segundo número de teléfono");
+                    return false;
+                }
+
+                if (!validateNumber($("#concom-Telefono2").val())) {
+                    MensErr("El segundo número de teléfono no es válido");
+                    return false;
+                }
+
+                obj.telefonos.push({
+                    tipoTelefono: $("#concom-TipoTelefono2").val(),
+                    telefono: $("#concom-Telefono2").val()
+                });
+            } else {
+                obj.telefonos.push({
+                    tipoTelefono: null,
+                    telefono: null
+                });
+            }
+            if ($("#concom-Telefono2").val() > 0) {
+                if (!validateNumber($("#concom-Telefono2").val())) {
+                    MensErr("El número de teléfono no es válido");
+                    return false;
+                }
+            }
+
+            if ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val()) {
+                if (((!$("#concom-TipoTelefono3").val() || $("#concom-TipoTelefono3").val() === "null") && ($("#concom-Telefono3").val() && $("#concom-Telefono3").val() !== "")) || (($("#concom-TipoTelefono3").val() && $("#concom-TipoTelefono3").val() !== "null") && (!$("#concom-Telefono3").val() && $("#concom-Telefono3").val() === ""))) {
+                    MensErr("El contacto comercial debe tener bien cargado el tercer número de télefono");
+                    return false;
+                }
+
+                if (!validateNumber($("#concom-Telefono1").val())) {
+                    MensErr("El tercer número de teléfono no es válido");
+                    return false;
+                }
+
+                obj.telefonos.push({
+                    tipoTelefono: $("#concom-TipoTelefono3").val(),
+                    telefono: $("#concom-Telefono3").val()
+                });
+            } else {
+                obj.telefonos.push({
+                    tipoTelefono: null,
+                    telefono: null
+                });
+            }
+        } else {
+            obj.telefonos.push({
+                tipoTelefono: null,
+                telefono: null
+            });
+            obj.telefonos.push({
+                tipoTelefono: null,
+                telefono: null
+            });
+            obj.telefonos.push({
+                tipoTelefono: null,
+                telefono: null
+            });
+        }
+        if ($("#concom-Telefono3").val()) {
+            if (!validateNumber($("#concom-Telefono3").val())) {
+                MensErr("El Telefono no es válido");
+                return false;
+            }
+        }
+
+        cantContactoComercial++;
+        obj.contactoComercialId = $("#concom-id").val() ? $("#concom-id").val() : 0;
+        obj.dia = $("#concom-fechanacimientodia").val();
+        obj.mes = $("#concom-fechanacimientomes").val();
+        obj.anio = $("#concom-anionacimientomes").val();
+
+        if (obj.anio != "null" && obj.mes != "null" && obj.dia != "null")
+            obj.fechaNacimiento = new Date(obj.anio, (obj.mes - 1), obj.dia);
+        else
+            obj.fechaNacimiento = null;
+        obj.cargo = $("#concom-cargo").val();
+        obj.puesto = $("#concom-puesto").val();
+        obj.intereses = $("#concom-intereses").val() != "" ? $("#concom-intereses").val() : [];
+        obj.interesesNombre = [];
+        $("#concom-intereses option:selected").each(function () {
+            var $this = $(this);
+            if ($this.length) {
+                var selText = $this.text();
+                obj.interesesNombre.push(selText);
+            }
+        });
+
+        obj.otrosIntereses = $("#concom-otrosintereses").val();
+        obj.principal = $("#concom-principal").is(":checked") ? 1 : 0;
+        obj.CompraNet = $("#concom-compranet").is(":checked") ? 1 : 0;
+        obj.Cupo = $("#concom-cupo").is(":checked") ? 1 : 0;
+        obj.Boleto = $("#concom-boleto").is(":checked") ? 1 : 0;
+        obj.item = cantContactoComercial;
+
+        if (obj.principal) {
+            for (var ii in aGuardarContactoComercial) {
+                (function (i) {
+                    aGuardarContactoComercial[i].principal = 0;
+                })(ii);
+            }
+        }
+
+        aGuardarContactoComercial.push(obj);
+        var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
+        var htmlComerciales = "";
+        htmlComerciales += '<div class="contenedor-contacto-comercial  ' + (obj.esApoderado == true ? 'color-Apoderado' : '') + '" id="comercial' + cantContactoComercial + '">' +
+            '<div class="contenedor-contacto-comercial-titulo">' +
+            '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
+            '<span class="span-contacto-comercial"> ' +
+            obj.nombre + ' ' + obj.apellido +
+            '</span>' +
+            '<span class="align-right" onclick="editarContactoComercial(' + cantContactoComercial + ')" id="concom-editar' + cantContactoComercial + '">' +
+            '<img class="contacto-edit-img" src="../Content/Images/contacto-edit.png" /> ' +
+            '<span class="editar-contacto editar-contacto-comercial">' +
+            'Editar' +
+            '</span>' +
+            '</span>' +
+            '<span style="margin-right:5px;" onclick="eliminarContactoComercial(this)" class="align-right" id="concom-eliminar' + cantContactoComercial + '">' +
+            '<span class="editar-contacto editar-contacto-comercial">' +
+            'x Eliminar' +
+            '</span>' +
+            '</span>' +
+            '</div>' +
+            '<div class="contenedor-contacto-comercial-posicion">' +
+            '<span class="contenedor-contacto-comercial-posicion-izq">' +
+            (obj.cargo ? obj.cargo : "No se especifica cargo") + ' - ' +
+            '</span>' +
+            '<span class="contenedor-contacto-comercial-posicion-der">' +
+            (obj.puesto ? obj.puesto : "No se especifica puesto") +
+            '</span>' +
+            '</div>' + (obj.esApoderado == true ? etiquetaApoderado : "") +
+            '<div class="contenedor-contacto-comercial-telefonos">' +
+            (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
+            '</div>' +
+            '<div class="contenedor-contacto-comercial-mails">' +
+            (obj.emails[0] ? obj.emails[0] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? '<i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck"></i>' : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") : "") : "No especifica mails") +
+            '</div>' +
+            '<div class="contenedor-contacto-comercial-extras">' +
+            '<div class="row">' +
+            '<div class="col-lg-6">' +
+            '<span class="contenedor-contacto-comercial-extras-label">' +
+            'Fecha de nacimiento:' +
+            '</span>' +
+            '</div>' +
+            '<div class="col-lg-6">' +
+            '<span class="contenedor-contacto-comercial-extras-value">' +
+            (obj.fechaNacimiento ? kendo.toString(obj.fechaNacimiento, "m") + " de " + kendo.toString(obj.anio) : "no especifica") +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-lg-6">' +
+            '<span class="contenedor-contacto-comercial-extras-label">' +
+            'Intereses' +
+            '</span>' +
+            '</div>' +
+            '<div class="col-lg-6">' +
+            '<span class="contenedor-contacto-comercial-extras-value">' +
+            (obj.interesesNombre ? obj.interesesNombre.join("<br>") + "<br>" + (obj.otrosIntereses ? obj.otrosIntereses : "") : (obj.otrosIntereses ? obj.otrosIntereses : "No especifica")) +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        $(".datos-contactocomercial-guardados").append(htmlComerciales);
+
+        //Limpiar Formulario Agregar Contacto Comercial
+        $("#concom-nombre").val("");
+        $("#concom-apellido").val("");
+        $("#concom-cuit").val("");
+        $("#concom-esapoderado").prop("checked", false);
+        $('#concom-puestoapoderado').val('null');
+        $("#concom-desde").val('null');
+        $("#concom-hasta").val('null');
+        //ocultar campos porque esapoderado es false
+        $(".concom-puestoapoderadoDiv").hide();
+        $(".concom-cuitDiv").hide();
+        $(".concom-desdeDiv").hide();
+        $(".concom-hastaDiv").hide();
+
+        $("#concom-email1").val("");
+        if ($("#concom-email2").length)
+            $("#concom-email2").parent().remove();
+        if ($("#concom-email3").length)
+            $("#concom-email3").parent().remove();
+        $("#concom-email1").val("");
+        $("#concom-TipoTelefono1").val("null");
+        $("#concom-Telefono1").val("");
+        if ($("#concom-TipoTelefono2").length) {
+            $("#concom-TipoTelefono2").parent().remove();
+        }
+        if ($("#concom-TipoTelefono3").length) {
+            $("#concom-TipoTelefono3").parent().remove();
+        }
+        $("#concom-fechanacimientodia").val("null");
+        $("#concom-fechanacimientomes").val("null");
+        $("#concom-anionacimientomes").val("null");
+        $("#concom-cargo").val("");
+        $("#concom-puesto").val("");
+        $("#concom-intereses").multiselect("uncheckAll");
+        $("#concom-otrosintereses").val("");
+        $("#concom-id").val(0);
+        $("#concom-principal").prop("checked", false);
+        $("#concom-compranet").prop("checked", false);
+        $("#concom-cupo").prop("checked", false);
+        $("#concom-boleto").prop("checked", false);
+    });
+}
+
+function limpiarSelected() {
+    $("#contacto").removeClass("whc-selected");
+    $("#produccion").removeClass("whc-selected");
+    $("#almacenamiento").removeClass("whc-selected");
+    $("#contactocomercial").removeClass("whc-selected");
+    $("#proveedores-corredor").removeClass("whc-selected");
+    $("#establecimiento").removeClass("whc-selected");
+}
+function esconderForms(form) {
+    if ($("#formulario-contacto").is(":visible") && "formulario-contacto" !== form) {
+        $("#formulario-contacto").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    } else if ($("#formulario-produccion").is(":visible") && "formulario-produccion" !== form) {
+        $("#formulario-produccion").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    } else if ($("#formulario-almacenamiento").is(":visible") && "formulario-almacenamiento" !== form) {
+        $("#formulario-almacenamiento").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    } else if ($("#formulario-contactocomercial").is(":visible") && "formulario-contactocomercial" !== form) {
+        $("#formulario-contactocomercial").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    } else if ($("#formulario-proveedorescorredor").is(":visible") && "formulario-proveedorescorredor" !== form) {
+        $("#formulario-proveedorescorredor").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    } else if ($("#formulario-establecimiento").is(":visible") && "formulario-establecimiento" !== form) {
+        $("#formulario-establecimiento").fadeOut("slow", function () {
+            $("#" + form).fadeIn("slow");
+        });
+    }
+}
+
+function InicializarDatos() {
+    var Datos = {
+        ProveedorId: 0
+    };
+    var result = resultInit = MSExecuteOnServer('/Proveedor/Iniciliazar', Datos);
+
+    if (result != null) {
+        resultGranos = result.Material;
+        armarSelects(result);
+        AutocompleteProcedenciaProduccion();
+        AutocompleteProcedenciaAlmacenamiento();
+        AutocompleteProcedenciaEstablecimiento();
+    }
+
+    $("#buscadorProveedor").click(function () {
+        $("#buscadorProveedor").data("kendoAutoComplete").value("");
+        $("#Proveedor").val("");
+        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
+    });
+
+    $("#buscadorProveedor").kendoAutoComplete({
+        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
+            '<p class="#:data.Corredor# buscar-nomb #: data.Estado != "" ? \'k-state-disabled\': \'\' #"  style="color:#: #" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)#if(data.Estado != null) {# ' +
+            ' #: data.Estado #    #}else{# #}# </p > ',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#buscadorProveedor").val().split('|').length > 1) {
+                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+            } else {
+                //$("#buscadorProveedor").val("");
+                //comisionistaId = null;
+            }
+        },
+        select: function (e) {
+            if (e.dataItem.Deshabilitado) {
+                $("#buscadorProveedor").val("")
+                e.preventDefault();
+            } else {
+                //$("#Comisionista").val(e.dataItem.Id);
+                comisionistaId = e.dataItem.Id;
+            }
+
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarProveedor"
+                },
+                parameterMap: function (data, type) {
+                    return { filtroProveedor: $('#buscadorProveedor').val(), esComisionista: true, cuitProveedor: $("#cuit").val() }; //, segmentacionId: 16 };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+}
 
 function eliminarGrano(elem) {
     var val = $(elem).prop("id").split("eliminarGrano")[1];
@@ -136,12 +1130,11 @@ var mostrarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
 };
+
 var ocultarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).hide();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).hide();
 };
-
-
 
 function buscarLocalidad(val) {
     var data = { Id: val };
@@ -291,7 +1284,6 @@ function armarSelects(result) {
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
         CrearCorredor();
-        /*    checkComisionista();*/
     });
     CrearCorredor();
 
@@ -405,7 +1397,8 @@ function armarSelects(result) {
     $("#grano0").change(function (x) {
         var obj = {
             MaterialId: $(this).val(),
-            elemId: $(this).prop("id").split("grano")[1]
+            elemId: $(this).prop("id").split("grano")[1],
+            ProveedorId: ProveedorId
         };
         armarSelectGrano(obj);
     });
@@ -448,20 +1441,6 @@ function armarSelects(result) {
     }
     htmlComercialEstablecimiento += '</select>';
     $("#divComercialEstablecimiento").append(htmlComercialEstablecimiento);
-
-
-
-
-    //var htmlLocalidadProduccion = "";
-    //htmlLocalidadProduccion += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-produccion">';
-    //htmlLocalidadProduccion += '<option value = "null">Seleccione...</option>';
-    //for (ii in result.loc) {
-    //    (function (i) {
-    //        htmlLocalidadProduccion += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
-    //    })(ii);
-    //}
-    //htmlLocalidadProduccion += '</select>';
-    //$(".campo-localidad-produccion").append(htmlLocalidadProduccion);
 
     var htmlCampañaGranoAlmacenamiento = "";
     htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamiento0">';
@@ -564,28 +1543,6 @@ function armarSelects(result) {
             $("#hectareas-propias" + val).prop("checked", false);
         }
     });
-
-    //var htmlProvinciaAlmacenamiento = "";
-    //htmlProvinciaAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-almacenamiento">';
-    //htmlProvinciaAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    //for (ii in result.prov) {
-    //    (function (i) {
-    //        htmlProvinciaAlmacenamiento += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
-    //    })(ii);
-    //}
-    //htmlProvinciaAlmacenamiento += '</select>';
-    //$(".campo-provincia-almacenamiento").append(htmlProvinciaAlmacenamiento);
-
-    //var htmlLocalidadAlmacenamiento = "";
-    //htmlLocalidadAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="localidad-almacenamiento">';
-    //htmlLocalidadAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    //for (ii in result.loc) {
-    //    (function (i) {
-    //        htmlLocalidadAlmacenamiento += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
-    //    })(ii);
-    //}
-    //htmlLocalidadAlmacenamiento += '</select>';
-    //$(".campo-localidad-almacenamiento").append(htmlLocalidadAlmacenamiento);
 
     var htmlProvinciaCompraNet = "";
     htmlProvinciaCompraNet += '<select class="campo-input-select" id="provincia-compranet">';
@@ -693,8 +1650,6 @@ function armarSelects(result) {
     htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet">';
     $(".campo-comision-compranet").append(htmlComisionCompraNet);
 
-
-
     (function ($) {
         $.fn.inputFilter = function (inputFilter) {
             return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
@@ -709,9 +1664,11 @@ function armarSelects(result) {
             });
         };
     }(jQuery));
+
     $("#comision-compranet").inputFilter(function (value) {
         return /^-?\d*[.,]?\d{0,2}$/.test(value) && (value === "" || parseFloat(value.replace(',', '.')) <= 100);
     });
+
     $("#agregarTelefono").click(function () {
         if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
             if (!validateNumber($("#Telefono1").val())) {
@@ -786,7 +1743,7 @@ function armarSelects(result) {
                 $(this).parent().remove();
             });
         } else {
-            MensInfo("No se pueden agregar mas de 4 correos teléfonos.");
+            MensInfo("No se pueden agregar mas de 4 teléfonos.");
         }
     });
 
@@ -958,8 +1915,10 @@ function armarSelects(result) {
         }
         obj.granos = [];
 
-        for (var i = 0; i < (cantGrano + 1); i++) {
+        for (var i = 0; i <= cantGrano; i++) {
             if (($("#campaña" + i).val() && $("#campaña" + i).val() != "null") || ($("#grano" + i).val() && $("#grano" + i).val() != "null")) {
+                if (!ValidarGranoProduccion(i))
+                    return false;
                 obj.granos.push({
                     granoId: $("#grano" + i).val(),
                     grano: $("#grano" + i).find('option:selected').text(),
@@ -975,16 +1934,13 @@ function armarSelects(result) {
             }
         }
 
-        if (!ValidarGranoProduccion(cantGrano))
-            return false;
-
         obj.archivo = $("#kmz").val();
         obj.archivoFile = document.getElementById("kmz").files[0];
         if (obj.archivo) {
             var input = document.getElementById("kmz");
             var file = input.files[0];
             if (file.size / 1024 / 1024 > 1.9) {
-                MensErr("El archivo adjuntado es muy grande. Limite maximo 2MB");
+                MensErr("El archivo adjuntado es muy grande. Límite máximo 2MB");
                 return false;
             }
             fr = new FileReader();
@@ -1071,6 +2027,7 @@ function armarSelects(result) {
 
         capProdCant++;
         recalcularSegmentacion();
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");
     });
 
     $("#guardarCapProd-almacenamiento").click(function () {
@@ -1524,7 +2481,7 @@ function editarCampoProduccion(id) {
     }
 
     $("#campoid").val(obj.CampoId ? obj.CampoId : 0);
-
+    console.log('pruebaaaaaaa');
     var cantGranos = obj.granos.length;
     $("#grano0").val(obj.granos.length ? obj.granos[0].granoId : "null");
     $("#grano0").trigger("change");
@@ -1558,7 +2515,8 @@ function editarCampoProduccion(id) {
         $("#grano" + i + "").change(function (x) {
             var obj = {
                 MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("grano")[1]
+                elemId: $(this).prop("id").split("grano")[1],
+                ProveedorId: ProveedorId
             };
             armarSelectGrano(obj);
         });
@@ -1757,923 +2715,6 @@ function editarAlmacenamiento(id) {
     });
 }
 
-function armarFuncionalidades() {
-    $(".page-sidebar-menu").attr('style', 'display:none!important');
-    $(".page-sidebar").attr('style', 'display:none!important');
-    $(".page-content").css({
-        'margin-left': 0
-    });
-    $(".atras-nav").show();
-    $(".nav-bar-segundo a span").css({
-        'vertical-align': 'middle'
-    });
-    $(".navbarsegundo-bread").html("Agregar contacto");
-    $("#AgregarContacto").hide();
-    $("#AgregarContacto2").hide();
-
-    $(".atras-nav").click(function () {
-        $("#modalSalir").modal();
-    });
-
-    $($(".logoheader-nav").parent()).click(function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $($(".logoheader-nav").parent()).blur();
-        $("#modalSalir").modal();
-    });
-
-    $(".miscontactos-nav").parent().click(function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $($(".logoheader-nav").parent()).blur();
-        $("#modalSalir").modal();
-    });
-
-    $(".formulario-footer-cancelar").click(function () {
-        $("#modalSalir").modal();
-    });
-
-    $(".modal-salir-sin-guardar").click(function () {
-        if (ProveedorId) {
-            window.location.href = window.location.origin + "/Proveedor/Detalle?ProveedorId=" + ProveedorId;
-        } else {
-            window.location.href = "http://" + window.location.href.split("\/")[2];
-        }
-    });
-
-    $(".modal-cancelar").click(function () {
-        $("#modalSalir").modal('hide');
-    });
-
-    $("label[for='kmz']").hover(function () {
-        $("label[for='kmz']").css({
-            'background-color': 'white',
-            border: '1px solid #017940'
-        });
-        $("label[for='kmz'] img").attr('src', "../content/images/upload.png");
-        $("label[for='kmz'] .campo-span").css({
-            color: '#017940'
-        });
-    }, function () {
-        $("label[for='kmz']").css({
-            'background-color': '#017940'
-        });
-        $("label[for='kmz'] img").attr('src', "../content/images/uploadb.png");
-        $("label[for='kmz'] .campo-span").css({
-            color: '#fff',
-            border: 'none'
-        });
-    });
-
-    $("#kmz").change(function (x) {
-        $(".label-field").html("Archivo subido");
-    });
-
-    $("label[for='kmz-almacenamiento']").hover(function () {
-        $("label[for='kmz-almacenamiento']").css({
-            'background-color': 'white',
-            border: '1px solid #017940'
-        });
-        $("label[for='kmz-almacenamiento'] img").attr('src', "../content/images/upload.png");
-        $("label[for='kmz-almacenamiento'] .campo-span").css({
-            color: '#017940'
-        });
-    }, function () {
-        $("label[for='kmz-almacenamiento']").css({
-            'background-color': '#017940'
-        });
-        $("label[for='kmz-almacenamiento'] img").attr('src', "../content/images/uploadb.png");
-        $("label[for='kmz-almacenamiento'] .campo-span").css({
-            color: '#fff',
-            border: 'none'
-        });
-    });
-
-    $("#kmz-almacenamiento").change(function (x) {
-        $(".label-field").html("Archivo subido");
-    });
-
-    $("label[for='kmz-establecimiento']").hover(function () {
-        $("label[for='kmz-establecimiento']").css({
-            'background-color': 'white',
-            border: '1px solid #017940'
-        });
-        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/upload.png");
-        $("label[for='kmz-establecimiento'] .campo-span").css({
-            color: '#017940'
-        });
-    }, function () {
-        $("label[for='kmz-establecimiento']").css({
-            'background-color': '#017940'
-        });
-        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/uploadb.png");
-        $("label[for='kmz-establecimiento'] .campo-span").css({
-            color: '#fff',
-            border: 'none'
-        });
-    });
-    $("#kmz-establecimiento").change(function (x) {
-        $(".label-field").html("Archivo subido");
-    });
-    $("#contacto").click(function () {
-        limpiarSelected();
-        $("#contacto").addClass("whc-selected");
-
-        esconderForms("formulario-contacto");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").show();
-    });
-
-    $("#contactocomercial").click(function () {
-        limpiarSelected();
-        $("#contactocomercial").addClass("whc-selected");
-
-        esconderForms("formulario-contactocomercial");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").show();
-    });
-
-    $("#produccion").click(function () {
-        limpiarSelected();
-        $("#produccion").addClass("whc-selected");
-
-        esconderForms("formulario-produccion");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").show();
-    });
-
-    $("#almacenamiento").click(function () {
-        limpiarSelected();
-        $("#almacenamiento").addClass("whc-selected");
-        esconderForms("formulario-almacenamiento");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").hide();
-    });
-
-    $("#establecimiento").click(function () {
-        limpiarSelected();
-        $("#establecimiento").addClass("whc-selected");
-        esconderForms("formulario-establecimiento");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").hide();
-    });
-
-    $("#proveedores-corredor").click(function () {
-        limpiarSelected();
-        $("#proveedores-corredor").addClass("whc-selected");
-
-        esconderForms("formulario-proveedorescorredor");
-
-        $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").removeClass("invertir-boton-Guardar");
-        $(".formulario-footer-siguiente").hide();
-    });
-    function limpiarSelected() {
-        $("#contacto").removeClass("whc-selected");
-        $("#produccion").removeClass("whc-selected");
-        $("#almacenamiento").removeClass("whc-selected");
-        $("#contactocomercial").removeClass("whc-selected");
-        $("#proveedores-corredor").removeClass("whc-selected");
-        $("#establecimiento").removeClass("whc-selected");
-    }
-    function esconderForms(form) {
-        if ($("#formulario-contacto").is(":visible") && "formulario-contacto" !== form) {
-            $("#formulario-contacto").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        } else if ($("#formulario-produccion").is(":visible") && "formulario-produccion" !== form) {
-            $("#formulario-produccion").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        } else if ($("#formulario-almacenamiento").is(":visible") && "formulario-almacenamiento" !== form) {
-            $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        } else if ($("#formulario-contactocomercial").is(":visible") && "formulario-contactocomercial" !== form) {
-            $("#formulario-contactocomercial").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        } else if ($("#formulario-proveedorescorredor").is(":visible") && "formulario-proveedorescorredor" !== form) {
-            $("#formulario-proveedorescorredor").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        } else if ($("#formulario-establecimiento").is(":visible") && "formulario-establecimiento" !== form) {
-            $("#formulario-establecimiento").fadeOut("slow", function () {
-                $("#" + form).fadeIn("slow");
-            });
-        }
-    }
-
-    $("#agregarMail").click(function () {
-        if (!($("#Email2") && $("#Email2").length > 0)) {
-            if (!validateEmail($("#Email1").val())) {
-                MensErr("El Email no es válido");
-                return false;
-            }
-
-            var div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email2" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail2" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail2").click(function () {
-                $(this).parent().remove();
-            });
-        } else if (!($("#Email3") && $("#Email3").length > 0)) {
-            if (!validateEmail($("#Email2").val())) {
-                MensErr("El Email no es válido");
-                return false;
-            }
-
-            div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email3" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail3" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail3").click(function () {
-                $(this).parent().remove();
-            });
-        } else if (!($("#Email4") && $("#Email4").length > 0)) {
-            if (!validateEmail($("#Email3").val())) {
-                MensErr("El Email no es válido");
-                return false;
-            }
-
-            div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email4" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail4" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail4").click(function () {
-                $(this).parent().remove();
-            });
-        } else {
-            MensInfo("No se pueden agregar mas de 4 correos electrónicos.");
-        }
-    });
-
-    $(".formulario-footer-siguiente").click(function () {
-        if ($("#formulario-basico").is(":visible")) {
-            $("#formulario-basico").fadeOut("slow", function () {
-                $("#formulario-contacto").fadeIn("slow");
-            });
-
-            $("#basico").removeClass("whc-selected");
-            $("#contacto").addClass("whc-selected");
-        } else if ($("#formulario-contacto").is(":visible")) {
-            $("#formulario-contacto").fadeOut("slow", function () {
-                $("#formulario-contactocomercial").fadeIn("slow");
-            });
-
-            $("#contacto").removeClass("whc-selected");
-            $("#contactocomercial").addClass("whc-selected");
-        } else if ($("#formulario-contactocomercial").is(":visible")) {
-            if ($("#produccion").is(":visible")) {
-                $("#formulario-contactocomercial").fadeOut("slow", function () {
-                    $("#formulario-produccion").fadeIn("slow");
-                });
-
-                $("#contactocomercial").removeClass("whc-selected");
-                $("#produccion").addClass("whc-selected");
-            } else {
-                $("#formulario-contactocomercial").fadeOut("slow", function () {
-                    $("#formulario-proveedorescorredor").fadeIn("slow");
-                });
-
-                $("#contactocomercial").removeClass("whc-selected");
-                $("#proveedores-corredor").addClass("whc-selected");
-
-                $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
-                $(".formulario-footer-siguiente").hide();
-            }
-        } else if ($("#formulario-produccion").is(":visible")) {
-            $("#formulario-produccion").fadeOut("slow", function () {
-                $("#formulario-almacenamiento").fadeIn("slow");
-            });
-
-            $("#produccion").removeClass("whc-selected");
-            $("#almacenamiento").addClass("whc-selected");
-
-            $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
-            $(".formulario-footer-siguiente").hide();
-        } else if ($("#formulario-almacenamiento").is(":visible")) {
-            $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#formulario-estsablecimiento").fadeIn("slow");
-            });
-
-            $("#almacenamiento").removeClass("whc-selected");
-            $("#estsablecimiento").addClass("whc-selected");
-
-            $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
-            $(".formulario-footer-siguiente").hide();
-        }
-    });
-
-    $(".agregargrano").click(function () {
-        var id = $(".campo-granos:last-of-type").attr("class").split(" ")[0].split("linea")[1];
-        if (!ValidarGranoProduccion(id))
-            return false;
-
-        cantGrano++;
-
-        var htmlCampañaGrano = "";
-
-        htmlCampañaGrano += '<div class="linea' + cantGrano + ' campo-granos"  style="position:relative;">'
-            + '<select class="campo-input-select campo-sin-span grano" id="grano' + cantGrano + '">'
-            + '<option disabled selected value="">Seleccionar...</option>';
-        for (var ii in resultInit.Material) {
-            (function (i) {
-                htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
-            })(ii);
-        }
-        htmlCampañaGrano += '</select>' +
-            '<select class="campo-input-select campo-sin-span grano" id="campaña' + cantGrano + '">';
-        htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
-        htmlCampañaGrano += '</select>'
-            + '<input type="text" class="campo-input-text hectareas" style="margin-left: 20px;" id="hectareas' + cantGrano + '" />'
-            + '<input type="text" class="campo-input-text toneladas" id="toneladas' + cantGrano + '" />'
-            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano" id="eliminarGrano' + cantGrano + '" />'
-            + '</div>';
-
-        $("#formulario-produccion .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGrano);
-
-        $("#grano" + cantGrano + "").change(function (x) {
-            var obj = {
-                MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("grano")[1]
-            };
-            armarSelectGrano(obj);
-        });
-
-        $("#eliminarGrano" + cantGrano).click(function () {
-            eliminarGrano(this);
-        });
-    });
-
-    $(".agregargrano-almacenamiento").click(function () {
-        var id = $(".campo-granos-almacenamiento:last-of-type").attr("class").split(" ")[0].split("lineaAlmacenamiento")[1];
-        if (!ValidarGranoAlmacenamiento(cantGranoAlmacenamiento))
-            return false;
-
-        cantGranoAlmacenamiento++;
-
-        var htmlCampañaGranoAlmacenamiento = "";
-        htmlCampañaGranoAlmacenamiento += '<div class="lineaAlmacenamiento' + cantGranoAlmacenamiento + ' campo-granos-almacenamiento"  style="position:relative;">';
-        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamiento' + cantGranoAlmacenamiento + '">';
-        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
-        for (var ii in resultCampaña) {
-            (function (i) {
-                htmlCampañaGranoAlmacenamiento += '<option value="' + resultCampaña[i].CampañaId + '">' + resultCampaña[i].Descripcion + '</option>';
-            })(ii);
-        }
-        htmlCampañaGranoAlmacenamiento += '</select>' +
-            '<input type="text" class="campo-input-text toneladasAlmacenamiento" id="toneladasAlmacenamiento' + cantGranoAlmacenamiento + '" />';
-
-        htmlCampañaGranoAlmacenamiento += '<div class="almacenamiento-hectareas-linea">' +
-            '<div class="formulario-campo-radio">' +
-            '<label for="hectareas-arrendadas' + cantGranoAlmacenamiento + '"><input id="hectareas-arrendadas' + cantGranoAlmacenamiento + '" type="radio" name="hectareas' + cantGranoAlmacenamiento + '" value="1"> Alquiladas</label>' +
-            '<label for="hectareas-propias' + cantGranoAlmacenamiento + '"><input id="hectareas-propias' + cantGranoAlmacenamiento + '" type="radio" name="hectareas' + cantGranoAlmacenamiento + '" value="0"> Propias</label>' +
-            '</div>' +
-
-            '</div>' +
-            '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano-almacenamiento" id="eliminarGrano-almacenamiento' + cantGranoAlmacenamiento + '" />' +
-            '</div>';
-
-        $("#formulario-almacenamiento .datos-almacenamiento-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoAlmacenamiento);
-
-        $("#campañaAlmacenamiento" + cantGranoAlmacenamiento + "").change(function (x) {
-            var obj = {
-                CampañaId: $(this).val(),
-                elemId: $(this).prop("id").split("campañaAlmacenamiento")[1]
-            };
-            armarSelectGranoAlmacenamiento(obj);
-        });
-
-        $("#eliminarGrano-almacenamiento" + cantGranoAlmacenamiento).click(function () {
-            eliminarGranoAlmacenamiento(this);
-        });
-    });
-
-    $(".agregargrano-almacenamientograno").click(function () {
-        var id = $(".campo-granos-almacenamientograno:last-of-type").attr("class").split(" ")[0].split("lineaAlmacenamientoGranos")[1];
-
-        cantGranoAlmacenamientoGrano++;
-
-        var htmlCampañaGranoAlmacenamiento = "";
-        htmlCampañaGranoAlmacenamiento += '<div class="lineaAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + ' campo-granos-almacenamientograno"   style="position:relative;">';
-        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + '">';
-        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
-        for (var ii in resultInit.Material) {
-            (function (i) {
-                htmlCampañaGranoAlmacenamiento += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
-            })(ii);
-        }
-        htmlCampañaGranoAlmacenamiento += '</select>'
-        htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamientoGranos' + cantGranoAlmacenamientoGrano + '">';
-        htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
-
-        htmlCampañaGranoAlmacenamiento += '</select>' +
-            '<input type="text" class="campo-input-text toneladasAlmacenamiento" id="toneladasAlmacenamientoGrano' + cantGranoAlmacenamientoGrano + '" />'
-            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano-almacenamientograno" id="eliminarGrano-almacenamientograno' + cantGranoAlmacenamientoGrano + '" />' +
-            '</div>';
-
-        $("#formulario-almacenamiento .datos-almacenamiento-cap-prod-editor-granosalm-cantidades-grupo").append(htmlCampañaGranoAlmacenamiento);
-
-        $("#granoAlmacenamientoGranos" + cantGranoAlmacenamientoGrano + "").change(function (x) {
-            var obj = {
-                MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("granoAlmacenamientoGranos")[1]
-            };
-            armarSelectGranoAlmacenamientoGrano(obj);
-        });
-
-        $("#eliminarGrano-almacenamientograno" + cantGranoAlmacenamientoGrano).click(function () {
-            eliminarGranoAlmacenamientoGrano(this);
-        });
-    });
-
-    $(".agregargranoObjetivo").click(function () {
-        var id = $(".ObjetivoGranos:last-of-type").attr("class").split(" ")[0].split("lineaObjetivos")[1];
-        if (!ValidarGranoObjetivo(id))
-            return false;
-
-        cantGranoObjetivo++;
-
-        var htmlCampañaGranoObjetivo = "";
-
-        htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
-            + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
-            + '<option disabled selected value="">Seleccionar...</option>';
-        for (var ii in resultInit.Material) {
-            (function (i) {
-                htmlCampañaGranoObjetivo += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
-            })(ii);
-        }
-
-        htmlCampañaGranoObjetivo += '</select>'
-            + '<select class="campo-input-select campo-sin-span grano" id="campañaObjetivo' + cantGranoObjetivo + '">';
-        htmlCampañaGranoObjetivo += '<option value = "null">Seleccione...</option>';
-
-        htmlCampañaGranoObjetivo += '</select>'
-            + '<input type="text" class="campo-input-text toneladasObjetivo" style="margin-left: 20px;" id="toneladasObjetivo' + cantGranoObjetivo + '" />'
-            + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivos" id="eliminarObjetivo' + cantGranoObjetivo + '" />'
-            + '</div>';
-
-        $("#formulario-contacto .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoObjetivo);
-
-        $("#granoObjetivo" + cantGranoObjetivo + "").change(function (x) {
-            var obj = {
-                MaterialId: $(this).val(),
-                elemId: $(this).prop("id").split("granoObjetivo")[1]
-            };
-            armarSelectGranoObjetivo(obj);
-        });
-
-        $("#eliminarObjetivo" + cantGranoObjetivo).click(function () {
-            eliminarObjetivo(this);
-        });
-    });
-
-    $("#eliminarObjetivo0").click(function () {
-        var val = 0;
-        var obj = {
-            granoId: $("#granoObjetivo" + val).val(),
-            grano: $("#granoObjetivo" + val).find('option:selected').text(),
-            campañaId: $("#campañaObjetivo" + val).val(),
-            campaña: $("#campañaObjetivo" + val).find('option:selected').text(),
-            toneladasObjetivo: $("#toneladasObjetivo" + val).val()
-        };
-
-        if (obj.granoId != "null" && obj.campañaId != "null")
-            aEliminarObjetivos.push(obj);
-
-        if (val > 0) {
-            $(".lineaObjetivos" + val).remove();
-            val--;
-        } else {
-            $("#granoObjetivo" + val).val("null"),
-                $("#campañaObjetivo" + val).val("null"),
-                $("#toneladasObjetivo" + val).val("")
-        }
-    });
-    $("#eliminarGrano0").click(function () {
-        var val = 0;
-        var obj = {
-            granoId: $("#grano" + val).val(),
-            grano: $("#grano" + val).find('option:selected').text(),
-            campañaId: $("#campaña" + val).val(),
-            campaña: $("#campaña" + val).find('option:selected').text(),
-            hectareas: $("#hectareas" + val).val(),
-            toneladas: $("#toneladas" + val).val(),
-            CampoId: $("#campoid").val()
-        };
-
-        if (obj.granoId != "null" && obj.campañaId != "null")
-            aEliminarGranos.push(obj);
-
-        if (val > 0) {
-            $(".linea" + val).remove();
-            val--;
-        } else {
-            $("#grano" + val).val("null");
-            $("#campaña" + val).val("null");
-            $("#toneladas" + val).val("");
-            $("#hectareas" + val).val("");
-        }
-    });
-
-    $("#cuit").blur(function (ev) {
-        $("#cuit").val($("#cuit").val().split(" ").join(''));
-        var valor = $("#cuit").val();
-        if (valor.length > 10)
-            buscarRazonSocial(valor);
-    });
-
-    $(".formulario-footer-guardar-contacto").click(function () {
-        if (cambios.CampaniaId.length > 0) {
-            $(this).removeClass("guardar-proveedor");
-            $("#modalGenerarInforme").modal('show');
-        } else {
-            if ($(this).hasClass("guardar-proveedor")) {
-                if (comprobarInputs()) {
-                    if (cantContactoComercial == 0) {
-                        if (validar() && ValidarContactoComercial()) {
-                            ObtenerDatos();
-                        }
-                    } else if (validar()) {
-                        ObtenerDatos();
-                    }
-                }
-            } else if ($(this).hasClass("guardar-corredor")) {
-                DatosCorredor();
-            }
-        }
-    });
-
-    $("#concom-agregarMail").click(function () {
-        if (!($("#concom-email2") && $("#concom-email2").length > 0)) {
-            if (!validateEmail($("#concom-email1").val())) {
-                MensErr("El Email no es válido");
-                return false;
-            }
-
-            var div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="concom-email2" style="margin-right: 50px;margin-top: 5px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail2" />'
-                + '</div>';
-            $(".concom-campo-email").append(div);
-
-            $("#concom-eliminarMail2").click(function () {
-                $(this).parent().remove();
-            });
-        } else if (!($("#concom-email3") && $("#concom-email3").length > 0)) {
-            if (!validateEmail($("#concom-email2").val())) {
-                MensErr("El segundo Email no es válido");
-                return false;
-            }
-            div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="concom-email3" style="margin-right: 50px;margin-top: 5px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail3" />'
-                + '</div>';
-            $(".concom-campo-email").append(div);
-
-            $("#concom-eliminarMail3").click(function () {
-                $(this).parent().remove();
-            });
-        } else {
-            MensInfo("No se pueden agregar mas de 3 correos electrónicos.");
-        }
-    });
-
-    $("#comisionista").change(function () {
-        if ($("#comisionista").is(":checked") == true) {
-            $("#comisionistaDiv").hide();
-            //$("#buscadorProveedor").val("")
-            //MensAlerta("Un proveedor comisionista no puede Operar con Comisionista.")
-        } else {
-            $("#comisionistaDiv").show();
-        }
-    });
-
-    //Evento Oculta EsApoderado Secccion $("body").on( "change","#concom-esapoderado", function() {
-    $("body").on("change", "#concom-esapoderado", function () {
-        if ($("#concom-esapoderado").is(":checked") == true) {
-            $(".concom-puestoapoderadoDiv").show();
-            $(".concom-cuitDiv").show();
-            $(".concom-desdeDiv").show();
-            $(".concom-hastaDiv").show();
-        } else {
-            $(".concom-puestoapoderadoDiv").hide();
-            $(".concom-cuitDiv").hide();
-            $(".concom-desdeDiv").hide();
-            $(".concom-hastaDiv").hide();
-        }
-    });
-    //Fin Evento
-
-    $("#GuardarContactoComercial").click(function () {
-        if (!ValidarContactoComercial())
-            return false;
-
-        var obj = {};
-        obj.nombre = $("#concom-nombre").val();
-        obj.apellido = $("#concom-apellido").val();
-        obj.cuit = $("#concom-cuit").val();
-        obj.desde = $("#concom-desde").val();
-        obj.hasta = $("#concom-hasta").val();
-        obj.esApoderado = $("#concom-esapoderado").is(":checked") ? true : false;
-        obj.puestoApoderadoId = $("#concom-puestoapoderado").val();
-        obj.emails = [];
-        if (($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) ||
-            ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) ||
-            ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val())) {
-            if ($("#concom-email1") && $("#concom-email1").length > 0 && $("#concom-email1").val()) {
-                if (!validateEmail($("#concom-email1").val())) {
-                    MensErr("El primer Email no es válido");
-                    return false;
-                }
-                obj.emails.push($("#concom-email1").val());
-            } else {
-                obj.emails.push(null);
-            }
-
-            if ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) {
-                if (!validateEmail($("#concom-email2").val())) {
-                    MensErr("El segundo Email no es válido");
-                    return false;
-                }
-                obj.emails.push($("#concom-email2").val());
-            } else {
-                obj.emails.push(null);
-            }
-
-            if ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val()) {
-                if (!validateEmail($("#concom-email3").val())) {
-                    MensErr("El tercer Email no es válido");
-                    return false;
-                }
-                obj.emails.push($("#concom-email3").val());
-            } else {
-                obj.emails.push(null);
-            }
-        } else {
-            obj.emails.push(null);
-            obj.emails.push(null);
-            obj.emails.push(null);
-        }
-
-        obj.telefonos = [];
-        if (!$("#concom-esapoderado").is(":checked") && ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) ||
-            ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) ||
-            ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val())) {
-            if ($("#concom-Telefono1") && $("#concom-Telefono1").length > 0 && $("#concom-Telefono1").val()) {
-                if (((!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null") && ($("#concom-Telefono1").val() && $("#concom-Telefono1").val() !== "")) || (($("#concom-TipoTelefono1").val() && $("#concom-TipoTelefono1").val() !== "null") && (!$("#concom-Telefono1").val() && $("#concom-Telefono1").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el primer número de teléfono");
-                    return false;
-                }
-
-                if (!validateNumber($("#concom-Telefono1").val())) {
-                    MensErr("El primer número de teléfono no es válido");
-                    return false;
-                }
-
-                obj.telefonos.push({
-                    tipoTelefono: $("#concom-TipoTelefono1").val(),
-                    telefono: $("#concom-Telefono1").val()
-                });
-            } else {
-                obj.telefonos.push({
-                    tipoTelefono: null,
-                    telefono: null
-                });
-            }
-            if ($("#concom-Telefono2") && $("#concom-Telefono2").length > 0 && $("#concom-Telefono2").val()) {
-                if (((!$("#concom-TipoTelefono2").val() || $("#concom-TipoTelefono2").val() === "null") && ($("#concom-Telefono2").val() && $("#concom-Telefono2").val() !== "")) || (($("#concom-TipoTelefono2").val() && $("#concom-TipoTelefono2").val() !== "null") && (!$("#concom-Telefono2").val() && $("#concom-Telefono2").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el segundo número de teléfono");
-                    return false;
-                }
-
-                if (!validateNumber($("#concom-Telefono2").val())) {
-                    MensErr("El segundo número de teléfono no es válido");
-                    return false;
-                }
-
-                obj.telefonos.push({
-                    tipoTelefono: $("#concom-TipoTelefono2").val(),
-                    telefono: $("#concom-Telefono2").val()
-                });
-            } else {
-                obj.telefonos.push({
-                    tipoTelefono: null,
-                    telefono: null
-                });
-            }
-            if ($("#concom-Telefono2").val() > 0) {
-                if (!validateNumber($("#concom-Telefono2").val())) {
-                    MensErr("El número de teléfono no es válido");
-                    return false;
-                }
-            }
-
-            if ($("#concom-Telefono3") && $("#concom-Telefono3").length > 0 && $("#concom-Telefono3").val()) {
-                if (((!$("#concom-TipoTelefono3").val() || $("#concom-TipoTelefono3").val() === "null") && ($("#concom-Telefono3").val() && $("#concom-Telefono3").val() !== "")) || (($("#concom-TipoTelefono3").val() && $("#concom-TipoTelefono3").val() !== "null") && (!$("#concom-Telefono3").val() && $("#concom-Telefono3").val() === ""))) {
-                    MensErr("El contacto comercial debe tener bien cargado el tercer número de télefono");
-                    return false;
-                }
-
-                if (!validateNumber($("#concom-Telefono1").val())) {
-                    MensErr("El tercer número de teléfono no es válido");
-                    return false;
-                }
-
-                obj.telefonos.push({
-                    tipoTelefono: $("#concom-TipoTelefono3").val(),
-                    telefono: $("#concom-Telefono3").val()
-                });
-            } else {
-                obj.telefonos.push({
-                    tipoTelefono: null,
-                    telefono: null
-                });
-            }
-        } else {
-            obj.telefonos.push({
-                tipoTelefono: null,
-                telefono: null
-            });
-            obj.telefonos.push({
-                tipoTelefono: null,
-                telefono: null
-            });
-            obj.telefonos.push({
-                tipoTelefono: null,
-                telefono: null
-            });
-        }
-        if ($("#concom-Telefono3").val()) {
-            if (!validateNumber($("#concom-Telefono3").val())) {
-                MensErr("El Telefono no es válido");
-                return false;
-            }
-        }
-
-        cantContactoComercial++;
-        obj.contactoComercialId = $("#concom-id").val() ? $("#concom-id").val() : 0;
-        obj.dia = $("#concom-fechanacimientodia").val();
-        obj.mes = $("#concom-fechanacimientomes").val();
-        obj.anio = $("#concom-anionacimientomes").val();
-
-        if (obj.anio != "null" && obj.mes != "null" && obj.dia != "null")
-            obj.fechaNacimiento = new Date(obj.anio, (obj.mes - 1), obj.dia);
-        else
-            obj.fechaNacimiento = null;
-        obj.cargo = $("#concom-cargo").val();
-        obj.puesto = $("#concom-puesto").val();
-        obj.intereses = $("#concom-intereses").val() != "" ? $("#concom-intereses").val() : [];
-        obj.interesesNombre = [];
-        $("#concom-intereses option:selected").each(function () {
-            var $this = $(this);
-            if ($this.length) {
-                var selText = $this.text();
-                obj.interesesNombre.push(selText);
-            }
-        });
-
-        obj.otrosIntereses = $("#concom-otrosintereses").val();
-        obj.principal = $("#concom-principal").is(":checked") ? 1 : 0;
-        obj.CompraNet = $("#concom-compranet").is(":checked") ? 1 : 0;
-        obj.Cupo = $("#concom-cupo").is(":checked") ? 1 : 0;
-        obj.Boleto = $("#concom-boleto").is(":checked") ? 1 : 0;
-        obj.item = cantContactoComercial;
-
-        if (obj.principal) {
-            for (var ii in aGuardarContactoComercial) {
-                (function (i) {
-                    aGuardarContactoComercial[i].principal = 0;
-                })(ii);
-            }
-        }
-
-        aGuardarContactoComercial.push(obj);
-        var etiquetaApoderado = '<div class="contenedor-contacto-comercial-apoderados">' + '<i class="fa fa-handshake-o" aria-hidden="true"></i> Apoderado' + '</div>';
-        var htmlComerciales = "";
-        htmlComerciales += '<div class="contenedor-contacto-comercial  ' + (obj.esApoderado == true ? 'color-Apoderado' : '') + '" id="comercial' + cantContactoComercial + '">' +
-            '<div class="contenedor-contacto-comercial-titulo">' +
-            '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
-            '<span class="span-contacto-comercial"> ' +
-            obj.nombre + ' ' + obj.apellido +
-            '</span>' +
-            '<span class="align-right" onclick="editarContactoComercial(' + cantContactoComercial + ')" id="concom-editar' + cantContactoComercial + '">' +
-            '<img class="contacto-edit-img" src="../Content/Images/contacto-edit.png" /> ' +
-            '<span class="editar-contacto editar-contacto-comercial">' +
-            'Editar' +
-            '</span>' +
-            '</span>' +
-            '<span style="margin-right:5px;" onclick="eliminarContactoComercial(this)" class="align-right" id="concom-eliminar' + cantContactoComercial + '">' +
-            '<span class="editar-contacto editar-contacto-comercial">' +
-            'x Eliminar' +
-            '</span>' +
-            '</span>' +
-            '</div>' +
-            '<div class="contenedor-contacto-comercial-posicion">' +
-            '<span class="contenedor-contacto-comercial-posicion-izq">' +
-            (obj.cargo ? obj.cargo : "No se especifica cargo") + ' - ' +
-            '</span>' +
-            '<span class="contenedor-contacto-comercial-posicion-der">' +
-            (obj.puesto ? obj.puesto : "No se especifica puesto") +
-            '</span>' +
-            '</div>' + (obj.esApoderado == true ? etiquetaApoderado : "") +
-            '<div class="contenedor-contacto-comercial-telefonos">' +
-            (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
-            '</div>' +
-            '<div class="contenedor-contacto-comercial-mails">' +
-            (obj.emails[0] ? obj.emails[0] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? '<i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck"></i>' : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck fa-lg"></i>' : "") : "") : "No especifica mails") +
-            '</div>' +
-            '<div class="contenedor-contacto-comercial-extras">' +
-            '<div class="row">' +
-            '<div class="col-lg-6">' +
-            '<span class="contenedor-contacto-comercial-extras-label">' +
-            'Fecha de nacimiento:' +
-            '</span>' +
-            '</div>' +
-            '<div class="col-lg-6">' +
-            '<span class="contenedor-contacto-comercial-extras-value">' +
-            (obj.fechaNacimiento ? kendo.toString(obj.fechaNacimiento, "m") + " de " + kendo.toString(obj.anio) : "no especifica") +
-            '</span>' +
-            '</div>' +
-            '</div>' +
-            '<div class="row">' +
-            '<div class="col-lg-6">' +
-            '<span class="contenedor-contacto-comercial-extras-label">' +
-            'Intereses' +
-            '</span>' +
-            '</div>' +
-            '<div class="col-lg-6">' +
-            '<span class="contenedor-contacto-comercial-extras-value">' +
-            (obj.interesesNombre ? obj.interesesNombre.join("<br>") + "<br>" + (obj.otrosIntereses ? obj.otrosIntereses : "") : (obj.otrosIntereses ? obj.otrosIntereses : "No especifica")) +
-            '</span>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-
-        $(".datos-contactocomercial-guardados").append(htmlComerciales);
-
-        //Limpiar Formulario Agregar Contacto Comercial
-        $("#concom-nombre").val("");
-        $("#concom-apellido").val("");
-        $("#concom-cuit").val("");
-        $("#concom-esapoderado").prop("checked", false);
-        $('#concom-puestoapoderado').val('null');
-        $("#concom-desde").val('null');
-        $("#concom-hasta").val('null');
-        //ocultar campos porque esapoderado es false
-        $(".concom-puestoapoderadoDiv").hide();
-        $(".concom-cuitDiv").hide();
-        $(".concom-desdeDiv").hide();
-        $(".concom-hastaDiv").hide();
-
-        $("#concom-email1").val("");
-        if ($("#concom-email2").length)
-            $("#concom-email2").parent().remove();
-        if ($("#concom-email3").length)
-            $("#concom-email3").parent().remove();
-        $("#concom-email1").val("");
-        $("#concom-TipoTelefono1").val("null");
-        $("#concom-Telefono1").val("");
-        if ($("#concom-TipoTelefono2").length) {
-            $("#concom-TipoTelefono2").parent().remove();
-        }
-        if ($("#concom-TipoTelefono3").length) {
-            $("#concom-TipoTelefono3").parent().remove();
-        }
-        $("#concom-fechanacimientodia").val("null");
-        $("#concom-fechanacimientomes").val("null");
-        $("#concom-anionacimientomes").val("null");
-        $("#concom-cargo").val("");
-        $("#concom-puesto").val("");
-        $("#concom-intereses").multiselect("uncheckAll");
-        $("#concom-otrosintereses").val("");
-        $("#concom-id").val(0);
-        $("#concom-principal").prop("checked", false);
-        $("#concom-compranet").prop("checked", false);
-        $("#concom-cupo").prop("checked", false);
-        $("#concom-boleto").prop("checked", false);
-    });
-}
-
 function eliminarContactoComercial(val) {
     var item = $(val).attr("id").split("concom-eliminar")[1];
     $("#comercial" + item).remove();
@@ -2802,78 +2843,6 @@ function editarContactoComercial(id) {
     $("#comercial" + id).remove();
     aGuardarContactoComercial = aGuardarContactoComercial.filter(function (el) {
         return el.item !== parseInt(id);
-    });
-}
-
-function InicializarDatos() {
-    var Datos = {
-        ProveedorId: 0
-    };
-    var result = resultInit = MSExecuteOnServer('/Proveedor/Iniciliazar', Datos);
-
-    if (result != null) {
-        resultGranos = result.Material;
-        armarSelects(result);
-        AutocompleteProcedenciaProduccion();
-        AutocompleteProcedenciaAlmacenamiento();
-        AutocompleteProcedenciaEstablecimiento();
-    }
-
-
-    $("#buscadorProveedor").click(function () {
-        $("#buscadorProveedor").data("kendoAutoComplete").value("");
-        $("#Proveedor").val("");
-        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
-    });
-
-    $("#buscadorProveedor").kendoAutoComplete({
-        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="#:data.Corredor# buscar-nomb #: data.Estado != "" ? \'k-state-disabled\': \'\' #"  style="color:#: #" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)#if(data.Estado != null) {# ' +
-            ' #: data.Estado #    #}else{# #}# </p > ',
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "Filtro",
-        dataValueField: "Id",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#buscadorProveedor").val().split('|').length > 1) {
-                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-            } else {
-                //$("#buscadorProveedor").val("");
-                //comisionistaId = null;
-            }
-        },
-        select: function (e) {
-            if (e.dataItem.Deshabilitado) {
-                $("#buscadorProveedor").val("")
-                e.preventDefault();
-            } else {
-                //$("#Comisionista").val(e.dataItem.Id);
-                comisionistaId = e.dataItem.Id;
-            }
-
-        },
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/Proveedor/BuscarProveedor"
-                },
-                parameterMap: function (data, type) {
-                    return { filtroProveedor: $('#buscadorProveedor').val(), esComisionista: true, cuitProveedor: $("#cuit").val() }; //, segmentacionId: 16 };
-                }
-            }
-
-        },
-        filtering: function (e) {
-            if (!e.filter.value) {
-                e.preventDefault();
-            }
-        }
     });
 }
 
@@ -3332,7 +3301,9 @@ function armarSelectGrano(obj) {
         text: "Seleccione..."
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
-        var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
+        var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterialCapacidadProductiva', { materialId: obj.MaterialId, proveedorId: obj.ProveedorId });
+        var sugerido = resultGrano.find(x => x.Sugerido == true);
+        resultGrano = resultGrano.slice(0, 3);
         if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
                 (function (i) {
@@ -3348,6 +3319,9 @@ function armarSelectGrano(obj) {
                         }));
                     }
                 })(ii);
+            }
+            if (sugerido != null || sugerido != undefined) {
+                elem.val(sugerido.CampañaId);
             }
         }
     }
@@ -3654,16 +3628,6 @@ function mostrarConsignatarioProveedor() {
         $("#planCanjeProveedorDiv").show();
     }
 }
-
-//function checkComisionista() {
-//    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
-//        //$("#comisionistaDiv").hide();
-//        //comisionista = null;
-//        //$("#buscadorProveedor").val("");
-//    } else {
-//        //$("#comisionistaDiv").show();
-//    }
-//}
 
 function GuardarModalInforme(boolean) {
     generarInforme = boolean;

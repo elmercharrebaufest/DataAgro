@@ -382,7 +382,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             campanaManagerMock.Verify(x => x.TraerCampañaPorMaterial(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -457,6 +457,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":0,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"LocalidadId\":1,\"ProvinciaId\":1,\"Localidad\":\"\",\"Provincia\":\"\",\"ClasificacionId\":0,\"Consignatario\":false,\"BoletoId\":0,\"BolsaId\":0,\"Corredor\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void ObtenerProvinciaLocalidadProvTest()
         {
@@ -471,6 +472,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":0,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"LocalidadId\":1,\"ProvinciaId\":1,\"Localidad\":\"\",\"Provincia\":\"\",\"ClasificacionId\":0,\"Consignatario\":false,\"BoletoId\":0,\"BolsaId\":0,\"Corredor\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void BuscarCuitPorIdTest()
         {
@@ -481,7 +483,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"EstadoId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

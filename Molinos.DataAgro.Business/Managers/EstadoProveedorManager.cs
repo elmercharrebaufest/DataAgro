@@ -1,18 +1,17 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class EstadoProveedorManager : IEstadoProveedorManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IDatosProveedorAgent oDatosProveedorAgent;
 
@@ -23,79 +22,100 @@ namespace Molinos.DataAgro.Business.Managers
             this.oDatosProveedorAgent = oDatosProveedorAgent;
         }
 
-        public void ActualizarProveedores()
+        public void ActualizarProveedores(string cuit)
         {
             try
             {
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
-                var crearEstadoProvedor = new List<ProveedorEstado>();
-                foreach (string userSap in comerciales.Keys)
+                var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.Trim()).ToDictionary(x => x.Key); //puede haber más de un registro con el mismo CUIT
+                var proveedorEstados = repositorio.Listar<ProveedorEstado>().ToDictionary(x => new Tuple<int, int>(x.ComercialId, x.ProveedorId));
+
+                var crearEstadoProveedor = new List<ProveedorEstado>();
+
+                List<DatosProveedorAgentDto> datosDeProveedores = new List<DatosProveedorAgentDto>();
+
+                if (string.IsNullOrEmpty(cuit))
                 {
-                    try
+                    var listaComerciales = comerciales.Keys.ToList();
+                    int tamanioLote = 30; //se seleccionan algunos porque si se consulta la RFC con todos, da server error
+
+                    for (int i = 0; i < listaComerciales.Count; i += tamanioLote)
                     {
-                        logger.Debug("Obteniendo datos de usuario SAP " + userSap);
+                        var loteComerciales = listaComerciales.Skip(i).Take(tamanioLote).ToList();
 
-                        var list = oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
+                        datosDeProveedores.AddRange(oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), loteComerciales));
+                    }
+                }
+                else
+                {
+                    datosDeProveedores = oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(new List<string> { cuit.Trim() }, comerciales.Keys.ToList());
+                }
 
-                        logger.Debug("Resultado: " + list.Count);
-                        var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
-                        var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
-                        var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper().Trim()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper().Trim()));
+                //se agrupan los resultados por CUIT y en cada grupo se conserva un solo usuario, ya que algunos pueden venir repetidos y eso generaría repeticiones en la tabla ProveedorEstado
+                var datosAgrupados = datosDeProveedores.GroupBy(x => x.CUIT.Trim()).ToDictionary(d => d.Key, d => d.GroupBy(g => g.USUARIO.Trim()).Select(grp => grp.First()).ToList());
+                logger.Debug($"Datos de {datosAgrupados.Count} proveedores obtenidos.");
 
-                        foreach (var estado in list)
+                foreach (var cuitProveedor in datosAgrupados.Keys)
+                {
+                    var datos = datosAgrupados[cuitProveedor];
+
+                    if (!proveedores.ContainsKey(cuitProveedor))
+                    {
+                        logger.Debug($"El proveedor con CUIT {cuitProveedor} no existe en la base.");
+                        continue;
+                    }
+
+                    var proveedoresAgrupados = proveedores[cuitProveedor];
+
+                    foreach (var estado in datos)
+                    {
+                        if (!comerciales.ContainsKey(estado.USUARIO.ToUpper().Trim()))
                         {
-                            if (!proveedores.ContainsKey(estado.CUIT.ToUpper()))
-                            {
-                                logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
-                            }
-                            var proveedorAgrupados = proveedores[estado.CUIT.ToUpper()];
-                            var comercial = comerciales[estado.USUARIO.ToUpper()];
+                            logger.Debug($"El usuario {estado.USUARIO} no existe en la base.");
+                            continue;
+                        }
 
-                            foreach (var proveedor in proveedorAgrupados)
+                        var comercial = comerciales[estado.USUARIO.ToUpper().Trim()];
+
+                        foreach (var proveedor in proveedoresAgrupados)
+                        {
+                            var clave = new Tuple<int, int>(comercial.ComercialId, proveedor.ProveedorId);
+
+                            if (proveedorEstados.TryGetValue(clave, out var proveedorEstado))
                             {
-                                var proveedorEstado = proveedoresEstado.Where(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
-                                if (proveedorEstado != null && proveedorEstado.Count() > 0)
+                                proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
+                            }
+                            else
+                            {
+                                if (!crearEstadoProveedor.Any(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId && x.EstadoId == estados[estado.STATUS.ToLower()].EstadoId))
                                 {
-                                    foreach (var item in proveedorEstado)
-                                    {
-                                        item.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
-                                    }
-                                }
-                                else
-                                {
-                                    logger.Debug("Creando nuevo estado para " + comercial.ComercialId + " y " + proveedor.ProveedorId);
-                                    crearEstadoProvedor.Add(new ProveedorEstado
+                                    logger.Debug($"Creando nuevo estado para el proveedor {cuitProveedor} y ComercialId {comercial.ComercialId}");
+                                    crearEstadoProveedor.Add(new ProveedorEstado
                                     {
                                         ComercialId = comercial.ComercialId,
                                         EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
                                         ProveedorId = proveedor.ProveedorId
                                     });
                                 }
-                                proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                             }
-                        }
 
-                        logger.Debug("Actualizar Clientes MOA:" + list.Count);
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error("FALLO EL USUARIO " + userSap, e);
+                            proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA);
+                        }
                     }
                 }
 
-                logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
-                if (crearEstadoProvedor.Count > 0)
+                if (crearEstadoProveedor.Any())
                 {
-                    repositorio.AgregarTodos(crearEstadoProvedor);
+                    repositorio.AgregarTodos(crearEstadoProveedor);
                 }
                 repositorio.GuardarCambios();
 
+                logger.Debug($"ActualizarProveedores completado: {crearEstadoProveedor.Count} nuevos estados creados.");
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error("Error en ActualizarProveedores", ex);
                 throw;
             }
         }

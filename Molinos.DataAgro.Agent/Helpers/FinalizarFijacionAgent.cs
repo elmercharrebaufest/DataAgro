@@ -17,6 +17,10 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly IFinalizarContratoAgent finalizarContratoAgent;
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent, ITipoDeCambioAgent tipoCambioAgent, IFinalizarContratoAgent finalizarContratoAgent)
         {
@@ -26,10 +30,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.tipoCambioAgent = tipoCambioAgent;
             this.finalizarContratoAgent = finalizarContratoAgent;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
+
         public string Finalizar(FijacionDePrecioContrato fijacion)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -58,7 +59,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         string codigoTC = finalizarContratoAgent.DevolverTipoCambioSAP(fijacion.TipoNegocioId, fijacion.MonedaId, fijacion.TipoAgenteCompraId, fijacion.Fecha);
                         string typeOfRate = codigoTC == "04" ? "Z" : "M";
                         var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date, typeOfRate), 2, MidpointRounding.AwayFromZero);
-                        
+
                         if (fijacion.MonedaId.Trim() == "ARP")
                         {
                             oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
@@ -90,20 +91,20 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     //if (fijacion.Pizarra != true)
                     //{
-                        foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
+                    foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
+                    {
+                        if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
-                            if (apertura.Importe != 0 || apertura.Porcentaje != 0)
+                            var a = new ZMPES5440
                             {
-                                var a = new ZMPES5440
-                                {
-                                    CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                                    IMPORTE = apertura.Importe,
-                                    MONEDA = apertura.MonedaId,
-                                    PORC = apertura.Porcentaje
-                                };
-                                listaApertura.Add(a);
-                            }
+                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                                IMPORTE = apertura.Importe,
+                                MONEDA = apertura.MonedaId,
+                                PORC = apertura.Porcentaje
+                            };
+                            listaApertura.Add(a);
                         }
+                    }
                     //}
 
 

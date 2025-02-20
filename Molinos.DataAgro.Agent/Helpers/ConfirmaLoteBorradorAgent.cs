@@ -23,14 +23,14 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IRepositorio repositorio;
         private readonly IStatusContratoAgent status;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
-        string userConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
-        string passConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
-        string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
-        string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
-        string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
+        private readonly string userConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
+        private readonly string passConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
+        private readonly string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
+        private readonly string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
+        private readonly string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
         // CUITs de prueba recomendado por Confirma para Staging
-        string cuit1 = "23555555555"; // VIOLETA
-        string cuit2 = "23888888888"; // CELESTE
+        private readonly string cuit1 = "23555555555"; // VIOLETA
+        private readonly string cuit2 = "23888888888"; // CELESTE
 
         public ConfirmaLoteBorradorAgent(ILogger logger, IRepositorio repositorio, IStatusContratoAgent status, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
         {
@@ -843,7 +843,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error: No se pudo procesar XML en WS Confirma", e);
+                    logger.Error("Error: No se pudo procesar el XML en WS Confirma", e);
                     throw;
                 }
             }
@@ -851,10 +851,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public ConfirmaAltaLoteBorradorResultDto ResultadoAltaDefinitiva(altaLoteResult devolucion, EstadosConfirmaDto estadosConfirmaDto)
         {
-            ConfirmaAltaLoteBorradorResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteBorradorResultDto();
-
-            confirmaAltaLoteResult.altaIdLote = devolucion.altaIdLote;
-            confirmaAltaLoteResult.altaEstado = int.Parse(new string(devolucion.altaEstado.ToString().Where(char.IsDigit).ToArray()));
+            ConfirmaAltaLoteBorradorResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteBorradorResultDto
+            {
+                altaIdLote = devolucion.altaIdLote,
+                altaEstado = int.Parse(new string(devolucion.altaEstado.ToString().Where(char.IsDigit).ToArray()))
+            };
             confirmaAltaLoteResult.confirmaAltaEstado = estadosConfirmaDto.ConfirmaAltaEstadoDto.Find(x => x.CodigoConfirmaAltaEstado == confirmaAltaLoteResult.altaEstado);
             confirmaAltaLoteResult.altaEstadoSpecified = devolucion.altaEstadoSpecified;
             confirmaAltaLoteResult.altaEstadoDetalleError = devolucion.altaEstadoDetalleError;
@@ -867,10 +868,12 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 foreach (var item in devolucion.altaItem)
                 {
-                    altaItemBorradorDto altaItem = new altaItemBorradorDto();
-                    altaItem.altaIdLote = item.altaIdLote;
-                    altaItem.altaIdBolsa = item.altaIdBolsa;
-                    altaItem.altaEstadoDocumento = int.Parse(new string(item.altaEstadoDocumento.ToString().Where(char.IsDigit).ToArray()));
+                    altaItemBorradorDto altaItem = new altaItemBorradorDto
+                    {
+                        altaIdLote = item.altaIdLote,
+                        altaIdBolsa = item.altaIdBolsa,
+                        altaEstadoDocumento = int.Parse(new string(item.altaEstadoDocumento.ToString().Where(char.IsDigit).ToArray()))
+                    };
                     altaItem.confirmaAltaEstadoDocumento = estadosConfirmaDto.ConfirmaAltaEstadoDocumentoDto.Find(x => x.CodigoConfirmaAltaEstadoDocumento == altaItem.altaEstadoDocumento);
                     altaItem.altaErrores = new List<string>();
 

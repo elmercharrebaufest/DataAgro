@@ -1,7 +1,6 @@
-﻿
-CREATE procedure [dbo].[DataAgro_Gauget_TraerExcel]
+﻿CREATE procedure [dbo].[DataAgro_Gauget_TraerExcel]
 
-@comercialId Int= null,
+@ComercialId Int= null,
 @ComercialGenerador varchar(MAX) =null,
 @CampañaId int = null,
 @MaterialId int = null  
@@ -15,36 +14,36 @@ insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @Comercial
 create table #Valor (MaterialId int,CampañaId int,CUIT float , Objetivo float, Compras float default(0),Porcentaje float default(0) )
 
 insert into  #Valor (MaterialId,CUIT,Objetivo,CampañaId)
-select  MaterialId,p.cuit, sum(ToneladasObjetivos) as Objetivo,CampañaId
-from objetivo o
+select  MaterialId,p.CUIT, sum(ToneladasObjetivos) as Objetivo,CampañaId
+from Objetivo o
 inner join Proveedor p on o.ProveedorId = p.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-where ((@CampañaId is null) or (o.campañaId = @CampañaId))
+where ((@CampañaId is null) or (o.CampañaId = @CampañaId))
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and ((@MaterialId is null) or (o.MaterialId = @MaterialId))
-group by o.MaterialId,o.CampañaId ,p.cuit
+group by o.MaterialId,o.CampañaId ,p.CUIT
 having sum(ToneladasObjetivos) > 0
 
 
 update #Valor
 set Compras =  b.Toneladas,
 Porcentaje= (b.Toneladas * 100) /objetivo
-from (select cm.MaterialId as MaterialId,cm.campañaId as CampañaId,p.cuit , sum(cmm.Toneladas) as Toneladas
+from (select cm.MaterialId as MaterialId,cm.CampañaId as CampañaId,p.CUIT , sum(cmm.Toneladas) as Toneladas
 from CampañaMaterial cm
 inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId = cmm.CampañaMaterialId and cmm.ComercialId in ( select ComercialId from @EmpleadoTable)
 inner join Proveedor p on cm.ProveedorId = p.ProveedorId
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-where ((@CampañaId is null) or (cm.campañaId = @CampañaId))
+where ((@CampañaId is null) or (cm.CampañaId = @CampañaId))
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and ((@MaterialId is null) or (cm.MaterialId = @MaterialId))
-group by cm.MaterialId,cm.campañaId,p.cuit) b
+group by cm.MaterialId,cm.CampañaId,p.CUIT) b
 where #Valor.MaterialId = b.MaterialId and #Valor.CampañaId = b.CampañaId and #Valor.CUIT = b.CUIT and  b.Toneladas > 0
 
 
-select p.cuit,val.Objetivo as Objetivos,round(val.Porcentaje,2) as Porcentajes
-,isnull(cmm.toneladas,0) as Toneladas
+select p.CUIT,val.Objetivo as Objetivos,round(val.Porcentaje,2) as Porcentajes
+,isnull(cmm.Toneladas,0) as Toneladas
 ,m.Descripcion as Material,
 c.Descripcion as Campaña
 ,isnull(cast(cmm.Año as varchar(20)),'0') as Año
@@ -63,48 +62,48 @@ when cmm.Mes=11 then 'NOVIEMBRE'
 when cmm.Mes=12 then 'DICIEMBRE' 
 else 'SIN MES'
 end  as Mes
-,case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
-,p.razonsocial
+,case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+,p.RazonSocial
 from #Valor val
-inner join proveedor p on val.CUIT = p.CUIT
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join Proveedor p on val.CUIT = p.CUIT
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-left join localidad loc on p.LocalidadId= loc.LocalidadId
+left join Localidad loc on p.LocalidadId= loc.LocalidadId
 left join Provincia prv on loc.ProvinciaId=prv.ProvinciaId
 inner join Material m on val.MaterialId = m.MaterialId
 inner join Campaña c on val.CampañaId = c.CampañaId
-inner join segmentacion seg on seg.SegmentacionId = p.SegmentacionId
+inner join Segmentacion seg on seg.SegmentacionId = p.SegmentacionId
 left join CampañaMaterial cm on p.ProveedorId= cm.ProveedorId
-left join CampañaMaterialPorMes cmm on cm.CampañaMaterialId=cmm.CampañaMaterialId  and cmm.comercialId in ( select ComercialId from @EmpleadoTable)
+left join CampañaMaterialPorMes cmm on cm.CampañaMaterialId=cmm.CampañaMaterialId  and cmm.ComercialId in ( select ComercialId from @EmpleadoTable)
 
 where 
-((@CampañaId is null) or (val.campañaId = @CampañaId and cm.campañaId=@CampañaId  ))
+((@CampañaId is null) or (val.CampañaId = @CampañaId and cm.CampañaId=@CampañaId  ))
 and ((@MaterialId is null) or (val.MaterialId = @MaterialId and cm.MaterialId=@MaterialId ))
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and val.Porcentaje > cast(0 as float)
 
 union all
 
-select distinct p.cuit,val.Objetivo as Objetivos,val.Porcentaje as Porcentajes,
+select distinct p.CUIT,val.Objetivo as Objetivos,val.Porcentaje as Porcentajes,
 0 as Toneladas
 ,m.Descripcion as Material,
 c.Descripcion as Campaña
 ,'0' as Año
 ,isnull(prv.Nombre,'SIN PROVINCIA') as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
 , 'SIN MES' as Mes
-,case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
-,p.razonsocial
+,case when seg.Grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+,p.RazonSocial
 from #Valor val
-inner join proveedor p on val.CUIT = p.CUIT
-inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join Proveedor p on val.CUIT = p.CUIT
+inner join ProveedorComercial pc on pc.ProveedorId= p.ProveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
-left join localidad loc on p.LocalidadId= loc.LocalidadId
+left join Localidad loc on p.LocalidadId= loc.LocalidadId
 left join Provincia prv on loc.ProvinciaId=prv.ProvinciaId
 inner join Material m on val.MaterialId = m.MaterialId
 inner join Campaña c on val.CampañaId = c.CampañaId
-inner join segmentacion seg on seg.SegmentacionId = p.SegmentacionId
+inner join Segmentacion seg on seg.SegmentacionId = p.SegmentacionId
 where 
-((@CampañaId is null) or (val.campañaId = @CampañaId  ))
+((@CampañaId is null) or (val.CampañaId = @CampañaId  ))
 and ((@MaterialId is null) or (val.MaterialId = @MaterialId ))
 and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and val.Porcentaje = cast(0 as float) 

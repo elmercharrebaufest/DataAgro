@@ -61,8 +61,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         int idMaterial = arrIdMateriales[i];
                         string dia = fecha.ToString("yyyy-MM-dd");
                         string url = urlBCR + "v" + versionClienteBCR + "/PreciosCamara?idGrano=" + idMaterial + "&fechaConcertacionDesde=" + dia + "&fechaConcertacionHasta=" + dia;
-                        RestClient client2 = new RestClient(url);
-                        client2.Timeout = -1;
+                        RestClient client2 = new RestClient(url)
+                        {
+                            Timeout = -1
+                        };
                         RestRequest request2 = new RestRequest(Method.GET);
                         request2.AddHeader("Authorization", token);
                         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Provincia { get; set; }
         public int? LocalidadId { get; set; }
         public int? ProvinciaId { get; set; }
-        //public int? EstadoId { get; set; }
+        public int? EstadoId { get; set; }
         //public int SegmentacionId { get; set; }
         //public string NombreReferente { get; set; }
         //public int? Calificacion { get; set; }

@@ -22,9 +22,9 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly ICache cache;
-        readonly string urlBase = ConfigurationManager.AppSettings["UrlBasePrimary"];
-        readonly string user = ConfigurationManager.AppSettings["UserPrimary"];
-        readonly string pass = ConfigurationManager.AppSettings["PassPrimary"];
+        private readonly string urlBase = ConfigurationManager.AppSettings["UrlBasePrimary"];
+        private readonly string user = ConfigurationManager.AppSettings["UserPrimary"];
+        private readonly string pass = ConfigurationManager.AppSettings["PassPrimary"];
 
         public ClientePrimaryAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager, ICache cache)
         {
@@ -33,6 +33,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logDataAgroManager = logDataAgroManager;
             this.cache = cache;
         }
+
         private TokenPrimary ObtenerToken()
         {
             try

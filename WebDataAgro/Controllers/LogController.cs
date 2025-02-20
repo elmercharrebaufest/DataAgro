@@ -5,18 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
-    public class LogController :Controller
+    public class LogController : Controller
     {
         private readonly ILogManager oLogManager;
 
-        public LogController (ILogManager oLogManager)
+        public LogController(ILogManager oLogManager)
         {
             this.oLogManager = oLogManager;
         }
@@ -33,7 +32,6 @@ namespace WebDataAgro.Controllers
             return PartialView("_ListaLog", new LogModel
             {
                 Log = TransformarAModel(oLogManager.TraerTodoLog(fecha))
-
             });
         }
 
@@ -55,11 +53,10 @@ namespace WebDataAgro.Controllers
             {
                 var logModel = new LogModel
                 {
-                    Xml = i.Xml, 
+                    Xml = i.Xml,
                     Fecha = i.Fecha
                 };
                 lista.Add(logModel);
-
             }
 
             return lista;

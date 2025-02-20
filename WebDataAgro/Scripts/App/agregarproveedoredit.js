@@ -38,7 +38,6 @@ function InicializarEdit() {
         }
     }
     comisionistaId = basico[0].ComisionistaId;
-
 }
 
 function armarBasico(basico) {
@@ -162,7 +161,7 @@ function armarComercial(comerciales) {
             obj.contactoComercialId = comerciales[i].ContactoComercialId; //TODO: Poner el id que va
             obj.nombre = comerciales[i].Nombres;
             obj.apellido = comerciales[i].Apellido;
-            obj.esApoderado = comerciales[i].EsApoderado?true:false;
+            obj.esApoderado = comerciales[i].EsApoderado ? true : false;
             obj.cuit = comerciales[i].CuitApoderado;
             obj.puestoApoderadoId = comerciales[i].PuestoApoderadoId;
             obj.desde = comerciales[i].FechaDesde;
@@ -227,7 +226,7 @@ function armarComercial(comerciales) {
             obj.Boleto = comerciales[i].Boleto;
             obj.item = cantContactoComercial;
             aGuardarContactoComercial.push(obj);
-            htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') +'" id="comercial' + cantContactoComercial + '">' +
+            htmlComerciales += '<div class="contenedor-contacto-comercial ' + (comerciales[i].EsApoderado == true ? 'color-Apoderado' : '') + '" id="comercial' + cantContactoComercial + '">' +
                 '<div class="contenedor-contacto-comercial-titulo">' +
                 '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
                 '<span class="span-contacto-comercial"> ' +
@@ -252,7 +251,7 @@ function armarComercial(comerciales) {
                 '<span class="contenedor-contacto-comercial-posicion-der">' +
                 (comerciales[i].Puesto ? comerciales[i].Puesto : "No especifica puesto") +
                 '</span>' +
-                '</div>' + (comerciales[i].EsApoderado==true? etiquetaApoderado: "") +
+                '</div>' + (comerciales[i].EsApoderado == true ? etiquetaApoderado : "") +
                 '<div class="contenedor-contacto-comercial-telefonos">' +
                 (comerciales[i].Telefono1 ? comerciales[i].Telefono1 + (comerciales[i].Telefono2 ? " - " + comerciales[i].Telefono2 : "") + (comerciales[i].Telefono3 ? " - " + comerciales[i].Telefono3 : "") : "No especifica teléfono") +
                 '</div>' +
@@ -260,30 +259,30 @@ function armarComercial(comerciales) {
                 (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? ' <i class="fa fa-check fa-lg" aria-hidden="true"></i>' : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck fa-lg"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck fa-lg"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text fa-lg" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck fa-lg"></i>' : "") : "") : "No especifica mails") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-extras">' +
-                    '<div class="row">' +
-                        '<div class="col-lg-6">' +
-                            '<span class="contenedor-contacto-comercial-extras-label">' +
-                                'Fecha de nacimiento:' +
-                            '</span>' +
-                        '</div>' +
-                        '<div class="col-lg-6">' +
-                            '<span class="contenedor-contacto-comercial-extras-value">' +
-                                (comerciales[i].FechaNacimiento ? kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "m") + " de " + kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "yyyy") : "no especifica") +
-                            '</span>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="row">' +
-                        '<div class="col-lg-6">' +
-                            '<span class="contenedor-contacto-comercial-extras-label">' +
-                                'Intereses' +
-                            '</span>' +
-                        '</div>' +
-                        '<div class="col-lg-6">' +
-                            '<span class="contenedor-contacto-comercial-extras-value">' +
-                                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") +
-                            '</span>' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="row">' +
+                '<div class="col-lg-6">' +
+                '<span class="contenedor-contacto-comercial-extras-label">' +
+                'Fecha de nacimiento:' +
+                '</span>' +
+                '</div>' +
+                '<div class="col-lg-6">' +
+                '<span class="contenedor-contacto-comercial-extras-value">' +
+                (comerciales[i].FechaNacimiento ? kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "m") + " de " + kendo.toString(kendo.parseDate(comerciales[i].FechaNacimiento), "yyyy") : "no especifica") +
+                '</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="row">' +
+                '<div class="col-lg-6">' +
+                '<span class="contenedor-contacto-comercial-extras-label">' +
+                'Intereses' +
+                '</span>' +
+                '</div>' +
+                '<div class="col-lg-6">' +
+                '<span class="contenedor-contacto-comercial-extras-value">' +
+                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") +
+                '</span>' +
+                '</div>' +
+                '</div>' +
                 '</div>' +
                 '</div>';
         })(ii);
@@ -296,7 +295,6 @@ function armarProduccion(campoacopio) {
 
     if (campoacopio.length > 0) {
         $("#tons-max-aprob-sojasust").val(campoacopio[0].AlmacTonsMaxSojaSust);
-
         $("#has-aprob-sojasust").val(campoacopio[0].AlmacHectSojaSust);
     }
 
@@ -304,7 +302,6 @@ function armarProduccion(campoacopio) {
         (function (i) {
 
             grupocampoacopio["Campo" + campoacopio[i].Id] = grupocampoacopio["Campo" + campoacopio[i].Id] || {};
-
             grupocampoacopio["Campo" + campoacopio[i].Id].ArrendadoPropio = campoacopio[i].ArrendadoPropio;
             grupocampoacopio["Campo" + campoacopio[i].Id].EsCampoProduccion = campoacopio[i].EsCampoProduccion;
             grupocampoacopio["Campo" + campoacopio[i].Id].HabilitadoSojaSustentable = campoacopio[i].HabilitadoSojaSustentable;
@@ -333,6 +330,8 @@ function armarProduccion(campoacopio) {
         })(ii);
     }
     grupocampoacopio = [grupocampoacopio];
+    const clave = Object.keys(grupocampoacopio[0])[0];
+    const ultimaCampaña = grupocampoacopio[0][clave];
 
     for (ii in grupocampoacopio[0]) {
         (function (i) {
@@ -341,7 +340,7 @@ function armarProduccion(campoacopio) {
             obj.item = capProdCant;
 
             obj.localidad = grupocampoacopio[0][i].LocalidadId;
-            obj.localidadNom = grupocampoacopio[0][i].Localidad + "(" + grupocampoacopio[0][i].Provincia + ")";
+            obj.localidadNom = grupocampoacopio[0][i].Localidad + " (" + grupocampoacopio[0][i].Provincia + ")";
 
             obj.partido = grupocampoacopio[0][i].Partido;
 
@@ -416,6 +415,67 @@ function armarProduccion(campoacopio) {
             aGuardar.push(obj);
             capProdCant++;
         })(ii);
+    }
+
+    if (ultimaCampaña) {
+        $("#localidad-produccion").val(ultimaCampaña.Localidad + " (" + ultimaCampaña.Provincia + ")" || "No especificada");
+        $("#localidadId-produccion").val(ultimaCampaña.LocalidadId);
+        $("#partido-produccion").val(ultimaCampaña.Partido || "No especificado");
+        if (ultimaCampaña.ArrendadoPropio) {
+            $("#hectareas-arrendadas").prop("checked", true);
+        } else {
+            $("#hectareas-propias").prop("checked", true);
+        }
+
+        var fila = 0;
+        $("#formulario-produccion .datos-produccion-cap-prod-editor-granos-cantidades-grupo").empty();
+        ultimaCampaña.Granos.forEach((grano) => {
+            var htmlCampañaGrano = "";
+            htmlCampañaGrano += '<div class="linea' + fila + ' campo-granos"  style="position:relative;">'
+                + '<select class="campo-input-select campo-sin-span grano" id="grano' + fila + '">'
+                + '<option disabled selected value="">Seleccionar...</option>';
+            for (var ii in resultInit.Material) {
+                (function (i) {
+                    htmlCampañaGrano += '<option value="' + resultInit.Material[i].MaterialId + '">' + resultInit.Material[i].Descripcion + '</option>';
+                })(ii);
+            }
+            htmlCampañaGrano += '</select>'
+                + '<select class="campo-input-select campo-sin-span grano" id="campaña' + fila + '">'
+                + '<option value = "null">Seleccione...</option>'
+                + '</select>'
+                + '<input type="text" class="campo-input-text hectareas" style="margin-left: 20px;" id="hectareas' + fila + '" />'
+                + '<input type="text" class="campo-input-text toneladas" id="toneladas' + fila + '" />'
+                + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano" id="eliminarGrano' + fila + '" />'
+                + '</div>';
+
+            $("#formulario-produccion .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGrano);
+
+            $("#grano" + fila + "").change(function (x) {
+                var obj = {
+                    MaterialId: $(this).val(),
+                    elemId: $(this).prop("id").split("grano")[1],
+                    ProveedorId: ProveedorId
+                };
+                armarSelectGrano(obj);
+            });
+
+            $("#eliminarGrano" + fila).click(function () {
+                eliminarGrano(this);
+            });
+
+            $("#grano" + fila).val(grano.MaterialId);
+            $("#grano" + fila).trigger("change");
+            $("#hectareas" + fila).val(grano.HectareasPorcentaje);
+            $("#toneladas" + fila).val(grano.Toneladas);
+            //var elemento = resultInit.Material.find(item => item.MaterialId == grano.MaterialId);
+            //if (elemento) {
+            //    $("#campaña" + fila).val(elemento.CampañaIdActual);
+            //} else {
+            //    $("#campaña" + fila).val(grano.CampañaId);
+            //}
+            fila++;
+        })
+        cantGrano = fila - 1;
     }
 }
 
@@ -775,4 +835,3 @@ function eliminarObjetivo(elem) {
             $("#toneladasObjetivo" + val).val("");
     }
 }
-

@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
@@ -27,9 +28,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
             var nombreUsuario = PermisosHelper.ObtenerUsuario();
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
+
             var queryCupos =
                 from cupo in contexto.Set<Cupo>()
-                where (equipo.Contains(cupo.ComercialId != null ? cupo.ComercialId.Value : 0) && !externo) ||
+                where (equipo.Contains(cupo.ComercialId ?? 0) && !externo) ||
                 (externo && cupo.UsuarioCreador == nombreUsuario)
 
                 select new CupoDto
@@ -38,11 +40,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialId = cupo.ComercialId,
                     FechaIngreso = cupo.FechaIngreso,
                     FechaGeneracion = cupo.FechaGeneracion,
-                    FechaRegistro = DbFunctions.TruncateTime(cupo.FechaGeneracion),
-                    Hora = SqlFunctions.DateName("hh", cupo.FechaGeneracion) + ":" + DbFunctions.Right("00" + SqlFunctions.DateName("n", cupo.FechaGeneracion), 2),
                     Comercial = cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido,
                     CupoSap = cupo.CupoSap,
-                    CupoStop = cupo.CupoStop.ToString(),
+                    CupoStop = cupo.CupoStop ?? 0,
                     Cumplimiento = cupo.Cumplimiento,
                     Material = cupo.Material.Descripcion,
                     MaterialId = cupo.Material.MaterialId,

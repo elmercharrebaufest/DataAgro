@@ -15,23 +15,17 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
-        private readonly IProveedorManager proveedorManager;
-        private readonly IMailManager mailManager;
-        private readonly IHttpContextManager httpContextManager;
         private readonly IConfiguracionCupoManager configuracionCupoManager;
         private readonly ICentroManager centroManager;
 
-        public CupoNoPropioManager(IRepositorio repositorio, ILogger logger, IProveedorManager proveedorManager, IMailManager mailManager,
-            IHttpContextManager httpContextManager, IConfiguracionCupoManager configuracionCupoManager, ICentroManager centroManager)
+        public CupoNoPropioManager(IRepositorio repositorio, ILogger logger, IConfiguracionCupoManager configuracionCupoManager, ICentroManager centroManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
-            this.proveedorManager = proveedorManager;
-            this.mailManager = mailManager;
-            this.httpContextManager = httpContextManager;
             this.configuracionCupoManager = configuracionCupoManager;
             this.centroManager = centroManager;
         }
+
         public CupoResult GrabarCupoNoPropio(CupoDto cupoDto)
         {
             var resultado = ValidarCupo(cupoDto);
@@ -69,7 +63,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Estado = 1
                         });
                         cuposEstado.Add(new CupoNoPropioDto { Codigo = c, EstadoId = 0 });
-                        cantidadCupos = cantidadCupos + 1;
+                        cantidadCupos++;
                     }
                 }
                 repositorio.AgregarTodos(cuposSave);
@@ -169,9 +163,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var cupos = repositorio.Listar<CupoNoPropio>(x => ids.Contains(x.Id));
                 var cuposUtilizados = cupos.Where(x => x.CupoId != null).ToList();
-                if(cuposUtilizados != null && cuposUtilizados.Count() > 0)
+                if (cuposUtilizados != null && cuposUtilizados.Count() > 0)
                 {
-                    resultado.Error("Cupos", "No se pudieron actualizar todos los cupos porque algunos ya fueron utilizados. Cupos no actualizados: "+ String.Join(", ", cuposUtilizados.Select(x => x.Codigo).ToList()));
+                    resultado.Error("Cupos", "No se pudieron actualizar todos los cupos porque algunos ya fueron utilizados. Cupos no actualizados: " + String.Join(", ", cuposUtilizados.Select(x => x.Codigo).ToList()));
                 }
                 else
                 {

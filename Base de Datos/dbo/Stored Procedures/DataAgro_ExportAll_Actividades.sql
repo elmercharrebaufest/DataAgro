@@ -10,11 +10,11 @@ declare @table as table(item int )
 
 
  SELECT  
-		pr.cuit as Cuit,
+		pr.CUIT as Cuit,
 		pr.RazonSocial as RazonSocial,
 		TA.Descripcion AS TipoActividad,    
 		A.Detalle as DetalleContacto,  
-		A.Asunto as Asunto,
+		A.asunto as Asunto,
 		cast(A.FechaHoraRecordatorio as varchar(50)) as FechaDesde,
 		cast(datepart(hour,A.FechaHoraRecordatorio) as varchar(50)) as HoraDesde, 
 		cast(A.FechaHoraRecordatorioFin as varchar(50)) as FechaHasta,  

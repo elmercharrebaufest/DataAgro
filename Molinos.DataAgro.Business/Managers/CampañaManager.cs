@@ -86,7 +86,32 @@ namespace Molinos.DataAgro.Business
             //&& (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1)
             var campañaConfigurada = ConfigurationManager.AppSettings["CampanaDesde"].ToString();
             var campañaEnAdelante = repositorio.Obtener<Campaña, int>(x => x.Descripcion == campañaConfigurada, x => x.CampañaId);
-            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Asc);
+            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Desc);
+        }
+
+        public List<CampañaDto> TraerCampañaPorMaterialCapacidadProductiva(int materialId, int proveedorId)
+        {
+            var campanaActualId = repositorio.Obtener<Material, int>(x => x.MaterialId == materialId, x => x.Campaña.CampañaId);
+            //&& (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1)
+            var campañaConfigurada = ConfigurationManager.AppSettings["CampanaDesde"].ToString();
+            var campañaEnAdelante = repositorio.Obtener<Campaña, int>(x => x.Descripcion == campañaConfigurada, x => x.CampañaId);
+            
+            var campoMaterial = repositorio.Listar<CampoMaterial>(x => x.Campo.ProveedorId == proveedorId).OrderByDescending(x => x.CampañaId).FirstOrDefault();
+            var campañaPorMaterial = repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Desc).Take(3).ToList();
+            var campañaIdSiguiente = campoMaterial!=null? campoMaterial.CampañaId + 1 : 0 ;
+            var filtrarCampaña = campañaPorMaterial.Where(x => x.CampañaId == campañaIdSiguiente).FirstOrDefault();
+
+            //if (filtrarCampaña == null)
+            //{
+            //    campañaIdSiguiente = campañaIdSiguiente - 1;
+            //    filtrarCampaña = campañaPorMaterial.Where(x => x.CampañaId == campañaIdSiguiente).FirstOrDefault();
+            //}
+            
+            if (filtrarCampaña != null)
+            {
+                filtrarCampaña.Sugerido = true;
+            }
+            return campañaPorMaterial;
         }
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)

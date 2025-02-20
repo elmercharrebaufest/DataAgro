@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Nuevo Proveedor";
+    ViewBag.Title = "Editar Proveedor";
 }
 
 
@@ -542,9 +542,6 @@
         <div class="datos-produccion-cap-prod">
             Capacidad Productiva
         </div>
-        <div class="datos-produccion-cap-prod-guardados">
-
-        </div>
         <div class="datos-produccion-cap-prod-editor-contenedor">
             <div class="datos-produccion-cap-prod-editor-titulo">
                 Agregar detalle de capacidad productiva
@@ -552,8 +549,8 @@
             <input type="hidden" id="campoid" />
             <div class="formulario-campo ubicacionkmz">
                 @*<span class="campo-span">Ubicación</span>
-                    <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-produccion" />
-                    <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />*@
+                <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-produccion" />
+                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />*@
                 <span style="float:none;" class="campo-span campo-span-kmz">Archivo</span>
                 <input type="file" name="kmz" id="kmz" class="inputfile" />
                 <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
@@ -562,7 +559,6 @@
                 <input id="localidad-produccion" placeholder="Localidad" style="width:59%;float:left;" />
                 @Html.Hidden("localidadId-produccion", "", new { @Id = "localidadId-produccion" })
                 @Html.TextBox("partido-produccion", "", new { disabled = "disabled", @id = "partido-produccion", @class = "form-control limpiar", @style = "width:39%;float:right;" })
-
             </div>
             <br />
             <div class="formulario-campo" style="padding-top: 15px;">
@@ -570,24 +566,6 @@
                 <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="0"> Alquiladas</label>
                 <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="1"> Propias</label>
             </div>
-            @*<div class="formulario-campo" style="text-align:left;">
-                    <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
-                        Nombre
-                    </div>
-                    <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
-                        Comercial
-                    </div>
-                </div>
-                <div class="formulario-campo" style="text-align:left;">
-                    <div style="width:45%;display: inline-block;">
-                        <input class="campo-input-text" id="campo-nombre-produccion" type="text" value="" style="width:100%;">
-                    </div>
-                    <div style="width:40%;display: inline-block;">
-                        <div class="formulario-campo" id="divComercialProduccion">
-
-                        </div>
-                    </div>
-                </div>*@
             <div class="datos-produccion-cap-prod-editor-granos-contenedor">
                 <div class="datos-produccion-cap-prod-editor-granos-titulos">
                     <div class="produccion-titulo-grano">Grano</div>
@@ -621,6 +599,9 @@
         <div class="formulario-campo">
             <span class="campo-span">Has. Aprobadas Soja Sustentable </span>
             <input type="text" class="campo-input-text" id="has-aprob-sojasust" />
+        </div>
+        <div class="datos-produccion-cap-prod-guardados">
+
         </div>
     </div>
 
@@ -733,9 +714,6 @@
         <div class="datos-produccion-cap-prod">
             Establecimiento
         </div>
-        <div class="datos-produccion-establecimiento-guardados">
-
-        </div>
         <div class="datos-produccion-cap-prod-editor-contenedor">
             <div class="datos-produccion-cap-prod-editor-titulo">
                 Agregar establecimiento
@@ -818,7 +796,9 @@
                 </div>
             </div>
         </div>
+        <div class="datos-produccion-establecimiento-guardados">
 
+        </div>
     </div>
 
     <div id="formulario-proveedorescorredor" @(ocultarCamposEditar ? "hidden" : "")>
@@ -970,9 +950,6 @@
     </span>
 </div>
 
-
-
-
 <div id="modalSalir" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -999,7 +976,6 @@
 
 <div id="modalGenerarInforme" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -1007,7 +983,7 @@
                 <h4 class="modal-title">Generar Informe Comercial</h4>
             </div>
             <div class="modal-body">
-                <p>¿Desea generar un informe comercial actualizado para este proveedor?</p>
+                <p>¿Desea generar un informe comercial actualizado para este proveedor?<br />Se enviará un e-mail a Administración.</p>
             </div>
             <div class="modal-footer">
                 <div class="modal-generar-informe guardar-con-informe" onclick="GuardarModalInforme(true)">

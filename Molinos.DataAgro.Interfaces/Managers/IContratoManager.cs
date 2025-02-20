@@ -105,5 +105,6 @@ namespace Molinos.DataAgro.Interfaces
         List<CupoDto> TraerCuposConDescarga(int contratoId);
         void EnviarMailImpuestos(int contratoId);
         string ConsultarRangoPrecio(int materialId, string moneda, decimal precio);
+        Resultado ValidarCapacidadProductiva(Contrato negocio);
     }
 }

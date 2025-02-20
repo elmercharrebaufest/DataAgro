@@ -32,11 +32,13 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHttpContextManager httpContextManager;
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly IMailProveedorAgent mailProveedorAgent;
+        private readonly IEstadoProveedorManager estadoProveedorManager;
+        private readonly IVisualizarCapacidadProductivaAgent capProdAgent;
 
-        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
-            IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
-            IMailManager mailManager, ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager,
-            IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent)
+
+        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent, IMailManager mailManager,
+            ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager,
+            IVisualizarCapacidadProductivaAgent capProdAgent)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -48,13 +50,15 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
             this.altaTempranaAgent = altaTempranaAgent;
             this.mailProveedorAgent = mailProveedorAgent;
+            this.estadoProveedorManager = estadoProveedorManager;
+            this.capProdAgent = capProdAgent;
         }
 
-        public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string actividadId)
+        public StoredHistorialResult TraerHistorialActividad(HistorialActividad oParam, int ProveedorId, string actividadId)
         {
             return new StoredHistorialResult
             {
-                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false, oParam.detalle, actividadId, oParam.cantidadRegistros))
+                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false, oParam.Detalle, actividadId, oParam.CantidadRegistros))
                 //ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId)
             };
         }
@@ -85,12 +89,11 @@ namespace Molinos.DataAgro.Business.Managers
                             ToneladasObjetivos = x.Sum(s => s.ToneladasObjetivos)
                         })
                         .Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
-                    //xGrupoCompras = xGrupoCompras.Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
                     res.ObjetivosTraerPorProveedorId = xGrupoCompras;
                 }
                 else
                 {
-                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.HasValue ? x.ComercialId.Value : 0) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
+                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId ?? 0)).ToList();
                 }
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
                 {
@@ -108,9 +111,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Provincia = x.Acopio.Localidad.Provincia.Nombre
                 }, x => x.Acopio.ProveedorId == ProveedorId);
                 var campoacopio = repositorio.SelStore<CampoProduccionAcopio>("DataAgro_CampoProduccionAcopioPorProveedorId", 0, ProveedorId);
-                res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).ToList();
-                res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).ToList();
-
+                res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).OrderByDescending(x => x.CampañaId).ThenByDescending(x => x.Id).ToList();
+                res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).OrderByDescending(x => x.CampañaId).ThenByDescending(x => x.Id).ToList();
                 res.DatosContacto = DevolverDatosContacto(ProveedorId);
                 res.Historial = Comprar(ProveedorId, UsuarioDirectory, equipo);
                 res.CanalesDeOperacion = repositorio.Listar<ProveedorCanalOperacion, CanalOperacion>(x => x.CanalOperacion, x => x.ProveedorId == ProveedorId);
@@ -170,11 +172,11 @@ namespace Molinos.DataAgro.Business.Managers
                     var campActual = campaniasPorMaterial.Where(x => x.MaterialId == res.CapacidadProductiva[i].MaterialId).FirstOrDefault().CampañaId;
                     if (res.CapacidadProductiva[i].CampaniaId >= campActual)
                     {
-                        res.CapacidadProductiva[i].InformeActualizado = 1; //actualizado
+                        res.CapacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.ACTUALIZADO;
                     }
                     else if (res.CapacidadProductiva[i].CampaniaId < campActual)
                     {
-                        res.CapacidadProductiva[i].InformeActualizado = 2; //desactualizado. Si queda nulo, nunca tuvo informe para ese material.
+                        res.CapacidadProductiva[i].InformeActualizado = (int)EnumEstadoInformeComercial.DESACTUALIZADO;
                     }
                 }
             }
@@ -183,7 +185,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
-
 
             foreach (var aux in res.BasicoProveedorTraerPorProveedores)
             {
@@ -276,7 +277,7 @@ namespace Molinos.DataAgro.Business.Managers
                 valor.Consignatario = oProveedor.Consignatario ?? false;
                 valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
                 valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
-                valor.Corredor = oProveedor.SegmentacionId == 5 || oProveedor.SegmentacionId == 7 ? true : false;
+                valor.Corredor = oProveedor.SegmentacionId == 5 || oProveedor.SegmentacionId == 7;
             }
             catch (Exception e)
             {
@@ -293,7 +294,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Intermediario = x.Intermediario
             });
         }
-        public Resultado GrabarRecordatorio(ActividadInsetarIni oParam)
+        public Resultado GrabarRecordatorio(ActividadInsertarIni oParam)
         {
             var oEntityErrors = new Resultado();
 
@@ -301,14 +302,14 @@ namespace Molinos.DataAgro.Business.Managers
                 ? new Actividad()
                 : repositorio.Obtener<Actividad>(x => x.ActividadId == oParam.ActividadId) ?? new Actividad();
             oActividadSave.ComercialId = oParam.ComercialId;
-            oActividadSave.ContactoComercialId = oParam.contacto;
-            oActividadSave.Detalle = oParam.detalle ?? "";
-            oActividadSave.FechaHoraActividad = oParam.fechaYHoraActividad;
-            oActividadSave.FechaHoraRecordatorio = oParam.fechaYHoraRecordatorio;
+            oActividadSave.ContactoComercialId = oParam.Contacto;
+            oActividadSave.Detalle = oParam.Detalle ?? "";
+            oActividadSave.FechaHoraActividad = oParam.FechaYHoraActividad;
+            oActividadSave.FechaHoraRecordatorio = oParam.FechaYHoraRecordatorio;
             oActividadSave.ProveedorId = oParam.ProveedorId;
-            oActividadSave.TipoActividadId = oParam.tipoactividad;
-            oActividadSave.asunto = oParam.asunto;
-            oActividadSave.FechaHoraRecordatorioFin = oParam.fechaYHoraRecordatorioFin;
+            oActividadSave.TipoActividadId = oParam.TipoActividad;
+            oActividadSave.asunto = oParam.Asunto;
+            oActividadSave.FechaHoraRecordatorioFin = oParam.FechaYHoraRecordatorioFin;
 
             repositorio.Agregar(oActividadSave);
 
@@ -324,7 +325,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedorEnDto = TraerProveedor(proveedor.ProveedorId, usuarioIdActive, equipo.Equipo);
                 logDataAgroManager.LogCambiosDataAgro(proveedorEnDto, TipoAccionLogDataAgro.Modificar, proveedor.ProveedorId);
 
-                if (oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
+                if (oParam.TipoActividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
                 {
                     EnviarCita(oParam);
                 }
@@ -336,7 +337,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        private void EnviarCita(ActividadInsetarIni oParam)
+        private void EnviarCita(ActividadInsertarIni oParam)
         {
             try
             {
@@ -345,9 +346,10 @@ namespace Molinos.DataAgro.Business.Managers
                     ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
                 }
 
-                var oMensaje = new MailMessage();
-
-                oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
+                var oMensaje = new MailMessage
+                {
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
 
                 if (ConfigurationManager.AppSettings["EmailAgenda"] == "1")
                 {
@@ -358,23 +360,23 @@ namespace Molinos.DataAgro.Business.Managers
                     oMensaje.To.Add(mailManager.GetEmailUserActiveDirectory(oParam.UserName));
                 }
 
-                if ((oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
-                    || ((oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaTareas"]))))
+                if ((oParam.TipoActividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
+                    || ((oParam.TipoActividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaTareas"]))))
                 {
-                    oMensaje.Subject = oParam.asunto;
+                    oMensaje.Subject = oParam.Asunto;
                 }
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
-                var comercial = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId && x.ContactoComercialId == oParam.contacto);
+                var comercial = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId && x.ContactoComercialId == oParam.Contacto);
 
                 oMensaje.Body = "CUIT: " + proveedor.CUIT + "\r\nRazón Social: " + proveedor.RazonSocial;
                 if (comercial != null)
                 {
                     oMensaje.Body = oMensaje.Body + "\r\nContacto: " + (!string.IsNullOrEmpty(comercial.Nombres) ? comercial.Nombres : "") + " " + (!string.IsNullOrEmpty(comercial.Apellido) ? comercial.Apellido : "");
-                    oMensaje.Body = oMensaje.Body + (comercial.Telefono1 != null ? " Tel: " + comercial.Telefono1 : "");
-                    oMensaje.Body = oMensaje.Body + (!string.IsNullOrEmpty(comercial.Email1) ? " Email: " + comercial.Email1 : "");
+                    oMensaje.Body += (comercial.Telefono1 != null ? " Tel: " + comercial.Telefono1 : "");
+                    oMensaje.Body += (!string.IsNullOrEmpty(comercial.Email1) ? " Email: " + comercial.Email1 : "");
                 }
-                oMensaje.Body = oMensaje.Body + "\r\nDetalle: " + oParam.detalle;
+                oMensaje.Body = oMensaje.Body + "\r\nDetalle: " + oParam.Detalle;
 
                 oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
 
@@ -386,13 +388,13 @@ namespace Molinos.DataAgro.Business.Managers
                 str.AppendLine("METHOD:REQUEST");
                 str.AppendLine("BEGIN:VEVENT");
                 //validar para las llamadas
-                if (oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
+                if (oParam.TipoActividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
                 {
-                    str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", oParam.fechaYHoraRecordatorio.Value.ToUniversalTime()));
-                    str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", oParam.fechaYHoraRecordatorio.Value.ToUniversalTime()));
-                    str.AppendLine(string.Format("DTEND:{0:yyyyMMddTHHmmssZ}", oParam.fechaYHoraRecordatorioFin.Value.ToUniversalTime().AddMinutes(+30)));
+                    str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", oParam.FechaYHoraRecordatorio.Value.ToUniversalTime()));
+                    str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", oParam.FechaYHoraRecordatorio.Value.ToUniversalTime()));
+                    str.AppendLine(string.Format("DTEND:{0:yyyyMMddTHHmmssZ}", oParam.FechaYHoraRecordatorioFin.Value.ToUniversalTime().AddMinutes(+30)));
                 }
-                else if (oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaTareas"]))
+                else if (oParam.TipoActividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaTareas"]))
                 {
                     str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", DateTime.Now.ToUniversalTime()));
                     str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", DateTime.Now.ToUniversalTime()));
@@ -424,8 +426,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -555,8 +556,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -682,8 +682,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 SmtpClient oCliente = default(SmtpClient);
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -714,8 +713,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -954,7 +955,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "PRECIO PACTADO <br />";
                 foreach (var precio in oContrato.PrecioPactado)
                 {
-                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado.HasValue ? precio.ImportePactado.Value : 0);
+                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado ?? 0);
                     htmlBody += " Si la entrega se realiza entre el " + precio.FechaDesde.Value.ToString("dd/MM/yyyy") + " y el " + precio.FechaHasta.Value.ToString("dd/MM/yyyy") +
                                             " el precio será " + calculoPrecio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
                                             "<br />"; if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
@@ -1050,8 +1051,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -1216,8 +1219,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string Td(ref int linea)
         {
-            string td1 = "";
-            string td2 = "";
+            string td1, td2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
@@ -1441,7 +1443,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Proveedor = proveedor
                             });
                         }
-                        proveedor.ClienteMOA = !string.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false;
+                        proveedor.ClienteMOA = !string.IsNullOrEmpty(lista.CLIENTE_MOA);
                     }
                 }
                 else
@@ -1947,7 +1949,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     }
                                 }
 
-                                oProveedorSave.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
+                                oProveedorSave.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA));
                             }
                         }
                     }
@@ -2413,8 +2415,10 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto, NuevoProveedor proveedor)
         {
             string urlMOA = ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"].ToString();
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string htmlBody = "Estimado <b>" + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "</b><br /><br />";
             htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con " + proveedor.basicos.RazonSocial + " ( " + proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión de Molinos Agro S.A. <br /><br />  ";
             htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
@@ -2967,8 +2971,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var listMaterial = hist.GroupBy(z => z.MATERIAL).ToList();
 
-                var ct = new campañaTotal();
-                ct.Nombre = "0";
+                var ct = new campañaTotal
+                {
+                    Nombre = "0"
+                };
 
                 var list = new List<GranoHistorial>();
                 foreach (var mat in listMaterial)
@@ -3001,8 +3007,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var ca in listCampaña)
                 {
-                    ct = new campañaTotal();
-                    ct.Nombre = ca.Key;
+                    ct = new campañaTotal
+                    {
+                        Nombre = ca.Key
+                    };
                     var materiales = hist.Where(x => x.COSECHA == ca.Key).GroupBy(z => z.MATERIAL);
 
                     foreach (var m in materiales)
@@ -3289,7 +3297,7 @@ namespace Molinos.DataAgro.Business.Managers
                 basicos = oParam.basicos,
                 contacto = oParam.contacto,
                 contactocomercial = oParam.contactocomercial,
-                produccion = oParam.produccion != null ? oParam.produccion : new Produccion(),
+                produccion = oParam.produccion ?? new Produccion(),
                 almacenamiento = new Almacenamiento()
 
             };
@@ -3395,8 +3403,8 @@ namespace Molinos.DataAgro.Business.Managers
                                    (proveedorUpdate.BoletoCompraNetId != (proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId)) ||
                                    (proveedorUpdate.BolsaCompraNetId != (proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId)) ||
                                    (proveedorUpdate.Consignatario != proveedor.basicos.Consignatario) ||
-                                   (proveedorUpdate.CodigoPostal != (proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal)) ||
-                                   (proveedorUpdate.Direccion != (proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion)) ||
+                                   (proveedorUpdate.CodigoPostal != (proveedor.contacto.codpost ?? proveedorUpdate.CodigoPostal)) ||
+                                   (proveedorUpdate.Direccion != (proveedor.contacto.direccion ?? proveedorUpdate.Direccion)) ||
                                    (proveedorUpdate.ProvinciaId != (proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId)) ||
                                    (proveedorUpdate.LocalidadId != (proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId))
                                    )
@@ -3411,8 +3419,8 @@ namespace Molinos.DataAgro.Business.Managers
                             proveedorUpdate.BoletoCompraNetId = proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId;
                             proveedorUpdate.BolsaCompraNetId = proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId;
                             proveedorUpdate.Consignatario = proveedor.basicos.Consignatario;
-                            proveedorUpdate.CodigoPostal = proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal;
-                            proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
+                            proveedorUpdate.CodigoPostal = proveedor.contacto.codpost ?? proveedorUpdate.CodigoPostal;
+                            proveedorUpdate.Direccion = proveedor.contacto.direccion ?? proveedorUpdate.Direccion;
                             proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
                             proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
 
@@ -3467,7 +3475,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var proveedorCorredor = new CorredorProveedor()
                             {
-                                ProveedorId = cor.ProveedorId.HasValue ? cor.ProveedorId.Value : repositorio.Obtener<Proveedor, int>(x => x.CUIT == cor.basicos.cuit && x.RazonSocial == cor.basicos.RazonSocial && x.Segmentacion.Grupo != "Corredores", x => x.ProveedorId),
+                                ProveedorId = cor.ProveedorId ?? repositorio.Obtener<Proveedor, int>(x => x.CUIT == cor.basicos.cuit && x.RazonSocial == cor.basicos.RazonSocial && x.Segmentacion.Grupo != "Corredores", x => x.ProveedorId),
                                 CorredorId = corredorId,
                             };
                             repositorio.Agregar(proveedorCorredor);
@@ -3615,20 +3623,22 @@ namespace Molinos.DataAgro.Business.Managers
                     CampoDetalle campoDetalle = campoDetalles.Where(x => x.ImportId == campo.ImportId).FirstOrDefault();
                     if (campoDetalle == null)
                     {
-                        campoDetalle = new CampoDetalle();
-                        campoDetalle.ProveedorId = campo.proveedorId;
-                        campoDetalle.Nombre = campo.nombre;
-                        campoDetalle.LocalidadId = campo.localidadId;
-                        campoDetalle.Longitud = campo.longitud;
-                        campoDetalle.Latitud = campo.latitud;
-                        campoDetalle.NroItem = 1;
-                        campoDetalle.MaterialId = 3;
-                        campoDetalle.ImportId = campo.ImportId;
-                        campoDetalle.HectareasTotales = campo.htotales;
-                        campoDetalle.HectareasCultivables = campo.hcultivables;
-                        campoDetalle.ComercialId = campo.comercialId;
-                        campoDetalle.Rinde = campo.rinde;
-                        campoDetalle.CampañaId = campo.campañaId;
+                        campoDetalle = new CampoDetalle
+                        {
+                            ProveedorId = campo.proveedorId,
+                            Nombre = campo.nombre,
+                            LocalidadId = campo.localidadId,
+                            Longitud = campo.longitud,
+                            Latitud = campo.latitud,
+                            NroItem = 1,
+                            MaterialId = 3,
+                            ImportId = campo.ImportId,
+                            HectareasTotales = campo.htotales,
+                            HectareasCultivables = campo.hcultivables,
+                            ComercialId = campo.comercialId,
+                            Rinde = campo.rinde,
+                            CampañaId = campo.campañaId
+                        };
                         repositorio.Agregar(campoDetalle);
                     }
                     else
@@ -3893,8 +3903,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContratoCanje(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -4262,8 +4274,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailFijacionVirtual(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial, bool eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -4462,7 +4476,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
-            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null ? true : false;
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null;
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
@@ -4498,8 +4512,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContratoPrestamoDevolucion(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -4855,16 +4871,19 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarProveedoresHome(int ProveedorId)
         {
             List<Proveedor> listProveedores;
-            if (ProveedorId == null || ProveedorId == 0)
+            List<FACACOP> listProveedorEnFacacop;
+            if (ProveedorId == 0)
             {
                 listProveedores = repositorio.Listar<Proveedor>();
+                listProveedorEnFacacop = repositorio.Listar<FACACOP>();
             }
             else
             {
-                listProveedores = repositorio.Listar<Proveedor>().Where(x => x.ProveedorId == ProveedorId).ToList();
+                listProveedores = repositorio.Listar<Proveedor>(x => x.ProveedorId == ProveedorId);
+                var cuit = listProveedores.Any() ? listProveedores.First().CUIT : "";
+                listProveedorEnFacacop = repositorio.Listar<FACACOP>(x => x.CUIT == cuit);
             }
             List<EstadoHome> listEstadosHome = repositorio.Listar<EstadoHome>();
-            List<FACACOP> listProveedorEnFacacop = repositorio.Listar<FACACOP>();
 
             foreach (Proveedor p in listProveedores)
             {
@@ -4886,7 +4905,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                var proveedorEnFacacop = listProveedorEnFacacop.Where(x => x.CUIT == p.CUIT).FirstOrDefault();
+                var proveedorEnFacacop = listProveedorEnFacacop.Find(x => x.CUIT == p.CUIT);
 
                 string tipoProv = p.SegmentacionId == 5 || p.SegmentacionId == 7 ? "CORR" : "PROV";
                 AltaTempranaNRCODto alta = altaTempranaAgent.ObtenerAlta(p.CUIT, tipoProv);
@@ -5125,81 +5144,35 @@ namespace Molinos.DataAgro.Business.Managers
             return lista;
         }
 
-        private List<HistorialActiviad> DevolverContactosIni(List<HistorialActiviad> list)
-        {
-            var lista = new List<HistorialActiviad>();
-            //ContactoIni cont = null;
-            //var a = list.GroupBy(x => x.ProveedorId);
-            //foreach (var con in a)
-            //{
-            //    cont = new ContactoIni();
-            //    cont.Calificacion = con.FirstOrDefault().Calificacion;
-            //    cont.ComercialCargo = string.Join("; ", con.Select(x => x.ComercialAcargo).Distinct());
-            //    cont.Operando = true;
-            //    cont.Cuit = con.FirstOrDefault().CUIT;
-            //    cont.Mail = (String.IsNullOrEmpty(con.FirstOrDefault().Email1) ? String.Empty : (con.FirstOrDefault().Email1)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email2) ? String.Empty : (";" + con.FirstOrDefault().Email2)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email3) ? String.Empty : (";" + con.FirstOrDefault().Email3)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email4) ? String.Empty : (";" + con.FirstOrDefault().Email4));
-            //    cont.ProveedorId = con.FirstOrDefault().ProveedorId;
-            //    cont.RazonSocial = con.FirstOrDefault().RazonSocial;
-            //    cont.Telefono = (String.IsNullOrEmpty(con.FirstOrDefault().Telefono1) ? String.Empty : (con.FirstOrDefault().Telefono1)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono2) ? String.Empty : (";" + con.FirstOrDefault().Telefono2)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono3) ? String.Empty : (";" + con.FirstOrDefault().Telefono3)) +
-            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono4) ? String.Empty : (";" + con.FirstOrDefault().Telefono4));
-            //    cont.UltimoContacto = DevolverUltimoContacto(con.FirstOrDefault().FechaUltimoContacto);
-            //    cont.Estado = con.FirstOrDefault().Estado;
-            //    cont.FechaAlta = con.FirstOrDefault().FechaAlta;
-            //    cont.GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct());
-            //    cont.Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7 ? true : false;
-            //    CargarOperabilidad(cont, con.FirstOrDefault());
-            //    if (cont.NoOperable == true)
-            //    {
-            //        cont.RptOpera = "No operable";
-            //    }
-            //    else
-            //    {
-            //        cont.RptOpera = "Operable";
-            //    }
-            //    cont.EstadoHomeId = con.FirstOrDefault().EstadoHomeId;
-            //    cont.EstadoHomeMensaje = con.FirstOrDefault().EstadoHomeMensaje;
-            //    cont.EstadoHomeDescripcion = con.FirstOrDefault().EstadoHomeDescripcion;
-
-            //    lista.Add(cont);
-            //}
-
-            //lista = lista.OrderBy(x => x.RazonSocial).ToList();
-
-            return lista;
-        }
-
-        public List<ActividadExportar> ExportarActividades(HistorialActiviad oParam, string idActiveDirectory)
+        public List<ActividadExportar> ExportarActividades(HistorialActividad oParam, string idActiveDirectory)
         {
             var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
 
             if (oComerciales != null)
             {
                 List<TipoActividad> listTipoActividad = repositorio.Listar<TipoActividad>().ToList();
-                List<Actividad> listHistorialActiviad = repositorio.Listar<Actividad>(x => x.ProveedorId == oParam.ProveedorId).ToList();
+                List<Actividad> listHistorialActividad = repositorio.Listar<Actividad>(x => x.ProveedorId == oParam.ProveedorId).ToList();
                 List<ActividadExportar> listActividadExportar = new List<ActividadExportar>();
 
-                foreach (var i in listHistorialActiviad)
+                foreach (var i in listHistorialActividad)
                 {
-                    ActividadExportar actividadExp = new ActividadExportar();
-                    actividadExp.ActividadId = i.ActividadId;
-                    actividadExp.TipoActividadId = i.TipoActividadId;
-                    actividadExp.tipoActividad = i.TipoActividadId > 0 ? listTipoActividad.Where(x => x.TipoActividadId == i.TipoActividadId).First().Descripcion : "";
-                    actividadExp.Detalle = i.Detalle;
-                    actividadExp.ProveedorId = i.ProveedorId;
-                    actividadExp.proveedor = i.ProveedorId > 0 ? i.Proveedor.RazonSocial : "";
-                    actividadExp.FechaHoraActividad = i.FechaHoraActividad;
-                    actividadExp.FechaHoraRecordatorio = i.FechaHoraRecordatorio;
-                    actividadExp.ComercialId = i.ComercialId;
-                    actividadExp.comercial = i.ComercialId > 0 ? String.Concat(i.Comercial.Apellido, ' ', i.Comercial.Nombres) : "";
-                    actividadExp.ContactoComercialId = i.ContactoComercialId;
-                    actividadExp.contactoComercial = i.ContactoComercialId > 0 ? String.Concat(i.ContactoComercial.Apellido, ' ', i.ContactoComercial.Nombres) : "";
-                    actividadExp.FechaHoraRecordatorioFin = i.FechaHoraRecordatorioFin;
-                    actividadExp.asunto = i.asunto;
+                    ActividadExportar actividadExp = new ActividadExportar
+                    {
+                        ActividadId = i.ActividadId,
+                        TipoActividadId = i.TipoActividadId,
+                        TipoActividad = i.TipoActividadId > 0 ? listTipoActividad.Where(x => x.TipoActividadId == i.TipoActividadId).First().Descripcion : "",
+                        Detalle = i.Detalle,
+                        ProveedorId = i.ProveedorId,
+                        Proveedor = i.ProveedorId > 0 ? i.Proveedor.RazonSocial : "",
+                        FechaHoraActividad = i.FechaHoraActividad,
+                        FechaHoraRecordatorio = i.FechaHoraRecordatorio,
+                        ComercialId = i.ComercialId,
+                        Comercial = i.ComercialId > 0 ? String.Concat(i.Comercial.Apellido, ' ', i.Comercial.Nombres) : "",
+                        ContactoComercialId = i.ContactoComercialId,
+                        ContactoComercial = i.ContactoComercialId > 0 ? String.Concat(i.ContactoComercial.Apellido, ' ', i.ContactoComercial.Nombres) : "",
+                        FechaHoraRecordatorioFin = i.FechaHoraRecordatorioFin,
+                        Asunto = i.asunto
+                    };
                     listActividadExportar.Add(actividadExp);
                 }
 
@@ -5275,6 +5248,44 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return proveedorCategoriasSISA;
+        }
+
+        public void ActualizarEstadoProveedor(int proveedorId, string proveedorCuit)
+        {
+            ActualizarProveedoresHome(proveedorId);
+            ActualizarCapacidadProductivaPorProveedor(proveedorId);
+            estadoProveedorManager.ActualizarProveedores(proveedorCuit);
+        }
+
+        private void ActualizarCapacidadProductivaPorProveedor(int proveedorId)
+        {
+            List<CapacidadProductivaDto> listaCP = new List<CapacidadProductivaDto>();
+            var proveedorSeleccionado = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+
+            listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(proveedorSeleccionado.ProveedorId));
+            var listaCapacidadProductiva = repositorio.Listar<CapacidadProductiva>(x => x.ProveedorId == proveedorSeleccionado.ProveedorId);
+
+            foreach (var capacidadProductiva in listaCapacidadProductiva)
+            {
+                repositorio.Remover<CapacidadProductiva>(capacidadProductiva);
+            }
+            repositorio.GuardarCambios();
+
+            foreach (var cp in listaCP)
+            {
+                CapacidadProductiva capacidadProductiva = new CapacidadProductiva
+                {
+                    ProveedorId = cp.ProveedorId,
+                    MaterialId = cp.MaterialId,
+                    CampaniaId = cp.CampaniaId,
+                    Cantidad = cp.Cantidad,
+                    UnidadMedida = cp.UnidadMedida,
+                    Porcentaje = cp.Porcentaje,
+                    FechaActualizacion = cp.FechaActualizacion
+                };
+                repositorio.Agregar(capacidadProductiva);
+            }
+            repositorio.GuardarCambios();
         }
     }
 

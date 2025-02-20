@@ -6,30 +6,17 @@ using Molinos.DataAgro.Report.ActiveReport;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report.Clases
 {
     public class LstProveedor
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
-
-        private IReportesManager reportesManager;
-
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
+        private readonly IReportesManager reportesManager;
 
         public LstProveedor(IReportesManager reportesManager)
         {
             this.reportesManager = reportesManager;
         }
-
-        //-----------------------------------------------------------------------------------
-        //  Metodos Publicos
-        //-----------------------------------------------------------------------------------
 
         public string GenerarListado(StoredPorProveedorResult oParam)
         {
@@ -48,7 +35,6 @@ namespace Molinos.DataAgro.Report.Clases
             var AlmacenamientoInfo = new RptAlmacenamientoInfo();
             var ObjetivosInfo = new RptObjetivosInfo();
 
-
             //Datos Basicos                 
             dato.CUIT = oParam.BasicoProveedorTraerPorProveedores[0].CUIT;
             dato.RazonSocial = oParam.BasicoProveedorTraerPorProveedores[0].RazonSocial;
@@ -59,7 +45,6 @@ namespace Molinos.DataAgro.Report.Clases
             dato.Segmentacion = oParam.BasicoProveedorTraerPorProveedores[0].Segmentacion;
             dato.Email1P = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].Email1) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Email1 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email2 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email3 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email4;
             dato.Telefono1P = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].Telefono1) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Telefono1 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono2 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono3 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono4;
-
 
             dato.CodigoPostal = string.IsNullOrEmpty(oParam.DatosContacto.CodigoPostal) ? "No posee" : oParam.DatosContacto.CodigoPostal;
             dato.Intermediario = string.IsNullOrEmpty(oParam.DatosContacto.Intermediario) ? "No posee" : oParam.DatosContacto.Intermediario;
@@ -218,7 +203,7 @@ namespace Molinos.DataAgro.Report.Clases
                 var oReporte = new Reportes()
                 {
                     Identificador = identif,
-                    FileName = "Proveedor.pdf",
+                    FileName = $"Proveedor {dato.RazonSocial} ({dato.CUIT}).pdf",
                     Contenido = ms.ToArray().ReplaceText()
                 };
 
@@ -227,7 +212,6 @@ namespace Molinos.DataAgro.Report.Clases
 
             return identif;
         }
-
 
     }
 }

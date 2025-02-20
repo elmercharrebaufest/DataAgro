@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 var condiciones = datosBoleto.CondicionFijacion.FirstOrDefault();
                 //var bonificacion = clausula.Basico.AperturaPrecios.FirstOrDefault(x => x.Importe != 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis);
                 
-                res.Texto += $"El vendedor fijará la Mercadería por posición {clausula.Basico.TipoPosicionCBOT} desde el {CorregirFormatoFecha(condiciones.FechaDesde)} hasta el {CorregirFormatoFecha(condiciones.FechaHasta)} " +
+                res.Texto += $"El vendedor fijará la Mercadería por Mercado {clausula.Basico.TipoPosicionCBOT} posición desde el {CorregirFormatoFecha(condiciones.FechaDesde)} hasta el {CorregirFormatoFecha(condiciones.FechaHasta)} " +
                     $"menos {clausula.Basico.MonedaBasis} {clausula.Basico.ImporteBasis?.ToString("N", new CultureInfo("es-AR"))} ({DevolverNumeroEnLetras(clausula.Basico.ImporteBasis.Value)}). " +
                     $"Si superado el vencimiento sin que el vendedor haya fijado, el comprador quedará automáticamente facultado para hacerlo.";
             }

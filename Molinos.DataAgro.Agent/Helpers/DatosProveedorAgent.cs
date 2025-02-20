@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.DatosDelProveedor;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -17,8 +16,8 @@ namespace Molinos.DataAgro.Agent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
 
         public DatosProveedorAgent(ILogger logger, IRepositorio repositorio)
         {
@@ -43,13 +42,12 @@ namespace Molinos.DataAgro.Agent
                     if (!users.Contains(item.UsuarioDirectory))
                     {
                         users.Add(item.UsuarioDirectory);
-                    }        
+                    }
                     CUIT.Add(item.CUIT);
                 }
-                foreach(var user in users)
+                foreach (var user in users)
                 {
-                    ZMPES5150 us = new ZMPES5150();
-                    us.USUARIO = user;
+                    ZMPES5150 us = new ZMPES5150() { USUARIO = user };
                     valor.Add(us);
                 }
                 SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();
@@ -58,7 +56,7 @@ namespace Molinos.DataAgro.Agent
 
                 agent.ClientCredentials.UserName.Password = PassSap;
                 valor = valor.Distinct().ToList();
-                var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray() , IM_USUARIO = valor.ToArray() };
+                var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = valor.ToArray() };
                 logger.Debug(rq.ToXml());
 
                 var log = new Log
@@ -80,10 +78,13 @@ namespace Molinos.DataAgro.Agent
                 var respuesta = new List<DatosProveedorAgentDto>();
                 if (valor1.EX_DATOS != null)
                 {
-                    foreach(var val in valor1.EX_DATOS)
+                    respuesta = valor1.EX_DATOS.Select(x => new DatosProveedorAgentDto
                     {
-                        respuesta.Add(ConvertirADto(val));
-                    }
+                        CLIENTE_MOA = x.CLIENTE_MOA,
+                        CUIT = x.CUIT,
+                        STATUS = x.STATUS,
+                        USUARIO = x.USUARIO
+                    }).ToList();
                 }
                 return respuesta;
             }
@@ -121,10 +122,13 @@ namespace Molinos.DataAgro.Agent
                 var respuesta = new List<DatosProveedorAgentDto>();
                 if (valor1.EX_DATOS != null)
                 {
-                    foreach (var val in valor1.EX_DATOS)
+                    respuesta = valor1.EX_DATOS.Select(x => new DatosProveedorAgentDto
                     {
-                        respuesta.Add(ConvertirADto(val));
-                    }
+                        CLIENTE_MOA = x.CLIENTE_MOA,
+                        CUIT = x.CUIT,
+                        STATUS = x.STATUS,
+                        USUARIO = x.USUARIO
+                    }).ToList();
                 }
                 return respuesta;
             }
@@ -133,15 +137,6 @@ namespace Molinos.DataAgro.Agent
                 logger.Error(ex);
                 throw;
             }
-        }
-        private DatosProveedorAgentDto ConvertirADto(ZMPES5140 dev)
-        {
-            var datos = new DatosProveedorAgentDto();
-            datos.CLIENTE_MOA = dev.CLIENTE_MOA;
-            datos.CUIT = dev.CUIT;
-            datos.STATUS = dev.STATUS;
-            datos.USUARIO = dev.USUARIO;
-            return datos;
         }
     }
 }

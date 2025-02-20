@@ -5,15 +5,13 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
     public class DestinatarioManager : IDestinatarioManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public DestinatarioManager(ILogger logger, IRepositorio repositorio)
         {

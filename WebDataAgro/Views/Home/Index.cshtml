@@ -14,7 +14,15 @@
 
     <div class="col-lg-6 contenedor-principal-miscontactos">
         <div class="contenedor-principal-miscontactos-titulo">
-            Mis Contactos
+            <div class="col-lg-6" style="padding-left: 0px;">
+                Mis Contactos
+            </div>
+            <div class="col-lg-6" style="text-align:right; min-height: 22px;">
+                <a id="abrirModalInformesFaltantes" class="exportar-contactos" style="display: inline-flex;">
+                    <img src="/Content/Images/Reporte.png">
+                    <span>Abrir Informes Comerciales faltantes</span>
+                </a>
+            </div>
         </div>
         <div class="contenedor-principal-miscontactos-subtitulo">
             Estado de mi agenda de proveedores
@@ -439,10 +447,12 @@
     td {
         font-size: 10px !important;
     }
+
     th {
         text-align: center !important;
         font-size: 10px !important;
     }
+
     #sojaCampania, #trigoCampania, #girCampania, #maizCampania, #sorgoCampania {
         font-weight: bold;
     }
@@ -451,3 +461,4 @@
 @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
 @Html.Partial("ModalObjetivo")
 @Html.Partial("ModalObjetivoDetalle")
+@Html.Partial("_ModalInformesComercialesPendientes")

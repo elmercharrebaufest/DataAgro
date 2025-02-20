@@ -1,13 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.InsertarFijacionesVirtuales;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -16,22 +13,23 @@ namespace Molinos.DataAgro.Agent
     public class FinalizarFijacionVirtualAgent : IFinalizarFijacionVirtualAgent
     {
         private readonly IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent;
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+        private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+
         public FinalizarFijacionVirtualAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.contratosParaFijacionVirtualAgent = contratosParaFijacionVirtualAgent;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
-        private readonly ILogger logger;
-        private readonly IRepositorio repositorio;
 
         public string FinalizarFijacionVirtual(FijacionDePrecioContrato fijacion)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {               
-                var numeroSAP = "05";                
+            {
+                var numeroSAP = "05";
                 return (int.Parse(numeroSAP) + 1).ToString();
             }
             else
@@ -88,10 +86,10 @@ namespace Molinos.DataAgro.Agent
                     var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                     var comision = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
                     var precioNeto = fijacion.Precio;
-                    if(comision <= 0)
+                    if (comision <= 0)
                     {
-                       var fijacionComision = fijacion.AperturaPrecio.Count() > 0 ? fijacion.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje : 0;
-                       if(fijacionComision > 0)
+                        var fijacionComision = fijacion.AperturaPrecio.Count() > 0 ? fijacion.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje : 0;
+                        if (fijacionComision > 0)
                         {
                             fijacionComision = fijacionComision / 100;
                             precioNeto = precioNeto + (precioNeto * fijacionComision);
@@ -107,7 +105,7 @@ namespace Molinos.DataAgro.Agent
                         IM_PRECIO = comision > 0 ? fijacion.Precio : decimal.Parse(precioNeto.ToString("n2")),
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_UNIME = "KG",
-                        IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),                        
+                        IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),
                     };
 
                     var log = new Log

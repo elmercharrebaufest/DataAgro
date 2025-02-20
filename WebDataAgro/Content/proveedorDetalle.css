@@ -519,9 +519,6 @@
     vertical-align: baseline;
 }
 
-
-
-
 .contenedor-contacto-comercial-posicion {
     color: #757575;
     font-family: "G-Open Sans-n6", Arial !important;
@@ -2513,4 +2510,15 @@ almacenamiento-titulo-hastn,
 .btn-overflow {
     /*display: none;*/
     text-decoration: none;
+}
+
+.primera-fila {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3px;
+}
+
+.btn-proveedor {
+    border-radius: 7px !important;
 }
