@@ -926,7 +926,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
                 Moneda = x.Moneda.Descripcion
-            }  , x => x.Negocio.Id == basicoContrato.Id).ToList();
+            }  , x => x.NegocioId == basicoContrato.Id).ToList();
             clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
             return clausulas;
         }
