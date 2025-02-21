@@ -24,7 +24,6 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
             var res = new ResultadoClausula();
 
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
-            bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId != null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true : false) : false;
             var bonificacionAperturaPrecio = clausula.Basico.AperturaPrecios != null ? clausula.Basico.AperturaPrecios.Find(x => x.ConceptoAperturaPrecioId == 4) : new AperturaPrecioDto();
 
             if (clausula.Basico.Descuentos.Count == 0 && bonificacionAperturaPrecio.Id > 0)
