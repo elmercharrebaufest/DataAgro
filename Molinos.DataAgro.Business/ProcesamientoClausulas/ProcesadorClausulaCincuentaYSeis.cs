@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
         public override ResultadoClausula DevolverClausulas(ClausulaCincuentaYSeis clausula)
         {
             var res = new ResultadoClausula();
+
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
             var bonificacionAperturaPrecio = clausula.Basico.AperturaPrecios != null ? clausula.Basico.AperturaPrecios.Find(x => x.ConceptoAperturaPrecioId == 4) : new AperturaPrecioDto();
             var descuentos = clausula.Basico.Descuentos.Where(x => x.Importe != 0 || x.Porcentaje != 0).ToList();
