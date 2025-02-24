@@ -11,6 +11,7 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -746,11 +747,23 @@ namespace Molinos.DataAgro.Business
             string razonSocial = string.Empty;
             string cuit = string.Empty;
             string nombreArchivo = string.Empty;
-            string fechaGeneracion = pdf.Identificador.Equals(string.Empty)? string.Empty : pdf.Identificador.ToString().Substring(0, 8);
-            var splitArchivo = pdf.FileName.Split('-');
-            cuit = splitArchivo[0].Trim();
-            razonSocial = splitArchivo[1].Trim();
-            razonSocial = razonSocial.Remove(razonSocial.Length - 4);
+            string fechaGeneracion = pdf.Identificador.Equals(string.Empty) ? string.Empty : pdf.Identificador.ToString().Substring(0, 8);
+
+            string nombrePdfReporte = pdf.FileName;
+            int index = nombrePdfReporte.IndexOf('-');
+
+            if (index != -1)
+            {
+                cuit = nombrePdfReporte.Substring(0, index).Trim();
+                string razonTemp = nombrePdfReporte.Substring(index + 1).Trim();
+                string extension = Path.GetExtension(razonTemp);
+
+                if (!string.IsNullOrEmpty(extension))
+                    razonSocial = razonTemp.Substring(0, razonTemp.Length - extension.Length).Trim();
+                else
+                    razonSocial = razonTemp;
+            }
+
             nombreArchivo = cuit + " Informe Comercial " + razonSocial + " " + fechaGeneracion + ".pdf";
             try
             {
