@@ -555,7 +555,9 @@
     <Compile Include="Entities\ClausulaCincuentaYCinco.cs" />
     <Compile Include="Entities\ClausulaCincuentaYCuatro.cs" />
     <Compile Include="Entities\ClausulaCincuentaYDos.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYOcho.cs" />
     <Compile Include="Entities\ClausulaCincuentaYSeis.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYSiete.cs" />
     <Compile Include="Entities\ClausulaCincuentaYTres.cs" />
     <Compile Include="Entities\Confirma.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />

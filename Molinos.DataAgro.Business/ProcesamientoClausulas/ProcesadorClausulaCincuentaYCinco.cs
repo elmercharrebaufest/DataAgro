@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
             var res = new ResultadoClausula();
             if (clausula.Basico.CorredorId > 0)
             {
-                string productor = clausula.Basico.Proveedor;
+                string productor = clausula.Basico.Corredor;
                 string corredor = clausula.Basico.CUITCorredor;
                 res.Texto += String.Format("Los señores {0}, CUIT N° {1}, actúan en la presente operación en carácter de corredores quedando facultados por los vendedores para fijar el precio, facturar, recibir el pago, firmar recibos de mercadería, ampliaciones y/o anulaciones y convenir eventuales prorrogas. El vendedor faculta al corredor a firmar en su nombre y representación toda la documentación necesaria para la instrumentación o formalización del presente.", productor, corredor);
 
