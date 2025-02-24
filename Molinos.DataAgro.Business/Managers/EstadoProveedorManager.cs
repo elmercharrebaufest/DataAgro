@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (string.IsNullOrEmpty(cuit))
                 {
                     var listaComerciales = comerciales.Keys.ToList();
-                    int tamanioLote = 30; //se seleccionan algunos porque si se consulta la RFC con todos, da server error
+                    int tamanioLote = 20; //se seleccionan algunos porque si se consulta la RFC con todos, da server error
 
                     for (int i = 0; i < listaComerciales.Count; i += tamanioLote)
                     {
