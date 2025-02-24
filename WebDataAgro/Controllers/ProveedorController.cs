@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -16,23 +15,20 @@ using Molinos.DataAgro.Entities.Helpers;
 using System.Data;
 using System.Collections.Generic;
 using WebDataAgro.Helpers;
-using System.Text;
-using System.Globalization;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Report;
 
 namespace WebDataAgro.Controllers
 {
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ProveedorController : Controller
     {
-        private IProveedorManager mobjProveedorManager;
-        private IHomeManager mobjHomeManager;
-        private ICampañaManager mobjCampañaManager;
-        private ILocalidadManager mobjLocalidadManager;
-        private IComercialManager mobComercialManager;
-        private IReportesManager mobjreportesManager;
-        private IProvinciaManager mobjProvinciaManager;
+        private readonly IProveedorManager mobjProveedorManager;
+        private readonly IHomeManager mobjHomeManager;
+        private readonly ICampañaManager mobjCampañaManager;
+        private readonly ILocalidadManager mobjLocalidadManager;
+        private readonly IComercialManager mobComercialManager;
+        private readonly IReportesManager mobjreportesManager;
+        private readonly IProvinciaManager mobjProvinciaManager;
         private readonly IInformeComercialManager mobjInformeComercialManager;
         private readonly IRepositorio repositorio;
 
@@ -41,7 +37,6 @@ namespace WebDataAgro.Controllers
             IReportesManager oReportesManager, ILocalidadManager oLocalidadManager,
             IProvinciaManager oProvinciaManager, IInformeComercialManager oInformeComercialManager, IRepositorio repositorio)
         {
-
             mobjProveedorManager = oProveedorManager;
             mobjHomeManager = oHomeManager;
             mobjCampañaManager = oCampañaManager;
@@ -52,7 +47,6 @@ namespace WebDataAgro.Controllers
             mobjInformeComercialManager = oInformeComercialManager;
             this.repositorio = repositorio;
         }
-
 
         // GET: Contactos
         public ActionResult Index()
@@ -67,7 +61,6 @@ namespace WebDataAgro.Controllers
             ViewBag.edita = false;
             return View();
         }
-
 
         [Autorizacion(PermisosDataAgro.AltaDatosProveedor, PermisosDataAgro.ModificarDatosProveedor)]
         public ActionResult Agregar(int? ProveedorId)
@@ -159,7 +152,7 @@ namespace WebDataAgro.Controllers
             {
                 ActionView = "ErrorDePermisos";
             }
-            ViewBag.Deshabilitado = ProveedorId != 0 ? mobjProveedorManager.MostrarProveedorDeshabilitado(ProveedorId) : false;
+            ViewBag.Deshabilitado = ProveedorId != 0 && mobjProveedorManager.MostrarProveedorDeshabilitado(ProveedorId);
             ViewBag.MostrarEditar = mostrarEditar;
             ViewBag.MostrarAgenda = Agenda;
             ViewBag.ProveedorId = ProveedorId;
@@ -415,10 +408,12 @@ namespace WebDataAgro.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
+
         public JsonResult BuscarCorredores(string filtro, int corredor, int? agenteCompraId)
         {
             return Json(mobjProveedorManager.DevolverProveedores(filtro, 1, GlobalVariables.Equipo, agenteCompraId), JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, int? agenteCompraId)
         {
             if (filtro == "")
