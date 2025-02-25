@@ -3144,6 +3144,7 @@ function ClickEnPizarra() {
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").min(null);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max(null);
+        viewModel.AperturaPrecio = [];
     }
     else {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
@@ -5238,16 +5239,38 @@ function InicializarAperturaDePrecios() {
 }
 
 function AbrirModalAperturaDePrecio() {
+    if ($("#pizarraId").is(':checked')) {
+        viewModel.AperturaPrecio = [];
+        $("#preciosPactadosBoton").hide();
+        $("#aperturaPrecioBoton").hide();
+    } else {
+        $("#preciosPactadosBoton").show();
+        $("#aperturaPrecioBoton").show();
+    }
     if (viewModel.AperturaPrecio.length > 0) {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[0].Importe);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[1].Importe);
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Porcentaje);
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Importe);
     } else {
+
+        //limpiando los valores de apertura de precio
+        $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(0);
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+        $("#PorcentajeEnImporte").html("");
+        $("#ImporteEnPorcentaje").html("");
+
+        //limpiando los valores de precios pactados
+        $("#fechaDesdePactado").data("kendoDatePicker").value("");
+        $("#fechaHastaPactado").data("kendoDatePicker").value("");
+        $("#precioPactado").data("kendoNumericTextBox").value("");
+        $("#importePactado").data("kendoNumericTextBox").value("");
+        $("#monedaImportePactadoId").data("kendoDropDownList").value("");
+        $("#porcentajePactado").data("kendoNumericTextBox").value("");
     }
 
     CalcularMaximoComision();
