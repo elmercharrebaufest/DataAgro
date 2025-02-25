@@ -244,8 +244,8 @@ function InicializarElementos() {
             HayCanje();
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                if ($("#material").val() && $("#campanaId").val())
-                    ValidarCapacidadProductiva();
+                //if ($("#material").val() && $("#campanaId").val())
+                //    ValidarCapacidadProductiva();
             }
             $("#contratoId").val("");
             $(".datoscontrato").hide();
@@ -969,8 +969,8 @@ function InicializarElementos() {
                 var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
                 CargarAutomaticamenteLaComision(compraNet);
-                if ($("material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
-                    ValidarCapacidadProductiva();
+                //if ($("material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
+                //    ValidarCapacidadProductiva();
             }
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
@@ -1037,8 +1037,8 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
-                ValidarCapacidadProductiva();
+            //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
+            //    ValidarCapacidadProductiva();
         }
     });
 
@@ -1160,8 +1160,8 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);
-                if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
-                    ValidarCapacidadProductiva();
+                //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR)
+                //    ValidarCapacidadProductiva();
             } else {
                 $("#CapacidadProductivaPendienteDiv").hide();
                 $("#consignatarioDiv").show();
