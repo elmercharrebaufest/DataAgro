@@ -1002,7 +1002,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     // Logica para obtener los corredores de los comerciales
 
-                    var filtroCorredoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId, 
+                    var filtroCorredoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId,
                                                                                                             x => x.ComercialId == comercialId &&
                                                                                                             x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
                                                                                                             x.Proveedor.Deshabilitado != true &&
@@ -1021,16 +1021,18 @@ namespace Molinos.DataAgro.Business.Managers
                                                                                                        x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
                                                                                                        x.Proveedor.Deshabilitado != true &&
                                                                                                        x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
-                                                                                                       x.Proveedor.Segmentacion.Grupo == "Productores" && 
+                                                                                                       x.Proveedor.Segmentacion.Grupo == "Productores" &&
                                                                                                        x.Proveedor.OperaConMATBA != true);
                     foreach (int proveedor in filtroProveedoresPorCorredor) proveedoresId.Add(proveedor);
                     foreach (int proveedor in filtroProductoresPorProveedorComercial) proveedoresId.Add(proveedor);
 
                 }
             }
+
             comercialesId.Add(comercialId);
             List<ComercialEmpleadorACargoDto> listaComercialEmpleadorACargo = new List<ComercialEmpleadorACargoDto>();
             var listaComercialPersonaACargo = repositorio.Listar<Comercial>(x => comercialesId.Contains(x.ComercialId));
+
             foreach (var personaACargo in listaComercialPersonaACargo)
             {
                 if (personaACargo.EmpleadorACargoId != null)
@@ -1046,13 +1048,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var filtroProveedoresPorComercial = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId) &&
-                                                                                      x.Proveedor.Segmentacion.Grupo == "Productores"
+                                                                                      x.Proveedor.Segmentacion.Grupo == "Productores" &&
+                                                                                      x.Proveedor.OperaConMATBA != true
                                                                                       ).ToList();
-
 
             List<ProveedorComercialFiltroDto> filtroProveedorComercial = new List<ProveedorComercialFiltroDto>();
             List<FiltroProveedoresPorComercialDto> listaFiltroProveedoresPorComercial = new List<FiltroProveedoresPorComercialDto>();
-
 
             foreach (var filtro in filtroProveedoresPorComercial)
             {
@@ -1070,8 +1071,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             foreach (var proveedorId in proveedoresId)
-            {   
-                var filtro = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+            {
+                var filtro = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId && x.OperaConMATBA != true);
+
                 listaFiltroProveedoresPorComercial.Add(new FiltroProveedoresPorComercialDto
                 {
                     ComercialId = comercialId,
