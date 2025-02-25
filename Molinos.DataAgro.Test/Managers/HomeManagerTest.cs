@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Test.Managers
             campanaMock = new Mock<ICampañaManager>();
             objetivoMock = new Mock<IObjetivoManager>();
             proveedorMock = new Mock<IProveedorManager>();
-            target = new HomeManager(logMock.Object, repositorioMock.Object, campanaMock.Object, objetivoMock.Object, proveedorMock.Object);
+            target = new HomeManager(logMock.Object, repositorioMock.Object, campanaMock.Object, objetivoMock.Object);
         }
 
         [Test]
