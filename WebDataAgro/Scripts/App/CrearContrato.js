@@ -5240,7 +5240,6 @@ function InicializarAperturaDePrecios() {
 
 function AbrirModalAperturaDePrecio() {
     if ($("#pizarraId").is(':checked')) {
-        viewModel.AperturaPrecio = [];
         $("#preciosPactadosBoton").hide();
         $("#aperturaPrecioBoton").hide();
     } else {
@@ -5260,7 +5259,6 @@ function AbrirModalAperturaDePrecio() {
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
 
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(0);
-        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
         $("#PorcentajeEnImporte").html("");
         $("#ImporteEnPorcentaje").html("");
 
