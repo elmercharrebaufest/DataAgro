@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        
+
         public AnularFijacionAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
                     //{
                     //    var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
-                        
+
                     //    if (fijacion.MonedaId.Trim() == "ARP")
                     //    {
                     //        oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
@@ -109,21 +109,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         precioApertura += ImportFinanciero.Importe;
                     }
-                   
+
                     var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (ImportBonificaciones != null)
                     {
                         precioApertura += ImportBonificaciones.Importe;
                     }
-              
+
                     var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (Comisiones != null)
                     {
                         precioApertura += Comisiones.Importe;
                     }
-                  
+
                     decimal im_precio = fijacion.Precio + precioApertura;
-             
+
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
@@ -135,18 +135,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
                         IM_APERTURA = listaApertura.ToArray(),
                         IM_PAGO_DIF_ARP = "",
-                        IM_DIAS_DIFERIM =  "",
+                        IM_DIAS_DIFERIM = "",
                         IM_FECHA = DateTime.Now.ToString("yyyy-MM-dd"),
                         IM_ZLSCH = "",
                         IM_CUENTA_MRP = "",
-                        IM_DOLARIZADO =  "",
-                        IM_DOL_EXPRESS =  "",
-                        IM_FECHA_LIMITE =  "",
-                        IM_DOL_CORREDOR =  "",
-                        IM_FECHA_CIERTA =  "",
+                        IM_DOLARIZADO = "",
+                        IM_DOL_EXPRESS = "",
+                        IM_FECHA_LIMITE = "",
+                        IM_DOL_CORREDOR = "",
+                        IM_FECHA_CIERTA = "",
                         IM_ANULACION = "X",
                         IM_PEDIDO = fijacion.FijacionSAP
-                        
+
                     };
                     logger.Debug(rq.ToXml());
                     logger.Debug("Anular fijacion log 10" + im_precio);
@@ -169,8 +169,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP", e);
-                    throw e;
+                    logger.Error("Error comunicacion SAP al anular fijación.", e);
+                    throw;
                 }
             }
         }
