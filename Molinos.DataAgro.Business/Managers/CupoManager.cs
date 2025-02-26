@@ -851,13 +851,16 @@ namespace Molinos.DataAgro.Business.Managers
         private async Task<CupoEliminarResult> AnularCupoStopAsync(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente, TokenStop token = null, RepositorioEF repo = null)
         {
             System.Diagnostics.Debug.WriteLine("INICIA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
-            logger.Debug("AnularCupoStopAsync " + cupoSap.CupoSap + " " + cupoSap.ToJson());
+            logger.Debug("AnularCupoStopAsync " + cupoSap?.CupoSap ?? "SIN CUPO" + " " + cupoSap.ToJson());
             var nuevoResultado = new CupoEliminarResult();
 
-            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == 1 || cupoSap.EstadoCupoId == 6) && cupoSap.CupoStop != null)
+            logger.Debug("Cupo: " + cupoSap?.CupoSap ?? "SIN CUPO" + " - Acopio: " + cupoSap.Centro?.Acopio ?? "SIN ACOPIO");
+
+            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || cupoSap.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP) && cupoSap.CupoStop != null)
             {
                 if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                 {
+                    logger.Debug("AnularCupoStopAsync HayError_1 " + cupoSap?.CupoSap ?? "SIN CUPO");
                     nuevoResultado.Error("Error", "Error al anular el cupo " + cupoSap.CupoSap + " en STOP: Sin conexión a STOP.");
                     nuevoResultado.cupo = cupoSap;
                     return nuevoResultado;
@@ -865,6 +868,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap, token, repo) : clienteStopAgent.EliminarCupo(cupoSap, token, repo);
                 if (resultadoStop.HayError)
                 {
+                    logger.Debug("AnularCupoStopAsync HayError_2 " + cupoSap?.CupoSap ?? "SIN CUPO");
                     logger.Debug("AnularCupoStopAsync HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
                     foreach (var e in resultadoStop.Errores)
                     {

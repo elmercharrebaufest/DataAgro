@@ -46,7 +46,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                logger.Error("Error al Crear Cupo.", e);
+                throw;
             }
         }
 
@@ -65,7 +66,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                logger.Error("Error al transmitir Cupos.", e);
+                throw;
             }
         }
 
@@ -86,7 +88,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                logger.Error("Error en EliminarCupo", e);
+                throw;
             }
         }
 
@@ -107,7 +110,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                logger.Error("Error al consultar cupos diarias.", e);
+                throw;
             }
         }
 
