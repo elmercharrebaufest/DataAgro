@@ -84,9 +84,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             catch (Exception e)
             {
                 logger.Error("EnviarCapacidadProductiva - Error comunicación SAP. ", e);
-                throw e;
+                throw;
             }
-
         }
     }
 }
