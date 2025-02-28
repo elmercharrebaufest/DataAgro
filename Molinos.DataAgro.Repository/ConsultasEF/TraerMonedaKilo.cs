@@ -155,7 +155,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      x.Sum(y => precioPizarraPorMaterial.FirstOrDefault(z => z.MaterialId == x.Key).Precio * y.Cantidad / 1000) : 0,
                 }).ToList();
 
-            var fas = contexto.Set<Fason>().Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.Fecha >= fechaInicio && x.Fecha <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
+            var fas = contexto.Set<Fason>().Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.FechaOperacion >= fechaInicio && x.FechaOperacion <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {

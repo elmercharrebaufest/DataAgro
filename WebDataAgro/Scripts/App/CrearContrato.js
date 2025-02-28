@@ -250,8 +250,8 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                //if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
             }
             if ($("#buscadorProveedor").val() == "") {
                 $("#proveedorId").val("");
@@ -1023,8 +1023,8 @@ function InicializarElementos() {
                         }
                     }
                 }
-                //if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
 
                 if (!ValidarComisionEnCentro())
                     BorrarComisionSiEsAcopio();
@@ -1167,8 +1167,8 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-            //    ValidarCapacidadProductiva();
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                ValidarCapacidadProductiva();
         }
     });
 
@@ -1308,8 +1308,8 @@ function InicializarElementos() {
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
                 }
-                //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#CapacidadProductivaPendienteDiv").hide();
@@ -3144,6 +3144,7 @@ function ClickEnPizarra() {
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").min(null);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max(null);
+        viewModel.AperturaPrecio = [];
     }
     else {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
@@ -5238,16 +5239,36 @@ function InicializarAperturaDePrecios() {
 }
 
 function AbrirModalAperturaDePrecio() {
+    if ($("#pizarraId").is(':checked')) {
+        $("#preciosPactadosBoton").hide();
+        $("#aperturaPrecioBoton").hide();
+    } else {
+        $("#preciosPactadosBoton").show();
+        $("#aperturaPrecioBoton").show();
+    }
     if (viewModel.AperturaPrecio.length > 0) {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[0].Importe);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[1].Importe);
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Porcentaje);
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Importe);
     } else {
+
+        //limpiando los valores de apertura de precio
+        $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(0);
+        $("#PorcentajeEnImporte").html("");
+        $("#ImporteEnPorcentaje").html("");
+
+        //limpiando los valores de precios pactados
+        $("#fechaDesdePactado").data("kendoDatePicker").value("");
+        $("#fechaHastaPactado").data("kendoDatePicker").value("");
+        $("#precioPactado").data("kendoNumericTextBox").value("");
+        $("#importePactado").data("kendoNumericTextBox").value("");
+        $("#monedaImportePactadoId").data("kendoDropDownList").value("");
+        $("#porcentajePactado").data("kendoNumericTextBox").value("");
     }
 
     CalcularMaximoComision();

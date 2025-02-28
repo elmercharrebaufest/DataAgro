@@ -20,22 +20,22 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ICampañaManager mobCampaña;
         private readonly IObjetivoManager objetivoManager;
-        private readonly IProveedorManager proveedorManager;
         private readonly ILogger logger;
 
-        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager, IProveedorManager proveedorManager)
+        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager)
         {
             this.logger = logger;
             this.mobCampaña = campañaManager;
             this.objetivoManager = objetivoManager;
             this.repositorio = repositorio;
-            this.proveedorManager = proveedorManager;
         }
 
         public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> equipo)
         {
-            var res = new ResultIniContacto();
-            res.Contactos = new List<ContactoIni>();
+            var res = new ResultIniContacto
+            {
+                Contactos = new List<ContactoIni>()
+            };
             if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) || PermisosHelper.Is(PermisosDataAgro.Ver_Todos_Contactos_x_Proveedor))
             {
                 var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 50, pagina, oParam.Campaña,
@@ -96,26 +96,28 @@ namespace Molinos.DataAgro.Business.Managers
             var a = list.GroupBy(x => x.ProveedorId);
             foreach (var con in a)
             {
-                cont = new ContactoIni();
-                cont.Calificacion = con.FirstOrDefault().Calificacion;
-                cont.ComercialCargo = string.Join("; ", con.Select(x => x.ComercialAcargo).Distinct());
-                cont.Operando = true;
-                cont.Cuit = con.FirstOrDefault().CUIT;
-                cont.Mail = (String.IsNullOrEmpty(con.FirstOrDefault().Email1) ? String.Empty : (con.FirstOrDefault().Email1)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Email2) ? String.Empty : (";" + con.FirstOrDefault().Email2)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Email3) ? String.Empty : (";" + con.FirstOrDefault().Email3)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Email4) ? String.Empty : (";" + con.FirstOrDefault().Email4));
-                cont.ProveedorId = con.FirstOrDefault().ProveedorId;
-                cont.RazonSocial = con.FirstOrDefault().RazonSocial;
-                cont.Telefono = (String.IsNullOrEmpty(con.FirstOrDefault().Telefono1) ? String.Empty : (con.FirstOrDefault().Telefono1)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono2) ? String.Empty : (";" + con.FirstOrDefault().Telefono2)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono3) ? String.Empty : (";" + con.FirstOrDefault().Telefono3)) +
-                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono4) ? String.Empty : (";" + con.FirstOrDefault().Telefono4));
-                cont.UltimoContacto = DevolverUltimoContacto(con.FirstOrDefault().FechaUltimoContacto);
-                cont.Estado = con.FirstOrDefault().Estado;
-                cont.FechaAlta = con.FirstOrDefault().FechaAlta;
-                cont.GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct());
-                cont.Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7 ? true : false;
+                cont = new ContactoIni
+                {
+                    Calificacion = con.FirstOrDefault().Calificacion,
+                    ComercialCargo = string.Join("; ", con.Select(x => x.ComercialAcargo).Distinct()),
+                    Operando = true,
+                    Cuit = con.FirstOrDefault().CUIT,
+                    Mail = (String.IsNullOrEmpty(con.FirstOrDefault().Email1) ? String.Empty : (con.FirstOrDefault().Email1)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Email2) ? String.Empty : (";" + con.FirstOrDefault().Email2)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Email3) ? String.Empty : (";" + con.FirstOrDefault().Email3)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Email4) ? String.Empty : (";" + con.FirstOrDefault().Email4)),
+                    ProveedorId = con.FirstOrDefault().ProveedorId,
+                    RazonSocial = con.FirstOrDefault().RazonSocial,
+                    Telefono = (String.IsNullOrEmpty(con.FirstOrDefault().Telefono1) ? String.Empty : (con.FirstOrDefault().Telefono1)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono2) ? String.Empty : (";" + con.FirstOrDefault().Telefono2)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono3) ? String.Empty : (";" + con.FirstOrDefault().Telefono3)) +
+                                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono4) ? String.Empty : (";" + con.FirstOrDefault().Telefono4)),
+                    UltimoContacto = DevolverUltimoContacto(con.FirstOrDefault().FechaUltimoContacto),
+                    Estado = con.FirstOrDefault().Estado,
+                    FechaAlta = con.FirstOrDefault().FechaAlta,
+                    GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct()),
+                    Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7
+                };
                 CargarOperabilidad(cont, con.FirstOrDefault());
                 if (cont.NoOperable == true)
                 {
@@ -816,16 +818,18 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var x in compras)
             {
-                var itemDto = new CampanaMaterialDetallePorMeseExcelDto();
-                itemDto.Material = x.Material;
-                itemDto.Campaña = x.Campana;
-                itemDto.Cuit = x.CUIT;
-                itemDto.RazonSocial = x.Proveedor;
-                itemDto.Contrato = x.Contrato;
-                itemDto.CorredorCuit = x.CorredorCuit;
-                itemDto.RazonSocialCorredor = x.RazonSocialCorredor;
-                itemDto.Clasificacion = !String.IsNullOrEmpty(x.CorredorCuit) ? "CORREDOR" : x.Clasificacion;
-                itemDto.Comercial = comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Nombres + ' ' + comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Apellido;
+                var itemDto = new CampanaMaterialDetallePorMeseExcelDto
+                {
+                    Material = x.Material,
+                    Campaña = x.Campana,
+                    Cuit = x.CUIT,
+                    RazonSocial = x.Proveedor,
+                    Contrato = x.Contrato,
+                    CorredorCuit = x.CorredorCuit,
+                    RazonSocialCorredor = x.RazonSocialCorredor,
+                    Clasificacion = !String.IsNullOrEmpty(x.CorredorCuit) ? "CORREDOR" : x.Clasificacion,
+                    Comercial = comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Nombres + ' ' + comerciales.FirstOrDefault(c => c.ComercialId == x.ComercialId).Apellido
+                };
 
                 if (((!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF") || (!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF")) ||
                     (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF") || (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF") ||
@@ -936,6 +940,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return comercialesDependientes;
         }
+
         /// <summary>
         /// Obtiene una lista de proveedores cuya capacidad productiva está desactualizada en función de la campaña actual.
         /// Los proveedores evaluados están asignados a un comercial específico, y se consideran
@@ -943,6 +948,9 @@ namespace Molinos.DataAgro.Business.Managers
         /// </summary>
         /// <param name="comercialId">
         /// ID del comercial al que están asignados los proveedores a evaluar.
+        /// </param>
+        /// <param name="esAdministrador">
+        /// Para visualizar todos los contactos.
         /// </param>
         /// <returns>
         /// Una lista de objetos <see cref="CapacidadProductivaDesactualizadaDto"/> con
@@ -994,33 +1002,37 @@ namespace Molinos.DataAgro.Business.Managers
 
                     // Logica para obtener los corredores de los comerciales
 
-                    var filtroCorredoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId, x => x.ComercialId == comercialId &&
-                                                                                                            x.Proveedor.Segmentacion.Grupo.Equals("Corredores") &&
+                    var filtroCorredoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId,
+                                                                                                            x => x.ComercialId == comercialId &&
                                                                                                             x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
                                                                                                             x.Proveedor.Deshabilitado != true &&
-                                                                                                            x.Proveedor.EstadoId != (int)EnumEstado.BAJA
-                                                                                                            );
+                                                                                                            x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
+                                                                                                            x.Proveedor.Segmentacion.Grupo.Equals("Corredores"));
                     var filtroProductoresPorProveedorComercial = repositorio.Listar<ProveedorComercial, int>(x => x.ProveedorId,
                                                                                                                 x => x.ComercialId == comercialId &&
                                                                                                                 x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
                                                                                                                 x.Proveedor.Deshabilitado != true &&
                                                                                                                 x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
-                                                                                                                x.Proveedor.Segmentacion.Grupo == "Productores");
+                                                                                                                x.Proveedor.Segmentacion.Grupo == "Productores" &&
+                                                                                                                x.Proveedor.OperaConMATBA != true);
 
                     var filtroProveedoresPorCorredor = repositorio.Listar<CorredorProveedor, int>(x => x.ProveedorId,
                                                                                                        x => filtroCorredoresPorProveedorComercial.Contains(x.CorredorId) &&
                                                                                                        x.Proveedor.EstadoHomeId != (int)EnumEstadoHome.NO_HABILITADO &&
                                                                                                        x.Proveedor.Deshabilitado != true &&
                                                                                                        x.Proveedor.EstadoId != (int)EnumEstado.BAJA &&
-                                                                                                       x.Proveedor.Segmentacion.Grupo == "Productores");
+                                                                                                       x.Proveedor.Segmentacion.Grupo == "Productores" &&
+                                                                                                       x.Proveedor.OperaConMATBA != true);
                     foreach (int proveedor in filtroProveedoresPorCorredor) proveedoresId.Add(proveedor);
                     foreach (int proveedor in filtroProductoresPorProveedorComercial) proveedoresId.Add(proveedor);
 
                 }
             }
+
             comercialesId.Add(comercialId);
             List<ComercialEmpleadorACargoDto> listaComercialEmpleadorACargo = new List<ComercialEmpleadorACargoDto>();
             var listaComercialPersonaACargo = repositorio.Listar<Comercial>(x => comercialesId.Contains(x.ComercialId));
+
             foreach (var personaACargo in listaComercialPersonaACargo)
             {
                 if (personaACargo.EmpleadorACargoId != null)
@@ -1036,13 +1048,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var filtroProveedoresPorComercial = repositorio.Listar<ProveedorComercial>(x => comercialesId.Contains(x.ComercialId) &&
-                                                                                      x.Proveedor.Segmentacion.Grupo == "Productores"
+                                                                                      x.Proveedor.Segmentacion.Grupo == "Productores" &&
+                                                                                      x.Proveedor.OperaConMATBA != true
                                                                                       ).ToList();
-
 
             List<ProveedorComercialFiltroDto> filtroProveedorComercial = new List<ProveedorComercialFiltroDto>();
             List<FiltroProveedoresPorComercialDto> listaFiltroProveedoresPorComercial = new List<FiltroProveedoresPorComercialDto>();
-
 
             foreach (var filtro in filtroProveedoresPorComercial)
             {
@@ -1060,8 +1071,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             foreach (var proveedorId in proveedoresId)
-            {   
-                var filtro = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+            {
+                var filtro = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId && x.OperaConMATBA != true);
+
                 listaFiltroProveedoresPorComercial.Add(new FiltroProveedoresPorComercialDto
                 {
                     ComercialId = comercialId,

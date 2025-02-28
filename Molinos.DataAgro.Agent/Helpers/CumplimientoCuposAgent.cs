@@ -55,10 +55,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
-                throw e;
+                logger.Error("Error comunicacion SAP al consultar cumplimiento de cupos.", e);
+                throw;
             }
-
         }
     }
 }

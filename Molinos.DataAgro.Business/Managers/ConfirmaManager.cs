@@ -916,6 +916,17 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> clausulas = new List<string>();
             var contratos = new List<string> { contratoSap };
             var basicoContrato = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo)).FirstOrDefault();
+            basicoContrato.AperturaPrecios = repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(x=> new AperturaPrecioDto()
+            {
+
+                Id = x.Id,
+                ConceptoAperturaPrecioId = x.ConceptoAperturaPrecioId,
+                Importe = x.Importe,
+                Porcentaje = x.Porcentaje,
+                MonedaId = x.MonedaId,
+                ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
+                Moneda = x.Moneda.Descripcion
+            }  , x => x.NegocioId == basicoContrato.Id).ToList();
             clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
             return clausulas;
         }

@@ -101,8 +101,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public void CrearCupo(List<string> cupos)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(urlStop);
+            HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri(urlStop)
+            };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             try
@@ -260,48 +262,18 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        private int ConsultarCupo(string cupo, int terminalId, string token)
-        {
-            return 1;//parche por que no funciona la consulta de cupos por idStop
-            //HttpClient client = new HttpClient();
-            //client.BaseAddress = new Uri(urlStop);
-            //client.DefaultRequestHeaders.Accept.Clear();
-            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //client.DefaultRequestHeaders.Add("token", token);
-            //HttpResponseMessage response = client.GetAsync(
-            //                $"v{versionApi}/turnos/{terminalId}/{cupo}").Result;
-            //response.EnsureSuccessStatusCode();
-            //var res = response.Content.ReadAsAsync<dynamic>().Result;
-            //var jObject = JObject.Parse(res.ToString());
-            //ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-            ////logger.Debug("jObject.ToString(): " + jObject.ToString());
-            //if (!respuesta.isError)
-            //{
-            //    RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
-            //    //logger.Debug(model.ToJson());
-
-            //    return model.idCupoEstado;
-            //}
-            //else
-            //{
-            //    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-            //    logger.Debug(error.ToJson());
-            //    throw new Exception(error.userMessage);
-            //}
-        }
-
         public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
             var r = repo ?? repositorio;
-            var resultado = new Resultado();
+            Resultado resultado = new Resultado();
             try
             {
                 logger.Debug("Eliminar Cupo en STOP  inicio: " + cupo.CupoSap ?? "");
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var datosConfiguracion = r.Obtener<Configuracion>(1);
-                logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
+                Configuracion datosConfiguracion = r.Obtener<Configuracion>(1);
+                logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : "CORRECTOS"));
                 TokenStop token;
 
                 if (tokenNuevo == null)
@@ -309,55 +281,45 @@ namespace Molinos.DataAgro.Agent.Helpers
                 else
                     token = tokenNuevo;
 
-                var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
-                var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
+                string codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
+
                 client.DefaultRequestHeaders.Add("token", token.Data);
-                if (estado == 1)
+
+                HttpRequestMessage request = new HttpRequestMessage
                 {
-                    HttpRequestMessage request = new HttpRequestMessage
-                    {
-                        Method = HttpMethod.Delete,
-                        RequestUri = new Uri($"{urlStop}v{versionApi}/turnos/{datosConfiguracion.TerminalStopId}/{cupo.CupoStop.Value}")
-                    };
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri($"{urlStop}v{versionApi}/turnos/{datosConfiguracion.TerminalStopId}/{cupo.CupoStop.Value}")
+                };
 
-                    HttpResponseMessage response = client.SendAsync(request).Result;
-                    response.EnsureSuccessStatusCode();
-                    var res = response.Content.ReadAsAsync<dynamic>().Result;
-                    var jObject = JObject.Parse(res.ToString());
+                HttpResponseMessage response = client.SendAsync(request).Result;
+                response.EnsureSuccessStatusCode();
+                dynamic res = response.Content.ReadAsAsync<dynamic>().Result;
+                dynamic jObject = JObject.Parse(res.ToString());
+                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
 
-                    ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                    if (!respuesta.isError)
+                if (!respuesta.isError)
+                {
+                    dynamic model = JsonConvert.DeserializeObject<dynamic>(jObject["data"].ToString());
+                    if (model == null)
                     {
-                        var model = JsonConvert.DeserializeObject<dynamic>(jObject["data"].ToString());
-                        if (model == null)
-                        {
-                            logger.Debug("Eliminar Cupo Stop ok: ", jObject["data"].ToString());
-                            return resultado;
-                        }
-                        else
-                        {
-                            logger.Debug("Error al Modificar en STOP linea 307" + cupo.CupoSap);
-                            resultado.Error("", "Error al Modificar en STOP");
-                            return resultado;
-                        }
+                        logger.Debug("Eliminar Cupo Stop ok: ", jObject["data"].ToString());
+                        return resultado;
                     }
                     else
                     {
-                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        logger.Debug("Error al Modificar en STOP  linea 315" + cupo.CupoSap);
-                        logger.Debug(error.ToJson());
-                        // Si el Cupo ya fue anulado en STOP, no lo toma como error y podrá anular en SAP.
-                        if (error.errorCode == "10011") return resultado;
-                        resultado.Error(error.errorCode, error.userMessage);
+                        logger.Debug("Error al Modificar en STOP linea 307" + cupo.CupoSap);
+                        resultado.Error("", "Error al Modificar en STOP");
                         return resultado;
                     }
                 }
                 else
                 {
-                    logger.Debug("Error al Modificar en STOP linea 323" + cupo.CupoSap);
-                    cupo.EstadoCupoId = estado;
-                    r.GuardarCambios();
-                    resultado.Error("", "Cupo con CTG");
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                    logger.Debug("Error al Modificar en STOP  linea 315" + cupo.CupoSap);
+                    logger.Debug(error.ToJson());
+                    // Si el Cupo ya fue anulado en STOP, no lo toma como error y podrá anular en SAP.
+                    if (error.errorCode == "10011") return resultado;
+                    resultado.Error(error.errorCode, error.userMessage);
                     return resultado;
                 }
             }
@@ -615,60 +577,58 @@ namespace Molinos.DataAgro.Agent.Helpers
             var token = ObtenerToken(datosConfiguracion.ClaveStop);
 
             var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
-            var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
-            if (estado == 1)
+
+            try
             {
-                try
+                var cupoStop = new CupoStop
                 {
-                    var cupoStop = new CupoStop
-                    {
 
-                        //cuitOrigen = null,//cupo.CuitOrigen,//preguntar
-                        //cuitIntermediario = "",//preguntar
-                        //CuitRemComercialProductor = "",//preguntar
-                        CuitCorredorVentaSecundaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
-                        //CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
-                        cuitDestinatario = cupo.Destinatario,
-                        cuitDestino = datosConfiguracion.CuitDestinoStop,
-                        idCupoTerminal = cupo.CupoSap,
-                        idTerminal = datosConfiguracion.TerminalStopId,
-                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
-                        codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
-                        desvio = "N",
-                        //nroPlantaRucaOrigen = 0, //preguntar
-                        nroPlantaRuca = nroPlantaRuca,
-                        codGrano = cupo.Material.CodigoEspecie.Value
-                    };
-                    client.DefaultRequestHeaders.Add("token", token.Data);
-                    HttpResponseMessage response = client.PostAsJsonAsync(
-                            $"v{versionApi}/turnos/{cupo.CupoStop}", cupoStop).Result;
-                    response.EnsureSuccessStatusCode();
-                    var res = response.Content.ReadAsAsync<dynamic>().Result;
-                    var jObject = JObject.Parse(res.ToString());
+                    //cuitOrigen = null,//cupo.CuitOrigen,//preguntar
+                    //cuitIntermediario = "",//preguntar
+                    //CuitRemComercialProductor = "",//preguntar
+                    CuitCorredorVentaSecundaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                    //CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                    cuitDestinatario = cupo.Destinatario,
+                    cuitDestino = datosConfiguracion.CuitDestinoStop,
+                    idCupoTerminal = cupo.CupoSap,
+                    idTerminal = datosConfiguracion.TerminalStopId,
+                    fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
+                    codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
+                    desvio = "N",
+                    //nroPlantaRucaOrigen = 0, //preguntar
+                    nroPlantaRuca = nroPlantaRuca,
+                    codGrano = cupo.Material.CodigoEspecie.Value
+                };
+                client.DefaultRequestHeaders.Add("token", token.Data);
+                HttpResponseMessage response = client.PostAsJsonAsync(
+                        $"v{versionApi}/turnos/{cupo.CupoStop}", cupoStop).Result;
+                response.EnsureSuccessStatusCode();
+                var res = response.Content.ReadAsAsync<dynamic>().Result;
+                var jObject = JObject.Parse(res.ToString());
 
-                    ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                    if (!respuesta.isError)
-                    {
-                        RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
-                        //logger.Debug(model.ToJson());
-                    }
-                    else
-                    {
-                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString()) ?? new ErrorStop { userMessage = "No se pudo modificar en STOP." };
-                        cupo.ErrorStop = error.userMessage;
-                        logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
-                        throw new Exception("Error Stop: " + error.userMessage);
-                    }
-
-                    repositorio.GuardarCambios();
-
-                }
-                catch (Exception e)
+                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                if (!respuesta.isError)
                 {
-                    logger.Error(e.Message);
-                    throw;
+                    RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
+                    //logger.Debug(model.ToJson());
                 }
+                else
+                {
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString()) ?? new ErrorStop { userMessage = "No se pudo modificar en STOP." };
+                    cupo.ErrorStop = error.userMessage;
+                    logger.Debug("No se pudo modificar en STOP." + cupo.CupoSap);
+                    throw new Exception("Error Stop: " + error.userMessage);
+                }
+
+                repositorio.GuardarCambios();
+
             }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+                throw;
+            }
+
         }
 
         #region MisturnosActivos(CupoNoPropio)

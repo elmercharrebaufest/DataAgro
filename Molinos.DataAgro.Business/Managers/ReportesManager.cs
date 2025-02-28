@@ -653,8 +653,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Acopio = 0,
                 SanLorenzo = Math.Round(x.Cantidad / 1000),
                 BahiaBlanca = (x.Destino.CodigoSap == "1168") ? Math.Round(x.Cantidad / 1000) : 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.Fecha >= fechaInicio
-                    && x.Fecha <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.FechaOperacion >= fechaInicio
+                    && x.FechaOperacion <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var agentes = repositorio.Listar<AgenteCompra, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
@@ -1121,8 +1121,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fason = negocios.Where(x =>
                 x.OcultarEnTablero == false
-                && x.Fecha >= fechaHoy
-                && x.Fecha <= fechaManana
+                && x.FechaOperacion >= fechaHoy
+                && x.FechaOperacion <= fechaManana
                 && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
                 && x.MaterialId == materialId
                 && x.TipoNegocioId == 4
