@@ -1218,21 +1218,24 @@ function inicializarMultiSelectFiltros() {
 
     $("#FechaIngresoDesdeId").kendoDatePicker({
         value: new Date(),
+        format: "dd/MM/yyyy",
         weekNumber: true
     });
 
     $("#FechaIngresoHastaId").kendoDatePicker({
         value: new Date(),
-
+        format: "dd/MM/yyyy",
         weekNumber: true
     });
 
     $("#FechaRegistroDesdeId").kendoDatePicker({
-        weekNumber: true
+        weekNumber: true,
+        format: "dd/MM/yyyy",
     });
 
     $("#FechaRegistroHastaId").kendoDatePicker({
-        weekNumber: true
+        weekNumber: true,
+        format: "dd/MM/yyyy",
     });
 }
 
