@@ -96,8 +96,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private AlternateView CuerpoMailNegociosConDiaAnterior(string filePath, List<Negocio> contratos)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -385,8 +387,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailNegociosAnulaYReemplaza(string filePath, List<Contrato> contratos)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -479,10 +483,9 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailErrorFinalizarNegocio(int negocioId)
         {
             var lista = new List<string>();
-            var email = "";
             var negocio = repositorio.Obtener<Negocio>(negocioId);
 
-            email = mailManager.GetEmailUserActiveDirectory(negocio.Comercial.IdActiveDirectory);
+            string email = mailManager.GetEmailUserActiveDirectory(negocio.Comercial.IdActiveDirectory);
             lista.Add(email);
             if (negocio.ComercialCreadorId != negocio.ComercialId)
             {
@@ -497,8 +500,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailContrato(string filePath, Negocio negocio)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
@@ -528,7 +533,7 @@ namespace Molinos.DataAgro.Business.Managers
                     th + "Proveedor" + "</td>" +
                     th + "Tipo" + "</td>" +
                     "</tr>";
-            string style = "";
+            string style;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 style = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
