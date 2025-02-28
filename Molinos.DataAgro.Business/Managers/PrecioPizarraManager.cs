@@ -131,7 +131,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion + "",
-                UnidadMedida = x.UnidadMedida != null ? x.UnidadMedida : "TON",
+                UnidadMedida = x.UnidadMedida ?? "TON",
                 Fecha = x.FechaHasta
 
             }, x => x.MaterialId == materialId && x.PizarraId == pizarraId, 0, "Fecha", Entities.Helpers.DirOrden.Desc);
@@ -274,16 +274,17 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var lp in listaPreciosBCR)
             {
-                PrecioPizarra pp = new PrecioPizarra();
-
-                pp.Precio = (int)Math.Round(lp.precio_Cotizacion);
-                pp.MaterialId = lp.id_MaterialDA;
-                pp.PizarraId = oPizarra.Id;
-                pp.FechaDesde = lp.fecha_Operacion_Pizarra;
-                pp.FechaHasta = lp.fecha_Operacion_Pizarra;
-                pp.MonedaId = oMoneda.MonedaId;
-                pp.UnidadMedida = "TON";
-                pp.ComercialId = oComercial != null ? oComercial.ComercialId : repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId;
+                PrecioPizarra pp = new PrecioPizarra
+                {
+                    Precio = (int)Math.Round(lp.precio_Cotizacion),
+                    MaterialId = lp.id_MaterialDA,
+                    PizarraId = oPizarra.Id,
+                    FechaDesde = lp.fecha_Operacion_Pizarra,
+                    FechaHasta = lp.fecha_Operacion_Pizarra,
+                    MonedaId = oMoneda.MonedaId,
+                    UnidadMedida = "TON",
+                    ComercialId = oComercial != null ? oComercial.ComercialId : repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId
+                };
 
                 Resultado oEntityErrors = GrabarPrecioPizarra(pp, manual);
             }
