@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -189,18 +190,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
-            Fason oFasonSave = null;
+
             var tipoCambio = oFason.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
             if (oFason.Id != 0)
             {
-                oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
+                Fason oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
                 if (oFasonSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El Negocio Fasón no se puede modificar");
                     return oEntityErrors;
                 }
-                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
-                if (estado == 7)
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? (int)EnumEstadoContrato.Confirmado : (int)EnumEstadoContrato.Reconfirmar;
+                if (estado == (int)EnumEstadoContrato.Reconfirmar)
                 {
                     if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
                     {
@@ -235,7 +236,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? (int)EnumEstadoContrato.Confirmado : (int)EnumEstadoContrato.Pendiente;
                 if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados))
                 {
                     oFason.FechaConfirmacion = DateTime.Now;
@@ -250,15 +251,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerFason(oFason.Id), tipoCambio, oFason.GetType());
-                //logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave ?? oFason, (oFasonSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Debug(oFason.ToXml());
+                logger.Error("Error al " + (oFason.Id != 0 ? "modificar" : "crear") + " Fason", ex);
                 throw;
             }
             return oEntityErrors;
         }
+
         public GrabarFasonResult FinalizarFason(int fijacionDePrecioContratoId)
         {
             var oEntityErrors = new GrabarFasonResult();
