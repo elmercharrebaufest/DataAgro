@@ -62,6 +62,7 @@
 	<setParameter name="ConfirmaPass Key" value="molinosagro" />
 	<setParameter name="ValorPruebaConfirma Key" value="0" />
 	<setParameter name="ActivarConfirmaWS Key" value="1" />
+	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="15" />
 
 	<!--QA2 de SCATO-->
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />

@@ -72,11 +72,27 @@ namespace Molinos.DataAgro.Agent
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                //cuits = new List<string> { "0068514169" };
                 logger.Debug("Cuits pesificados " + cuits.ToXml());
-                var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
+
+                var rq = new Z_MPRFC_LISTA_PROVEEDORES {
+                    IM_PROVEEDORES = cuits.ToArray()
+                };
+
+                var log = new Log
+                {
+                    Fecha = DateTime.Now,
+                    Xml = rq.ToXml()
+                };
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+                logger.Debug(rq.ToXml());
 
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
+                logger.Debug(devolucion.ToXml());
+                log = repositorio.Obtener<Log>(logId.Id);
+                log.Xml += devolucion.ToXml();
+                repositorio.GuardarCambios();
+
                 var pesificado = new List<PesificarAgentDto>();
                 if (devolucion.EX_SALIDA != null)
                 {

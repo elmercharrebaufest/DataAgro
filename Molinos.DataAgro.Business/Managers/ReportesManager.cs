@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratosAPesificarAgent pesificarAgent;
         private readonly IMailManager mailManager;
         private readonly IHttpContextManager httpContextManager;
+        private readonly string cantidadDeProveedoresAProcesarPesificados = ConfigurationManager.AppSettings["CantidadDeProveedoresAProcesarPesificados"];
 
         public ReportesManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             ITipoDeCambioAgent tipoDeCambio, IContratosAPesificarAgent pesificarAgent, IMailManager mailManager, IHttpContextManager httpContextManager)
@@ -2343,6 +2344,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return agente;
         }
+
         private List<string[]> ConvertirListadetalleContratoAListaString(List<DetalleContratoDto> contratos, int mes, int anio)
         {
             var listaDatos = new List<string[]>();
@@ -2930,7 +2932,6 @@ namespace Molinos.DataAgro.Business.Managers
                         Cuit = x.CUIT,
                         ProveedorId = x.ProveedorId
                     });
-                //proveedores = proveedores.Where(x => x.ProveedorId == 385).ToList();
                 var cuits = proveedores.Select(y => y.ProveedorId);
 
                 var corredores = repositorio.Listar<CorredorProveedor, ProveedorCombo>(
@@ -2958,9 +2959,10 @@ namespace Molinos.DataAgro.Business.Managers
                 while (proveedores.Count > 0)
                 {
                     logger.Debug("Proveedores pesificados pendientes " + proveedores.Count());
-                    var index = proveedores.Count >= 15 ? 15 : proveedores.Count;
+                    var index = proveedores.Count >= Convert.ToInt32(cantidadDeProveedoresAProcesarPesificados) ? Convert.ToInt32(cantidadDeProveedoresAProcesarPesificados) : proveedores.Count;
                     var lista = proveedores.Take(index).ToList();
                     proveedores.RemoveRange(0, index);
+                    logger.Debug("Proveedores a consultar en Z_MPRFC_LISTA_PROVEEDORES: " + lista.Select(x => x.Cuit).Distinct().ToList().ToXml());
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));
                 }
                 datos = BuscarPase(datos);
@@ -2968,7 +2970,6 @@ namespace Molinos.DataAgro.Business.Managers
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
                 repositorio.TruncarTabla<ReportePesificado>();
-
 
                 if (items.Count > 0)
                 {
@@ -2979,7 +2980,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error reporte");
+                logger.Error("Error reporte Pesificados.");
                 logger.Error(e);
                 throw;
             }
@@ -2987,10 +2988,13 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<PesificarAgentDto> BuscarPase(List<PesificarAgentDto> pesificado)
         {
-            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == 3 && a.TipoNegocioId == 1 && a.EstadoId == 5);
+            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == (int)EnumTipoPosicionCBOT.PASE && 
+                                                                        a.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && 
+                                                                        a.EstadoId == (int)EnumEstadoContrato.Finalizado);
+
             List<string> contratosAFijarPaseSAPList = contratosAFijarPase.Select(a => a.ContratoSAP).ToList();
 
-            var fijacionesPase = repositorio.Listar<FijacionDePrecioContrato>(a => a.EstadoId == 5 && contratosAFijarPaseSAPList.Contains(a.ContratoSAP));
+            var fijacionesPase = repositorio.Listar<FijacionDePrecioContrato>(a => a.EstadoId == (int)EnumEstadoContrato.Finalizado && contratosAFijarPaseSAPList.Contains(a.ContratoSAP));
 
             var fijacionesKilos = fijacionesPase.GroupBy(a => a.ContratoSAP).Select(x => new BasicoContrato { ContratoSAP = x.Key, Cantidad = x.Sum(y => y.Cantidad) });
 
@@ -3026,21 +3030,21 @@ namespace Molinos.DataAgro.Business.Managers
                         NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
                         NombreVendedor = item.Proveedor.RazonSocial,
                         Pase = true,
-                        Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault() != null ?
-                        item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault().Importe : 0,
+                        Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && a.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).SingleOrDefault() != null ? 
+                        item.Descuentos.Where(a => a.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && a.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).SingleOrDefault().Importe : 0,
                         Posicion = item.PosicionCBOT,
                         KgTotalesPase = item.Cantidad,
                         FechaHastaDolarizado = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01),
                     });
                 }
             }
+            logger.Debug("PESIFICADOS 1 - BuscarPase");
 
             return pesificado;
         }
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
         {
-
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();
@@ -3050,6 +3054,8 @@ namespace Molinos.DataAgro.Business.Managers
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => fijacionesSap.Contains(x.FijacionSAP)).Select(x => new KeyValuePair<string, int>(x.FijacionSAP, x.Id)).ToList();
             logger.Debug(contratos.ToJson());
             logger.Debug(fijaciones.ToJson());
+            logger.Debug("PESIFICADOS 2 - ConvertPesificarAgent");
+
             return datos.Select(item => new ReportePesificado()
             {
                 CantidadPendiente = item.CantidadPendiente,
