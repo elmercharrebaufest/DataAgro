@@ -58,6 +58,8 @@
 	<setParameter name="ConfirmaPass Key" value="molinosagro" />
 	<setParameter name="ValorPruebaConfirma Key" value="0" />
 	<setParameter name="ActivarConfirmaWS Key" value="1" />
+	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="15" />
+	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="20" />
 
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 

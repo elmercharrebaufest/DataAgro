@@ -183,6 +183,16 @@
 						match="/configuration/appSettings/add[@key='PruebaRapidaDeConfirma']
 					   /@value" />
 	</parameter>
+	<parameter name="CantidadDeProveedoresAProcesarPesificados Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='CantidadDeProveedoresAProcesarPesificados']
+					   /@value" />
+	</parameter>
+	<parameter name="CantidadDeProveedoresParaActualizarEstado Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='CantidadDeProveedoresParaActualizarEstado']
+					   /@value" />
+	</parameter>
 
 	<parameter name="HTTP_Port Service Endpoint Address">
 		<parameterEntry kind="XmlFile" scope="Web.config"

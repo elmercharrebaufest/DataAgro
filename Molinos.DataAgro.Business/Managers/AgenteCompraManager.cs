@@ -32,10 +32,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.oDiasHabilesAgent = oDiasHabilesAgent;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-
         private Resultado Validar(AgenteCompra oParam, Resultado oErrorMessages)
         {
             bool posicionIncorrecta = false;
@@ -122,41 +118,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaOperacion", "La fecha tiene que ser menor o igual al día de hoy.");
             }
-            //else
-            //{
-            //    var agente = repositorio.Obtener<AgenteCompra>(oParam.Id);
-            //    if (oParam.Id > 0)
-            //    {
-            //        if ((oParam.FechaOperacion != agente.Fecha.Date && oParam.FechaOperacion < agente.Fecha.Date))
-            //        {
-
-            //            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(agente.Fecha.Date);
-
-            //            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)))
-            //            {
-            //                oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (oParam.FechaOperacion < DateTime.Now.Date)
-            //        {
-            //            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
-
-            //            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)))
-            //            {
-            //                oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
-            //            }
-            //        }
-
-            //    }
-            //}
-
-            //if (ValidarFechaAgenteMP(oParam))
-            //{
-            //    oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
-            //}
 
             if (!posicionIncorrecta)
             {
@@ -197,8 +158,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("GrabarAgente", "El Agente de Compras no se puede modificar.");
                     return oEntityErrors;
                 }
-                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
-                if (estado == 7 && oAgenteSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? (int)EnumEstadoContrato.Confirmado : (int)EnumEstadoContrato.Reconfirmar;
+                if (estado == (int)EnumEstadoContrato.Reconfirmar && oAgenteSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
                     string jsonContrato = JsonConvert.SerializeObject(oAgenteSave, new JsonSerializerSettings()
                     {
@@ -226,7 +187,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var estado = (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente)) ? 2 : 1;
+                var estado = (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente)) ? (int)EnumEstadoContrato.Confirmado : (int)EnumEstadoContrato.Pendiente;
                 if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
                 {
                     oAgente.FechaConfirmacion = DateTime.Now;
@@ -246,7 +207,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error("Error al GrabarAgente. " + ex);
                 throw;
             }
 
@@ -282,7 +243,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logDataAgroManager.LogCambiosDataAgro(TraerAgente(oFasonSave.Id), TipoAccionLogDataAgro.Crear, oFasonSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
-                    logger.Error(ex);
+                    logger.Error("Error al FinalizarAgente. " + ex);
                 }
             }
             else
@@ -298,6 +259,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
         public GrabarAgenteResult BorrarAgente(AgenteCompra oAgente)
         {
             var oEntityErrors = new GrabarAgenteResult();
@@ -414,6 +376,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
         public BasicoContrato TraerAgente(int contratoId)
         {
             var contrato = repositorio.Obtener<AgenteCompra, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
@@ -462,6 +425,7 @@ namespace Molinos.DataAgro.Business.Managers
             });
             return contrato;
         }
+
         public GrabarAgenteResult GrabarAmpliacionAgente(AgenteCompra oAgente)
         {
             var oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
@@ -484,7 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    logger.Error("Error al GrabarAmpliacionAgente. " + ex);
                     throw;
                 }
             }
@@ -494,6 +458,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
         public Resultado ConfirmarAgenteCompra(int id, int usuarioConfirmador)
         {
             var oEntityErrors = new Resultado();
@@ -523,22 +488,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
-        //private bool ValidarFechaAgenteMP(AgenteCompra contrato)
-        //{
-        //    var fechaElegida = contrato.FechaOperacion;
-        //    var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
-        //    bool fechaInvalida = false;
-        //    int cont = 0;
-        //    for (int i = diasHabiles.Count - 1; cont < 5 && !fechaInvalida; i--)
-        //    {
-        //        if (fechaElegida == diasHabiles[i])
-        //            fechaInvalida = true;
-        //        cont++;
-        //    }
-
-        //    return fechaInvalida;
-        //}
 
     }
 }

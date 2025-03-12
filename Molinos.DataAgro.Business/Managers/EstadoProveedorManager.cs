@@ -5,6 +5,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -14,6 +15,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IDatosProveedorAgent oDatosProveedorAgent;
+        private readonly string cantidadDeProveedoresParaActualizarEstado = ConfigurationManager.AppSettings["CantidadDeProveedoresParaActualizarEstado"];
 
         public EstadoProveedorManager(ILogger logger, IRepositorio repositorio, IDatosProveedorAgent oDatosProveedorAgent)
         {
@@ -38,7 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (string.IsNullOrEmpty(cuit))
                 {
                     var listaComerciales = comerciales.Keys.ToList();
-                    int tamanioLote = 20; //se seleccionan algunos porque si se consulta la RFC con todos, da server error
+                    int tamanioLote = Convert.ToInt32(cantidadDeProveedoresParaActualizarEstado); //se seleccionan algunos porque si se consulta la RFC con todos, da server error
 
                     for (int i = 0; i < listaComerciales.Count; i += tamanioLote)
                     {
