@@ -576,15 +576,23 @@ namespace Molinos.DataAgro.Business.Managers
                      basico.RazonSocialProveedor, (basico.CorredorId > 0 ? basico.RazonSocialCorredor : ""), basico.Material, basico.Campania, basico.Cantidad.ToString("N", new CultureInfo("es-AR")),
                      precio, ($"{basico.Localidad}, {basico.Provincia}"), ($"{basico.DestinoLocalidad}, {basico.DestinoProvincia}"), "5", FormatoCuit(basico.Cuit), basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : "",
                      titulo, clausulashtml, basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), "5", (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""), seccionSio);
+                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: " + FormatoCuit(basico.CUITCorredor) : ""), seccionSio, FormatoCuit(basico.Cuit));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.FISICO && basico.BolsaContratoId == (int)EnumBolsaCompraNet.BS_AS)
             {
                 var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {FormatoCuit(basico.CUITCorredor)} </b> </td></tr>" : "";
                 xHtml = string.Format(xHtml,
                 stylesHtml, basico.ContratoSAP.TrimStart('0'), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.TrimStart('0'),
-                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
-                     (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""), basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"));
+                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml, 
+                (basico.CorredorId > 0 ? "__________________" : ""), 
+                (basico.CorredorId > 0 ? "P. Corredor" : ""), 
+                (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
+                (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), 
+                (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""),
+                basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), 
+                "30-71511877-3",
+                (basico.CorredorId > 0 ? "CUIT Nro.: " + FormatoCuit(basico.CUITCorredor) : ""), 
+                FormatoCuit(basico.Cuit));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
@@ -594,7 +602,7 @@ namespace Molinos.DataAgro.Business.Managers
                     clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
                 }
                 xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd.MM.yyyy"), basico.ContratoSAP.TrimStart('0'), basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
-                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas);
+                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas, FormatoCuit(basico.Cuit),basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : "");
                 return xHtml;
             }
             return xHtml;
