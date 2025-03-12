@@ -78,20 +78,20 @@ namespace Molinos.DataAgro.Agent
                     IM_PROVEEDORES = cuits.ToArray()
                 };
 
-                var log = new Log
-                {
-                    Fecha = DateTime.Now,
-                    Xml = rq.ToXml()
-                };
-                var logId = repositorio.Agregar(log);
-                repositorio.GuardarCambios();
-                logger.Debug(rq.ToXml());
+                //var log = new Log
+                //{
+                //    Fecha = DateTime.Now,
+                //    Xml = rq.ToXml()
+                //};
+                //var logId = repositorio.Agregar(log);
+                //repositorio.GuardarCambios();
+                //logger.Debug(rq.ToXml());
 
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
-                logger.Debug(devolucion.ToXml());
-                log = repositorio.Obtener<Log>(logId.Id);
-                log.Xml += devolucion.ToXml();
-                repositorio.GuardarCambios();
+                //logger.Debug("PESIFICADOS - Respuesta rfc LISTA_PROVEEDORES: " + devolucion.ToXml());
+                //log = repositorio.Obtener<Log>(logId.Id);
+                //log.Xml += devolucion.ToXml();
+                //repositorio.GuardarCambios();
 
                 var pesificado = new List<PesificarAgentDto>();
                 if (devolucion.EX_SALIDA != null)
@@ -167,6 +167,7 @@ namespace Molinos.DataAgro.Agent
                 logger.Error($"Reporte Pesificado FechaUltimaAplicacion:  {pesificado.ToJson()}");
                 pesificado.FechaUltimaAplicacion = (DateTime?)null;
             }
+            logger.Debug("PESIFICADOS 3 - ConvertirADto");
 
             return pesificado;
         }
