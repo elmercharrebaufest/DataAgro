@@ -2962,7 +2962,6 @@ namespace Molinos.DataAgro.Business.Managers
                     var index = proveedores.Count >= Convert.ToInt32(cantidadDeProveedoresAProcesarPesificados) ? Convert.ToInt32(cantidadDeProveedoresAProcesarPesificados) : proveedores.Count;
                     var lista = proveedores.Take(index).ToList();
                     proveedores.RemoveRange(0, index);
-                    logger.Debug("Proveedores a consultar en Z_MPRFC_LISTA_PROVEEDORES: " + lista.Select(x => x.Cuit).Distinct().ToList().ToXml());
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));
                 }
                 datos = BuscarPase(datos);
