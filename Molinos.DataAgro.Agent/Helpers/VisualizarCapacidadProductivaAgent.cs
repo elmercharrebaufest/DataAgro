@@ -50,7 +50,26 @@ namespace Molinos.DataAgro.Agent
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-                var response = agent.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA(new Z_MPRFC_VISU_CAP_PRODUCTIVA { IM_CUIT = proveedor.CUIT });
+                var rq = new Z_MPRFC_VISU_CAP_PRODUCTIVA()
+                {
+                    IM_CUIT = proveedor.CUIT
+                };
+
+                var log = new Log
+                {
+                    Fecha = DateTime.Now,
+                    Xml = rq.ToXml()
+                };
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+                logger.Debug(rq.ToXml());
+
+                var response = agent.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA(rq);
+                logger.Debug(response.ToXml());
+                log = repositorio.Obtener<Log>(logId.Id);
+                log.Xml += response.ToXml();
+                repositorio.GuardarCambios();
+
                 List<CapacidadProductivaDto> lista = new List<CapacidadProductivaDto>();
 
                 foreach (var item in response.EX_SALIDA)

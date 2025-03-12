@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
         public override ResultadoClausula DevolverClausulas(ClausulaCincuentaYSiete clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.CorredorId > 0 || clausula.Basico.CD == true)
+            if (clausula.Basico.CorredorId > 0 || clausula.Basico.PagoDirectoVendedor == true)
             {
                 string razonSocialProveedor = clausula.Basico.Corredor;
                 string razonSocialCorredor = clausula.Basico.Proveedor;
