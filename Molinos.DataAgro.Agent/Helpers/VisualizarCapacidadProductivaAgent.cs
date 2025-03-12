@@ -55,20 +55,20 @@ namespace Molinos.DataAgro.Agent
                     IM_CUIT = proveedor.CUIT
                 };
 
-                var log = new Log
-                {
-                    Fecha = DateTime.Now,
-                    Xml = rq.ToXml()
-                };
-                var logId = repositorio.Agregar(log);
-                repositorio.GuardarCambios();
-                logger.Debug(rq.ToXml());
+                //var log = new Log
+                //{
+                //    Fecha = DateTime.Now,
+                //    Xml = rq.ToXml()
+                //};
+                //var logId = repositorio.Agregar(log);
+                //repositorio.GuardarCambios();
+                //logger.Debug(rq.ToXml());
 
                 var response = agent.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA(rq);
-                logger.Debug(response.ToXml());
-                log = repositorio.Obtener<Log>(logId.Id);
-                log.Xml += response.ToXml();
-                repositorio.GuardarCambios();
+                //logger.Debug(response.ToXml());
+                //log = repositorio.Obtener<Log>(logId.Id);
+                //log.Xml += response.ToXml();
+                //repositorio.GuardarCambios();
 
                 List<CapacidadProductivaDto> lista = new List<CapacidadProductivaDto>();
 
