@@ -262,6 +262,7 @@
     <Compile Include="Common\Enums\EnumConfirmaAltaEstadoDocumento.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoSisa.cs" />
+    <Compile Include="Common\Enums\EnumSegmentacion.cs" />
     <Compile Include="Common\Enums\EnumStandarCalidad.cs" />
     <Compile Include="Common\Enums\EnumMateriales.cs" />
     <Compile Include="Common\Enums\EnumEstadoCupo.cs" />
