@@ -1473,10 +1473,10 @@ namespace Molinos.DataAgro.Business.Managers
             //    }
             //}
 
-            //if (oParam.ClasificacionId == (int)EnumClasificacionCompraNet.Productor && oParam.Venta != true && oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
-            //{
-            //    oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
-            //}
+            if (oParam.ClasificacionId == (int)EnumClasificacionCompraNet.Productor && oParam.Venta != true && oParam.ProveedorId > 0 && oParam.MaterialId > 0 && oParam.CampanaId > 0)
+            {
+                oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
+            }
 
             return oErrorMessages;
         }

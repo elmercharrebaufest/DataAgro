@@ -250,8 +250,8 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                //if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
             }
             if ($("#buscadorProveedor").val() == "") {
                 $("#proveedorId").val("");
@@ -1023,8 +1023,8 @@ function InicializarElementos() {
                         }
                     }
                 }
-                //if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#material").val() && $("#campanaId").val() && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
 
                 if (!ValidarComisionEnCentro())
                     BorrarComisionSiEsAcopio();
@@ -1167,8 +1167,8 @@ function InicializarElementos() {
         dataValueField: "CampañaId",
         change: function (e) {
             validarFechaCampana();
-            //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-            //    ValidarCapacidadProductiva();
+            if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                ValidarCapacidadProductiva();
         }
     });
 
@@ -1308,8 +1308,8 @@ function InicializarElementos() {
                 if ($("#corredorId").val() != '') {  //SI HAY CORREDOR
                     $("#chequeElectronicoDiv").hide();  //OCULTAR
                 }
-                //if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
-                //    ValidarCapacidadProductiva();
+                if ($("#campanaId").val() && $("#material").val() && $("#buscadorProveedor").val().split('(')[1] && $("#clasificacion").val() == CLASIFICACION.PRODUCTOR && !$("#ventaId").is(":checked"))
+                    ValidarCapacidadProductiva();
             } else {
                 $("#chequeElectronicoDiv").hide();
                 $("#CapacidadProductivaPendienteDiv").hide();
