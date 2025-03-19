@@ -80,6 +80,24 @@
             </span>
         </div>
     </div>
+    <div class="row" style="display: flex;align-items: anchor-center;">
+        <div class="col-md-2">
+            <label>Fecha de Descarga</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="FechaDescargaId" name="FechaDescarga">
+            Sí: @Html.RadioButton("FechaDescarga", true, new { @class = "filtroBoleano ocultarAnular", @id = "FechaDescarga" })
+            No: @Html.RadioButton("FechaDescarga", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonFechaDescarga()" style="margin-left:3%; font-size:20px;color:red"></i> Ninguno
+        </div>
+        <div class="col-md-2">
+            <label>Origen DA</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="OrigenDAId" name="OrigenDA">
+            Sí: @Html.RadioButton("OrigenDA", true, new { @class = "filtroBoleano ocultarAnular", @id = "OrigenDA" })
+            No: @Html.RadioButton("OrigenDA", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonOrigenDA()" style="margin-left:3%; font-size:20px;color:red"></i> Ninguno
+        </div>
+    </div>
     <br />
     <br />
     <div class="row">

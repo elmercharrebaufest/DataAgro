@@ -272,11 +272,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public DateTime? FechaAlta { get; set; }
         public DateTime? FechaAltaConHora { get; set; }
-        public DateTime? FechaDescarga { get; set; }
+        public bool? FechaDescarga { get; set; }
         public DateTime? FechaDescargaConHora { get; set; }
-        public string OrigenDA { get; set; }
+        public bool? OrigenDA { get; set; }
         public string UsuarioSAP { get; set; }
-
+        public string OrigenDAVal { get; set; }
+        public DateTime? FechaDescargaVal { get; set; }
         public InformeProduccionList()
         {
             Seleccionado = false;
