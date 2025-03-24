@@ -7,6 +7,7 @@ using Humanizer;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Entities.Resources;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -27,11 +28,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
             bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId !=null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true: false) : false;
 
-            var descuentoGeneralSobrePrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
-            var descuentoGeneralFueraPrecio = esPosicionCBOT ? null : clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
 
-            res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
-            res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
 
             if (!esPosicionCBOT)
             {
@@ -47,30 +44,45 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     }
                 }
             }
+            else
+            {
+                var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+                var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
+                var descuentoPorAperturaDePrecio = clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault();
+
+                res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio, descuentoPorAperturaDePrecio);
+                res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
+            }
 
             return res;
         }
 
-        private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio)
+        private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio,AperturaPrecioDto descuentoPorAperturaDePrecio)
         {
             string clausula = string.Empty;
-            if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
+
+            // En la bonificacion sobre el precio siempre debe mostrarse lo que se tiene como apertura de precio
+            decimal? importeSobrePrecio = descuentoPorAperturaDePrecio != null ? descuentoPorAperturaDePrecio.Importe : descuentoGeneralSobrePrecio?.Importe;
+            decimal? porcentajeSobrePrecio = descuentoPorAperturaDePrecio != null ? descuentoPorAperturaDePrecio.Porcentaje : descuentoGeneralSobrePrecio?.Porcentaje;
+            string monedaSobrePrecio = descuentoPorAperturaDePrecio != null ? descuentoPorAperturaDePrecio.Moneda : descuentoGeneralSobrePrecio?.Moneda;
+
+            if (porcentajeSobrePrecio > 0)
             {
-                clausula += $"Se bonificará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se bonificará sobre el precio el {porcentajeSobrePrecio}% por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
+            if (porcentajeSobrePrecio < 0)
             {
-                clausula += $"Se descontará sobre el precio el {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
+                clausula += $"Se descontará sobre el precio el {porcentajeSobrePrecio}% por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio?.Importe > 0)
+            if (importeSobrePrecio > 0)
             {
-                clausula += $"Se bonificará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
-                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
+                clausula += $"Se bonificará sobre el precio {DivisaSimbolica(monedaSobrePrecio)} {ValorAbsoluto((decimal)importeSobrePrecio)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)importeSobrePrecio, monedaSobrePrecio)}) por tonelada. ";
             }
-            if (descuentoGeneralSobrePrecio?.Importe < 0)
+            if (importeSobrePrecio < 0)
             {
-                clausula += $"Se descontará sobre el precio {DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda)} {ValorAbsoluto(descuentoGeneralSobrePrecio.Importe)} " +
-                    $" ({DevolverNumeroEnLetrasConDivisa(descuentoGeneralSobrePrecio.Importe, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
+                clausula += $"Se descontará sobre el precio {DivisaSimbolica(monedaSobrePrecio)} {ValorAbsoluto((decimal)importeSobrePrecio)} " +
+                    $" ({DevolverNumeroEnLetrasConDivisa((decimal)importeSobrePrecio, monedaSobrePrecio)}) por tonelada. ";
             }
             return clausula;
         }

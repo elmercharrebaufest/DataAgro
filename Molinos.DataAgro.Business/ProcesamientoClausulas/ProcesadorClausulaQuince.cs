@@ -27,8 +27,13 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.HastaFijacion.HasValue)
             {
+
+                var aperturaPrecioPorContrato = clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
                 var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+                decimal? importeSobrePrecio = aperturaPrecioPorContrato!=null? aperturaPrecioPorContrato.Importe : descuentoGeneralSobrePrecio?.Importe;
+                decimal? porcentajeSobrePrecio = aperturaPrecioPorContrato != null ? aperturaPrecioPorContrato.Porcentaje : descuentoGeneralSobrePrecio?.Porcentaje;
+                string monedaSobrePrecio = aperturaPrecioPorContrato != null ? aperturaPrecioPorContrato.Moneda : descuentoGeneralSobrePrecio?.Moneda;
 
                 if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
                 {
@@ -52,29 +57,28 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         $"se bonificará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {descuentoGeneralFueraPrecio.Importe}" +
                         $" ({DevolverNumeroEnLetras(descuentoGeneralFueraPrecio.Importe)}) por tonelada. ";
                 }
-
-
-                if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
+                // En la bonificacion sobre el precio siempre debe mostrarse lo que se tiene como apertura de precio
+                if (porcentajeSobrePrecio > 0)
                 {
                     res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {clausula.Basico.DesdeFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} al {clausula.Basico.HastaFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                        $"se descontará sobre el precio el  {descuentoGeneralSobrePrecio.Porcentaje}% del precio. ";
+                        $"se descontará sobre el precio el  {porcentajeSobrePrecio}% del precio. ";
                 }
-                if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
+                if (porcentajeSobrePrecio < 0)
                 {
                     res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {clausula.Basico.DesdeFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} al {clausula.Basico.HastaFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                        $"se bonificará  sobre el precio el  {descuentoGeneralSobrePrecio.Porcentaje}% por tonelada. ";
+                        $"se bonificará  sobre el precio el  {porcentajeSobrePrecio}% por tonelada. ";
                 }
-                if (descuentoGeneralSobrePrecio?.Importe > 0)
+                if (importeSobrePrecio > 0)
                 {
                     res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {clausula.Basico.DesdeFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} al {clausula.Basico.HastaFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                        $"se descontará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe}" +
-                        $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
+                        $"se descontará sobre el precio {monedaSobrePrecio} {importeSobrePrecio}" +
+                        $" ({DevolverNumeroEnLetras((decimal)importeSobrePrecio)}) por tonelada. ";
                 }
-                if (descuentoGeneralSobrePrecio?.Importe < 0)
+                if (importeSobrePrecio < 0)
                 {
                     res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {clausula.Basico.DesdeFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} al {clausula.Basico.HastaFijacion.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                        $"se bonificará sobre el precio {descuentoGeneralSobrePrecio.Moneda} {descuentoGeneralSobrePrecio.Importe}" +
-                        $" ({DevolverNumeroEnLetras(descuentoGeneralSobrePrecio.Importe)}) por tonelada. ";
+                        $"se bonificará sobre el precio {monedaSobrePrecio} {importeSobrePrecio}" +
+                        $" ({DevolverNumeroEnLetras((decimal)importeSobrePrecio)}) por tonelada. ";
                 }
             }
 
