@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -85,9 +86,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
                     List<Instrument> instruments = new List<Instrument>();
-                    //foreach (var item in CFICodes)
-                    //{
-                    var instrumentos = SecurityList(token /*, item*/);
+                    
+                    var instrumentos = SecurityList(token);
+                    
                     if (instrumentos.Code == "200")
                     {
                         foreach (var item2 in instrumentos.Value)
@@ -98,12 +99,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
                         }
                     }
-                    //}
+                    
                     List<AgenteCompra> listaAgenteCompra = new List<AgenteCompra>();
                     var operadores = repositorio.Listar<Operador>();
                     listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500" || b.Account == "281647") && a.TrdType == 61 && a.TrdRptStatus == "0").Select(a => new AgenteCompra
                     {
-                        TipoNegocioId = 5,
+                        TipoNegocioId = (int)EnumTipoNegocio.AGENTE_DE_COMPRAS,
                         Cantidad = ObtenerCantidad(a),
                         Precio = a.LastPx ?? 0,
                         Fecha = DateTime.ParseExact(a.TransactTime, "s", null),
@@ -177,7 +178,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
                 var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
                 int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
-                if (materialId == 2 && mes == 12)
+                if (materialId == (int)EnumMateriales.TRIGO && mes == 12)
                     anio += 1;
 
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
@@ -216,15 +217,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                 switch (item.SecurityGroup)
                 {
                     case var s when item.SecurityGroup.Contains("MAI"):
-                        materialId = 1; break;
+                        materialId = (int)EnumMateriales.MAIZ;
+                        break;
                     case var s when item.SecurityGroup.Contains("TRI"):
-                        materialId = 2; break;
+                        materialId = (int)EnumMateriales.TRIGO;
+                        break;
                     case var s when item.SecurityGroup.Contains("SOJ"):
-                        materialId = 3; break;
+                        materialId = (int)EnumMateriales.SOJA;
+                        break;
                     case var s when item.SecurityGroup.Contains("GIR"):
-                        materialId = 4; break;
+                        materialId = (int)EnumMateriales.GIRASOL;
+                        break;
                     case var s when item.SecurityGroup.Contains("GIO"):
-                        materialId = 5; break;
+                        materialId = (int)EnumMateriales.GIRASOL_AO;
+                        break;
                     default:
                         break;
                 }

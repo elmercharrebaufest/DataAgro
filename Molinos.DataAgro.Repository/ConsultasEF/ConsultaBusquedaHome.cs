@@ -32,10 +32,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var resultado =
                 (from Proveedor in contexto.Set<Proveedor>()
-                     //join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
                  join contactoComercial in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                  from contactoComercial in cons.DefaultIfEmpty()
-                     //where (equipo.Contains(proveedorComercial.ComercialId) || corredor) &&
                  where
                      (Proveedor.CUIT.Contains(filtro) ||
                      contactoComercial.Nombres.Contains(filtro) ||
@@ -44,15 +42,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      Proveedor.RazonSocial.Contains(filtro) ||
                      Proveedor.Alias.Contains(filtro))
 
-                 //group proveedorComercial by Proveedor into provs
                  select new BusquedaHome
-
                  {
                      Id = Proveedor.ProveedorId,
                      Cuit = Proveedor.CUIT,
                      Alias = Proveedor.Alias,
-                     RazonSocial = Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial) : !string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial,
-                     Corredor = Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7 ? "COR" : "",
+                     RazonSocial = Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios || Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales ? "COR - " + (!string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial) : !string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial,
+                     Corredor = Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios || Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales ? "COR" : "",
                      Filtro = filtro + "|" + (!string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial) + " (" + Proveedor.CUIT + ")",
                      ClasificacionId = Proveedor.ClasificacionCompraNetId,
                      RiesgoComercialSap = Proveedor.RiesgoComercialSap,
@@ -73,6 +69,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 return Query(contexto, equipo, comercialId, filtro, corredoresComercial, corredor);
             }
         }
+
         private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, List<int> equipo, bool corredor)
         {
             if (lista.Count > 0)
@@ -100,16 +97,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 continue;
                             }
                         }
+
                         var sisa = new SISA();
                         if (item.ClasificacionId.HasValue)
                         {
-                            if (item.ClasificacionId == 1)
+                            if (item.ClasificacionId == (int)EnumClasificacionCompraNet.Productor)
                             {
                                 sisa = (from s in contexto.Set<SISA>()
                                         where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.PRODUCTOR && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
-                            else if (item.ClasificacionId == 2)
+                            else if (item.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador)
                             {
                                 sisa = (from s in contexto.Set<SISA>()
                                         where s.CUIT == item.Cuit && s.CodCategoria == (int)EnumEstadoSisa.ACOPIADOR && s.SituacionCategoria == "AL"
@@ -121,6 +119,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                         where s.CUIT == item.Cuit && s.CodCategoria != (int)EnumEstadoSisa.PRODUCTOR && s.CodCategoria != (int)EnumEstadoSisa.ACOPIADOR && s.CodCategoria != (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
+
                             if (sisa != null)
                             {
                                 if (sisa.EstadoCuit == 3 && item.RiesgoComercialSap != "E")
@@ -135,12 +134,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                     item.Color = "red";
                                     continue;
                                 }
+
                                 if (sisa.SituacionCategoria != "AL")
                                 {
                                     item.Estado = "No Operable por Situación Categoría BA";
                                     item.Color = "red";
                                     continue;
                                 }
+
                                 if (sisa.CodCategoria == (int)EnumEstadoSisa.OPERADOR_DE_DERIVADOS_GRANARIOS)
                                 {
                                     item.Estado = "No operable por categoría Operador de Derivados Granarios";
@@ -181,6 +182,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 item.Deshabilitar = true;
                                 continue;
                             }
+
                             if (sisa.SituacionCategoria != "AL")
                             {
                                 item.Estado = "Corredor No Operable por Situación Categoría BA";
@@ -197,6 +199,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             continue;
                         }
                     }
+
                     var estadoProveedor = (from provEstado in contexto.Set<ProveedorEstado>()
                                            where provEstado.ProveedorId == item.Id && provEstado.EstadoId == 4
                                            select provEstado).FirstOrDefault();
@@ -208,9 +211,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         item.Color = "red";
                         continue;
                     }
+
                     var facacop = (from f in contexto.Set<FACACOP>()
                                    where f.CUIT == item.Cuit
                                    select f).FirstOrDefault();
+
                     if (facacop != null)
                     {
                         item.Estado = "No Operable por ser Apócrifo";
@@ -218,6 +223,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         item.Color = "red";
                         continue;
                     }
+
                     if (item.OperaConMATBA == true)
                     {
                         item.Estado += ". Opera solo MATBA";
@@ -227,6 +233,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
             return lista;
         }
+
         private static void VerificarSiEstaAsignado(DbContext contexto, BusquedaHome proveedor, List<int> equipo, bool corredor)
         {
             if (proveedor.Corredor == "COR" && corredor)

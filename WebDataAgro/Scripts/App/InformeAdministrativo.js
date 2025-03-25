@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function onChange(arg) {
-    console.log("The selected product ids are: [" + this.selectedKeyNames().join(", ") + "]");
+    //console.log("The selected product ids are: [" + this.selectedKeyNames().join(", ") + "]");
 }
 
 function CreateGridInformeAdministrativo() {
@@ -60,9 +60,11 @@ function CreateGridInformeAdministrativo() {
                     Comercial: { type: "string" },
                     FechaAlta: { type: "date" },
                     FechaAltaConHora: { type: "date" },
-                    FechaDescarga: { type: "date" },
+                    FechaDescargaVal: { type: "date" },
+                    FechaDescarga: { type: "boolean" },
                     FechaDescargaConHora: { type: "date" },
-                    OrigenDA: { type: "string" },
+                    OrigenDAVal: { type: "string" },
+                    OrigenDA: { type: "boolean" },
                     Seleccionado: { type: "boolean" },
                     MaterialSAP: { type: "string" },
                     Seleccionado: { type: "boolean" },
@@ -109,7 +111,7 @@ function CreateGridInformeAdministrativo() {
             { field: "Comercial" },
             { field: "FechaAltaConHora", title: "Fecha de Generación", width: 150, format: "{0:dd/MM/yyyy HH:mm}" },
             { field: "FechaDescargaConHora", title: "Fecha de Descarga", width: 150, format: "{0:dd/MM/yyyy HH:mm}" },
-            { field: "OrigenDA", title: "Origen DA", width: 100 },
+            { field: "OrigenDAVal", title: "Origen DA", width: 100 },
         ],
         persistSelection: true,
         excelExport: function (e) {
@@ -156,7 +158,7 @@ function CreateGridInformeAdministrativo() {
                                 { value: item.Comercial },
                                 { value: item.FechaAltaConHora },
                                 { value: item.FechaDescargaConHora },
-                                { value: item.OrigenDA }
+                                { value: item.OrigenDAVal }
                             ]
                         };
                         sheet.rows.push(dataRow);
@@ -562,4 +564,10 @@ function EnviarCapProdSAP() {
     } else {
         MensAlerta("Debe seleccionar informes de la grilla para enviar a SAP.");
     }
+}
+function deseleccionarRadioButtonFechaDescarga() {
+    $('[name=FechaDescarga]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonOrigenDA() {
+    $('[name=OrigenDA]:checked').prop('checked', false);
 }
