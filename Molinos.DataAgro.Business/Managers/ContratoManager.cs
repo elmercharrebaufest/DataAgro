@@ -8454,32 +8454,45 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarEstadoDeContratos()
         {
-            //var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
+            logger.Debug("ActualizarEstadoDeContratos INICIO");
 
-            var contratos = repositorio.Listar<Contrato, ContratoActualizarEstadoDeContratosDto>(x => new ContratoActualizarEstadoDeContratosDto
+            try
             {
-                ContratoSAP = x.ContratoSAP,
-                ConfirmadoSAP = x.ConfirmadoSAP,
-                FechaConfirmadoSAP = x.FechaConfirmadoSAP,
-            }, x => x.ConfirmadoSAP != true
-            && !string.IsNullOrEmpty(x.ContratoSAP)
-            && x.EstadoId != (int)EnumEstadoContrato.Rechazado
-            && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
+                //var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
 
-            if (contratos != null && contratos.Count > 0)
-            {
-                logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
-                var estados = status.ValidarEstados(contratos.Select(x => x.ContratoSAP).ToList());
-                foreach (var contrato in contratos)
+                var contratos = repositorio.Listar<Contrato, ContratoActualizarEstadoDeContratosDto>(x => new ContratoActualizarEstadoDeContratosDto
                 {
-                    var res = estados.FirstOrDefault(a => a.ContratoSap == contrato.ContratoSAP);
-                    if (res != null)
+                    ContratoSAP = x.ContratoSAP,
+                    ConfirmadoSAP = x.ConfirmadoSAP,
+                    FechaConfirmadoSAP = x.FechaConfirmadoSAP,
+                }, x => x.ConfirmadoSAP != true
+                && !string.IsNullOrEmpty(x.ContratoSAP)
+                && x.EstadoId != (int)EnumEstadoContrato.Rechazado
+                && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
+
+                if (contratos != null && contratos.Count > 0)
+                {
+                    logger.Debug("Cambiar estado de contratos: Count " + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
+                    var estados = status.ValidarEstados(contratos.Select(x => x.ContratoSAP).ToList());
+                    foreach (var contrato in contratos)
                     {
-                        contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
-                        contrato.FechaConfirmadoSAP = res.FechaConfirmadoSAP;
+                        var res = estados.FirstOrDefault(a => a.ContratoSap == contrato.ContratoSAP);
+                        if (res != null)
+                        {
+                            contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+                            contrato.FechaConfirmadoSAP = res.FechaConfirmadoSAP;
+                        }
                     }
+                    repositorio.GuardarCambios();
                 }
-                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
+            finally
+            {
+                logger.Debug("ActualizarEstadoDeContratos FIN");
             }
         }
 
