@@ -8454,7 +8454,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarEstadoDeContratos()
         {
-            logger.Debug("ActualizarEstadoDeContratos INICIO");
+            logger.Info("ActualizarEstadoDeContratos INICIO");
 
             try
             {
@@ -8479,8 +8479,9 @@ namespace Molinos.DataAgro.Business.Managers
                         var res = estados.FirstOrDefault(a => a.ContratoSap == contrato.ContratoSAP);
                         if (res != null)
                         {
-                            contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
-                            contrato.FechaConfirmadoSAP = res.FechaConfirmadoSAP;
+                            var contratoSAPSel = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP);
+                            contratoSAPSel.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+                            contratoSAPSel.FechaConfirmadoSAP = res.FechaConfirmadoSAP;
                         }
                     }
                     repositorio.GuardarCambios();
@@ -8492,7 +8493,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             finally
             {
-                logger.Debug("ActualizarEstadoDeContratos FIN");
+                logger.Info("ActualizarEstadoDeContratos FIN");
             }
         }
 
