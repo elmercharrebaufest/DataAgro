@@ -129,6 +129,7 @@ function FiltrarBoletos() {
                 let claseNegocio = $("#tipoId").val();
                 let contratoDesde = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
                 let contratoHasta = $("#contratoHasta").val();
+                let material = $("#materialId").val();
 
                 var filters = {
                     logic: "and",
@@ -150,7 +151,16 @@ function FiltrarBoletos() {
                 if (fechaHasta) {
                     filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
                 }
-
+                if (fechaCargaDesde) {
+                    filters.filters.push({ field: "FechaCarga", operator: "gte", value: fechaCargaDesde });
+                }
+                if (fechaCargaHasta) {
+                    filters.filters.push({ field: "FechaCarga", operator: "lte", value: fechaCargaHasta });
+                }
+                if (material) {
+                    filters.filters.push({ field: "MaterialId", operator: "eq", value: parseInt(material) });
+                }
+                
                 var data = {
                     Filter: filters,
                     Take: 100000,
@@ -170,7 +180,10 @@ function FiltrarBoletos() {
                             return {
                                 ...item,
                                 FechaOperacion: parseDate(item.FechaOperacion),
-                                FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                                FechaConfirmacion: parseDate(item.FechaConfirmacion),
+                                FechaGeneracion: parseDate(item.FechaGeneracion),
+                                FechaAnulacion: parseDate(item.FechaAnulacion),
+                                FechaCarga: parseDate(item.FechaCarga)
                             };
                         }));
                         $("#contratos-grid").show();
