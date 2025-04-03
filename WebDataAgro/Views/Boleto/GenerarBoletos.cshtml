@@ -16,40 +16,66 @@
     <div class="row">
         <div class="" id="GenerarBoletos">
             <div class="row">
-                <div class="col-sm-1 col-lg-2"></div>
-                <div class="col-sm-2 col-lg-1">
-                    <label>Negocio</label>
+                <div class="col-md-2">
+                    <label>Tipo de Negocio</label>
                 </div>
                 <div class="col-sm-2" style="margin-bottom:0.5em;">
                     @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), new { @class = "form-control", @id = "tipoId" })
                 </div>
-                <div class="col-sm-2" style="margin-bottom:0.5em">
+                <div class="col-md-2 noRightPadding">
                     @Html.TextBox("Negocio", "", new { placeholder = "Número/s SAP", @class = "form-control", style = "width:100%", @id = "contratoDesde" })
                 </div>
                 <div class="col-sm-2" style="margin-bottom:0.5em">
                     @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { placeholder = "Número SAP Hasta", @type = "number", @class = "form-control", style = "width:100%", @id = "contratoHasta" })
                 </div>
                 <div class="col-sm-2" style="text-align: start">
-                    <button type="button" id="filtrarBoletos" class="k-button k-button-icontext" style="height:34px">
-                        Filtrar Boletos
-                    </button>
+
                 </div>
                 <div class="col"></div>
             </div>
             <br />
             <div class="row">
-                <div class="col-sm-1 col-lg-2"></div>
-                <div class="col-sm-2 col-lg-1">
+                <div class="col-md-2">
                     <label>Fecha de confirmación</label>
                 </div>
                 <div class="col-sm-2">
-                    <input id="FechaConfirmacionDesdeId" class="filtroFecha" name="FechaConfirmacion-desde" type="date" style="width:unset" />
+                    <input id="FechaConfirmacionDesdeId" class="filtroFecha" name="FechaConfirmacion-desde" type="date" style="width:100%" />
                 </div>
-                <div class="col-sm-2 col-lg-1">
+                <div class="col-md-2 noRightPadding">
                     <label>Hasta</label>
                 </div>
                 <div class="col-sm-2">
-                    <input id="FechaConfirmacionHastaId" class="filtroFecha" name="FechaConfirmacion-hasta" type="date" style="width:unset" />
+                    <input id="FechaConfirmacionHastaId" class="filtroFecha" name="FechaConfirmacion-hasta" type="date" style="width: 100%" />
+                </div>
+                <div class="col"></div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Fecha de Carga desde</label>
+                </div>
+                <div class="col-md-2">
+                    <input id="FechaCargaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
+                </div>
+                <div class="col-md-2 noRightPadding">
+                    <label>Hasta</label>
+                </div>
+                <div class="col-md-2">
+                    <input id="FechaCargaHastaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Material</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
+                </div>
+                @*<div class="col-md-9"></div>*@
+                <div class="col-md-2" style="text-align: start">
+                    <button type="button" id="filtrarBoletos" class="k-button k-button-icontext" style="height:34px; width:218px">Filtrar Boletos</button>
                 </div>
                 <div class="col"></div>
             </div>
@@ -75,5 +101,9 @@
         </div>
     </div>
 </div>
-
+<style>
+    .grid-scroll-container {
+        overflow: auto;
+    }
+</style>
 @Html.Partial("ModalBoletoGenerado")
