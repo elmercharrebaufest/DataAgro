@@ -5,6 +5,7 @@
     [Version] INT NOT NULL, 
     [FechaGeneracion] DATETIME NOT NULL , 
     [ComercialId] INT NOT NULL, 
+    [FechaAnulacion] DATETIME NULL,
     CONSTRAINT [FK_Boleto_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [Negocio]([Id]),
 	CONSTRAINT [FK_Boleto_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
 
