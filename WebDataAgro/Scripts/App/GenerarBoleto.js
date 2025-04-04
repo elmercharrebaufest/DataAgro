@@ -181,6 +181,7 @@ function FiltrarBoletos() {
                                 ...item,
                                 FechaOperacion: parseDate(item.FechaOperacion),
                                 FechaConfirmacion: parseDate(item.FechaConfirmacion),
+                                FechaConfirmadoSAP: parseDate(item.FechaConfirmadoSAP),
                                 FechaGeneracion: parseDate(item.FechaGeneracion),
                                 FechaAnulacion: parseDate(item.FechaAnulacion),
                                 FechaCarga: parseDate(item.FechaCarga)
