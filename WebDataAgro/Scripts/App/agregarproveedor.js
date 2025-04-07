@@ -1916,6 +1916,12 @@ function armarSelects(result) {
         obj.granos = [];
 
         for (var i = 0; i <= cantGrano; i++) {
+            if ($("#campaña" + i).val() == "null")
+            {
+                MensErr("Debe seleccionar la campaña.");
+                return false;
+            }
+
             if (($("#campaña" + i).val() && $("#campaña" + i).val() != "null") || ($("#grano" + i).val() && $("#grano" + i).val() != "null")) {
                 if (!ValidarGranoProduccion(i))
                     return false;
