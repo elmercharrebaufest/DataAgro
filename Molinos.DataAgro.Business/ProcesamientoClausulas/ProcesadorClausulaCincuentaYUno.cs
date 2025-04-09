@@ -41,6 +41,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 res.Texto = $"Al precio convenido se le adicionará la tarifa que corresponda por tonelada de soja sustentable / EPA entregada, siempre que la entrega de la mercadería fijada haya sido recibida dentro de los plazos de entrega y recibos pautados en el presente Boleto. La tarifa será fijada entre ambas partes y comunicada en oportunidad de recibo de mercadería.";
             }
+            // EL MATERIAL ES SOJA Y ES SUSTENTABLE Y A CONVENIR
+            else if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA && (clausula.Basico.Sustentable && !clausula.Basico.EPA) && clausula.Basico.Importe_Sustentable != null && clausula.Basico.TarifaAConvenir == true)
+            {
+                res.Texto = $"Al precio convenido se le adicionará la tarifa que corresponda por tonelada de soja sustentable entregada, siempre que la entrega de la mercadería fijada haya sido recibida dentro de los plazos de entrega y recibos pautados en el presente Boleto. La tarifa será fijada entre ambas partes y comunicada en oportunidad de recibo de mercadería.";
+            }
             // EL MATERIAL ES SOJA Y ES EPA SOBRE PRECIO EN USDM
             else if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA && clausula.Basico.EPA == true && clausula.Basico.MonedaId_Sustentable.Equals("USDM ") && clausula.Basico.SustentableTipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO && clausula.Basico.TarifaAConvenir != true)
             {
