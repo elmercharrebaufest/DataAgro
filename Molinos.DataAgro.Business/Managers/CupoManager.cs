@@ -1554,10 +1554,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public void CrearSugerenciaCupo()
         {
-            var materiales = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
+            var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
             var sugerencias = new List<SugerenciaCupoDto>();
             var formulas = new List<FormulaDto>();
-            foreach (var MaterialId in materiales.Where(a => a.MaterialId == 3).Select(a => a.MaterialId))
+            foreach (var MaterialId in materiales)
             {
                 var dto = ObtenerFormulaDto(MaterialId);
                 sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, dto, null));
@@ -1847,7 +1847,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         Fecha = disponibilidad.Fecha,
                         Disponible = topeCupos,
-                        Ingremental = disponibilidad.LimiteAlgoritmo * 10 / 100,
+                        Ingremental = 1,//disponibilidad.LimiteAlgoritmo * 10 / 100,
                         ProveedorId = idProveedor
                     });
                 }
