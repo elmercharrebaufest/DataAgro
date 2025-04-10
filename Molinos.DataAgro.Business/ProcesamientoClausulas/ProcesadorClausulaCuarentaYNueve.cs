@@ -19,8 +19,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var res = new ResultadoClausula();
 
-            if ((clausula.Basico.MaterialId == (int)EnumMateriales.MAIZ && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ||
-                (clausula.Basico.MaterialId == (int)EnumMateriales.TRIGO && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2))
+            if ((clausula.Basico.MaterialId == (int)EnumMateriales.MAIZ || clausula.Basico.MaterialId == (int)EnumMateriales.TRIGO) && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL)
             {
                 res.Texto += $"Condición de la mercadería Grado 2: No bonifica Grado 1, no bonifica ni rebaja Grado 2, rebaja Grado 3 y demás condiciones cámara.";
             }
