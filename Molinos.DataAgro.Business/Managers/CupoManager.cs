@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -12,20 +13,19 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using OfficeOpenXml;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Net;
-using KendoGridBinder.Extensions;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -1529,13 +1529,13 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public void CrearSugerenciaCupo()
         {
-            var materiales = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
+            var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
             var sugerencias = new List<SugerenciaCupoDto>();
             var formulas = new List<FormulaDto>();
-            foreach (var material in materiales)
+            foreach (var MaterialId in materiales)
             {
-                var dto = ObtenerFormulaDto(material.MaterialId);
-                sugerencias.AddRange(CrearSugerenciaCupo(material.MaterialId, dto, null));
+                var dto = ObtenerFormulaDto(MaterialId);
+                sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, dto, null));
                 formulas.Add(dto);
             }
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
@@ -1809,9 +1809,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var configuracion = repositorio.Obtener<Configuracion>(1);
             var idsProveedores = negocios.Select(a => a.ProveedorId ?? 0).Distinct();
-            decimal puntajeMinimo = negocios == null || negocios.Count() == 0 ? 0 : negocios.Min(a => a.PuntuacionTotal);
             int porcentajeMaximo = configuracion.AlgoritmoProcMaxSugerenciasProveedorDia;
             List<TopeSugerenciasPorDiaPorProveedor> limitePorProveedor = new List<TopeSugerenciasPorDiaPorProveedor>();
+
+            // Inicializar los límites por proveedor
             foreach (var disponibilidad in disponibilidadEnPlantas)
             {
                 var topeCupos = disponibilidad.LimiteAlgoritmo * porcentajeMaximo / 100;
@@ -1821,89 +1822,63 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         Fecha = disponibilidad.Fecha,
                         Disponible = topeCupos,
+                        Ingremental = 1,//disponibilidad.LimiteAlgoritmo * 10 / 100,
                         ProveedorId = idProveedor
                     });
                 }
             }
+
             List<SugerenciaCupoDto> newNegocios = new List<SugerenciaCupoDto>();
+            bool hayDisponibilidad = true;
 
-            //primera ronda de sugerencias TENIENDO en cuenta el limite de % por dia por prov
-            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal))
+            // Realizar rondas incrementando el porcentaje límite
+            while (hayDisponibilidad)
             {
-                var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
+                hayDisponibilidad = false;
 
-                while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
+                foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal).ThenBy(a => a.ContratoSAP))
                 {
-                    foreach (var disponible in disponibles)
+                    var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0).OrderBy(a => a.Fecha).ToList();
+
+                    while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
                     {
-                        var limiteProveedor = limitePorProveedor.Where(a => a.ProveedorId == negocio.ProveedorId && a.Fecha == disponible.Fecha).Single();
+                        hayDisponibilidad = true;
 
-                        //pasa al proximo dia si ya le asigno todo lo que podia a ese dia por proveedor o por limite algoritmo  o por negocio priorizado
-                        if (limiteProveedor.Disponible <= 0 || disponible.LimiteAlgoritmo <= 0 || negocio.Priorizado) continue;
-
-                        if (negocio.CantidadDeCupos == 1)
+                        foreach (var disponible in disponibles)
                         {
-                            disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
-                            limiteProveedor.Disponible -= negocio.CantidadDeCupos;
-                            negocio.Priorizado = true;
-                            negocio.FechaSugerida = disponible.Fecha.Date;
-                        }
-                        else
-                        {
-                            int cantidadAcrear = 1;
+                            var limiteProveedor = limitePorProveedor.Single(a => a.ProveedorId == negocio.ProveedorId && a.Fecha == disponible.Fecha);
 
-                            var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                            newNegocio.CantidadDeCupos = cantidadAcrear;
-                            limiteProveedor.Disponible -= cantidadAcrear;
-                            newNegocio.Priorizado = true;
-                            newNegocio.FechaSugerida = disponible.Fecha.Date;
-                            newNegocios.Add(newNegocio);
+                            // Pasar al próximo día si ya se asignó todo lo que podía
+                            if (limiteProveedor.Disponible <= 0 || disponible.LimiteAlgoritmo <= 0 || negocio.Priorizado) continue;
 
-                            negocio.CantidadDeCupos -= cantidadAcrear;
-                            disponible.LimiteAlgoritmo -= cantidadAcrear;
-                            negocio.Priorizado = false;
+                            if (negocio.CantidadDeCupos == 1)
+                            {
+                                disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
+                                limiteProveedor.Disponible -= negocio.CantidadDeCupos;
+                                negocio.Priorizado = true;
+                                negocio.FechaSugerida = disponible.Fecha.Date;
+                            }
+                            else
+                            {
+                                int cantidadAcrear = 1;
+
+                                var newNegocio = (SugerenciaCupoDto)negocio.Clone();
+                                newNegocio.CantidadDeCupos = cantidadAcrear;
+                                limiteProveedor.Disponible -= cantidadAcrear;
+                                newNegocio.Priorizado = true;
+                                newNegocio.FechaSugerida = disponible.Fecha.Date;
+                                newNegocios.Add(newNegocio);
+
+                                negocio.CantidadDeCupos -= cantidadAcrear;
+                                disponible.LimiteAlgoritmo -= cantidadAcrear;
+                                negocio.Priorizado = false;
+                            }
                         }
                     }
                 }
 
-            }
-
-            //segunda ronda de sugerencias de lo pendiente SIN tener en cuenta el limite de % por dia por prov
-            foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal))
-            {
-                var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
-
-                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true && disponibles.Any(a => a.LimiteAlgoritmo > 0))
-                {
-                    foreach (var disponible in disponibles)
-                    {
-
-                        //pasa al proximo dia si ya le asigno todo por limite algoritmo  o por negocio priorizado
-                        if (disponible.LimiteAlgoritmo <= 0 || negocio.Priorizado) continue;
-
-                        if (negocio.CantidadDeCupos == 1)
-                        {
-                            disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
-                            negocio.Priorizado = true;
-                            negocio.FechaSugerida = disponible.Fecha.Date;
-                        }
-                        else
-                        {
-                            int cantidadAcrear = 1;
-
-                            var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                            newNegocio.CantidadDeCupos = cantidadAcrear;
-                            newNegocio.Priorizado = true;
-                            newNegocio.FechaSugerida = disponible.Fecha.Date;
-                            newNegocios.Add(newNegocio);
-
-                            negocio.CantidadDeCupos -= cantidadAcrear;
-                            disponible.LimiteAlgoritmo -= cantidadAcrear;
-                            negocio.Priorizado = false;
-                        }
-                    }
-                }
-
+                // Incrementar el porcentaje límite por proveedor basado en el límite inicial
+                limitePorProveedor.ForEach(limite => limite.Disponible += limite.Ingremental);
             }
 
             if (newNegocios.Count > 0)
@@ -1911,6 +1886,7 @@ namespace Molinos.DataAgro.Business.Managers
                 negocios.AddRange(newNegocios);
             }
 
+            // Agrupar sugerencias
             var sugerenciasAgrupadas = new List<SugerenciaCupoDto>();
             foreach (var item in negocios.GroupBy(x => new { x.ProveedorId, x.Priorizado, x.NegocioId, x.FechaSugerida, x.ConfiguracionEspacioDinamicoId }))
             {
@@ -2081,7 +2057,6 @@ namespace Molinos.DataAgro.Business.Managers
                 x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
                 x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer)
                 .GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
-
 
             //Dictionary<int, int> cuposCumplidos = repositorio.Listar<Cupo>(x =>
             //      x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) &&
@@ -3061,22 +3036,22 @@ namespace Molinos.DataAgro.Business.Managers
                         if (fecha >= formula.CuposDesde && fecha <= formula.CuposHasta)
                         {
                             //Todos los cupos
-                            var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            var CantidadCuposGenerados = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados por solicitud y creados manualmente (fuera del algoritmo)
-                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                             fecha && x.CentroId == formula.CentroId && (x.AdministracionCupoId != null || x.NegocioId == null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados fuera del algoritmo y solicitudes
-                            var CantidadCuposGeneradosFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosFueraDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                             fecha && x.CentroId == formula.CentroId && x.ConDescarga != true && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados dentro del algoritmo
-                            var CantidadCuposGeneradosDentroDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosDentroDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                            fecha && x.CentroId == formula.CentroId && (x.NegocioId != null && x.ConDescarga != true) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados con descarga
-                            var CantidadCuposGeneradosConDescarga = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosConDescarga = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                            fecha && x.CentroId == formula.CentroId && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
 
@@ -3116,14 +3091,14 @@ namespace Molinos.DataAgro.Business.Managers
                                 //Sugerencias Devueltas
                                 CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId),
                                 //Solicitudes Aceptadas
-                                CantidadSolicitudesAceptadas = (int)repositorio.Contar<Cupo>(x => x.FechaIngreso == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId && x.AdministracionCupoId != null && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)),
+                                CantidadSolicitudesAceptadas = repositorio.Contar<Cupo>(x => x.FechaIngreso == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId && x.AdministracionCupoId != null && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)),
                                 //Solicitudes Pendientes del algoritmo y extraordinarias.
                                 CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo),
                                 //Solicitudes Pendientes Extra
                                 CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
 
-                                CantidadSugerenciaPendiente = (int)repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null
+                                CantidadSugerenciaPendiente = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null
                                 && x.MaterialId == material.MaterialId).Sum(x => x.CantidadDeCupos),
                                 // no se usa
                                 //CantidadSugerencia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId),
@@ -4386,7 +4361,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona, int material, int centro, DateTime hoy)
         {
             var actual = hoy.Date;
-            var cantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == actual && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
+            var cantidadCuposGenerados = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == actual && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
 
             var limitePorZona = repositorio.Listar<LimiteCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
             {
@@ -6744,7 +6719,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                     }
                     workSheet9.Column(i).AutoFit();
-                };
+                }
+                ;
             }
 
             j = 1;
@@ -6846,7 +6822,7 @@ namespace Molinos.DataAgro.Business.Managers
                         workSheet13.Column((c + k)).AutoFit();
 
                     }
-                };
+                }
             }
 
 
@@ -6855,27 +6831,23 @@ namespace Molinos.DataAgro.Business.Managers
         private ConfiguracionCupo DevolverCuperaLiberada(SugerenciaCupo sugerencia)
         {
 
-            return repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == sugerencia.MaterialId && x.CentroId == sugerencia.CentroId &&
-             x.Fecha == sugerencia.FechaSugerida && x.CierreCupera != true && x.LiberarCupera == true);
-
+            return DevolverCuperaLiberada(sugerencia.MaterialId, sugerencia.CentroId, sugerencia.FechaSugerida);
         }
         private ConfiguracionCupo DevolverCuperaLiberada(int MaterialId, int CentroId, DateTime Fecha)
         {
-
             return repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == MaterialId && x.CentroId == CentroId &&
-             x.Fecha == Fecha && x.CierreCupera != true && x.LiberarCupera == true);
-
+             x.Fecha == Fecha && !x.CierreCupera && x.LiberarCupera);
         }
 
         private int ObtenerCuposConsumidosPorFecha(DateTime fecha, SugerenciaCupo s)
         {
-            return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
+            return repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == s.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == s.MaterialId)).Count;
         }
 
         private int ObtenerCuposConsumidosPorFecha(int MaterialId, int CentroId, DateTime fecha)
         {
-            return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
+            return repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == MaterialId)).Count;
         }
 

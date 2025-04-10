@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ProveedorId { get; set; }                  
         public DateTime Fecha { get; set; }
         public int Disponible { get; set; }
+        public int Ingremental { get; set; }
     }
 
 }
