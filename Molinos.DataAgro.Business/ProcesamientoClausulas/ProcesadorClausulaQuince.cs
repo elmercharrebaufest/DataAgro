@@ -28,7 +28,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.HastaFijacion.HasValue)
             {
 
-                var aperturaPrecioPorContrato = clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault();
+                var aperturaPrecioPorContrato = (clausula.Basico.AperturaPrecios!=null && clausula.Basico.AperturaPrecios.Count > 0) ? clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault() : null;
+                
                 var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
                 var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
                 decimal? importeSobrePrecio = aperturaPrecioPorContrato!=null? aperturaPrecioPorContrato.Importe : descuentoGeneralSobrePrecio?.Importe;
