@@ -24,6 +24,16 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
             {
                 res.Texto = $"Destino de la mercadería: {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. Origen: {clausula.Basico.Localidad}, {clausula.Basico.Provincia}.";
+                if (clausula.Basico.PreciosPactados != null && clausula.Basico.PreciosPactados.Count > 0)
+                {
+                    res.Texto += "El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de entrega y recibos, desde el ";
+                    foreach (var precio in clausula.Basico.PreciosPactados)
+                    {
+                        res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
+                            $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)}),";
+                    }
+                    res.Texto = res.Texto.EndsWith(",") ? string.Format("{0}.",res.Texto.Remove(res.Texto.Length - 1)) : res.Texto;
+                }
             }
             else
             {
@@ -102,6 +112,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
                             $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({DevolverNumeroEnLetras(precio.Precio)}),";
                     }
+                    res.Texto = res.Texto.EndsWith(",") ? string.Format("{0}.", res.Texto.Remove(res.Texto.Length - 1)) : res.Texto;
                 }
             }
 
