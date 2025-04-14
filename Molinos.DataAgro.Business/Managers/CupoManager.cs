@@ -6935,7 +6935,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MaterialId = x.MaterialId,
                     FechaHasta = x.FechaHastaOriginal ?? x.FechaHasta,
                     KgPendientes = x.Cantidad
-                }, x => x.ProveedorId == proveedorId && x.MaterialId == materialId && x.Cantidad > 0 && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
+                }, x => (x.ProveedorId == proveedorId || x.CorredorId == proveedorId) && x.MaterialId == materialId && x.Cantidad > 0 && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
                     (sustentable ? x.Sustentable : epa || eudr ? x.EPA || x.EUDR : !x.Sustentable && !x.EPA && !x.EUDR) &&
                     (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado));
 
