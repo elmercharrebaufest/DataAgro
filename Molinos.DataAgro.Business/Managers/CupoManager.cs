@@ -1086,7 +1086,6 @@ namespace Molinos.DataAgro.Business.Managers
                 if (proveedorContacto.Count == 0)
                 {
                     logger.Debug($"El proveedor {id} no tiene ContactoComercial. Cupos generados: {string.Join(", ", listaCupos)}");
-                    return;
                 }
 
                 string emailComercial = "";
@@ -1100,7 +1099,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     catch (Exception e)
                     {
-                        logger.Error(e);
+                        logger.Error("Error al obtener el email del AD del Comercial asignado: ", e);
                     }
                 }
 
@@ -1108,8 +1107,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
                 };
-
-
 
                 if (cupo.ComercialCreador != null)
                 {
@@ -1120,7 +1117,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     catch (Exception e)
                     {
-                        logger.Error(e);
+                        logger.Error("Error al obtener el email del AD del Comercial creador: ", e);
                     }
                 }
 
@@ -1158,8 +1155,9 @@ namespace Molinos.DataAgro.Business.Managers
                             var emailAdicional = mailManager.GetEmailUserActiveDirectory(comercialAdicional.IdActiveDirectory);
                             oMensaje.CC.Add(emailAdicional);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            logger.Error("Error al obtener el email del Comercial en el AD: ", ex);
                         }
 
                     }
@@ -1220,7 +1218,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error("Error al enviar el email de aceptación de Cupo: ", ex);
             }
         }
 
