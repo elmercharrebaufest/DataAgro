@@ -556,6 +556,7 @@
     <Compile Include="Entities\ClausulaCincuentaYCinco.cs" />
     <Compile Include="Entities\ClausulaCincuentaYCuatro.cs" />
     <Compile Include="Entities\ClausulaCincuentaYDos.cs" />
+    <Compile Include="Entities\ClausulaCincuentaYNueve.cs" />
     <Compile Include="Entities\ClausulaCincuentaYOcho.cs" />
     <Compile Include="Entities\ClausulaCincuentaYSeis.cs" />
     <Compile Include="Entities\ClausulaCincuentaYSiete.cs" />

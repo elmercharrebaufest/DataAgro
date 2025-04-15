@@ -356,6 +356,7 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYCinco.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYCuatro.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYDos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYNueve.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYOcho.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYSeis.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCincuentaYSiete.cs" />
