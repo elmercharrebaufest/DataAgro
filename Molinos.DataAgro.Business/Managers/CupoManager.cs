@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -12,20 +13,19 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using OfficeOpenXml;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Net;
-using KendoGridBinder.Extensions;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -3059,22 +3059,22 @@ namespace Molinos.DataAgro.Business.Managers
                         if (fecha >= formula.CuposDesde && fecha <= formula.CuposHasta)
                         {
                             //Todos los cupos
-                            var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            var CantidadCuposGenerados = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados por solicitud y creados manualmente (fuera del algoritmo)
-                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                             fecha && x.CentroId == formula.CentroId && (x.AdministracionCupoId != null || x.NegocioId == null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados fuera del algoritmo y solicitudes
-                            var CantidadCuposGeneradosFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosFueraDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                             fecha && x.CentroId == formula.CentroId && x.ConDescarga != true && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados dentro del algoritmo
-                            var CantidadCuposGeneradosDentroDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosDentroDelAlgoritmo = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                            fecha && x.CentroId == formula.CentroId && (x.NegocioId != null && x.ConDescarga != true) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados con descarga
-                            var CantidadCuposGeneradosConDescarga = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosConDescarga = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                            fecha && x.CentroId == formula.CentroId && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
 
@@ -3114,14 +3114,14 @@ namespace Molinos.DataAgro.Business.Managers
                                 //Sugerencias Devueltas
                                 CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId),
                                 //Solicitudes Aceptadas
-                                CantidadSolicitudesAceptadas = (int)repositorio.Contar<Cupo>(x => x.FechaIngreso == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId && x.AdministracionCupoId != null && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)),
+                                CantidadSolicitudesAceptadas = repositorio.Contar<Cupo>(x => x.FechaIngreso == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId && x.AdministracionCupoId != null && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)),
                                 //Solicitudes Pendientes del algoritmo y extraordinarias.
                                 CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo),
                                 //Solicitudes Pendientes Extra
                                 CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
 
-                                CantidadSugerenciaPendiente = (int)repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null
+                                CantidadSugerenciaPendiente = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null
                                 && x.MaterialId == material.MaterialId).Sum(x => x.CantidadDeCupos),
                                 // no se usa
                                 //CantidadSugerencia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId),
@@ -4384,7 +4384,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona, int material, int centro, DateTime hoy)
         {
             var actual = hoy.Date;
-            var cantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == actual && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
+            var cantidadCuposGenerados = repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == actual && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
 
             var limitePorZona = repositorio.Listar<LimiteCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
             {
@@ -6867,13 +6867,13 @@ namespace Molinos.DataAgro.Business.Managers
 
         private int ObtenerCuposConsumidosPorFecha(DateTime fecha, SugerenciaCupo s)
         {
-            return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
+            return repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == s.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == s.MaterialId)).Count;
         }
 
         private int ObtenerCuposConsumidosPorFecha(int MaterialId, int CentroId, DateTime fecha)
         {
-            return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
+            return repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == MaterialId)).Count;
         }
 
@@ -6975,7 +6975,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 contratoSap = contratoSap.PadLeft(10, '0');
                 var negocio = repositorio.Obtener<Negocio, NegocioParaSolicitarCupo>(x => x.ContratoSAP == contratoSap && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION
-                && (sustentable ? x.Sustentable : epa || eudr ? x.EPA || x.EUDR : !x.Sustentable && !x.EPA && !x.EUDR)
+                && x.TipoNegocioId != (int)EnumTipoNegocio.CONTRATO_ACUERDO &&
+                (sustentable ? x.Sustentable : epa || eudr ? x.EPA || x.EUDR : !x.Sustentable && !x.EPA && !x.EUDR)
                 && (estadoId > 0 ? x.EstadoId == estadoId : x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado),
                     x => new NegocioParaSolicitarCupo
                     {
