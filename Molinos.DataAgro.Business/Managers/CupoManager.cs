@@ -3047,23 +3047,23 @@ namespace Molinos.DataAgro.Business.Managers
                         if (fecha >= formula.CuposDesde && fecha <= formula.CuposHasta)
                         {
                             //Todos los cupos
-                            var CantidadCuposGenerados = cupos.Count(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
+                            var CantidadCuposGenerados = cupos.Count(x => x.FechaIngreso.Date == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
 
                             //Cupos creados por solicitud y creados manualmente (fuera del algoritmo)
-                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = cupos.Count(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = cupos.Count(x => x.FechaIngreso.Date ==
                             fecha && x.CentroId == formula.CentroId && (x.AdministracionCupoId != null || x.NegocioId == null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
 
                             //Cupos creados fuera del algoritmo y solicitudes
-                            var CantidadCuposGeneradosFueraDelAlgoritmo = cupos.Count(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                            fecha && x.CentroId == formula.CentroId && x.ConDescarga != true && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
+                            var CantidadCuposGeneradosFueraDelAlgoritmo = cupos.Count(x => x.FechaIngreso.Date == fecha && x.CentroId == formula.CentroId && x.ConDescarga != true
+                            && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
 
                             //Cupos creados dentro del algoritmo
-                            var CantidadCuposGeneradosDentroDelAlgoritmo = cupos.Count(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                           fecha && x.CentroId == formula.CentroId && (x.NegocioId != null && x.ConDescarga != true) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
+                            var CantidadCuposGeneradosDentroDelAlgoritmo = cupos.Count(x => x.FechaIngreso.Date == fecha && x.CentroId == formula.CentroId
+                            && (x.NegocioId != null && x.ConDescarga != true) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
 
                             //Cupos creados con descarga
-                            var CantidadCuposGeneradosConDescarga = cupos.Count(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                           fecha && x.CentroId == formula.CentroId && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
+                            var CantidadCuposGeneradosConDescarga = cupos.Count(x => x.FechaIngreso.Date == fecha && x.CentroId == formula.CentroId &&
+                            x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId));
 
 
                             var cupo = new DiaCupo()
