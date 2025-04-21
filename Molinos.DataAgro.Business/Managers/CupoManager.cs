@@ -2999,8 +2999,9 @@ namespace Molinos.DataAgro.Business.Managers
                     List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta && x.CentroId == formula.CentroId);
                     List<ConfiguracionCupoDto> disponibilidadEnPlanta = configuracionCupo.Select(x => new ConfiguracionCupoDto { CentroId = x.CentroId, LimiteAlgoritmo = x.LimiteAlgoritmo, LimiteCupo = x.LimiteCupo, MaterialId = x.MaterialId, Fecha = x.Fecha, LimiteDescarga = x.LimiteDescarga }).ToList();
 
-                    var fechasComprendidas = FechasComprendidas(null);
-
+                    List<DateTime> fechasComprendidas = FechasComprendidas(null);
+                    var minFecha = fechasComprendidas.Min();
+                    var maxFecha = fechasComprendidas.Max();
                     var cupos = repositorio.Listar<Cupo, CupoDto>(x => new CupoDto
                     {
                         Id = x.Id,
@@ -3012,7 +3013,7 @@ namespace Molinos.DataAgro.Business.Managers
                         AdministracionCupoId = x.AdministracionCupoId,
                         ConDescarga = x.ConDescarga
                     },
-                        x => fechasComprendidas.Contains(DbFunctions.TruncateTime(x.FechaIngreso).Value) && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId);
+                        x => DbFunctions.TruncateTime(x.FechaIngreso) >= minFecha && DbFunctions.TruncateTime(x.FechaIngreso) <= maxFecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId);
 
                     var administracionCupos = repositorio.Listar<AdministracionCupo, AdministracionCupoDto>(x => new AdministracionCupoDto
                     {
@@ -3027,7 +3028,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Excedente = x.Excedente,
                         EstadoId = x.EstadoId
                     },
-                        x => fechasComprendidas.Contains(DbFunctions.TruncateTime(x.Fecha).Value) && x.MaterialId == material.MaterialId);
+                        x => DbFunctions.TruncateTime(x.Fecha) >= minFecha && DbFunctions.TruncateTime(x.Fecha) <= maxFecha && x.MaterialId == material.MaterialId);
 
                     var sugerenciaCupo = repositorio.Listar<SugerenciaCupo, SugerenciaCupoDto>(x => new SugerenciaCupoDto
                     {
@@ -3038,7 +3039,7 @@ namespace Molinos.DataAgro.Business.Managers
                         MaterialId = x.MaterialId,
                         Aceptado = x.Aceptado
                     }
-                    , x => fechasComprendidas.Contains(DbFunctions.TruncateTime(x.FechaSugerida).Value) && x.CentroId == formula.CentroId && x.Aceptado == null
+                    , x => DbFunctions.TruncateTime(x.FechaSugerida) >= minFecha && DbFunctions.TruncateTime(x.FechaSugerida) <= maxFecha && x.CentroId == formula.CentroId && x.Aceptado == null
                                 && x.MaterialId == material.MaterialId);
 
                     foreach (var fecha in fechasComprendidas)

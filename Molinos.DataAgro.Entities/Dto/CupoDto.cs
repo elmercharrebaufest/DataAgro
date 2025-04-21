@@ -64,6 +64,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Sustentable { get; set; }
         public bool EPA { get; set; }
         public bool EUDR { get; set; }
-        public object AdministracionCupoId { get; set; }
+        public int? AdministracionCupoId { get; set; }
     }
 }
