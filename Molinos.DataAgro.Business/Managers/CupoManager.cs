@@ -1292,7 +1292,21 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += TablaSustentable(cupo);
             }
-            htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
+
+            /* ACOPIOS que no deben recibir el texto de recordatorio:
+             * Rio del Valle (Planta Soto)
+             * Rio del Valle
+             * General Pinedo
+             * Chivilcoy
+             * Pergamino
+             * Bandera
+             * La Cautiva
+             * Lincoln
+             */
+            var acopiosSinTexto = new List<string> { "1075", "1071", "1072", "1034", "1035", "1127", "1126", "1036" };
+            bool estaEnLaLista = acopiosSinTexto.Contains(cupo.Centro.CodigoSap);
+
+            htmlBody += "<br />" + (estaEnLaLista != true ? " Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. " : "") + "Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
