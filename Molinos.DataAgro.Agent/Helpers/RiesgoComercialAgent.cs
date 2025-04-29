@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Agent.RiesgoComercial;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Interfaces;
 using System.Configuration;
 
@@ -16,17 +17,26 @@ namespace Molinos.DataAgro.Agent
                 CUIT = ConfigurationManager.AppSettings["SapPruebaCUIT"];
             }
 
-            SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient agent = new SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient();
+            if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+            {
+                Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
 
-            agent.ClientCredentials.UserName.UserName = UserSap;
+                var rq = new ZMprfcRiesgoComercial() { ImCuit = CUIT };
+                var valor = agent.ZMprfcRiesgoComercial(rq);
+                return valor.ExRiesgo;
+            }
+            else
+            {
+                SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient agent = new SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient();
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
 
-            agent.ClientCredentials.UserName.Password = PassSap;
-
-            var rq = new Z_MPRFC_RIESGO_COMERCIAL() { IM_CUIT = CUIT };
-
-            var valor = agent.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL(rq);
-
-            return valor.EX_RIESGO;
+                var rq = new Z_MPRFC_RIESGO_COMERCIAL() { IM_CUIT = CUIT };
+                var valor = agent.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL(rq);
+                return valor.EX_RIESGO;
+            }
         }
 
     }
