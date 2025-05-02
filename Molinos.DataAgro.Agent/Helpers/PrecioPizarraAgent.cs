@@ -159,6 +159,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
+                logger.Info("SAP sin PI - RFC ZMprfcPrecioPizarra");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
@@ -172,7 +173,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug(request.ToXml());
 
                 ZMprfcPrecioPizarraResponse devolucion = agent.ZMprfcPrecioPizarra(request);
-
+                logger.Info("SAP sin PI - RFC ZMprfcPrecioPizarra");
                 logger.Debug(devolucion.ToXml());
                 var log = repositorio.Obtener<Log>(logId.Id);
                 log.Xml += devolucion.ToXml();
