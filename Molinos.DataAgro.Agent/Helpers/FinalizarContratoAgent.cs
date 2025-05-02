@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             descuentoBonificacion = descuentoBonificacion ?? new List<DescuentoBonificacion>();
             var servicios = contrato.Servicios ?? new List<Servicio>();
             calidad = calidad ?? new List<Calidad>();
+            logger.Info("SAP sin PI - RFC ZMprfcPreSlip");
             logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
@@ -435,6 +436,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();
 
                 var devolucion = agent.ZMprfcPreSlip(rq2);
+                logger.Info("SAP sin PI - RFC ZMprfcPreSlip");
                 logger.Debug(devolucion.ToXml());
 
                 log = repositorio.Obtener<Log>(logId.Id);
