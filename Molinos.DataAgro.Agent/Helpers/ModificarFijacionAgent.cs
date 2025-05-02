@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ModificarFijacion;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -32,47 +33,94 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACIONClient();
-
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-                    logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.FijacionSAP);
-                    logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
-                    logger.Debug("Cargando contrato");
-                    var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");
-                    var rq = new Z_MPRFC_MODIFICAR_FIJACION
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CONTRATO = contratoGuardado.ContratoSAP,
-                        IM_ZLSCH = contratoGuardado.ChequeElectronico == true ? "=" : "",
-                        IM_CUENTA_MRP = contratoGuardado.PagoCBU != null ? contratoGuardado.PagoCBU.Split('-')[0] : "",
-                        IM_FIJACION = contratoGuardado.FijacionSAP,
-                        IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
-                        IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
-                        IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
-                        IM_FECHA_LIMITE = fechaDolarizadoString,
-                        IM_DIAS_DIFERIM = contratoGuardado.DiasPesificado != null ? contratoGuardado.DiasPesificado.ToString() : "0"
-                    };
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+                        logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.FijacionSAP);
+                        logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
+                        logger.Debug("Cargando contrato");
+                        var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");
+                        var rq = new ZMprfcModificarFijacion
+                        {
+                            ImContrato = contratoGuardado.ContratoSAP,
+                            ImZlsch = contratoGuardado.ChequeElectronico == true ? "=" : "",
+                            ImCuentaMrp = contratoGuardado.PagoCBU != null ? contratoGuardado.PagoCBU.Split('-')[0] : "",
+                            ImFijacion = contratoGuardado.FijacionSAP,
+                            ImDolarizado = contratoGuardado.Dolarizado == true ? "X" : "",
+                            ImDolCorredor = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
+                            ImDolExpress = contratoGuardado.DolarizadoExpress == true ? "X" : "",
+                            ImFechaLimite = fechaDolarizadoString,
+                            ImDiasDiferim = contratoGuardado.DiasPesificado != null ? contratoGuardado.DiasPesificado.ToString() : "0"
+                        };
 
-                    logger.Debug(rq.ToXml());
+                        logger.Debug(rq.ToXml());
 
-                    var log = new Log
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+
+                        var devolucion = agent.ZMprfcModificarFijacion(rq);
+                        logger.Debug(devolucion.ToXml());
+
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+
+                        logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.ExMensaje) ? "Respuesta SAP: " + devolucion.ExMensaje : "OK SAP null");
+                        return devolucion.ExMensaje;
+
+                    }
+                    else
                     {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
+                        var agent = new SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACIONClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+                        logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.FijacionSAP);
+                        logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
+                        logger.Debug("Cargando contrato");
+                        var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");
+                        var rq = new Z_MPRFC_MODIFICAR_FIJACION
+                        {
+                            IM_CONTRATO = contratoGuardado.ContratoSAP,
+                            IM_ZLSCH = contratoGuardado.ChequeElectronico == true ? "=" : "",
+                            IM_CUENTA_MRP = contratoGuardado.PagoCBU != null ? contratoGuardado.PagoCBU.Split('-')[0] : "",
+                            IM_FIJACION = contratoGuardado.FijacionSAP,
+                            IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
+                            IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
+                            IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
+                            IM_FECHA_LIMITE = fechaDolarizadoString,
+                            IM_DIAS_DIFERIM = contratoGuardado.DiasPesificado != null ? contratoGuardado.DiasPesificado.ToString() : "0"
+                        };
 
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
 
-                    var devolucion = agent.SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION(rq);
-                    logger.Debug(devolucion.ToXml());
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
 
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += devolucion.ToXml();
-                    repositorio.GuardarCambios();
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
 
-                    logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? "Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
-                    return devolucion.EX_MENSAJE;
+                        var devolucion = agent.SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION(rq);
+                        logger.Debug(devolucion.ToXml());
+
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+
+                        logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? "Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
+                        return devolucion.EX_MENSAJE;
+                    }
+
                 }
                 catch (Exception e)
                 {
