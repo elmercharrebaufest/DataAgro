@@ -2156,6 +2156,21 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El contrato no se puede confirmar");
                 return oEntityErrors;
             }
+
+            if (!oContratoSave.Pizarra.Value && oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+            {
+                decimal porcentajeDesvio = 0.9M;
+                decimal precioNetoMinimo = (decimal)(oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio));
+                decimal precioNetoMaximo = (decimal)(oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio));
+
+                if (oContratoSave.PrecioNeto < precioNetoMinimo || oContratoSave.PrecioNeto > precioNetoMaximo)
+                {
+                    oEntityErrors.Error("Precio", $"Precio fuera de Rango para NegocioId {oContratoSave.Id}. Precio base {oContratoSave.Precio} y Precio Neto {oContratoSave.PrecioNeto}");
+                    logger.Error($"Precio fuera de Rango para NegocioId {oContratoSave.Id}. Precio base {oContratoSave.Precio} y Precio Neto {oContratoSave.PrecioNeto}");
+                    return oEntityErrors;
+                }
+            }
+
             if (oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && oContratoSave.TipoPosicionCBOTId == 3)
             {
                 var cantidad = ValidarSiCumpleLaTolerancia(contratoId);
@@ -2442,12 +2457,32 @@ namespace Molinos.DataAgro.Business.Managers
                 if (oContratoSave.Fecha < diaAnterior)
                 {
                     oEntityErrors.Error("", "La fecha del contrato debe ser la de hoy o día hábil anterior.");
+                    logger.Error($"La fecha del contrato con ID {oContratoSave.Id} debe ser la de hoy o día hábil anterior.");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
                     return oEntityErrors;
                 }
+
+                if (!oContratoSave.Pizarra.Value && oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+                {
+                    decimal porcentajeDesvio = 0.9M;
+                    decimal precioNetoMinimo = (decimal)(oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio));
+                    decimal precioNetoMaximo = (decimal)(oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio));
+
+                    if (oContratoSave.PrecioNeto < precioNetoMinimo || oContratoSave.PrecioNeto > precioNetoMaximo)
+                    {
+                        oEntityErrors.Error("Precio", $"Precio fuera de Rango para NegocioId {oContratoSave.Id}. Precio base {oContratoSave.Precio} y Precio Neto {oContratoSave.PrecioNeto}");
+                        logger.Error($"Precio fuera de Rango para NegocioId {oContratoSave.Id}. Precio base {oContratoSave.Precio} y Precio Neto {oContratoSave.PrecioNeto}");
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                        repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
+
+                        return oEntityErrors;
+                    }
+                }
+
                 try
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.Id);
