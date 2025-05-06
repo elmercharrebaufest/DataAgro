@@ -245,6 +245,8 @@ function CargarCopiaContrato(contratoId, tipo) {
     if (tipo == "acuerdo") {
         contratoCopia.ContratoAcuerdoId = contratoId;
         $("#contratoAcuerdoId").val(contratoId);
+        contratoCopia.FechaOperacionFormateado = formatearFecha(new Date());
+        contratoCopia.FechaOperacion = "/Date(" + new Date().getTime() + ")/";
     }
 
     if (contratoCopia.HayError) {
