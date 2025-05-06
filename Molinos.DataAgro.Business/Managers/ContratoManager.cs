@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -2160,8 +2159,8 @@ namespace Molinos.DataAgro.Business.Managers
             if (!oContratoSave.Pizarra.Value && oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
                 decimal porcentajeDesvio = 0.9M;
-                decimal precioNetoMinimo = (decimal)(oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio));
-                decimal precioNetoMaximo = (decimal)(oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio));
+                decimal precioNetoMinimo = oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio);
+                decimal precioNetoMaximo = oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio);
 
                 if (oContratoSave.PrecioNeto < precioNetoMinimo || oContratoSave.PrecioNeto > precioNetoMaximo)
                 {
@@ -2468,8 +2467,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (!oContratoSave.Pizarra.Value && oContratoSave.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     decimal porcentajeDesvio = 0.9M;
-                    decimal precioNetoMinimo = (decimal)(oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio));
-                    decimal precioNetoMaximo = (decimal)(oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio));
+                    decimal precioNetoMinimo = oContratoSave.Precio - (oContratoSave.Precio * porcentajeDesvio);
+                    decimal precioNetoMaximo = oContratoSave.Precio + (oContratoSave.Precio * porcentajeDesvio);
 
                     if (oContratoSave.PrecioNeto < precioNetoMinimo || oContratoSave.PrecioNeto > precioNetoMaximo)
                     {
@@ -2658,7 +2657,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
             oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado) || (int)oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado) || oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
             {
                 if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || oContratoSave.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado)
                 {
@@ -3942,6 +3941,16 @@ namespace Molinos.DataAgro.Business.Managers
                 PagoCBU = x.PagoCBU
             });
             Nullable<DateTime> fecha = null;
+
+            if (contrato.DesdeFijacion.HasValue)
+            {
+                contrato.DesdeFijacionFormateado = contrato.DesdeFijacion.Value.ToString("dd-MM-yyyy");
+            }
+
+            if (contrato.HastaFijacion.HasValue)
+            {
+                contrato.HastaFijacionFormateado = contrato.HastaFijacion.Value.ToString("dd-MM-yyyy");
+            }
 
             var dia = oDiasHabilesAgent.UltimoDiaHabil(fecha);
             if (contrato.Fecha < dia)
@@ -5629,7 +5638,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Fecha_Dolarizado = negocio is Contrato && ((negocio as Contrato).FechaDolarizado).HasValue ? ((negocio as Contrato).FechaDolarizado).Value.Date : (DateTime?)null;
             bc.Fecha_DolarizadoFormateado = negocio is Contrato && ((negocio as Contrato).FechaDolarizado).HasValue ? ((negocio as Contrato).FechaDolarizado).Value.ToString("dd-MM-yyyy") : "";
             bc.Dias_Pesificado = negocio.DiasPesificado;
-            bc.NoInformaSIO = negocio is Contrato ? (negocio as Contrato).NoInformaSio : (bool?)null;
+            bc.NoInformaSIO = negocio is Contrato ? (negocio as Contrato).NoInformaSio : null;
             bc.Estado = negocio.EstadoId;
             bc.UsuarioId = negocio.UsuarioId;
             bc.ContratoSAP = negocio.ContratoSAP;
@@ -5651,7 +5660,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Pesificado = negocio.DiasPesificado != null;
             bc.Negocio = negocio is ContratoAcuerdo ? negocio.Id.ToString() : (negocio is FijacionDePrecioContrato && (negocio.EstadoId == (int)EnumEstadoContrato.Finalizado || negocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (negocio as FijacionDePrecioContrato).FijacionSAP : negocio.ContratoSAP != "0" ? negocio.ContratoSAP : "";
             bc.DestinoId = negocio.DestinoId;
-            bc.CantidadCamiones = (negocio is Contrato) ? (negocio as Contrato).CantidadCamiones : (int?)null;
+            bc.CantidadCamiones = (negocio is Contrato) ? (negocio as Contrato).CantidadCamiones : null;
             bc.Consignatario = (negocio is Contrato) ? (negocio as Contrato).Consignatario : false;
             bc.PlanCanje = (negocio is Contrato) ? (negocio as Contrato).PlanCanje : false;
             bc.CD = (negocio is Contrato) ? (negocio as Contrato).CD : null;
@@ -5665,7 +5674,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.HastaFijacion = (negocio is Contrato) && ((negocio as Contrato).HastaFijacion).HasValue ? ((negocio as Contrato).HastaFijacion).Value.Date : (DateTime?)null;
             bc.HastaFijacionFormateado = (negocio is Contrato) && ((negocio as Contrato).HastaFijacion).HasValue ? ((negocio as Contrato).HastaFijacion).Value.ToString("dd-MM-yyyy") : "";
             bc.CondicionFijacion = (negocio is Contrato) ? (negocio as Contrato).CondicionFijacionId : null;
-            bc.ClasificacionId = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : (int?)null;
+            bc.ClasificacionId = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : null;
             bc.CalidadDescripcion = negocio.TrigoEspecial == true ? "Especial" : "Cámara";
             bc.MercsDeposito = (negocio is Contrato) ? ((negocio as Contrato).MercsDeposito == true ? (negocio as Contrato).MercsDeposito : false) : null;
             bc.ComercialCreadorId = negocio.ComercialCreadorId;
@@ -5788,7 +5797,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaDescripcion = valor.Where(x => x.ServicioValorId == y.ServicioValorId).FirstOrDefault().MonedaDescripcion,
                 Descripcion = valor.Where(x => x.ServicioValorId == y.ServicioValorId).FirstOrDefault().Descripcion
             }).ToList() : valor;
-            var clasificacion = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : (int?)null;
+            var clasificacion = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : null;
             bc.ClasificacionDescripcion = (negocio is Contrato) ? repositorio.Obtener<ClasificacionCompraNet, string>(x => x.Id == clasificacion, x => x.Descripcion) : "";
             bc.CalidadDescripcion = negocio.TrigoEspecial == true ? "Especial" : "Cámara";
             bc.ComercialZonaDescripcion = comercial != null && comercial.GrupoDeCompras != null ? comercial.GrupoDeCompras.Descripcion : "";
@@ -5799,10 +5808,10 @@ namespace Molinos.DataAgro.Business.Managers
             var provincia = (negocio is Contrato) ? (negocio as Contrato).ProvinciaId : null;
             bc.Localidad = (negocio is Contrato) && (!(negocio is Contrato) || localidad == null) ? "" : repositorio.Obtener<Localidad, string>(x => x.LocalidadId == localidad, x => x.Nombre);
             bc.Provincia = (negocio is Contrato) && (!(negocio is Contrato) || provincia == null) ? "" : repositorio.Obtener<Provincia, string>(x => x.ProvinciaId == provincia, x => x.Nombre);
-            bc.PrecioAjusteComision = (negocio is Contrato) ? (negocio as Contrato).PrecioAjusteComision : (decimal?)null;
+            bc.PrecioAjusteComision = (negocio is Contrato) ? (negocio as Contrato).PrecioAjusteComision : null;
             bc.MonedaAjusteComisionId = (negocio is Contrato) ? (negocio as Contrato).MonedaAjusteComisionId : "";
             bc.CaratulaMAT = (negocio is Contrato) ? (negocio as Contrato).CaratulaMAT : "";
-            bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : (int?)null;
+            bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : null;
             bc.PrestamoDevolucion = negocio.PrestamoDevolucion.HasValue ? negocio.PrestamoDevolucion.Value : false;
             bc.PlantaDestinoId = negocio.PlantaDestinoId.HasValue ? negocio.PlantaDestinoId.Value : 0;
             bc.FechaHasta_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable != null ?
@@ -7152,7 +7161,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             contrato.PorcentajeDePago = 97.5m;
-            contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
+            contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? null : contrato.PagoDiferidoTerceroId;
 
             return GrabarContrato(contrato);
         }
@@ -7562,7 +7571,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoPeriodoDBId = 1,
                                 MonedaId = "USDM "
                             }};
-                        };
+                        }
+                        ;
                         int descuentos = DBNull.Value.Equals(rows.ElementAt(ii)[24]) ? 0 : tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id;
                         if (descuentos != 0)
                         {
