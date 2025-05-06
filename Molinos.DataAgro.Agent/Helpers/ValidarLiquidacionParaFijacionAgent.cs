@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ValidarLiquidacionParaFijacion;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -28,21 +29,36 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACIONClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPFRC_VAL_LIQ_PAR_FIJACION
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
-                    };
-                    logger.Debug(rq.ToXml());
-
-                    var valor = agent.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION(rq);
-                    logger.Debug(valor.ToXml());
-
-                    return valor.EX_RESULTADO[0].MENSAJE;
-
+                        logger.Info("SAP sin PI - RFC ZMpfrcValLiqParFijacion");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+                        var rq = new ZMpfrcValLiqParFijacion
+                        {
+                            ImConPed = new Zmpes6290[] { new Zmpes6290 { Contrato = contratoSap, Pedido = fijacion } },
+                        };
+                        logger.Debug(rq.ToXml());
+                        var valor = agent.ZMpfrcValLiqParFijacion(rq);
+                        logger.Info("SAP sin PI - RFC ZMpfrcValLiqParFijacion");
+                        logger.Debug(valor.ToXml());
+                        return valor.ExResultado[0].Mensaje;
+                    }
+                    else
+                    {
+                        var agent = new SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACIONClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+                        var rq = new Z_MPFRC_VAL_LIQ_PAR_FIJACION
+                        {
+                            IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
+                        };
+                        logger.Debug(rq.ToXml());
+                        var valor = agent.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION(rq);
+                        logger.Debug(valor.ToXml());
+                        return valor.EX_RESULTADO[0].MENSAJE;
+                    }
                 }
                 catch (Exception e)
                 {

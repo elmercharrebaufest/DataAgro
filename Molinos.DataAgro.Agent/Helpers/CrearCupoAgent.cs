@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.CrearCupo;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -42,56 +43,113 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_CREAR_CUPOSClient();
-
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-                    var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
-                    var rq = new Z_MPRFC_CREAR_CUPOS
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CANTIDAD_CUPOS = cantidadCupos.ToString(),
-                        IM_COMERCIAL = cupo.Comercial.IdActiveDirectory,
-                        IM_DATAAGRO = "X",
-                        IM_CUPO = new ZMPES5500()
+                        logger.Info("SAP sin PI - RFC ZMprfcCrearCupos");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+                        var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
+                        var rq = new ZMprfcCrearCupos
                         {
-                            FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
-                            MATNR = cupo.Material.Codigo,
-                            PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
-                            DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
-                            PLANTA = cupo.Centro.CodigoSap == "1029" && (cupo.Sustentable || cupo.EPA || cupo.EUDR) ? "1600" : cupo.Centro.CodigoSap,
-                            ZONA = cupo.ZonaCupo.CodigoSap,
-                            OBSERVACIONES = cupo.Observaciones,
-                            DESTINATARIO = cupo.Destinatario,
-                            FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
-                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
-                        },
-                        IM_PROPUESTA = "X", //Si se envía vacío la RFC responde "No hay cupos disponibles."
-                        IM_EXCEPCION = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
-                    };
+                            ImCantidadCupos = cantidadCupos.ToString(),
+                            ImComercial = cupo.Comercial.IdActiveDirectory,
+                            ImDataagro = "X",
+                            ImCupo = new Zmpes5500()
+                            {
+                                FechaIngreso = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
+                                Matnr = cupo.Material.Codigo,
+                                Proveedor = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
+                                Descprov = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
+                                Planta = cupo.Centro.CodigoSap == "1029" && (cupo.Sustentable || cupo.EPA || cupo.EUDR) ? "1600" : cupo.Centro.CodigoSap,
+                                Zona = cupo.ZonaCupo.CodigoSap,
+                                Observaciones = cupo.Observaciones,
+                                Destinatario = cupo.Destinatario,
+                                FleteProc = cupo.FleteProcedencia == true ? "S" : "N",
+                                Calidad = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
+                            },
+                            ImPropuesta = "X", //Si se envía vacío la RFC responde "No hay cupos disponibles."
+                            ImExcepcion = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
+                        };
 
-                    var logId = repositorio.Agregar(new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    });
-                    repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                        var logId = repositorio.Agregar(new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        });
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
 
-                    var devolucion = agent.SI_ZMPWS_DATAAGRO_CREAR_CUPOS(rq);
+                        var devolucion = agent.ZMprfcCrearCupos(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcCrearCupos");
+                        logger.Debug(devolucion.ToXml());
+                        var log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+                        logger.Debug("Guardado en la base");
 
-                    logger.Debug(devolucion.ToXml());
-                    var log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += devolucion.ToXml();
-                    repositorio.GuardarCambios();
-                    logger.Debug("Guardado en la base");
+                        if (devolucion.ExMensajeError != "")
+                        {
+                            throw new Exception(devolucion.ExMensajeError);
+                        }
+                        logger.Debug("Sin Error");
 
-                    if (devolucion.EX_MENSAJE_ERROR != "")
-                    {
-                        throw new Exception(devolucion.EX_MENSAJE_ERROR);
+                        return devolucion.ExNCupo.Select(x => x.CodigoCupo).ToList();
+
                     }
-                    logger.Debug("Sin Error");
+                    else
+                    {
+                        var agent = new SI_ZMPWS_DATAAGRO_CREAR_CUPOSClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    return devolucion.EX_N_CUPO.Select(x => x.CODIGO_CUPO).ToList();
+                        var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
+                        var rq = new Z_MPRFC_CREAR_CUPOS
+                        {
+                            IM_CANTIDAD_CUPOS = cantidadCupos.ToString(),
+                            IM_COMERCIAL = cupo.Comercial.IdActiveDirectory,
+                            IM_DATAAGRO = "X",
+                            IM_CUPO = new ZMPES5500()
+                            {
+                                FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
+                                MATNR = cupo.Material.Codigo,
+                                PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
+                                DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
+                                PLANTA = cupo.Centro.CodigoSap == "1029" && (cupo.Sustentable || cupo.EPA || cupo.EUDR) ? "1600" : cupo.Centro.CodigoSap,
+                                ZONA = cupo.ZonaCupo.CodigoSap,
+                                OBSERVACIONES = cupo.Observaciones,
+                                DESTINATARIO = cupo.Destinatario,
+                                FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
+                                CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
+                            },
+                            IM_PROPUESTA = "X", //Si se envía vacío la RFC responde "No hay cupos disponibles."
+                            IM_EXCEPCION = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
+                        };
+
+                        var logId = repositorio.Agregar(new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        });
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
+
+                        var devolucion = agent.SI_ZMPWS_DATAAGRO_CREAR_CUPOS(rq);
+
+                        logger.Debug(devolucion.ToXml());
+                        var log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+                        logger.Debug("Guardado en la base");
+
+                        if (devolucion.EX_MENSAJE_ERROR != "")
+                        {
+                            throw new Exception(devolucion.EX_MENSAJE_ERROR);
+                        }
+                        logger.Debug("Sin Error");
+
+                        return devolucion.EX_N_CUPO.Select(x => x.CODIGO_CUPO).ToList();
+                    }
                 }
                 catch (Exception e)
                 {
