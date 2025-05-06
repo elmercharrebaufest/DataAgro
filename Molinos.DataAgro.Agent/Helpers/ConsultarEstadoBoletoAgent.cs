@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ConsultarEstadoBoleto;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -52,59 +53,113 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             try
             {
-                SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new Z_MPRFC_CONSULTAR_ESTADO_BOLET()
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    IM_CONTRATO = ContratoSAP,
-                    IM_FIJACION = FijacionSAP
-                };
-                logger.Debug(rq.ToXml());
+                    logger.Info("SAP sin PI - RFC ZMprfcConsultarEstadoBolet");
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
 
-                var log = new Log
-                {
-                    Fecha = DateTime.Now,
-                    Xml = rq.ToXml()
-                };
-
-                var logId = repositorio.Agregar(log);
-                repositorio.GuardarCambios();
-
-                var devolucion = agent.SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLET(rq);
-                logger.Debug(devolucion.ToXml());
-
-                log = repositorio.Obtener<Log>(logId.Id);
-                log.Xml += devolucion.ToXml();
-                repositorio.GuardarCambios();
-
-                DatosEstadoBoletoDto estadoBoleto = new DatosEstadoBoletoDto
-                {
-                    //EX_BOLETO = "",
-                    Version = devolucion.EX_VERSION,
-                    Anulado = devolucion.EX_ANULADO,
-                    FechaRecepcionBoleto = devolucion.EX_FE_RECEP_BOLETO,
-                    Contrato = devolucion.EX_CONTRATO,
-                    //EX_COND_FIJACION = devolucion.EX_COND_FIJACION,
-                    FechaConfirmacion = devolucion.EX_FECHA_CONFIR,
-                    Generado = devolucion.EX_GENERADO
-                };
-                foreach (var item in devolucion.EX_COND_FIJACION)
-                {
-                    estadoBoleto.CondicionFijacion.Add(new CondicionFijacionEstadoBoletoDto
+                    var rq = new ZMprfcConsultarEstadoBolet()
                     {
-                        Contrato = item.CONTRNUM,
-                        CantidadMaxima = item.CANT_MAX,
-                        CantidadMinima = item.CANT_MIN,
-                        FechaDesde = item.FE_DESDE,
-                        FechaHasta = item.FE_HASTA,
-                        Meins = item.MEINS
-                    });
-                }
-                return estadoBoleto;
+                        ImContrato = ContratoSAP,
+                        ImFijacion = FijacionSAP
+                    };
+                    logger.Debug(rq.ToXml());
 
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+
+                    var devolucion = agent.ZMprfcConsultarEstadoBolet(rq);
+                    logger.Info("SAP sin PI - RFC ZMprfcConsultarEstadoBolet");
+                    logger.Debug(devolucion.ToXml());
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += devolucion.ToXml();
+                    repositorio.GuardarCambios();
+
+                    DatosEstadoBoletoDto estadoBoleto = new DatosEstadoBoletoDto
+                    {
+                        Version = devolucion.ExVersion,
+                        Anulado = devolucion.ExAnulado,
+                        FechaRecepcionBoleto = devolucion.ExFeRecepBoleto,
+                        Contrato = devolucion.ExContrato,
+                        FechaConfirmacion = devolucion.ExFechaConfir,
+                        Generado = devolucion.ExGenerado
+                    };
+                    foreach (var item in devolucion.ExCondFijacion)
+                    {
+                        estadoBoleto.CondicionFijacion.Add(new CondicionFijacionEstadoBoletoDto
+                        {
+                            Contrato = item.Contrnum,
+                            CantidadMaxima = item.CantMax,
+                            CantidadMinima = item.CantMin,
+                            FechaDesde = item.FeDesde,
+                            FechaHasta = item.FeHasta,
+                            Meins = item.Meins
+                        });
+                    }
+                    return estadoBoleto;
+                }
+                else
+                {
+                    SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_CONSULTAR_ESTADO_BOLET()
+                    {
+                        IM_CONTRATO = ContratoSAP,
+                        IM_FIJACION = FijacionSAP
+                    };
+                    logger.Debug(rq.ToXml());
+
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLET(rq);
+                    logger.Debug(devolucion.ToXml());
+
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += devolucion.ToXml();
+                    repositorio.GuardarCambios();
+
+                    DatosEstadoBoletoDto estadoBoleto = new DatosEstadoBoletoDto
+                    {
+                        //EX_BOLETO = "",
+                        Version = devolucion.EX_VERSION,
+                        Anulado = devolucion.EX_ANULADO,
+                        FechaRecepcionBoleto = devolucion.EX_FE_RECEP_BOLETO,
+                        Contrato = devolucion.EX_CONTRATO,
+                        //EX_COND_FIJACION = devolucion.EX_COND_FIJACION,
+                        FechaConfirmacion = devolucion.EX_FECHA_CONFIR,
+                        Generado = devolucion.EX_GENERADO
+                    };
+                    foreach (var item in devolucion.EX_COND_FIJACION)
+                    {
+                        estadoBoleto.CondicionFijacion.Add(new CondicionFijacionEstadoBoletoDto
+                        {
+                            Contrato = item.CONTRNUM,
+                            CantidadMaxima = item.CANT_MAX,
+                            CantidadMinima = item.CANT_MIN,
+                            FechaDesde = item.FE_DESDE,
+                            FechaHasta = item.FE_HASTA,
+                            Meins = item.MEINS
+                        });
+                    }
+                    return estadoBoleto;
+                }
             }
             catch (Exception e)
             {

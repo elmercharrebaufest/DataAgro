@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ContratosAPesificar;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -26,12 +27,83 @@ namespace Molinos.DataAgro.Agent
             this.repositorio = repositorio;
         }
 
+
+        public List<PesificarAgentDto> ConsultarProveedores(List<string> cuits, bool esBuscarTodos)
+        {
+            var pesificado = new List<PesificarAgentDto>();
+            if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+            {
+                logger.Info("SAP sin PI - RFC ZMprfcListaProveedores");
+                Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
+
+                var rq = new ZMprfcListaProveedores { ImProveedores = cuits.ToArray() };
+
+                if (!esBuscarTodos)
+                {
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                }
+
+                var devolucion = agent.ZMprfcListaProveedores(rq);
+                logger.Info("SAP sin PI - RFC ZMprfcListaProveedores");
+                if (devolucion.ExSalida != null)
+                {
+                    foreach (var dev in devolucion.ExSalida)
+                    {
+                        pesificado.Add(ConvertirADtoSinPI(dev));
+                    }
+                }
+                return pesificado;
+            }
+            else
+            {
+                var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
+                var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
+
+                if (!esBuscarTodos)
+                {
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                }
+
+                var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
+                if (devolucion.EX_SALIDA != null)
+                {
+                    foreach (var dev in devolucion.EX_SALIDA)
+                    {
+                        pesificado.Add(ConvertirADto(dev));
+                    }
+                }
+
+                return pesificado;
+            }
+        }
+
         public List<PesificarAgentDto> ConsultarPorUnProveedor(string cuit)
         {
             try
             {
-                var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
+                var pesificado = new List<PesificarAgentDto>();
+                var prov = new List<string> { cuit };
+                pesificado = ConsultarProveedores(prov, false);
+                return pesificado;
 
+                /*
+                var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
                 var prov = new List<string> { cuit };
@@ -46,7 +118,6 @@ namespace Molinos.DataAgro.Agent
                 repositorio.GuardarCambios();
 
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
-                var pesificado = new List<PesificarAgentDto>();
                 if (devolucion.EX_SALIDA != null)
                 {
                     foreach (var dev in devolucion.EX_SALIDA)
@@ -56,6 +127,7 @@ namespace Molinos.DataAgro.Agent
                 }
 
                 return pesificado;
+                */
             }
             catch (Exception e)
             {
@@ -68,6 +140,14 @@ namespace Molinos.DataAgro.Agent
         {
             try
             {
+
+                logger.Debug("Cuits pesificados " + cuits.ToXml());
+                var pesificado = new List<PesificarAgentDto>();
+                pesificado = ConsultarProveedores(cuits, true);
+                logger.Debug("Pesificado total " + pesificado.Count());
+                return pesificado;
+
+                /*
                 var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
@@ -78,21 +158,7 @@ namespace Molinos.DataAgro.Agent
                     IM_PROVEEDORES = cuits.ToArray()
                 };
 
-                //var log = new Log
-                //{
-                //    Fecha = DateTime.Now,
-                //    Xml = rq.ToXml()
-                //};
-                //var logId = repositorio.Agregar(log);
-                //repositorio.GuardarCambios();
-                //logger.Debug(rq.ToXml());
-
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
-                //logger.Debug("PESIFICADOS - Respuesta rfc LISTA_PROVEEDORES: " + devolucion.ToXml());
-                //log = repositorio.Obtener<Log>(logId.Id);
-                //log.Xml += devolucion.ToXml();
-                //repositorio.GuardarCambios();
-
                 var pesificado = new List<PesificarAgentDto>();
                 if (devolucion.EX_SALIDA != null)
                 {
@@ -104,6 +170,7 @@ namespace Molinos.DataAgro.Agent
 
                 logger.Debug("Pesificado total " + pesificado.Count());
                 return pesificado;
+                */
             }
             catch (Exception e)
             {
@@ -171,5 +238,67 @@ namespace Molinos.DataAgro.Agent
 
             return pesificado;
         }
+        
+        private PesificarAgentDto ConvertirADtoSinPI(Zmpes6360 dev)
+        {
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            var pesificado = new PesificarAgentDto
+            {
+                Material = dev.Material,
+                Contrato = dev.Contrato,
+                CantidadPendiente = (int)dev.CantPendiente,
+                Comercial = dev.Comercial,
+                Fijacion = dev.Fijacion,
+                FechaFijacion = dev.FechaFijacion == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FechaFijacion, "yyyy-MM-dd", provider),
+                FechaHastaDolarizado = dev.FechaHastaDol == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FechaHastaDol, "yyyy-MM-dd", provider),
+                FechaUltimaAplicacion = dev.FechaUltApli == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(dev.FechaUltApli, "yyyy-MM-dd", provider),
+                DolarizadoNoProductor = dev.DolarizadoNoProd != "NO",
+                CuitCorredor = dev.CuitCorredor,
+                CuitVendedor = dev.CuitVendedor,
+                DolarizadoExpress = dev.DolarizadoExpress != "NO",
+                Moneda = dev.Moneda,
+                KgNoPesificable = dev.PesNoVen < 0 ? (dev.PesNoVen + dev.PesVencida) : dev.PesNoVen,
+                KgVencimientoPesificable = dev.PesVencida < 0 ? 0 : dev.PesVencida,
+                KgTotales = dev.PesNoVen + dev.PesVencida,
+                Precio = dev.Precio,
+                NombreCorredor = dev.NomCorredor,
+                NombreVendedor = dev.NomVend,
+                Unidad = dev.Unidad,
+                Dolarizado = dev.Dolarizado != "NO",
+                Clasificacion = dev.Clasificacion,
+                Anticipo = dev.Anticipo,
+                Status = dev.Status == "" ? "S" : dev.Status,
+                Cesion = dev.Cesion == "X",
+                Cantidad = dev.Cantidad,
+                CantidadLiquidada = dev.CantLiquidada,
+                CantidadRecibida = dev.CantRecibida,
+                ConPrecio = dev.ConPrecio,
+
+            };
+            var fecha = new DateTime(1753, 1, 1);
+            if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)
+            {
+
+                logger.Error($"Reporte Pesificado fecha Fijacion:  {pesificado.ToJson()}");
+                pesificado.FechaFijacion = (DateTime?)null;
+            }
+            if (pesificado.FechaHastaDolarizado.HasValue && pesificado.FechaHastaDolarizado.Value < fecha)
+            {
+
+                logger.Error($"Reporte Pesificado FechaHastaDolarizado:  {pesificado.ToJson()}");
+                pesificado.FechaHastaDolarizado = (DateTime?)null;
+            }
+            if (pesificado.FechaUltimaAplicacion.HasValue && pesificado.FechaUltimaAplicacion.Value < fecha)
+            {
+
+                logger.Error($"Reporte Pesificado FechaUltimaAplicacion:  {pesificado.ToJson()}");
+                pesificado.FechaUltimaAplicacion = (DateTime?)null;
+            }
+            logger.Debug("PESIFICADOS 3 - ConvertirADto");
+
+            return pesificado;
+        }
+
+
     }
 }
