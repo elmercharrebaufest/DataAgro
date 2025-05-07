@@ -6377,7 +6377,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
-                var comercialVenta = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta))); ;
+                var comercialVenta = repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta))); ;
                 comercialVenta.Remove(contrato.Comercial);
                 comercialVenta.Remove(contrato.ComercialCreador);
                 logger.Debug("Enviando mail a " + string.Join(", ", comercialVenta.Select(x => x.IdActiveDirectory)));
