@@ -9,6 +9,7 @@ using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -23,6 +24,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net.Mail;
 using System.Text;
 
@@ -771,8 +773,16 @@ namespace Molinos.DataAgro.Business.Managers
             // Iterar sobre los datos y modificar atributos
             foreach (var boleto in data)
             {
-                boleto.Version_Proxima = boleto.Version_Proxima is null ? 1 : boleto.Version_Proxima + 1;
-            }
+                boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
+                if (boleto.Estado_Version == "Anulado")
+                {
+                    boleto.Estado_Version = "Pendiente";
+                    boleto.Version++;
+                    boleto.FechaAnulacion = null;
+                    boleto.FechaGeneracion = null;
+                    boleto.UsuarioAnulacion = null;
+                }
+            };
             return result;
         }
 
@@ -787,22 +797,46 @@ namespace Molinos.DataAgro.Business.Managers
             return request;
         }
 
-        private string CompletarEstadoBoleto(string ContratoSAP, string FijacionSAP)
+        private string ObtenerEstadoBoleto(BasicoBoleto boleto)
         {
-            var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(ContratoSAP, FijacionSAP);
-            var mensaje = string.Empty;
-            if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "X")
+            var mensaje = boleto.Estado_Version;
+            try
             {
-                mensaje = "Anulado";
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                var version = Int32.Parse(consultaBoleto.Version);
+                if (version > boleto.Version)
+                {
+                    mensaje = "Anulado";
+                }
+                else if (version == boleto.Version)
+                {
+                    if (consultaBoleto.Anulado == "X")
+                    {
+                        mensaje = "Anulado";
+                    }
+                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+                    {
+                        mensaje = "Vigente";
+                    }
+                    else
+                    {
+                        mensaje = "Pendiente";
+                    }
+                }
+                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
+                {
+                    mensaje = "Pendiente";
+                }
+                else
+                {
+                    logger.Info($"Generar Boleto - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
+                }
             }
-            else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+            catch (Exception ex)
             {
-                mensaje = "Generado";
+                logger.Info($"Generar Boleto - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Mensaje: {ex.Message}.");
             }
-            else
-            {
-                mensaje = "No Generado";
-            }
+
             return mensaje;
         }
 

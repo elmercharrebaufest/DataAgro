@@ -844,7 +844,7 @@
   <data name="ConfirmarNegociosTrigo" xml:space="preserve">
     <value>Confirmar Negocios Trigo</value>
   </data>
-	<data name="ConfirmarNegociosSorgo" xml:space="preserve">
+  <data name="ConfirmarNegociosSorgo" xml:space="preserve">
     <value>Confirmar Negocios Sorgo</value>
   </data>
   <data name="ModificarFijacionVirtual" xml:space="preserve">
@@ -942,5 +942,8 @@
   </data>
   <data name="Mail_Impuestos" xml:space="preserve">
     <value>Recibir Mail de Jurisdicciones no Inscriptas</value>
+  </data>
+  <data name="Ver_Todos_Contactos_Por_Proveedor" xml:space="preserve">
+    <value>Ver Todos Contactos Por Proveedor</value>
   </data>
 </root>

@@ -48,8 +48,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
                 var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
-                var descuentoPorAperturaDePrecio = clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault();
-
+                var descuentoPorAperturaDePrecio = (clausula.Basico.AperturaPrecios!=null && clausula.Basico.AperturaPrecios.Count > 0) ? clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault() : null;
+                
                 res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio, descuentoPorAperturaDePrecio);
                 res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
             }

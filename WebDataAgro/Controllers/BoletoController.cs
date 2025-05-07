@@ -1,4 +1,5 @@
 ﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -23,12 +24,15 @@ namespace WebDataAgro.Controllers
     {
         private readonly IBoletoManager boletoManager;
         private readonly IReportesManager reportesManager;
+        private readonly IMaterialManager materialManager;
+
         private readonly string _logDir;
 
-        public BoletoController(IBoletoManager boletoManager, IReportesManager reportesManager)
+        public BoletoController(IBoletoManager boletoManager, IReportesManager reportesManager, IMaterialManager materialManager)
         {
             this.boletoManager = boletoManager;
             this.reportesManager = reportesManager;
+            this.materialManager = materialManager;
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
 
@@ -88,6 +92,18 @@ namespace WebDataAgro.Controllers
                         Selected = false
                     }).OrderBy(x => x.Value);
             ViewBag.TipoNegocio = tiposListItems;
+
+            var material = materialManager.TraerTodoMaterial();
+
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+
         }
 
         [HttpGet]

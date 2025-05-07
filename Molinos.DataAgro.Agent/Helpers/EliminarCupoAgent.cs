@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.AnularCupo;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -47,33 +48,68 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_ANULAR_CUPOSClient();
-
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_ANULAR_CUPOS
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CODIGO = cupoSap,
-                        IM_COMERCIAL = comercial
-                    };
+                        logger.Info("SAP sin PI - RFC ZMprfcAnularCupos");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    logger.Debug(rq.ToXml());
-                    var logId = repositorio.Agregar(new Log
+
+                        var rq = new ZMprfcAnularCupos
+                        {
+                            ImCodigo = cupoSap,
+                            ImComercial = comercial
+                        };
+
+                        logger.Debug(rq.ToXml());
+                        var logId = repositorio.Agregar(new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        });
+                        repositorio.GuardarCambios();
+
+                        var devolucion = agent.ZMprfcAnularCupos(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcAnularCupos");
+                        logger.Debug(devolucion.ToXml());
+
+                        var log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+
+                        return devolucion.ExMensaje;
+                    }
+                    else
                     {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    });
-                    repositorio.GuardarCambios();
+                        var agent = new SI_ZMPWS_DATAAGRO_ANULAR_CUPOSClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var devolucion = agent.SI_ZMPWS_DATAAGRO_ANULAR_CUPOS(rq);
-                    logger.Debug(devolucion.ToXml());
+                        var rq = new Z_MPRFC_ANULAR_CUPOS
+                        {
+                            IM_CODIGO = cupoSap,
+                            IM_COMERCIAL = comercial
+                        };
 
-                    var log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += devolucion.ToXml();
-                    repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
+                        var logId = repositorio.Agregar(new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        });
+                        repositorio.GuardarCambios();
 
-                    return devolucion.EX_MENSAJE;
+                        var devolucion = agent.SI_ZMPWS_DATAAGRO_ANULAR_CUPOS(rq);
+                        logger.Debug(devolucion.ToXml());
+
+                        var log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += devolucion.ToXml();
+                        repositorio.GuardarCambios();
+
+                        return devolucion.EX_MENSAJE;
+                    }
+
                 }
                 catch (Exception e)
                 {

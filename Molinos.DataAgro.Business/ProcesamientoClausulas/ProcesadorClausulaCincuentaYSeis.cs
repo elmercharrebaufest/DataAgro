@@ -6,11 +6,8 @@ using Molinos.DataAgro.Entities.Resources;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.ProcesamientoClausulas
 {
@@ -26,7 +23,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
             var bonificacionAperturaPrecio = clausula.Basico.AperturaPrecios != null ? clausula.Basico.AperturaPrecios.Find(x => x.ConceptoAperturaPrecioId == 4) : new AperturaPrecioDto();
             var descuentos = clausula.Basico.Descuentos.Where(x => x.Importe != 0 || x.Porcentaje != 0).ToList();
-            if (descuentos.Count == 0 && bonificacionAperturaPrecio.Id > 0)
+            if (descuentos.Count == 0 && (bonificacionAperturaPrecio!=null && bonificacionAperturaPrecio.Id > 0))
             {
                 res.Texto += DevolverClausulaBonificacionAperturaPrecio(bonificacionAperturaPrecio);
             }

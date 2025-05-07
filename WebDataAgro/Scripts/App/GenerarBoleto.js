@@ -124,9 +124,12 @@ function FiltrarBoletos() {
             if (esContratoDesdeValido() && validarFechasYContratos()) {
                 let fechaDesde = $("#FechaConfirmacionDesdeId").data("kendoDatePicker").value();
                 let fechaHasta = $("#FechaConfirmacionHastaId").data("kendoDatePicker").value();
+                let fechaCargaDesde = $("#FechaCargaId").data("kendoDatePicker").value();
+                let fechaCargaHasta = $("#FechaCargaHastaId").data("kendoDatePicker").value();
                 let claseNegocio = $("#tipoId").val();
                 let contratoDesde = $("#contratoDesde").val().endsWith(';') ? $("#contratoDesde").val().slice(0, -1) : $("#contratoDesde").val();
                 let contratoHasta = $("#contratoHasta").val();
+                let material = $("#materialId").val();
 
                 var filters = {
                     logic: "and",
@@ -148,7 +151,16 @@ function FiltrarBoletos() {
                 if (fechaHasta) {
                     filters.filters.push({ field: "FechaConfirmacion", operator: "lte", value: fechaHasta });
                 }
-
+                if (fechaCargaDesde) {
+                    filters.filters.push({ field: "FechaCarga", operator: "gte", value: fechaCargaDesde });
+                }
+                if (fechaCargaHasta) {
+                    filters.filters.push({ field: "FechaCarga", operator: "lte", value: fechaCargaHasta });
+                }
+                if (material) {
+                    filters.filters.push({ field: "MaterialId", operator: "eq", value: parseInt(material) });
+                }
+                
                 var data = {
                     Filter: filters,
                     Take: 100000,
@@ -168,7 +180,11 @@ function FiltrarBoletos() {
                             return {
                                 ...item,
                                 FechaOperacion: parseDate(item.FechaOperacion),
-                                FechaConfirmacion: parseDate(item.FechaConfirmacion)
+                                FechaConfirmacion: parseDate(item.FechaConfirmacion),
+                                FechaConfirmadoSAP: parseDate(item.FechaConfirmadoSAP),
+                                FechaGeneracion: parseDate(item.FechaGeneracion),
+                                FechaAnulacion: parseDate(item.FechaAnulacion),
+                                FechaCarga: parseDate(item.FechaCarga)
                             };
                         }));
                         $("#contratos-grid").show();
@@ -251,19 +267,25 @@ function inicializarGrillaContratos() {
             }
 
             var columns = [
-                { field: "ContratoSAP", title: "Contrato SAP", width: 150 },
-                { field: "FijacionSAP", title: "Fijación SAP", width: 150 },
-                { field: "Version_Proxima", title: "Versión Próxima", width: 150 },
+                { field: "NegocioSAP", title: "Contrato", width: 150 },
+                { field: "Material", title: "Material", width: 150 },
                 { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
                 { field: "Bolsa", title: "Bolsa", width: 150 },
+                { field: "Version", title: "Vers.", width: 150 },
+                { field: "Estado_Version", title: "Estado V.", width: 150 },
+                { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
                 { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
-                { field: "FechaConfirmacion", title: "Fecha Confirmación", width: 150 },
+                { field: "FechaConfirmadoSAP", title: "Fecha Confirmación", width: 150 },
+                { field: "FechaAnulacion", title: "Fecha Anulación", width: 150 },
+                { field: "ContratoVendedor", title: "Contrato Vendedor", width: 150 },
+                { field: "ContratoCorredor", title: "Contrato Corredor", width: 150 },
                 { field: "Corredor", title: "Corredor", width: 150 },
                 { field: "Vendedor", title: "Vendedor", width: 150 },
+                { field: "Comercial", title: "Comercial", width: 150 },
                 { field: "Precio", title: "Precio", width: 150 },
                 { field: "Moneda", title: "Moneda", width: 150 },
                 { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
-                { field: "Canje", title: "Canje", width: 150 }
+                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35 },
             ];
 
             var header = columns.map(function (column) {
@@ -292,7 +314,6 @@ function inicializarGrillaContratos() {
 
             // Actualizar el workbook en e.data
             e.workbook = workbook;
-            console.log(e.workbook);
         },
         dataSource: {
 
@@ -316,6 +337,7 @@ function inicializarGrillaContratos() {
         },
         sortable: true,
         filterable: false,
+        scrollable: true,
         columns: [
             {
                 field: "NegocioSAP",
@@ -343,23 +365,177 @@ function inicializarGrillaContratos() {
                         </a>
                     </div>
                 `,
-                width: 70
             },
-            { field: "ContratoSAP", title: "Contrato SAP", width: 50, },
-            { field: "FijacionSAP", title: "Fijación SAP", width: 50, },
-            { field: "Version_Proxima", title: "Ver. Próx.", width: 30, format: "{0:N0}", headerAttributes: { "title": "Version Próxima" } },
-            { field: "TipoBoleto", title: "Tipo Boleto", width: 50 },
-            { field: "Bolsa", title: "Bolsa", width: "50px" },
-            { field: "FechaOperacion", title: "F. Operación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" } },
-            { field: "FechaConfirmacion", title: "F. Confirmación", width: 50, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" } },
-            { field: "Corredor", title: "Corredor", width: 150 },
-            { field: "Vendedor", title: "Vendedor", width: 150 },
-            { field: "Precio", title: "Precio", type: "number", width: 50, format: "{0:#,##0.00}" },
-            { field: "Moneda", title: "Moneda", width: 30 },
-            { field: "TipoNegocio", title: "Tipo Contrato", width: 50 },
-            { field: "Canje", title: "Canje", width: 30 }
+            { field: "NegocioSAP", title: "Contrato", width: "auto", type: "string", headerAttributes: { "title": "Contrato" } },
+            {
+                field: "Material", title: "Material", width: "auto", editable: false, type: "string", headerAttributes: { "title": "Material" },
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { Material: "Maiz" },
+                        { Material: "Trigo" },
+                        { Material: "Soja" },
+                        { Material: "Girasol" }
+                    ],
+                }
+            },
+            { field: "TipoBoleto", title: "Tipo Boleto", width: "auto", headerAttributes: { "title": "Tipo Boleto" }, type: "string" },
+            {
+                field: "Bolsa", title: "Bolsa", width: "auto", editable: false, type: "string",
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { Bolsa: "Buenos Aires" },
+                        { Bolsa: "Rosario" },
+                        { Bolsa: "Bahía Blanca" },
+                        { Bolsa: "Santa Fe" },
+                        { Bolsa: "Cordoba" },
+                        { Bolsa: "Entre Ríos" },
+                        { Bolsa: "Chaco" }
+                    ],
+                }
+            },
+            { field: "Version", title: "Vers.", width: "auto", headerAttributes: { "title": "Versión" }, type: "number" },
+            {
+                field: "Estado_Version", title: "Estado V.", width: "auto", headerAttributes: { "title": "Estado Versión" }, editable: false, type: "string",
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { Estado_Version: "Pendiente" },
+                        { Estado_Version: "Vigente" },
+                        { Estado_Version: "Anulado" }
+                    ],
+                }
+            },
+            { field: "FechaGeneracion", title: "F. Generación", width: "auto", format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Generación" }, type: "date" },
+            { field: "FechaOperacion", title: "F. Operación", width: "auto", format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" }, type: "date" },
+            { field: "FechaConfirmadoSAP", title: "F. Confirmación", width: "auto", format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" }, type: "date" },
+            { field: "FechaAnulacion", title: "F. Anulación", width: "auto", format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Anulación" }, type: "date" },
+            { field: "ContratoVendedor", title: "C. Vendedor", width: "auto", headerAttributes: { "title": "Contrato Vendedor" }, type: "string" },
+            { field: "ContratoCorredor", title: "C. Corredor", width: "auto", headerAttributes: { "title": "Contrato Corredor" }, type: "string" },
+            {
+                field: "Vendedor",
+                title: "Vendedor",
+                width: "auto",
+                headerAttributes: { "title": "Vendedor" },
+                filterable: {
+                    multi: true,
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione vendedores...",
+                            dataTextField: "Vendedor",
+                            dataValueField: "Vendedor",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Vendedor", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
+            {
+                field: "Corredor",
+                title: "Corredor",
+                width: 150,
+                headerAttributes: { "title": "Corredor" },
+                filterable: {
+                    multi: true,
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione corredores...",
+                            dataTextField: "Corredor",
+                            dataValueField: "Corredor",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Corredor", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
+            {
+                field: "Comercial",
+                title: "Comercial",
+                width: 150,
+                headerAttributes: { "title": "Comercial" },
+                filterable: {
+                    multi: true, // Permitir selección múltiple
+                    ui: function (element) {
+                        element.kendoMultiSelect({
+                            placeholder: "Seleccione comerciales...",
+                            dataTextField: "Comercial",
+                            dataValueField: "Comercial",
+                            dataSource: [], // Inicialmente vacío
+                            change: function () {
+                                var values = this.value();
+                                var grid = $("#contratos-grid").data("kendoGrid");
+                                grid.dataSource.filter({
+                                    logic: "or",
+                                    filters: values.map(function (value) {
+                                        return { field: "Comercial", operator: "eq", value: value };
+                                    })
+                                });
+                            }
+                        });
+                    }
+                }
+            },
+            { field: "Precio", title: "Precio", type: "number", width: 70, format: "{0:#,##0.00}", headerAttributes: { "title": "Precio" } },
+            {
+                field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" }, editable: false, type: "string",
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { Moneda: "USD" },
+                        { Moneda: "ARP" }
+                    ],
+                }
+            },
+            {
+                field: "TipoNegocio", title: "Tipo Contrato", width: 55, headerAttributes: { "title": "Tipo Contrato" }, editable: false, type: "string",
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { TipoNegocio: "CONVENIO" },
+                        { TipoNegocio: "FIJ. CONVENIO" },
+                        { TipoNegocio: "FASON MP" },
+                        { TipoNegocio: "AGENTE DE COMPRAS MP" },
+                        { TipoNegocio: "ACUERDO AGENTE" },
+                        { TipoNegocio: "CANJE" },
+                        { TipoNegocio: "PRESTAMO DEVOLUCION" },
+                        { TipoNegocio: "VENTA" },
+                        { TipoNegocio: "A FIJAR PASE" },
+                        { TipoNegocio: "FIJACION VIRTUAL" },
+                        { TipoNegocio: "FIJACION CANJE" },
+                        { TipoNegocio: "A FIJAR" },
+                        { TipoNegocio: "A PRECIO" },
+                        { TipoNegocio: "FIJACION" },
+                        { TipoNegocio: "FASON" },
+                        { TipoNegocio: "AGENTE DE COMPRAS" },
+                        { TipoNegocio: "CONTRATO ACUERDO" },
+                        { TipoNegocio: "ESPACIO DINAMICO" }
+                    ],
+                }
+            }
         ]
     });
+
+    $('#contratos-grid').contents().wrap('<div class="grid-scroll-container"></div>');
+
 }
 
 function inicializarFiltros() {
@@ -374,6 +550,16 @@ function inicializarFiltros() {
     });
 
     $("#FechaConfirmacionHastaId").kendoDatePicker({
+        weekNumber: true,
+        format: "dd/MM/yyyy",
+        value: hoy
+    });
+    $("#FechaCargaId").kendoDatePicker({
+        weekNumber: true,
+        format: "dd/MM/yyyy",
+        value: hoy
+    });
+    $("#FechaCargaHastaId").kendoDatePicker({
         weekNumber: true,
         format: "dd/MM/yyyy",
         value: hoy

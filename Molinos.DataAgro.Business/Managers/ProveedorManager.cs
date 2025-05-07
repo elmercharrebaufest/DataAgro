@@ -4476,11 +4476,11 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
-            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null;
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion)) && x.ComercialId == contrato.ComercialCreadorId) != null;
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
-                var comercialPrestamo = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion))); ;
+                var comercialPrestamo = repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarPrestamoDevolucion))); ;
                 comercialPrestamo.Remove(contrato.Comercial);
                 comercialPrestamo.Remove(contrato.ComercialCreador);
                 logger.Debug("Enviando mail a " + string.Join(", ", comercialPrestamo.Select(x => x.IdActiveDirectory)));
@@ -5130,6 +5130,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", oytNorte));
             foreach (Comercial oytNorteCopia in oytNorte)
             {
+                if(oytNorteCopia.Deshabilitado != true) { continue; }
                 try
                 {
                     var emailComerciales = mailManager.GetEmailUserActiveDirectory(oytNorteCopia.IdActiveDirectory);

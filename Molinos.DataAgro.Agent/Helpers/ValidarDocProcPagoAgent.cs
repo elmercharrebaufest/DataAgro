@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ValidarDocProcPago;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -32,32 +33,63 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGOClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_VALIDAR_DOC_PROC_PAGO
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
+                        logger.Info("SAP sin PI - RFC ZMprfcValidarDocProcPago");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    };
-                    var log = new Log
+                        var rq = new ZMprfcValidarDocProcPago
+                        {
+                            ImConPed = new Zmpes6290[] { new Zmpes6290 { Contrato = contratoSap, Pedido = fijacion } }
+                        };
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
+
+                        var valor = agent.ZMprfcValidarDocProcPago(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcValidarDocProcPago");
+                        logger.Debug(valor.ToXml());
+
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+                        return valor.ExResultado[0].Mensaje;
+                    }
+                    else
                     {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                        var agent = new SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var valor = agent.SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO(rq);
-                    logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
+                        var rq = new Z_MPRFC_VALIDAR_DOC_PROC_PAGO
+                        {
+                            IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
 
-                    return valor.EX_RESULTADO[0].MENSAJE;
+                        };
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
 
+                        var valor = agent.SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO(rq);
+                        logger.Debug(valor.ToXml());
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+
+                        return valor.EX_RESULTADO[0].MENSAJE;
+                    }
                 }
                 catch (Exception e)
                 {

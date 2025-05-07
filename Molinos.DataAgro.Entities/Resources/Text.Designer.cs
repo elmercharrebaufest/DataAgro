@@ -2234,6 +2234,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ver Todos Contactos Por Proveedor.
+        /// </summary>
+        public static string Ver_Todos_Contactos_Por_Proveedor {
+            get {
+                return ResourceManager.GetString("Ver_Todos_Contactos_Por_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ver Todos los Cupos.
         /// </summary>
         public static string Ver_Todos_Cupos {

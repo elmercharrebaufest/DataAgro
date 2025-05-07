@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ContratoKgPendientes;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -39,37 +40,71 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTESClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_INDICAR_KG_PENDIENTES()
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CONTRATO = contratos.Select(a => a.ContratoSAP).ToArray()
-                    };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    //logger.Debug(rq.ToXml());
+                        logger.Info("SAP sin PI - RFC ZMprfcIndicarKgPendientes");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var valor = agent.SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES(rq);
-                    //logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
+                        var rq = new ZMprfcIndicarKgPendientes()
+                        {
+                            ImContrato = contratos.Select(a => a.ContratoSAP).ToArray()
+                        };
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        //logger.Debug(rq.ToXml());
 
-                    foreach (var contrato in contratos)
-                    {
-                        var contratoSAP = valor.EX_CONTRATO.Where(a => a.CONTRATO == contrato.ContratoSAP).SingleOrDefault();
-                        contrato.KgPendiente = Decimal.ToInt32(contratoSAP == null ? 0 : contratoSAP.KILOS_CONT);
+                        var valor = agent.ZMprfcIndicarKgPendientes(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcIndicarKgPendientes");
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+
+                        foreach (var contrato in contratos)
+                        {
+                            var contratoSAP = valor.ExContrato.Where(a => a.Contrato == contrato.ContratoSAP).SingleOrDefault();
+                            contrato.KgPendiente = Decimal.ToInt32(contratoSAP == null ? 0 : contratoSAP.KilosCont);
+                        }
+                        return contratos;
                     }
+                    else
+                    {
+                        var agent = new SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTESClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
+                        var rq = new Z_MPRFC_INDICAR_KG_PENDIENTES()
+                        {
+                            IM_CONTRATO = contratos.Select(a => a.ContratoSAP).ToArray()
+                        };
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        //logger.Debug(rq.ToXml());
 
-                    return contratos;
+                        var valor = agent.SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES(rq);
+                        //logger.Debug(valor.ToXml());
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+
+                        foreach (var contrato in contratos)
+                        {
+                            var contratoSAP = valor.EX_CONTRATO.Where(a => a.CONTRATO == contrato.ContratoSAP).SingleOrDefault();
+                            contrato.KgPendiente = Decimal.ToInt32(contratoSAP == null ? 0 : contratoSAP.KILOS_CONT);
+                        }
+                        return contratos;
+                    }
                 }
                 catch (Exception e)
                 {

@@ -1,7 +1,9 @@
 ﻿using Molinos.DataAgro.Agent.RelacionCorredorProveedor;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System.Configuration;
 
 namespace Molinos.DataAgro.Agent
@@ -11,10 +13,12 @@ namespace Molinos.DataAgro.Agent
         private readonly IRepositorio repositorio;
         private readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
         private readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
 
-        public RelacionCorredorProveedorAgent(IRepositorio repositorio)
+        public RelacionCorredorProveedorAgent(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
+            this.logger = logger;
         }
 
         public bool ObtenerRelacionCorredorProveedor(string cuitCorredor, string cuitProveedor)
@@ -25,28 +29,48 @@ namespace Molinos.DataAgro.Agent
             }
             else
             {
-
-                SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new Z_MPRFC_CONSULTAR_RP()
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    IM_CORREDOR = cuitCorredor,
-                    IM_PROVEEDOR = cuitProveedor
-                };
+                    logger.Info("SAP sin PI - RFC ZMprfcConsultarRp");
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
 
-                var valor = agent.SI_ZMPWS_DATAAGRO_CONSULTAR_RP(rq);
-                var retorno = true;
-                if (valor.EX_MENSAJE != "X")
-                {
-                    retorno = false;
+                    var rq = new ZMprfcConsultarRp()
+                    {
+                        ImCorredor = cuitCorredor,
+                        ImProveedor = cuitProveedor
+                    };
+                    var valor = agent.ZMprfcConsultarRp(rq);
+                    logger.Info("SAP sin PI - RFC ZMprfcConsultarRp");
+                    var retorno = true;
+                    if (valor.ExMensaje != "X")
+                    {
+                        retorno = false;
+                    }
+                    return retorno;
                 }
-                return retorno;
+                else
+                {
+                    SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_CONSULTAR_RP()
+                    {
+                        IM_CORREDOR = cuitCorredor,
+                        IM_PROVEEDOR = cuitProveedor
+                    };
+
+                    var valor = agent.SI_ZMPWS_DATAAGRO_CONSULTAR_RP(rq);
+                    var retorno = true;
+                    if (valor.EX_MENSAJE != "X")
+                    {
+                        retorno = false;
+                    }
+                    return retorno;
+                }
             }
         }
-
     }
 }

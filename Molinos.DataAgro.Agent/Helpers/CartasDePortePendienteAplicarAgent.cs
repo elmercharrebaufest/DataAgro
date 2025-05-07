@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.CartasDePortePendienteAplicar;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -85,53 +86,108 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICARClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap == req.Centro);
-                    var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material || x.Codigo == req.Material);
-
-                    var rq = new Z_MPRFC_CCPP_PENDIENTE_APLICAR
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_AGENTE_COMPRA = req.AgenteCompra == "1" ? "9952569841" : string.Empty,
-                        IM_CENTRO = centro.CodigoSap,
-                        IM_CORREDOR = req.Corredor != null ? ObtenerCodigoProveedor(req.Corredor, true) : string.Empty,
-                        IM_MATERIAL = material.Codigo,
-                        IM_PROVEEDOR = req.Proveedor != null ? ObtenerCodigoProveedor(req.Proveedor) : string.Empty
-                    };
+                        logger.Info("SAP sin PI - RFC ZMprfcCcppPendienteAplicar");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var valor = agent.SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR(rq);
-                    var listaccpp = new List<CcPpPendienteAplicarDto>();
-                    if (valor.EX_SALIDA != null)
-                    {
-                        listaccpp = valor.EX_SALIDA.Select(item =>
-                            new CcPpPendienteAplicarDto()
-                            {
-                                AgenteCompra = item.AGENTE_COMPRA,
-                                Cantidad = item.CANTIDAD,
-                                CartasPorte = item.CCPP,
-                                Centro = centro.Descripcion,
-                                Corredor = item.CORREDOR,
-                                FechaIngresoString = item.FECHA_INGRESO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
-                                FechaNetoString = item.FECHA_NETO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
-                                Material = material.Descripcion,
-                                Proveedor = item.PROVEEDOR,
-                                FechaIngresoDate = item.FECHA_INGRESO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                FechaNetoDate = item.FECHA_NETO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                Almacen = item.ALMACEN,
-                                Canje = item.CANJE == "X",
-                                CD = item.CD_CG == "X",
-                                Warrant = item.WARRANT == "X",
-                                Sustentable = item.SUSTENTABLE == "X",
-                                Region = item.REGION,
-                                Contrato = item.CONTRATO ?? "",
-                                KgContrato = item.KILOS_CONT,
-                                EPA = item.EPA == "X",
-                                EUDR = item.EUDR == "X"
-                            }).OrderBy(a => a.FechaIngresoDate).ToList();
+                        var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap == req.Centro);
+                        var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material || x.Codigo == req.Material);
+
+                        var rq = new ZMprfcCcppPendienteAplicar
+                        {
+                            ImAgenteCompra = req.AgenteCompra == "1" ? "9952569841" : string.Empty,
+                            ImCentro = centro.CodigoSap,
+                            ImCorredor = req.Corredor != null ? ObtenerCodigoProveedor(req.Corredor, true) : string.Empty,
+                            ImMaterial = material.Codigo,
+                            ImProveedor = req.Proveedor != null ? ObtenerCodigoProveedor(req.Proveedor) : string.Empty
+                        };
+
+                        var valor = agent.ZMprfcCcppPendienteAplicar(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcCcppPendienteAplicar");
+                        var listaccpp = new List<CcPpPendienteAplicarDto>();
+                        if (valor.ExSalida != null)
+                        {
+                            listaccpp = valor.ExSalida.Select(item =>
+                                new CcPpPendienteAplicarDto()
+                                {
+                                    AgenteCompra = item.AgenteCompra,
+                                    Cantidad = item.Cantidad,
+                                    CartasPorte = item.Ccpp,
+                                    Centro = centro.Descripcion,
+                                    Corredor = item.Corredor,
+                                    FechaIngresoString = item.FechaIngreso == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                    FechaNetoString = item.FechaNeto == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FechaNeto, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                    Material = material.Descripcion,
+                                    Proveedor = item.Proveedor,
+                                    FechaIngresoDate = item.FechaIngreso == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                    FechaNetoDate = item.FechaNeto == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FechaNeto, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                    Almacen = item.Almacen,
+                                    Canje = item.Canje == "X",
+                                    CD = item.CdCg == "X",
+                                    Warrant = item.Warrant == "X",
+                                    Sustentable = item.Sustentable == "X",
+                                    Region = item.Region,
+                                    Contrato = item.Contrato ?? "",
+                                    KgContrato = item.KilosCont,
+                                    EPA = item.Epa == "X",
+                                    EUDR = item.Eudr == "X"
+                                }).OrderBy(a => a.FechaIngresoDate).ToList();
+                        }
+                        return listaccpp;
                     }
-                    return listaccpp;
+                    else
+                    {                    
+                        var agent = new SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICARClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+
+                        var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap == req.Centro);
+                        var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material || x.Codigo == req.Material);
+
+                        var rq = new Z_MPRFC_CCPP_PENDIENTE_APLICAR
+                        {
+                            IM_AGENTE_COMPRA = req.AgenteCompra == "1" ? "9952569841" : string.Empty,
+                            IM_CENTRO = centro.CodigoSap,
+                            IM_CORREDOR = req.Corredor != null ? ObtenerCodigoProveedor(req.Corredor, true) : string.Empty,
+                            IM_MATERIAL = material.Codigo,
+                            IM_PROVEEDOR = req.Proveedor != null ? ObtenerCodigoProveedor(req.Proveedor) : string.Empty
+                        };
+
+                        var valor = agent.SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR(rq);
+                        var listaccpp = new List<CcPpPendienteAplicarDto>();
+                        if (valor.EX_SALIDA != null)
+                        {
+                            listaccpp = valor.EX_SALIDA.Select(item =>
+                                new CcPpPendienteAplicarDto()
+                                {
+                                    AgenteCompra = item.AGENTE_COMPRA,
+                                    Cantidad = item.CANTIDAD,
+                                    CartasPorte = item.CCPP,
+                                    Centro = centro.Descripcion,
+                                    Corredor = item.CORREDOR,
+                                    FechaIngresoString = item.FECHA_INGRESO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                    FechaNetoString = item.FECHA_NETO == "0000-00-00" ? "00-00-0000" : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"),
+                                    Material = material.Descripcion,
+                                    Proveedor = item.PROVEEDOR,
+                                    FechaIngresoDate = item.FECHA_INGRESO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                    FechaNetoDate = item.FECHA_NETO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                    Almacen = item.ALMACEN,
+                                    Canje = item.CANJE == "X",
+                                    CD = item.CD_CG == "X",
+                                    Warrant = item.WARRANT == "X",
+                                    Sustentable = item.SUSTENTABLE == "X",
+                                    Region = item.REGION,
+                                    Contrato = item.CONTRATO ?? "",
+                                    KgContrato = item.KILOS_CONT,
+                                    EPA = item.EPA == "X",
+                                    EUDR = item.EUDR == "X"
+                                }).OrderBy(a => a.FechaIngresoDate).ToList();
+                        }
+                        return listaccpp;
+                    }
                 }
                 catch (Exception e)
                 {

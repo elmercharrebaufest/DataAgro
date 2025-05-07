@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ListaCBUProveedor;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -39,44 +40,90 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDORClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_LISTA_CBU_PROVEEDOR
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CUIT = new ZMPES6280[] { new ZMPES6280 { CUIT = cuit } }
-                    };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                        logger.Info("SAP sin PI - RFC ZMprfcListaCbuProveedor");
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var valor = agent.SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR(rq);
-                    var listaCbus = new List<PagoCBUDto>();
-
-                    foreach (var item in valor.EX_CBU)
-                    {
-                        var cbus = new PagoCBUDto()
+                        var rq = new ZMprfcListaCbuProveedor
                         {
-                            Cbu = item.BANKN,
-                            Cuit = item.CUIT,
-                            Koinh = item.KOINH,
-                            Pago = item.KOINH + "-" + item.BANKN + " " + item.BVTYP + " " + item.BANKA,
-                            NombreBanco = item.BVTYP
+                            ImCuit = new Zmpes6280[] { new Zmpes6280 { Cuit = cuit } }
                         };
-                        listaCbus.Add(cbus);
-                    }
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
 
-                    logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
-                    return listaCbus.Where(x => x.Pago.Contains(filtro)).OrderBy(x => x.Cbu).ToList();
+                        var valor = agent.ZMprfcListaCbuProveedor(rq);
+                        logger.Info("SAP sin PI - RFC ZMprfcListaCbuProveedor");
+                        var listaCbus = new List<PagoCBUDto>();
+
+                        foreach (var item in valor.ExCbu)
+                        {
+                            var cbus = new PagoCBUDto()
+                            {
+                                Cbu = item.Bankn,
+                                Cuit = item.Cuit,
+                                Koinh = item.Koinh,
+                                Pago = item.Koinh + "-" + item.Bankn + " " + item.Bvtyp + " " + item.Banka,
+                                NombreBanco = item.Bvtyp
+                            };
+                            listaCbus.Add(cbus);
+                        }
+
+                        logger.Debug(valor.ToXml());
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+                        return listaCbus.Where(x => x.Pago.Contains(filtro)).OrderBy(x => x.Cbu).ToList();
+                    }
+                    else
+                    {
+                        var agent = new SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDORClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
+
+                        var rq = new Z_MPRFC_LISTA_CBU_PROVEEDOR
+                        {
+                            IM_CUIT = new ZMPES6280[] { new ZMPES6280 { CUIT = cuit } }
+                        };
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                        logger.Debug(rq.ToXml());
+
+                        var valor = agent.SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR(rq);
+                        var listaCbus = new List<PagoCBUDto>();
+
+                        foreach (var item in valor.EX_CBU)
+                        {
+                            var cbus = new PagoCBUDto()
+                            {
+                                Cbu = item.BANKN,
+                                Cuit = item.CUIT,
+                                Koinh = item.KOINH,
+                                Pago = item.KOINH + "-" + item.BANKN + " " + item.BVTYP + " " + item.BANKA,
+                                NombreBanco = item.BVTYP
+                            };
+                            listaCbus.Add(cbus);
+                        }
+
+                        logger.Debug(valor.ToXml());
+                        log = repositorio.Obtener<Log>(logId.Id);
+                        log.Xml += valor.ToXml();
+                        repositorio.GuardarCambios();
+                        return listaCbus.Where(x => x.Pago.Contains(filtro)).OrderBy(x => x.Cbu).ToList();
+                    }
                 }
                 catch (Exception e)
                 {

@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ObtenerMailProveedor;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -25,37 +26,70 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 logger.Debug("Obtener MailProveedor y direcciones SAP");
 
-                //var listaa = new List<ZMPES6280>() { new ZMPES6280 { CUIT = "30711160163" } };
-
-                var request = new Z_MPRFC_OBTENER_MAILS
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    IM_CUIT = CrearLista(cuits).ToArray()
-                };
-                var agent = new SI_ZMPWS_DATAAGRO_OBTENER_MAILSClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                logger.Debug(request.ToXml());
-                var devolucion = agent.SI_ZMPWS_DATAAGRO_OBTENER_MAILS(request);
-                var lista = new List<MailProveedorDto>();
-                foreach (var item in devolucion.EX_SALIDA)
-                {
-                    lista.Add(new MailProveedorDto()
+                    var request = new ZMprfcObtenerMails
                     {
-                        Cuit = item.CUIT,
-                        Pesificado = (!(item.REMARK.ToUpper().Contains("BOLETO") ||
-                        item.REMARK.ToUpper().Contains("CUPO") || item.REMARK.ToUpper().Contains("NDNCDIFTC")) || item.FLGDEFAULT == "X") ? item.MAIL : "",
-                        DireccionSap = item.DIRECCION.DIRECCION,
-                        LocalidadSap = item.DIRECCION.LOCALIDAD,
-                        ProvinciaSap = item.DIRECCION.PROVINCIA,
-                        CodigoPostalSap = item.DIRECCION.CODIGO_POSTAL
-                    });
-                }
-                logger.Debug(devolucion.ToXml());
+                        ImCuit = CrearListaSinPi(cuits).ToArray()
+                    };
+                    logger.Info("SAP sin PI - RFC ZMprfcObtenerMails");
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
 
-                logger.Debug("Sin Error");
-                return lista;
+                    var devolucion = agent.ZMprfcObtenerMails(request);
+                    logger.Info("SAP sin PI - RFC ZMprfcObtenerMails");
+                    var lista = new List<MailProveedorDto>();
+                    foreach (var item in devolucion.ExSalida)
+                    {
+                        lista.Add(new MailProveedorDto()
+                        {
+                            Cuit = item.Cuit,
+                            Pesificado = (!(item.Remark.ToUpper().Contains("BOLETO") ||
+                            item.Remark.ToUpper().Contains("CUPO") || item.Remark.ToUpper().Contains("NDNCDIFTC")) || item.Flgdefault == "X") ? item.Mail : "",
+                            DireccionSap = item.Direccion.Direccion,
+                            LocalidadSap = item.Direccion.Localidad,
+                            ProvinciaSap = item.Direccion.Provincia,
+                            CodigoPostalSap = item.Direccion.CodigoPostal
+                        });
+                    }
+                    logger.Debug(devolucion.ToXml());
+
+                    logger.Debug("Sin Error");
+                    return lista;
+                }
+                else
+                {
+                    var request = new Z_MPRFC_OBTENER_MAILS
+                    {
+                        IM_CUIT = CrearLista(cuits).ToArray()
+                    };
+                    var agent = new SI_ZMPWS_DATAAGRO_OBTENER_MAILSClient();
+
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    logger.Debug(request.ToXml());
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_OBTENER_MAILS(request);
+                    var lista = new List<MailProveedorDto>();
+                    foreach (var item in devolucion.EX_SALIDA)
+                    {
+                        lista.Add(new MailProveedorDto()
+                        {
+                            Cuit = item.CUIT,
+                            Pesificado = (!(item.REMARK.ToUpper().Contains("BOLETO") ||
+                            item.REMARK.ToUpper().Contains("CUPO") || item.REMARK.ToUpper().Contains("NDNCDIFTC")) || item.FLGDEFAULT == "X") ? item.MAIL : "",
+                            DireccionSap = item.DIRECCION.DIRECCION,
+                            LocalidadSap = item.DIRECCION.LOCALIDAD,
+                            ProvinciaSap = item.DIRECCION.PROVINCIA,
+                            CodigoPostalSap = item.DIRECCION.CODIGO_POSTAL
+                        });
+                    }
+                    logger.Debug(devolucion.ToXml());
+
+                    logger.Debug("Sin Error");
+                    return lista;
+                }
             }
             catch (Exception e)
             {
@@ -70,6 +104,16 @@ namespace Molinos.DataAgro.Agent.Helpers
             foreach (var item in cuits)
             {
                 cuit.Add(new ZMPES6280 { CUIT = item });
+            }
+            return cuit;
+        }
+
+        private List<Zmpes6280> CrearListaSinPi(List<string> cuits)
+        {
+            var cuit = new List<Zmpes6280>();
+            foreach (var item in cuits)
+            {
+                cuit.Add(new Zmpes6280 { Cuit = item });
             }
             return cuit;
         }

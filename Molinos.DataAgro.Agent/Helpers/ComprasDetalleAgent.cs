@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ComprasDetalle;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -50,34 +51,44 @@ namespace Molinos.DataAgro.Agent
 
             try
             {
-                //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-                //{
-                //    UsuarioComercial = ConfigurationManager.AppSettings["SapPruebaUser"];
-                //}
-                SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEClient agent = new SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new Z_MPRFC_DATOS_COMPRAS_DETALLE() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = UsuarioComercial };
-                //var log = new Log
-                //{
-                //    Fecha = DateTime.Now,
-                //    Xml = rq.ToXml()
-                //};
-                //var logId = repositorio.Agregar(log);
-                //repositorio.GuardarCambios();
-                //logger.Debug(rq.ToXml());
-                var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
-
-                if (devolucion.EX_SALIDA != null)
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    foreach (var dev in devolucion.EX_SALIDA)
+                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle");
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new ZMprfcDatosComprasDetalle() { ImCuit = CUIT.ToArray(), ImUsuario = UsuarioComercial };
+                    var devolucion = agent.ZMprfcDatosComprasDetalle(rq);
+                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle");
+                    if (devolucion.ExSalida != null)
                     {
-                        compra.Add(ConvertirADto(dev));
+                        foreach (var dev in devolucion.ExSalida)
+                        {
+                            compra.Add(ConvertirADtoSinPI(dev));
+                        }
                     }
+                    return compra;
+
                 }
-                return compra;
+                else
+                {
+                    SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEClient agent = new SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_DATOS_COMPRAS_DETALLE() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = UsuarioComercial };
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
+
+                    if (devolucion.EX_SALIDA != null)
+                    {
+                        foreach (var dev in devolucion.EX_SALIDA)
+                        {
+                            compra.Add(ConvertirADto(dev));
+                        }
+                    }
+                    return compra;
+                }
             }
             catch (Exception e)
             {
@@ -86,7 +97,31 @@ namespace Molinos.DataAgro.Agent
                 return compra;
             }
         }
-
+        private CompraDetalleAgentDto ConvertirADtoSinPI(Zmpes5620 dev)
+        {
+            var compraAgent = new CompraDetalleAgentDto
+            {
+                COSECHA = dev.Cosecha,
+                MATERIAL = dev.Material,
+                VENDEDOR = dev.Vendedor,
+                CLASE_DOC = dev.ClaseDoc,
+                CLASIFICACION = dev.Clasificacion,
+                CONTRATO = dev.Contrato,
+                CORREDOR = dev.Corredor,
+                FECHA = dev.Fecha,
+                PEND_APLICAR = dev.PendAplicar,
+                PEND_FIJAR = dev.PendFijar,
+                TN_AMPLIADAS = dev.TnAmpliadas,
+                TN_ANULADAS = dev.TnAnuladas,
+                TN_APLICADAS = dev.TnAplicadas,
+                TN_CONTRATO = dev.TnContrato,
+                TN_FIJADAS = dev.TnFijadas,
+                FECHA_HASTA = dev.FechaHasta,
+                FECHA_DESDE = dev.FechaDesde,
+                CENTRO = dev.Centro
+            };
+            return compraAgent;
+        }
         private CompraDetalleAgentDto ConvertirADto(ZMPES5620 dev)
         {
             var compraAgent = new CompraDetalleAgentDto

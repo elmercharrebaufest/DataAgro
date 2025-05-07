@@ -315,10 +315,13 @@ namespace Molinos.DataAgro.Business
             }
             return resultado;
         }
+
         public List<int> CadenaComerciales(int comercialId)
         {
             var listaSuperiores = new List<int>();
-            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
+            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, 
+                x => x.Deshabilitado != true && 
+                     x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             if (permiso)
             {
                 listaSuperiores.Add(comercialId);
@@ -327,6 +330,7 @@ namespace Molinos.DataAgro.Business
 
             return listaSuperiores;
         }
+
         private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
         {
             var comercial = repositorio.Obtener<Comercial>(comercialId);
@@ -350,23 +354,23 @@ namespace Molinos.DataAgro.Business
 
         public List<int> ListarCorredoresComercial()
         {
-            var resultado = (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
+            var resultado = (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
             return resultado;
         }
 
         public List<Comercial> ListarComercialesCorredor()
         {
-            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
+            return repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
         }
 
         public List<Comercial> ListarComercialesSinRecibirMail()
         {
-            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NoRecibirMail)));
+            return repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NoRecibirMail)));
         }
 
         public List<Comercial> ListarComercialesOyTNorte()
         {
-            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.OyT_Norte)));
+            return repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.OyT_Norte)));
         }
 
         public List<GrupoDeCompras> ListarGrupoDeCompras(string filtro)
@@ -417,10 +421,8 @@ namespace Molinos.DataAgro.Business
 
         public List<Comercial> ListarComercialesRecibirSugerenciaFAQ()
         {
-            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Recibir_Mail_SugerenciaFAQ)));
+            return repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.Recibir_Mail_SugerenciaFAQ)));
         }
-
-
 
         public DataSourceResult TraerComercialesProveedorReporte(int? proveedorId, DataSourceRequest request)
         {
