@@ -140,8 +140,8 @@ namespace Molinos.DataAgro.Agent
                 contratoParaFijacion.Color = DateTime.Parse(contrato.FechaHasta) < hoy ? "Red" : "";
                 contratoParaFijacion.Calidades = calidades;
                 contratoParaFijacion.Clasificacion = contrato.Clasificacion;
-                contratoParaFijacion.Cesion = contrato.Cesion== "X";
-                contratoParaFijacion.Anticipo = contrato.Anticipo== "X";
+                contratoParaFijacion.Cesion = contrato.Cesion == "X";
+                contratoParaFijacion.Anticipo = contrato.Anticipo == "X";
                 contratoParaFijacion.Aperturas = aperturas;
                 contratoParaFijacion.Bonificaciones = bonificaciones;
                 contratoParaFijacion.Virtual = false;
@@ -175,7 +175,7 @@ namespace Molinos.DataAgro.Agent
             }
             return datosContratos;
         }
-        
+
         private List<DatosFijacionDeContratoDto> CargarContratosConPi(Z_MPRFC_CONTRATO_PEND_FIJACIONResponse devolucion, int materialId, string filtro, int idFijacion)
         {
             var hoy = DateTime.Now.Date;
@@ -188,7 +188,6 @@ namespace Molinos.DataAgro.Agent
             var condicionFijaciones = repositorio.Listar<CondicionFijacion>();
             var centros = repositorio.Listar<Centro>();
             var datosContratos = new List<DatosFijacionDeContratoDto>();
-            var contratoParaFijacion = new DatosFijacionDeContratoDto();
 
             CultureInfo provider = CultureInfo.InvariantCulture;
 
@@ -257,6 +256,7 @@ namespace Molinos.DataAgro.Agent
                 }
 
 
+                var contratoParaFijacion = new DatosFijacionDeContratoDto();
                 contratoParaFijacion.ContratoId = contrato.CONTRATO.TrimStart('0');
                 contratoParaFijacion.KilosAplicados = ((double)contrato.KILOS_APLICADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                 contratoParaFijacion.KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
@@ -326,13 +326,12 @@ namespace Molinos.DataAgro.Agent
             }
             return datosContratos;
         }
-        
+
         public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
             filtro = filtro ?? "";
             var datosContratos = new List<DatosFijacionDeContratoDto>();
             var hoy = DateTime.Now.Date;
-            bool esSAPSinPi = false;
             Z_MPRFC_CONTRATO_PEND_FIJACIONResponse devolucion = new Z_MPRFC_CONTRATO_PEND_FIJACIONResponse();
             ZMprfcContratoPendFijacionResponse devolucionSinPI = new ZMprfcContratoPendFijacionResponse();
 
@@ -442,7 +441,6 @@ namespace Molinos.DataAgro.Agent
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        esSAPSinPi = true;
                         logger.Info("SAP sin PI - RFC ZMprfcContratoPendFijacion");
 
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
