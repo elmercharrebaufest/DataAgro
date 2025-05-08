@@ -39,7 +39,6 @@ namespace Molinos.DataAgro.Agent
             var condicionFijaciones = repositorio.Listar<CondicionFijacion>();
             var centros = repositorio.Listar<Centro>();
             var datosContratos = new List<DatosFijacionDeContratoDto>();
-            var contratoParaFijacion = new DatosFijacionDeContratoDto();
             CultureInfo provider = CultureInfo.InvariantCulture;
 
             var contratosSap = listaContratos.Select(a => a.Contrato).ToList();
@@ -105,7 +104,7 @@ namespace Molinos.DataAgro.Agent
                         MonedaId = sustentable.MonedaDb,
                     });
                 }
-
+                var contratoParaFijacion = new DatosFijacionDeContratoDto();
                 contratoParaFijacion.ContratoId = contrato.Contrato.TrimStart('0');
                 contratoParaFijacion.KilosAplicados = ((double)contrato.KilosAplicados).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                 contratoParaFijacion.KilosPendiente = ((double)contrato.KilosPendFijar - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
