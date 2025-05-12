@@ -7007,5 +7007,71 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return negocios;
         }
+
+        public CupoSapTerceroDto DatosCupoSap(string cupoSap)
+        {
+            try
+            {
+                Cupo cupo = repositorio.Listar<Cupo>(x => x.CupoSap == cupoSap).FirstOrDefault();
+
+                if (cupo == null) return null;
+
+                CupoSapTerceroDto cupoSapTercero = new CupoSapTerceroDto()
+                {
+                    IdDataAgro = cupo.Id,
+                    CUIT = cupo.Proveedor.CUIT,
+                    RazonSocial = cupo.Proveedor.RazonSocial,
+                    Centro = cupo.Centro.Descripcion,
+                    Material = cupo.Material.Descripcion,
+                    FechaIngreso = cupo.FechaIngreso.ToString(),
+                    CupoSap = cupo.CupoSap,
+                    ZonaCupo = cupo.ZonaCupo.Descripcion,
+                    ComercialAsignado = cupo.Comercial.Apellido + ' ' + cupo.Comercial.Nombres,
+                    FleteProcedencia = cupo.FleteProcedencia ?? false,
+                    Calidad = cupo.Calidad,
+                    Fason = cupo.Fason ?? false,
+                    FechaGeneracion = cupo.FechaGeneracion.ToString(),
+                    EstadoCupo = cupo.EstadoCupo.Descripcion,
+                    CupoStop = cupo.CupoStop ?? 0,
+                    //CreacionStop = cupo.CreacionStop,
+                    TipoNegocio = cupo.TipoNegocio?.Descripcion ?? "",
+                    ContratoSap = cupo.Negocio?.ContratoSAP ?? "",
+                    ConDescarga = cupo.ConDescarga ?? false,
+                    ComercialCreador = cupo.ComercialCreador?.Apellido + ' ' + cupo.ComercialCreador?.Nombres,
+                    Sustentable = cupo.Sustentable,
+                    EPA = cupo.EPA,
+                    EUDR = cupo.EUDR,
+                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : cupo.EPA ? "EPA" : cupo.EUDR ? "EUDR" : "Común",
+                };
+
+                if (cupo.ConDescarga == true && cupo.NegocioId != null)
+                {
+                    cupoSapTercero.OrigenDeCupo = "Con descarga";
+                }
+                else if (cupo.AdministracionCupoId != null)
+                {
+                    if (cupo.AdministracionCupo.TipoAdministracionCupo.Id == (int)EnumTipoAdministracionCupo.Algoritmo)
+                        cupoSapTercero.OrigenDeCupo = "Algoritmo";
+                    else if (cupo.AdministracionCupo.TipoAdministracionCupo.Id == (int)EnumTipoAdministracionCupo.Extraordinaria)
+                        cupoSapTercero.OrigenDeCupo = "Extraordinaria";
+                }
+                else if (cupo.NegocioId != null && cupo.AdministracionCupoId == null && cupo.ConDescarga != true)
+                {
+                    cupoSapTercero.OrigenDeCupo = "Sugerencia de cupo confirmada";
+                }
+                else
+                {
+                    cupoSapTercero.OrigenDeCupo = "Común";
+                }
+
+                return cupoSapTercero;
+            }
+            catch (Exception ex)
+            {
+                logger.Info("Error en DatosCupoSap de CupoManager", ex);
+                return null;
+            }
+
+        }
     }
 }
