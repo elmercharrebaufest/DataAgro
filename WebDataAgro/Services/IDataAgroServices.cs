@@ -70,6 +70,8 @@ namespace WebDataAgro.Services
         [OperationContract]
         List<ApoderadoSapDto> ListarApoderadosPorProveedor(string cuit);
 
+        [OperationContract]
+        CupoSapTerceroDto DatosCupoSap(string cupoStop);
         #endregion
     }
 }

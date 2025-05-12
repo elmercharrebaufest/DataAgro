@@ -311,6 +311,7 @@
     <Compile Include="Controllers\AdministracionCupoController.cs" />
     <Compile Include="Controllers\CamposSustentableReporteController.cs" />
     <Compile Include="Controllers\ConfirmaController.cs" />
+    <Compile Include="Controllers\CupoTerceroController.cs" />
     <Compile Include="Controllers\ResearchReporteController.cs" />
     <Compile Include="Controllers\CupoNoPropioController.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosController.cs" />

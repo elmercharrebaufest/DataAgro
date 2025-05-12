@@ -1292,5 +1292,20 @@ namespace WebDataAgro.Services
             }
         }
 
+        public CupoSapTerceroDto DatosCupoSap(string cupoStop)
+        {
+            try
+            {
+                CupoSapTerceroDto response = cupoManager.DatosCupoSap(cupoStop);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("Error en DatosCupoSap: ", ex);
+                throw;
+            }
+        }
+
     }
 }

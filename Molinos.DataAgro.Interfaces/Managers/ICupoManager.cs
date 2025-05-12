@@ -70,5 +70,6 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
         void VerificarSolicitudesExtraordinariasPendientes(DateTime fecha);
         List<NegocioParaSolicitarCupo> ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa, bool eudr);
+        CupoSapTerceroDto DatosCupoSap(string cupoStop);
     }
 }
