@@ -7033,7 +7033,6 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaGeneracion = cupo.FechaGeneracion.ToString(),
                     EstadoCupo = cupo.EstadoCupo.Descripcion,
                     CupoStop = cupo.CupoStop ?? 0,
-                    //CreacionStop = cupo.CreacionStop,
                     TipoNegocio = cupo.TipoNegocio?.Descripcion ?? "",
                     ContratoSap = cupo.Negocio?.ContratoSAP ?? "",
                     ConDescarga = cupo.ConDescarga ?? false,
@@ -7041,7 +7040,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = cupo.Sustentable,
                     EPA = cupo.EPA,
                     EUDR = cupo.EUDR,
-                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : cupo.EPA ? "EPA" : cupo.EUDR ? "EUDR" : "Común",
+                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : (cupo.EPA && !cupo.EUDR) ? "EPA" : cupo.EUDR ? "EUDR" : "Común",
                 };
 
                 if (cupo.ConDescarga == true && cupo.NegocioId != null)
