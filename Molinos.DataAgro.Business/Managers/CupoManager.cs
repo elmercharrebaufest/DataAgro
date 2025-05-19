@@ -7040,7 +7040,10 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = cupo.Sustentable,
                     EPA = cupo.EPA,
                     EUDR = cupo.EUDR,
-                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : (cupo.EPA && !cupo.EUDR) ? "EPA" : cupo.EUDR ? "EUDR" : "Común",
+                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : 
+                                cupo.EPA && cupo.EUDR ? "EPA/EUDR" : 
+                                cupo.EPA && !cupo.EUDR ? "EPA" :
+                                !cupo.EPA && cupo.EUDR ? "EUDR" : "Común",
                 };
 
                 if (cupo.ConDescarga == true && cupo.NegocioId != null)
