@@ -169,34 +169,40 @@ namespace Molinos.DataAgro.Business.Managers
                                                     x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
                                                     cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
-                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA TraerLimitePorZona()");
-                                                    ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
-                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA TraerLimitePorZona()");
+                                                    //if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA TraerLimitePorZona()");
+                                                    //ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
+                                                    //if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA TraerLimitePorZona()");
 
-                                                    if (limitePorZona == null)
+                                                    //if (limitePorZona == null)
+                                                    //{
+                                                    //    error.Error("CantidadCuposSAP", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                    //    continue;
+                                                    //}
+                                                    //else if (limitePorZona.LimiteCupo <= 0)
+                                                    //{
+                                                    //    error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
+                                                    //    continue;
+                                                    //}
+
+                                                    //var disponibles = limitePorZona.LimiteCupo - consumidos;
+                                                    //if (disponibles <= 0)
+                                                    //{
+                                                    //    error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
+                                                    //    continue;
+                                                    //}
+
+                                                    //disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
+
+                                                    var cuposNoPropiosDisponibles = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
+                                                        d.Cantidad.Value);
+
+                                                    if (cuposNoPropiosDisponibles.Count < d.Cantidad.Value)
                                                     {
-                                                        error.Error("CantidadCuposSAP", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                        error.Error("CantidadCuposSAP", "No hay límite de cupo disponible.");
                                                         continue;
                                                     }
-                                                    else if (limitePorZona.LimiteCupo <= 0)
-                                                    {
-                                                        error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
-                                                        continue;
-                                                    }
 
-                                                    var disponibles = limitePorZona.LimiteCupo - consumidos;
-                                                    if (disponibles <= 0)
-                                                    {
-                                                        error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
-                                                        continue;
-                                                    }
-
-                                                    disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
-
-                                                    var cuposNoPropios = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible == true && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
-                                                        disponibles);
-
-                                                    foreach (var cupoNp in cuposNoPropios)
+                                                    foreach (var cupoNp in cuposNoPropiosDisponibles)
                                                     {
                                                         listaCupos.Add(cupoNp.Codigo);
                                                     }
@@ -5191,7 +5197,7 @@ namespace Molinos.DataAgro.Business.Managers
                 bool cargaMasiva = solicitud.Dias != null && solicitud.Dias.Count() > 0;
                 if (cargaMasiva) sumaCuposCargaMasiva = solicitud.Dias.Sum(x => (int)x.Cantidad);
 
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id, Sustentable = solicitud.Sustentable, EPA = solicitud.EPA, EUDR = solicitud.EUDR },
+                var resultado = Validar(new Cupo { Calidad = solicitud.Calidad, MaterialId = solicitud.MaterialId, ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id, Sustentable = solicitud.Sustentable, EPA = solicitud.EPA, EUDR = solicitud.EUDR },
                     cargaMasiva ? sumaCuposCargaMasiva : (solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia), solicitud.Fecha);
                 if (resultado.HayError)
                 {
