@@ -1292,11 +1292,11 @@ namespace WebDataAgro.Services
             }
         }
 
-        public CupoSapTerceroDto DatosCupoSap(string cupoStop)
+        public CupoSapTerceroDto DatosCupoSap(string cupoSap)
         {
             try
             {
-                CupoSapTerceroDto response = cupoManager.DatosCupoSap(cupoStop);
+                CupoSapTerceroDto response = cupoManager.DatosCupoSap(cupoSap);
 
                 return response;
             }
