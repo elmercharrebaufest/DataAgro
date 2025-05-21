@@ -211,6 +211,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         item.Color = "red";
                         continue;
                     }
+                    
+                    var estadoHomeProveedor = (from provEstadoHome in contexto.Set<Proveedor>()
+                                               where provEstadoHome.ProveedorId == item.Id && 
+                                                     provEstadoHome.EstadoHomeId == (int)EnumEstadoHome.NO_HABILITADO
+                                               select provEstadoHome).FirstOrDefault();
+
+                    if (estadoHomeProveedor != null)
+                    {
+                        item.Estado = "No Operable por Estado Home NO HABILITADO";
+                        item.Deshabilitar = true;
+                        item.Color = "red";
+                        continue;
+                    }
 
                     var facacop = (from f in contexto.Set<FACACOP>()
                                    where f.CUIT == item.Cuit
