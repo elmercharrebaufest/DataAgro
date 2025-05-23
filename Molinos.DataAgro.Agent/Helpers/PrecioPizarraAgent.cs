@@ -43,13 +43,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ImFechaHasta = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
                         ImMatnr = material.Codigo,
                         ImPizarra = pizarra.Codigo,
-                        ImPrecio = precioPizarra.Precio,
+                        ImPrecio = Convert.ToDecimal(precioPizarra.Precio.ToString()),
+                        ImPrecioSpecified = true,
                         ImUdate = DateTime.Now.ToString("yyyy-MM-dd"),
                         ImUnimed = precioPizarra.UnidadMedida,
                         ImUsuario = comercial.IdActiveDirectory,
                         ImUtime = DateTime.Now.ToString("HH:mm:ss"),
                         ImWaers = precioPizarra.MonedaId
-
                     };
                     return EjecutarSinPi(rq);
                 }
