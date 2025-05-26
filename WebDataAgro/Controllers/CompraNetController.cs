@@ -226,9 +226,9 @@ namespace WebDataAgro.Controllers
 
             oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
             GrabarContratoResult model;
-            if (oParam.EstadoId == 5 || oParam.EstadoId == 11)
+            if (oParam.EstadoId == (int)EnumEstadoContrato.Finalizado || oParam.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado)
             {
-                model = mobjContratoManager.ActualizarContratoFinalizado(oParam);
+                model = mobjContratoManager.ActualizarContratoFinalizado(oParam, listCupoConDescargaFechas);
             }
             else
             {

@@ -50,7 +50,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ImUsuario = comercial.IdActiveDirectory,
                         ImUtime = DateTime.Now.ToString("HH:mm:ss"),
                         ImWaers = precioPizarra.MonedaId
-
                     };
                     return EjecutarSinPi(rq);
                 }
