@@ -4318,7 +4318,7 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        public GrabarContratoResult ActualizarContratoFinalizado(Contrato oContrato)
+        public GrabarContratoResult ActualizarContratoFinalizado(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             var error = new GrabarContratoResult();
             try
@@ -4379,6 +4379,62 @@ namespace Molinos.DataAgro.Business.Managers
                         return error;
                     }
                 }
+
+                #region CUPOS CON DESCARGA
+
+                //var oContratoSave = new Contrato();
+                //if (oContrato.Id > 0) oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+                double kilosParametro = oContrato.Cantidad;
+
+                Cupo cupoNuevo = null;
+                if (oContrato.ConDescarga == true)
+                {
+                    error.Errores = negocioManager.ControlesAccesoConDescarga(oContrato).Errores;
+                    if (error.Errores.Count > 0) return error;
+                }
+
+                if (listCupoConDescargaFechas != null)
+                {
+                    if (oContrato.Id > 0 && kilosParametro >= oContratoSave.Cantidad)
+                    {
+                        var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id);
+                        oContrato.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
+                    }
+                    cupoNuevo = negocioManager.TransformarContratoACupo(oContrato);
+
+                    int sumaCuposCargaMasiva = 0;
+                    bool cargaMasiva = listCupoConDescargaFechas != null && listCupoConDescargaFechas.Count() > 0;
+                    if (cargaMasiva) sumaCuposCargaMasiva = listCupoConDescargaFechas.Sum(x => x.CantidadCupo) + listCupoConDescargaFechas.Sum(x => x.CantidadFlete);
+
+                    var errorCupo = cupoManager.Validar(cupoNuevo, sumaCuposCargaMasiva, oContrato.FechaHasta);
+                    if (errorCupo != null)
+                    {
+                        error.Errores.AddRange(errorCupo.Errores);
+                        error.ListaErrores.AddRange(errorCupo.ListaErrores);
+                    }
+
+                    // Validar disponibilidad según LIMITE CUPO CON DESCARGA
+                    listCupoConDescargaFechas.ForEach(x =>
+                    {
+                        int sumaCuposPorFecha = x.CantidadCupo + x.CantidadFlete;
+
+                        CupoResult cupoResult = cupoManager.ValidarDisponibilidadCuperaConDescarga(oContrato.MaterialId, (int)oContrato.DestinoId, x.Fecha, sumaCuposPorFecha);
+                        if (cupoResult.HayError)
+                            cupoResult.Errores.ForEach(y => error.Errores.Add(new ErrorMessage(400, y.Message)));
+                    });
+
+                    var cantidadCuposFletesPermitidos = Math.Ceiling(oContrato.Cantidad / 30000);
+                    if (cantidadCuposFletesPermitidos < sumaCuposCargaMasiva)
+                    {
+                        string mensaje = oContrato.Id == 0 || kilosParametro == oContratoSave.Cantidad ? ".\n\n" : " que aún no tienen cupos.\n\n";
+                        error.Errores.Add(new ErrorMessage(400, "La cantidad de cupos ingresada se excede con respecto a los kilos del negocio" + mensaje));
+                    }
+
+                    oContrato.Cantidad = kilosParametro;
+                }
+
+                #endregion CUPOS CON DESCARGA
+
                 if (oContrato.EstadoId != (int)EnumEstadoContrato.ReconfirmarFinalizado)
                 {
                     if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.DesdeFijacion != oContrato.DesdeFijacion ||
@@ -4388,7 +4444,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                         {
-                            oContrato.EstadoId = 11;
+                            oContrato.EstadoId = (int)EnumEstadoContrato.ReconfirmarFinalizado;
                             string jsonContrato = JsonConvert.SerializeObject(oContratoSave, new JsonSerializerSettings()
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -4413,6 +4469,48 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var listaErrores = ActualizarContratoFinalizadoResultado(oContrato);
                 error.Errores.AddRange(listaErrores.Errores);
+
+                #region CREAR CUPOS CON DESCARGA
+
+                if (listCupoConDescargaFechas != null)
+                {
+                    cupoNuevo.NegocioId = oContratoSave.Id;
+                    CupoResult cupoGrabado;
+
+                    listCupoConDescargaFechas.ForEach(x =>
+                    {
+                        if (x.CantidadCupo > 0)
+                        {
+                            cupoNuevo.FleteProcedencia = false;
+                            List<DiaCupo> listDiaCupo = new List<DiaCupo>() { new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo } };
+
+                            cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo, false);
+
+                            error.Errores.AddRange(cupoGrabado.Errores);
+                            error.ListaCupos.AddRange(cupoGrabado.ListaCupos);
+                            error.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+                        }
+                        if (x.CantidadFlete > 0)
+                        {
+                            cupoNuevo.FleteProcedencia = true;
+                            List<DiaCupo> listDiaFlete = new List<DiaCupo> { new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete } };
+
+                            cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete, false);
+
+                            CupoResult crTemp = new CupoResult();
+                            crTemp.ListaCupos.AddRange(cupoGrabado.ListaCupos.Select(a => "*" + a + "*"));
+                            cupoGrabado.ListaCupos = new List<string>();
+                            cupoGrabado.ListaCupos.AddRange(crTemp.ListaCupos);
+
+                            error.Errores.AddRange(cupoGrabado.Errores);
+                            error.ListaCupos.AddRange(cupoGrabado.ListaCupos);
+                            error.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+                        }
+                    });
+                }
+
+                #endregion CREAR CUPOS CON DESCARGA
+
             }
             catch (Exception e)
             {
