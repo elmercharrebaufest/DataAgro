@@ -1292,20 +1292,20 @@ namespace WebDataAgro.Services
             }
         }
 
-        public CupoSapTerceroDto DatosCupoSap(string cupoSap)
-        {
-            try
-            {
-                CupoSapTerceroDto response = cupoManager.DatosCupoSap(cupoSap);
+        //public CupoSapTerceroDto DatosCupoSap(string cupoSap)
+        //{
+        //    try
+        //    {
+        //        CupoSapTerceroDto response = cupoManager.DatosCupoSap(cupoSap);
 
-                return response;
-            }
-            catch (Exception ex)
-            {
-                logger.Debug("Error en DatosCupoSap: ", ex);
-                throw;
-            }
-        }
+        //        return response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Debug("Error en DatosCupoSap: ", ex);
+        //        throw;
+        //    }
+        //}
 
     }
 }
