@@ -234,7 +234,7 @@ namespace Molinos.DataAgro.Business
             {
                 if (oContratoAcuerdo.Id > 0 && kilosParametro > oAcuerdoSave.Cantidad)
                 {
-                    var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContratoAcuerdo.Id);
+                    var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContratoAcuerdo.Id && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
                     oContratoAcuerdo.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
                 }
                 cupoNuevo = negocioManager.TransformarContratoACupo(oContratoAcuerdo);
