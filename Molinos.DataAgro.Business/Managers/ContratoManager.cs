@@ -1591,7 +1591,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oContrato.Id > 0 && kilosParametro >= oContratoSave.Cantidad)
                 {
-                    var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id);
+                    var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
                     oContrato.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
                 }
                 cupoNuevo = negocioManager.TransformarContratoACupo(oContrato);
@@ -4397,7 +4397,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oContrato.Id > 0 && kilosParametro >= oContratoSave.Cantidad)
                     {
-                        var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id);
+                        var cuposExistentes = repositorio.Contar<Cupo>(x => x.NegocioId == oContrato.Id && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
                         oContrato.Cantidad = kilosParametro - (30000 * cuposExistentes); //conservo la cantidad que aún no tiene cupos
                     }
                     cupoNuevo = negocioManager.TransformarContratoACupo(oContrato);
@@ -4431,6 +4431,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                     oContrato.Cantidad = kilosParametro;
+
+                    if (error.Errores.Count > 0) return error;
                 }
 
                 #endregion CUPOS CON DESCARGA
@@ -4469,6 +4471,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var listaErrores = ActualizarContratoFinalizadoResultado(oContrato);
                 error.Errores.AddRange(listaErrores.Errores);
+
+                if (error.Errores.Count > 0) return error;
 
                 #region CREAR CUPOS CON DESCARGA
 
@@ -9233,7 +9237,10 @@ namespace Molinos.DataAgro.Business.Managers
                 CupoSap = x.CupoSap,
                 FleteProcedencia = x.FleteProcedencia,
                 Centro = x.Centro.Descripcion
-            }, x => x.NegocioId == contratoId && x.ConDescarga.HasValue && x.ConDescarga.Value);
+            }, x => x.NegocioId == contratoId && 
+                    x.ConDescarga.HasValue && 
+                    x.ConDescarga.Value &&
+                    x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
         }
 
         public string ObtenerTypeOfRate(int tipoNegocioId, string monedaId, int? tipoAgenteCompraId, DateTime fecha, bool modifica)
