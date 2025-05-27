@@ -674,7 +674,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 subject += oFijacionDePrecioContrato.Corredor != null ? oFijacionDePrecioContrato.Corredor.RazonSocial : oFijacionDePrecioContrato.Proveedor.RazonSocial;
                 oMensaje.Subject = subject;
-                var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
+                var tipoNegocio = repositorio.Obtener<TipoNegocio>((int)EnumTipoNegocio.FIJACION);
 
                 oMensaje.BodyEncoding = Encoding.UTF8;
 
@@ -5127,10 +5127,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oytNorte.Remove(item);
             }
-            logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", oytNorte));
+
+            List<string> mailsOytNorte = new List<string>();
+            oytNorte?.ForEach(x => mailsOytNorte.Add(x.Email));
+
+            logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", mailsOytNorte));
+
             foreach (Comercial oytNorteCopia in oytNorte)
             {
-                if(oytNorteCopia.Deshabilitado != true) { continue; }
+                if(oytNorteCopia.Deshabilitado == true) { continue; }
                 try
                 {
                     var emailComerciales = mailManager.GetEmailUserActiveDirectory(oytNorteCopia.IdActiveDirectory);
