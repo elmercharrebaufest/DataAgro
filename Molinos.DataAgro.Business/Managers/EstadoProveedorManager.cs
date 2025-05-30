@@ -41,12 +41,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var listaComerciales = comerciales.Keys.ToList();
                     int tamanioLote = Convert.ToInt32(cantidadDeProveedoresParaActualizarEstado); //se seleccionan algunos porque si se consulta la RFC con todos, da server error
+                    List<string> CUITs = proveedores.Keys.ToList();
 
                     for (int i = 0; i < listaComerciales.Count; i += tamanioLote)
                     {
                         var loteComerciales = listaComerciales.Skip(i).Take(tamanioLote).ToList();
 
-                        datosDeProveedores.AddRange(oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), loteComerciales));
+                        datosDeProveedores.AddRange(oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(CUITs, loteComerciales));
                     }
                 }
                 else
