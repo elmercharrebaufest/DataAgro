@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Agent.ComprasDetalle;
 using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception e)
             {
-                logger.Error("Error obtener compras detalle con el usuario " + UsuarioComercial);
+                logger.Error($"Error obtener compras detalle con el usuario {UsuarioComercial} y CUITs {CUIT.ToJson()}");
                 logger.Error(e);
                 return compra;
             }
