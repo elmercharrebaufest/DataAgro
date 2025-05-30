@@ -640,7 +640,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         corredoresComerciales.Remove(item);
                     }
-                    logger.Debug("Enviando mail fijación a " + string.Join(", ", corredoresComerciales));
+                    logger.Debug("Enviando mail fijación a " + string.Join(", ", corredoresComerciales.Select(x => x.IdActiveDirectory)));
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try
@@ -5128,11 +5128,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oytNorte.Remove(item);
             }
 
-            List<string> mailsOytNorte = new List<string>();
-            oytNorte?.ForEach(x => mailsOytNorte.Add(x.Email));
-
-            logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", mailsOytNorte));
-
+            logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", oytNorte.Select(x => x.IdActiveDirectory)));
             foreach (Comercial oytNorteCopia in oytNorte)
             {
                 if(oytNorteCopia.Deshabilitado == true) { continue; }
