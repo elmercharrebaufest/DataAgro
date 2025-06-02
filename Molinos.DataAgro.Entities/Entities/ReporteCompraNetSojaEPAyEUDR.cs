@@ -1,6 +1,6 @@
 ﻿namespace Molinos.DataAgro.Entities.Entities
 {
-    public class ReporteCompraNetSojaEPAyEUDR
+    public class ReporteCompraNetSojaEPA
     {
         public int Id { get; set; }
 
