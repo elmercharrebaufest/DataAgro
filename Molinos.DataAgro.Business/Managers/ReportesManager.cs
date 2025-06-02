@@ -2523,7 +2523,7 @@ namespace Molinos.DataAgro.Business.Managers
                 List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
                 List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
                 ReporteCompraNetSojaSustentable sojaSustentable = new ReporteCompraNetSojaSustentable();
-                ReporteCompraNetSojaEPAyEUDR sojaEPAyEUDR = new ReporteCompraNetSojaEPAyEUDR();
+                ReporteCompraNetSojaEPA sojaEPAyEUDR = new ReporteCompraNetSojaEPA();
                 List<ReporteCompraNetHedgeMaterial> hedgeMaterial = new List<ReporteCompraNetHedgeMaterial>();
                 ReporteCompraNetHedgeCargaObjetivo hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo();
                 ReporteCompraNetHedgeTCPromedio TCPromedioDto = new ReporteCompraNetHedgeTCPromedio();
@@ -2590,7 +2590,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Total = result.SojaSustentable.Total
                 };
                 logger.Debug("GrabarDatosReporteCompraNet - inicio sojaEPAyEUDR");
-                sojaEPAyEUDR = new ReporteCompraNetSojaEPAyEUDR
+                sojaEPAyEUDR = new ReporteCompraNetSojaEPA
                 {
                     AFijar = result.SojaEPAyEUDR.Fijar,
                     APrecio = result.SojaEPAyEUDR.Precio,
@@ -2735,7 +2735,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.RemoverTodos<ReporteCompraNetPosicionCompras>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetPrecioCantidad>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetSojaSustentable>(a => true);
-                repositorio.RemoverTodos<ReporteCompraNetSojaEPAyEUDR>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetSojaEPA>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeMaterial>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeCargaObjetivo>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeTCPromedio>(a => true);
