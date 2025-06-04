@@ -969,7 +969,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (esAdministrador)
             {
-                comercialesId = repositorio.Listar<Comercial, int>(c => c.ComercialId, x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
+                comercialesId = repositorio.Listar<Comercial, int>(c => c.ComercialId, x => x.Deshabilitado != true && x.FechaDeshabilitado == null);
             }
             else
             {
@@ -980,7 +980,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    var comerciales = repositorio.Listar<Comercial>(x => x.Deshabilitado == false && x.FechaDeshabilitado == null);
+                    var comerciales = repositorio.Listar<Comercial>(x => x.Deshabilitado != true && x.FechaDeshabilitado == null);
                     foreach (var comercial in comercialesFiltro)
                     {
                         if (comercial.EmpleadorACargoId == 0 || comercial.EmpleadorACargoId == null)

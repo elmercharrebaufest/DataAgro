@@ -34,7 +34,7 @@
             <div class="detalle-contacto-header-estado">
                 <span>Estado: </span><span class="detalle-contacto-header-estado-span"> </span><span class="detalle-contacto-header-estado-cantestrellas"></span>
             </div>
-            <div class="detalle-contacto-header-deshabilitado" @(ViewBag.Deshabilitado == false ? "hidden" : "")>
+            <div class="detalle-contacto-header-deshabilitado" @(ViewBag.Deshabilitado != true ? "hidden" : "")>
                 <span>Deshabilitado</span>
             </div>
             <div class="contacto-detalle-basico">
