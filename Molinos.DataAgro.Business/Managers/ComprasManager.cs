@@ -87,10 +87,12 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var contadorActualizacion = 0;
+                int contadorComerciales = 0;
                 foreach (var item in listProve)
                 {
+                    contadorComerciales += 1;
                     var hist = oComprasAgent.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
-                    logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT.Count + ": " + hist.Count);
+                    logger.Debug($"({contadorComerciales}/{listProve.Count()}) - Campos a Acualizar para {item.UsuarioDirectory}-{item.CUIT.Count}: {hist.Count}");
                     if (hist.Count > 0)
                     {
                         var listHistorial = hist.GroupBy(x => new { x.VENDEDOR, x.MATERIAL, x.COSECHA });
@@ -210,11 +212,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             try
             {
-
+                int contadorComerciales = 0;
                 foreach (var item in listProve)
                 {
+                    contadorComerciales += 1;
                     List<CompraDetalleAgentDto> hist = comprasDetalleAgent.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
-                    logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT.Count + ": " + hist.Count);
+                    logger.Debug($"({contadorComerciales}/{listProve.Count()}) - Campos a Acualizar para {item.UsuarioDirectory}-{item.CUIT.Count}: {hist.Count}");
                     CultureInfo provider = CultureInfo.InvariantCulture;
                     if (hist.Count > 0)
                     {

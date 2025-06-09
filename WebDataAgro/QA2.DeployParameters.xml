@@ -24,7 +24,7 @@
 	<setParameter name="SapPass Key" value="Data2015" />
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
-	<setParameter name="SAPsinPI Key" value="0" />
+	<setParameter name="SAPsinPI Key" value="1" />
 	<setParameter name="AmbientePruebas Key" value="1" />
 	<setParameter name="AmbienteStaging Key" value="0" />
 	<setParameter name="AmbienteUATMOA Key" value="0" />
