@@ -583,7 +583,7 @@ function GestionarClausulas(negocioSAP) {
     };
     var response = MSExecuteOnServer(url, data);
 
-    if (response && response.Mensaje == '') {
+    if (response && (response.Mensaje == '' || response.Mensaje == null)) {
         // Redireccionar si el negocio es válido
         var redirectUrl = `/Boleto/GestionarClausulas?numeroSap=${encodeURIComponent(negocioSAP)}&tipoNegocio=${tipoNegocioId}`;
         window.location.href = redirectUrl;
