@@ -575,6 +575,7 @@
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
     <Compile Include="Entities\FormulaTipoNegocioExcluido.cs" />
+    <Compile Include="Entities\HabilitacionJob.cs" />
     <Compile Include="Entities\HedgeMargenMolienda.cs" />
     <Compile Include="Entities\InformeComercialApertura.cs" />
     <Compile Include="Entities\LogAnulacionContrato.cs" />

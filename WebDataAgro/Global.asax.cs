@@ -1,28 +1,29 @@
 ﻿using Autofac;
 using Autofac.Extras.NLog;
 using Autofac.Integration.Mvc;
+using Autofac.Integration.Wcf;
+using Hangfire;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using WebDataAgro.Core;
-using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Interfaces;
-using System.Data.Entity;
 using WebDataAgro.Services;
-using Autofac.Integration.Wcf;
-using System.Data.SqlClient;
-using System.Net.Mail;
-using System.Configuration;
-using System.Net;
-using System.Globalization;
-using System.Threading;
 
 namespace WebDataAgro
 {
@@ -79,10 +80,22 @@ namespace WebDataAgro
                  .InstancePerLifetimeScope();
             builder.RegisterType<Cache>().As<ICache>().SingleInstance();
 
+            // Hangfire job
+            var assembly = Assembly.Load("WebDataAgro");
+            builder.RegisterAssemblyTypes(assembly)
+                   .Where(t => t.Name.EndsWith("HangfireJob") && !t.IsAbstract)
+                   .AsImplementedInterfaces()
+                   .InstancePerDependency();
+
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             AutofacHostFactory.Container = container;
+
+            // Configurar Hangfire con Autofac y SQL Server
+            GlobalConfiguration.Configuration
+                .UseSqlServerStorage("HfContexto")
+                .UseAutofacActivator(container);
 
             ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
             ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
