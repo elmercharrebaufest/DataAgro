@@ -360,6 +360,7 @@
     <Build Include="dbo\Tables\ConfirmaAltaEstadoLote.sql" />
     <Build Include="dbo\Tables\ConfirmaAltaEstado.sql" />
     <Build Include="dbo\Tables\InformeComercialApertura.sql" />
+    <Build Include="dbo\Tables\HabilitacionJob.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
