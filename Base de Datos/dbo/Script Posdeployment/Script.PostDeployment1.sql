@@ -951,3 +951,44 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolTodosContactos and Perm
    BEGIN
 		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolTodosContactos, 921)
    END
+
+
+--Habilitacion Job HangFire
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarCumplimientoCuposHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarCumplimientoCuposHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarEstadoDeContratosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarEstadoDeContratosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarFechaUltimaActualizacionManualesFAQHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarFechaUltimaActualizacionManualesFAQHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarMailProveedorHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarMailProveedorHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarPrecioPizarraHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarPrecioPizarraHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarProveedoresHomeHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarProveedoresHomeHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarRazonSocialHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarRazonSocialHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'AnularAcuerdosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('AnularAcuerdosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'BorradoContratosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('BorradoContratosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'CerrarDiaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('CerrarDiaHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ConfirmacionAutomaticaPizarra13HrsHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ConfirmacionAutomaticaPizarra13HrsHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ConsultarCuposDiariosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ConsultarCuposDiariosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ConsultarMisturnosActivosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ConsultarMisturnosActivosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'CrearSugerenciaCupoHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('CrearSugerenciaCupoHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnviarMailConfirmaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnviarMailConfirmaHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnviarMailSugerenciasPendientesPorComercialHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnviarMailSugerenciasPendientesPorComercialHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnvioMailNegociosAnulaYReemplazaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnvioMailNegociosAnulaYReemplazaHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnvioMailNegociosConDiaAnteriorHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnvioMailNegociosConDiaAnteriorHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnvioMailPendientesHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnvioMailPendientesHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EnvioMailSinCTGHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EnvioMailSinCTGHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'FinalizacionContratosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('FinalizacionContratosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'GrabarDatosReporteCompraNetHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('GrabarDatosReporteCompraNetHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'MigrarContratosPrimaryHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('MigrarContratosPrimaryHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'PesificadosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('PesificadosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'RechazarSolicitudesVencidasHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('RechazarSolicitudesVencidasHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ReportePagosDiferidosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ReportePagosDiferidosHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'SincronizarResearchHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('SincronizarResearchHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'TransmitirCupoStopHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('TransmitirCupoStopHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'VerificarSolicitudesExtraordinariasPendientesHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('VerificarSolicitudesExtraordinariasPendientesHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessComprasAyerHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessComprasAyerHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessRg2300HangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessRg2300HangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessSisaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessSisaHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessFacacopHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessFacacopHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessEstadoHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessEstadoHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessComprasHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessComprasHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessComprasDetalleHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessComprasDetalleHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessCapacidadProductivaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessCapacidadProductivaHangfireJob', 0) END
+
