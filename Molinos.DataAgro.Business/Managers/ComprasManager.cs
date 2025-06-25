@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IComprasAgent oComprasAgent;
         private readonly IComprasDetalleAgent comprasDetalleAgent;
-
+        private readonly int TAMAÑOGRUPO = 40;
         public ComprasManager(ILogger logger, IRepositorio repositorio, IComprasAgent oComprasAgent, IComprasDetalleAgent comprasDetalleAgent)
         {
             this.logger = logger;
@@ -169,36 +169,109 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var a = new List<string>();
 
-            var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
-            if (!string.IsNullOrEmpty(cuit))
-            {
-                oProveedor = oProveedor.Where(x => x == cuit);
-            }
-            var oComercial = repositorio.Listar<Comercial>();
+
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;
-            if (!string.IsNullOrEmpty(comercialUsurarioAD))
+
+            if (string.IsNullOrEmpty(comercialUsurarioAD) && string.IsNullOrEmpty(comercialUsurarioAD))
             {
-                oComercial = oComercial.Where(x => x.IdActiveDirectory == comercialUsurarioAD).Take(5).ToList();
+
+                var oComercial = repositorio.Listar<Comercial>();
+
+                List<ProveedorComercialActualizarDetalle> lstComercialProveedor = new List<ProveedorComercialActualizarDetalle>();
+
+                foreach(var comercial in oComercial.ToList())
+                {
+
+                    var oProveedorComercial = repositorio.Listar<ProveedorComercial>(x => x.Comercial.IdActiveDirectory == comercial.IdActiveDirectory);
+                    foreach (var proveedorComercial in oProveedorComercial)
+                    {
+                        lstComercialProveedor.Add(new ProveedorComercialActualizarDetalle()
+                        {
+                            IdActiveDirectory = comercial.IdActiveDirectory,
+                            CUIT = proveedorComercial.Proveedor.CUIT
+                        });
+                    }
+                }
+
+                foreach (var grupoPorComercial in lstComercialProveedor.GroupBy(x => x.IdActiveDirectory))
+                {
+                    List<ProveedorComercialActualizarDetalle> proveedores = grupoPorComercial.ToList();
+
+                    for (int i = 0; i < proveedores.Count; i++)
+                    {
+                        // Asignar grupo por cada 40 elementos por IdActiveDirectory
+                        proveedores[i].Grupo = i / TAMAÑOGRUPO + 1;
+                    }
+                }
+
+                // Ordenar la lista por ComercialId y Grupo
+                var listaComercialProveedorOrdenada = lstComercialProveedor
+                    .OrderBy(x => x.IdActiveDirectory)
+                    .ThenBy(x => x.Grupo)
+                    .ToList();
+
+                // Agrupar por ComercialId y Grupo, y contar los CUITs
+                var listaComercialPorGrupo = lstComercialProveedor
+                    .GroupBy(x => new { x.IdActiveDirectory, x.Grupo })
+                    .Select(g => new
+                    {
+                        IdActiveDirectory = g.Key.IdActiveDirectory,
+                        Grupo = g.Key.Grupo,
+                        CantidadCUIT = g.Count()
+                    });
+
+                foreach (var grupos in listaComercialPorGrupo)
+                {
+                    listProve = new List<ComprasIniciales>();
+                    var listComercial = repositorio.Listar<Comercial>(x=> x.IdActiveDirectory == grupos.IdActiveDirectory);
+
+                    var filtroCuits = lstComercialProveedor.Where(x => x.IdActiveDirectory == grupos.IdActiveDirectory && x.Grupo == grupos.Grupo).ToList();
+                    var listaCuits = filtroCuits.Select(x => x.CUIT).Distinct();
+
+                    comp = new ComprasIniciales();
+                    comp.CUIT.AddRange(listaCuits);
+                    comp.UsuarioDirectory = grupos.IdActiveDirectory;
+                    listProve.Add(comp);
+                    logger.Info("Iniciando procesamiento CUITs para el comercial " + grupos.IdActiveDirectory + " para el grupo " + grupos.Grupo.ToString() + " cantidad de CUIT's a procesar " + listaCuits.Count().ToString());
+                    ActualizarComprasDetalleProveedorIniciales(listProve, listComercial);
+                    logger.Info("Finalizando procesamiento CUITs para el comercial " + grupos.IdActiveDirectory + " para el grupo " + grupos.Grupo.ToString() + " cantidad de CUIT's a procesar " + listaCuits.Count().ToString());
+                }
             }
-            foreach (var comercial in oComercial)
+            else
             {
-                //var oProveedorComercial = repositorio.Listar<ProveedorComercial, string>(x => x.Proveedor.CUIT, x => x.ComercialId == comercial.ComercialId).Distinct();
-                //if (!string.IsNullOrEmpty(cuit))
-                //{
-                //    oProveedorComercial = oProveedorComercial.Where(x => x == cuit);
-                //}
-                comp = new ComprasIniciales();
-                comp.CUIT.AddRange(oProveedor);
+                var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
+                var oComercial = repositorio.Listar<Comercial>();
+                if (!string.IsNullOrEmpty(cuit))
+                {
+                    oProveedor = oProveedor.Where(x => x == cuit);
+                }
 
-                comp.UsuarioDirectory = comercial.IdActiveDirectory;
-                listProve.Add(comp);
+                if (!string.IsNullOrEmpty(comercialUsurarioAD))
+                {
+                    oComercial = oComercial.Where(x => x.IdActiveDirectory == comercialUsurarioAD).Take(5).ToList();
+                }
+                foreach (var comercial in oComercial)
+                {
+                    //var oProveedorComercial = repositorio.Listar<ProveedorComercial, string>(x => x.Proveedor.CUIT, x => x.ComercialId == comercial.ComercialId).Distinct();
+                    //if (!string.IsNullOrEmpty(cuit))
+                    //{
+                    //    oProveedorComercial = oProveedorComercial.Where(x => x == cuit);
+                    //}
+                    comp = new ComprasIniciales();
+                    comp.CUIT.AddRange(oProveedor);
+
+                    comp.UsuarioDirectory = comercial.IdActiveDirectory;
+                    listProve.Add(comp);
+                }
+
+
+                ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);
+                //ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes  
             }
 
 
-            ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);
-            //ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes        
         }
         private void ActualizarComprasDetalleProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
         {
@@ -418,6 +491,13 @@ namespace Molinos.DataAgro.Business.Managers
                 (anio -1).ToString().Substring(2,2) + "-" + anio.ToString().Substring(2, 2) : 
                 (anio - 2).ToString().Substring(2, 2) + "-" + (anio -1).ToString().Substring(2, 2);
         }
+
+    }
+    public class ProveedorComercialActualizarDetalle
+    {
+        public int Grupo { get; set; }
+        public string IdActiveDirectory { get; set; }
+        public string CUIT { get; set; }
 
     }
 }
