@@ -54,14 +54,17 @@ namespace Molinos.DataAgro.Agent
             {
                 if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle");
+                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle request");
                     Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
                     var rq = new ZMprfcDatosComprasDetalle() { ImCuit = CUIT.ToArray(), ImUsuario = UsuarioComercial };
+                    logger.Info(rq.ToXml());
+
                     var devolucion = agent.ZMprfcDatosComprasDetalle(rq);
-                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle");
+                    logger.Info("SAP sin PI - RFC ZMprfcDatosComprasDetalle response");
+                    logger.Info(devolucion.ToXml());
                     if (devolucion.ExSalida != null)
                     {
                         foreach (var dev in devolucion.ExSalida)
