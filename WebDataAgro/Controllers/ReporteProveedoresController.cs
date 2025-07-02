@@ -18,7 +18,7 @@ namespace WebDataAgro.Controllers
             this.proveedorManager = proveedorManager;
         }
         // GET: ResearchAvanceSiembra
-        [Autorizacion(PermisosDataAgro.VerReporteResearch)]
+        [Autorizacion(PermisosDataAgro.VisualizarReporteDeProveedores)]
         public ActionResult Index()
         {
             return View();
