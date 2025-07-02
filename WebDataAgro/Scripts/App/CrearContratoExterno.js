@@ -166,7 +166,8 @@ function InicializarElementos() {
         autoWidth: true,
         filter: "contains",
         select: function (e) {
-            ValidarCorredor(e.dataItem.Id);
+            // Se comenta por solicitud del Ticket DAT-542
+            //ValidarCorredor(e.dataItem.Id);
         },
         dataSource: {
             severFiltering: true,
