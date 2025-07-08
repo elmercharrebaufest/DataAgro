@@ -7,6 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface IHomeManager
     {
         ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> corredoresComerciales);
+        ResultEstadoProveedores ObtenerEstadoProveedores(string comercial, List<string> listaCuits);
         CampañaHome TraerInfoCampaña(int idComercial, List<int> equipo);
         ObjetivoHome TraerInfoObjetivo(int? idComercial, List<int> equipo, int? idZona, int? idComercialLogeado);
         DatosIniciales TraerInfoIniciales(List<int> equipo);

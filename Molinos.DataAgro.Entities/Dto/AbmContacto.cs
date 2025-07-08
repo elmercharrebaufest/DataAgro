@@ -39,6 +39,32 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TotalPaginas { get; set; }
     }
 
+    public class ResultEstadoProveedores
+    {
+        public List<ResultProveedoresIni> Contactos { get; set; }
+        public int TotalContactos { get; set; }
+        public int TotalHabilitadoContactos { get; set; }
+        public int TotalLegajoIrregularContactos { get; set; }
+        public int TotalNoHabilitadoContactos { get; set; }
+    }
+
+    public class ResultProveedoresIni
+    {
+        public int ProveedorId { get; set; }
+        public int? Calificacion { get; set; }
+        [DisplayName("Razon Social")]
+        public string RazonSocial { get; set; }
+        public string Cuit { get; set; }
+        public string Mail { get; set; }
+        public string Estado { get; set; }
+        public bool Operando { get; set; }
+        public string Telefono { get; set; }
+        [DisplayName("Comercial a Cargo")]
+        public string ComercialCargo { get; set; }
+        public int? EstadoHomeId { get; set; }
+        public string EstadoHomeMensaje { get; set; }
+        public string EstadoHomeDescripcion { get; set; }
+    }
 
     public class ContactoIni
     {
