@@ -2592,7 +2592,7 @@
     <None Include="Service References\WS_GAQ_sin_PI\Molinos.DataAgro.Agent.WS_GAQ_sin_PI.ZMprfcVisuCapProductivaResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\WS_GAQ_sin_PI\z_mp_ws_dataagro_directo.wsdl" />
+    <None Include="Service References\WS_GAQ_sin_PI\z_mp_ws_dataagro_directo1.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AcuerdosGenerados\" />

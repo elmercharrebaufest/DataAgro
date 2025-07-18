@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="vqsrJ6ganA/YXX7z4WTHmLuuLEJvV9vQNHFcVN7U9Ck=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="V7rv5aqxE/vEwb+WupHKlOBhiFtoOK79eaGIS91zf1c=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="customBinding" name="Z_MP_WS_DATAAGRO_DIRECTO">
       <properties>
@@ -323,10 +323,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="Z_MP_WS_DATAAGRO_DIRECTO" contract="WS_GAQ_sin_PI.Z_MP_WS_DATAAGRO_DIRECTO" bindingType="customBinding" address="http://gviceccqa.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" bindingConfiguration="Z_MP_WS_DATAAGRO_DIRECTO">
+    <endpoint name="Z_MP_WS_DATAAGRO_DIRECTO" contract="WS_GAQ_sin_PI.Z_MP_WS_DATAAGRO_DIRECTO" bindingType="customBinding" address="http://vhmgkgaqci.sap.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" bindingConfiguration="Z_MP_WS_DATAAGRO_DIRECTO">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://gviceccqa.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo</serializedValue>
+          <serializedValue>http://vhmgkgaqci.sap.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -408,10 +408,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="Z_MP_WS_DATAAGRO_DIRECTO_soap12" contract="WS_GAQ_sin_PI.Z_MP_WS_DATAAGRO_DIRECTO" bindingType="customBinding" address="http://gviceccqa.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" bindingConfiguration="Z_MP_WS_DATAAGRO_DIRECTO_soap12">
+    <endpoint name="Z_MP_WS_DATAAGRO_DIRECTO_soap12" contract="WS_GAQ_sin_PI.Z_MP_WS_DATAAGRO_DIRECTO" bindingType="customBinding" address="http://vhmgkgaqci.sap.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" bindingConfiguration="Z_MP_WS_DATAAGRO_DIRECTO_soap12">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://gviceccqa.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo</serializedValue>
+          <serializedValue>http://vhmgkgaqci.sap.molinosagro.ad:8000/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
