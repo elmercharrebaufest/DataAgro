@@ -128,45 +128,88 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATOClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_STATUS_DE_CONTRATO()
+                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        IM_CONTRATO = contratosSap.ToArray()
-                    };
+                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
-
-                    if (activarLogDebug)
-                    {
-                        logger.Debug(rq.ToXml());
-                        logger.Debug(valor.ToXml());
-                    }
-
-                    var estados = new List<EstadoSAPDto>();
-
-                    if (valor.EX_SALIDA != null)
-                    {
-                        foreach (var item in valor.EX_SALIDA)
+                        var rq = new ZMprfcStatusDeContrato()
                         {
-                            long.TryParse(item.NUM_SIO, out long numsio);
-                            logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
-                            var estado = new EstadoSAPDto()
-                            {
-                                NumeroSio = numsio,
-                                Status = item.STATUS,
-                                ContratoSap = item.CONTRATO,
-                                Mensaje = item.MENSAJE,
-                                FechaConfirmadoSAP = string.IsNullOrEmpty(item.FECHA_CONFIR) || item.FECHA_CONFIR == "0000-00-00" ? null : DateTime.ParseExact(item.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
-                            };
-                            estados.Add(estado);
+                            ImContrato = contratosSap.ToArray()
+                        };
+
+                        var valor = agent.ZMprfcStatusDeContrato(rq);
+
+                        if (activarLogDebug)
+                        {
+                            logger.Debug(rq.ToXml());
+                            logger.Debug(valor.ToXml());
                         }
+
+                        var estados = new List<EstadoSAPDto>();
+
+                        if (valor.ExSalida != null)
+                        {
+                            foreach (var item in valor.ExSalida)
+                            {
+                                long.TryParse(item.NumSio, out long numsio);
+                                logger.Debug($"Contrato: {item.Contrato}. EX_STATUS: {item.Status}. NUM_SIO: {numsio}. MENSAJE: {item.Mensaje}. FECHA_CONFIRMADO_SAP: {item.FechaConfir}");
+                                var estado = new EstadoSAPDto()
+                                {
+                                    NumeroSio = numsio,
+                                    Status = item.Status,
+                                    ContratoSap = item.Contrato,
+                                    Mensaje = item.Mensaje,
+                                    FechaConfirmadoSAP = string.IsNullOrEmpty(item.FechaConfir) || item.FechaConfir == "0000-00-00" ? null : DateTime.ParseExact(item.FechaConfir, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
+                                };
+                                estados.Add(estado);
+                            }
+                        }
+
+                        return estados;
                     }
+                    else
+                    {
+                        var agent = new SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATOClient();
+                        agent.ClientCredentials.UserName.UserName = UserSap;
+                        agent.ClientCredentials.UserName.Password = PassSap;
 
-                    return estados;
+                        var rq = new Z_MPRFC_STATUS_DE_CONTRATO()
+                        {
+                            IM_CONTRATO = contratosSap.ToArray()
+                        };
 
+                        var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
+
+                        if (activarLogDebug)
+                        {
+                            logger.Debug(rq.ToXml());
+                            logger.Debug(valor.ToXml());
+                        }
+
+                        var estados = new List<EstadoSAPDto>();
+
+                        if (valor.EX_SALIDA != null)
+                        {
+                            foreach (var item in valor.EX_SALIDA)
+                            {
+                                long.TryParse(item.NUM_SIO, out long numsio);
+                                logger.Debug($"Contrato: {item.CONTRATO}. EX_STATUS: {item.STATUS}. NUM_SIO: {numsio}. MENSAJE: {item.MENSAJE}. FECHA_CONFIRMADO_SAP: {item.FECHA_CONFIR}");
+                                var estado = new EstadoSAPDto()
+                                {
+                                    NumeroSio = numsio,
+                                    Status = item.STATUS,
+                                    ContratoSap = item.CONTRATO,
+                                    Mensaje = item.MENSAJE,
+                                    FechaConfirmadoSAP = string.IsNullOrEmpty(item.FECHA_CONFIR) || item.FECHA_CONFIR == "0000-00-00" ? null : DateTime.ParseExact(item.FECHA_CONFIR, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) as DateTime?,
+                                };
+                                estados.Add(estado);
+                            }
+                        }
+
+                        return estados;
+                    }
                 }
                 catch (Exception e)
                 {
