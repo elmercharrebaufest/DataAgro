@@ -7,5 +7,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
     public interface ILogManager
     {
         List<LogDto> TraerTodoLog(DateTime fecha);
+
+        void EliminarLogsAntiguos();
     }
 }

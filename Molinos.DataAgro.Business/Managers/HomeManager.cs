@@ -89,6 +89,54 @@ namespace Molinos.DataAgro.Business.Managers
             return res;
         }
 
+        public ResultEstadoProveedores ObtenerEstadoProveedores(string comercial, List<string> listaCuits)
+        {
+            var res = new ResultIniContacto
+            {
+                Contactos = new List<ContactoIni>()
+            };
+            var resProveedores = new ResultEstadoProveedores
+            {
+                Contactos = new List<ResultProveedoresIni>()
+            };
+
+            var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, null,
+            null, null, null, null,
+            null, null, comercial, null, null, null, null);
+
+            queryPorEstado = listaCuits != null && listaCuits.Count > 0 ? queryPorEstado.Where(x => listaCuits.Contains(x.CUIT)).ToList() : queryPorEstado;
+
+            res.Contactos = DevolverContactosIni(queryPorEstado);
+            res.TotalContactos = queryPorEstado.Select(a => a.CUIT).Distinct().Count();
+            res.TotalHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.CUIT).Distinct().Count();
+            res.TotalLegajoIrregularContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.CUIT).Distinct().Count();
+            res.TotalNoHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.CUIT).Distinct().Count();
+
+            foreach(var contacto in res.Contactos)
+            {
+                resProveedores.Contactos.Add(new ResultProveedoresIni()
+                {
+                    ProveedorId = contacto.ProveedorId,
+                    Calificacion = contacto.Calificacion,
+                    RazonSocial = contacto.RazonSocial,
+                    Cuit = contacto.Cuit,
+                    Mail = contacto.Mail,
+                    Estado = contacto.Estado,
+                    Operando = contacto.Operando,
+                    Telefono = contacto.Telefono,
+                    ComercialCargo = contacto.ComercialCargo,
+                    EstadoHomeId = contacto.EstadoHomeId,
+                    EstadoHomeMensaje = contacto.EstadoHomeMensaje,
+                    EstadoHomeDescripcion = contacto.EstadoHomeDescripcion
+                });
+            }
+            resProveedores.TotalContactos = res.TotalContactos;
+            resProveedores.TotalHabilitadoContactos = res.TotalHabilitadoContactos;
+            resProveedores.TotalLegajoIrregularContactos = res.TotalLegajoIrregularContactos;
+            resProveedores.TotalNoHabilitadoContactos = res.TotalNoHabilitadoContactos;
+            return resProveedores;
+        }
+
         private List<ContactoIni> DevolverContactosIni(List<Contactos> list)
         {
             var lista = new List<ContactoIni>();
@@ -1220,6 +1268,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return archivoBytes;
         }
+
     }
 
     public class FakeHome

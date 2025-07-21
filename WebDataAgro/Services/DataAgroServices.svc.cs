@@ -31,7 +31,7 @@ namespace WebDataAgro.Services
         private readonly IFijacionDePrecioContratoManager fijacionDePrecioContratoManager;
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly IProveedorManager proveedorManager;
-
+        private readonly IHomeManager homeManager;
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
             ICampaniaActualManager campanaActual,
@@ -43,7 +43,8 @@ namespace WebDataAgro.Services
             IMailManager mailManager,
             IFijacionDePrecioContratoManager fijacionDePrecioContratoManager,
             ITipoDeCambioAgent tipoDeCambioAgent,
-            IProveedorManager proveedorManager
+            IProveedorManager proveedorManager,
+            IHomeManager homeManager
             )
         {
             this.logger = logger;
@@ -58,6 +59,7 @@ namespace WebDataAgro.Services
             this.fijacionDePrecioContratoManager = fijacionDePrecioContratoManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.proveedorManager = proveedorManager;
+            this.homeManager = homeManager;
         }
 
         public ResultadoSap Ping()
@@ -1307,5 +1309,9 @@ namespace WebDataAgro.Services
             }
         }
 
+        public ResultEstadoProveedores ObtenerEstadoProveedores(string comercial, List<string> listaCuits)
+        {
+            return homeManager.ObtenerEstadoProveedores(comercial, listaCuits);
+        }
     }
 }

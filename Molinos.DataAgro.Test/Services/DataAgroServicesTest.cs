@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IFijacionDePrecioContratoManager> fijacionManager;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgent;
         private Mock<IProveedorManager> proveedorManager;
+        private Mock<IHomeManager> homeManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -56,7 +57,7 @@ namespace Molinos.DataAgro.Test.Services
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, cupoManagerMock.Object
-                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object);
+                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, homeManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;

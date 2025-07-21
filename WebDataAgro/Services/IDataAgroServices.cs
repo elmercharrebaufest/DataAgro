@@ -72,6 +72,9 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         CupoSapTerceroDto DatosCupoSap(string cupoSap);
+
+        [OperationContract]
+        ResultEstadoProveedores ObtenerEstadoProveedores(string comercial, List<string> listaCuits);
         #endregion
     }
 }
