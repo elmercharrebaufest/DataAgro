@@ -991,4 +991,5 @@ IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessEstado
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessComprasHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessComprasHangfireJob', 0) END
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessComprasDetalleHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessComprasDetalleHangfireJob', 0) END
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessCapacidadProductivaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ProcessCapacidadProductivaHangfireJob', 0) END
+IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EliminarLogsAntiguosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EliminarLogsAntiguosHangfireJob', 0) END
 

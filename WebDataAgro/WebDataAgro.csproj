@@ -328,6 +328,7 @@
     <Compile Include="Jobs\ProcessEstadoHangfireJob.cs" />
     <Compile Include="Jobs\ProcessFacacopHangfireJob.cs" />
     <Compile Include="Jobs\ProcessRg2300HangfireJob.cs" />
+    <Compile Include="Jobs\EliminarLogsAntiguosHangfireJob.cs" />
     <Compile Include="Jobs\ProcessSisaHangfireJob.cs" />
     <Compile Include="Jobs\TransmitirCupoStopHangfireJob.cs" />
     <Compile Include="Jobs\ActualizarCumplimientoCuposHangfireJob.cs" />

@@ -282,6 +282,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Dto\Archivo.cs" />
     <Compile Include="Dto\BasicoConfirma.cs" />
     <Compile Include="Dto\CapacidadProductivaDesactualizadaDto.cs" />
     <Compile Include="Dto\ComercialEmpleadorACargoDto.cs" />
