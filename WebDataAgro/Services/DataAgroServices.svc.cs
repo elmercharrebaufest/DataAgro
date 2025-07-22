@@ -11,6 +11,7 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Services
 {
@@ -1309,9 +1310,9 @@ namespace WebDataAgro.Services
             }
         }
 
-        public ResultEstadoProveedores ObtenerEstadoProveedores(string comercial, List<string> listaCuits)
+        public ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits)
         {
-            return homeManager.ObtenerEstadoProveedores(comercial, listaCuits);
+            return homeManager.ObtenerEstadoProveedores(string.Join(",", GlobalVariables.EquipoReal), listaCuits);
         }
     }
 }
