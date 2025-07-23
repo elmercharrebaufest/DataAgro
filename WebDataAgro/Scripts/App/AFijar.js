@@ -862,6 +862,11 @@ function InicializarElementos() {
                     $("#pizarraDiv").prop("checked", false);
                 }
             }
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(6)
+            }
+
             ClickEnPizarra();
         }
     });
@@ -962,6 +967,10 @@ function InicializarElementos() {
             } else {
                 $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
                 $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
+            }
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(6)
             }
 
             var cuitAux = $("#buscadorProveedor").val().split('(');

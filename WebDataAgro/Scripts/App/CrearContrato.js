@@ -780,6 +780,11 @@ function InicializarElementos() {
             ImporteSobrePrecio = 0;
             MonedaSobrePrecio = "";
             PorcentajeSobrePrecio = 0;
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(6)
+            }
+
             //A FIJAR, FIJACION O ACUERDO
             if (this.value() == 1 || this.value() == 3 || this.value() == 6) {
                 var tipoId = $("#tipoId").data("kendoDropDownList").value();
@@ -981,6 +986,11 @@ function InicializarElementos() {
                 $("#dolarExportadorDiv").hide();
                 $("#dolarExportadorId").prop("checked", false);
             }
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(6)
+            }
+
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
