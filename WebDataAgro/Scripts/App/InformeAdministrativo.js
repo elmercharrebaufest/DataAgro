@@ -487,7 +487,7 @@ var toCSV = function (data, fileName, headers, addheaders) {
         var i = 0;
         for (var col in data[row]) {
             var value = data[row][col];
-            value = value.toString();
+            value = value?.toString() ?? "";
 
             value = value.replace(/"/g, '""');
             csv += value;
