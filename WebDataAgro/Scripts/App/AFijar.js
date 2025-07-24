@@ -864,7 +864,7 @@ function InicializarElementos() {
             }
 
             if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
-                $("#destinoId").data("kendoDropDownList").value(6)
+                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
             }
 
             ClickEnPizarra();
@@ -970,7 +970,7 @@ function InicializarElementos() {
             }
 
             if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
-                $("#destinoId").data("kendoDropDownList").value(6)
+                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
             }
 
             var cuitAux = $("#buscadorProveedor").val().split('(');
