@@ -346,7 +346,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
+                    var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, 
+                        x => x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && 
+                             //x.EstadoCupoId != (int)EnumEstadoCupo.Arribado && 
+                             x.EstadoCupoId != (int)EnumEstadoCupo.Disponible && 
+                             !x.Centro.Acopio);
 
                     DateTime tresDiasAtras = DateTime.Now.AddDays(-3).Date;
                     fechas = fechas.Where(x => x >= tresDiasAtras).ToList();
