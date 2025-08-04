@@ -28,6 +28,8 @@ namespace WebDataAgro.Jobs
             var habilitacion = repositorio.Obtener<HabilitacionJob>(a => a.Nombre == "ActualizarCumplimientoCuposHangfireJob");
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
+
+            // TODO: Falta implementar
             return;
 
             logger.Info("INICIO ActualizarCumplimientoCupos");

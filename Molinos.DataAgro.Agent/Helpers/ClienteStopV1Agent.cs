@@ -464,7 +464,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     //repositorio.AgregarTodos(logs);
                     //repositorio.GuardarCambios();
-                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + string.Join(", ", fechas.Select(a => a.ToString("yyyy/MM/dd")).ToList()));
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas: " + string.Join(", ", fechas.Select(a => a.ToString("yyyy/MM/dd")).ToList()));
 
                     return listaCuposStop.results;
                 }
@@ -736,7 +736,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     repositorio.GuardarCambios();
 
-                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + fechaDesde.ToString() + " - " + DateTime.Now.ToString());
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas: " + fechaDesde.ToString() + " - " + DateTime.Now.ToString());
 
                     return listaCuposStop.data;
                 }

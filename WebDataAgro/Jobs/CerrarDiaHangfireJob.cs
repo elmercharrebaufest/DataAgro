@@ -25,6 +25,7 @@ namespace WebDataAgro.Jobs
                 return;
 
             logger.Info("Ejecución CerrarDiaHangfireJob iniciada");
+            // TODO: Falta implementar
         }
     }
 }
