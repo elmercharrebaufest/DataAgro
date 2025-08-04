@@ -2069,20 +2069,20 @@ namespace Molinos.DataAgro.Business.Managers
             var antesDeAyer = DateTime.Now.Date.AddDays(-2);
             var ayer = DateTime.Now.Date.AddDays(-1);
 
-            //var cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
-            //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
-            //    x => x.Cumplimiento == false && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.FechaIngreso <= antesDeAyer);
-
             var cuposPendientes = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
-                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer)
-                .GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
-
-            //Dictionary<int, int> cuposCumplidos = repositorio.Listar<Cupo>(x =>
-            //      x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) &&
-            //      x.EstadoCupoId != 4 && x.EstadoCupoId != 9
-            //      && x.Cumplimiento != false
-            //      && x.NegocioId != null && x.ComercialId != null).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
+                x => new CupoDto { 
+                    Id = x.Id, 
+                    Cumplimiento = x.Cumplimiento, 
+                    FechaIngreso = x.FechaIngreso, 
+                    NegocioId = x.NegocioId
+                },
+                x => x.Cumplimiento != true && 
+                     x.NegocioId != null && 
+                     negociosId.Contains(x.NegocioId ?? 0) 
+                     && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado
+                     && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado
+                     && x.FechaIngreso >= ayer
+            ).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
 
             //solicitudes pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
@@ -2125,11 +2125,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CuposPendientes = cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                     item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes del negocio " + item.ContratoSAP;
                 }
-                //analizar si tiene sentido por que ahora la cantiad depende de los kg pendientes y no de la cantidad de cupos por negocios
-                //if (cuposNoCumplidos.Any(x => x.NegocioId == item.NegocioId))
-                //{
-                //    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.NegocioId);
-                //}
+                
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes
@@ -2157,7 +2153,6 @@ namespace Molinos.DataAgro.Business.Managers
                     c.CDWarrant = true;
                 }
             }
-
 
             //validar CCPP Pendientes de aplicar
             var contratosPorProveedorCorredor = contratos.Where(x => x.CantidadDeCupos > 0).GroupBy(x => new { x.CUITProveedor, x.CUITCorredor }).ToList();

@@ -53,6 +53,7 @@ namespace Molinos.DataAgro.Test.Services
             fijacionManager = new Mock<IFijacionDePrecioContratoManager>();
             tipoDeCambioAgent = new Mock<ITipoDeCambioAgent>();
             proveedorManager = new Mock<IProveedorManager>();
+            homeManager = new Mock<IHomeManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,

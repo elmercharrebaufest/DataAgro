@@ -25,6 +25,7 @@ namespace WebDataAgro.Jobs
                 return;
 
             logger.Info("Ejecución RechazarSolicitudesVencidasHangfireJob iniciada");
+            // TODO: Falta implementar
         }
     }
 }
