@@ -1103,14 +1103,17 @@ function InicializarElementos() {
                     }
                 }
             }
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            }
+
             ClickEnPizarra();
             if (this.value() == 6) {
                 var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
                 $("#precioId").data("kendoNumericTextBox").value("");
                 $("#precioId").trigger('change');
                 precioRojo.removeClass("required-border");
-
-
             }
         }
     });
@@ -1228,6 +1231,11 @@ function InicializarElementos() {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
             }
+
+            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            }
+
             limpiarContrato();
         }
     });
