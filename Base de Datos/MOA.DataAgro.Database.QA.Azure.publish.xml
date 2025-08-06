@@ -4,7 +4,7 @@
 		<IncludeCompositeObjects>True</IncludeCompositeObjects>
 		<TargetDatabaseName>DataAgroQA</TargetDatabaseName>
 		<DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
-		<TargetConnectionString>Data Source=APPAGLQA.molinosagro.ad,1450; Integrated Security=False; User Id=DATAAGROQAUSR; Password='Cq!7$7S28Xr'; initial catalog=DataAgroQA; Pooling=False; Trust Server Certificate=True;</TargetConnectionString>
+		<TargetConnectionString>Data Source=ArBAVSPWSQL01.molinosagro.ad,1433; Integrated Security=False; User Id=DATAAGROQAUSR; Password='Cq!7$7S28Xr'; initial catalog=DataAgroQA; Pooling=False; Trust Server Certificate=True;</TargetConnectionString>
 		<ProfileVersionNumber>1</ProfileVersionNumber>
 		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
 		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
