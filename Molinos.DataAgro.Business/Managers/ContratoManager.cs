@@ -597,10 +597,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("", "Debe seleccionar alguna Calidad.");
             }
-            if (oParam.MaterialId == (int)EnumMateriales.GIRASOL_AO && (oParam.ZonaId == 0 || oParam.ZonaId == null))
-            {
-                oErrorMessages.Error("", "Zona es obligatoria para Girasol Alto Oleico.");
-            }
+            //if (oParam.MaterialId == (int)EnumMateriales.GIRASOL_AO && (oParam.ZonaId == 0 || oParam.ZonaId == null))
+            //{
+            //    oErrorMessages.Error("", "Zona es obligatoria para Girasol Alto Oleico.");
+            //}
             if (oParam.AperturaPrecio != null)
             {
                 var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones);
