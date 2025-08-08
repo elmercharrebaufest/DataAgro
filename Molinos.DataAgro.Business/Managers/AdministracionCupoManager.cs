@@ -491,7 +491,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void RechazarSolicitudesVencidas()
         {
-            var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente);
+            DateTime ayer = DateTime.Now.Date.AddDays(-1);
+
+            var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < ayer && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente);
             foreach (var item in administacion)
             {
                 CambiarEstadoRechazado(item.Id, "", "");
