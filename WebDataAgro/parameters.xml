@@ -605,4 +605,11 @@
                            /@address" />
 	</parameter>
 
+  <parameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='Z_MP_WS_DATAAGRO_DIRECTO']
+                           /@bindingConfiguration" />
+  </parameter>
+
 </parameters>
