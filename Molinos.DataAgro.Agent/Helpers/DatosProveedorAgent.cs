@@ -160,38 +160,78 @@ namespace Molinos.DataAgro.Agent
         {
             try
             {
-                var valor = new List<ZMPES5150>();
-
-                foreach (var item in usuarios)
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    valor.Add(new ZMPES5150
+                    var valor = new List<Zmpes5150>();
+
+                    foreach (var item in usuarios)
                     {
-                        USUARIO = item
-                    });
+                        valor.Add(new Zmpes5150
+                        {
+                            Usuario = item
+                        });
+                    }
+
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new ZMprfcDatosProveedor()
+                    {
+                        ImCuit = CUIT.ToArray(),
+                        ImUsuario = valor.ToArray()
+                    };
+                    //logger.Debug(rq.ToXml());
+                    var valor1 = agent.ZMprfcDatosProveedor(rq);
+
+                    var respuesta = new List<DatosProveedorAgentDto>();
+                    if (valor1.ExDatos != null)
+                    {
+                        respuesta = valor1.ExDatos.Select(x => new DatosProveedorAgentDto
+                        {
+                            CLIENTE_MOA = x.ClienteMoa,
+                            CUIT = x.Cuit,
+                            STATUS = x.Status,
+                            USUARIO = x.Usuario
+                        }).ToList();
+                    }
+                    return respuesta;
                 }
-
-                SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = valor.ToArray() };
-                //logger.Debug(rq.ToXml());
-                var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR(rq);
-
-                var respuesta = new List<DatosProveedorAgentDto>();
-                if (valor1.EX_DATOS != null)
+                else
                 {
-                    respuesta = valor1.EX_DATOS.Select(x => new DatosProveedorAgentDto
+                    var valor = new List<ZMPES5150>();
+
+                    foreach (var item in usuarios)
                     {
-                        CLIENTE_MOA = x.CLIENTE_MOA,
-                        CUIT = x.CUIT,
-                        STATUS = x.STATUS,
-                        USUARIO = x.USUARIO
-                    }).ToList();
+                        valor.Add(new ZMPES5150
+                        {
+                            USUARIO = item
+                        });
+                    }
+
+                    SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();
+
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = valor.ToArray() };
+                    //logger.Debug(rq.ToXml());
+                    var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR(rq);
+
+                    var respuesta = new List<DatosProveedorAgentDto>();
+                    if (valor1.EX_DATOS != null)
+                    {
+                        respuesta = valor1.EX_DATOS.Select(x => new DatosProveedorAgentDto
+                        {
+                            CLIENTE_MOA = x.CLIENTE_MOA,
+                            CUIT = x.CUIT,
+                            STATUS = x.STATUS,
+                            USUARIO = x.USUARIO
+                        }).ToList();
+                    }
+                    return respuesta;
                 }
-                return respuesta;
             }
             catch (Exception ex)
             {
