@@ -201,7 +201,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<Fason>() { new Fason { Id = 1 } });
 
-            var resultado = target.CerrarDia(1, arc, "a", false, "a", 10);
+            var resultado = target.CerrarDia(1, arc, false, "a", 10);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FinDelDia>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

@@ -17,12 +17,12 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarHedgeTC(HedgeTC hedgeTC, int comercialId);
         Resultado GrabarHedgeMargenMolienda(HedgeMargenMolienda hedgeMargen, int comercialId);
         Resultado EliminarHedgeTC(int hedgeTCId);
-        Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory, bool mail, string cuerpoMail, int diferencial);
+        Resultado CerrarDia(int comercialId, byte[] archivo, bool mail, string cuerpoMail, int diferencial);
         Resultado ReabrirDia(int comercialId, double? diferencial);
         Resultado Diferencial();
         string GenerarCuerpoMail(string observaciones);
         ReporteCompraNetModel ObtenerDatosReporte();
         void EnviarMail(int comercialId, DateTime hoy, string cuerpoMail, byte[] archivo);
-        void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial);
+        void JobCerrarDia(int comercialId, byte[] archivo, int diferencial);
     }
 }

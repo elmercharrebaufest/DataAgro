@@ -29,9 +29,6 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            // TODO: Falta implementar
-            return;
-
             logger.Info("INICIO ActualizarCumplimientoCupos");
             cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date.AddDays(-1));
             logger.Info("FIN ActualizarCumplimientoCupos");

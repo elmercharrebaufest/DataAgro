@@ -201,7 +201,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CerrarDiaTest()
         {
-            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null, false, string.Empty, 100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, false, string.Empty, 100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
 
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>())).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>())).Returns(new List<ToneladasGranoTipoDto>());
@@ -220,7 +220,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
         [Test]
