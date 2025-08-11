@@ -139,7 +139,7 @@ namespace WebDataAgro.Controllers
 
             var diferencial = diferencialManager.TraerDiferencial();
 
-            oHedgeManager.CerrarDia(GlobalVariables.ComercialId, mailEnviar, GlobalVariables.IdActiveDirectory, mail, oHedgeManager.GenerarCuerpoMail(observaciones),
+            oHedgeManager.CerrarDia(GlobalVariables.ComercialId, mailEnviar, mail, oHedgeManager.GenerarCuerpoMail(observaciones),
                                     (diferencial == null ? 0 : diferencial.DiferencialDefault));
             return RedirectToAction("Index");
         }

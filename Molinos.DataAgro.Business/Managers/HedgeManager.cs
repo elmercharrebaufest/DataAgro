@@ -279,7 +279,7 @@ namespace Molinos.DataAgro.Business
             }
             return oEntityErrors;
         }
-        public Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory, bool mail, string cuerpoMail, int diferencial)
+        public Resultado CerrarDia(int comercialId, byte[] archivo, bool mail, string cuerpoMail, int diferencial)
         {
             var oEntityErrors = new Resultado();
             oEntityErrors = ValidarFinDelDia(oEntityErrors);
@@ -984,7 +984,7 @@ namespace Molinos.DataAgro.Business
             return htmlBody;
         }
 
-        public void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial)
+        public void JobCerrarDia(int comercialId, byte[] archivo, int diferencial)
         {
             var dia = Dia();
             var diaDeLaSemana = DateTime.Today.DayOfWeek;
@@ -995,11 +995,11 @@ namespace Molinos.DataAgro.Business
 
             if (dia == null)
             {
-                CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
+                CerrarDia(comercialId, archivo, true, GenerarCuerpoMail(""), diferencial);
             }
             else if (dia.Cerrado == false)
             {
-                CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
+                CerrarDia(comercialId, archivo, true, GenerarCuerpoMail(""), diferencial);
             }
         }
     }
