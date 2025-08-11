@@ -150,7 +150,7 @@ namespace WebDataAgro.Controllers
             logger.Info("INICIO CerrarDiaHedge");
             var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
             var diferencial = diferencialManager.TraerDiferencial();
-            oHedgeManager.JobCerrarDia(GlobalVariables.ComercialId, GlobalVariables.IdActiveDirectory, mailEnviar, diferencial == null ? 0 : diferencial.DiferencialDefault);
+            oHedgeManager.JobCerrarDia(GlobalVariables.ComercialId, mailEnviar, diferencial == null ? 0 : diferencial.DiferencialDefault);
             logger.Info("FIN CerrarDiaHedge");
             return Content("ok");
         }
