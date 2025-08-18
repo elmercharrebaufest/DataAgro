@@ -314,18 +314,9 @@ function checkSoja() {
         $("#EUDR").prop("checked", false);
     } else {
         $("#calidadDiv").show();
-        if ($("#planta").val() == "1029") {
-            $("#sustentableDiv").show();
-            $("#EPADiv").show();
-            $("#EUDRDiv").show();
-        } else {
-            $("#sustentableDiv").hide();
-            $("#Sustentable").prop("checked", false);
-            $("#EPADiv").hide();
-            $("#EPA").prop("checked", false);
-            $("#EUDRDiv").hide();
-            $("#EUDR").prop("checked", false);
-        }
+        $("#sustentableDiv").show();
+        $("#EPADiv").show();
+        $("#EUDRDiv").show();
     }
 }
 

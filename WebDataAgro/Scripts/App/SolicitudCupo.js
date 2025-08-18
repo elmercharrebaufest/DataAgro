@@ -718,19 +718,9 @@ function checkSoja() {
         $("#EUDR").prop("checked", false).prop("disabled", false);
     } else {
         $("#calidadDivSE").show();
-
-        if ($("#CentroIdSE").val() == "1029") {
-            $("#sustentableDivSE").show();
-            $("#EPADivSE").show();
-            $("#EUDRDivSE").show();
-        } else {
-            $("#sustentableDivSE").hide();
-            $("#Sustentable").prop("checked", false);
-            $("#EPADivSE").hide();
-            $("#EPA").prop("checked", false);
-            $("#EUDRDivSE").hide();
-            $("#EUDR").prop("checked", false);
-        }
+        $("#sustentableDivSE").show();
+        $("#EPADivSE").show();
+        $("#EUDRDivSE").show();
     }
 }
 
