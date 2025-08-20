@@ -322,6 +322,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RegisterHangfireJobs.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />
     <Compile Include="Jobs\ProcessCapacidadProductivaHangfireJob.cs" />
     <Compile Include="Jobs\ProcessComprasAyerHangfireJob.cs" />
     <Compile Include="Jobs\ProcessComprasHangfireJob.cs" />

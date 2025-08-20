@@ -66,7 +66,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Segmentacion = provs.Key.Segmentacion.Descripcion,
                     TipoBoleto = provs.Key.BoletoCompraNet.Descripcion,
                     Zona = provs.Key.GrupoCompras,
-                    ComisionPorcentaje = provs.Key.ComisionPorcentaje??0,
+                    ComisionPorcentaje = provs.Key.ComisionPorcentaje ?? 0,
                     LocalidadCompraNet = provs.Key.LocalidadCompraNet.Nombre,
                     ProvinciaCompraNet = provs.Key.ProvinciaCompraNet.Nombre,
                     Deshabilitado = provs.Key.Deshabilitado.HasValue && provs.Key.Deshabilitado.Value ? "SI" : "NO",
@@ -75,6 +75,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     OperaConMATBA = provs.Key.OperaConMATBA.HasValue && provs.Key.OperaConMATBA.Value ? "SI" : "NO",
                     OperaAtravesDe = provs.Key.ComisionistaE != null ? provs.Key.ComisionistaE.RazonSocial +
                     "(" + provs.Key.ComisionistaE.CUIT + ")" : "",
+                    Cluster = provs.Key.Cluster,
+                    Score = provs.Key.Score,
                 };
 
             return resultado.Distinct().ToList();

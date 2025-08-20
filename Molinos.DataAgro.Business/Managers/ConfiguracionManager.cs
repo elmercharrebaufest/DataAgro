@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.CantidadMaximaDiasNegocioConDescarga = oConfiguracion.CantidadMaximaDiasNegocioConDescarga;
                 oConfiguracionSave.PorcentajeVolumenNegocioConDescarga = oConfiguracion.PorcentajeVolumenNegocioConDescarga;
                 oConfiguracionSave.ExigirNegocioEnSolExt = oConfiguracion.ExigirNegocioEnSolExt;
+                oConfiguracionSave.ApiKeyScoringCupos = oConfiguracion.ApiKeyScoringCupos;
             }
             else
             {

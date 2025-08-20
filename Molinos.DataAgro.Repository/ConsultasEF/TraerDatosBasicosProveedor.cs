@@ -109,7 +109,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     OperaConMATBA = prove.OperaConMATBA,
                     EstadoHomeId = (int)prove.EstadoHomeId,
                     EstadoHomeMensaje = prove.EstadoHomeMensaje,
-                    EstadoHomeDescripcion = estHome.Descripcion
+                    EstadoHomeDescripcion = estHome.Descripcion,
+                    Score = prove.Score,
+                    Cluster = prove.Cluster,
                 };
 
             return resultado.ToList();

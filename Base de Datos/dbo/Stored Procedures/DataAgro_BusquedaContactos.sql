@@ -189,7 +189,7 @@ SELECT
 	p.FechaUltimoContacto,
 	est.Descripcion as Estado ,
 	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 EstadoCuit from SISA where CUIT = p.CUIT),'') as EstadoCuit,
-	p.EstadoHomeId, p.EstadoHomeMensaje, eh.Descripcion as EstadoHomeDescripcion, eh.Color
+	p.EstadoHomeId, p.EstadoHomeMensaje, eh.Descripcion as EstadoHomeDescripcion, eh.Color, p.Cluster, p.Score
 FROM Proveedor p
 left join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
 inner join @EmpleadoTable  e on e.ComercialId = pc.ComercialId

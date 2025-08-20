@@ -396,5 +396,13 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
+        public ActionResult ActualizarScoringCuposDeProveedores()
+        {
+            logger.Info("INICIO ActualizarScoringCuposDeProveedores");
+            proveedorManager.ActualizarScoringCuposDeProveedores();
+            logger.Info("FIN ActualizarScoringCuposDeProveedores");
+            return Content("ok");
+        }
+
     }
 }

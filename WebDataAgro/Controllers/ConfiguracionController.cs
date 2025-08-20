@@ -52,6 +52,7 @@ namespace WebDataAgro.Controllers
                 CantidadMaximaDiasNegocioConDescarga = conf != null ? conf.CantidadMaximaDiasNegocioConDescarga : 0,
                 PorcentajeVolumenNegocioConDescarga = conf != null ? conf.PorcentajeVolumenNegocioConDescarga : 0,
                 ExigirNegocioEnSolExt = conf?.ExigirNegocioEnSolExt ?? false,
+                ApiKeyScoringCupos = conf.ApiKeyScoringCupos,
             });
         }
 
@@ -103,6 +104,7 @@ namespace WebDataAgro.Controllers
                 CantidadMaximaDiasNegocioConDescarga = configuracion.CantidadMaximaDiasNegocioConDescarga,
                 PorcentajeVolumenNegocioConDescarga = configuracion.PorcentajeVolumenNegocioConDescarga,
                 ExigirNegocioEnSolExt = configuracion.ExigirNegocioEnSolExt,
+                ApiKeyScoringCupos = configuracion.ApiKeyScoringCupos,
             };
 
             return entidad;

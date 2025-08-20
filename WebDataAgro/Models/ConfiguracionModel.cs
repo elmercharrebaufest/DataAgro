@@ -43,5 +43,6 @@ namespace WebDataAgro.Models
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
         public bool ExigirNegocioEnSolExt { get; set; }
+        public string ApiKeyScoringCupos { get; set; }
     }
 }

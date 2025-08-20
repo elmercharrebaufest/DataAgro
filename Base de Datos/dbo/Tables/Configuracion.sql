@@ -29,5 +29,6 @@
     [PorcentajeVolumenNegocioConDescarga] INT NULL DEFAULT 30,
     [ActivarLogDebug] BIT NULL DEFAULT 1,
     [ExigirNegocioEnSolExt] BIT NULL DEFAULT 0,
+    [ApiKeyScoringCupos] VARCHAR(500) DEFAULT 'iYr0s8Bm9p2iHZAqOrEYt2836ep61wFM3CGki4hp' NOT NULL,
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );

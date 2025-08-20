@@ -102,6 +102,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? EstadoHomeId { get; set; }
         public string EstadoHomeMensaje { get; set; }
         public string EstadoHomeDescripcion { get; set; }
+        public string Cluster { get; set; }
+        public double? Score { get; set; }
     }
 
     public class BasicoProveedorTraerPorProveedor

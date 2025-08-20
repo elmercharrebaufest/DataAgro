@@ -381,6 +381,13 @@ contenedor-principal-miscontactos-grupo {
     padding-top: 3px;
 }
 
+    .lista-contacto-no-operable.scoring {
+        text-align: center;
+        background-color: lightskyblue;
+        width: 110px;
+        margin-right: 10px;
+    }
+
 .img-contacto-no-operable {
     width: 16px;
     height: 16px;

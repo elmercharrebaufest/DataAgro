@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
@@ -34,11 +35,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailProveedorAgent mailProveedorAgent;
         private readonly IEstadoProveedorManager estadoProveedorManager;
         private readonly IVisualizarCapacidadProductivaAgent capProdAgent;
-
+        private readonly IScoringCuposAgent scoringCuposAgent;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent, IMailManager mailManager,
             ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager, IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent, IEstadoProveedorManager estadoProveedorManager,
-            IVisualizarCapacidadProductivaAgent capProdAgent)
+            IVisualizarCapacidadProductivaAgent capProdAgent, IScoringCuposAgent scoringCuposAgent)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -52,6 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailProveedorAgent = mailProveedorAgent;
             this.estadoProveedorManager = estadoProveedorManager;
             this.capProdAgent = capProdAgent;
+            this.scoringCuposAgent = scoringCuposAgent;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActividad oParam, int ProveedorId, string actividadId)
@@ -5288,6 +5290,36 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Agregar(capacidadProductiva);
             }
             repositorio.GuardarCambios();
+        }
+
+        public void ActualizarScoringCuposDeProveedores()
+        {
+            try
+            {
+                ConsultaScoringCuposDto scoringCupos = scoringCuposAgent.ConsultarScoringCupos();
+
+                List<Proveedor> proveedores = repositorio.Listar<Proveedor>();
+
+                scoringCupos.data.ForEach(x =>
+                {
+                    List<Proveedor> provs = proveedores.FindAll(y => y.CUIT == x.z_cuitda);
+
+                    provs.ForEach(p =>
+                    {
+                        p.Score = string.IsNullOrWhiteSpace(x.score) ? (double?)null : double.Parse(x.score, CultureInfo.InvariantCulture);
+                        p.PorcentajeCumplimiento = string.IsNullOrWhiteSpace(x.porcentaje_cumplimiento) ? (double?)null : double.Parse(x.porcentaje_cumplimiento, CultureInfo.InvariantCulture);
+                        p.ScoreCluster = string.IsNullOrWhiteSpace(x.score_cluster) ? (double?)null : double.Parse(x.score_cluster, CultureInfo.InvariantCulture);
+                        p.Cluster = x.cluster;
+                    });
+                });
+
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error al actualizar Scoring Cupos de Proveedores.", ex);
+                throw;
+            }
         }
     }
 
