@@ -56,7 +56,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 }
                 else
                 {
-                    res.Texto += "CALIDAD " + clausula.Basico.StandardDeCalidadDescripcion.ToUpper() + " ";
+                    //res.Texto += "CALIDAD " + clausula.Basico.StandardDeCalidadDescripcion.ToUpper() + " ";
+                    res.Texto += $"{clausula.Basico.Material} " + clausula.Basico.StandardDeCalidadDescripcion.ToUpper() + " ";
                 }
                 if (clausula.Basico.Calidades != null && clausula.Basico.StandardDeCalidadId != 7)
                 {
