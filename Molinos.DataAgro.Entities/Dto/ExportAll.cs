@@ -71,6 +71,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string OperaAtravesDe { get; set; }
 
         public int ProveedorId { get; set; }
+        public string Cluster { get; set; }
+        public double? Score { get; set; }
     }
 
     public class ObjetivoAll

@@ -46,6 +46,7 @@ namespace WebDataAgro.JobRegistration
             RecurringJob.AddOrUpdate<IProcessComprasHangfireJob>("ProcessComprasHangfireJob", s => s.Execute(), "15 23 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IProcessCapacidadProductivaHangfireJob>("ProcessCapacidadProductivaHangfireJob", s => s.Execute(), "0 7,12,16 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IEliminarLogsAntiguosHangfireJob>("EliminarLogsAntiguosHangfireJob", s => s.Execute(), "0 8 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
+            RecurringJob.AddOrUpdate<IActualizarScoringCuposDeProveedoresHangfireJob>("ActualizarScoringCuposDeProveedoresHangfireJob", s => s.Execute(), "0 1 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
 
             RecurringJob.RemoveIfExists("JobDePrueba");
         }

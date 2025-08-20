@@ -53,7 +53,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Facacop = contexto.Set<FACACOP>().Where(x => x.CUIT == provs.Key.CUIT).Any() ? 1 : 0,
                     EstadoHomeId = (int)provs.Key.EstadoHomeId,
                     EstadoHomeMensaje = provs.Key.EstadoHomeMensaje,
-                    EstadoHomeDescripcion = provs.Key.EstadoHome.Descripcion
+                    EstadoHomeDescripcion = provs.Key.EstadoHome.Descripcion,
+                    Cluster = provs.Key.Cluster,
+                    Score = provs.Key.Score
                 };
 
             return resultado.ToList();

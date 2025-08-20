@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Molinos.DataAgro.Test.Mock;
@@ -37,6 +38,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailProveedorAgent> mailProveedorAgentMock;
         private Mock<IEstadoProveedorManager> estadoProveedorManagerMock;
         private Mock<IVisualizarCapacidadProductivaAgent> visualizarCapacidadProductivaAgentMock;
+        private Mock<IScoringCuposAgent> scoringCuposAgentMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -63,9 +65,11 @@ namespace Molinos.DataAgro.Test.Managers
             mailProveedorAgentMock = new Mock<IMailProveedorAgent>();
             estadoProveedorManagerMock = new Mock<IEstadoProveedorManager>();
             visualizarCapacidadProductivaAgentMock = new Mock<IVisualizarCapacidadProductivaAgent>();
+            scoringCuposAgentMock = new Mock<IScoringCuposAgent>();
 
             target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
-                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object, visualizarCapacidadProductivaAgentMock.Object);
+                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object, visualizarCapacidadProductivaAgentMock.Object, 
+                scoringCuposAgentMock.Object);
 
 
             //para pasar el logDataA

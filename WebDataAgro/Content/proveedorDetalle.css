@@ -2522,3 +2522,8 @@ almacenamiento-titulo-hastn,
 .btn-proveedor {
     border-radius: 7px !important;
 }
+
+.contacto-detalle-basico-contenedor-scoring {
+    background-color: lightskyblue;
+    width: 130px;
+}

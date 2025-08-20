@@ -328,6 +328,7 @@
     <Compile Include="Dto\ResearchHumedadSueloDto.cs" />
     <Compile Include="Dto\ResearchTipoCargaDto.cs" />
     <Compile Include="Dto\ResearchTipoMuestraDto.cs" />
+    <Compile Include="Dto\ScoringCuposDto.cs" />
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
