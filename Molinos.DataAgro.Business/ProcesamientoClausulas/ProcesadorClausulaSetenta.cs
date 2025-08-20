@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.ProcesamientoClausulas
 {
-    public class ProcesadorClausulaSetenta : ProcesadorClausula<ClausulaSesentaYNueve>
+    public class ProcesadorClausulaSetenta : ProcesadorClausula<ClausulaSetenta>
     {
         public ProcesadorClausulaSetenta(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto) : base(repositorio, log, estadoBoleto)
         {
         }
-        public override ResultadoClausula DevolverClausulas(ClausulaSesentaYNueve clausula)
+        public override ResultadoClausula DevolverClausulas(ClausulaSetenta clausula)
         {
             //No aplica a carta oferta porque no se sella. Es solo para boleto físico y confirma
 
