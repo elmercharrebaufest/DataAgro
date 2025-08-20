@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                  $"del medio de transporte de la mercadería, se detectaran al momento de la descarga resultados positivos de alguna de las sustancias prohibidas antes " +
                  $"mencionadas, la mercadería podrá ser rechazada dándose por incumplido el contrato de compra, con las sanciones e indemnizaciones que correspondan. " +
                  $"Si el resultado del análisis positivo se conociera a posteriori de su descarga, en los términos indicados anteriormente, el remitente será " +
-                 $"sancionado con una multa de U$S 20 (VEINTE dólares americanos) por tonelada. En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las " +
+                 $"sancionado con una multa de U$S 20 por tonelada. En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las " +
                  $"entregas de la mercadería realizadas el 1 de marzo de 2019.";
 
             return res;
