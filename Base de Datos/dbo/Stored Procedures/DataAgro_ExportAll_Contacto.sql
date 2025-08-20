@@ -21,7 +21,7 @@ CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),I
 AreaDeInfluencia varchar(10),Comentario varchar(MAX),ComercialACargo varchar(255),ClienteMoa varchar(255),   
 Zona varchar(255), FechaAlta DATETIME null, Clasificacion varchar(255), TipoBoleto varchar(255), Bolsa varchar(255),  
 Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255), Deshabilitado varchar(255), 
-Comisionista varchar(255), CuposConRiesgo varchar(255), OperaConMATBA varchar(255), OperaAtravesDe varchar(255))  
+Comisionista varchar(255), CuposConRiesgo varchar(255), OperaConMATBA varchar(255), OperaAtravesDe varchar(255), Cluster varchar(50), Score float)  
   
   
  insert into @table   
@@ -31,7 +31,7 @@ Comisionista varchar(255), CuposConRiesgo varchar(255), OperaConMATBA varchar(25
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Estado, Calificacion,  
  Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,ComercialACargo
  ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario, Deshabilitado,ComisionPorcentaje,LocalidadCompraNet, ProvinciaCompraNet,
- Comisionista, CuposConRiesgo, OperaConMATBA, OperaAtravesDe)
+ Comisionista, CuposConRiesgo, OperaConMATBA, OperaAtravesDe, Cluster, Score)
   
  select    
  p.ProveedorId,  
@@ -83,7 +83,9 @@ Comisionista varchar(255), CuposConRiesgo varchar(255), OperaConMATBA varchar(25
  case when p.Comisionista = 1 then 'SI' else 'NO' end,  
  case when p.CuposConRiesgo = 1 then 'SI' else 'NO' end,  
  case when p.OperaConMATBA = 1 then 'SI' else 'NO' end,  
- comisionista.RazonSocial + '(' + comisionista.CUIT + ')'  as OperaAtravesDe
+ comisionista.RazonSocial + '(' + comisionista.CUIT + ')'  as OperaAtravesDe,
+ p.Cluster, 
+ p.Score
   from Proveedor p  
  inner join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId  
  inner join Comercial c on pc.ComercialId = c.ComercialId  
@@ -167,7 +169,9 @@ ProveedorId,
  Comisionista, 
  CuposConRiesgo, 
  OperaConMATBA,
- OperaAtravesDe
+ OperaAtravesDe,
+ Cluster,
+ Score
 from #ProveedorAux PA  
   
 drop table #ProveedorAux  

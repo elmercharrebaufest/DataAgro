@@ -35,5 +35,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
         public bool? ActivarLogDebug { get; set; }
         public bool? ExigirNegocioEnSolExt { get; set; }
+        public string ApiKeyScoringCupos { get; set; }
     }
 }

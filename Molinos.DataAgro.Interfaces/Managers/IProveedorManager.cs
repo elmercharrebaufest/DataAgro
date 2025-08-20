@@ -62,5 +62,6 @@ namespace Molinos.DataAgro.Interfaces
         ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion);
         void ActualizarEstadoProveedor(int proveedorId, string proveedorCuit);
         List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial, List<int> equipo);
+        void ActualizarScoringCuposDeProveedores();
     }
 }

@@ -604,6 +604,7 @@ function ArmarContactos(contactos) {
             }
 
             htmlaux += "</span>";
+
             if (contactos[i].NoOperable) {
                 var url3 = MSGetUrl("/Content/Images/no-operable.png");
                 htmlaux += '<div class="lista-contacto-no-operable"' +
@@ -612,6 +613,15 @@ function ArmarContactos(contactos) {
                     + '<span class="span-contacto-no-operable">No operable</span>'
                     + '</div>';
             }
+
+            htmlaux += '<div class="lista-contacto-no-operable scoring">'
+                + '<span class="span-contacto-no-operable"> Cluster: ' + contactos[i].Cluster + '</span>'
+                + '</div>';
+
+            htmlaux += '<div class="lista-contacto-no-operable scoring">'
+                + '<span class="span-contacto-no-operable"> Score: ' + contactos[i].Score + '</span>'
+                + '</div>';
+
             htmlaux += '</div>'
                 + '<div class="lista-contactos-datos">'
                 + '<div>'

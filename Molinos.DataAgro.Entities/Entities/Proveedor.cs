@@ -61,6 +61,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? EstadoHomeId { get; set; }
         public string EstadoHomeMensaje { get; set; }
         public bool? Deshabilitado { get; set; }
+        public double? Score { get; set; }
+        public double? PorcentajeCumplimiento { get; set; }
+        public double? ScoreCluster { get; set; }
+        public string Cluster { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual Estado Estado { get; set; }

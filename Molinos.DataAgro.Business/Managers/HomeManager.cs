@@ -164,7 +164,9 @@ namespace Molinos.DataAgro.Business.Managers
                     Estado = con.FirstOrDefault().Estado,
                     FechaAlta = con.FirstOrDefault().FechaAlta,
                     GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct()),
-                    Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7
+                    Corredor = con.FirstOrDefault().Segmentacion == (int)EnumSegmentacion.Corredor_Correacopios || con.FirstOrDefault().Segmentacion == (int)EnumSegmentacion.Corredores_tradicionales,
+                    Cluster = con.FirstOrDefault().Cluster,
+                    Score = con.FirstOrDefault().Score
                 };
                 CargarOperabilidad(cont, con.FirstOrDefault());
                 if (cont.NoOperable == true)

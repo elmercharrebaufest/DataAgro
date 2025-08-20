@@ -358,7 +358,12 @@
 						match="/configuration/appSettings/add[@key='PassPrimary']
                            /@value" />
 	</parameter>
-	
+	<parameter name="UrlScoringCupos Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='UrlScoringCupos']
+                           /@value" />
+	</parameter>
+
 	<parameter name="HTTP_Port19 Service Endpoint Address">
 		<parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
@@ -605,11 +610,11 @@
                            /@address" />
 	</parameter>
 
-  <parameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration">
-    <parameterEntry kind="XmlFile" scope="Web.config"
-						match="/configuration/system.serviceModel/client
+	<parameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+							match="/configuration/system.serviceModel/client
                            /endpoint[@name='Z_MP_WS_DATAAGRO_DIRECTO']
                            /@bindingConfiguration" />
-  </parameter>
+	</parameter>
 
 </parameters>

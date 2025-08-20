@@ -467,6 +467,9 @@ function armarContacto() {
     $(".contacto-detalle-basico-contenedor-cuit-span").html("(CUIT " + basico[0].CUIT + ")");
     cuit = basico[0].CUIT;
 
+    $(".contacto-detalle-basico-contenedor-score-span").html(basico[0].Score).attr('title', basico[0].Score);
+    $(".contacto-detalle-basico-contenedor-cluster-span").html(basico[0].Cluster).attr('title', basico[0].Cluster);
+
     if (basico[0].NoOperable) {
         $(".span-contacto-no-operable-tooltip").html(basico[0].TooltipNoOperable);
         $(".contacto-detalle-basico-contenedor-operable").show();
