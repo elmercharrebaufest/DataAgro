@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
             var res = new ResultadoClausula();
             res.Texto += "";
-            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
+            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA && clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 res.Texto += "A los fines de cumplir con normas legales e impositivas, el vendedor/corredor se encuentra obligado a remitir al comprador el original del presente boleto, debidamente suscripto, a efectos de su presentación en la Bolsa de Cereales.";
             }

@@ -26,11 +26,21 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y NO ES POSICIÓN PASE
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (!clausula.Basico.TipoPosicionCBOTId.HasValue || clausula.Basico.TipoPosicionCBOTId.Value != (int)EnumTipoPosicionCBOT.PASE) && clausula.Basico.EsFason != true && clausula.Basico.PrestamoDevolucion != true)
             {
-                res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
-                    $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
-                    $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
-                    $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)}. " +
-                    $"Únicamente a los efectos del impuesto de sellos las partes acuerdan que el precio de referencia corresponde a Pizarra Rosario.";
+                if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                {
+                    res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
+                                 $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
+                                 $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
+                                 $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)}. " +
+                                 $"Únicamente a los efectos del impuesto de sellos las partes acuerdan que el precio de referencia corresponde a Pizarra Rosario.";
+                }
+                else
+                {
+                    res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
+                                 $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
+                                 $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
+                                 $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)}.";
+                }
             }
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y ES POSICIÓN PASE
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.TipoPosicionCBOTId.HasValue && clausula.Basico.TipoPosicionCBOTId.Value == (int)EnumTipoPosicionCBOT.PASE && clausula.Basico.EsFason != true && clausula.Basico.PrestamoDevolucion != true)

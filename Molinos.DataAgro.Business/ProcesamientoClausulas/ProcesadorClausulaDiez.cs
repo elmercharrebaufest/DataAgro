@@ -20,9 +20,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
             //SI EN EL CONTRATO SE ESPECIFICA UN PORCENTAJE DE MULTA DISTINTO DE CERO EN CONTRATOS A FIJAR
 
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.PlanCanje != true)
+            if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                res.Texto += $"Multa por incumplimiento: 10%";
+                if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.PlanCanje != true)
+                {
+                    res.Texto += $"Multa por incumplimiento: 10%";
+                }
             }
 
             return res;

@@ -21,8 +21,16 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA)
             {
 
-                res.Texto += "Los firmantes acuerdan y aceptan que en lo sucesivo, todos los documentos que tengan relación con el presente contrato podrán suscribirse " +
-                  "mediante firma digital y/o electrónica, la que tendrá plena validez para las Partes.";
+                if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                {
+                    res.Texto += "En caso de aceptación, las partes acuerdan y aceptan que en lo sucesivo, todos los documentos que tengan relación con la presente Oferta podrán suscribirse " +
+                                 "mediante firma digital y/o electrónica, la que\r\ntendrá plena validez para las Partes.";
+                }
+                else
+                {
+                    res.Texto += "Los firmantes acuerdan y aceptan que en lo sucesivo, todos los documentos que tengan relación con el presente contrato podrán suscribirse " +
+                                 "mediante firma digital y/o electrónica, la que tendrá plena validez para las Partes.";
+                }
             }
 
             return res;
