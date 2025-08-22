@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
                                  $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
                                  $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
-                                 $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)}.";
+                                 $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} Kg. y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)} Kg.";
                 }
             }
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y ES POSICIÓN PASE

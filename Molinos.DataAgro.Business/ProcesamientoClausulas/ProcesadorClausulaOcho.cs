@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
             //if (clausula.Basico.Cesion == true)
             //{
-            if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.FISICO)
+            if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 res.Texto = "El presente contrato sólo es transferible con el expreso consentimiento de Molinos Agro SA.";
             }
