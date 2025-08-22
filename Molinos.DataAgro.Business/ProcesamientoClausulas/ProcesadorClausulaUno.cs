@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
                 {
-                    res.Texto = "El VENDEDOR vende al COMPRADOR";
+                    res.Texto = "La VENDEDORA vende a la COMPRADORA";
                 }
                 else
                 {
