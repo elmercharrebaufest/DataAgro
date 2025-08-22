@@ -4099,13 +4099,13 @@ function CargarDatosEditar(contrato, hijo) {
 
 
     if (contrato.Id > 0) {
-        //$("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
-        CalcularMaximo();
+        $("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
+        //CalcularMaximo();
         $("#minimoId").data("kendoNumericTextBox").value(contrato.KgMinimo);
     }
-    //else {
-    //    CalcularMaximo();
-    //}
+    else {
+        CalcularMaximo();
+    }
 
 
     if (contrato.CondicionalContratoId != null && contrato.CondicionalContratoId > 0) {
