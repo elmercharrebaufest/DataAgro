@@ -31,7 +31,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("ProcessRg2300 - Iniciando");
+            logger.Info("HANGFIRE - ProcessRg2300 - Iniciando");
             var str = ConfigurationManager.AppSettings["Rg2300"];
 
             var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
@@ -85,7 +85,7 @@ namespace WebDataAgro.Jobs
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessRg2300 - Fin. Lineas INSERTADAS: {lista.Count}");
+            logger.Info($"HANGFIRE - ProcessRg2300 - Fin. Lineas INSERTADAS: {lista.Count}");
         }
     }
 }

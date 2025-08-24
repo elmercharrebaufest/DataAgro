@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO EnvioMailSinCTG");
+            logger.Info("HANGFIRE - INICIO EnvioMailSinCTG");
             cupoManager.EnviarMailSinCtg();
-            logger.Info("FIN EnvioMailSinCTG");
+            logger.Info("HANGFIRE - FIN EnvioMailSinCTG");
         }
     }
 }

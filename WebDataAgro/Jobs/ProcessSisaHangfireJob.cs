@@ -31,7 +31,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("ProcessSisa - Iniciando");
+            logger.Info("HANGFIRE - ProcessSisa - Iniciando");
             var str = ConfigurationManager.AppSettings["SISA"];
 
             var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
@@ -100,7 +100,7 @@ namespace WebDataAgro.Jobs
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessSisa - Fin. Lineas INSERTADAS: {lineas}");
+            logger.Info($"HANGFIRE - ProcessSisa - Fin. Lineas INSERTADAS: {lineas}");
         }
     }
 }

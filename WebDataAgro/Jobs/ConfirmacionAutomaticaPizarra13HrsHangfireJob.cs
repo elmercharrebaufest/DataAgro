@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ConfirmacionAutomaticaPizarra13hrs");
+            logger.Info("HANGFIRE - INICIO ConfirmacionAutomaticaPizarra13hrs");
             fijacionManager.ConfirmacionAutomaticaPizarra13Hrs();
-            logger.Info("FIN ConfirmacionAutomaticaPizarra13hrs");
+            logger.Info("HANGFIRE - FIN ConfirmacionAutomaticaPizarra13hrs");
         }
     }
 }

@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using System;
 using WebDataAgro.Job;
 
 namespace WebDataAgro.Jobs
@@ -28,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ProcessCompras");
+            logger.Info("HANGFIRE - INICIO ProcessCompras");
             comprasManager.ActualizarComprasDetalle("", "");
-            logger.Info("FIN ProcessCompras");
+            logger.Info("HANGFIRE - FIN ProcessCompras");
         }
     }
 }

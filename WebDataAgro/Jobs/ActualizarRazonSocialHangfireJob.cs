@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarRazonSocial");
+            logger.Info("HANGFIRE - INICIO ActualizarRazonSocial");
             proveedorManager.ActualizarRazonSocial();
-            logger.Info("FIN ActualizarRazonSocial");
+            logger.Info("HANGFIRE - FIN ActualizarRazonSocial");
         }
     }
 }

@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ConsultarCuposDiarios a STOP");
+            logger.Info("HANGFIRE - INICIO ConsultarCuposDiarios a STOP");
             cupoManager.ConsultarCuposDiarios();
-            logger.Info("FIN ConsultarCuposDiarios a STOP");
+            logger.Info("HANGFIRE - FIN ConsultarCuposDiarios a STOP");
         }
     }
 }

@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarEstadoDeContrato");
+            logger.Info("HANGFIRE - INICIO ActualizarEstadoDeContrato");
             contratoManager.ActualizarEstadoDeContratos();
-            logger.Info("FIN ActualizarEstadoDeContrato");
+            logger.Info("HANGFIRE - FIN ActualizarEstadoDeContrato");
         }
     }
 }

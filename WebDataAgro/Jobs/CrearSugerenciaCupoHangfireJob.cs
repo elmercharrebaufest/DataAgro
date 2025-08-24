@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO CrearSugerenciaCupo");
+            logger.Info("HANGFIRE - INICIO CrearSugerenciaCupo");
             cupoManager.CrearSugerenciaCupo();
-            logger.Info("FIN CrearSugerenciaCupo");
+            logger.Info("HANGFIRE - FIN CrearSugerenciaCupo");
         }
     }
 }

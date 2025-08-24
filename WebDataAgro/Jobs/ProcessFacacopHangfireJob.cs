@@ -31,7 +31,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("ProcessFacacop - Iniciando");
+            logger.Info("HANGFIRE - ProcessFacacop - Iniciando");
             var str = ConfigurationManager.AppSettings["Facacop"];
 
             StreamReader objReader = new StreamReader(str.ToString());
@@ -77,7 +77,7 @@ namespace WebDataAgro.Jobs
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessFacacop - Fin. Lineas INSERTADAS: {lista.Count}");
+            logger.Info($"HANGFIRE - ProcessFacacop - Fin. Lineas INSERTADAS: {lista.Count}");
         }
     }
 }

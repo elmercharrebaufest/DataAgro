@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using WebDataAgro.Job;
+
 namespace WebDataAgro.Jobs
 {
     public interface IActualizarMailProveedorHangfireJob : IHangfireJob { }
@@ -26,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarMailProveedor");
+            logger.Info("HANGFIRE - INICIO ActualizarMailProveedor");
             proveedorManager.GrabarMailProveedor();
-            logger.Info("FIN ActualizarMailProveedor");
+            logger.Info("HANGFIRE - FIN ActualizarMailProveedor");
         }
     }
 }

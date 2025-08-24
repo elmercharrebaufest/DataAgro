@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info($"Borrado Automatico - Iniciando");
+            logger.Info($"HANGFIRE - Borrado Automatico - Iniciando");
             contratoManager.BorradoAutomatico();
-            logger.Info($"Borrado Automatico - Finalizado");
+            logger.Info($"HANGFIRE - Borrado Automatico - Finalizado");
         }
     }
 }
