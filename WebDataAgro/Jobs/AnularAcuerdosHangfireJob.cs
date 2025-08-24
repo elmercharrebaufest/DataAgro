@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO AnularAcuerdos (cantidad Pendiente de Acuerdos)");
+            logger.Info("HANGFIRE - INICIO AnularAcuerdos (cantidad Pendiente de Acuerdos)");
             contratoAcuerdoManager.AnularAcuerdos();
-            logger.Info("FIN AnularAcuerdos");
+            logger.Info("HANGFIRE - FIN AnularAcuerdos");
         }
     }
 }

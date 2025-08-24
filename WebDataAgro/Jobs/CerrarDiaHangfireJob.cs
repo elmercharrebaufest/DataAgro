@@ -1,4 +1,3 @@
-using Autofac;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -35,18 +34,18 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO CerrarDiaHedge");
+            logger.Info("HANGFIRE - INICIO CerrarDiaHedge");
             try
             {
                 var mailEnviar = ExcelReporteCompleto.GenerarExcel(hedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
                 var diferencial = diferencialManager.TraerDiferencial();
 
                 hedgeManager.JobCerrarDia(44, mailEnviar, diferencial == null ? 0 : diferencial.DiferencialDefault);
-                logger.Info("FIN CerrarDiaHedge");
+                logger.Info("HANGFIRE - FIN CerrarDiaHedge");
             }
             catch (Exception ex)
             {
-                logger.Error("Error al ejecutar job CerrarDiaHangfireJob", ex);
+                logger.Error("HANGFIRE - Error al ejecutar job CerrarDiaHangfireJob", ex);
                 throw;
             }
         }

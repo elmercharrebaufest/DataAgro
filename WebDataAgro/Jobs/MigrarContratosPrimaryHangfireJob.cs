@@ -24,7 +24,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución MigrarContratosPrimaryHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución MigrarContratosPrimaryHangfireJob iniciada");
             // TODO: Falta implementar
         }
     }

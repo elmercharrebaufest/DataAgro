@@ -29,9 +29,9 @@ namespace WebDataAgro.Jobs
                 return;
 
             DateTime dia = DateTime.Today;
-            logger.Info("INICIO EnviarMailConfirma");
+            logger.Info("HANGFIRE - INICIO EnviarMailConfirma");
             confirmaManager.EnviarMailConfirma(dia);
-            logger.Info("FIN EnviarMailConfirma");
+            logger.Info("HANGFIRE - FIN EnviarMailConfirma");
         }
     }
 }

@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO EnvioMailNegociosConDiaAnterior");
+            logger.Info("HANGFIRE - INICIO EnvioMailNegociosConDiaAnterior");
             negocioManager.EnvioMailNegociosConDiaAnterior();
-            logger.Info("FIN EnvioMailNegociosConDiaAnterior");
+            logger.Info("HANGFIRE - FIN EnvioMailNegociosConDiaAnterior");
         }
     }
 }

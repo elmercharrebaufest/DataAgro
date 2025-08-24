@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using WebDataAgro.Job;
+
 namespace WebDataAgro.Jobs
 {
     public interface IActualizarFechaUltimaActualizacionManualesFAQHangfireJob : IHangfireJob { }
@@ -26,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO Actualizar fecha última actualización Manuales FAQ");
+            logger.Info("HANGFIRE - INICIO Actualizar fecha última actualización Manuales FAQ");
             faqManager.ActualizarFechaUltimaActualizacionManualesFAQ();
-            logger.Info("FIN Actualizar fecha última actualización Manuales FAQ");
+            logger.Info("HANGFIRE - FIN Actualizar fecha última actualización Manuales FAQ");
         }
     }
 }

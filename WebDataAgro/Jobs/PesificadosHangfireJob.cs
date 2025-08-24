@@ -24,7 +24,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución PesificadosHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución PesificadosHangfireJob iniciada");
             // TODO: Falta implementar
         }
     }

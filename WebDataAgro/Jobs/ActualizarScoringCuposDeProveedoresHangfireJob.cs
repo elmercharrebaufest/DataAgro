@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarScoringCuposDeProveedores Hangfire");
+            logger.Info("HANGFIRE - INICIO ActualizarScoringCuposDeProveedores Hangfire");
             proveedorManager.ActualizarScoringCuposDeProveedores();
-            logger.Info("FIN ActualizarScoringCuposDeProveedores Hangfire");
+            logger.Info("HANGFIRE - FIN ActualizarScoringCuposDeProveedores Hangfire");
         }
     }
 }
