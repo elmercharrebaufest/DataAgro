@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución EnvioMailPendientesHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución EnvioMailPendientesHangfireJob iniciada");
             contratoManager.EnviarMailPendiente();
-            logger.Info($"EnvioMail - Finalizado");
+            logger.Info($"HANGFIRE - EnvioMail - Finalizado");
         }
     }
 }

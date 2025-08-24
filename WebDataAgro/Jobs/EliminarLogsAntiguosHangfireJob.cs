@@ -28,7 +28,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("EliminarLogsAntiguosHangfireJob - Iniciando");
+            logger.Info("HANGFIRE - EliminarLogsAntiguosHangfireJob - Iniciando");
 
             try
             {
@@ -39,7 +39,7 @@ namespace WebDataAgro.Jobs
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"EliminarLogsAntiguosHangfireJob - Fin");
+            logger.Info($"HANGFIRE - EliminarLogsAntiguosHangfireJob - Fin");
         }
     }
 }

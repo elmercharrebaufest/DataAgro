@@ -29,9 +29,9 @@ namespace WebDataAgro.Jobs
                 return;
 
             DateTime dia = DateTime.Today;
-            logger.Info("INICIO VerificarSolicitudesExtraordinariasPendientes");
+            logger.Info("HANGFIRE - INICIO VerificarSolicitudesExtraordinariasPendientes");
             cupoManager.VerificarSolicitudesExtraordinariasPendientes(dia);
-            logger.Info("FIN VerificarSolicitudesExtraordinariasPendientes");
+            logger.Info("HANGFIRE - FIN VerificarSolicitudesExtraordinariasPendientes");
         }
     }
 }

@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO SincronizarResearch Power App");
+            logger.Info("HANGFIRE - INICIO SincronizarResearch Power App");
             researchManager.SincronizarResearchPowerApp();
-            logger.Info("FIN SincronizarResearch Power App");
+            logger.Info("HANGFIRE - FIN SincronizarResearch Power App");
         }
     }
 }

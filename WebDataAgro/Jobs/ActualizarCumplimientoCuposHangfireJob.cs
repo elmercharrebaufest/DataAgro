@@ -1,4 +1,3 @@
-
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -29,9 +28,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarCumplimientoCupos");
+            logger.Info("HANGFIRE - INICIO ActualizarCumplimientoCupos");
             cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date.AddDays(-1));
-            logger.Info("FIN ActualizarCumplimientoCupos");
+            logger.Info("HANGFIRE - FIN ActualizarCumplimientoCupos");
         }
     }
 }

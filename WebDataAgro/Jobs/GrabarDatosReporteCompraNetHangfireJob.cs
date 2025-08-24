@@ -24,7 +24,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución GrabarDatosReporteCompraNetHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución GrabarDatosReporteCompraNetHangfireJob iniciada");
             // TODO: Falta implementar
         }
     }

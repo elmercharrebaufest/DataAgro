@@ -28,16 +28,16 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ActualizarCumplimientoCupos");
+            logger.Info("HANGFIRE - INICIO ActualizarCumplimientoCupos");
             try
             {
                 cupoManager.TransmitirCupos();
             }
             catch (Exception ex)
             {
-                logger.Error("ActualizarCumplimientoCupos", ex);
+                logger.Error("HANGFIRE - Error en ActualizarCumplimientoCupos.", ex);
             }
-            logger.Info("FIN ActualizarCumplimientoCupos");
+            logger.Info("HANGFIRE - FIN ActualizarCumplimientoCupos");
         }
     }
 }

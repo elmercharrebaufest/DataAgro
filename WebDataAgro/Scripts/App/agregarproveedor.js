@@ -1916,7 +1916,7 @@ function armarSelects(result) {
         obj.granos = [];
 
         for (var i = 0; i <= cantGrano; i++) {
-            if ($("#campaña" + i).val() == "null")
+            if ($("#campaña" + i).val() == null)
             {
                 MensErr("Debe seleccionar la campaña.");
                 return false;

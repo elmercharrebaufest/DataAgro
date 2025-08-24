@@ -24,7 +24,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución RechazarSolicitudesVencidasHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución RechazarSolicitudesVencidasHangfireJob iniciada");
             // TODO: Falta implementar
         }
     }

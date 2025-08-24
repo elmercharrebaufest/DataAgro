@@ -30,9 +30,9 @@ namespace WebDataAgro.Jobs
 
             if (DateTime.Now >= DateTime.Now.Date.AddHours(7) && DateTime.Now <= DateTime.Now.Date.AddHours(21))
             {
-                logger.Info("INICIO ConsultarMisturnosActivos - Actualizar CupoNoPropio");
+                logger.Info("HANGFIRE - INICIO ConsultarMisturnosActivos - Actualizar CupoNoPropio");
                 cupoManager.ConsultarMisTurnosActivos();
-                logger.Info("FIN ConsultarMisturnosActivos - Actualizar CupoNoPropio");
+                logger.Info("HANGFIRE - FIN ConsultarMisturnosActivos - Actualizar CupoNoPropio");
             }
             else
             {

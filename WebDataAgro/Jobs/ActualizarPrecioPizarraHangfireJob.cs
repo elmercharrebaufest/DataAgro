@@ -4,6 +4,7 @@ using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using System;
 using WebDataAgro.Job;
+
 namespace WebDataAgro.Jobs
 {
     public interface IActualizarPrecioPizarraHangfireJob : IHangfireJob { }
@@ -29,9 +30,9 @@ namespace WebDataAgro.Jobs
 
             if (DateTime.Now > DateTime.Now.Date.AddHours(12) && DateTime.Now < DateTime.Now.Date.AddHours(13).AddMinutes(1))
             {
-                logger.Info("INICIO ActualizarPrecioPizarra");
+                logger.Info("HANGFIRE - INICIO ActualizarPrecioPizarra");
                 precioPizarraManager.ActualizarPrecioPizarra(DateTime.Now.Date.AddDays(-1), false);
-                logger.Info("FIN ActualizarPrecioPizarra");
+                logger.Info("HANGFIRE - FIN ActualizarPrecioPizarra");
             }
         }
     }

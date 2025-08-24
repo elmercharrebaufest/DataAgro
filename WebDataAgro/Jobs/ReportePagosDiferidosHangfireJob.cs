@@ -24,7 +24,7 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("Ejecución ReportePagosDiferidosHangfireJob iniciada");
+            logger.Info("HANGFIRE - Ejecución ReportePagosDiferidosHangfireJob iniciada");
             // TODO: Falta implementar
         }
     }

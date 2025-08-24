@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using System;
 using WebDataAgro.Job;
 
 namespace WebDataAgro.Jobs
@@ -28,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO ProcessEstado");
+            logger.Info("HANGFIRE - INICIO ProcessEstado");
             estadoProveedorManager.ActualizarProveedores(null);
-            logger.Info("FIN ProcessEstado");
+            logger.Info("HANGFIRE - FIN ProcessEstado");
         }
     }
 }

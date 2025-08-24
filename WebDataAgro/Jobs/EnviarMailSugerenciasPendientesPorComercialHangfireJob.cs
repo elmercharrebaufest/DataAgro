@@ -27,9 +27,9 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("INICIO EnviarMailSugerenciasPendientesPorComercial");
+            logger.Info("HANGFIRE - INICIO EnviarMailSugerenciasPendientesPorComercial");
             cupoManager.EnviarMailSugerenciasPendientesPorComercial();
-            logger.Info("FIN EnviarMailSugerenciasPendientesPorComercial");
+            logger.Info("HANGFIRE - FIN EnviarMailSugerenciasPendientesPorComercial");
         }
     }
 }
