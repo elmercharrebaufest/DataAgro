@@ -542,7 +542,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.BoletoId != (int)EnumBoletoCompraNet.SIN_BOLETO)
             {
-                if ((oParam.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA || oParam.BoletoId == (int)EnumBoletoCompraNet.FISICO || oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA) && (oParam.BolsaId == 0 || oParam.BolsaId == null))
+                if ((oParam.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA || 
+                    oParam.BoletoId == (int)EnumBoletoCompraNet.FISICO || 
+                    oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA) && 
+                    (oParam.BolsaId == 0 || oParam.BolsaId == null) && 
+                    oParam.Venta != true)
                 {
                     oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacío cuando existe Boleto.");
                 }
