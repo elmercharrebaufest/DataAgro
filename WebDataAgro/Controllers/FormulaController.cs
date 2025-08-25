@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -77,7 +78,7 @@ namespace WebDataAgro.Controllers
                             Criterios = mobjFormulaManager.TodosLosCriterios()
                         },
 
-                        ultimaFormulaTraida = mobjFormulaManager.UltimaFormula(MaterialId ?? 3),
+                        ultimaFormulaTraida = mobjFormulaManager.UltimaFormula(MaterialId ?? (int)EnumMateriales.SOJA),
                         materiales = materialManager.TraerTodoMaterial().Material.OrderBy(a => a.MaterialId).ToList()
                     }
                 },
