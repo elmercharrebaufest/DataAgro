@@ -2461,6 +2461,13 @@ function InicializarElementos() {
             SustentableTipoDB();
         }
     });
+
+    $("#maximaId").change(function () {
+        if ($("#cantidadId").data("kendoNumericTextBox").value() < parseInt($("#maximaId").val(), 10) ) {
+            MensErr("La cantidad de fijación máxima (Kg) no puede ser mayor a la cantidad.");
+        }
+    });
+
     //FIN INICIALIZARELEMENTOS
 }
 

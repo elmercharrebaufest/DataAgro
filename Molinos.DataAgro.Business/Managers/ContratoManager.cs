@@ -1481,6 +1481,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Errores.AddRange(ValidarCapacidadProductiva(oParam).Errores);
             }
 
+            if (oParam.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && oParam.Cantidad < oParam.KgMaximo)
+            {
+                oErrorMessages.Error("Cantidad", "El campo 'KgMaximo' no debe ser mayor al campo 'Cantidad'.");
+            }
+
             return oErrorMessages;
         }
 
