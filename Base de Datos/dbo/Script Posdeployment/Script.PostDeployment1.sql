@@ -998,6 +998,7 @@ IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EliminarLogsA
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarScoringCuposDeProveedoresHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarScoringCuposDeProveedoresHangfireJob', 0) END
 
 --Clausula Boleto Confirma
+/*
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesenta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesenta',60,1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesentaYUno',61,1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesentaYDos',62,1); END
@@ -1033,4 +1034,42 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYUno
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaNoventaYDos',92,1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaNoventaYTres',93,1); END
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYCuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaNoventaYCuatro',94,1); END
+*/
+
+--Eliminar Clausula Boleto Confirma
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesenta')        BEGIN delete from Clausula where Discriminator = 'ClausulaSesenta'        ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYUno')    BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYUno'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYDos')    BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYDos'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYTres')   BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYTres'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYCuatro') BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYCuatro' ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYCinco')  BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYCinco'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYSeis')   BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYSeis'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYSiete')  BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYSiete'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYOcho')   BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYOcho'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYNueve')  BEGIN delete from Clausula where Discriminator = 'ClausulaSesentaYNueve'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetenta')        BEGIN delete from Clausula where Discriminator = 'ClausulaSetenta'        ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYUno')    BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYUno'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYDos')    BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYDos'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYTres')   BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYTres'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYCuatro') BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYCuatro' ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYCinco')  BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYCinco'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYSeis')   BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYSeis'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYSiete')  BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYSiete'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYOcho')   BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYOcho'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSetentaYNueve')  BEGIN delete from Clausula where Discriminator = 'ClausulaSetentaYNueve'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchenta')        BEGIN delete from Clausula where Discriminator = 'ClausulaOchenta'        ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYUno')    BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYUno'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYDos')    BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYDos'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYTres')   BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYTres'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYCuatro') BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYCuatro' ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYCinco')  BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYCinco'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYSeis')   BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYSeis'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYSiete')  BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYSiete'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYOcho')   BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYOcho'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOchentaYNueve')  BEGIN delete from Clausula where Discriminator = 'ClausulaOchentaYNueve'  ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventa')        BEGIN delete from Clausula where Discriminator = 'ClausulaNoventa'        ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYUno')    BEGIN delete from Clausula where Discriminator = 'ClausulaNoventaYUno'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYDos')    BEGIN delete from Clausula where Discriminator = 'ClausulaNoventaYDos'    ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYTres')   BEGIN delete from Clausula where Discriminator = 'ClausulaNoventaYTres'   ; END
+IF EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNoventaYCuatro') BEGIN delete from Clausula where Discriminator = 'ClausulaNoventaYCuatro' ; END
 

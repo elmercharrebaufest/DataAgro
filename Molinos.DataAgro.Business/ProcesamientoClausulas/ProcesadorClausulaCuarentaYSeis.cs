@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.MonedaId == "USDM ")
                 {
                     // NEGOCIOS FIJOS EN DOLARES
-                    res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina, salvo en el caso en que dicho tipo de cambio no sea el que resulte aplicable para la liquidación de divisas proveniente de la exportación de granos, en cuyo caso se tomará este último. En ese sentido, las Partes establecen de común acuerdo que la única forma de pago válida de las liquidaciones parciales y finales es la que se plasma en el presente instrumento, y la que rige según usos y costumbres del mercado de granos excluyendo cualquier otra que se pretenda o intente aplicar que atente contra el principio de autonomía de voluntad de las partes y de dichos usos y costumbres.";
+                    res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
                 }
                 else if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) || clausula.Basico.MonedaId == "USDM " || (string.IsNullOrWhiteSpace(clausula.Basico.MonedaId) && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR))
                 {
