@@ -1483,7 +1483,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && oParam.Cantidad < oParam.KgMaximo)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'KgMaximo' no debe ser mayor al campo 'Cantidad'.");
+                oErrorMessages.Error("Cantidad", "La cantidad de fijación máxima (Kg) no puede ser mayor a la cantidad.");
             }
 
             return oErrorMessages;
