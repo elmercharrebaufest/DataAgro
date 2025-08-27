@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                     //SI EL NEGOCIO ES FIJACIÓN DISPONIBLE DE UN CONTRATO DE CANJE O ES UN NEGOCIO A FIJAR O NEGOCIO CONVENIO
                     if (esFijacionDeContratoCanje || esAFijarSinCanje || esConvenio)
                     {
-                        res.Texto += $", 4 DÍAS HÁBILES DE FECHA DE FIJACIÓN, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato.";
+                        res.Texto += $", 4 DÍAS HÁBILES DE FECHA DE FIJACIÓN, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato. El pago del valor correspondiente a la mercadería se realizará al corredor.";
                     }
                 }
             }
