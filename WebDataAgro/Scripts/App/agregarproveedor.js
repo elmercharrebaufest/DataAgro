@@ -1047,6 +1047,7 @@ function eliminarGrano(elem) {
 
     if (val > 0) {
         $(".linea" + val).remove();
+        cantGrano--;
     } else {
         $("#grano" + val).val("null");
         $("#campaña" + val).val("null");
