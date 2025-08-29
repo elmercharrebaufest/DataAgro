@@ -27,7 +27,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 {
                     if (clausula.Basico.PorcentajeDePago != null)
-                        res.Texto += $"El pago se hará {clausula.Basico.PorcentajeDePago}% ({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento), ";
+                    {
+                        string porcentajePago = clausula.Basico.PorcentajeDePago.ToString().Replace(",",".");
+                        res.Texto += $"El pago se hará {porcentajePago}% ({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento), ";
+                    }
 
                     if (clausula.Basico.Dias_Pesificado > 0)
                         res.Texto += $"los {clausula.Basico.Dias_Pesificado.Value} días";
@@ -44,7 +47,9 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
                     if (clausula.Basico.PorcentajeDePago != null)
                     {
-                        res.Texto += $", liquidándose el {100 - clausula.Basico.PorcentajeDePago.Value}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
+                        decimal porcentaje = 100 - clausula.Basico.PorcentajeDePago.Value;
+                        string porcentajePago = porcentaje.ToString().Replace(",", ".");
+                        res.Texto += $", liquidándose el {porcentajePago}% ({DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value)} por ciento) " +
                         $"restante a los 30 (treinta) días del cumplimiento del contrato.";
                     }
 
@@ -61,7 +66,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 {
                     if (clausula.Basico.PorcentajeDePago != null)
                     {
-                        res.Texto += $"El pago se hará {clausula.Basico.PorcentajeDePago}% ({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento)";
+                        string porcentajePago = clausula.Basico.PorcentajeDePago.ToString().Replace(",", ".");
+                        res.Texto += $"El pago se hará {porcentajePago}% ({DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento)";
                     }
                     var esFijacionDeContratoCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && clausula.Basico.Canje == true;
                     var esAFijarSinCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true;
