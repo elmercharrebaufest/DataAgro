@@ -22,10 +22,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
                 {
-                    res.Texto += $"La entrega y recibo de la mercadería se efectuará desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'/'MM'/'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'/'MM'/'yyyy},";
+                    res.Texto += $"La entrega y recibo de la mercadería se efectuará desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'.'MM'.'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'.'MM'.'yyyy},";
                 }
                 else {
-                    res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'/'MM'/'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'/'MM'/'yyyy},";
+                    res.Texto += $"Las entregas y recibos se efectuarán desde el {clausula.Basico.FechaDesde.GetValueOrDefault():dd'.'MM'.'yyyy} hasta el {clausula.Basico.FechaHasta.GetValueOrDefault():dd'.'MM'.'yyyy},";
                 }
 
 

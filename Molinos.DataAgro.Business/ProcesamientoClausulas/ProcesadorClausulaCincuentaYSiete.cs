@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
             string razonSocialCorredor = clausula.Basico.Proveedor;
             if (clausula.Basico.CorredorId > 0 && clausula.Basico.PagoDirectoVendedor == true)
             {
-                res.Texto += String.Format("El pago de las Parciales y Finales resultantes del presente contrato serán realizados directamente a {0} ; Los señores {1} no se encuentran autorizados a recibir pagos ni firmar recibos de mercadería.", razonSocialProveedor, razonSocialCorredor);
+                res.Texto += String.Format("El pago de las Parciales y Finales resultantes del presente contrato serán realizados directamente a {0} ; Los señores {1} no se encuentran autorizados a recibir pagos ni firmar recibos de mercadería.", razonSocialCorredor, razonSocialProveedor);
             }else if (clausula.Basico.CorredorId == 0 && clausula.Basico.PagoDirectoVendedor == true){
                 res.Texto += String.Format("El pago de las Parciales y Finales resultantes del presente contrato serán realizados directamente a {0}; Los señores no se encuentran autorizados a recibir pagos ni firmar recibos de mercadería.", razonSocialProveedor);
             }
