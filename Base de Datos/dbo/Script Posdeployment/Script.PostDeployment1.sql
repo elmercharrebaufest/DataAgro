@@ -997,3 +997,5 @@ IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ProcessCapaci
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'EliminarLogsAntiguosHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('EliminarLogsAntiguosHangfireJob', 0) END
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarScoringCuposDeProveedoresHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarScoringCuposDeProveedoresHangfireJob', 0) END
 
+--Clausula Carta Oferta
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesenta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesenta',60,1); END

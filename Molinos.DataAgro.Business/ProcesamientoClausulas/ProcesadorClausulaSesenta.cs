@@ -1,0 +1,35 @@
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Molinos.DataAgro.Business.ProcesamientoClausulas
+{
+    public class ProcesadorClausulaSesenta : ProcesadorClausula<ClausulaSesenta>
+    {
+        public ProcesadorClausulaSesenta(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto) : base(repositorio, log, estadoBoleto)
+        {
+        }
+        public override ResultadoClausula DevolverClausulas(ClausulaSesenta clausula)
+        {
+            var res = new ResultadoClausula();
+            {
+                if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && clausula.Basico.Moneda == "USD")
+                {
+                    res.Texto += "Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas. El precio a pagar será neto de los impuestos y retenciones impositivas que correspondieran y se hubieran ";
+                    res.Texto += "practicado según la condición del Vendedor y las particularidades del negocio. Toda vez que las Partes han acordado la posibilidad de prorrogar la fecha de pago de la Mercadería, queda expresamente ";
+                    res.Texto += "establecido que el Vendedor no podrá invocar mora ni reclamar intereses y/o multas y/o cualquier tipo de penalidad por el tiempo transcurrido entre el plazo de pago originario y el del ejercicio de la opción de ";
+                    res.Texto += "prórroga acordada en la presente Cláusula.";
+                }
+            }
+            return res;
+        }
+    }
+}
