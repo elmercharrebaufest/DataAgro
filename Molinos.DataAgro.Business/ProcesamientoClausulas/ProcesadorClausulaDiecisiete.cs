@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 {
                     res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
                                  $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
-                                 $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
+                                 $"{CorregirFormatoFecha(condiciones.FechaDesde)} hasta el {CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
                                  $"{condiciones.Meins} de fijación mínima permitida {NumeroConSeparadores(condiciones.CantidadMinima)} Kg. y la cantidad máxima permitida {NumeroConSeparadores(condiciones.CantidadMaxima)} Kg.";
                 }
             }
@@ -91,7 +91,9 @@ namespace Molinos.DataAgro.Business.Procesamiento
         private string CorregirFormatoFecha(string cadena)
         {
             var date = DateTime.Parse(cadena);
-            return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string formatoFecha = date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            formatoFecha = formatoFecha.Replace("/", ".");
+            return formatoFecha;
         }
     }
 }

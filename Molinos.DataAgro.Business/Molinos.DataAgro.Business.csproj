@@ -385,6 +385,7 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaOnce.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaQuince.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaSesenta.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaSiete.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTrece.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreinta.cs" />
