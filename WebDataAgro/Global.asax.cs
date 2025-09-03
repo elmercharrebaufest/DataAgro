@@ -16,7 +16,9 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -44,6 +46,12 @@ namespace WebDataAgro
             cultureInfo.DateTimeFormat.LongTimePattern = "HH:mm:ss";
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
+            ServicePointManager.ServerCertificateValidationCallback =
+            delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            {
+                return true; // Ignora todos los errores de certificado
+            };
 
             // Habilita TLS 1.2
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
