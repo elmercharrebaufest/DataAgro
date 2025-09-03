@@ -29,10 +29,10 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 var datosBoleto = EstadoBoleto.EstadoBoleto(clausula.Basico.ContratoSAP, "");
                 var condiciones = datosBoleto.CondicionFijacion.FirstOrDefault();
-                //var bonificacion = clausula.Basico.AperturaPrecios.FirstOrDefault(x => x.Importe != 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis);
-                
-                res.Texto += $"El vendedor fijará la Mercadería por Mercado {clausula.Basico.TipoPosicionCBOT} posición desde el {CorregirFormatoFecha(condiciones.FechaDesde)} hasta el {CorregirFormatoFecha(condiciones.FechaHasta)} " +
-                    $"menos {clausula.Basico.MonedaBasis} {clausula.Basico.ImporteBasis?.ToString("N", new CultureInfo("es-AR"))} ({DevolverNumeroEnLetras(clausula.Basico.ImporteBasis.Value)}). " +
+                decimal? importeBasis = (clausula.Basico.ImporteBasis != null && clausula.Basico.ImporteBasis < 0) ? clausula.Basico.ImporteBasis * -1 : clausula.Basico.ImporteBasis;
+
+                res.Texto += $"El vendedor fijará la Mercadería por Mercado {clausula.Basico.TipoPosicionCBOT} posición {CorregirFormatoMes(condiciones.FechaDesde)} desde el {CorregirFormatoFecha(condiciones.FechaDesde)} hasta el {CorregirFormatoFecha(condiciones.FechaHasta)} " +
+                    $"menos  {importeBasis?.ToString("N", new CultureInfo("es-AR"))} {clausula.Basico.MonedaBasis}. " +
                     $"Si superado el vencimiento sin que el vendedor haya fijado, el comprador quedará automáticamente facultado para hacerlo.";
             }
 
@@ -55,6 +55,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
         {
             var date = DateTime.Parse(cadena);
             return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        }
+        private string CorregirFormatoMes(string cadena)
+        {
+            var date = DateTime.Parse(cadena);
+            return date.ToString("MM.yyyy", CultureInfo.InvariantCulture);
         }
     }
 }
