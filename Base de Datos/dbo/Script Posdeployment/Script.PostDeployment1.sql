@@ -999,3 +999,4 @@ IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarSco
 
 --Clausula Carta Oferta
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesenta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesenta',60,1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSesentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSesentaYUno',61,1); END

@@ -565,6 +565,7 @@
     <Compile Include="Entities\ClausulaCincuentaYSiete.cs" />
     <Compile Include="Entities\ClausulaCincuentaYTres.cs" />
     <Compile Include="Entities\ClausulaSesenta.cs" />
+    <Compile Include="Entities\ClausulaSesentaYUno.cs" />
     <Compile Include="Entities\Confirma.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
     <Compile Include="Entities\ClausulaCuarentaYOcho.cs" />
