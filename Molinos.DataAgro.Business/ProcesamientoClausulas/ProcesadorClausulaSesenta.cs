@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business.ProcesamientoClausulas
         {
             var res = new ResultadoClausula();
             {
-                if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && clausula.Basico.Moneda == "USD")
+                if (clausula.Basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA && (clausula.Basico.DolarizadoExpress == true || clausula.Basico.Dolarizado == true))
                 {
                     res.Texto += "Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas. El precio a pagar será neto de los impuestos y retenciones impositivas que correspondieran y se hubieran ";
                     res.Texto += "practicado según la condición del Vendedor y las particularidades del negocio. Toda vez que las Partes han acordado la posibilidad de prorrogar la fecha de pago de la Mercadería, queda expresamente ";
