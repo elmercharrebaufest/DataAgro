@@ -44,8 +44,8 @@
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
 	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
 
-	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
-	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
+	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
+	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />
 
 	<setParameter name="ActivarBLEND Key" value="No" />
 

@@ -694,9 +694,9 @@ const CLASIFICACION = {
 }
 
 const BOLETO_COMPRANET = {
-    CONFIRMA = 1,
-    FISICO = 2,
-    NINGUNO = 3,
-    CARTA_OFERTA = 4,
-    SIN_BOLETO = 5
+    CONFIRMA: 1,
+    FISICO: 2,
+    NINGUNO: 3,
+    CARTA_OFERTA: 4,
+    SIN_BOLETO: 5
 }
