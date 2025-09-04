@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 ProveedorScoringDto proveedor = proveedores.Single(x => x.ProveedorId == criterio.Dto.ProveedorId.Value);
                 double score = proveedor?.Score ?? 0;
 
-                var puntos = Normalizar(score, scoreMin, scoreMax) * 100; // escala 0-100
+                var puntos = Normalizar(score, scoreMin, scoreMax);
 
                 return Math.Round((decimal)puntos, 2);
             }

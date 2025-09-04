@@ -1614,8 +1614,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("CrearSugerenciaCupo - se obtuvo la formula para material: " + MaterialId);
                 var formulaSave = repositorio.Obtener<Formula>(formulaDto.Id);
 
-
-
                 if (configuracion != null)
                 {
                     logger.Debug("CrearSugerenciaCupo - configuracion: " + (configuracion == null ? "null" : configuracion.ToJson()));
@@ -1780,7 +1778,6 @@ namespace Molinos.DataAgro.Business.Managers
                     configuracion.LimiteAlgoritmo -= sugerencia.CantidadFleteProcedencia + sugerencia.CantidadCupo;
                 }
             }
-
 
             //cupos no rechazados en rango de fecha 
             List<Cupo> cuposTotales = repositorio.Listar<Cupo>(x =>
@@ -2070,15 +2067,16 @@ namespace Molinos.DataAgro.Business.Managers
             var ayer = DateTime.Now.Date.AddDays(-1);
 
             var cuposPendientes = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { 
-                    Id = x.Id, 
-                    Cumplimiento = x.Cumplimiento, 
-                    FechaIngreso = x.FechaIngreso, 
+                x => new CupoDto
+                {
+                    Id = x.Id,
+                    Cumplimiento = x.Cumplimiento,
+                    FechaIngreso = x.FechaIngreso,
                     NegocioId = x.NegocioId
                 },
-                x => x.Cumplimiento != true && 
-                     x.NegocioId != null && 
-                     negociosId.Contains(x.NegocioId ?? 0) 
+                x => x.Cumplimiento != true &&
+                     x.NegocioId != null &&
+                     negociosId.Contains(x.NegocioId ?? 0)
                      && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado
                      && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado
                      && x.FechaIngreso >= ayer
@@ -2125,7 +2123,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CuposPendientes = cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                     item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes del negocio " + item.ContratoSAP;
                 }
-                
+
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes
@@ -7043,8 +7041,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = cupo.Sustentable,
                     EPA = cupo.EPA,
                     EUDR = cupo.EUDR,
-                    TipoDeCupo = cupo.Sustentable ? "Sustentable" : 
-                                cupo.EPA && cupo.EUDR ? "EPA/EUDR" : 
+                    TipoDeCupo = cupo.Sustentable ? "Sustentable" :
+                                cupo.EPA && cupo.EUDR ? "EPA/EUDR" :
                                 cupo.EPA && !cupo.EUDR ? "EPA" :
                                 !cupo.EPA && cupo.EUDR ? "EUDR" : "Común",
                 };
