@@ -3,6 +3,7 @@ using Molinos.DataAgro.Agent.CartasDePortePendienteAplicar;
 using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -84,6 +85,7 @@ namespace Molinos.DataAgro.Agent
             }
             else
             {
+                string request = "";
                 try
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
@@ -104,6 +106,8 @@ namespace Molinos.DataAgro.Agent
                             ImMaterial = material.Codigo,
                             ImProveedor = req.Proveedor != null ? ObtenerCodigoProveedor(req.Proveedor) : string.Empty
                         };
+
+                        request = rq.ToXml();
 
                         var valor = agent.ZMprfcCcppPendienteAplicar(rq);
                         logger.Info("SAP sin PI - RFC ZMprfcCcppPendienteAplicar");
@@ -191,7 +195,8 @@ namespace Molinos.DataAgro.Agent
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e);
+                    logger.Error($"Última request procesada: {request}");
+                    logger.Error("Error en método ListarCartasDePortePendienteAplicar.", e);
                     throw;
                 }
             }
