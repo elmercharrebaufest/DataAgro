@@ -26,38 +26,47 @@ namespace Molinos.DataAgro.Business.Procesamiento
             var res = new ResultadoClausula();
 
             // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
-            bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId !=null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true: false) : false;
+            bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId != null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true : false) : false;
 
-
-
-            if (!esPosicionCBOT)
+            if (clausula.Basico.TipoPosicionCBOTId != null)
             {
-                if (clausula.Basico.EPA || clausula.Basico.Sustentable)
+                if (!esPosicionCBOT)
                 {
-                    if (clausula.Basico.SustentableTipoDBId == 1)
+                    if (clausula.Basico.EPA || clausula.Basico.Sustentable)
                     {
-                        res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
+                        if (clausula.Basico.SustentableTipoDBId == 1)
+                        {
+                            res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
+                        }
+                        if (clausula.Basico.SustentableTipoDBId == 2)
+                        {
+                            res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
+                        }
                     }
-                    if (clausula.Basico.SustentableTipoDBId == 2)
-                    {
-                        res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
-                    }
+                }
+                else
+                {
+                    var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+                    var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
+                    var descuentoPorAperturaDePrecio = (clausula.Basico.AperturaPrecios != null && clausula.Basico.AperturaPrecios.Count > 0) ? clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault() : null;
+
+                    res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio, descuentoPorAperturaDePrecio);
+                    res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
                 }
             }
             else
             {
                 var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
                 var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
-                var descuentoPorAperturaDePrecio = (clausula.Basico.AperturaPrecios!=null && clausula.Basico.AperturaPrecios.Count > 0) ? clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault() : null;
-                
+                var descuentoPorAperturaDePrecio = (clausula.Basico.AperturaPrecios != null && clausula.Basico.AperturaPrecios.Count > 0) ? clausula.Basico.AperturaPrecios.Where(x => x.ConceptoAperturaPrecioId == 4 && (x.Importe != 0 || x.Porcentaje != 0)).FirstOrDefault() : null;
+
                 res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio, descuentoPorAperturaDePrecio);
                 res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
             }
-
             return res;
         }
 
-        private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio,AperturaPrecioDto descuentoPorAperturaDePrecio)
+        private string DevolverClausulaBonificacionSobrePrecio(DescuentoBonificacionDto descuentoGeneralSobrePrecio, AperturaPrecioDto descuentoPorAperturaDePrecio)
         {
             string clausula = string.Empty;
 
