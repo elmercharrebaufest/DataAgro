@@ -37,7 +37,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    logger.Info("SAP sin PI - RFC ZMprfcActCapacidadProd");
                     Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
@@ -76,7 +75,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         logger.Debug("EnviarCapacidadProductivaSAP - Se envió: " + rq.ToXml());
 
                         devolucion = agent.ZMprfcActCapacidadProd(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcActCapacidadProd");
                         log = repositorio.Obtener<Log>(logId.Id);
                         log.Xml += devolucion.ToXml();
                         repositorio.GuardarCambios();

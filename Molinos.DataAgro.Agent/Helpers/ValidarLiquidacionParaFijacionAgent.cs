@@ -31,7 +31,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMpfrcValLiqParFijacion");
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -41,7 +40,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         };
                         logger.Debug(rq.ToXml());
                         var valor = agent.ZMpfrcValLiqParFijacion(rq);
-                        logger.Info("SAP sin PI - RFC ZMpfrcValLiqParFijacion");
                         logger.Debug(valor.ToXml());
                         return valor.ExResultado[0].Mensaje;
                     }

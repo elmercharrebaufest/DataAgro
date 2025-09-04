@@ -35,7 +35,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMprfcValidarLiqComisiones");
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -56,7 +55,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var logId = repositorio.Agregar(log);
                         repositorio.GuardarCambios();
                         var devolucion = agent.ZMprfcValidarLiqComisiones(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcValidarLiqComisiones");
                         logger.Debug(devolucion.ToXml());
 
                         log = repositorio.Obtener<Log>(logId.Id);

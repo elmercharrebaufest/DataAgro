@@ -62,7 +62,6 @@ namespace Molinos.DataAgro.Agent
                                 var rq = new ZMprfcDisponibilidadCupos() { ImFecha = fecha.ToString("yyyy-MM-dd"), ImCentro = centro, ImMaterial = materialId, ImZona = zonaId };
                                 logger.Debug(rq.ToXml());
                                 ZMprfcDisponibilidadCuposResponse devolucion = agent.ZMprfcDisponibilidadCupos(rq);
-                                logger.Info("SAP sin PI - RFC ZMprfcDisponibilidadCupos");
                                 foreach (var item in devolucion.ExSalida)
                                 {
                                     result.Add(new DisponibilidadCuposDto

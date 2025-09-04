@@ -35,7 +35,6 @@ namespace Molinos.DataAgro.Agent
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMprfcValidarDocProcPago");
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -54,7 +53,6 @@ namespace Molinos.DataAgro.Agent
                         logger.Debug(rq.ToXml());
 
                         var valor = agent.ZMprfcValidarDocProcPago(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcValidarDocProcPago");
                         logger.Debug(valor.ToXml());
 
                         log = repositorio.Obtener<Log>(logId.Id);

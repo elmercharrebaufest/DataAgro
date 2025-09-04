@@ -63,7 +63,6 @@ namespace Molinos.DataAgro.Agent
                         logger.Debug(rq.ToXml());
 
                         var valor = agent.ZMprfcCapacProductivaDispo(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcCapacProductivaDispo");
                         logger.Debug(valor.ToXml());
                         log = repositorio.Obtener<Log>(logId.Id);
                         log.Xml += valor.ToXml();

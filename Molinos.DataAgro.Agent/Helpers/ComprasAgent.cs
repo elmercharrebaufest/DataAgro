@@ -29,14 +29,12 @@ namespace Molinos.DataAgro.Agent
             }
             if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
             {
-                logger.Info("SAP sin PI - RFC ZMprfcDatosCompras");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
                 var rq = new ZMprfcDatosCompras() { ImCuit = new List<String>() { CUIT }.ToArray(), ImUsuario = UsuarioComercial };
 
                 var devolucion = agent.ZMprfcDatosCompras(rq);
-                logger.Info("SAP sin PI - RFC ZMprfcDatosCompras");
                 var compra = new List<CompraAgentDto>();
                 if (devolucion.ExCompras != null)
                 {
@@ -74,13 +72,11 @@ namespace Molinos.DataAgro.Agent
 
             if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
             {
-                logger.Info("SAP sin PI - RFC ZMprfcDatosCompras");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
                 var rq = new ZMprfcDatosCompras() { ImCuit = CUIT.ToArray(), ImUsuario = UsuarioComercial };
                 var devolucion = agent.ZMprfcDatosCompras(rq);
-                logger.Info("SAP sin PI - RFC ZMprfcDatosCompras");
 
                 var compra = new List<CompraAgentDto>();
                 if (devolucion.ExCompras != null)

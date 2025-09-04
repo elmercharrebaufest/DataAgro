@@ -26,14 +26,12 @@ namespace Molinos.DataAgro.Agent
 
             if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
             {
-                logger.Info("SAP sin PI - RFC ZMprfcRiesgoComercial");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
                 var rq = new ZMprfcRiesgoComercial() { ImCuit = CUIT };
                 var valor = agent.ZMprfcRiesgoComercial(rq);
-                logger.Info("SAP sin PI - RFC ZMprfcRiesgoComercial");
                 return valor.ExRiesgo;
             }
             else

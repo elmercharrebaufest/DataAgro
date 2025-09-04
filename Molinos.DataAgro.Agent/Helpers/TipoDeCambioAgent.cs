@@ -38,7 +38,6 @@ namespace Molinos.DataAgro.Agent
 
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMprfcTipoDeCambio");
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -54,7 +53,6 @@ namespace Molinos.DataAgro.Agent
                         logger.Debug(rq.ToXml());
 
                         var devolucion = agent.ZMprfcTipoDeCambio(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcTipoDeCambio");
                         logger.Debug(devolucion.ToXml());
                         return devolucion.ExchangeRate;
                     }
