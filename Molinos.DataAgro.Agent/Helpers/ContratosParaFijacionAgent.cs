@@ -439,8 +439,6 @@ namespace Molinos.DataAgro.Agent
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMprfcContratoPendFijacion");
-
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -454,7 +452,6 @@ namespace Molinos.DataAgro.Agent
                         logger.Debug(rq.ToXml());
 
                         devolucionSinPI = agent.ZMprfcContratoPendFijacion(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcContratoPendFijacion");
 
                         logger.Debug("Numero de contratos pendientes:" + devolucionSinPI.ExSalida.Count());
                     }

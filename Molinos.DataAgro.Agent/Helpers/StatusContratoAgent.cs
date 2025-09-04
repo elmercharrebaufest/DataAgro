@@ -34,7 +34,6 @@ namespace Molinos.DataAgro.Agent
                 {
                     if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                     {
-                        logger.Info("SAP sin PI - RFC ZMprfcStatusDeContrato");
                         Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                         agent.ClientCredentials.UserName.UserName = UserSap;
                         agent.ClientCredentials.UserName.Password = PassSap;
@@ -45,7 +44,6 @@ namespace Molinos.DataAgro.Agent
                         };
 
                         var valor = agent.ZMprfcStatusDeContrato(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcStatusDeContrato");
                         if (activarLogDebug)
                         {
                             logger.Debug(rq.ToXml());

@@ -33,7 +33,6 @@ namespace Molinos.DataAgro.Agent
             var pesificado = new List<PesificarAgentDto>();
             if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
             {
-                logger.Info("SAP sin PI - RFC ZMprfcListaProveedores");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
@@ -52,7 +51,6 @@ namespace Molinos.DataAgro.Agent
                 }
 
                 var devolucion = agent.ZMprfcListaProveedores(rq);
-                logger.Info("SAP sin PI - RFC ZMprfcListaProveedores");
                 if (devolucion.ExSalida != null)
                 {
                     foreach (var dev in devolucion.ExSalida)
@@ -238,7 +236,7 @@ namespace Molinos.DataAgro.Agent
 
             return pesificado;
         }
-        
+
         private PesificarAgentDto ConvertirADtoSinPI(Zmpes6360 dev)
         {
             CultureInfo provider = CultureInfo.InvariantCulture;

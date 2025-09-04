@@ -37,7 +37,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             try
             {
-                logger.Info("SAP sin PI - RFC ZMprfcModificarContrato");
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
@@ -105,14 +104,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         listaDescuentos.Add(new Zmpes5290
                         {
                             TipoPeriodo = listaPeriodo.Where(x => x.Id == descBon.TipoPeriodoDBId).Single().CodigoSap,
-                            TipoDb      = listaTipo.Where(x => x.Id == descBon.TipoDBId).Single().CodigoSap,
-                            Fedesde     = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
-                            Fehasta     = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
-                            ImporteDb   = descBon.Importe,
-                            MonedaDb    = descBon.MonedaId ?? "",
-                            PorcDb      = descBon.Porcentaje
+                            TipoDb = listaTipo.Where(x => x.Id == descBon.TipoDBId).Single().CodigoSap,
+                            Fedesde = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
+                            Fehasta = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
+                            ImporteDb = descBon.Importe,
+                            MonedaDb = descBon.MonedaId ?? "",
+                            PorcDb = descBon.Porcentaje
                         });
-                    };
+                    }
+                    ;
                 }
                 decimal? precioNetoSustentable = null;
 
@@ -121,13 +121,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                     listaDescuentos.Add(new Zmpes5290
                     {
                         TipoPeriodo = "I",
-                        TipoDb      = "B",
-                        Fedesde     = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde.ToString("yyyy-MM-dd"),
-                        Fehasta     = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta.ToString("yyyy-MM-dd"),
-                        ImporteDb   = contrato.TarifaAConvenir == true ? -1 : contrato.SustentableTipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
-                        MonedaDb    = contrato.MonedaSustentableId,
-                        PorcDb      = 0,
-                        Precio      = 0
+                        TipoDb = "B",
+                        Fedesde = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde.ToString("yyyy-MM-dd"),
+                        Fehasta = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta.ToString("yyyy-MM-dd"),
+                        ImporteDb = contrato.TarifaAConvenir == true ? -1 : contrato.SustentableTipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
+                        MonedaDb = contrato.MonedaSustentableId,
+                        PorcDb = 0,
+                        Precio = 0
                     });
                     if (contrato.TipoNegocioId == 2 && contrato.SustentableTipoDBId == 1) //a precio y sobre precio
                     {
@@ -140,15 +140,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         listaDescuentos.Add(new Zmpes5290
                         {
-                          TipoPeriodo  = "E",
-                          TipoDb       = "",
-                          Fedesde      = p.FechaDesde?.ToString("yyyy-MM-dd"),
-                          Fehasta      = p.FechaHasta?.ToString("yyyy-MM-dd"),
-                          ImporteDb    = p.ImportePactado ?? 0,
-                          MonedaDb     = p.MonedaImportePactadoId ?? "",
-                          PorcDb       = p.Porcentaje ?? 0,
-                          Precio       = p.Precio,
-                          Moneda       = p.MonedaPactadoId
+                            TipoPeriodo = "E",
+                            TipoDb = "",
+                            Fedesde = p.FechaDesde?.ToString("yyyy-MM-dd"),
+                            Fehasta = p.FechaHasta?.ToString("yyyy-MM-dd"),
+                            ImporteDb = p.ImportePactado ?? 0,
+                            MonedaDb = p.MonedaImportePactadoId ?? "",
+                            PorcDb = p.Porcentaje ?? 0,
+                            Precio = p.Precio,
+                            Moneda = p.MonedaPactadoId
                         });
                     }
                 }
@@ -185,10 +185,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 listaCalidades.Add(new Zmpes5300
                                 {
-                                   Codigo     = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                                   Valor      = 0,
-                                   PorcDesde  = 1,
-                                   PorcHasta  = 1
+                                    Codigo = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                    Valor = 0,
+                                    PorcDesde = 1,
+                                    PorcHasta = 1
                                 }
                             );
                             }
@@ -198,10 +198,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 {
                                     listaCalidades.Add(new Zmpes5300
                                     {
-                                       Codigo     = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                                       Valor      = cal.Valor,
-                                       PorcDesde  = cal.PorcentajeDesde ?? 0,
-                                       PorcHasta  = 51
+                                        Codigo = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                        Valor = cal.Valor,
+                                        PorcDesde = cal.PorcentajeDesde ?? 0,
+                                        PorcHasta = 51
                                     }
                                     );
                                 }
@@ -209,10 +209,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 {
                                     listaCalidades.Add(new Zmpes5300
                                     {
-                                       Codigo     = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                                       Valor      = cal.Valor,
-                                       PorcDesde  = cal.PorcentajeDesde ?? 0,
-                                       PorcHasta  = cal.PorcentajeHasta ?? 0
+                                        Codigo = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                        Valor = cal.Valor,
+                                        PorcDesde = cal.PorcentajeDesde ?? 0,
+                                        PorcHasta = cal.PorcentajeHasta ?? 0
                                     }
                                     );
                                 }
@@ -222,10 +222,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             listaCalidades.Add(new Zmpes5300
                             {
-                               Codigo     = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                               Valor      = 0,
-                               PorcDesde  = 1,
-                               PorcHasta  = 1
+                                Codigo = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                Valor = 0,
+                                PorcDesde = 1,
+                                PorcHasta = 1
                             });
                         }
                     }
@@ -260,9 +260,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     listaApertura.Add(new Zmpes5440
                     {
-                       Concepto = "BO",
-                       Importe  = (decimal)contrato.ImporteSustentable,
-                       Moneda   = contrato.MonedaSustentableId,
+                        Concepto = "BO",
+                        Importe = (decimal)contrato.ImporteSustentable,
+                        Moneda = contrato.MonedaSustentableId,
                     });
                 }
                 if (contrato.AperturaPrecio != null)
@@ -453,18 +453,18 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 topesFijacion.Add(new Zmpes5280
                 {
-                   FeDesde = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
-                   FeHasta = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
-                   Horaact = "00:00:00",
-                   CantMax = contrato.TipoNegocioId == 1 ?
+                    FeDesde = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
+                    FeHasta = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
+                    Horaact = "00:00:00",
+                    CantMax = contrato.TipoNegocioId == 1 ?
                            cantidadAbsoluta < 30000 ?
                            Convert.ToDecimal(cantidadAbsoluta) :
                            (cantidadAbsoluta >= 30000 && cantidadAbsoluta <= 100000) ? 30000
                            : Convert.ToDecimal(contrato.KgMaximo) : 0,
-                   CantMin = contrato.TipoNegocioId == 1 ? cantidadAbsoluta < 30000 ? Convert.ToDecimal(cantidadAbsoluta) : 30000 : 0,
-                   Fechaact = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
+                    CantMin = contrato.TipoNegocioId == 1 ? cantidadAbsoluta < 30000 ? Convert.ToDecimal(cantidadAbsoluta) : 30000 : 0,
+                    Fechaact = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                   Valor = "KG"
+                    Valor = "KG"
                 });
 
                 var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
@@ -488,120 +488,120 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.Material = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo);
                 detalle.PagoDifArp = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
                 detalle.PrecioPizarra = contrato.Precio;
-                detalle.Precio  = (contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : contrato.PrecioNeto ?? contrato.Precio;
-                detalle.Proveedor  = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT);
-                detalle.Provincia  = contrato.ProvinciaId.ToString();
-                detalle.Sustentable  = contrato.Sustentable || contrato.EPA || contrato.EUDR ? "X" : "";
-                detalle.Epa  = contrato.EPA ? "X" : ""; //si es twin (EPA+EUDR) se completa el campo EPA.
-                detalle.Eudr  = contrato.EUDR && !contrato.EPA ? "X" : "";
-                detalle.Especial  = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap);
-                detalle.Fecha  = contrato.FechaOperacion.ToString("yyyy-MM-dd");
-                detalle.Usuario  = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory);
-                detalle.Horaact  = fechaContrato.ToString("HH:mm:ss");
-                detalle.Procedencia  = localidadString;
-                detalle.Centro  = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
-                detalle.Clasificacion  = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion).ToUpper();
-                detalle.IndOpCanje  = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "";
-                detalle.Consignatario  = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "";
-                detalle.CondFijacion  = contrato.CondicionFijacionId.HasValue ? repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap) : "";
-                detalle.Camiones  = cantidadCamiones;
-                detalle.Confirma  = contrato.BoletoId == 1 ? "X" : "";
-                detalle.Bolsa  = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? repositorio.Obtener<BolsaCompraNet, string>(x => contrato.BolsaId == x.Id, x => x.CodigoSap) : null;
-                detalle.BolFisico  = contrato.BoletoId == 2 ? "X" : "";
-                detalle.CartaOferta  = contrato.BoletoId == 4 ? "X" : "";
-                detalle.Ninguno  = contrato.BoletoId == 3 ? "X" : "";
-                detalle.SinBoleto  = contrato.BoletoId == 5 ? "X" : "";
-                detalle.AutCg  = contrato.Warrant == true ? "X" : "";
-                detalle.AurCd  = contrato.CD == true ? "X" : "";
-                detalle.PagoDirVend  = contrato.PagoDirectoVendedor == true ? "X" : "";
-                detalle.EstabPropio  = contrato.EstablecimientoPropio == true ? "X" : "";
-                detalle.EstabArrendado  = contrato.EstablecimientoPropio == false ? "X" : "";
-                detalle.ImporteSPrecio  = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0;
-                detalle.MonedaSPrecio  = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null;
-                detalle.PorcSPrecio  = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
-                detalle.ImporteAPrecio  = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
-                detalle.MonedaAPrecio  = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
-                detalle.PorcAPrecio  = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
-                detalle.MercDescargada  = contrato.MercsDeposito == true ? "X" : "";
-                detalle.ObservacionCal1  = contrato.Observacion;
-                detalle.CuitCorredor  = contrato.CorredorId.HasValue ? repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "";
-                detalle.PorcComision  = contrato.CorredorId.HasValue ? contrato.PorcentajeComision.Value : 0;
-                detalle.Contrcorr  = contrato.ContratoCorredor ?? "";
-                detalle.Contrvend  = contrato.ContratoVendedor ?? "";
-                detalle.SelCargoMoa  = contrato.SelCargoMOA == true ? "X" : "";
-                detalle.SelCargoVend  = contrato.SelCargoVendedor == true ? "X" : "";
-                detalle.ContratoMadre  = contrato.ContratoMadre ?? "";
-                detalle.Creador  = contrato.ComercialCreadorId.HasValue ? repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory) : "";
-                detalle.Zona  = contrato.ZonaId.HasValue ? repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "";
-                detalle.Compensacion  = contrato.Compensacion == true ? "X" : "";
-                detalle.FleteNivel  = contrato.NivelTarifaId.HasValue ? repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "";
-                detalle.FleteTarifa  = contrato.TarifaFlete ?? 0;
-                detalle.FechaCierta  = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
-                detalle.Porcparcial  = contrato.PorcentajeDePago ?? (decimal)97.5;
-                detalle.AgenteCompra  = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
-                detalle.Caratula  = contrato.CaratulaMAT;
-                detalle.CaratulaExt  = contrato.CaratulaExtension;
-                detalle.PrecioComMat  = contrato.PrecioAjusteComision ?? 0;
-                detalle.MonedaComMat  = contrato.MonedaAjusteComisionId;
-                detalle.FechaCreacion  = fechaContrato.ToString("yyyy-MM-dd");
-                detalle.Zlsch  = contrato.ChequeElectronico == true ? "=" : "";
-                detalle.DolExpress  = contrato.DolarizadoExpress == true ? "X" : "";
-                detalle.CuentaMrp  = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "";
-                detalle.PlantaDest  = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
-                detalle.Canje  = contrato.Canje == true ? "X" : "";
-                detalle.DescInsumos  = contrato.Insumo;
-                detalle.MonedaDeuda  = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId;
-                detalle.MontoDeuda  = contrato.Monto ?? 0;
-                detalle.PosicionCbot  = contrato.PosicionCBOT;
-                detalle.FijCbotMat  = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "";
-                detalle.Tercero  = contrato.ProveedorCreadorId != null ? "X" : "";
-                detalle.AnulaYReemp  = AnulaYReemplazaContratoSAP;
-                detalle.Condicional  = contrato.Condicional == true ? "X" : "";
-                detalle.FechaCond  = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "";
-                detalle.MesCondMat  = contrato.CondicionalPosicion ?? "";
-                detalle.MonedaCond  = contrato.CondicionalMonedaId ?? "";
-                detalle.PrecioCond  = contrato.CondicionalPrecio ?? 0;
-                detalle.ContratoCond  = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
-                detalle.CantidadCond  = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
-                detalle.CondPago  = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";
-                detalle.PorcMulta  = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "10" : "";
-                detalle.Pizarra  = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
-                detalle.TolInf  = contrato.CantidadCamiones > 0 ? 0 : 3;
-                detalle.TolSup  = contrato.CantidadCamiones > 0 ? 0 : 3;
+                detalle.Precio = (contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : contrato.PrecioNeto ?? contrato.Precio;
+                detalle.Proveedor = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT);
+                detalle.Provincia = contrato.ProvinciaId.ToString();
+                detalle.Sustentable = contrato.Sustentable || contrato.EPA || contrato.EUDR ? "X" : "";
+                detalle.Epa = contrato.EPA ? "X" : ""; //si es twin (EPA+EUDR) se completa el campo EPA.
+                detalle.Eudr = contrato.EUDR && !contrato.EPA ? "X" : "";
+                detalle.Especial = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap);
+                detalle.Fecha = contrato.FechaOperacion.ToString("yyyy-MM-dd");
+                detalle.Usuario = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory);
+                detalle.Horaact = fechaContrato.ToString("HH:mm:ss");
+                detalle.Procedencia = localidadString;
+                detalle.Centro = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
+                detalle.Clasificacion = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion).ToUpper();
+                detalle.IndOpCanje = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "";
+                detalle.Consignatario = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "";
+                detalle.CondFijacion = contrato.CondicionFijacionId.HasValue ? repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap) : "";
+                detalle.Camiones = cantidadCamiones;
+                detalle.Confirma = contrato.BoletoId == 1 ? "X" : "";
+                detalle.Bolsa = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? repositorio.Obtener<BolsaCompraNet, string>(x => contrato.BolsaId == x.Id, x => x.CodigoSap) : null;
+                detalle.BolFisico = contrato.BoletoId == 2 ? "X" : "";
+                detalle.CartaOferta = contrato.BoletoId == 4 ? "X" : "";
+                detalle.Ninguno = contrato.BoletoId == 3 ? "X" : "";
+                detalle.SinBoleto = contrato.BoletoId == 5 ? "X" : "";
+                detalle.AutCg = contrato.Warrant == true ? "X" : "";
+                detalle.AurCd = contrato.CD == true ? "X" : "";
+                detalle.PagoDirVend = contrato.PagoDirectoVendedor == true ? "X" : "";
+                detalle.EstabPropio = contrato.EstablecimientoPropio == true ? "X" : "";
+                detalle.EstabArrendado = contrato.EstablecimientoPropio == false ? "X" : "";
+                detalle.ImporteSPrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0;
+                detalle.MonedaSPrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null;
+                detalle.PorcSPrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
+                detalle.ImporteAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
+                detalle.MonedaAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
+                detalle.PorcAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
+                detalle.MercDescargada = contrato.MercsDeposito == true ? "X" : "";
+                detalle.ObservacionCal1 = contrato.Observacion;
+                detalle.CuitCorredor = contrato.CorredorId.HasValue ? repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "";
+                detalle.PorcComision = contrato.CorredorId.HasValue ? contrato.PorcentajeComision.Value : 0;
+                detalle.Contrcorr = contrato.ContratoCorredor ?? "";
+                detalle.Contrvend = contrato.ContratoVendedor ?? "";
+                detalle.SelCargoMoa = contrato.SelCargoMOA == true ? "X" : "";
+                detalle.SelCargoVend = contrato.SelCargoVendedor == true ? "X" : "";
+                detalle.ContratoMadre = contrato.ContratoMadre ?? "";
+                detalle.Creador = contrato.ComercialCreadorId.HasValue ? repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory) : "";
+                detalle.Zona = contrato.ZonaId.HasValue ? repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "";
+                detalle.Compensacion = contrato.Compensacion == true ? "X" : "";
+                detalle.FleteNivel = contrato.NivelTarifaId.HasValue ? repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "";
+                detalle.FleteTarifa = contrato.TarifaFlete ?? 0;
+                detalle.FechaCierta = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
+                detalle.Porcparcial = contrato.PorcentajeDePago ?? (decimal)97.5;
+                detalle.AgenteCompra = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
+                detalle.Caratula = contrato.CaratulaMAT;
+                detalle.CaratulaExt = contrato.CaratulaExtension;
+                detalle.PrecioComMat = contrato.PrecioAjusteComision ?? 0;
+                detalle.MonedaComMat = contrato.MonedaAjusteComisionId;
+                detalle.FechaCreacion = fechaContrato.ToString("yyyy-MM-dd");
+                detalle.Zlsch = contrato.ChequeElectronico == true ? "=" : "";
+                detalle.DolExpress = contrato.DolarizadoExpress == true ? "X" : "";
+                detalle.CuentaMrp = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "";
+                detalle.PlantaDest = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
+                detalle.Canje = contrato.Canje == true ? "X" : "";
+                detalle.DescInsumos = contrato.Insumo;
+                detalle.MonedaDeuda = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId;
+                detalle.MontoDeuda = contrato.Monto ?? 0;
+                detalle.PosicionCbot = contrato.PosicionCBOT;
+                detalle.FijCbotMat = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "";
+                detalle.Tercero = contrato.ProveedorCreadorId != null ? "X" : "";
+                detalle.AnulaYReemp = AnulaYReemplazaContratoSAP;
+                detalle.Condicional = contrato.Condicional == true ? "X" : "";
+                detalle.FechaCond = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "";
+                detalle.MesCondMat = contrato.CondicionalPosicion ?? "";
+                detalle.MonedaCond = contrato.CondicionalMonedaId ?? "";
+                detalle.PrecioCond = contrato.CondicionalPrecio ?? 0;
+                detalle.ContratoCond = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
+                detalle.CantidadCond = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
+                detalle.CondPago = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "04" : "";
+                detalle.PorcMulta = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "10" : "";
+                detalle.Pizarra = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? "ROS" : "";
+                detalle.TolInf = contrato.CantidadCamiones > 0 ? 0 : 3;
+                detalle.TolSup = contrato.CantidadCamiones > 0 ? 0 : 3;
 
                 #region BLEND
                 detalle.CodigoTc = finalizarContratoAgent.DevolverTipoCambioSAP(contrato.TipoNegocioId, contrato.MonedaId, contrato.TipoAgenteCompraId, contrato.Fecha, true);
                 #endregion
                 logger.Info($"MODIFICA - NegocioId: {contrato.Id} - Contrato Nro: {contrato.ContratoSAP} - CODIGO_TC: {detalle.CodigoTc} - TipoDeCambioId: {contrato.TipoDeCambioId}");
 
-                detalle.Bloqueo  = "";
-                detalle.TipoCambioFijo  = 0;
-                detalle.Posicion  = CalcularPosicion(contrato.FechaDesde);
+                detalle.Bloqueo = "";
+                detalle.TipoCambioFijo = 0;
+                detalle.Posicion = CalcularPosicion(contrato.FechaDesde);
                 var rq = new ZMprfcModificarContrato
                 {
                     ImContrato = new Zmpes5560
                     {
-                        Contrato= contrato.ContratoSAP.TrimStart('0'),
+                        Contrato = contrato.ContratoSAP.TrimStart('0'),
                         Detalle = detalle
                     }
                 };
                 var topFija =
                     contratoGuardado.DesdeFijacion != contrato.DesdeFijacion ||
                     contratoGuardado.HastaFijacion != contrato.HastaFijacion;
-                rq.ImTopesFij  = topesFijacion.ToArray();
-                rq.ImModificacion  = new Zmpes5570
+                rq.ImTopesFij = topesFijacion.ToArray();
+                rq.ImModificacion = new Zmpes5570
                 {
-                    Contrato  = conModificado ? "X" : "",
-                    Apertura  = apModificado ? "X" : "",
-                    Calidad  = calModificado ? "X" : "",
-                    DescBonif  = descModificado ? "X" : "",
-                    TopesFij  = topFija ? "X" : "",
-                    Servicios  = apServicio ? "X" : ""
+                    Contrato = conModificado ? "X" : "",
+                    Apertura = apModificado ? "X" : "",
+                    Calidad = calModificado ? "X" : "",
+                    DescBonif = descModificado ? "X" : "",
+                    TopesFij = topFija ? "X" : "",
+                    Servicios = apServicio ? "X" : ""
                 };
-                rq.ImDescBonif  = listaDescuentos.ToArray();
+                rq.ImDescBonif = listaDescuentos.ToArray();
                 rq.ImCalidad = listaCalidades.ToArray();
-                rq.ImApertura  = listaApertura.ToArray();
-                rq.ImServicios  = servicioSap.ToArray();
+                rq.ImApertura = listaApertura.ToArray();
+                rq.ImServicios = servicioSap.ToArray();
 
                 logger.Debug(rq.ToXml());
 
@@ -615,7 +615,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();
 
                 var devolucion = agent.ZMprfcModificarContrato(rq);
-                logger.Info("SAP sin PI - RFC ZMprfcModificarContrato");
                 logger.Debug(devolucion.ToXml());
 
                 log = repositorio.Obtener<Log>(logId.Id);
@@ -717,7 +716,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_DB = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         });
-                    };
+                    }
+                    ;
                 }
                 decimal? precioNetoSustentable = null;
 

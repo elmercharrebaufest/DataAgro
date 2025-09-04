@@ -37,7 +37,6 @@ namespace Molinos.DataAgro.Agent
             {
                 if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    logger.Info("SAP sin PI - RFC ZMprfcDatosProveedor");
                     var CUIT = new List<String>();
                     List<Zmpes5150> valor = new List<Zmpes5150>();
                     var users = new List<string>();
@@ -72,7 +71,6 @@ namespace Molinos.DataAgro.Agent
                     repositorio.GuardarCambios();
 
                     var valor1 = agent.ZMprfcDatosProveedor(rq);
-                    logger.Info("SAP sin PI - RFC ZMprfcDatosProveedor");
                     logger.Debug(valor1.ToXml());
 
                     log = repositorio.Obtener<Log>(logId.Id);

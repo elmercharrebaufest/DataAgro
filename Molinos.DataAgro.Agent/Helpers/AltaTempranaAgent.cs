@@ -89,7 +89,6 @@ namespace Molinos.DataAgro.Agent
                         };
 
                         var valor = agent.ZMprfcAltaTempranaNRCo(rq);
-                        logger.Info("SAP sin PI - RFC ZMprfcAltaTempranaNRCo");
                         if (activarLogDebug)
                         {
                             logger.Debug(rq.ToXml());

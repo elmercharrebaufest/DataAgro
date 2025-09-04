@@ -35,7 +35,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             descuentoBonificacion = descuentoBonificacion ?? new List<DescuentoBonificacion>();
             var servicios = contrato.Servicios ?? new List<Servicio>();
             calidad = calidad ?? new List<Calidad>();
-            logger.Info("SAP sin PI - RFC ZMprfcPreSlip");
             logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
@@ -74,7 +73,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PorcDb = descBon.Porcentaje
                         }
                         );
-                    };
+                    }
+                    ;
                 }
                 decimal? precioNetoSustentable = null;
 
@@ -123,7 +123,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 }
                             }
                         }
-                        listaDescuentos.Add(new Zmpes5290 
+                        listaDescuentos.Add(new Zmpes5290
                         {
                             TipoPeriodo = "E",
                             TipoDb = "",
@@ -147,10 +147,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             listaCalidades.Add(new Zmpes5300
                             {
-                                Codigo      = cal.CalidadEspecial.CodigoSap,
-                                Valor       = 0,
-                                PorcDesde   = 1,
-                                PorcHasta   = 1
+                                Codigo = cal.CalidadEspecial.CodigoSap,
+                                Valor = 0,
+                                PorcDesde = 1,
+                                PorcHasta = 1
                             }
                         );
                         }
@@ -161,9 +161,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 listaCalidades.Add(new Zmpes5300
                                 {
                                     Codigo = cal.CalidadEspecial.CodigoSap,
-                                    Valor      = cal.Valor,
-                                    PorcDesde  = cal.PorcentajeDesde ?? 0,
-                                    PorcHasta  = 51
+                                    Valor = cal.Valor,
+                                    PorcDesde = cal.PorcentajeDesde ?? 0,
+                                    PorcHasta = 51
                                 }
                                 );
                             }
@@ -172,9 +172,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 listaCalidades.Add(new Zmpes5300
                                 {
                                     Codigo = cal.CalidadEspecial.CodigoSap,
-                                    Valor      = cal.Valor,
-                                    PorcDesde  = cal.PorcentajeDesde ?? 0,
-                                    PorcHasta  = cal.PorcentajeHasta ?? 0
+                                    Valor = cal.Valor,
+                                    PorcDesde = cal.PorcentajeDesde ?? 0,
+                                    PorcHasta = cal.PorcentajeHasta ?? 0
                                 }
                                 );
                             }
@@ -185,9 +185,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         listaCalidades.Add(new Zmpes5300
                         {
                             Codigo = cal.CalidadEspecial.CodigoSap,
-                            Valor      = 0,
-                            PorcDesde  = 1,
-                            PorcHasta  = 1
+                            Valor = 0,
+                            PorcDesde = 1,
+                            PorcHasta = 1
                         });
                     }
                 }
@@ -198,9 +198,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     listaApertura.Add(new Zmpes5440
                     {
-                        Concepto    = "BO",
-                        Importe     = (decimal)contrato.ImporteSustentable,
-                        Moneda      = contrato.MonedaSustentableId,
+                        Concepto = "BO",
+                        Importe = (decimal)contrato.ImporteSustentable,
+                        Moneda = contrato.MonedaSustentableId,
                     });
                 }
                 foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
@@ -212,7 +212,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             Concepto = apertura.ConceptoAperturaPrecio.CodigoSap,
                             Importe = apertura.Importe,
                             Moneda = contrato.TipoNegocioId == 2 ? contrato.Moneda?.MonedaId : apertura.MonedaId,
-                            Porc   = apertura.Porcentaje
+                            Porc = apertura.Porcentaje
                         });
                     }
                 }
@@ -292,7 +292,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
                 var cantidadAbsoluta = Math.Abs(contrato.Cantidad);
-                
+
                 topesFijacion.Add(new Zmpes5280
                 {
                     FeDesde = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
@@ -436,7 +436,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();
 
                 var devolucion = agent.ZMprfcPreSlip(rq2);
-                logger.Info("SAP sin PI - RFC ZMprfcPreSlip");
                 logger.Debug(devolucion.ToXml());
 
                 log = repositorio.Obtener<Log>(logId.Id);
@@ -458,7 +457,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
-        
+
         public string FinalizarContratoConPI(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
             descuentoBonificacion = descuentoBonificacion ?? new List<DescuentoBonificacion>();
@@ -503,7 +502,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PORC_DB = descBon.Porcentaje
                         }
                         );
-                    };
+                    }
+                    ;
                 }
                 decimal? precioNetoSustentable = null;
 

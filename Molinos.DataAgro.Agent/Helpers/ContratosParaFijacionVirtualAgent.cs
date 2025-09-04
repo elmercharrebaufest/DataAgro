@@ -32,7 +32,6 @@ namespace Molinos.DataAgro.Agent
         {
             var hoy = DateTime.Now.Date;
             var datosContratos = new List<DatosFijacionDeContratoDto>();
-            logger.Info("SAP sin PI - RFC ZMprfcContratoCanjeGene");
             Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
             agent.ClientCredentials.UserName.UserName = UserSap;
             agent.ClientCredentials.UserName.Password = PassSap;
@@ -47,7 +46,6 @@ namespace Molinos.DataAgro.Agent
             logger.Debug(rq.ToXml());
             CultureInfo provider = CultureInfo.InvariantCulture;
             var devolucion = agent.ZMprfcContratoCanjeGene(rq);
-            logger.Info("SAP sin PI - RFC ZMprfcContratoCanjeGene");
             logger.Debug("Numero de contratos pendientes: " + devolucion.ExSalida.Count());
             var listaContratos = devolucion.ExSalida.Where(x => x.Contrnum.StartsWith("000" + filtro.TrimStart('0')));
             var calidadesEspeciales = repositorio.Listar<CalidadEspecial>();

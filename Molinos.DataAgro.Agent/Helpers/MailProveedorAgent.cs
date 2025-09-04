@@ -32,13 +32,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         ImCuit = CrearListaSinPi(cuits).ToArray()
                     };
-                    logger.Info("SAP sin PI - RFC ZMprfcObtenerMails");
                     Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
                     var devolucion = agent.ZMprfcObtenerMails(request);
-                    logger.Info("SAP sin PI - RFC ZMprfcObtenerMails");
                     var lista = new List<MailProveedorDto>();
                     foreach (var item in devolucion.ExSalida)
                     {
