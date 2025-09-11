@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
         public override ResultadoClausula DevolverClausulas(ClausulaCartaOfertaNueve clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.CorredorId > 0 && clausula.Basico.PagoDirectoVendedor == true)
+            if (clausula.Basico.CorredorId > 0)
             {
                 string productor = clausula.Basico.Corredor;
                 string corredor = clausula.Basico.CUITCorredor;
