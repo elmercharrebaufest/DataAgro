@@ -42,7 +42,7 @@
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
 	<!--Parametro para nueva version de boletos-->
-	<add key="BoletosNuevaVersion Key" value="1" />
+	<setParameter name="BoletosNuevaVersion Key" value="1" />
 	
 	<!--Primary Producción-->
 	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
