@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaOcho clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.CorredorId > 0 && clausula.Basico.PagoDirectoVendedor == true)
+            if (clausula.Basico.CorredorId > 0)
             {
                 string productor = clausula.Basico.Corredor;
                 string corredor = clausula.Basico.CUITCorredor;
