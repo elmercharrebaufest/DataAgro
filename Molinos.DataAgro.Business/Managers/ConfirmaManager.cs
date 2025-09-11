@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -35,11 +36,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         private readonly IServicioClausulas servicioClausula;
         private readonly IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent;
+        private readonly IServicioClausulasConfirma servicioClausulaConfirma;
+        private readonly IServicioClausulasGenericos servicioClausulasGenericos;
         private readonly string pathConfirmas;
+        private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
             IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
-            IServicioClausulas servicioClausula, IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent)
+            IServicioClausulas servicioClausula, IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent, 
+            IServicioClausulasConfirma servicioClausulaConfirma, IServicioClausulasGenericos servicioClausulasGenericos)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -50,7 +55,9 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausula = servicioClausula;
             this.oEnviarBoletoAgent = oEnviarBoletoAgent;
             this.confirmaLoteBorradorAgent = confirmaLoteBorradorAgent;
+            this.servicioClausulaConfirma = servicioClausulaConfirma;
             pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
+            this.servicioClausulasGenericos = servicioClausulasGenericos;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -306,6 +313,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 { //CONTRATO
                     //Validar estado del contrato
+                    
                     var res = status.ValidarEstado(contrato.ContratoSAP);
                     if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                     {
@@ -328,6 +336,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug($"No se puede generar el confirma para el negocio {contrato.ContratoSAP} por no tener tilde de confirma.");
                         return mensaje;
                     }
+                    
                 }
             }
             else
@@ -840,23 +849,72 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico)
         {
-            var clausulas = repositorio.Listar<Clausula>();
+            var result = new List<ResultadoClausula>();
+            if (boletosNuevaVersion == "1")
+            {
+                result = ObtenerClausulasConfirma(basico);
+            }
+            else
+            {
+                var clausulas = repositorio.Listar<Clausula>();
+                var orden = 1;
+                Inicializar(basico);
+                foreach (var item in clausulas)
+                {
+                    item.Basico = basico;
+                    var clausula = servicioClausula.DevolverClausulas(item);
+                    if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
+                    {
+                        if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                                                                                                                                          //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
+                        clausula.Orden = orden++;
+                        result.Add(clausula);
+                    }
+                }
+            }
+            return result.OrderBy(x => x.Orden).ToList();
+        }
+
+
+        private List<ResultadoClausula> ObtenerClausulasGenericas(BasicoContrato basico, int orden, List<ResultadoClausula> result)
+        {
+            var clausulas = repositorio.Listar<ClausulaGenericos>();
+            Inicializar(basico);
+            foreach (var item in clausulas)
+            {
+                item.Basico = basico;
+                var clausula = this.servicioClausulasGenericos.DevolverClausulas(item);
+                if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
+                {
+                    //if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
+                    clausula.Orden = orden++;
+                    result.Add(clausula);
+                }
+            }
+            return result;
+        }
+
+        private List<ResultadoClausula> ObtenerClausulasConfirma(BasicoContrato basico)
+        {
+            var clausulas = repositorio.Listar<ClausulaConfirma>();
             var result = new List<ResultadoClausula>();
             var orden = 1;
             Inicializar(basico);
             foreach (var item in clausulas)
             {
                 item.Basico = basico;
-                var clausula = servicioClausula.DevolverClausulas(item);
+                var clausula = this.servicioClausulaConfirma.DevolverClausulas(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
-                    if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    //if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
                     //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
                     clausula.Orden = orden++;
                     result.Add(clausula);
                 }
             }
-            return result.OrderBy(x => x.Orden).ToList();
+            result = ObtenerClausulasGenericas(basico, orden, result);
+            return result;
         }
 
         private void Inicializar(BasicoContrato basico)

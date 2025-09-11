@@ -361,6 +361,10 @@
     <Build Include="dbo\Tables\ConfirmaAltaEstado.sql" />
     <Build Include="dbo\Tables\InformeComercialApertura.sql" />
     <Build Include="dbo\Tables\HabilitacionJob.sql" />
+    <Build Include="dbo\Tables\ClausulaBoletoFisico.sql" />
+    <Build Include="dbo\Tables\ClausulaCartaOferta.sql" />
+    <Build Include="dbo\Tables\ClausulaConfirma.sql" />
+    <Build Include="dbo\Tables\ClausulaGenericos.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
