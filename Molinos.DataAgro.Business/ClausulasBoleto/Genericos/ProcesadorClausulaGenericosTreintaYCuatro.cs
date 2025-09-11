@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
         public override ResultadoClausula DevolverClausulas(ClausulaGenericosTreintaYCuatro clausula)
         {
             var res = new ResultadoClausula();
+            /*
             if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
                 var esFijacionDeContratoCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && clausula.Basico.Canje == true;
@@ -38,7 +39,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                     //$"Toda vez que las Partes han acordado la opción de prorrogar la fecha de pago de la Mercadería, queda expresamente establecido el Vendedor no podrá invocar mora ni reclamar intereses y/o multas y/o cualquier tipo de penalidad por el tiempo transcurrido entre el plazo de pago originario y el del ejercicio de la opción de prórroga acordada en la presente Cláusula.";
 
                 }
-            }
+            }*/
             return res;
         }
     }
