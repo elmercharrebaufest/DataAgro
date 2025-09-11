@@ -10,6 +10,9 @@ using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
+using Molinos.DataAgro.Business.Clausulas;
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -40,9 +43,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHttpContextManager httpContextManager;
         private readonly IServicioClausulas servicioClausula;
         private readonly IStatusContratoAgent status;
+        private readonly IServicioClausulasCartaOferta servicioClausulasCartaOferta;
+        private readonly IServicioClausulasBoletoFisico servicioClausulasBoletoFisico;
+        private readonly IServicioClausulasGenericos servicioClausulasGenericos;
+
+        private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public BoletoManager(IRepositorio repositorio, ILogger logger, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
-            IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
+            IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
+            IStatusContratoAgent status, IServicioClausulas servicioClausula, IServicioClausulasCartaOferta servicioClausulasCartaOferta,
+            IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -51,6 +61,9 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
+            this.servicioClausulasCartaOferta = servicioClausulasCartaOferta;
+            this.servicioClausulasBoletoFisico = servicioClausulasBoletoFisico;
+            this.servicioClausulasGenericos = servicioClausulasGenericos;
             this.status = status;
         }
 
@@ -327,23 +340,101 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico)
         {
-            var clausulas = repositorio.Listar<Clausula>();
+            var result = new List<ResultadoClausula>();
+
+            if (boletosNuevaVersion == "1")
+            {
+                if (basico.BoletoId == (int)EnumBoletoCompraNet.FISICO)
+                {
+                    result = ObtenerClausulasBoletoFisico(basico);
+                }
+                if (basico.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                {
+                    result = ObtenerClausulasCartaOferta(basico);
+                }
+            }
+            else
+            {
+                var clausulas = repositorio.Listar<Clausula>();
+                var orden = 1;
+                Inicializar(basico);
+                foreach (var item in clausulas)
+                {
+                    item.Basico = basico;
+                    var clausula = servicioClausula.DevolverClausulas(item);
+                    if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
+                    {
+                        if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                                                                                                                                          //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
+                        clausula.Orden = orden++;
+                        result.Add(clausula);
+                    }
+                }
+            }
+            return result.OrderBy(x => x.Orden).ToList();
+
+        }
+        private List<ResultadoClausula> ObtenerClausulasGenericas(BasicoContrato basico, int orden, List<ResultadoClausula> result)
+        {
+            var clausulas = repositorio.Listar<ClausulaGenericos>();
+            Inicializar(basico);
+            foreach (var item in clausulas)
+            {
+                item.Basico = basico;
+                var clausula = this.servicioClausulasGenericos.DevolverClausulas(item);
+                if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
+                {
+                    //if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
+                    clausula.Orden = orden++;
+                    result.Add(clausula);
+                }
+            }
+            return result;
+        }
+
+        private List<ResultadoClausula> ObtenerClausulasCartaOferta(BasicoContrato basico)
+        {
+            var clausulas = repositorio.Listar<ClausulaCartaOferta>();
             var result = new List<ResultadoClausula>();
             var orden = 1;
             Inicializar(basico);
             foreach (var item in clausulas)
             {
                 item.Basico = basico;
-                var clausula = servicioClausula.DevolverClausulas(item);
+                var clausula = this.servicioClausulasCartaOferta.DevolverClausulas(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
-                    if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    //if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
                     //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
                     clausula.Orden = orden++;
                     result.Add(clausula);
                 }
             }
-            return result.OrderBy(x => x.Orden).ToList();
+            result = ObtenerClausulasGenericas(basico, orden, result);
+            return result;
+        }
+
+        private List<ResultadoClausula> ObtenerClausulasBoletoFisico(BasicoContrato basico)
+        {
+            var clausulas = repositorio.Listar<ClausulaBoletoFisico>();
+            var result = new List<ResultadoClausula>();
+            var orden = 1;
+            Inicializar(basico);
+            foreach (var item in clausulas)
+            {
+                item.Basico = basico;
+                var clausula = this.servicioClausulasBoletoFisico.DevolverClausulas(item);
+                if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
+                {
+                    //if ((basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) && item.DisplayName.Equals("Clausula Diez")) continue;//es clausula Diez y es Precio Establecido(No es precio a Fijar) SALTAR esta iteracion
+                    //if (item.DisplayName.Equals("Clausula Veinte") && basico.CorredorId > 0) continue;//es clausula Veinte y tiene corredor(No es operacion directa) SALTAR esta clausula
+                    clausula.Orden = orden++;
+                    result.Add(clausula);
+                }
+            }
+            result = ObtenerClausulasGenericas(basico, orden, result);
+            return result;
         }
 
         private byte[] GenerarPDF(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoDto boleto)

@@ -82,10 +82,30 @@ namespace WebDataAgro
             builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
                    .Where(t => t.Name.StartsWith("Procesador"))
                    .InstancePerLifetimeScope();
+
             builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
                  .Where(t => t.Name.EndsWith("Clausulas"))
                  .AsImplementedInterfaces()
                  .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                 .Where(t => t.Name.EndsWith("ClausulasConfirma"))
+                 .AsImplementedInterfaces()
+                 .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                 .Where(t => t.Name.EndsWith("ClausulasCartaOferta"))
+                 .AsImplementedInterfaces()
+                 .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                 .Where(t => t.Name.EndsWith("ClausulasBoletoFisico"))
+                 .AsImplementedInterfaces()
+                 .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                 .Where(t => t.Name.EndsWith("ClausulasGenericos"))
+                 .AsImplementedInterfaces()
+                 .InstancePerLifetimeScope();
+
             builder.RegisterType<Cache>().As<ICache>().SingleInstance();
 
             // Hangfire job

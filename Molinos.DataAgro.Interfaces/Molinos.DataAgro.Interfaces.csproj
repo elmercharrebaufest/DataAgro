@@ -273,6 +273,10 @@
     <Compile Include="Agent\IValidarLiquidacionParaFijacionAgent.cs" />
     <Compile Include="Agent\IEnviarCapacidadProductivaSAPAgent.cs" />
     <Compile Include="Agent\IVisualizarCapacidadProductivaAgent.cs" />
+    <Compile Include="Clausulas\IServicioClausulasCartaOferta.cs" />
+    <Compile Include="Clausulas\IServicioClausulasConfirma.cs" />
+    <Compile Include="Clausulas\IServicioClausulasGenericos.cs" />
+    <Compile Include="Clausulas\IServicioClausulasBoletoFisico.cs" />
     <Compile Include="Clausulas\IServicioClausulas.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />
     <Compile Include="Managers\IConfirmaManager.cs" />

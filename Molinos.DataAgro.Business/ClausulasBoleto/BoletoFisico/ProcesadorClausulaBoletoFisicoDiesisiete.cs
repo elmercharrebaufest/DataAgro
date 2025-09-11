@@ -1,0 +1,27 @@
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.ClausulasBoleto.BoletoFisico;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
+
+namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
+{
+    public class ProcesadorClausulaBoletoFisicoDiesisiete : ProcesadorClausulaBoletoFisico<ClausulaBoletoFisicoDiesisiete>
+    {
+        public ProcesadorClausulaBoletoFisicoDiesisiete(IRepositorio repositorio, ILogger log, IConsultarEstadoBoletoAgent estadoBoleto)
+            : base(repositorio, log, estadoBoleto) { }
+
+        public override ResultadoClausula DevolverClausulas(ClausulaBoletoFisicoDiesisiete clausula)
+        {
+            var res = new ResultadoClausula();
+
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador || clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Productor || clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Otros || clausula.Basico.CorredorId > 0) && clausula.Basico.Moneda == "USD")
+            {
+                res.Texto += "Toda vez que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas desde que la misma fuera entregada y aplicada, " +
+                    "las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
+            }
+            return res;
+        }
+    }
+}

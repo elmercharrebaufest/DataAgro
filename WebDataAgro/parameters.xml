@@ -363,6 +363,11 @@
 						match="/configuration/appSettings/add[@key='UrlScoringCupos']
                            /@value" />
 	</parameter>
+	<parameter name="BoletosNuevaVersion Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='BoletosNuevaVersion']
+                           /@value" />
+	</parameter>
 
 	<parameter name="HTTP_Port19 Service Endpoint Address">
 		<parameterEntry kind="XmlFile" scope="Web.config"

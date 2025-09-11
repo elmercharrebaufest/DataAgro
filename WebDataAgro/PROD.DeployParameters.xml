@@ -61,6 +61,9 @@
 	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
 	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
 
+	<!--Parametro para nueva version de boletos-->
+	<add key="BoletosNuevaVersion Key" value="1" />	
+	
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scato.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://sapprgap.molinosagro.ad/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
