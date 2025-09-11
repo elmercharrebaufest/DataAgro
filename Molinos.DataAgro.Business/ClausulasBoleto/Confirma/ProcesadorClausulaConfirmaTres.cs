@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
                     res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. " +
                                  $"El vendedor comunicará al comprador el día elegido para la fijación de precio por {clausula.Basico.CondicionFijacionDescripcion} desde el " +
                                  $"{MetodosUtiles.CorregirFormatoFecha(condiciones.FechaDesde)} hasta {MetodosUtiles.CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor, siendo la cantidad de " +
-                                 $"{condiciones.Meins} de fijación mínima permitida {MetodosUtiles.NumeroConSeparadoresSinNulos(condiciones.CantidadMinima)} Kg y la cantidad máxima permitida {MetodosUtiles.NumeroConSeparadoresSinNulos(condiciones.CantidadMaxima)} Kg. " +
+                                 $"{condiciones.Meins} de fijación mínima permitida {MetodosUtiles.NumeroConSeparadoresSinNulos(condiciones.CantidadMinima)} y la cantidad máxima permitida {MetodosUtiles.NumeroConSeparadoresSinNulos(condiciones.CantidadMaxima)}. " +
                                  $"Únicamente a los efectos del impuesto de sellos las partes acuerdan que el precio de referencia corresponde a Pizarra Rosario.";
             }
             //SI EL NEGOCIO ES DE TIPO A FIJAR Y ES POSICIÓN PASE
