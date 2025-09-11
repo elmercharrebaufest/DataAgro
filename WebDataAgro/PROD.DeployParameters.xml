@@ -62,7 +62,7 @@
 	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
 
 	<!--Parametro para nueva version de boletos-->
-	<add key="BoletosNuevaVersion Key" value="1" />	
+	<setParameter name="BoletosNuevaVersion Key" value="1" />	
 	
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scato.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
