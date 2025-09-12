@@ -227,7 +227,7 @@ function InicializarCuposIndex() {
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                var dataitem = { fleteprocedencia: row.cells[8].value };
+                var dataitem = { FleteProcedencia: row.cells[8].value };
                 row.cells[8].value = templateflete(dataitem);
 
                 var dataitemSustentable = { Sustentable: row.cells[9].value };

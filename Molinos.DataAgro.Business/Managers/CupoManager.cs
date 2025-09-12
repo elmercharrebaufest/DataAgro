@@ -1616,7 +1616,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (configuracion != null)
                 {
-                    logger.Debug("CrearSugerenciaCupo - configuracion: " + (configuracion == null ? "null" : configuracion.ToJson()));
+                    //logger.Debug("CrearSugerenciaCupo - configuracion: " + (configuracion == null ? "null" : configuracion.ToJson()));
                     logger.Debug("desde" + formulaDto.CuposDesde + " hasta " + formulaDto.CuposHasta + "- Configuracion: " + configuracion.Fecha);
                     if (!(formulaDto.CuposDesde <= configuracion.Fecha && formulaDto.CuposHasta >= configuracion.Fecha))
                     {
@@ -1856,8 +1856,8 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal).ThenBy(a => a.ContratoSAP))
                 {
                     var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0).OrderBy(a => a.Fecha).ToList();
-
-                    while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
+                    bool disponibilidad = ValidarDisponibilidad(limitePorProveedor, negocio, disponibles);
+                    while (disponibilidad)
                     {
                         hayDisponibilidad = true;
 
@@ -1922,10 +1922,10 @@ namespace Molinos.DataAgro.Business.Managers
             var disponibleProvYPlantaPorFecha = limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0 && fechasDispo.Contains(a.Fecha));
 
             return negocio.CantidadDeCupos > 0 &&
-                                negocio.Priorizado != true &&
-                                disponibles.Any(a => a.LimiteAlgoritmo > 0) &&
-                                limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0) &&
-                                disponibleProvYPlantaPorFecha;
+                negocio.Priorizado != true &&
+                disponibles.Any(a => a.LimiteAlgoritmo > 0) &&
+                limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0) &&
+                disponibleProvYPlantaPorFecha;
         }
 
         private List<SugerenciaCupoDto> ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)

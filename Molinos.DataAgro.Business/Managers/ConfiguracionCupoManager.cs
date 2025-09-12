@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado GrabarConfiguracionCupo(ConfiguracionCupo configuracion, List<DiaCupo> dias)
         {
             logger.Debug($"GrabarConfiguracionCupo");
-            logger.Debug($"configuracion: {configuracion.ToJson()}");
+            //logger.Debug($"configuracion: {configuracion.ToJson()}");
             logger.Debug($"dias: {dias.ToJson()}");
             var oEntityErrors = Validar(configuracion, dias);
             if (oEntityErrors.HayError)
