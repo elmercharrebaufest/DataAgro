@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<IncludeCompositeObjects>True</IncludeCompositeObjects>
+		<TargetDatabaseName>DataAgroQA2</TargetDatabaseName>
+		<DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
+		<TargetConnectionString>Data Source=dataagroqa2.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; Integrated Security=False; User Id=DATAAGRODEVUSR; Password=DAT44GR0D3VUSR!; initial catalog=DataAgroQA2; Pooling=False; Trust Server Certificate=True;</TargetConnectionString>
+		<ProfileVersionNumber>1</ProfileVersionNumber>
+		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
+		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
+	</PropertyGroup>
+</Project>

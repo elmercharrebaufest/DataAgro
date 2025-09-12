@@ -520,6 +520,8 @@
     <Compile Include="Services\IDataAgroServices.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AWS.PRD2.DeployParameters.xml" />
+    <Content Include="AWS.QA2.DeployParameters.xml" />
     <Content Include="Content\agregarcontacto.css" />
     <Content Include="Content\agregarproveedor.css" />
     <Content Include="Content\agregarproveedorResponsive.css" />
@@ -1215,6 +1217,7 @@
     <Content Include="DEV.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="AWS.QA3.DeployParameters.xml" />
     <Content Include="Scripts\App\AltaMasivaContratos.js" />
     <Content Include="Scripts\App\CupoDisponibilidadDescarga.js" />
     <Content Include="Scripts\App\CupoNoPropio.js" />
