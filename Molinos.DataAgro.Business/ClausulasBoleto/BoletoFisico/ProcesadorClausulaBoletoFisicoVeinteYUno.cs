@@ -15,10 +15,8 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
         public override ResultadoClausula DevolverClausulas(ClausulaBoletoFisicoVeinteYUno clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.ClasificacionId == (int)EnumClasificacionCompraNet.Acopiador || clausula.Basico.CorredorId > 0)
-            {
+				// Se cambia para que aplique siempre para boleto fisico
                 res.Texto += "A los fines de cumplir con normas legales e impositivas, el vendedor/corredor se encuentra obligado a remitir al comprador el original del presente boleto, debidamente suscripto, a efectos de su presentación en la Bolsa de Cereales.";
-            }
             return res;
         }
     }
