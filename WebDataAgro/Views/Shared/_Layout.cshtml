@@ -20,7 +20,13 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/plugins")
     @Scripts.Render("~/bundles/layouts")
-    @Scripts.Render("~/bundles/kendo")
+
+    <!-- Kendo desde CDN -->
+    <script src="https://kendo.cdn.telerik.com/2019.3.1023/js/kendo.all.min.js"></script>
+    <!-- Complementos locales -->
+    <script src="~/Scripts/kendo/jszip.min.js"></script>
+    <script src="~/Scripts/kendo/cultures/kendo.culture.es-AR.min.js"></script>
+
     @Scripts.Render("~/bundles/mastersoft")
 
     <link href="~/Content/w3.css" rel="stylesheet" type="text/css" />
