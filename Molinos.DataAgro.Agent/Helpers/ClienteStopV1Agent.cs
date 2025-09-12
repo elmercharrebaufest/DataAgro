@@ -279,7 +279,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var datosConfiguracion = r.Obtener<Configuracion>(1);
-                logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
+                //logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
                 TokenStop token;
 
                 if (tokenNuevo == null)
