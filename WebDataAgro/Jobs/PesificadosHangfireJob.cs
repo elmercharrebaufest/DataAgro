@@ -1,6 +1,8 @@
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using System;
 using WebDataAgro.Job;
 
 namespace WebDataAgro.Jobs
@@ -11,11 +13,14 @@ namespace WebDataAgro.Jobs
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly IReportesManager reportesManager;
+        private static readonly object _lockPesificados = new object();
 
-        public PesificadosHangfireJob(ILogger logger, IRepositorio repositorio)
+        public PesificadosHangfireJob(ILogger logger, IRepositorio repositorio, IReportesManager reportesManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.reportesManager = reportesManager;
         }
 
         public void Execute()
@@ -24,8 +29,12 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
-            logger.Info("HANGFIRE - Ejecución PesificadosHangfireJob iniciada");
-            // TODO: Falta implementar
+            lock (_lockPesificados)
+            {
+                logger.Info("HANGFIRE - INICIO Pesificados - " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
+                reportesManager.GrabarTodoDatoPesificar();
+                logger.Info("HANGFIRE - FIN Pesificados - " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
+            }
         }
     }
 }

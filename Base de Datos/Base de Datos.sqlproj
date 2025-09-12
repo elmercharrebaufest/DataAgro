@@ -379,6 +379,9 @@
     <None Include="MOA.DataAgro.Database.QA.Azure.publish.xml" />
     <None Include="MOA.DataAgro.Database.PROD.Azure.publish.xml" />
     <None Include="MOA.DataAgro.Database.PREPROD.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.AWS.QA2.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.AWS.QA3.Azure.publish.xml" />
+    <None Include="MOA.DataAgro.Database.AWS.PRD2.Azure.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />

@@ -162,7 +162,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             var r = repo ?? repositorio;
             var datosConfiguracion = r.Obtener<Configuracion>(1);
-            logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
+            //logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
 
             string versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
             if (versionClienteStop == "1.1.0")
