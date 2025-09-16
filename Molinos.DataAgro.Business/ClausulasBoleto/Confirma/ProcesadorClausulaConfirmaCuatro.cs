@@ -16,32 +16,22 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaCuatro clausula)
         {
             var res = new ResultadoClausula();
-
-            if (clausula.Basico.MaterialId == (int)EnumMateriales.SOJA || clausula.Basico.MaterialId == (int)EnumMateriales.MAIZ || clausula.Basico.MaterialId == (int)EnumMateriales.SORGO)
+            if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.MonedaId == "USDM ")
             {
-                res.Texto += $"Por Resolución SENASA nro. 149/2018, vigente a partir del 05/11/18, está prohibido el uso de Diclorvos (DDVP) y Triclorfon, en todas las etapas de la cadena granaría," + 
-                              " incluyendo las instalaciones para su almacenamiento. El remitente de la mercadería declara que la mercadería no fue tratada con DDVP, razón por la cual, si mediante análisis realizado," + 
-                              " por alguna de las Cámaras Arbitrales del país de muestras lacradas extraídas del medio de transporte de la mercadería, se detectaran al momento de la descarga resultados positivos de alguna" + 
-                              " de las sustancias prohibidas antes mencionadas, la mercadería podrá ser rechazada dándose por incumplido el contrato de compra, con las sanciones e indemnizaciones que correspondan." + 
-                              " Si el resultado del análisis positivo se conociera a posteriori de su descarga, en los términos indicados anteriormente, el remitente será sancionado con una multa de U$S 20 por tonelada." + 
-                              " En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las entregas de la mercadería realizadas el 1 de marzo de 2019.";
+                // NEGOCIOS FIJOS EN DOLARES
+                res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
             }
-            else if (clausula.Basico.MaterialId == (int)EnumMateriales.TRIGO)
+            else if ((clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BNA && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) || clausula.Basico.MonedaId == "USDM " || (string.IsNullOrWhiteSpace(clausula.Basico.MonedaId) && clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR))
             {
-                res.Texto += $"Por Resolución SENASA nro. 149/2018, vigente a partir del 05/11/18, está prohibido el uso de Diclorvos (DDVP) y Triclorfon, en todas las etapas de la cadena granaría," + 
-                              " incluyendo las instalaciones para su almacenamiento. El remitente de la mercadería declara que la mercadería no fue tratada con DDVP, razón por la cual, si mediante análisis realizado," + 
-                              " por alguna de las Cámaras Arbitrales del país de muestras lacradas extraídas del medio de transporte de la mercadería, se detectaran al momento de la descarga resultados positivos de alguna" + 
-                              " de las sustancias prohibidas antes mencionadas, la mercadería podrá ser rechazada dándose por incumplido el contrato de compra, con las sanciones e indemnizaciones que correspondan." + 
-                              " Si el resultado del análisis positivo se conociera a posteriori de su descarga, en los términos indicados anteriormente, el remitente será sancionado con una multa de U$S 20 por tonelada." + 
-                              " En ambos casos, se dará intervención al SENASA. Esta cláusula entrará en vigencia a partir de las entregas de la mercadería realizadas el 1 de octubre de 2019.";
+                //SI EL CAMPO CODIGO_TC ES 02(BNA) mientras sea negocio de Tipo A Fijar  O  tambien se aplica a Negocios con Moneda Dolar
+                res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
             }
-            else
+            else if (clausula.Basico.TipoDeCambioId == (int)EnumTipoDeCambio.BLEND)
             {
-                res.Texto += $"Por Resolución SENASA nro. 149/2018, a partir del 05/11/18 queda prohibido el uso de los principios activos Diclorvos (DDVP) y Triclorfon, en todas las etapas de la cadena granaría," +
-                             $" incluyendo las instalaciones para su almacenamiento. El remitente de la mercadería declara bajo juramento que la misma NO fue tratada con DDVP ni Triclorfon, razón por la cual, si vía" +
-                             " análisis se detectaran resultados positivos al momento de la descarga, la mercadería podrá ser rechazada dándose por incumplido el contrato de compra con las sanciones e indemnizaciones que" +
-                             " correspondan. Si el resultado del análisis positivo se conociera a posteriori de su descarga, además de dar por incumplido el contrato, en los términos indicados anteriormente, el remitente será" +
-                             " sancionado con una multa de U$S 20 por tonelada. En ambos casos se dará intervención al SENASA.";
+                //SI EL CAMPO CODIGO_TC ES 04
+                res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio publicado por el MATBA ROFEX SA denominado \"índice Dólar Exportación Matba Rofex\", " +
+                    "del día de la pesificación, siempre que la comunicación de pesificación sea informada antes de las 13.00 horas. De comunicarse fuera del horario mencionado, se tomará el tipo de cambio del día siguiente al de la comunicación. " +
+                    "En caso de no existir el tipo de cambio denominado \"índice Dólar Exportación Matba Rofex\", la obligación será pagadera en pesos argentinos al tipo de cambio aplicable para la liquidación de divisas provenientes de la exportación del producto objeto de la presente oferta/boleto.";
             }
             return res;
         }

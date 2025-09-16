@@ -16,7 +16,12 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaSiete clausula)
         {
             var res = new ResultadoClausula();
-            res.Texto += "El pago de la liquidación final se hará a los 30 días de la entrega de la mercadería, en caso de corresponder.";
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (clausula.Basico.ClasificacionContrato.ToUpper() == "ACOPIADOR" || clausula.Basico.CorredorId > 0))
+            {
+                res.Texto += "En caso que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas corridas desde que la misma fuera " +
+                    "entregada, aplicada y fijada, las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer " +
+                    "el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
+            }
             return res;
         }
     }
