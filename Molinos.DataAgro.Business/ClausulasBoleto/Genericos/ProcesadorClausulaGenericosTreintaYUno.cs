@@ -20,12 +20,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
         public override ResultadoClausula DevolverClausulas(ClausulaGenericosTreintaYUno clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (clausula.Basico.ClasificacionContrato == "ACOPIADOR" || clausula.Basico.CorredorId > 0))
-            {
-                res.Texto += "En caso que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas corridas desde que la misma fuera " +
-                    "entregada, aplicada y fijada, las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer " +
-                    "el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
-            }
+
             return res;
         }
     }
