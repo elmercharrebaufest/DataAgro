@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
         public override ResultadoClausula DevolverClausulas(ClausulaGenericosOnce clausula)
         {
             var res = new ResultadoClausula();
+            /*
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.Dolarizado == true || clausula.Basico.DolarizadoCorredor == true))
             {
                 res.Texto += $"Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas, a opción del Vendedor hasta el " +
@@ -36,6 +37,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                     $"podrá invocar mora ni reclamar intereses y/o multas y/o cualquier tipo de penalidad por el tiempo transcurrido entre el plazo de pago originario " +
                     $"y el del ejercicio de la opción de prórroga acordada en la presente Cláusula.";
             }
+            */
             return res;
         }
     }
