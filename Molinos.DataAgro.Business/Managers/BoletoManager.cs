@@ -200,8 +200,9 @@ namespace Molinos.DataAgro.Business.Managers
                 //return System.Text.Encoding.UTF8.GetString(fileBytes);
                 return fileBytes;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("Error en método BoletoEnByte.", ex);
                 throw;
             }
         }
@@ -676,15 +677,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var corredor = basico.CorredorId > 0 ? $"<tr><td><b>Corredor: {basico.RazonSocialCorredor}</b><br /><b>CUIT: {FormatoCuit(basico.CUITCorredor)} </b> </td></tr>" : "";
                 xHtml = string.Format(xHtml,
                 stylesHtml, basico.ContratoSAP.TrimStart('0'), boleto.Version.ToString().PadLeft(2, '0'), basico.ContratoSAP.TrimStart('0'),
-                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml, 
-                (basico.CorredorId > 0 ? "__________________" : ""), 
-                (basico.CorredorId > 0 ? "P. Corredor" : ""), 
+                basico.RazonSocialProveedor, FormatoCuit(basico.Cuit), corredor, clausulashtml,
+                (basico.CorredorId > 0 ? "__________________" : ""),
+                (basico.CorredorId > 0 ? "P. Corredor" : ""),
                 (basico.CorredorId > 0 ? "Aclaración: _______________" : ""),
-                (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""), 
+                (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _________________" : ""),
                 (basico.CorredorId > 0 ? "Cargo:&nbsp;&nbsp; __________________" : ""),
-                basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"), 
+                basico.FechaOperacion.GetValueOrDefault().ToString("dd'/'MM'/'yyyy"),
                 "30-71511877-3",
-                (basico.CorredorId > 0 ? "CUIT Nro.: " + FormatoCuit(basico.CUITCorredor) : ""), 
+                (basico.CorredorId > 0 ? "CUIT Nro.: " + FormatoCuit(basico.CUITCorredor) : ""),
                 FormatoCuit(basico.Cuit));
             }
             else if (basico.BoletoContratoId == (int)EnumBoletoCompraNet.CARTA_OFERTA)
@@ -695,7 +696,7 @@ namespace Molinos.DataAgro.Business.Managers
                     clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
                 }
                 xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd.MM.yyyy"), basico.ContratoSAP.TrimStart('0'), basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
-                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas, FormatoCuit(basico.Cuit),basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : "");
+                    , basico.Corredor, FormatoCuit(basico.CUITCorredor), clausulasNumeradas, FormatoCuit(basico.Cuit), basico.CorredorId > 0 ? FormatoCuit(basico.CUITCorredor) : "");
                 return xHtml;
             }
             return xHtml;
@@ -873,7 +874,7 @@ namespace Molinos.DataAgro.Business.Managers
                     boleto.FechaGeneracion = null;
                     boleto.UsuarioAnulacion = null;
                 }
-            };
+            }
             return result;
         }
 

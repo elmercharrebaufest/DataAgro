@@ -186,7 +186,13 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var negociosMAT = clientePrimaryAPI.ObtenerNegocios(fecha);
-                var negociosConAgenteId = repositorio.Listar<Negocio, int>(x => x.Id, x => x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5)).ToList();
+
+                var negociosConAgenteId = repositorio.Listar<Negocio, int>(x => x.Id,
+                                                                           x => x.FechaOperacion == fecha &&
+                                                                                x.TipoNegocioId == (int)EnumTipoNegocio.AGENTE_DE_COMPRAS &&
+                                                                                (x.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                                                                                x.EstadoId == (int)EnumEstadoContrato.Finalizado)).ToList();
+
                 var negociosDA = repositorio.Listar<AgenteCompra>(x => negociosConAgenteId.Contains(x.Id));
                 var negociosDAJson = negociosDA.Select(a => new { a.Id, a.ComercialId, a.Fecha, a.Cantidad, a.Precio, a.MaterialId, a.MonedaId, a.DolarExportador, a.OperadorId, a.EstadoId }).ToJson();
                 logger.Debug("Lista negocios AgenteCompra DataAgro: " + negociosDAJson);

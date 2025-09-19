@@ -84,11 +84,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 if (result.Code == "200")
                 {
-                    List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
+                    //List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
                     List<Instrument> instruments = new List<Instrument>();
-                    
+
                     var instrumentos = SecurityList(token);
-                    
+
                     if (instrumentos.Code == "200")
                     {
                         foreach (var item2 in instrumentos.Value)
@@ -99,30 +99,35 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
                         }
                     }
-                    
+
                     List<AgenteCompra> listaAgenteCompra = new List<AgenteCompra>();
                     var operadores = repositorio.Listar<Operador>();
-                    listaAgenteCompra = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500" || b.Account == "281647") && a.TrdType == 61 && a.TrdRptStatus == "0").Select(a => new AgenteCompra
-                    {
-                        TipoNegocioId = (int)EnumTipoNegocio.AGENTE_DE_COMPRAS,
-                        Cantidad = ObtenerCantidad(a),
-                        Precio = a.LastPx ?? 0,
-                        Fecha = DateTime.ParseExact(a.TransactTime, "s", null),
-                        FechaOperacion = DateTime.ParseExact(a.TransactTime, "s", null).Date,
-                        MonedaId = a.Currency == "USD" ? "USDM " : "ARP  ",
-                        EstadoId = a.TrdRptStatus == "3" ? 6 : 2, //TrdRptStatus 0: Definitiva. 3: Anulada. 4: Transitoria.
-                        DestinoId = 1,
-                        Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
-                        MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
-                        Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
-                        DolarExportador = EsDolarExportador(a.Instrument[0]),
-                        CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
-                        Operador = ObtenerOperador(a.RootParties, operadores),
-                        TipoAgenteCompraId = 1, //MAT
-                        ComercialId = 44,
-                        ComercialCreadorId = 44, //Id DataAgro en prod
-
-                    }).Where(a => !string.IsNullOrEmpty(a.Posicion)).ToList();
+                    listaAgenteCompra = result.Value
+                        .Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500" || b.Account == "281647") &&
+                                                                a.TrdType == 61 &&
+                                                                a.TrdRptStatus == "0")
+                        .Select(a => new AgenteCompra
+                        {
+                            TipoNegocioId = (int)EnumTipoNegocio.AGENTE_DE_COMPRAS,
+                            Cantidad = ObtenerCantidad(a),
+                            Precio = a.LastPx ?? 0,
+                            Fecha = DateTime.ParseExact(a.TransactTime, "s", null),
+                            FechaOperacion = DateTime.ParseExact(a.TransactTime, "s", null).Date,
+                            MonedaId = a.Currency == "USD" ? "USDM " : "ARP  ",
+                            EstadoId = a.TrdRptStatus == "3" ? (int)EnumEstadoContrato.Rechazado : (int)EnumEstadoContrato.Confirmado, //TrdRptStatus 0: Definitiva. 3: Anulada. 4: Transitoria.
+                            DestinoId = 1,
+                            Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
+                            MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
+                            Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
+                            DolarExportador = EsDolarExportador(a.Instrument[0]),
+                            CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
+                            Operador = ObtenerOperador(a.RootParties, operadores),
+                            TipoAgenteCompraId = 1, //MAT
+                            ComercialId = 44,
+                            ComercialCreadorId = 44, //Id DataAgro en prod
+                        })
+                        .Where(a => !string.IsNullOrEmpty(a.Posicion))
+                        .ToList();
 
                     var materiales = repositorio.Listar<Material>();
 

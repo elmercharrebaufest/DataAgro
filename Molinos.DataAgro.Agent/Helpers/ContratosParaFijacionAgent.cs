@@ -104,47 +104,49 @@ namespace Molinos.DataAgro.Agent
                         MonedaId = sustentable.MonedaDb,
                     });
                 }
-                var contratoParaFijacion = new DatosFijacionDeContratoDto();
-                contratoParaFijacion.ContratoId = contrato.Contrato.TrimStart('0');
-                contratoParaFijacion.KilosAplicados = ((double)contrato.KilosAplicados).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.KilosPendiente = ((double)contrato.KilosPendFijar - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.FechaDesde = DateTime.Parse(contrato.FechaDesde).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.FechaHasta = DateTime.Parse(contrato.FechaHasta).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.KilosContrato = contrato.KilosContrato.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.DesdeEntrega = DateTime.Parse(contrato.EntregaDesde).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.HastaEntrega = DateTime.Parse(contrato.EntregaHasta).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.Calidad = ((materialId == 3 || materialId == 4 || materialId == 5) && contrato.Calidad == "X") || ((materialId == 1 || materialId == 2) && contrato.Calidad != "X");
-                contratoParaFijacion.Campana = contrato.Cosecha;
-                contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.Cosecha).FirstOrDefault() != null ?
-                    campañas.Where(x => x.Descripcion == contrato.Cosecha).FirstOrDefault().CampañaId : 0;
-                contratoParaFijacion.Posicion = contrato.Posicion;
-                contratoParaFijacion.PagoDiferido = contrato.PagoDifArp == "X";
-                contratoParaFijacion.Centro = centro.Id;
-                contratoParaFijacion.ARecibirSinPrecio = contrato.ARecibirSinPrecio.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.RecibidoSinFijar = contrato.RecibidoSinFijar.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.CentroDescripcion = centro.Descripcion;
-                contratoParaFijacion.ImporteAPrecio = contrato.ImporteAPrecio;
-                contratoParaFijacion.ImporteSobrePrecio = contrato.ImporteSPrecio;
-                contratoParaFijacion.MonedaAPrecio = contrato.MonedaAPrecio;
-                contratoParaFijacion.MonedaSobrePrecio = contrato.MonedaSPrecio;
-                contratoParaFijacion.PorcentajeAPrecio = contrato.PorcAPrecio;
-                contratoParaFijacion.PorcentajeSobrePrecio = contrato.PorcSPrecio;
-                contratoParaFijacion.CondicionFijacionCod = contrato.CondFijacion;
-                contratoParaFijacion.CondicionPagoCod = contrato.CondPago;
-                contratoParaFijacion.CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.CondFijacion).FirstOrDefault() != null ?
-                    condicionFijaciones.Where(x => x.CodigoSap == contrato.CondFijacion).FirstOrDefault().Descripcion : "";
-                contratoParaFijacion.CondicionPagoDescripcion = condicionPagos.Where(x => x.CodigoSap == contrato.CondPago).SingleOrDefault() != null ?
-                    condicionPagos.Where(x => x.CodigoSap == contrato.CondPago).SingleOrDefault().Descripcion : "";
-                contratoParaFijacion.Filtro = filtro + "|" + contrato.Contrato.TrimStart('0');
-                contratoParaFijacion.Color = DateTime.Parse(contrato.FechaHasta) < hoy ? "Red" : "";
-                contratoParaFijacion.Calidades = calidades;
-                contratoParaFijacion.Clasificacion = contrato.Clasificacion;
-                contratoParaFijacion.Cesion = contrato.Cesion == "X";
-                contratoParaFijacion.Anticipo = contrato.Anticipo == "X";
-                contratoParaFijacion.Aperturas = aperturas;
-                contratoParaFijacion.Bonificaciones = bonificaciones;
-                contratoParaFijacion.Virtual = false;
-                contratoParaFijacion.Sustentables = sustentables;
+                var contratoParaFijacion = new DatosFijacionDeContratoDto()
+                {
+                    ContratoId = contrato.Contrato.TrimStart('0'),
+                    KilosAplicados = ((double)contrato.KilosAplicados).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    KilosPendiente = ((double)contrato.KilosPendFijar - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    FechaDesde = DateTime.Parse(contrato.FechaDesde).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    FechaHasta = DateTime.Parse(contrato.FechaHasta).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    KilosContrato = contrato.KilosContrato.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    DesdeEntrega = DateTime.Parse(contrato.EntregaDesde).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    HastaEntrega = DateTime.Parse(contrato.EntregaHasta).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    Calidad = ((materialId == 3 || materialId == 4 || materialId == 5) && contrato.Calidad == "X") || ((materialId == 1 || materialId == 2) && contrato.Calidad != "X"),
+                    Campana = contrato.Cosecha,
+                    CampanaId = campañas.Where(x => x.Descripcion == contrato.Cosecha).FirstOrDefault() != null ?
+                        campañas.Where(x => x.Descripcion == contrato.Cosecha).FirstOrDefault().CampañaId : 0,
+                    Posicion = contrato.Posicion,
+                    PagoDiferido = contrato.PagoDifArp == "X",
+                    Centro = centro.Id,
+                    ARecibirSinPrecio = contrato.ARecibirSinPrecio.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    RecibidoSinFijar = contrato.RecibidoSinFijar.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    CentroDescripcion = centro.Descripcion,
+                    ImporteAPrecio = contrato.ImporteAPrecio,
+                    ImporteSobrePrecio = contrato.ImporteSPrecio,
+                    MonedaAPrecio = contrato.MonedaAPrecio,
+                    MonedaSobrePrecio = contrato.MonedaSPrecio,
+                    PorcentajeAPrecio = contrato.PorcAPrecio,
+                    PorcentajeSobrePrecio = contrato.PorcSPrecio,
+                    CondicionFijacionCod = contrato.CondFijacion,
+                    CondicionPagoCod = contrato.CondPago,
+                    CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.CondFijacion).FirstOrDefault() != null ?
+                        condicionFijaciones.Where(x => x.CodigoSap == contrato.CondFijacion).FirstOrDefault().Descripcion : "",
+                    CondicionPagoDescripcion = condicionPagos.Where(x => x.CodigoSap == contrato.CondPago).SingleOrDefault() != null ?
+                        condicionPagos.Where(x => x.CodigoSap == contrato.CondPago).SingleOrDefault().Descripcion : "",
+                    Filtro = filtro + "|" + contrato.Contrato.TrimStart('0'),
+                    Color = DateTime.Parse(contrato.FechaHasta) < hoy ? "Red" : "",
+                    Calidades = calidades,
+                    Clasificacion = contrato.Clasificacion,
+                    Cesion = contrato.Cesion == "X",
+                    Anticipo = contrato.Anticipo == "X",
+                    Aperturas = aperturas,
+                    Bonificaciones = bonificaciones,
+                    Virtual = false,
+                    Sustentables = sustentables
+                };
 
                 var existeConAnulaYReemplaza = false;
                 var contDA = contratos.Where(x => x.ContratoSAP == contrato.Contrato && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
@@ -174,7 +176,7 @@ namespace Molinos.DataAgro.Agent
             }
             return datosContratos;
         }
-        
+
         private List<DatosFijacionDeContratoDto> CargarContratosConPi(Z_MPRFC_CONTRATO_PEND_FIJACIONResponse devolucion, int materialId, string filtro, int idFijacion)
         {
             var hoy = DateTime.Now.Date;
@@ -254,47 +256,49 @@ namespace Molinos.DataAgro.Agent
                     });
                 }
 
-                var contratoParaFijacion = new DatosFijacionDeContratoDto();
-                contratoParaFijacion.ContratoId = contrato.CONTRATO.TrimStart('0');
-                contratoParaFijacion.KilosAplicados = ((double)contrato.KILOS_APLICADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.DesdeEntrega = DateTime.Parse(contrato.ENTREGA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.Calidad = ((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X");
-                contratoParaFijacion.Campana = contrato.COSECHA;
-                contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault() != null ?
-                    campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault().CampañaId : 0;
-                contratoParaFijacion.Posicion = contrato.POSICION;
-                contratoParaFijacion.PagoDiferido = contrato.PAGO_DIF_ARP == "X";
-                contratoParaFijacion.Centro = centro.Id;
-                contratoParaFijacion.ARecibirSinPrecio = contrato.A_RECIBIR_SIN_PRECIO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.RecibidoSinFijar = contrato.RECIBIDO_SIN_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                contratoParaFijacion.CentroDescripcion = centro.Descripcion;
-                contratoParaFijacion.ImporteAPrecio = contrato.IMPORTE_A_PRECIO;
-                contratoParaFijacion.ImporteSobrePrecio = contrato.IMPORTE_S_PRECIO;
-                contratoParaFijacion.MonedaAPrecio = contrato.MONEDA_A_PRECIO;
-                contratoParaFijacion.MonedaSobrePrecio = contrato.MONEDA_S_PRECIO;
-                contratoParaFijacion.PorcentajeAPrecio = contrato.PORC_A_PRECIO;
-                contratoParaFijacion.PorcentajeSobrePrecio = contrato.PORC_S_PRECIO;
-                contratoParaFijacion.CondicionFijacionCod = contrato.COND_FIJACION;
-                contratoParaFijacion.CondicionPagoCod = contrato.COND_PAGO;
-                contratoParaFijacion.CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault() != null ?
-                    condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault().Descripcion : "";
-                contratoParaFijacion.CondicionPagoDescripcion = condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault() != null ?
-                    condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault().Descripcion : "";
-                contratoParaFijacion.Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0');
-                contratoParaFijacion.Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "";
-                contratoParaFijacion.Calidades = calidades;
-                contratoParaFijacion.Clasificacion = contrato.CLASIFICACION;
-                contratoParaFijacion.Cesion = contrato.CESION == "X";
-                contratoParaFijacion.Anticipo = contrato.ANTICIPO == "X";
-                contratoParaFijacion.Aperturas = aperturas;
-                contratoParaFijacion.Bonificaciones = bonificaciones;
-                contratoParaFijacion.Virtual = false;
-                contratoParaFijacion.Sustentables = sustentables;
+                var contratoParaFijacion = new DatosFijacionDeContratoDto()
+                {
+                    ContratoId = contrato.CONTRATO.TrimStart('0'),
+                    KilosAplicados = ((double)contrato.KILOS_APLICADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    DesdeEntrega = DateTime.Parse(contrato.ENTREGA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                    Calidad = ((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X"),
+                    Campana = contrato.COSECHA,
+                    CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault() != null ?
+                        campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault().CampañaId : 0,
+                    Posicion = contrato.POSICION,
+                    PagoDiferido = contrato.PAGO_DIF_ARP == "X",
+                    Centro = centro.Id,
+                    ARecibirSinPrecio = contrato.A_RECIBIR_SIN_PRECIO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    RecibidoSinFijar = contrato.RECIBIDO_SIN_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                    CentroDescripcion = centro.Descripcion,
+                    ImporteAPrecio = contrato.IMPORTE_A_PRECIO,
+                    ImporteSobrePrecio = contrato.IMPORTE_S_PRECIO,
+                    MonedaAPrecio = contrato.MONEDA_A_PRECIO,
+                    MonedaSobrePrecio = contrato.MONEDA_S_PRECIO,
+                    PorcentajeAPrecio = contrato.PORC_A_PRECIO,
+                    PorcentajeSobrePrecio = contrato.PORC_S_PRECIO,
+                    CondicionFijacionCod = contrato.COND_FIJACION,
+                    CondicionPagoCod = contrato.COND_PAGO,
+                    CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault() != null ?
+                        condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault().Descripcion : "",
+                    CondicionPagoDescripcion = condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault() != null ?
+                        condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault().Descripcion : "",
+                    Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
+                    Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "",
+                    Calidades = calidades,
+                    Clasificacion = contrato.CLASIFICACION,
+                    Cesion = contrato.CESION == "X",
+                    Anticipo = contrato.ANTICIPO == "X",
+                    Aperturas = aperturas,
+                    Bonificaciones = bonificaciones,
+                    Virtual = false,
+                    Sustentables = sustentables
+                };
 
                 var existeConAnulaYReemplaza = false;
                 var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
@@ -324,7 +328,7 @@ namespace Molinos.DataAgro.Agent
             }
             return datosContratos;
         }
-        
+
         public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
             filtro = filtro ?? "";

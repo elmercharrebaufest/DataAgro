@@ -48,13 +48,9 @@ namespace Molinos.DataAgro.Test.Controllers
             fijacionDePrecioContratoManagerMock = new Mock<IFijacionDePrecioContratoManager>();
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
-            //
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new CompraNetTerceroController(proveedorManagerMock.Object,
-               contratoManagerMock.Object,
-                comercialManagerMock.Object, logger.Object, fijacionDePrecioContratoManagerMock.Object, configuracionInternaManagerMock.Object, 
-                tipoDeCambioAgentMock.Object);
+            target = new CompraNetTerceroController(proveedorManagerMock.Object, contratoManagerMock.Object, fijacionDePrecioContratoManagerMock.Object, configuracionInternaManagerMock.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
@@ -242,7 +238,7 @@ namespace Molinos.DataAgro.Test.Controllers
             List<BasicoContrato> contratos = new List<BasicoContrato> {
                 new BasicoContrato{ ContratoAcuerdoId=1 }
             };
-            
+
             var result = target.GrabarContratoMasivo(contratos);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
