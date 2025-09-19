@@ -3208,7 +3208,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { x.ProveedorId, x.ComercialId });
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == (int)EnumEstadoCupo.SinCTG && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { x.ProveedorId, x.ComercialId });
 
             foreach (var p in cupos)
             {
@@ -3218,14 +3218,21 @@ namespace Molinos.DataAgro.Business.Managers
                 var comercial = repositorio.Obtener<Comercial>(p.Key.ComercialId);
                 var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
                 var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == p.Key.ProveedorId && x.Cupo == true);
+                
                 if (emailproveedor.Count <= 0)
                 {
                     continue;
                 }
                 lista.Add(email);
+
                 if (comercial.RolesAsociados.Any(a => a.Descripcion == "Reenvio Mails Cupos Corredores Rosario"))
                 {
-                    var comerciales = comercialManager.TraerTodoComercial().Comercial.Where(a => a.Rol.ToUpper().Contains("Reenvio Mails Cupos Corredores Rosario".ToUpper()) && a.Deshabilitado != true && a.ComercialId != p.Key.ComercialId).ToList();
+                    var comerciales = comercialManager.TraerTodoComercial().Comercial
+                        .Where(a => a.Rol.ToUpper().Contains("Reenvio Mails Cupos Corredores Rosario".ToUpper()) && 
+                                    a.Deshabilitado != true && 
+                                    a.ComercialId != p.Key.ComercialId
+                        ).ToList();
+
                     foreach (var item in comerciales)
                     {
                         var comercialAdicional = repositorio.Obtener<Comercial>(item.ComercialId);
@@ -3234,14 +3241,17 @@ namespace Molinos.DataAgro.Business.Managers
                             var emailAdicional = mailManager.GetEmailUserActiveDirectory(comercialAdicional.IdActiveDirectory);
                             lista.Add(emailAdicional);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            logger.Error($"Error al obtener el email del Comercial {item.Apellido} {item.Nombres}.", ex);
                         }
                     }
                 }
-                mailManager.EnviarMail(emailproveedor,
-                   "Estado de cupos", "", lista, CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
-                    p.ToList(), comercial));
+
+                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista, 
+                    CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
+                    p.ToList(), comercial)
+                );
 
             }
         }

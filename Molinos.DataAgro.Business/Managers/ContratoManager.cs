@@ -542,10 +542,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.BoletoId != (int)EnumBoletoCompraNet.SIN_BOLETO)
             {
-                if ((oParam.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA || 
-                    oParam.BoletoId == (int)EnumBoletoCompraNet.FISICO || 
-                    oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA) && 
-                    (oParam.BolsaId == 0 || oParam.BolsaId == null) && 
+                if ((oParam.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA ||
+                    oParam.BoletoId == (int)EnumBoletoCompraNet.FISICO ||
+                    oParam.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA) &&
+                    (oParam.BolsaId == 0 || oParam.BolsaId == null) &&
                     oParam.Venta != true)
                 {
                     oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacío cuando existe Boleto.");
@@ -6038,14 +6038,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
-            try
-            {
-                logger.Debug("GrabarContratoMasivo");
-                logger.Debug(contratos.ToXml());
-            }
-            catch (Exception)
-            {
-            }
+            logger.Debug("GrabarContratoMasivo");
+            logger.Debug(contratos.ToXml());
+
             List<GrabarContratoResult> results = new List<GrabarContratoResult>();
             var acuerdo = TraerContratoAcuerdoACopiar(contratos.First().ContratoAcuerdoId.Value);
             var comercial = mobjComercialManager.TraerComercial(acuerdo.ComercialId.Value);
@@ -7555,8 +7550,9 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("Error en método AltaMasivaContratos.", ex);
                 throw;
             }
         }
@@ -7791,8 +7787,9 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("Error en método AltaMasivaConvenios.", ex);
                 throw;
             }
         }
@@ -8613,8 +8610,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             try
             {
-                //var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP) && x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado).ToList();
-
                 var contratos = repositorio.Listar<Contrato, ContratoActualizarEstadoDeContratosDto>(x => new ContratoActualizarEstadoDeContratosDto
                 {
                     ContratoSAP = x.ContratoSAP,
@@ -9057,13 +9052,12 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("Error en método AltaMasivaMATBA.", ex);
                 throw;
             }
         }
-
-
 
         public Resultado ValidarPantallaEnUso(PantallaEnUsoDto pantallaEnUso)
         {
@@ -9246,8 +9240,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CupoSap = x.CupoSap,
                 FleteProcedencia = x.FleteProcedencia,
                 Centro = x.Centro.Descripcion
-            }, x => x.NegocioId == contratoId && 
-                    x.ConDescarga.HasValue && 
+            }, x => x.NegocioId == contratoId &&
+                    x.ConDescarga.HasValue &&
                     x.ConDescarga.Value &&
                     x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
         }
