@@ -161,7 +161,7 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarContratoResult ValidarAmpliacionFijacion(FijacionDePrecioContrato fijacion, double ampliacion)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var aFijar = TraerDatosFijacion(fijacion.Proveedor.CUIT, fijacion.Corredor != null ? fijacion.Corredor.CUIT : null, fijacion.MaterialId, fijacion.ContratoSAP.Remove(0, 3), fijacion.Id);
+            var aFijar = TraerDatosFijacion(fijacion.Proveedor.CUIT, fijacion.Corredor?.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.Remove(0, 3), fijacion.Id);
             double kgAplicados = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosAplicados, out kgAplicados) ? kgAplicados : 0;
             double pendiente = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosPendiente, out pendiente) ? pendiente - kgAplicados : 0;
             if (pendiente <= ampliacion)
@@ -1595,45 +1595,45 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     return error;
                 }
-                var fijacionSave = new FijacionDePrecioContrato();
-                fijacionSave.FijacionSAP = fijacion.FijacionSAP;
-                fijacionSave.ConfirmadoSAP = true;
-                fijacionSave.ChequeElectronico = fijacion.ChequeElectronico;
-                fijacionSave.PagoCBU = fijacion.PagoCBU;
-                fijacionSave.TrigoEspecial = fijacion.TrigoEspecial;
-                fijacionSave.ContratoSAP = fijacion.ContratoSAP;
-                fijacionSave.ContratoId = fijacion.ContratoId;
-                fijacionSave.Precio = fijacion.Precio;
-                fijacionSave.Cantidad = fijacion.Cantidad;
-                fijacionSave.DestinoId = fijacion.DestinoId;
-                fijacionSave.Pizarra = fijacion.Pizarra;
-                fijacionSave.Posicion = fijacion.Posicion;
-                fijacionSave.PagoDiferido = fijacion.PagoDiferido;
-                fijacionSave.FechaOperacion = fijacion.FechaOperacion;
-                fijacionSave.Fecha = fijacion.Fecha;
-                fijacionSave.FechaHasta = fijacion.FechaHasta;
-                fijacionSave.FechaDesde = fijacion.FechaDesde;
-                fijacionSave.ProveedorId = fijacion.ProveedorId;
-                fijacionSave.ComercialId = fijacion.ComercialId;
-                fijacionSave.MaterialId = fijacion.MaterialId;
-                fijacionSave.CorredorId = fijacion.CorredorId;
-                fijacionSave.DiasPesificado = fijacion.DiasPesificado;
-                fijacionSave.MonedaId = fijacion.MonedaId;
-                fijacionSave.CampanaId = fijacion.CampanaId;
-                fijacionSave.PrecioNeto = fijacion.PrecioNeto;
-                fijacionSave.EstadoId = fijacion.EstadoId;
-                fijacionSave.FechaConfirmacion = fijacion.FechaConfirmacion;
-                fijacionSave.TipoNegocioId = fijacion.TipoNegocioId;
-                fijacionSave.ComercialCreadorId = fijacion.ComercialCreadorId;
-                fijacionSave.ComercialId = fijacion.ComercialId;
-                fijacionSave.Canje = fijacion.Canje;
-                fijacionSave.Virtual = fijacion.Virtual;
-                fijacionSave.Fecha = fijacion.Fecha;
-                fijacionSave.GrupoCompra = fijacion.GrupoCompra;
-                fijacionSave.DescripcionOperacionAnterior = fijacion.MotivoOperacionAnterior;
-                fijacionSave.MotivoOperacionAnterior = "Otro";
-                fijacionSave.ClasificacionContrato = fijacion.ClasificacionContrato;
-                fijacionSave.TipoPosicionCBOTId = fijacion.TipoPosicionCBOTId;
+                var fijacionSave = new FijacionDePrecioContrato
+                {
+                    FijacionSAP = fijacion.FijacionSAP,
+                    ConfirmadoSAP = true,
+                    ChequeElectronico = fijacion.ChequeElectronico,
+                    PagoCBU = fijacion.PagoCBU,
+                    TrigoEspecial = fijacion.TrigoEspecial,
+                    ContratoSAP = fijacion.ContratoSAP,
+                    ContratoId = fijacion.ContratoId,
+                    Precio = fijacion.Precio,
+                    Cantidad = fijacion.Cantidad,
+                    DestinoId = fijacion.DestinoId,
+                    Pizarra = fijacion.Pizarra,
+                    Posicion = fijacion.Posicion,
+                    PagoDiferido = fijacion.PagoDiferido,
+                    FechaOperacion = fijacion.FechaOperacion,
+                    Fecha = fijacion.Fecha,
+                    FechaHasta = fijacion.FechaHasta,
+                    FechaDesde = fijacion.FechaDesde,
+                    ProveedorId = fijacion.ProveedorId,
+                    ComercialId = fijacion.ComercialId,
+                    MaterialId = fijacion.MaterialId,
+                    CorredorId = fijacion.CorredorId,
+                    DiasPesificado = fijacion.DiasPesificado,
+                    MonedaId = fijacion.MonedaId,
+                    CampanaId = fijacion.CampanaId,
+                    PrecioNeto = fijacion.PrecioNeto,
+                    EstadoId = fijacion.EstadoId,
+                    FechaConfirmacion = fijacion.FechaConfirmacion,
+                    TipoNegocioId = fijacion.TipoNegocioId,
+                    ComercialCreadorId = fijacion.ComercialCreadorId,
+                    Canje = fijacion.Canje,
+                    Virtual = fijacion.Virtual,
+                    GrupoCompra = fijacion.GrupoCompra,
+                    DescripcionOperacionAnterior = fijacion.MotivoOperacionAnterior,
+                    MotivoOperacionAnterior = "Otro",
+                    ClasificacionContrato = fijacion.ClasificacionContrato,
+                    TipoPosicionCBOTId = fijacion.TipoPosicionCBOTId
+                };
 
                 if (fijacion.AperturaPrecio != null)
                 {

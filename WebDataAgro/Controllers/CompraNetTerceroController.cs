@@ -1,49 +1,29 @@
-﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
-using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
-using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CompraNetTerceroController : Controller
     {
-        private IContratoManager mobjContratoManager;
-        private IComercialManager mobjComercialManager;
-        private IProveedorManager mobjProveedorManager;
-        private IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
-        private ILogger mobjLogger;
-        private IConfiguracionInternaManager configuracionInternaManager;
-        private ITipoDeCambioAgent tipoDeCambioAgent;
+        private readonly IContratoManager mobjContratoManager;
+        private readonly IProveedorManager mobjProveedorManager;
+        private readonly IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
+        private readonly IConfiguracionInternaManager configuracionInternaManager;
 
         public CompraNetTerceroController(IProveedorManager oProveedorManager, IContratoManager oContratoManager,
-            IComercialManager oComercialManager, ILogger oLogger, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, IConfiguracionInternaManager configuracionInternaManager
-            , ITipoDeCambioAgent tipoDeCambioAgent)
+            IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, IConfiguracionInternaManager configuracionInternaManager)
         {
-            mobjComercialManager = oComercialManager;
             mobjContratoManager = oContratoManager;
             mobjProveedorManager = oProveedorManager;
-            mobjLogger = oLogger;
             mobjFijacionDePrecioContratoManager = oFijacionDePrecioContratoManager;
             this.configuracionInternaManager = configuracionInternaManager;
-            this.tipoDeCambioAgent = tipoDeCambioAgent;
-
         }
 
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno)]
@@ -136,6 +116,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         public ActionResult AnularFijacion(int negocioId, string MotivoRechazo)
         {
 
