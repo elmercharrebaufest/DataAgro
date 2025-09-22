@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
             }
 
             string destino = clausula.Basico.DestinoDescripcion;
-            res.Texto += $" haciéndose el recibo por el recibidor dell comprador en planta {(destino.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : destino)}" +
+            res.Texto += $" haciéndose el recibo por el recibidor del comprador en planta {(destino.Equals("San Lorenzo") ? "San Lorenzo o Ricardone" : destino)}" +
                 $"{(clausula.Basico.DestinoCodigoSap.Equals("1068") ? "" : $", localidad {clausula.Basico.DestinoLocalidad}, provincia de {clausula.Basico.DestinoProvincia}")}" +
                 $". Queda establecido que toda tasa contribución, impuesto provincial y/o municipal que grave la presente operación será a cargo de la parte vendedora.";
             return res;
