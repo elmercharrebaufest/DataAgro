@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
             res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
-                res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {MetodosUtiles.DivisaSimbolica(clausula.Basico.Moneda)} ({MetodosUtiles.DivisaEnLetras(clausula.Basico.Moneda)} {MetodosUtiles.DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada";
+                res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {MetodosUtiles.DivisaSimbolica(clausula.Basico.Moneda)} ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(clausula.Basico.PrecioNeto.Value, clausula.Basico.Moneda)}) más IVA la tonelada";
 
             }
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true)
@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
                 foreach (var precio in clausula.Basico.PreciosPactados)
                 {
                     res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
-                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetras(precio.Precio)}),";
+                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(precio.Precio, precio.MonedaPactadoDesc)}),";
                 }
                 res.Texto = res.Texto.EndsWith(",") ? string.Format("{0}.", res.Texto.Remove(res.Texto.Length - 1)) : res.Texto;
             }

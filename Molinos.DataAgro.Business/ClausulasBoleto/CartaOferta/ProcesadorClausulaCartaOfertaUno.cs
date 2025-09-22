@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
             res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
-                res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {MetodosUtiles.DivisaSimbolica(clausula.Basico.Moneda)} ({MetodosUtiles.DivisaEnLetras(clausula.Basico.Moneda)} {MetodosUtiles.DevolverNumeroEnLetras(clausula.Basico.PrecioNeto.Value)}) más IVA la tonelada .";
+                res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {MetodosUtiles.DivisaSimbolica(clausula.Basico.Moneda)} ({MetodosUtiles.DivisaEnLetras(clausula.Basico.Moneda)} {MetodosUtiles.DevolverNumeroEnLetrasConDivisa(clausula.Basico.PrecioNeto.Value, clausula.Basico.Moneda)}) más IVA la tonelada .";
             }
             res.Texto += $"Procedencia de la mercadería: {clausula.Basico.Localidad} - {clausula.Basico.Provincia}.";
             res.Texto += $"A todos los efectos impositivos los vendedores declaran que la mercadería {(clausula.Basico.ClasificacionDescripcion == "Productor" ? "SI" : "NO")} es de su propia producción{(clausula.Basico.Consignatario == true ? ", actúa en carácter de consignatario." : ".")}";

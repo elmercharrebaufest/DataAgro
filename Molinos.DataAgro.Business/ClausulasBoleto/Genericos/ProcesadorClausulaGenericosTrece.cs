@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
                 res.Texto += $"A los efectos fiscales, únicamente, las partes fijan el valor del presente boleto en la suma de " +
-                    $"{clausula.Basico.MonedaCanjeDescripcion} {clausula.Basico.Monto?.ToString("N", new CultureInfo("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetras(clausula.Basico.Monto.Value)}) " +
+                    $"{clausula.Basico.MonedaCanjeDescripcion} {clausula.Basico.Monto?.ToString("N", new CultureInfo("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(clausula.Basico.Monto.Value, clausula.Basico.MonedaCanjeDescripcion)}) " +
                     $"que el impuesto de sellos correspondiente será abonado por el comprador y el vendedor en partes iguales.";
             }
             return res;
