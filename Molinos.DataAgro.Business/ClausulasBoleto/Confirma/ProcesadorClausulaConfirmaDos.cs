@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
                 foreach (var precio in clausula.Basico.PreciosPactados)
                 {
                     res.Texto += $"{precio.FechaDesde} al {precio.FechaHasta}" +
-                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetras(precio.Precio)}),";
+                        $" {precio.MonedaPactadoDesc} {precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(precio.Precio, precio.MonedaPactadoDesc)}),";
                 }
                 res.Texto = res.Texto.EndsWith(",") ? string.Format("{0}.", res.Texto.Remove(res.Texto.Length - 1)) : res.Texto;
             }

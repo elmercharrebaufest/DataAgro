@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
 
                     res.Texto += $"El precio de la mercadería objeto del presente contrato, se fijará cualquier día hábil a elección del vendedor. El precio será el resultante " +
                     $"de ajustar el precio de la mercadería del día elegido para la fijación conforme se establece más adelante, con el precio de la Posición {clausula.Basico.PosicionCBOT} " +
-                    $"del Mercado a Término (MAT) más una bonificación del {clausula.Basico.MonedaBonificacion} {clausula.Basico.ImporteBonificacion?.ToString("N", new CultureInfo("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetras(clausula.Basico.ImporteBonificacion.Value)}). " +
+                    $"del Mercado a Término (MAT) más una bonificación del {clausula.Basico.MonedaBonificacion} {clausula.Basico.ImporteBonificacion?.ToString("N", new CultureInfo("es-AR"))} ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(clausula.Basico.ImporteBonificacion.Value, clausula.Basico.MonedaBonificacion)}). " +
                     $"El vendedor comunicará al comprador el día elegido para la fijación de precio por Mercado Disponible de Molinos Agro SA hasta el {MetodosUtiles.CorregirFormatoFecha(condiciones.FechaHasta)} en cualquier día hábil a elección del vendedor. " +
                     $"Dicho precio será ajustado con el precio Posición {clausula.Basico.PosicionCBOT} MAT, al que se le aplicará además una bonificación de {clausula.Basico.MonedaBonificacion} {clausula.Basico.ImporteBonificacion?.ToString("N", new CultureInfo("es-AR"))}, " +
                     $"quedando de esa manera definido el Precio de cada fijación que realice el Vendedor. " +
