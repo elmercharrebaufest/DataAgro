@@ -20,7 +20,9 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
         public override ResultadoClausula DevolverClausulas(ClausulaGenericosTreintaYTres clausula)
         {
             var res = new ResultadoClausula();
-            if ((clausula.Basico.MaterialId == (int)EnumMateriales.MAIZ || clausula.Basico.MaterialId == (int)EnumMateriales.TRIGO) && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL)
+            if ( (clausula.Basico.MaterialId == (int)EnumMateriales.TRIGO && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2) || 
+                 (clausula.Basico.MaterialId == (int)EnumMateriales.MAIZ && clausula.Basico.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL)
+               )
             {
                 res.Texto += $"Condición de la mercadería Grado 2: No bonifica Grado 1, no bonifica ni rebaja Grado 2, rebaja Grado 3 y demás condiciones cámara.";
             }

@@ -1123,3 +1123,21 @@ IF NOT EXISTS (select 1 from ClausulaGenericos where Discriminator = 'ClausulaGe
 IF NOT EXISTS (select 1 from ClausulaGenericos where Discriminator = 'ClausulaGenericosCuarentaYSiete' )BEGIN insert into ClausulaGenericos(Discriminator, Orden, Estado, Clausula) values ('ClausulaGenericosCuarentaYSiete',47,1,'ClausulaCuarentaYSiete'); END
 IF NOT EXISTS (select 1 from ClausulaGenericos where Discriminator = 'ClausulaGenericosCuarentaYOcho'  )BEGIN insert into ClausulaGenericos(Discriminator, Orden, Estado, Clausula) values ('ClausulaGenericosCuarentaYOcho',48,1,'ClausulaCuarentaYOcho'); END
 IF NOT EXISTS (select 1 from ClausulaGenericos where Discriminator = 'ClausulaGenericosCuarentaYNueve' )BEGIN insert into ClausulaGenericos(Discriminator, Orden, Estado, Clausula) values ('ClausulaGenericosCuarentaYNueve',49,1,'ClausulaCuarentaYNueve'); END
+
+
+-- Correccion de descripciones de Destino
+IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rosario Norte/Sur, opción comprador%') 
+   BEGIN
+    DECLARE @IdRosario int
+	SELECT TOP 1 @IdRosario = Id FROM Centro WHERE Descripcion like 'Rosario Norte/Sur, opción comprador'
+	UPDATE Centro SET Descripcion = 'Rosario Norte/Sur' 
+	 WHERE Id = @IdRosario;
+   END
+
+IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Soto)%') 
+   BEGIN
+    DECLARE @IdRioValle int
+	SELECT TOP 1 @IdRioValle = Id FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Soto)'
+	UPDATE Centro SET Descripcion = 'Rio del Valle' 
+	 WHERE Id = @IdRioValle;
+   END
