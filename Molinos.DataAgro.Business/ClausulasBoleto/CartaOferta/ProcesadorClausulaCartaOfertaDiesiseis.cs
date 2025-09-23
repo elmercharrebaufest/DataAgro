@@ -15,15 +15,23 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
         public override ResultadoClausula DevolverClausulas(ClausulaCartaOfertaDiesiseis clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && 
-                (clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
-                 clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "PRODUCTOR" ||
-                 clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS" ||
-                 clausula.Basico.CorredorId > 0))
+            if (
+                (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR &&
+                 clausula.Basico.Moneda == "USD" &&
+                 clausula.Basico.CorredorId > 0 &&
+                    (clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
+                     clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "PRODUCTOR" ||
+                     clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
+                    ) ||
+                (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR &&
+                 clausula.Basico.Moneda == "USD" &&
+                    (clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
+                    clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
+                )
+               )
             {
-                res.Texto += "En caso que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas corridas desde que la misma fuera " +
-                    "entregada, aplicada y fijada, las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer " +
-                    "el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
+                res.Texto += "Toda vez que el Acopiador/Corredor no proceda a liquidar la mercadería dentro de las 72 horas desde que la misma fuera entregada y aplicada, " +
+                             "las Partes acuerdan que quedará a opción del Comprador determinar el día que se tomará válido para establecer el tipo de cambio a utilizar en los términos dispuestos en el presente boleto.";
             }
             return res;
         }
