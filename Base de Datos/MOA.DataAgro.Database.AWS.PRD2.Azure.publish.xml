@@ -4,7 +4,15 @@
 		<IncludeCompositeObjects>True</IncludeCompositeObjects>
 		<TargetDatabaseName>DataAgroPRD2</TargetDatabaseName>
 		<DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
-		<TargetConnectionString>Data Source=dataagroprd2.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; Integrated Security=False; User Id=DATAAGROPRDUSR; Password=9U=S10:mAqky; initial catalog=DataAgroPRD2; Pooling=False; Trust Server Certificate=True;</TargetConnectionString>
+		<TargetConnectionString>
+			Data Source=dataagroprd2.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433;
+			Integrated Security=False;
+			User Id=DATAAGROPRDUSR;
+			Password=9U=S10:mAqky;
+			Initial Catalog=DataAgroPRD2;
+			Pooling=False;
+			TrustServerCertificate=True;
+		</TargetConnectionString>
 		<ProfileVersionNumber>1</ProfileVersionNumber>
 		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
 		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
