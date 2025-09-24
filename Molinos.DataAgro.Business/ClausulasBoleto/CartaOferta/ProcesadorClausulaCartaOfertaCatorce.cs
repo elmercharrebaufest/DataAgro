@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
         public override ResultadoClausula DevolverClausulas(ClausulaCartaOfertaCatorce clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.Dolarizado == true || clausula.Basico.DolarizadoExpress == true))
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.Dolarizado == true || clausula.Basico.DolarizadoExpress == true || clausula.Basico.DolarizadoCorredor == true))
             {
 
                 res.Texto += $"Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas, a opción " +
