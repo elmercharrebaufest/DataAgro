@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
         public override ResultadoClausula DevolverClausulas(ClausulaBoletoFisicoDiesiocho clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.Dolarizado == true || clausula.Basico.DolarizadoCorredor == true))
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && (clausula.Basico.Dolarizado == true || clausula.Basico.DolarizadoExpress == true))
             {
 
                 res.Texto += $"Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas, a opción " +
@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
             }
             else
             {
-                if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || clausula.Basico.DolarizadoExpress == true || clausula.Basico.Dolarizado == true)
+                if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || (clausula.Basico.DolarizadoExpress == true || clausula.Basico.Dolarizado == true))
                 {
                     res.Texto += "Las Partes acuerdan la posibilidad de prorrogar el plazo de pago indicado en las cláusulas previas. El precio a pagar será neto de los impuestos y retenciones impositivas que correspondieran y se hubieran ";
                     res.Texto += "practicado según la condición del Vendedor y las particularidades del negocio. Toda vez que las Partes han acordado la posibilidad de prorrogar la fecha de pago de la Mercadería, queda expresamente ";
