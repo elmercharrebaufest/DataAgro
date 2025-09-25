@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
 
             if (clausula.Basico.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
             {
-                var descuentos = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.POR_FECHA_DE_FIJACION);
+                var descuentos = (clausula.Basico.Descuentos != null && clausula.Basico.Descuentos.Count > 0) ? clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.POR_FECHA_DE_FIJACION) : null;
 
                 if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && (descuentos != null && descuentos.Id > 0))
                 {
