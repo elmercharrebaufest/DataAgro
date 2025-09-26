@@ -53,6 +53,13 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
                     }
                 }
+                else
+                {
+                    var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+                    var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
+                    res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
+                    res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
+                }
             }else
             {
                 var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
