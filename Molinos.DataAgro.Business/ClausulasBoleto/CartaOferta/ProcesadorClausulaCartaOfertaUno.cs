@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
             res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true)
             {
-                res.Texto += "con precio a fijar";
+                res.Texto += "con precio a fijar. ";
             }
             else if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
             {
