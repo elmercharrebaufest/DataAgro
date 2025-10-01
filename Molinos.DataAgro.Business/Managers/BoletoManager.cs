@@ -24,11 +24,13 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Net.Mail;
+using System.ServiceModel.Channels;
 using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -719,6 +721,19 @@ namespace Molinos.DataAgro.Business.Managers
                 boletoDto.Mensaje = $"No se pudo generar el boleto porque el negocio tiene tilde de Confirma.";
             else if (!string.IsNullOrEmpty(estadoBoleto.Generado) && string.IsNullOrEmpty(estadoBoleto.Anulado))
                 boletoDto.Mensaje = $"El negocio ya tiene un boleto generado en SAP.";
+            else if (negocio.Venta == true) // SI ES UN CONTRATO DE VENTA
+            {
+                boletoDto.Mensaje = $"No se puede generar el boleto para el contrato {negocio.ContratoSAP} porque esta tildado como venta.";
+                logger.Debug($"No se puede generar el boleto para el contrato {negocio.ContratoSAP} porque esta tildado como venta.");
+            }
+            else if (negocio.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) //A PRECIO
+            {
+                if (negocio.Madre == false && !negocio.ContratoMadre.Equals(string.Empty)) // SI TIENE UN CONTRATO MADRE
+                {
+                    boletoDto.Mensaje = $"No se puede generar el boleto para el contrato {negocio.ContratoSAP} porque es un contrato hijo.";
+                    logger.Debug($"No se puede generar el boleto para el contrato {negocio.ContratoSAP} porque es un contrato hijo.");
+                }
+            }
             else if (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
             {
                 if (negocio.BoletoId != (int)EnumBoletoCompraNet.FISICO && negocio.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
