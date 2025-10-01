@@ -30,64 +30,75 @@ namespace Molinos.DataAgro.Agent
 
         public List<PesificarAgentDto> ConsultarProveedores(List<string> cuits, bool esBuscarTodos)
         {
-            var pesificado = new List<PesificarAgentDto>();
-            if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+            string lastBeforeTheError = string.Empty;
+            try
             {
-                Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new ZMprfcListaProveedores { ImProveedores = cuits.ToArray() };
-
-                if (!esBuscarTodos)
+                var pesificado = new List<PesificarAgentDto>();
+                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
                 {
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                }
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
 
-                var devolucion = agent.ZMprfcListaProveedores(rq);
-                if (devolucion.ExSalida != null)
-                {
-                    foreach (var dev in devolucion.ExSalida)
+                    var rq = new ZMprfcListaProveedores { ImProveedores = cuits.ToArray() };
+
+                    if (!esBuscarTodos)
                     {
-                        pesificado.Add(ConvertirADtoSinPI(dev));
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
                     }
+
+                    lastBeforeTheError = rq.ToXml();
+
+                    var devolucion = agent.ZMprfcListaProveedores(rq);
+                    if (devolucion.ExSalida != null)
+                    {
+                        foreach (var dev in devolucion.ExSalida)
+                        {
+                            pesificado.Add(ConvertirADtoSinPI(dev));
+                        }
+                    }
+                    return pesificado;
                 }
-                return pesificado;
+                else
+                {
+                    var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+                    var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
+
+                    if (!esBuscarTodos)
+                    {
+                        var log = new Log
+                        {
+                            Fecha = DateTime.Now,
+                            Xml = rq.ToXml()
+                        };
+                        var logId = repositorio.Agregar(log);
+                        repositorio.GuardarCambios();
+                    }
+
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
+                    if (devolucion.EX_SALIDA != null)
+                    {
+                        foreach (var dev in devolucion.EX_SALIDA)
+                        {
+                            pesificado.Add(ConvertirADto(dev));
+                        }
+                    }
+
+                    return pesificado;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var agent = new SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESClient();
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-                var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
-
-                if (!esBuscarTodos)
-                {
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                }
-
-                var devolucion = agent.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES(rq);
-                if (devolucion.EX_SALIDA != null)
-                {
-                    foreach (var dev in devolucion.EX_SALIDA)
-                    {
-                        pesificado.Add(ConvertirADto(dev));
-                    }
-                }
-
-                return pesificado;
+                logger.Error($"Error en ContratosAPesificarAgent, ConsultarProveedores(). Últimos CUITS antes del error: {lastBeforeTheError}", ex);
+                throw;
             }
         }
 
