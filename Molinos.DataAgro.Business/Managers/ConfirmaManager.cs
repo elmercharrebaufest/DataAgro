@@ -294,6 +294,25 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (contrato != null)
             {
+
+                if (contrato.Venta == true) // SI ES UN CONTRATO DE VENTA
+                {
+                    mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} para una venta.";
+                    logger.Debug($"No se puede generar el confirma {contrato.ContratoSAP} para una venta.");
+                    return mensaje;
+                }
+
+                if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) //A PRECIO
+                {
+                    if (contrato.Madre == false && !contrato.ContratoMadre.Equals(string.Empty)) // SI TIENE UN CONTRATO MADRE
+                    {
+                        mensaje = $"No se puede generar el confirma {contrato.ContratoSAP} para un contrato hijo.";
+                        logger.Debug($"No se puede generar el confirma {contrato.ContratoSAP} para un contrato hijo.");
+                        return mensaje;
+                    }
+                }
+
+
                 if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) //FIJACION
                 {
                     if (contrato.Cantidad < kilosMinimos)

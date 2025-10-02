@@ -45,6 +45,18 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
                 }
             }
             res.Texto += $"de la cosecha {clausula.Basico.Campania}, ";
+            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true)
+            {
+                res.Texto += "con precio a fijar. ";
+            }
+            else if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje == true)
+            {
+                res.Texto += $"para cancelar {clausula.Basico.Insumo} - {clausula.Basico.Monto} {clausula.Basico.MonedaCanjeId} " +
+                    $"(en adelante, el {"Insumo"}) así como también para cancelar los gastos asociados a los que el Vendedor hubiere incurrido para llevar a cabo la presente operación. " +
+                    $"(en adelante, los {"Gastos Asociados"}). Las Partes acuerdan que el Insumo será a retirar en puerto por el Vendedor. ";
+
+            }
+
             if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
                 res.Texto += $"a {clausula.Basico.PrecioNeto.Value.ToString("#,##0.##", CultureInfo.GetCultureInfo("es-ES"))} {MetodosUtiles.DivisaSimbolica(clausula.Basico.Moneda)} ({MetodosUtiles.DivisaEnLetras(clausula.Basico.Moneda)} {MetodosUtiles.DevolverNumeroEnLetrasConDivisa(clausula.Basico.PrecioNeto.Value, clausula.Basico.Moneda)}) más IVA la tonelada .";
