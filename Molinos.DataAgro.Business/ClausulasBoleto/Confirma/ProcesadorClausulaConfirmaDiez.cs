@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaDiez clausula)
         {
             var res = new ResultadoClausula();
+            res.Texto += "El impuesto de Sellos que corresponda abonar por el presente contrato será soportado por las partes conforme a derecho.";
             return res;
         }
     }

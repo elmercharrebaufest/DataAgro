@@ -16,12 +16,19 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaNueve clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.CorredorId > 0)
+            res.Texto += $"El importe del sellado del presente Contrato como los honorarios de la Cámara Arbitral de la Bolsa de Cereales de {clausula.Basico.BolsaDescripcion}, " +
+             $"será abonado por ";
+            if (clausula.Basico.SelCargoVendedor == true) //SI TIENE TILDE EN SELLADO 100% A CARGO DEL VENDEDOR
             {
-                string productor = clausula.Basico.Corredor;
-                string corredor = clausula.Basico.CUITCorredor;
-                res.Texto += String.Format("Los señores {0}, CUIT N° {1}, actúan en la presente operación en carácter de corredores quedando facultados por los vendedores para fijar el precio, facturar, recibir el pago, firmar recibos de mercadería, ampliaciones y/o anulaciones y convenir eventuales prorrogas. El vendedor faculta al corredor a firmar en su nombre y representación toda la documentación necesaria para la instrumentación o formalización del presente.", productor, corredor);
-
+                res.Texto += $"el vendedor en forma total.";
+            }
+            else if (clausula.Basico.SelCargoMOA == true) //SI TIENE TILDE EN SELLADO 100% A CARGO DE MOA
+            {
+                res.Texto += $"el comprador.";
+            }
+            else
+            {
+                res.Texto += $"las partes en partes iguales.";
             }
             return res;
         }
