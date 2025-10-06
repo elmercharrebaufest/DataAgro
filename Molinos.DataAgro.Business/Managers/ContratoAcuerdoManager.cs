@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
@@ -976,20 +977,38 @@ namespace Molinos.DataAgro.Business
 
         public void AnularAcuerdos()
         {
-            DateTime? fecha = null;
-            var dia = diasHabilesAgent.UltimoDiaHabil(fecha);
-            var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == 2);
-
-            foreach (var acuerdo in listaAcuerdo)
+            try
             {
-                var cantidad = repositorio.Listar<Contrato, double>(d => d.Cantidad, d => d.ContratoAcuerdoId == acuerdo.Id && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum();
+                DateTime? fecha = null;
+                var dia = diasHabilesAgent.UltimoDiaHabil(fecha);
+                var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == (int)EnumEstadoContrato.Confirmado);
+                List<int> acuerdosProcesados = new List<int>();
 
-                acuerdo.Cantidad = (int)cantidad;
-                acuerdo.EstadoId = 5;
-                logDataAgroManager.LogCambiosDataAgro(negocioManager.TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
+                foreach (var acuerdo in listaAcuerdo)
+                {
+                    var cantidad = repositorio.Listar<Contrato, double>(d => d.Cantidad,
+                                                                        d => d.ContratoAcuerdoId == acuerdo.Id &&
+                                                                        (d.EstadoId == (int)EnumEstadoContrato.Pendiente ||
+                                                                        d.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                                                                        d.EstadoId == (int)EnumEstadoContrato.Oferta ||
+                                                                        d.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                                                                        d.EstadoId == (int)EnumEstadoContrato.Finalizado ||
+                                                                        d.EstadoId == (int)EnumEstadoContrato.Reconfirmar)).Sum();
+
+                    acuerdo.Cantidad = (int)cantidad;
+                    acuerdo.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                    logDataAgroManager.LogCambiosDataAgro(negocioManager.TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
+                    acuerdosProcesados.Add(acuerdo.Id);
+                }
+
+                repositorio.GuardarCambios();
+                logger.Info($"Acuerdos procesados: {acuerdosProcesados.ToJson()}");
             }
-
-            repositorio.GuardarCambios();
+            catch (Exception ex)
+            {
+                logger.Error($"Error al Anular Acuerdos. ", ex);
+                throw;
+            }
         }
 
     }
