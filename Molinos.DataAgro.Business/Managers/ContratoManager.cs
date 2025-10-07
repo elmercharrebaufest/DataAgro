@@ -3381,6 +3381,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var hoy = DateTime.Today;
+
             var contratosPendientes = repositorio.Listar<Negocio, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.Id,
@@ -3391,9 +3392,17 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => (x.EstadoId == (int)EnumEstadoContrato.Pendiente || x.EstadoId == (int)EnumEstadoContrato.Oferta) && x.Fecha < hoy && (x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) && x.Canje != true && x.PrestamoDevolucion != null);
-            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
+            }, x => (x.EstadoId == (int)EnumEstadoContrato.Pendiente || x.EstadoId == (int)EnumEstadoContrato.Oferta) &&
+                    x.Fecha < hoy &&
+                    (x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || x.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO || x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) &&
+                    x.Canje != true &&
+                    x.PrestamoDevolucion != null);
+
+            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory },
+                x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
+
             var mailComercialesMesa = new List<string>();
+
             foreach (var mesa in comercialesMesa)
             {
                 try
@@ -3446,8 +3455,15 @@ namespace Molinos.DataAgro.Business.Managers
                         oMensaje.CC.Add(new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]));
                         var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
                         oMensaje.AlternateViews.Add(CuerpoMailContrato(rutaMolinos, contratosPorCreador.ToList(), contratosPorCreador.Key));
-                        oMensaje.Subject = "Negocios Pendientes CompraNet";
-
+                        
+                        var subject = "";
+                        if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                        {
+                            subject += "Mail Pruebas - ";
+                        }
+                        subject += "Negocios Pendientes CompraNet";
+                        oMensaje.Subject = subject;
+                        
                         oMensaje.BodyEncoding = Encoding.UTF8;
 
                         oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
