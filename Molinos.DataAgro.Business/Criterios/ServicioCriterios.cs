@@ -1,4 +1,5 @@
-﻿using Autofac.Extras.NLog;
+﻿using Autofac;
+using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces.Criterios;
 using System;
@@ -11,10 +12,12 @@ namespace Molinos.DataAgro.Business.Criterios
     {
         private readonly ILogger log;
         private IDictionary<Type, Type> procesadores;
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public ServicioCriterios(ILogger log)
+        public ServicioCriterios(ILogger log, ILifetimeScope lifetimeScope)
         {
             this.log = log;
+            this._lifetimeScope = lifetimeScope;
             RegistrarProcesadores();
         }
 
@@ -46,8 +49,11 @@ namespace Molinos.DataAgro.Business.Criterios
             else
             {
                 var tipoProcesador = procesadores[criterio.GetType().BaseType];
-                var procesador = (IProcesadorCriterio)System.Web.Mvc.DependencyResolver.Current.GetService(tipoProcesador);
-                return procesador.Calcular(criterio);
+                using (var scope = _lifetimeScope.BeginLifetimeScope())
+                {
+                    var procesador = (IProcesadorCriterio)scope.Resolve(tipoProcesador);
+                    return procesador.Calcular(criterio);
+                }
             }
 
         }
