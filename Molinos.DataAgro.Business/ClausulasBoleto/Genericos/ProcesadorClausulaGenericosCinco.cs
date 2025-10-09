@@ -37,29 +37,29 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         DateTime? hastaFijacionFueraPrecio = Convert.ToDateTime(descuentoGeneralFueraPrecio.FechaHasta);
                         decimal porcentajelFueraPrecio = (decimal)(descuentoGeneralFueraPrecio?.Porcentaje < 0 ? descuentoGeneralFueraPrecio?.Porcentaje * -1 : descuentoGeneralFueraPrecio?.Porcentaje);
                         decimal importeFueraPrecio = (decimal)(descuentoGeneralFueraPrecio?.Importe < 0 ? descuentoGeneralFueraPrecio?.Importe * -1 : descuentoGeneralFueraPrecio?.Importe);
-                        decimal descuentoImporteFueraPrecio = porcentajelFueraPrecio > 0 ? (importeFueraPrecio * porcentajelFueraPrecio) / 100 : 0;
-                        importeFueraPrecio = descuentoGeneralFueraPrecio?.Porcentaje > 0 ? Math.Round((importeFueraPrecio - descuentoImporteFueraPrecio), 2) : Math.Round((importeFueraPrecio + descuentoImporteFueraPrecio), 2);
+                        decimal descuentoImporteFueraPrecio = (importeFueraPrecio * porcentajelFueraPrecio) / 100;
+                        importeFueraPrecio = descuentoGeneralFueraPrecio?.Porcentaje > 0 ? Math.Round((importeFueraPrecio + descuentoImporteFueraPrecio), 2) : Math.Round((importeFueraPrecio - descuentoImporteFueraPrecio), 2);
 
                         if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
                         {
                             res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará por fuera del precio el {porcentajelFueraPrecio}% del precio. ";
+                                $"se bonificará por fuera del precio el {porcentajelFueraPrecio}% del precio. ";
                         }
                         if (descuentoGeneralFueraPrecio?.Porcentaje < 0)
                         {
                             res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se bonificará  por fuera del precio el {porcentajelFueraPrecio}% por tonelada. ";
+                                $"se descontará por fuera del precio el {porcentajelFueraPrecio}% por tonelada. ";
                         }
                         if (descuentoGeneralFueraPrecio?.Importe > 0)
                         {
                             res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {importeFueraPrecio}" +
+                                $"se bonificará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {importeFueraPrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeFueraPrecio, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
                         }
                         if (descuentoGeneralFueraPrecio?.Importe < 0)
                         {
                             res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se bonificará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {importeFueraPrecio}" +
+                                $"se descontará por fuera del precio {descuentoGeneralFueraPrecio.Moneda} {importeFueraPrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeFueraPrecio, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
                         }
                     }
@@ -71,8 +71,8 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
 
                         decimal porcentajelSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Porcentaje < 0 ? descuentoGeneralSobrePrecio?.Porcentaje * -1 : descuentoGeneralSobrePrecio?.Porcentaje);
                         decimal importeSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Importe < 0 ? descuentoGeneralSobrePrecio?.Importe * -1 : descuentoGeneralSobrePrecio?.Importe);
-                        decimal descuentoImporteFueraPrecio = descuentoGeneralSobrePrecio?.Porcentaje > 0 ? (importeSobrePrecio * porcentajelSobrePrecio) / 100 : 0;
-                        importeSobrePrecio = descuentoGeneralSobrePrecio?.Porcentaje > 0 ? Math.Round((importeSobrePrecio + descuentoImporteFueraPrecio), 2) : Math.Round((importeSobrePrecio - descuentoImporteFueraPrecio), 2);
+                        decimal descuentoImporteSobrePrecio = (importeSobrePrecio * porcentajelSobrePrecio) / 100;
+                        importeSobrePrecio = descuentoGeneralSobrePrecio?.Porcentaje > 0 ? Math.Round((importeSobrePrecio + descuentoImporteSobrePrecio), 2) : Math.Round((importeSobrePrecio - descuentoImporteSobrePrecio), 2);
 
                         // En la bonificacion sobre el precio siempre debe mostrarse lo que se tiene como apertura de precio
                         if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
