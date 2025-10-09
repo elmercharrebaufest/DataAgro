@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         if (descuentoGeneralSobrePrecio?.Importe < 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {descuentoGeneralSobrePrecio?.Importe}" +
+                                $"se descontará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeSobrePrecio, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
                         }
                     }
