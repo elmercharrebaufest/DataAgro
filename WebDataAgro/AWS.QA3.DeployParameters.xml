@@ -19,7 +19,10 @@
 	<setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
+
+	<!-- Para S4: Inicio2025! - Para R3: Data2015 -->
 	<setParameter name="SapPass Key" value="Data2015" />
+
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
 	<setParameter name="SAPsinPI Key" value="1" />
@@ -40,6 +43,9 @@
 	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
 	<setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9000/" />
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
+
+	<!--Parametro para nueva version de boletos-->
+	<setParameter name="BoletosNuevaVersion Key" value="1" />
 
 	<!--Primary Producción-->
 	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />

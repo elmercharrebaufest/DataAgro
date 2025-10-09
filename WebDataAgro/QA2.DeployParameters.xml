@@ -19,7 +19,10 @@
 	<setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
+
+	<!-- Para S4: Inicio2025! - Para R3: Data2015 -->
 	<setParameter name="SapPass Key" value="Data2015" />
+
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
 	<setParameter name="SAPsinPI Key" value="1" />
