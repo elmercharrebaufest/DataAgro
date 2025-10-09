@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         decimal porcentajelSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Porcentaje < 0 ? descuentoGeneralSobrePrecio?.Porcentaje * -1 : descuentoGeneralSobrePrecio?.Porcentaje);
                         decimal importeSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Importe < 0 ? descuentoGeneralSobrePrecio?.Importe * -1 : descuentoGeneralSobrePrecio?.Importe);
                         decimal descuentoImporteFueraPrecio = (importeSobrePrecio * porcentajelSobrePrecio) / 100;
-                        importeSobrePrecio = porcentajelSobrePrecio > 0 ? Math.Round((importeSobrePrecio + descuentoImporteFueraPrecio), 2) : importeSobrePrecio;
+                        importeSobrePrecio = porcentajelSobrePrecio > 0 ? Math.Round((importeSobrePrecio - descuentoImporteFueraPrecio), 2) : importeSobrePrecio;
 
                         // En la bonificacion sobre el precio siempre debe mostrarse lo que se tiene como apertura de precio
                         if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
