@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(p.ProveedorId, p, materiales, cosechas));
             }
 
-            repositorio.TruncarTabla<CapacidadProductiva>();
+            repositorio.RemoverTodosConReseedCero<CapacidadProductiva>(a => true);
             List<CapacidadProductiva> listaFinal = listaCP.Select(cp => new CapacidadProductiva
             {
                 ProveedorId = cp.ProveedorId,

@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Repository
         TEntidad Agregar<TEntidad>(TEntidad entidad) where TEntidad : class;
         void AgregarTodos<TEntidad>(IEnumerable<TEntidad> entidades, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
 
-        void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id", string where  ="") where TEntidad : class;
+        void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id", string where = "") where TEntidad : class;
 
         /// <summary>
         /// Remueve una entidad del repositorio
@@ -127,6 +127,8 @@ namespace Molinos.DataAgro.Repository
 
         void RemoverTodos<TEntidad>(IEnumerable<TEntidad> entidades) where TEntidad : class;
         void RemoverTodos<TEntidad>(Expression<Func<TEntidad, bool>> filter) where TEntidad : class;
+        void RemoverTodosConReseedCero<TEntidad>(Expression<Func<TEntidad, bool>> filter) where TEntidad : class;
+
         /// <summary>
         /// Ejecuta un comando insert/update en la base
         /// </summary>

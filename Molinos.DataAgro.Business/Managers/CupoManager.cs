@@ -3208,7 +3208,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == (int)EnumEstadoCupo.SinCTG && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { x.ProveedorId, x.ComercialId });
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == (int)EnumEstadoCupo.SinCTG &&
+                                                      x.FechaIngreso == DateTime.Today, 0, "CupoSap")
+                .GroupBy(x => new { x.ProveedorId, x.ComercialId });
 
             foreach (var p in cupos)
             {
@@ -3218,7 +3220,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var comercial = repositorio.Obtener<Comercial>(p.Key.ComercialId);
                 var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
                 var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == p.Key.ProveedorId && x.Cupo == true);
-                
+
                 if (emailproveedor.Count <= 0)
                 {
                     continue;
@@ -3228,8 +3230,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (comercial.RolesAsociados.Any(a => a.Descripcion == "Reenvio Mails Cupos Corredores Rosario"))
                 {
                     var comerciales = comercialManager.TraerTodoComercial().Comercial
-                        .Where(a => a.Rol.ToUpper().Contains("Reenvio Mails Cupos Corredores Rosario".ToUpper()) && 
-                                    a.Deshabilitado != true && 
+                        .Where(a => a.Rol.ToUpper().Contains("Reenvio Mails Cupos Corredores Rosario".ToUpper()) &&
+                                    a.Deshabilitado != true &&
                                     a.ComercialId != p.Key.ComercialId
                         ).ToList();
 
@@ -3248,7 +3250,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista, 
+                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista,
                     CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
                     p.ToList(), comercial)
                 );
