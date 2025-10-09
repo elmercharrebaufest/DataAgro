@@ -38,15 +38,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         decimal porcentajelFueraPrecio = (decimal)(descuentoGeneralFueraPrecio?.Porcentaje < 0 ? descuentoGeneralFueraPrecio?.Porcentaje * -1 : descuentoGeneralFueraPrecio?.Porcentaje);
                         decimal importeFueraPrecio = (decimal)(descuentoGeneralFueraPrecio?.Importe < 0 ? descuentoGeneralFueraPrecio?.Importe * -1 : descuentoGeneralFueraPrecio?.Importe);
                         decimal descuentoImporteFueraPrecio = porcentajelFueraPrecio > 0 ? (importeFueraPrecio * porcentajelFueraPrecio) / 100 : 0;
-
-                        if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
-                        {
-                            importeFueraPrecio = porcentajelFueraPrecio > 0 ? Math.Round((importeFueraPrecio + descuentoImporteFueraPrecio),2) : importeFueraPrecio;
-                        }
-                        if (descuentoGeneralFueraPrecio?.Porcentaje < 0)
-                        {
-                            importeFueraPrecio = porcentajelFueraPrecio > 0 ? Math.Round((importeFueraPrecio - descuentoImporteFueraPrecio), 2) : importeFueraPrecio;
-                        }
+                        importeFueraPrecio = descuentoGeneralFueraPrecio?.Porcentaje > 0 ? Math.Round((importeFueraPrecio - descuentoImporteFueraPrecio), 2) : Math.Round((importeFueraPrecio + descuentoImporteFueraPrecio), 2);
 
                         if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
                         {
@@ -80,15 +72,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         decimal porcentajelSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Porcentaje < 0 ? descuentoGeneralSobrePrecio?.Porcentaje * -1 : descuentoGeneralSobrePrecio?.Porcentaje);
                         decimal importeSobrePrecio = (decimal)(descuentoGeneralSobrePrecio?.Importe < 0 ? descuentoGeneralSobrePrecio?.Importe * -1 : descuentoGeneralSobrePrecio?.Importe);
                         decimal descuentoImporteFueraPrecio = descuentoGeneralSobrePrecio?.Porcentaje > 0 ? (importeSobrePrecio * porcentajelSobrePrecio) / 100 : 0;
-
-                        if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
-                        {
-                            importeSobrePrecio = porcentajelSobrePrecio > 0 ? Math.Round( (importeSobrePrecio + descuentoImporteFueraPrecio),2) : importeSobrePrecio;
-                        }
-                        if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
-                        {
-                            importeSobrePrecio = porcentajelSobrePrecio > 0 ? Math.Round((importeSobrePrecio - descuentoImporteFueraPrecio), 2) : importeSobrePrecio;
-                        }
+                        importeSobrePrecio = descuentoGeneralSobrePrecio?.Porcentaje > 0 ? Math.Round((importeSobrePrecio + descuentoImporteFueraPrecio), 2) : Math.Round((importeSobrePrecio - descuentoImporteFueraPrecio), 2);
 
                         // En la bonificacion sobre el precio siempre debe mostrarse lo que se tiene como apertura de precio
                         if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
@@ -110,7 +94,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         if (descuentoGeneralSobrePrecio?.Importe < 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {descuentoGeneralSobrePrecio?.Importe}" +
+                                $"se descontará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeSobrePrecio, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
                         }
                     }
