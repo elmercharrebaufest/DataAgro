@@ -408,7 +408,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var precioPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= fechaHasta);
-            
+
             // Ajustamos las fechas para el rango del día completo
             var fechaInicio = fechaDesde.Date;
             var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
@@ -737,7 +737,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
 
             var hedgeMat = new List<HedgeMaterialDto>();
-            
+
             // Ajustamos las fechas para el rango del día completo
             var fechaInicio = fechaDesde.Date;
             var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
@@ -760,7 +760,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var obj = new HedgeCargaObjetivoDto();
-            
+
             // Ajustamos las fechas para el rango del día completo
             var fechaInicio = fechaDesde.Date;
             var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
@@ -850,7 +850,7 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             // GSIAN: No hay negocio de referencia para traer el "typeOfRate"
             var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
-            
+
             // Ajustamos las fechas para el rango del día completo
             var fechaInicio = fechaDesde.Date;
             var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
@@ -2756,16 +2756,12 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.AgregarTodos(pricingCampania);
                 repositorio.GuardarCambios();
                 logger.Debug("GrabarDatosReporteCompraNet - fin agregartodos");
-
-                logger.Debug("GrabarDatosReporteCompraNet - inicio migrar");
-                repositorio.MigrarReporteCompraNetPosicionCompras();
                 logger.Debug("GrabarDatosReporteCompraNet - fin migrar");
             }
             catch (Exception e)
             {
                 logger.Error("GrabarDatosReporteCompraNet", e);
             }
-
         }
 
         public ReporteLocalidadesModel ObtenerDatosReporteLocalidades()
@@ -2970,7 +2966,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
-                repositorio.TruncarTabla<ReportePesificado>();
+                repositorio.RemoverTodosConReseedCero<ReportePesificado>(a => true);
 
                 if (items.Count > 0)
                 {
@@ -2989,8 +2985,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<PesificarAgentDto> BuscarPase(List<PesificarAgentDto> pesificado)
         {
-            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == (int)EnumTipoPosicionCBOT.PASE && 
-                                                                        a.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && 
+            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == (int)EnumTipoPosicionCBOT.PASE &&
+                                                                        a.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR &&
                                                                         a.EstadoId == (int)EnumEstadoContrato.Finalizado);
 
             List<string> contratosAFijarPaseSAPList = contratosAFijarPase.Select(a => a.ContratoSAP).ToList();
@@ -3031,7 +3027,7 @@ namespace Molinos.DataAgro.Business.Managers
                         NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
                         NombreVendedor = item.Proveedor.RazonSocial,
                         Pase = true,
-                        Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && a.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).SingleOrDefault() != null ? 
+                        Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && a.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).SingleOrDefault() != null ?
                         item.Descuentos.Where(a => a.TipoPeriodoDBId == (int)EnumTipoPeriodoDB.GENERALES && a.TipoDBId == (int)EnumTipoDB.SOBRE_EL_PRECIO).SingleOrDefault().Importe : 0,
                         Posicion = item.PosicionCBOT,
                         KgTotalesPase = item.Cantidad,

@@ -179,7 +179,7 @@ namespace Molinos.DataAgro.Repository
             }
         }
 
-        public virtual void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id",string where = "") where TEntidad : class
+        public virtual void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id", string where = "") where TEntidad : class
         {
             var enumerable = items as IList<TEntidad> ?? items.ToList();
             if (enumerable.Any())
@@ -214,11 +214,78 @@ namespace Molinos.DataAgro.Repository
             string selectSql = query.ToString();
             string deleteSql = "DELETE [Extent1] " + selectSql.Substring(selectSql.IndexOf("FROM"));
 
-            var internalQuery = query.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(field => field.Name == "_internalQuery").Select(field => field.GetValue(query)).First();
-            var objectQuery = internalQuery.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(field => field.Name == "_objectQuery").Select(field => field.GetValue(internalQuery)).First() as ObjectQuery;
-            var parameters = objectQuery.Parameters.Select(p => new SqlParameter(p.Name, p.Value)).ToArray();
+            var internalQuery = query.GetType()
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.Name == "_internalQuery")
+                .Select(field => field.GetValue(query))
+                .First();
+
+            var objectQuery = internalQuery.GetType()
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.Name == "_objectQuery")
+                .Select(field => field.GetValue(internalQuery))
+                .First() as ObjectQuery;
+
+            var parameters = objectQuery.Parameters
+                .Select(p => new SqlParameter(p.Name, p.Value))
+                .ToArray();
 
             context.Database.ExecuteSqlCommand(deleteSql, parameters);
+        }
+
+        public void RemoverTodosConReseedCero<TEntidad>(Expression<Func<TEntidad, bool>> filter) where TEntidad : class
+        {
+            var query = context.Set<TEntidad>().Where(filter);
+
+            string selectSql = query.ToString();
+            string deleteSql = "DELETE [Extent1] " + selectSql.Substring(selectSql.IndexOf("FROM"));
+
+            // Obtener parámetros de la query
+            var internalQuery = query.GetType()
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.Name == "_internalQuery")
+                .Select(field => field.GetValue(query))
+                .First();
+
+            var objectQuery = internalQuery.GetType()
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.Name == "_objectQuery")
+                .Select(field => field.GetValue(internalQuery))
+                .First() as ObjectQuery;
+
+            var parameters = objectQuery.Parameters
+                .Select(p => new SqlParameter(p.Name, p.Value))
+                .ToArray();
+
+            // Ejecutar el DELETE
+            context.Database.ExecuteSqlCommand(deleteSql, parameters);
+
+            // Extraer nombre de tabla y esquema del SELECT
+            var fromIndex = selectSql.IndexOf("FROM", StringComparison.OrdinalIgnoreCase);
+            var tableSegment = selectSql.Substring(fromIndex);
+
+            var match = System.Text.RegularExpressions.Regex.Match(
+                tableSegment,
+                @"FROM\s+\[?(?<schema>\w+)\]?\.\[?(?<table>\w+)\]?",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+
+            if (match.Success)
+            {
+                var schema = match.Groups["schema"].Value;
+                var table = match.Groups["table"].Value;
+
+                // Chequear si la tabla quedó vacía
+                string countSql = $"SELECT COUNT(1) FROM [{schema}].[{table}]";
+                int remainingRows = context.Database.SqlQuery<int>(countSql).FirstOrDefault();
+
+                // Solo hacer RESEED si está vacía
+                if (remainingRows == 0)
+                {
+                    string reseedSql = $"DBCC CHECKIDENT ('[{schema}].[{table}]', RESEED, 0)";
+                    context.Database.ExecuteSqlCommand(reseedSql);
+                }
+            }
         }
 
         public TResultado EjecutarComando<TResultado>(IComando<TResultado> comando)
@@ -370,7 +437,7 @@ namespace Molinos.DataAgro.Repository
 
         public List<Cupo> ListarCupoConsultaCuposDiarios(List<string> cuposSapStop)
         {
-            var value = "'"+string.Join("','", cuposSapStop)+"'";
+            var value = "'" + string.Join("','", cuposSapStop) + "'";
             var sql = string.Format(
     "SELECT * FROM Cupo WHERE CupoSap IN ({0})",
     value);
