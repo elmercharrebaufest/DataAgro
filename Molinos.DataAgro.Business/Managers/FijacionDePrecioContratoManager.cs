@@ -2226,11 +2226,11 @@ namespace Molinos.DataAgro.Business.Managers
         public void ConfirmacionAutomaticaPizarra13Hrs()
         {
             var oEntityErrors = new GrabarContratoResult();
-            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x =>
-            x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-            x.EstadoId == (int)EnumEstadoContrato.Pendiente &&
-            (x.Contrato.CondicionFijacion.CodigoSap == "02" || x.Contrato.CondicionFijacion.CodigoSap == "05") &&
-            x.Cantidad <= x.Contrato.KgMaximo);
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
+                                                                               x.EstadoId == (int)EnumEstadoContrato.Pendiente &&
+                                                                               (x.Contrato.CondicionFijacion.CodigoSap == "02" ||
+                                                                               x.Contrato.CondicionFijacion.CodigoSap == "05") &&
+                                                                               x.Cantidad <= x.Contrato.KgMaximo);
 
             foreach (var fijacion in fijaciones)
             {
