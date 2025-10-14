@@ -23,50 +23,11 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
             //SI ESTÁ SELECCIONADA BONIFICACIONES SOBRE PRECIO Y/O POR FUERA DE PRECIO
 
             var res = new ResultadoClausula();
+            var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
+            var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
+            res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
+            res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
 
-            // Se modifica por peticion de Santiago para que cuando sea posicion CBOT no se muestre estas clausulas
-            if (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
-            {
-                bool esPosicionCBOT = clausula.Basico.TipoPosicionCBOTId != null ? (clausula.Basico.TipoPosicionCBOTId == 1 ? true : false) : false;
-                if (clausula.Basico.TipoPosicionCBOTId != null)
-                {
-                    if (!esPosicionCBOT)
-                    {
-                        if (clausula.Basico.EPA || clausula.Basico.Sustentable)
-                        {
-                            if (clausula.Basico.SustentableTipoDBId == 1)
-                            {
-                                res.Texto += DevolverClausulaBonificacionSobrePrecioAdicionales(clausula.Basico);
-                            }
-                            if (clausula.Basico.SustentableTipoDBId == 2)
-                            {
-                                res.Texto += DevolverClausulaBonificacionFueraPrecioAdicionales(clausula.Basico);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
-                        var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
-
-                        res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
-                        res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
-                    }
-                }
-                else
-                {
-                    var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
-                    var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
-                    res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
-                    res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
-                }
-            }else
-            {
-                var descuentoGeneralSobrePrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1);
-                var descuentoGeneralFueraPrecio = clausula.Basico.Descuentos.Find(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2);
-                res.Texto += DevolverClausulaBonificacionSobrePrecio(descuentoGeneralSobrePrecio);
-                res.Texto += DevolverClausulaBonificacionFueraPrecio(descuentoGeneralFueraPrecio);
-            }
             return res;
         }
 
@@ -123,39 +84,5 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
             }
             return clausula;
         }
-
-        private string DevolverClausulaBonificacionSobrePrecioAdicionales(BasicoContrato descuentoGeneralSobrePrecio)
-        {
-            string clausula = string.Empty;
-            if (descuentoGeneralSobrePrecio?.Importe_Sustentable > 0)
-            {
-                clausula += $"Se bonificará sobre el precio {MetodosUtiles.DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda_Sustentable)} {MetodosUtiles.ValorAbsoluto((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable)} " +
-                    $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
-            }
-            if (descuentoGeneralSobrePrecio?.Importe_Sustentable < 0)
-            {
-                clausula += $"Se descontará sobre el precio {MetodosUtiles.DivisaSimbolica(descuentoGeneralSobrePrecio.Moneda_Sustentable)} {MetodosUtiles.ValorAbsoluto((decimal)descuentoGeneralSobrePrecio.Importe_Sustentable)} " +
-                    $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralSobrePrecio?.Importe_Sustentable, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
-            }
-            return clausula;
-        }
-
-        private string DevolverClausulaBonificacionFueraPrecioAdicionales(BasicoContrato descuentoGeneralFueraPrecio)
-        {
-            string clausula = string.Empty;
-            if (descuentoGeneralFueraPrecio?.Importe_Sustentable > 0)
-            {
-                clausula += $"Se bonificará por fuera del precio {MetodosUtiles.DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda_Sustentable)} {MetodosUtiles.ValorAbsoluto((decimal)descuentoGeneralFueraPrecio.Importe_Sustentable)}" +
-                    $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralFueraPrecio?.Importe_Sustentable, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
-            }
-            if (descuentoGeneralFueraPrecio?.Importe_Sustentable < 0)
-            {
-                clausula += $"Se descontará por fuera del precio {MetodosUtiles.DivisaSimbolica(descuentoGeneralFueraPrecio.Moneda_Sustentable)} {MetodosUtiles.ValorAbsoluto((decimal)descuentoGeneralFueraPrecio.Importe_Sustentable)}" +
-                    $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa((decimal)descuentoGeneralFueraPrecio?.Importe_Sustentable, descuentoGeneralFueraPrecio.Moneda)}) por tonelada. ";
-            }
-            return clausula;
-        }
-
-
     }
 }
