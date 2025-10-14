@@ -78,23 +78,23 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se adicionará sobre el precio el  {porcentajelSobrePrecio}% del precio. ";
+                                $"se adicionará {porcentajelSobrePrecio}% del precio. ";
                         }
                         if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará  sobre el precio el  {porcentajelSobrePrecio}% por tonelada. ";
+                                $"se descontará {porcentajelSobrePrecio}% por tonelada. ";
                         }
                         if (descuentoGeneralSobrePrecio?.Importe > 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se adicionará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
+                                $"se adicionará {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeSobrePrecio, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
                         }
                         if (descuentoGeneralSobrePrecio?.Importe < 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se descontará sobre el precio {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
+                                $"se descontará {descuentoGeneralSobrePrecio?.Moneda} {importeSobrePrecio}" +
                                 $" ({MetodosUtiles.DevolverNumeroEnLetrasConDivisa(importeSobrePrecio, descuentoGeneralSobrePrecio.Moneda)}) por tonelada. ";
                         }
                     }

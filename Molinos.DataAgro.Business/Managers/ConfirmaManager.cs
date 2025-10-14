@@ -511,7 +511,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
-                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty) : null),
+                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR") ? (contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty) : "0.0" ) : null),
 
                 #region Calidad
 
