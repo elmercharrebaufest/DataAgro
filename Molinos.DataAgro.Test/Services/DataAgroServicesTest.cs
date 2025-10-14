@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void PingOk()
         {
-            var result = target.Ping() as ResultadoSap;
+            var result = target.Ping();
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
         }
@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Test.Services
             riesgoComercialManagerMock.Setup(x => x.ActualizacionDeRiesgoComercial(It.IsAny<RiesgoComercial>()))
                 .Returns(new Resultado());
 
-            var result = target.Ping() as ResultadoSap;
+            var result = target.Ping();
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count(), 0);
@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Test.Services
             riesgoComercialManagerMock.Setup(x => x.ActualizacionDeRiesgoComercial(It.IsAny<RiesgoComercial>()))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
 
-            var result = target.GrabarRiesgoComercial(riesgoComercial) as ResultadoSap;
+            var result = target.GrabarRiesgoComercial(riesgoComercial);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -105,7 +105,7 @@ namespace Molinos.DataAgro.Test.Services
             var campania = new CampaniaActual();
             campaniaAcutalManagerMock.Setup(x => x.ActualizacionCampaniaActual(campania))
                 .Returns(new Resultado());
-            var result = target.GrabarCampaniaActual(campania) as ResultadoSap;
+            var result = target.GrabarCampaniaActual(campania);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Test.Services
             var campania = new CampaniaActual();
             campaniaAcutalManagerMock.Setup(x => x.ActualizacionCampaniaActual(campania))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.GrabarCampaniaActual(campania) as ResultadoSap;
+            var result = target.GrabarCampaniaActual(campania);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -142,7 +142,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             camaniaMaterialManagerMock.Setup(x => x.TraerCampañasPorGrano(campania))
                 .Returns(new Resultado());
-            var result = target.ActualizarCampaniaMaterial(campania) as ResultadoSap;
+            var result = target.ActualizarCampaniaMaterial(campania);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -167,7 +167,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             camaniaMaterialManagerMock.Setup(x => x.TraerCampañasPorGrano(campania))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarCampaniaMaterial(campania) as ResultadoSap;
+            var result = target.ActualizarCampaniaMaterial(campania);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -188,7 +188,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
                 .Returns(new Resultado());
-            var result = target.ActualizarEstadoComercial(informe) as ResultadoSap;
+            var result = target.ActualizarEstadoComercial(informe);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -210,7 +210,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarEstadoComercial(informe) as ResultadoSap;
+            var result = target.ActualizarEstadoComercial(informe);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -295,7 +295,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
             contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
-            var result = target.ActualizarContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
 
         }
@@ -370,7 +370,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
             contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -409,7 +409,7 @@ namespace Molinos.DataAgro.Test.Services
 
             cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
                 .Returns(new Resultado());
-            var result = target.ActualizarCupoSAP(cupoSap) as ResultadoSap;
+            var result = target.ActualizarCupoSAP(cupoSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -447,7 +447,7 @@ namespace Molinos.DataAgro.Test.Services
 
             cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarCupoSAP(cupoSap) as ResultadoSap;
+            var result = target.ActualizarCupoSAP(cupoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -486,7 +486,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
             cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
                 .Returns(new Resultado());
-            var result = target.AltaCupoSAP(cupoSap) as ResultadoSap;
+            var result = target.AltaCupoSAP(cupoSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -525,7 +525,7 @@ namespace Molinos.DataAgro.Test.Services
 
             cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
                 .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AltaCupoSAP(cupoSap) as ResultadoSap;
+            var result = target.AltaCupoSAP(cupoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -544,7 +544,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
             .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AnularContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.AnularContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -561,7 +561,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
             .Returns(new Resultado());
-            var result = target.AnularContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.AnularContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -592,7 +592,7 @@ namespace Molinos.DataAgro.Test.Services
               Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;
+            var result = target.ValidarProveedorComercial("00023434", true);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -623,7 +623,7 @@ namespace Molinos.DataAgro.Test.Services
               Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;
+            var result = target.ValidarProveedorComercial("00023434", true);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -709,7 +709,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
 
             contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
-            var result = target.AltaContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.AltaContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -796,7 +796,7 @@ namespace Molinos.DataAgro.Test.Services
 
             contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
 
-            var result = target.AltaContratoSAP(contratoSap) as ResultadoSap;
+            var result = target.AltaContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -814,7 +814,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             fijacionManager.Setup(y => y.ActualizarFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
             .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.ActualizarFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -832,7 +832,7 @@ namespace Molinos.DataAgro.Test.Services
             };
             fijacionManager.Setup(y => y.ActualizarFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
             .Returns(new Resultado());
-            var result = target.ActualizarFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.ActualizarFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -886,7 +886,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AltaFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.AltaFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -942,7 +942,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
            .Returns(new Resultado());
-            var result = target.AltaFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.AltaFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -960,7 +960,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
            .Returns(new Resultado());
-            var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.AnularFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -978,7 +978,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
+            var result = target.AnularFijacionSAP(fijacionSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -1007,7 +1007,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void ActualizarCesionContratoSAPTestOk()
         {
-            var result = target.ActualizarCesionContratoSAP("", true) as ResultadoSap;
+            var result = target.ActualizarCesionContratoSAP("", true);
             Assert.NotNull(result);
         }
 
@@ -1035,7 +1035,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
             proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>())).Returns(new ResultadoAltaCampoSustentable());
 
-            var result = target.AltaCampoSustentable(campo) as ResultadoAltaCampoSustentable;
+            var result = target.AltaCampoSustentable(campo);
 
             proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>()), Times.Once);
 
@@ -1080,6 +1080,31 @@ namespace Molinos.DataAgro.Test.Services
 
             Assert.NotNull(result);
             Assert.AreEqual(false, result.HayError);
+        }
+
+
+        [Test]
+        public void ObtenerEstadoProveedoresTestOk()
+        {
+            var listaCuits = new List<string> { "30345456230" };
+            var expectedContactos = new List<ResultProveedoresIni>
+            {
+                new ResultProveedoresIni { OperaConMATBA = true }
+            };
+            var expectedResult = new ResultEstadoProveedores
+            {
+                Contactos = expectedContactos
+            };
+            homeManager.Setup(x => x.ObtenerEstadoProveedores(It.IsAny<string>(), listaCuits))
+                .Returns(expectedResult);
+            HttpContext.Current.Session["equipoReal"] = new List<int>();
+
+            var result = target.ObtenerEstadoProveedores(listaCuits);
+
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Contactos);
+            Assert.AreEqual(expectedContactos.Count, result.Contactos.Count);
         }
     }
 }

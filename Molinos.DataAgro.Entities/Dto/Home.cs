@@ -78,6 +78,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string EstadoHomeDescripcion { get; set; }
         public string Cluster { get; set; }
         public double? Score { get; set; }
+        public bool OperaConMATBA { get; set; }
     }
 
     public class oParamBusqueda
