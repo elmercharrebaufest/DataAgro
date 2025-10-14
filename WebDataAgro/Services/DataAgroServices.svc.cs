@@ -1312,7 +1312,8 @@ namespace WebDataAgro.Services
 
         public ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits)
         {
-            return homeManager.ObtenerEstadoProveedores(string.Join(",", GlobalVariables.EquipoReal), listaCuits);
+            var resultado = homeManager.ObtenerEstadoProveedores(string.Join(",", GlobalVariables.EquipoReal), listaCuits);
+            return resultado;
         }
     }
 }

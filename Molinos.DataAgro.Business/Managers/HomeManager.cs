@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Business.Managers
             res.TotalLegajoIrregularContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.CUIT).Distinct().Count();
             res.TotalNoHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.CUIT).Distinct().Count();
 
-            foreach(var contacto in res.Contactos)
+            foreach (var contacto in res.Contactos)
             {
                 resProveedores.Contactos.Add(new ResultProveedoresIni()
                 {
@@ -127,7 +127,8 @@ namespace Molinos.DataAgro.Business.Managers
                     ComercialCargo = contacto.ComercialCargo,
                     EstadoHomeId = contacto.EstadoHomeId,
                     EstadoHomeMensaje = contacto.EstadoHomeMensaje,
-                    EstadoHomeDescripcion = contacto.EstadoHomeDescripcion
+                    EstadoHomeDescripcion = contacto.EstadoHomeDescripcion,
+                    OperaConMATBA = contacto.OperaConMATBA
                 });
             }
             resProveedores.TotalContactos = res.TotalContactos;
@@ -166,7 +167,8 @@ namespace Molinos.DataAgro.Business.Managers
                     GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct()),
                     Corredor = con.FirstOrDefault().Segmentacion == (int)EnumSegmentacion.Corredor_Correacopios || con.FirstOrDefault().Segmentacion == (int)EnumSegmentacion.Corredores_tradicionales,
                     Cluster = con.FirstOrDefault().Cluster,
-                    Score = con.FirstOrDefault().Score
+                    Score = con.FirstOrDefault().Score,
+                    OperaConMATBA = con.FirstOrDefault().OperaConMATBA
                 };
                 CargarOperabilidad(cont, con.FirstOrDefault());
                 if (cont.NoOperable == true)
