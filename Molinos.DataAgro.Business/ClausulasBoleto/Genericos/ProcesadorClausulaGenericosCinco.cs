@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         if (descuentoGeneralFueraPrecio?.Porcentaje > 0)
                         {
                             res.Texto += $"De acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionFueraPrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se bonificará por fuera del precio el {porcentajelFueraPrecio}% del precio. ";
+                                $"se bonificará por fuera del precio el {porcentajelFueraPrecio}% por tonelada. ";
                         }
                         if (descuentoGeneralFueraPrecio?.Porcentaje < 0)
                         {
