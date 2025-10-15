@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                         if (descuentoGeneralSobrePrecio?.Porcentaje > 0)
                         {
                             res.Texto += $"El PRECIO del contrato se modificará de acuerdo a las siguientes fechas de fijación, desde el {desdeFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} al {hastaFijacionSobrePrecio.GetValueOrDefault():dd'/'MM'/'yyyy} " +
-                                $"se adicionará {porcentajelSobrePrecio}% del precio. ";
+                                $"se adicionará {porcentajelSobrePrecio}% sobre el precio. ";
                         }
                         if (descuentoGeneralSobrePrecio?.Porcentaje < 0)
                         {
