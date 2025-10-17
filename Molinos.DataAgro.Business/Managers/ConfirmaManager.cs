@@ -456,6 +456,12 @@ namespace Molinos.DataAgro.Business.Managers
                 var clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
                 if (clausulasConfirma is null || clausulasConfirma.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}.");
                 //Fin de carga de datos
+
+                // obtener valores CodPrv para el tag Origen
+                string codigoPrvFormat = string.Format("0000{0}",contrato.ProvinciaId.ToString().Trim());
+                string codigoPrvOrigen = codigoPrvFormat.Length > 4 ?codigoPrvFormat.Substring(codigoPrvFormat.Length - 4) : "0000";
+
+
                 MemoryStream ms = new MemoryStream(); //Memory Stream
                                                       //Inicia formateo del XML
                 var doc = new XDocument(
@@ -503,15 +509,15 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("FechaConcertacion", contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null),
                                     new XElement("Cosecha", new XAttribute("CodLista", contrato.CampanaConfirma)),
                                     new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
-                                    new XElement("CantidadDesde", contrato.KgMinimo > 0 ? contrato.KgMinimo : (int)contrato.Cantidad),
-                                    new XElement("CantidadHasta", contrato.KgMaximo > 0 ? contrato.KgMaximo : (int)contrato.Cantidad),
+                                    new XElement("CantidadDesde", (int)contrato.Cantidad),
+                                    new XElement("CantidadHasta", (int)contrato.Cantidad),
                                     new XElement("Ajuste", new XAttribute("CodLista", string.Empty)),
                                     new XElement("CantCamiones", contrato.CantidadCamiones),
                                     (esCanje || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR ? new XElement("MontoImponible") : null),
                                     new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
-                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR") ? (contrato.PorcentajeComision.HasValue ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty) : "0.0" ) : null),
+                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR") ? (contrato.PorcentajeComision.HasValue ? contrato.PorcentajeComision.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty) : "0.0" ) : null),
 
                 #region Calidad
 
@@ -541,8 +547,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     ),
 
                 #endregion Origen
-
-                                    new XElement("Destino", new XAttribute("CodLista", contrato.DestinoConfirma), new XAttribute("CodPrv", "0000")),
+                                    new XElement("Destino", new XAttribute("CodLista", contrato.DestinoConfirma), new XAttribute("CodPrv", codigoPrvOrigen)),
 
                 #region DecisionDeclara
 
