@@ -1,19 +1,19 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
-using Kendo.DynamicLinq;
-using System.Globalization;
-using System.Configuration;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -62,6 +62,7 @@ namespace WebDataAgro.Controllers
         public ActionResult CrearCupo(int? id, string siguientes)
         {
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
+            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
             CargarViewBag();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -144,6 +145,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
+            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
             if (cupo.NegocioId == 0)
             {
                 cupo.NegocioId = null;
@@ -715,13 +717,13 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult ListarNegociosParaSolicitarCupo(string contratoSap, int proveedorId, int materialId, int estadoId, bool sustentable, bool epa, bool eudr)
         {
             return new JsonResult()
             {
                 Data = cupoManager.ListarNegociosParaSolicitarCupo(contratoSap, proveedorId, materialId, estadoId, sustentable, epa, eudr),
-                MaxJsonLength = Int32.MaxValue, 
+                MaxJsonLength = Int32.MaxValue,
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
@@ -749,7 +751,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Estados = estados.Select(
                x => new SelectListItem
                {
-                   Text = esExterno? (x.Id == (int)EnumEstadoCupo.SinCTG ? "Aceptado":(x.Id == (int)EnumEstadoCupo.SinSTOP ? "Pendiente": x.Descripcion)): x.Descripcion,
+                   Text = esExterno ? (x.Id == (int)EnumEstadoCupo.SinCTG ? "Aceptado" : (x.Id == (int)EnumEstadoCupo.SinSTOP ? "Pendiente" : x.Descripcion)) : x.Descripcion,
                    Value = x.Id.ToString(),
                    Selected = false
                }).OrderBy(x => x.Value);

@@ -4287,21 +4287,41 @@ $("#sustentableId").change(function () {
     }
 });
 $("#epaId").change(function () {
-    if ($("#epaId").is(':checked')) {
-        $("#eudrId").prop("checked", true).prop("disabled", true);
-        $(".sojaSustentable").hide();
-        MostrarBonificacionSoja();
+    if (ActivarSojaTwin == "1") {
+        if ($("#epaId").is(':checked')) {
+            $("#eudrId").prop("checked", true).prop("disabled", true);
+            $(".sojaSustentable").hide();
+            MostrarBonificacionSoja();
+        } else {
+            OcultarBonificacionSoja()
+        }
     } else {
-        OcultarBonificacionSoja()
+        if ($("#epaId").is(':checked')) {
+            $(".sojaSustentable").hide();
+            $(".sojaEudr").hide();
+            MostrarBonificacionSoja();
+        } else {
+            OcultarBonificacionSoja()
+        }
     }
 });
 $("#eudrId").change(function () {
-    if ($("#eudrId").is(':checked')) {
-        $("#epaId").prop("checked", true).prop("disabled", true);
-        $(".sojaSustentable").hide();
-        MostrarBonificacionSoja();
+    if (ActivarSojaTwin == "1") {
+        if ($("#eudrId").is(':checked')) {
+            $("#epaId").prop("checked", true).prop("disabled", true);
+            $(".sojaSustentable").hide();
+            MostrarBonificacionSoja();
+        } else {
+            OcultarBonificacionSoja()
+        }
     } else {
-        OcultarBonificacionSoja()
+        if ($("#eudrId").is(':checked')) {
+            $(".sojaSustentable").hide();
+            $(".sojaEpa").hide();
+            MostrarBonificacionSoja();
+        } else {
+            OcultarBonificacionSoja()
+        }
     }
 });
 

@@ -621,5 +621,9 @@
                            /endpoint[@name='Z_MP_WS_DATAAGRO_DIRECTO']
                            /@bindingConfiguration" />
 	</parameter>
-
+  <parameter name="ActivarSojaTwin Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ActivarSojaTwin']
+                           /@value" />
+  </parameter>
 </parameters>

@@ -6,7 +6,6 @@
     var reasignarCupo = PermisosHelper.Is(PermisosDataAgro.ReasignarProveedorPantallaCupo);
 }
 <script src="~/Scripts/html2canvas.js"></script>
-
 <script>
     BlockUi("Cargando...");
     fleteProcedencia = '@fleteProcedencia';
@@ -18,7 +17,8 @@
 <script src="~/Scripts/App/CrearCupo.js"></script>
 
 <script>
- fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
+    fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
+     var ActivarSojaTwin = '@ViewBag.ActivarSojaTwin';
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
