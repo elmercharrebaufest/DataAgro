@@ -512,7 +512,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 new XElement("DetalleContrato",
                                     new XElement("Producto", new XAttribute("CodLista", contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty)),
                                     new XElement("DescAdicional", esCanje ? "INSUMO" : null),
-                                    new XElement("FechaConcertacion", contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null),
+                                    new XElement("FechaConcertacion", contrato.Fecha.HasValue ? contrato.Fecha.Value.ToString("dd/MM/yyyy") : null),
                                     new XElement("Cosecha", new XAttribute("CodLista", contrato.CampanaConfirma)),
                                     new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
                                     new XElement("CantidadDesde", (int)contrato.Cantidad),
