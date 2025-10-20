@@ -150,20 +150,34 @@ function InicializarCargaCupos() {
         MostrarVisualizarStock();
     });
     $("#EPA").change(function () {
-        if ($("#EPA").is(':checked')) {
-            $("#EUDR").prop("checked", true).prop("disabled", true);
-            $("#Sustentable").prop("checked", false);
+        if (ActivarSojaTwin == "1") {
+            if ($("#EPA").is(':checked')) {
+                $("#EUDR").prop("checked", true).prop("disabled", true);
+                $("#Sustentable").prop("checked", false);
+            } else {
+                $("#EUDR").prop("checked", false).prop("disabled", false);
+            }
         } else {
-            $("#EUDR").prop("checked", false).prop("disabled", false);
+            if ($("#EPA").is(':checked')) {
+                $("#EUDR").prop("checked", false);
+                $("#Sustentable").prop("checked", false);
+            }
         }
         MostrarVisualizarStock();
     });
     $("#EUDR").change(function () {
-        if ($("#EUDR").is(':checked')) {
-            $("#EPA").prop("checked", true).prop("disabled", true);
-            $("#Sustentable").prop("checked", false);
+        if (ActivarSojaTwin == "1") {
+            if ($("#EUDR").is(':checked')) {
+                $("#EPA").prop("checked", true).prop("disabled", true);
+                $("#Sustentable").prop("checked", false);
+            } else {
+                $("#EPA").prop("checked", false).prop("disabled", false);
+            }
         } else {
-            $("#EPA").prop("checked", false).prop("disabled", false);
+            if ($("#EUDR").is(':checked')) {
+                $("#EPA").prop("checked", false);
+                $("#Sustentable").prop("checked", false);
+            }
         }
         MostrarVisualizarStock();
     });

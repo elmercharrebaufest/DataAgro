@@ -45,7 +45,7 @@
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
 	<!--Parametro para nueva version de boletos-->
-	<setParameter name="BoletosNuevaVersion Key" value="1" />
+  <setParameter name="BoletosNuevaVersion Key" value="1" />
 
 	<!--Primary Producción-->
 	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
@@ -71,8 +71,9 @@
 	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
 	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
 	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
+  <setParameter name="ActivarSojaTwin Key" value="0" />
 
-	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
+  <setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://gviceccqa.molinosagro.ad/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />

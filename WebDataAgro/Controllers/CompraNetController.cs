@@ -1,23 +1,24 @@
-﻿using static WebDataAgro.MvcApplication;
-using Autofac.Extras.NLog;
+﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Atributos;
+using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
-using System;
-using System.IO;
-using System.Data;
-using Newtonsoft.Json;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -104,6 +105,8 @@ namespace WebDataAgro.Controllers
             {
                 return RedirectToAction("CrearContratoExterno");
             }
+            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
+
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;

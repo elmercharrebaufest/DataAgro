@@ -1,16 +1,17 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Interfaces;
-using System.Web.Mvc;
-using System;
-using static WebDataAgro.MvcApplication;
-using System.Collections.Generic;
-using KendoGridBinder.ModelBinder.Mvc;
 using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
-using System.Linq;
-using WebDataAgro.Atributos;
 using Molinos.DataAgro.Entities.Seguridad;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Web.Mvc;
+using WebDataAgro.Atributos;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -51,6 +52,7 @@ namespace WebDataAgro.Controllers
 
         private void CargarVista(int? materialId = null, string centroId = "1029", int ComercialSeleccionado = 0, bool muestraModal = false)
         {
+            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
             if (!PermisosHelper.Is(PermisosDataAgro.VerTodasLasSugerencias))
             {
                 ComercialSeleccionado = GlobalVariables.ComercialId;
