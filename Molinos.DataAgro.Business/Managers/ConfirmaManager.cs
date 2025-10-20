@@ -461,7 +461,13 @@ namespace Molinos.DataAgro.Business.Managers
                 string codigoPrvFormat = string.Format("0000{0}",contrato.ProvinciaId.ToString().Trim());
                 string codigoPrvOrigen = codigoPrvFormat.Length > 4 ?codigoPrvFormat.Substring(codigoPrvFormat.Length - 4) : "0000";
 
+                // obteber comision PorcentajeComision
 
+                string porcentajeComision = "0.0";
+                if (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR")
+                {
+                    porcentajeComision = contrato.PorcentajeComision.HasValue ? contrato.PorcentajeComision.Value.ToString("F2", CultureInfo.InvariantCulture) : porcentajeComision;
+                }
                 MemoryStream ms = new MemoryStream(); //Memory Stream
                                                       //Inicia formateo del XML
                 var doc = new XDocument(
@@ -506,7 +512,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 new XElement("DetalleContrato",
                                     new XElement("Producto", new XAttribute("CodLista", contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty)),
                                     new XElement("DescAdicional", esCanje ? "INSUMO" : null),
-                                    new XElement("FechaConcertacion", contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null),
+                                    new XElement("FechaConcertacion", contrato.Fecha.HasValue ? contrato.Fecha.Value.ToString("dd/MM/yyyy") : null),
                                     new XElement("Cosecha", new XAttribute("CodLista", contrato.CampanaConfirma)),
                                     new XElement("UnidadMedida", new XAttribute("CodLista", "K")),
                                     new XElement("CantidadDesde", (int)contrato.Cantidad),
@@ -517,7 +523,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     new XElement("Moneda", new XAttribute("CodLista", contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : (String.IsNullOrEmpty(contrato.Moneda) ? "2" : string.Empty))),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("Precio", contrato.Precio) : null),
                                     (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? new XElement("UnidadMedidaPrecio", new XAttribute("CodLista", "T")) : null),
-                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR") ? (contrato.PorcentajeComision.HasValue ? contrato.PorcentajeComision.Value.ToString("F2", CultureInfo.InvariantCulture) : string.Empty) : "0.0" ) : null),
+                                    (tipoDocumento != "17" ? new XElement("PorcComisionComprador", porcentajeComision) : null),
 
                 #region Calidad
 
