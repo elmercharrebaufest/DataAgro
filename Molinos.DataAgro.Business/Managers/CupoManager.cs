@@ -1856,8 +1856,8 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal).ThenBy(a => a.ContratoSAP))
                 {
                     var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0).OrderBy(a => a.Fecha).ToList();
-                    bool disponibilidad = ValidarDisponibilidad(limitePorProveedor, negocio, disponibles);
-                    while (disponibilidad)
+
+                    while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
                     {
                         hayDisponibilidad = true;
 
