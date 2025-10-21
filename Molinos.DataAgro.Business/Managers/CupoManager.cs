@@ -48,6 +48,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
         private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
         private readonly ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent;
+        private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
@@ -1856,6 +1857,23 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal).ThenBy(a => a.FechaHastaOriginal).ThenBy(a => a.ContratoSAP))
                 {
                     var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0).OrderBy(a => a.Fecha).ToList();
+
+                    if (activarLogDebug)
+                    {
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad disponibles: " + disponibles.ToJson());
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad negocio: " + negocio.ToJson());
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad limitePorProveedor: " + limitePorProveedor.ToJson());
+                        var fechasDispo = disponibles.Where(a => a.LimiteAlgoritmo > 0).Select(a => a.Fecha).ToList();
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad fechasDispo: " + fechasDispo.ToJson());
+                        var disponibleProvYPlantaPorFecha = limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0 && fechasDispo.Contains(a.Fecha));
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad disponibleProvYPlantaPorFecha: " + disponibleProvYPlantaPorFecha.ToJson());
+                        logger.Debug("CrearSugerenciaCupo - ValidarDisponibilidad result" + (negocio.CantidadDeCupos > 0 &&
+                            negocio.Priorizado != true &&
+                            disponibles.Any(a => a.LimiteAlgoritmo > 0) &&
+                            limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0) &&
+                            disponibleProvYPlantaPorFecha)
+                        );
+                    }
 
                     while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
                     {
