@@ -1341,6 +1341,7 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             alternateView.LinkedResources.Add(img);
             alternateView.LinkedResources.Add(store);
+            alternateView.LinkedResources.Add(imgTasaMunicipal);
             return alternateView;
         }
 
