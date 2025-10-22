@@ -1556,8 +1556,11 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var MaterialId in materiales)
             {
                 var dto = ObtenerFormulaDto(MaterialId);
-                sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, dto, null));
-                formulas.Add(dto);
+                if (dto != null)
+                {
+                    sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, dto, null));
+                    formulas.Add(dto);
+                }
             }
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
             EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas));
@@ -1693,6 +1696,10 @@ namespace Molinos.DataAgro.Business.Managers
                     KgPendienteAplicar = a.KgPendienteAplicar,
 
                 }).ToList();
+                if (activarLogDebug)
+                {
+                    logger.Debug("CrearSugerenciaCupo - sugerencias: " + sugerencias.ToJson());
+                }
 
 
 
@@ -1709,7 +1716,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CargarDatosSugerenciasPorComercial(sugerencias, formulaDto);
                 repositorio.GuardarCambios();
 
-                logger.Debug("CrearSugerenciaCupo - GuardarCambios.");
+                logger.Debug("CrearSugerenciaCupo - GuardarCambios. material: " + MaterialId);
                 negocios.AddRange(inhabilitados);
                 negocios.AddRange(sinSugerencia);
                 return negocios;
@@ -2783,6 +2790,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         private FormulaDto FormulaToDto(Formula formula)
         {
+            if (formula == null)
+                return null;
+
             return new FormulaDto
             {
                 CuposDesde = formula.CuposDesde,
@@ -3873,7 +3883,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-
+            if (activarLogDebug)
+            {
+                logger.Debug("CrearSugerenciaCupo - CargarDatosSugerenciasPorComercial listaSugerenciaPorComercial: " + listaSugerenciaPorComercial.ToJson());
+            }
             repositorio.AgregarTodos(listaSugerenciaPorComercial);
         }
 
