@@ -1178,7 +1178,9 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
-                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG")));
+                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), 
+                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG"),
+                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/tasaMunicipal.png")));
                 }
 
                 var subject = "";
@@ -1229,11 +1231,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos)
+        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos, String tasaMunicipal)
         {
             LinkedResource store = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
             LinkedResource img = new LinkedResource(circular) { ContentId = Guid.NewGuid().ToString() };
             LinkedResource res = new LinkedResource(molinos) { ContentId = Guid.NewGuid().ToString() };
+            LinkedResource imgTasaMunicipal = new LinkedResource(tasaMunicipal) { ContentId = Guid.NewGuid().ToString() };
 
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
@@ -1316,6 +1319,11 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<br />" + (estaEnLaLista != true ? " Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. " : "") + "Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><u>Molinos Agro implementó el cobro electrónico de la Tasa Municipal a través de <a href='https://www.puertos.tramitesenlinea.com.ar' target='_blank'>www.puertos.tramitesenlinea.com.ar</a>, bajo la opción \"Puerto de San Lorenzo\". Será obligatorio a partir del 1 de diciembre de 2025. La tasa deberá estar abonada antes del ingreso a planta. Esta modalidad será una ventaja en seguridad y fluidez dentro del complejo.</u><br />";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+
+                "<tr>" +
+                "<td>" + @"<a><img src='cid:" + imgTasaMunicipal.ContentId + @"'/></a>" + " </td>" +
+                "</tr>" +
+
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
                 "<br /> www.molinosagro.com.ar <br />" +
