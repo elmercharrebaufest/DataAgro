@@ -615,6 +615,7 @@
     <Content Include="Content\Images\logobaufest.png" />
     <Content Include="Content\Images\logomoa.png" />
     <Content Include="Content\Images\molinosCircular.PNG" />
+	<Content Include="Content\Images\tasaMunicipal.png" />
     <Content Include="Content\Images\qaimage.png" />
     <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />
