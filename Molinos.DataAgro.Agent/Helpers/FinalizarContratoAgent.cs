@@ -346,12 +346,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq2.ImContrato.Consignatario = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "";
                 rq2.ImContrato.CondFijacion = contrato.CondicionFijacion?.CodigoSap;
                 rq2.ImContrato.Camiones = cantidadCamiones;
-                rq2.ImContrato.Confirma = contrato.BoletoId == 1 ? "X" : "";
-                rq2.ImContrato.Bolsa = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null;
-                rq2.ImContrato.BolFisico = contrato.BoletoId == 2 ? "X" : "";
-                rq2.ImContrato.CartaOferta = contrato.BoletoId == 4 ? "X" : "";
-                rq2.ImContrato.Ninguno = contrato.BoletoId == 3 ? "X" : "";
-                rq2.ImContrato.SinBoleto = contrato.BoletoId == 5 ? "X" : "";
+                rq2.ImContrato.Confirma = contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA ? "X" : "";
+
+                BolsaCompraNet bolsaNegocio = repositorio.Obtener<BolsaCompraNet>(contrato.BolsaId);
+
+                rq2.ImContrato.Bolsa = contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA ||
+                                       contrato.BoletoId == (int)EnumBoletoCompraNet.FISICO ||
+                                       contrato.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA ? bolsaNegocio.CodigoSap : null;
+
+                rq2.ImContrato.BolFisico = contrato.BoletoId == (int)EnumBoletoCompraNet.FISICO ? "X" : "";
+                rq2.ImContrato.CartaOferta = contrato.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA ? "X" : "";
+                rq2.ImContrato.Ninguno = contrato.BoletoId == (int)EnumBoletoCompraNet.NINGUNO ? "X" : "";
+                rq2.ImContrato.SinBoleto = contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO ? "X" : "";
                 rq2.ImContrato.AutCg = contrato.Warrant == true ? "X" : "";
                 rq2.ImContrato.AurCd = contrato.CD == true ? "X" : "";
                 rq2.ImContrato.PagoDirVend = contrato.PagoDirectoVendedor == true ? "X" : "";
