@@ -4009,24 +4009,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
-            //if (oContrato.TipoNegocioId == 1)
-            //{
-            //    if (oContrato.Cantidad < 30000)
-            //    {
-            //        htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //        htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //    }
-            //    else if (oContrato.Cantidad >= 30000 && oContrato.Cantidad <= 100000)
-            //    {
-            //        htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //        htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //    }
-            //    else if (oContrato.Cantidad >= 100000)
-            //    {
-            //        htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //        htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-            //    }
-            //}
+            
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -4576,31 +4559,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += " (" + oContrato.CantidadCamiones + " camiones)<br />";
             }
-            //htmlBody += "</td></tr>";
-            //htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
-            //if (oContrato.TipoNegocioId == 2)
-            //{
-            //    if (oContrato.Pizarra.HasValue && oContrato.Pizarra.Value)
-            //    {
-            //        htmlBody += "Pizarra</td></tr>";
-            //    }
-            //    else
-            //    {
-            //        if (oContrato.PrecioNeto.HasValue)
-            //        {
-            //            htmlBody += Split(oContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
-            //        }
-            //        else
-            //        {
-            //            htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
-            //        }
-            //    }
-            //}
-            //if (oContrato.TipoNegocioId == 1)
-            //{
-            //    htmlBody += "A FIJAR HASTA: <br />" + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + "<br />" + Split(oContrato.CondicionFijacion.Descripcion.ToUpper()) + "</td></tr>";
-            //}
-            //htmlBody += "<tr>" + th + "PORCENTAJE DE PAGO</th>" + Td(ref linea) + oContrato.PorcentajeDePago.ToString() + "</td></tr>";
+            
             htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + oContrato.Localidad.Nombre.ToUpper() + " - " + oContrato.Provincia.Nombre.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. DESDE</th>" + Td(ref linea) + Split(oContrato.FechaDesde.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. HASTA</th>" + Td(ref linea) + Split(oContrato.FechaHasta.ToShortDateString()) + "</td></tr>";
