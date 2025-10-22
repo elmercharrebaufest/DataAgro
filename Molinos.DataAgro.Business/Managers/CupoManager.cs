@@ -1178,7 +1178,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
-                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), 
+                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"),
                         System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG"),
                         System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/tasaMunicipal.png")));
                 }
@@ -1317,16 +1317,17 @@ namespace Molinos.DataAgro.Business.Managers
             bool estaEnLaLista = acopiosSinTexto.Contains(cupo.Centro.CodigoSap);
 
             htmlBody += "<br />" + (estaEnLaLista != true ? " Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. " : "") + "Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
-            htmlBody += "<br /><u>Molinos Agro implementó el cobro electrónico de la Tasa Municipal a través de <a href='https://www.puertos.tramitesenlinea.com.ar' target='_blank'>www.puertos.tramitesenlinea.com.ar</a>, bajo la opción \"Puerto de San Lorenzo\". Será obligatorio a partir del 1 de diciembre de 2025. La tasa deberá estar abonada antes del ingreso a planta. Esta modalidad será una ventaja en seguridad y fluidez dentro del complejo.</u><br />";
+            //htmlBody += "<br /><u>Molinos Agro implementó el cobro electrónico de la Tasa Municipal a través de <a href='https://www.puertos.tramitesenlinea.com.ar' target='_blank'>www.puertos.tramitesenlinea.com.ar</a>, bajo la opción \"Puerto de San Lorenzo\". Será obligatorio a partir del 1 de diciembre de 2025. La tasa deberá estar abonada antes del ingreso a planta. Esta modalidad será una ventaja en seguridad y fluidez dentro del complejo.</u><br />";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-
-                "<tr>" +
-                "<td>" + @"<a><img src='cid:" + imgTasaMunicipal.ContentId + @"'/></a>" + " </td>" +
-                "</tr>" +
 
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
                 "<br /> www.molinosagro.com.ar <br />" +
+
+                "<tr>" +
+                "<td>" + @"<a><img style='padding-right: 500px;' src='cid:" + imgTasaMunicipal.ContentId + @"'/></a>" + " </td>" +
+                "</tr>" +
+
                 "<table>" +
                 "<tr >" +
                 "<td rowspan='2'>" + @"<img src='cid:" + img.ContentId + @"'/> " + "</td> " +
