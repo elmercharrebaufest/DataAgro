@@ -62,7 +62,7 @@ namespace WebDataAgro.Controllers
         public ActionResult CrearCupo(int? id, string siguientes)
         {
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
-            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
+            ViewBag.ActivarSojaEUDR = ConfigurationManager.AppSettings["ActivarSojaEUDR"];
             CargarViewBag();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -145,7 +145,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
-            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
+            ViewBag.ActivarSojaEUDR = ConfigurationManager.AppSettings["ActivarSojaEUDR"];
             if (cupo.NegocioId == 0)
             {
                 cupo.NegocioId = null;

@@ -105,7 +105,7 @@ namespace WebDataAgro.Controllers
             {
                 return RedirectToAction("CrearContratoExterno");
             }
-            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
+            ViewBag.ActivarSojaEUDR = ConfigurationManager.AppSettings["ActivarSojaEUDR"];
 
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;

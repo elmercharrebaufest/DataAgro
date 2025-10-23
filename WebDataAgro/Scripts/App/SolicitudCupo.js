@@ -593,14 +593,15 @@ function InicializarElementos() {
     });
 
     $("#EPA").change(function () {
-        if (ActivarSojaTwin == "1") {
+        $("#Sustentable").prop("checked", false);
+        if (ActivarSojaEUDR == "Twin") {
             if ($("#EPA").is(':checked')) {
                 $("#EUDR").prop("checked", true).prop("disabled", true);
-                $("#Sustentable").prop("checked", false);
             } else {
                 $("#EUDR").prop("checked", false).prop("disabled", false);
             }
-        } else {
+        }
+        if (ActivarSojaEUDR == "Si") {
             if ($("#EPA").is(':checked')) {
                 $("#EUDR").prop("checked", false);
                 $("#Sustentable").prop("checked", false);
@@ -611,17 +612,17 @@ function InicializarElementos() {
     });
 
     $("#EUDR").change(function () {
-        if (ActivarSojaTwin == "1") {
+        $("#Sustentable").prop("checked", false);
+        if (ActivarSojaEUDR == "Twin") {
             if ($("#EUDR").is(':checked')) {
                 $("#EPA").prop("checked", true).prop("disabled", true);
-                $("#Sustentable").prop("checked", false);
             } else {
                 $("#EPA").prop("checked", false).prop("disabled", false);
             }
-        } else {
+        }
+        if (ActivarSojaEUDR == "Si") {
             if ($("#EUDR").is(':checked')) {
                 $("#EPA").prop("checked", false);
-                $("#Sustentable").prop("checked", false);
             }
         }
         MostrarVisualizarStock();
@@ -734,7 +735,11 @@ function checkSoja() {
         $("#calidadDivSE").show();
         $("#sustentableDivSE").show();
         $("#EPADivSE").show();
-        $("#EUDRDivSE").show();
+        if (ActivarSojaEUDR == "No") {
+            $("#EUDRDivSE").hide();
+        } else {
+            $("#EUDRDivSE").show();
+        }
     }
 }
 
