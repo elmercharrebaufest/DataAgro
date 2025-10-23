@@ -110,16 +110,25 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoDto.Generado = true;
                             var guardarBoleto = repositorio.Agregar(ConvertirBoletoDtoAEntidad(boletoDto));
                             boletoResult.BoletosGenerados.Add(guardarBoleto);
-                            List<ResultadoClausula> clausulas = new List<ResultadoClausula>();
-                            if (boletoContrato.Clausulas.Any())
-                            {
-                                int orden = 1;
-                                clausulas = boletoContrato.Clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = orden++ }).ToList();
-                            }
-                            else
+                            List<ResultadoClausula> clausulas = new List<ResultadoClausula>();                            
+                            if (boletoContrato.Clausulas.Count() == 0)
                             {
                                 clausulas = ObtenerClausulas(negocio);
                             }
+                            else
+                            {
+                                int orden = 0;
+                                foreach (var texto in boletoContrato.Clausulas)
+                                {
+                                    orden++;
+                                    clausulas.Add(new ResultadoClausula()
+                                    {
+                                        Texto = texto,
+                                        Orden = orden,
+                                    });
+                                }
+                            }
+                            
                             var pdf = GenerarPDF(negocio, clausulas, boletoDto);
                             if (boletoContrato.Mail)
                             {
