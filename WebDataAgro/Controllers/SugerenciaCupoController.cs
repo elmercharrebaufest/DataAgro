@@ -52,7 +52,7 @@ namespace WebDataAgro.Controllers
 
         private void CargarVista(int? materialId = null, string centroId = "1029", int ComercialSeleccionado = 0, bool muestraModal = false)
         {
-            ViewBag.ActivarSojaTwin = ConfigurationManager.AppSettings["ActivarSojaTwin"];
+            ViewBag.ActivarSojaEUDR = ConfigurationManager.AppSettings["ActivarSojaEUDR"];
             if (!PermisosHelper.Is(PermisosDataAgro.VerTodasLasSugerencias))
             {
                 ComercialSeleccionado = GlobalVariables.ComercialId;

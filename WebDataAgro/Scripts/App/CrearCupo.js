@@ -150,33 +150,33 @@ function InicializarCargaCupos() {
         MostrarVisualizarStock();
     });
     $("#EPA").change(function () {
-        if (ActivarSojaTwin == "1") {
+        $("#Sustentable").prop("checked", false);
+        if (ActivarSojaEUDR == "Twin") {
             if ($("#EPA").is(':checked')) {
                 $("#EUDR").prop("checked", true).prop("disabled", true);
-                $("#Sustentable").prop("checked", false);
             } else {
                 $("#EUDR").prop("checked", false).prop("disabled", false);
             }
-        } else {
+        }
+        if (ActivarSojaEUDR == "Si") {
             if ($("#EPA").is(':checked')) {
                 $("#EUDR").prop("checked", false);
-                $("#Sustentable").prop("checked", false);
             }
         }
         MostrarVisualizarStock();
     });
     $("#EUDR").change(function () {
-        if (ActivarSojaTwin == "1") {
+        $("#Sustentable").prop("checked", false);
+        if (ActivarSojaEUDR == "Twin") {
             if ($("#EUDR").is(':checked')) {
                 $("#EPA").prop("checked", true).prop("disabled", true);
-                $("#Sustentable").prop("checked", false);
             } else {
                 $("#EPA").prop("checked", false).prop("disabled", false);
             }
-        } else {
+        } 
+        if (ActivarSojaEUDR == "Si") {
             if ($("#EUDR").is(':checked')) {
                 $("#EPA").prop("checked", false);
-                $("#Sustentable").prop("checked", false);
             }
         }
         MostrarVisualizarStock();
@@ -304,7 +304,7 @@ function InicializarCargaCupos() {
             event.preventDefault();
         }
     });
-    MostrarVisualizarStock();
+    MostrarVisualizarStock();    
 }
 
 function checkFason() {
@@ -330,7 +330,11 @@ function checkSoja() {
         $("#calidadDiv").show();
         $("#sustentableDiv").show();
         $("#EPADiv").show();
-        $("#EUDRDiv").show();
+        if (ActivarSojaEUDR == "No") {
+            $("#EUDRDiv").hide();
+        } else {
+            $("#EUDRDiv").show();
+        }
     }
 }
 

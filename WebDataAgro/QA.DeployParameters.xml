@@ -71,7 +71,7 @@
 	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
 	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
 	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
-  <setParameter name="ActivarSojaTwin Key" value="0" />
+  <setParameter name="ActivarSojaEUDR Key" value="No" />
 
   <setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 

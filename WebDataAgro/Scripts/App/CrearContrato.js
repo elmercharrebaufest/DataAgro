@@ -962,7 +962,11 @@ function InicializarElementos() {
             if ($("#material").val() == Materiales.SOJA && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
                 $(".sojaEpa").show();
-                $(".sojaEudr").show();
+                if (ActivarSojaEUDR == "No") {
+                    $(".sojaEudr").hide();
+                } else {
+                    $(".sojaEudr").show();
+                }
             } else {
                 $(".sojaSustentable").hide();
                 $(".sojaEpa").hide();
@@ -3027,6 +3031,9 @@ function InicializarElementos() {
             SustentableTipoDB();
         }
     });
+    if (ActivarSojaEUDR == "No") {
+        $(".sojaEudr").hide();
+    }
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -5946,7 +5953,7 @@ $("#sustentableId").change(function () {
     }
 });
 $("#epaId").change(function () {
-    if (ActivarSojaTwin == "1") {
+    if (ActivarSojaEUDR == "Twin") {
         if ($("#epaId").is(':checked')) {
             $("#eudrId").prop("checked", true).prop("disabled", true);
             $(".sojaSustentable").hide();
@@ -5954,7 +5961,8 @@ $("#epaId").change(function () {
         } else {
             OcultarBonificacionSoja()
         }
-    } else {
+    }
+    if (ActivarSojaEUDR == "Si") {
         if ($("#epaId").is(':checked')) {
             $(".sojaSustentable").hide();
             $(".sojaEudr").hide();
@@ -5963,9 +5971,18 @@ $("#epaId").change(function () {
             OcultarBonificacionSoja()
         }
     }
+    if (ActivarSojaEUDR == "No") {
+        if ($("#epaId").is(':checked')) {
+            $(".sojaSustentable").hide();
+            $(".eudrId").hide();
+            MostrarBonificacionSoja();
+        } else {
+            OcultarBonificacionSoja()
+        }
+    }
 });
 $("#eudrId").change(function () {
-    if (ActivarSojaTwin == "1") {
+    if (ActivarSojaEUDR == "Twin") {
         if ($("#eudrId").is(':checked')) {
             $("#epaId").prop("checked", true).prop("disabled", true);
             $(".sojaSustentable").hide();
@@ -5973,7 +5990,8 @@ $("#eudrId").change(function () {
         } else {
             OcultarBonificacionSoja()
         }
-    } else {
+    }
+    if (ActivarSojaEUDR == "Si") {
         if ($("#eudrId").is(':checked')) {
             $(".sojaSustentable").hide();
             $(".sojaEpa").hide();
@@ -5988,6 +6006,9 @@ function MostrarBonificacionSoja() {
     $(".sustentableDiv").show();
     $(".sustenTipoDB").show();
     CompletarCantidadDisponibleDeposito();
+    if (ActivarSojaEUDR == "No") {
+        $(".sojaEudr").hide();
+    }
 }
 function OcultarBonificacionSoja() {
     $(".sustentableDiv").hide();
@@ -6000,7 +6021,11 @@ function OcultarBonificacionSoja() {
     $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
     $(".sojaSustentable").show();
     $(".sojaEpa").show();
-    $(".sojaEudr").show();
+    if (ActivarSojaEUDR == "No") {
+        $(".sojaEudr").hide();
+    } else {
+        $(".sojaEudr").show();
+    }
     $(".sustenTipoDB").hide();
     $("#selectSustenTipoDB").data("kendoDropDownList").value("");
     $("#divSustentableSinTarifa").hide();
