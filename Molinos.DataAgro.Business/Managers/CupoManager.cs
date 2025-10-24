@@ -6820,7 +6820,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             Material = formula.Material,
                             Criterio = hijo.Descripcion.Replace("Criterio", ""),
-                            Puntuacion = Decimal.ToInt32(hijo.Puntuacion),
+                            Puntuacion = Decimal.ToInt32(hijo.Prioridad),
                             CuposDesde = formula.CuposDesde,
                             CuposHasta = formula.CuposHasta,
                             NegociosDesde = formula.NegociosDesde,
