@@ -726,6 +726,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 tiposNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
                 tiposNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
+                tiposNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
             }
             else // Fijación
             {
@@ -743,13 +744,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios, List<int> tipoNegocios)
         {
+            string tipoContratoVenta = "VENTA";
             List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
             List<BasicoContrato> negociosFiltrados = new List<BasicoContrato>();
             foreach (var negocio in negocios)
             {
                 foreach (var tipo in tipoNegocioDetalles)
                 {
-                    if (tipo.Descripcion == negocio.TipoNegocio)
+                    if (tipo.Descripcion == negocio.TipoNegocio || tipo.Descripcion == tipoContratoVenta)
                     {
                         logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
                         if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
