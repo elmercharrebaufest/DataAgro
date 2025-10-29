@@ -464,7 +464,10 @@ namespace Molinos.DataAgro.Business.Managers
                 // obteber comision PorcentajeComision
 
                 string porcentajeComision = "0.0";
-                if (contrato.CorredorId > 0 || contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR")
+                if (contrato.CorredorId > 0 || 
+                    contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
+                    contrato.ClasificacionDescripcion?.ToString().ToUpper() == "PRODUCTOR" ||
+                    contrato.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
                 {
                     porcentajeComision = contrato.PorcentajeComision.HasValue ? contrato.PorcentajeComision.Value.ToString("F2", CultureInfo.InvariantCulture) : porcentajeComision;
                 }
