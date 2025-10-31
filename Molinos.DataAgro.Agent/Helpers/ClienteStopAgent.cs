@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -31,17 +30,17 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.clienteStopV2Agent = new ClienteStopV2Agent(logger, repositorio, cupoManagerInj, logDataAgroManager);
         }
 
-        public void CrearCupo(List<string> cupos)
+        public void CrearCupo(List<string> listaCupos)
         {
             try
             {
                 if (versionClienteStop == "1.1.0")
                 {
-                    clienteStopV1Agent.CrearCupo(cupos);
+                    clienteStopV1Agent.CrearCupo(listaCupos);
                 }
                 if (versionClienteStop == "2.0.0")
                 {
-                    clienteStopV2Agent.CrearCupo(cupos);
+                    clienteStopV2Agent.CrearCupo(listaCupos);
                 }
             }
             catch (Exception e)
@@ -71,20 +70,20 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public Resultado EliminarCupo(Cupo cupo, TokenStop token = null, RepositorioEF repo = null)
+        public Resultado EliminarCupo(Cupo cupo, TokenStop tokenNuevo = null, RepositorioEF repo = null)
         {
             try
             {
                 if (versionClienteStop == "1.1.0")
                 {
-                    return clienteStopV1Agent.EliminarCupo(cupo, token, repo);
+                    return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo, repo);
                 }
                 if (versionClienteStop == "2.0.0")
                 {
-                    return clienteStopV2Agent.EliminarCupo(cupo, token, repo);
+                    return clienteStopV2Agent.EliminarCupo(cupo, tokenNuevo, repo);
                 }
 
-                return clienteStopV1Agent.EliminarCupo(cupo, token, repo);
+                return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo, repo);
             }
             catch (Exception e)
             {
@@ -162,9 +161,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             var r = repo ?? repositorio;
             var datosConfiguracion = r.Obtener<Configuracion>(1);
-            //logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
 
-            string versionClienteStop = ConfigurationManager.AppSettings["VersionClienteSTOP"];
             if (versionClienteStop == "1.1.0")
             {
                 return clienteStopV1Agent.ObtenerToken(datosConfiguracion.ClaveStop);
