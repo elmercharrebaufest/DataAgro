@@ -69,7 +69,7 @@
 
 	<!--Parametro para nueva version de boletos-->
 	<setParameter name="BoletosNuevaVersion Key" value="1" />
-  <setParameter name="ActivarSojaEUDR Key" value="No" />
+  <setParameter name="ActivarSojaEUDR Key" value="Twin" />
 
   <!--QA2 de SCATO-->
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
