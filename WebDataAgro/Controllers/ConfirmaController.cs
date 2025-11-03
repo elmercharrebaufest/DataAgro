@@ -160,9 +160,14 @@ namespace WebDataAgro.Controllers
         [HttpGet]
         public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
         {
-            ViewBag.Clausulas = confirmaManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
-            ViewBag.NegocioSAP = numeroSap;
-            ViewBag.TipoNegocio = tipoNegocio;
+            ViewBag.ValidacionContrato = confirmaManager.ValidarContratoConfirma(numeroSap, tipoNegocio, GlobalVariables.EquipoReal);
+            string mensajeValidacion = (string) ViewBag.ValidacionContrato;
+            if (mensajeValidacion.Length == 0)
+            {
+                ViewBag.Clausulas = confirmaManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
+                ViewBag.NegocioSAP = numeroSap;
+                ViewBag.TipoNegocio = tipoNegocio;
+            }
             return View();
         }
 

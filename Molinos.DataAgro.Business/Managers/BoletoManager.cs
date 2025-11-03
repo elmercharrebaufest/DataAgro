@@ -1058,5 +1058,33 @@ namespace Molinos.DataAgro.Business.Managers
         private string ObtenerTextoNegocio(int claseNegocio) => claseNegocio == 1 ? "ContratoSAP" : "FijacionSAP";
 
         private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
+
+        public string ValidarContratoTipoBoleto(string numeroSap, int tipoNegocio, List<int> equipo)
+        {
+            string mensajeValidacionContratoSAP = string.Empty;
+            List<string> listaContratoSAP = new List<string>();
+            listaContratoSAP.Add(numeroSap);
+            var contratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(listaContratoSAP, equipo));
+
+            if (contratos == null || contratos.Count() == 0)
+            {
+                mensajeValidacionContratoSAP = $"No se ha encontrado un contrato tipo boleto fisico/carta oferta para numero de contrato: {String.Join(",", listaContratoSAP)}.";
+                return mensajeValidacionContratoSAP;
+            }
+            var contrato = contratos.FirstOrDefault();
+
+            if ( (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)) 
+            {
+                mensajeValidacionContratoSAP = $"El contrato {contrato.ContratoSAP} no es un boleto tipo boleto fisico/carta oferta.";
+                return mensajeValidacionContratoSAP;
+            }
+            if (contrato.Venta == true) // SI ES UN CONTRATO DE VENTA
+            {
+                mensajeValidacionContratoSAP = $"No se puede generar el boleto {contrato.ContratoSAP} para una venta.";
+                return mensajeValidacionContratoSAP;
+            }
+            return mensajeValidacionContratoSAP;
+        }
+
     }
 }

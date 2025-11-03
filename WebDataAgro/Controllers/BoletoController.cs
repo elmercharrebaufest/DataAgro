@@ -1,5 +1,6 @@
 ﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -189,9 +190,15 @@ namespace WebDataAgro.Controllers
         [HttpGet]
         public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
         {
-            ViewBag.Clausulas = boletoManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
-            ViewBag.NegocioSAP = numeroSap;
-            ViewBag.TipoNegocio = tipoNegocio;
+
+            ViewBag.ValidacionContrato = boletoManager.ValidarContratoTipoBoleto(numeroSap, tipoNegocio, GlobalVariables.EquipoReal);
+            string mensajeValidacion = (string)ViewBag.ValidacionContrato;
+            if (mensajeValidacion.Length == 0)
+            {
+                ViewBag.Clausulas = boletoManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
+                ViewBag.NegocioSAP = numeroSap;
+                ViewBag.TipoNegocio = tipoNegocio;
+            }
             return View();
         }
 
