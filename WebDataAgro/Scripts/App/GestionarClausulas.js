@@ -2,12 +2,28 @@
 
 $(document).ready(function () {
 
-    renderizarClausulas();
+    if (validacionContrato > '') {
+        BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_DANGER,
+            title: "Generación Contrato Boleto Fisico/Carta Oferta",
+            closable: false,
+            message: validacionContrato,
+            buttons: [{
+                label: 'Cerrar',
+                action: function (dialogItself) {
+                    window.location.href = '/Boleto/GenerarBoletos';
+                }
+            }]
+        });
 
-    if (tipoNegocio == 2)
-        $("#numero-contrato").text("Cláusulas para la fijación N° " + negocioSAP);
-    else
-        $("#numero-contrato").text("Cláusulas para el contrato N° " + negocioSAP);
+    } else {
+        renderizarClausulas();
+
+        if (tipoNegocio == 2)
+            $("#numero-contrato").text("Cláusulas para la fijación N° " + negocioSAP);
+        else
+            $("#numero-contrato").text("Cláusulas para el contrato N° " + negocioSAP);
+    }
 });
 
 function renderizarClausulas() {

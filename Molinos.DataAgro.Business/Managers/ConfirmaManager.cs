@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -13,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -20,6 +22,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Mail;
+using System.ServiceModel.Channels;
 using System.Web.WebPages;
 using System.Xml.Linq;
 
@@ -910,7 +913,6 @@ namespace Molinos.DataAgro.Business.Managers
             return result.OrderBy(x => x.Orden).ToList();
         }
 
-
         private List<ResultadoClausula> ObtenerClausulasGenericas(BasicoContrato basico, int orden, List<ResultadoClausula> result)
         {
             var clausulas = repositorio.Listar<ClausulaGenericos>();
@@ -993,7 +995,7 @@ namespace Molinos.DataAgro.Business.Managers
             return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
 
-        private List<string> CompletarCodigoLista(List<string> lista)
+        public List<string> CompletarCodigoLista(List<string> lista)
         {
             var result = new List<string>();
             foreach (var item in lista)
@@ -1024,6 +1026,33 @@ namespace Molinos.DataAgro.Business.Managers
             return clausulas;
         }
 
+        public string ValidarContratoConfirma(string numeroSap, int tipoNegocio, List<int> equipo)
+        {
+            string mensajeValidacionContratoSAP = string.Empty;
+            List<string> listaContratoSAP = new List<string>();
+            listaContratoSAP.Add(numeroSap);
+            var codigos = CompletarCodigoLista(listaContratoSAP);
+            var contratos = ObtenerContratos(codigos, tipoNegocio, equipo);
+            if (contratos == null || contratos.Count == 0)
+            {
+                mensajeValidacionContratoSAP = $"No se ha encontrado un contrato confirma para numero de contrato: {String.Join(",", codigos)}.";
+                return mensajeValidacionContratoSAP;
+            }
+            var contrato = contratos.FirstOrDefault();
+
+            if (contrato.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA) // SI ES UN CONTRATO ES CONFIRMA
+            {
+                mensajeValidacionContratoSAP = $"El contrato {contrato.ContratoSAP} no es un boleto confirma.";
+                return mensajeValidacionContratoSAP;
+            }
+            if (contrato.Venta == true) // SI ES UN CONTRATO DE VENTA
+            {
+                mensajeValidacionContratoSAP = $"No se puede generar el confirma {contrato.ContratoSAP} para una venta.";
+                return mensajeValidacionContratoSAP;
+            }
+            return mensajeValidacionContratoSAP;
+        }
+
         public string ValidarNegocio(string negocioSAP, List<int> equipo)
         {
             var contratoSap = negocioSAP.TrimStart('0').PadLeft(10, '0');
@@ -1034,7 +1063,7 @@ namespace Molinos.DataAgro.Business.Managers
             return mensaje;
         }
 
-        private List<BasicoContrato> ObtenerContratos(List<string> codigos, int claseNegocio, List<int> equipo)
+        public List<BasicoContrato> ObtenerContratos(List<string> codigos, int claseNegocio, List<int> equipo)
         {
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
             if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");

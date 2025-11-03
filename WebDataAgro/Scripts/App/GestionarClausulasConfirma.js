@@ -1,13 +1,28 @@
 ﻿var indexClausulaAEliminar = null;
 
 $(document).ready(function () {
+    if (validacionContrato > '') {
+        BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_DANGER,
+            title: "Generación Contrato Confirma",
+            closable: false,
+            message: validacionContrato,
+            buttons: [{
+                label: 'Cerrar',
+                action: function (dialogItself) {
+                    window.location.href = '/Confirma/GenerarConfirma';
+                }
+            }]
+        });
 
-    renderizarClausulas();
+    } else {
+        renderizarClausulas();
 
-    if (tipoNegocio == 2)
-        $("#numero-contrato").text("Cláusulas para la fijación N° " + negocioSAP);
-    else
-        $("#numero-contrato").text("Cláusulas para el contrato N° " + negocioSAP);
+        if (tipoNegocio == 2)
+            $("#numero-contrato").text("Cláusulas para la fijación N° " + negocioSAP);
+        else
+            $("#numero-contrato").text("Cláusulas para el contrato N° " + negocioSAP);
+    }
 });
 
 function renderizarClausulas() {
