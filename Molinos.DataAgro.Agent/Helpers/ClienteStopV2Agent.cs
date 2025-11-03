@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         };
                         dynamic jObject;
                         ResultadoStop respuesta;
-                        ExecuteStopRequest($"v{versionApi}/turnos/", HttpMethod.Post, cupoStop, out jObject, out respuesta);
+                        ExecuteStopRequest($"v{versionApi}/turnos/", HttpMethod.Post, cupoStop, out jObject, out respuesta, null, datosConfiguracion);
                         if (!respuesta.isError)
                         {
                             RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
@@ -248,7 +248,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 dynamic jObject;
                 ResultadoStop respuesta;
-                ExecuteStopRequest($"v{versionApi}/turnos/{datosConfiguracion.TerminalStopId}/{cupo.CupoStop.Value}", HttpMethod.Delete, null, out jObject, out respuesta, token);
+                ExecuteStopRequest($"v{versionApi}/turnos/{datosConfiguracion.TerminalStopId}/{cupo.CupoStop.Value}", HttpMethod.Delete, null, out jObject, out respuesta, token, datosConfiguracion);
 
                 if (!respuesta.isError)
                 {
@@ -434,7 +434,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 dynamic jObject;
                 ResultadoStop respuesta;
-                ExecuteStopRequest($"v{versionApi}/turnos/{cupo.CupoStop}", HttpMethod.Post, cupoStop, out jObject, out respuesta, null);
+                ExecuteStopRequest($"v{versionApi}/turnos/{cupo.CupoStop}", HttpMethod.Post, cupoStop, out jObject, out respuesta, null, datosConfiguracion);
 
                 if (!respuesta.isError)
                 {
@@ -610,9 +610,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        private void ExecuteStopRequest(string url, HttpMethod httpMethod, object data, out dynamic jObject, out ResultadoStop respuesta, TokenStop tokenNuevo = null)
+        private void ExecuteStopRequest(string url, HttpMethod httpMethod, object data, out dynamic jObject, out ResultadoStop respuesta, TokenStop tokenNuevo = null, Configuracion datosConfiguracion = null)
         {
-            var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+            if (datosConfiguracion == null)
+                datosConfiguracion = repositorio.Obtener<Configuracion>(1);
 
             TokenStop token;
             if (tokenNuevo == null)
