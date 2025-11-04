@@ -1061,9 +1061,59 @@ namespace Molinos.DataAgro.Business.Managers
                 mensajeValidacionContratoSAP = $"No se puede generar el confirma {contrato.ContratoSAP} para una venta.";
                 return mensajeValidacionContratoSAP;
             }
+
+            var resultadoVersionBoletoConfirma = ValidarEstadoVersion(contrato);
+            if (!resultadoVersionBoletoConfirma.Equals(string.Empty))
+            {
+                mensajeValidacionContratoSAP = resultadoVersionBoletoConfirma;
+                return mensajeValidacionContratoSAP;
+            }
             return mensajeValidacionContratoSAP;
         }
+        private string ValidarEstadoVersion(BasicoContrato contrato)
+        {
+            string mensajeValidacionVersionBoleto = string.Empty;
+            var listaConfirma = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id);
+            string estadoVersion = string.Empty;
+            if (listaConfirma.Count > 0)
+            {
+                var confirma = listaConfirma.LastOrDefault();
+                estadoVersion = confirma != null && confirma.FechaAnulacion != null ? "Anulado" : (confirma != null && confirma.FechaGeneracion != null ? "Vigente" : "Pendiente");
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.FijacionSAP ?? string.Empty);
+                var version = Int32.Parse(consultaBoleto.Version);
 
+                if (version > confirma.Version)
+                {
+                    estadoVersion = "Anulado";
+                }
+                else if (version == confirma.Version)
+                {
+                    if (consultaBoleto.Anulado == "X")
+                    {
+                        estadoVersion = "Anulado";
+                    }
+                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+                    {
+                        estadoVersion = "Vigente";
+                    }
+                    else
+                    {
+                        estadoVersion = "Pendiente";
+                    }
+                }
+                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
+                {
+                    estadoVersion = "Pendiente";
+                }
+            }
+
+            if (estadoVersion.Equals("Vigente"))
+            {
+                mensajeValidacionVersionBoleto = $"No se puede generar el confirma {contrato.ContratoSAP} para una version del boleto vigente.";
+                return mensajeValidacionVersionBoleto;
+            }
+            return mensajeValidacionVersionBoleto;
+        }
         public string ValidarNegocio(string negocioSAP, List<int> equipo)
         {
             var contratoSap = negocioSAP.TrimStart('0').PadLeft(10, '0');
