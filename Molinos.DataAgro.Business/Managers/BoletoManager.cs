@@ -1083,7 +1083,57 @@ namespace Molinos.DataAgro.Business.Managers
                 mensajeValidacionContratoSAP = $"No se puede generar el boleto {contrato.ContratoSAP} para una venta.";
                 return mensajeValidacionContratoSAP;
             }
+            var resultadoVersionBoleto = ValidarEstadoVersion(contrato);
+            if (!resultadoVersionBoleto.Equals(string.Empty))
+            {
+                mensajeValidacionContratoSAP = resultadoVersionBoleto;
+                return mensajeValidacionContratoSAP;
+            }
             return mensajeValidacionContratoSAP;
+        }
+        private string ValidarEstadoVersion(BasicoContrato contrato)
+        {
+            string mensajeValidacionVersionBoleto = string.Empty;
+            var listaBoleto = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id);
+            string estadoVersion = string.Empty;
+            if (listaBoleto.Count > 0)
+            {
+                var boleto = listaBoleto.LastOrDefault();
+                estadoVersion = boleto != null && boleto.FechaAnulacion != null ? "Anulado" : (boleto != null && boleto.FechaGeneracion != null ? "Vigente" : "Pendiente");
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.FijacionSAP ?? string.Empty);
+                var version = Int32.Parse(consultaBoleto.Version);
+
+                if (version > boleto.Version)
+                {
+                    estadoVersion = "Anulado";
+                }
+                else if (version == boleto.Version)
+                {
+                    if (consultaBoleto.Anulado == "X")
+                    {
+                        estadoVersion = "Anulado";
+                    }
+                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+                    {
+                        estadoVersion = "Vigente";
+                    }
+                    else
+                    {
+                        estadoVersion = "Pendiente";
+                    }
+                }
+                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
+                {
+                    estadoVersion = "Pendiente";
+                }
+            }
+
+            if (estadoVersion.Equals("Vigente"))
+            {
+                mensajeValidacionVersionBoleto = $"No se puede generar el boleto fisico/carta oferta {contrato.ContratoSAP} para una version del boleto vigente.";
+                return mensajeValidacionVersionBoleto;
+            }
+            return mensajeValidacionVersionBoleto;
         }
 
     }
