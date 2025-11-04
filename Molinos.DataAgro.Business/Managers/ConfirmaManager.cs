@@ -753,24 +753,35 @@ namespace Molinos.DataAgro.Business.Managers
             string tipoContratoVenta = "VENTA";
             List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
             List<BasicoContrato> negociosFiltrados = new List<BasicoContrato>();
+
             foreach (var negocio in negocios)
             {
-                foreach (var tipo in tipoNegocioDetalles)
+                if (negocio.TipoNegocio == tipoContratoVenta)
                 {
-                    if (tipo.Descripcion == negocio.TipoNegocio || tipo.Descripcion == tipoContratoVenta)
+                    logger.Debug("Tipo Negocio: " + tipoContratoVenta);
+                    if (negocio.BoletoContratoId == (int)EnumBoletoCompraNet.CONFIRMA)
                     {
-                        logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
+                        negociosFiltrados.Add(negocio);
+                    }
+                }
+                else {
+                    foreach (var tipo in tipoNegocioDetalles)
+                    {
+                        if (tipo.Descripcion == negocio.TipoNegocio)
                         {
-                            negociosFiltrados.Add(negocio);
-                        }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
-                        {
-                            negociosFiltrados.Add(negocio);
-                        }
-                        if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
-                        {
-                            negociosFiltrados.Add(negocio);
+                            logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
+                            if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CONFIRMA && tipo.Confirma)
+                            {
+                                negociosFiltrados.Add(negocio);
+                            }
+                            if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.FISICO && tipo.BoletoFisico)
+                            {
+                                negociosFiltrados.Add(negocio);
+                            }
+                            if ((negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? negocio.BoletoContratoId : negocio.BoletoContratoId) == (int)EnumBoletoCompraNet.CARTA_OFERTA && tipo.CartaOferta)
+                            {
+                                negociosFiltrados.Add(negocio);
+                            }
                         }
                     }
                 }
