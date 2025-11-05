@@ -297,6 +297,14 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (contrato != null)
             {
+                var estadoBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.FijacionSAP);
+
+                if (!string.IsNullOrEmpty(estadoBoleto.Generado) && string.IsNullOrEmpty(estadoBoleto.Anulado))
+                {
+                    mensaje = $"El negocio ya tiene un boleto generado en SAP.";
+                    logger.Debug($"El negocio ya tiene un boleto generado en SAP.");
+                    return mensaje;
+                }
 
                 if (contrato.Venta == true) // SI ES UN CONTRATO DE VENTA
                 {
@@ -314,7 +322,6 @@ namespace Molinos.DataAgro.Business.Managers
                         return mensaje;
                     }
                 }
-
 
                 if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION) //FIJACION
                 {
