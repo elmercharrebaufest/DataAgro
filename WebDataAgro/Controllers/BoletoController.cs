@@ -204,6 +204,20 @@ namespace WebDataAgro.Controllers
 
         public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
         {
+            var filters = filtro.Filter.Filters.ToList();
+            var claseNegocioId = filters.FirstOrDefault(x => x.Field == "ClaseNegocio");
+            if (claseNegocioId != null)
+            {
+                var negociosSAP = filters.FirstOrDefault(x => x.Field == "ContratoSAP");
+                var negocioSAP = filters.FirstOrDefault(x => x.Field == null);
+
+                if (negociosSAP != null)
+                    filtro.Filter.Filters = filters.Where(x => x.Field == "ClaseNegocio" || x.Field == "ContratoSAP").ToList();
+
+                if (negocioSAP != null)
+                    filtro.Filter.Filters = filters.Where(x => x.Field == "ClaseNegocio" || x.Field == null).ToList();
+            }
+
             var model = boletoManager.TraerContratosFiltrados(filtro, GlobalVariables.EquipoReal);
 
             return new JsonResult()

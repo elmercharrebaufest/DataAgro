@@ -496,24 +496,27 @@ function esContratoDesdeValido() {
 
 // Función para validar fechas y contratos
 function validarFechasYContratos() {
-    var fechaDesde = $("#FechaConfirmadoSAPDesde").data("kendoDatePicker").value();
-    var fechaHasta = $("#FechaConfirmadoSAPHasta").data("kendoDatePicker").value();
     var contratoDesde = ($("#NegocioSAP-desde").val().endsWith(';') ? $("#NegocioSAP-desde").val().slice(0, -1) : $("#NegocioSAP-desde").val()).trim();
     var contratoHasta = $("#NegocioSAP-hasta").val().trim();
 
-    if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
-        return false; // La fecha desde no puede ser mayor que la fecha hasta
-    }
-
-    // Validar contratos solo si ambos valores están presentes
-    if (contratoDesde) {
-        if (contratoHasta) {
-            // Verificar que contratoDesde sea menor que contratoHasta
-            if (parseInt(contratoDesde) >= parseInt(contratoHasta)) {
-                return false; // El contrato desde debe ser menor que el contrato hasta
+    if (contratoDesde == '' && contratoHasta == '') {
+        var fechaDesde = $("#FechaConfirmadoSAPDesde").data("kendoDatePicker").value();
+        var fechaHasta = $("#FechaConfirmadoSAPHasta").data("kendoDatePicker").value();
+        if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
+            return false; // La fecha desde no puede ser mayor que la fecha hasta
+        }
+    } else {
+        // Validar contratos solo si ambos valores están presentes
+        if (contratoDesde) {
+            if (contratoHasta) {
+                // Verificar que contratoDesde sea menor que contratoHasta
+                if (parseInt(contratoDesde) >= parseInt(contratoHasta)) {
+                    return false; // El contrato desde debe ser menor que el contrato hasta
+                }
             }
         }
     }
+
     // Si todas las validaciones pasan
     return true;
 }
