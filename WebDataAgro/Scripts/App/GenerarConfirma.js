@@ -1,5 +1,6 @@
 ﻿//Inicializar
 $(document).ready(function () {
+    $('#ContratosPendientesCheck').prop('checked', true);
     inicializarFiltros();
     inicializarGrillaContratos();
 });
@@ -34,8 +35,6 @@ function inicializarFiltros() {
 }
 
 function inicializarGrillaContratos() {
-
-
     var ds = {
         transport: {
             parameterMap: function (options, operation) {
@@ -91,6 +90,16 @@ function inicializarGrillaContratos() {
         serverSorting: true,
         serverFiltering: false,
         pageSize: 15,
+        requestEnd: function (e) {
+            if (e.type === "read" && e.response && e.response.Data) {
+                var checkPendiente = $('#ContratosPendientesCheck').is(':checked');
+                if (checkPendiente) {
+                    let datosFiltrados = e.response.Data.filter(x => x.Estado_Version == 'Pendiente');
+                    // Reemplazar los datos originales por los filtrados
+                    e.sender.data(datosFiltrados);
+                }
+            }
+        }
     };
 
     $("#contratos-grid").kendoGrid({
