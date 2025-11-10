@@ -43,6 +43,7 @@ function validarFechasYContratos() {
 }
 
 $(document).ready(function () {
+    $('#ContratosPendientesCheck').prop('checked', true);
     kendo.culture("es-AR");
     console.log("Current Kendo culture:", kendo.culture().name);
     $('#menuproveedor').hide();
@@ -176,7 +177,11 @@ function FiltrarBoletos() {
                         MensAlerta("Sin Resultados");
                         $("#contratos-grid").data("kendoGrid").dataSource.data([]);
                     } else {
-                        // Actualizar la grilla Kendo UI con los resultados
+                        // Actualizar la grilla Kendo UI con los resultados                         
+                        var checkPendiente = $('#ContratosPendientesCheck').is(':checked');
+                        if (checkPendiente) {
+                            result.Data = result.Data.filter(x => x.Estado_Version == 'Pendiente');
+                        }
                         var grid = $("#contratos-grid").data("kendoGrid");
                         grid.dataSource.data(result.Data.map(function (item) {
                             return {
