@@ -96,7 +96,8 @@ function inicializarGrillaContratos() {
                 if (checkPendiente) {
                     let datosFiltrados = e.response.Data.filter(x => x.Estado_Version == 'Pendiente');
                     // Reemplazar los datos originales por los filtrados
-                    e.sender.data(datosFiltrados);
+                    var grid = $("#contratos-grid").data("kendoGrid");
+                    grid.dataSource.data(datosFiltrados);
                 }
             }
         }
