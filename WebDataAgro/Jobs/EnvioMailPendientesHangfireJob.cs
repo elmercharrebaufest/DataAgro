@@ -29,7 +29,7 @@ namespace WebDataAgro.Jobs
 
             logger.Info("HANGFIRE - Ejecución EnvioMailPendientesHangfireJob iniciada");
             contratoManager.EnviarMailPendiente();
-            logger.Info($"HANGFIRE - EnvioMail - Finalizado");
+            logger.Info($"HANGFIRE - EnvioMailPendientesHangfireJob - Finalizado");
         }
     }
 }

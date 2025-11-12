@@ -76,8 +76,8 @@ namespace Molinos.DataAgro.Business.Managers
                     var comercial = repositorio.Obtener<Comercial>(p.ComercialId);
                     var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
                     lista.Add(email);
-
                 }
+
                 var idJefes = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory,
                     a => a.RolesAsociados.Any(b => b.PermisosAsociados.Any(c => c.Permiso == PermisosDataAgro.JefeEnvioMailNegociosConDiaAnterior)));
 
@@ -86,6 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var email = mailManager.GetEmailUserActiveDirectory(item);
                     listaJefes.Add(email);
                 }
+
                 lista = lista.Distinct().ToList();
                 if (listaJefes.Count == 0)
                 {
@@ -98,9 +99,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var cuerpoMail = CuerpoMailNegociosConDiaAnterior(rutaMolinos, contratos);
                 mailManager.EnviarMail(lista, subject, "", listaJefes, cuerpoMail);
             }
-
-
         }
+
         private AlternateView CuerpoMailNegociosConDiaAnterior(string filePath, List<Negocio> contratos)
         {
             LinkedResource res = new LinkedResource(filePath)
