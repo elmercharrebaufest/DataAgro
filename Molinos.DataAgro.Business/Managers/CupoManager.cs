@@ -3288,10 +3288,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista,
-                    CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
-                    p.ToList(), comercial)
-                );
+                string pathLogoMail = httpContextManager.ObtenerPathLogoMail();
+                AlternateView cuerpoMailSinCtg = CuerpoMailSinCtg(pathLogoMail, p.ToList(), comercial);
+
+                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista, cuerpoMailSinCtg);
 
             }
         }
