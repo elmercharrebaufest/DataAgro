@@ -5093,6 +5093,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Listar<CierreCupera>().ToList();
         }
+
         public void EnviarMailSugerenciasPendientesPorComercial()
         {
             var comerciales = repositorio.Listar<Comercial>();
