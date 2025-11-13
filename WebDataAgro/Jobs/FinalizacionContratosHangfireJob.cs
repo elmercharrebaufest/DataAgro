@@ -30,9 +30,10 @@ namespace WebDataAgro.Jobs
             if (habilitacion == null || !habilitacion.Habilitado)
                 return;
 
+            string idActiveDirectory = "DATAAGRO";
             logger.Info($"HANGFIRE - Finalización Automatica - Iniciando");
-            contratoManager.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory);
-            fijacionManager.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory);
+            contratoManager.FinalizacionAutomatica(idActiveDirectory);
+            fijacionManager.FinalizacionAutomatica(idActiveDirectory);
             logger.Info($"HANGFIRE - Finalización Automatica - Finalizado");
         }
     }
