@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Business.Managers
             var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado", "ProveedorCreador", "FechaCiertaTilde" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
 
-            if (cambios.TipoNegocioId == 3)
+            if (cambios.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
             {
                 if (!string.IsNullOrEmpty(cambios.Negocio) && !string.IsNullOrEmpty(cambios.Negocio.TrimStart('0')))
                 {
@@ -48,8 +48,8 @@ namespace Molinos.DataAgro.Business.Managers
                     descripcion = cambios.Id.ToString() + " - " + cambios.DatosFijacion.ContratoId.TrimStart('0');
                 }
             }
-            if ((!string.IsNullOrEmpty(cambios.ContratoSAP) && (cambios.TipoNegocioId == 1 || cambios.TipoNegocioId == 2)) ||
-                 (!string.IsNullOrEmpty(cambios.Negocio) && cambios.TipoNegocioId == 3))
+            if ((!string.IsNullOrEmpty(cambios.ContratoSAP) && (cambios.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || cambios.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)) ||
+                 (!string.IsNullOrEmpty(cambios.Negocio) && cambios.TipoNegocioId == (int)EnumTipoNegocio.FIJACION))
             {
                 var tipo = cambios.GetType().Name;
                 var logs = repositorio.Listar<LogDataAgro>(x => x.ClaseId == cambios.Id && x.Tipo == tipo);
@@ -66,6 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, cambios.ProveedorId == 0 ? (int?)null : cambios.ProveedorId, cambios.CorredorId == 0 ? (int?)null : cambios.CorredorId, resolver, usuario);
         }
+
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
             var resolver = new IgnorePropertiesResolver(new[] { "BasicoProveedorTraerPorProveedores.EstadoCuit", "BasicoProveedorTraerPorProveedores.Facacop" });
@@ -138,8 +139,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 resolver = new IgnorePropertiesResolver(new[] { "" });
             }
-            var usuarioComercial = "";
-            usuarioComercial = ObtenerUsuario(usuario, usuarioComercial);
+            var usuarioComercial = "DATAAGRO";
+            usuarioComercial = ObtenerUsuario(usuario ?? "DATAAGRO", usuarioComercial);
 
             string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
             {
