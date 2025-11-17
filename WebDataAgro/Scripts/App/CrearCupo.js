@@ -173,7 +173,7 @@ function InicializarCargaCupos() {
             } else {
                 $("#EPA").prop("checked", false).prop("disabled", false);
             }
-        } 
+        }
         if (ActivarSojaEUDR == "Si") {
             if ($("#EUDR").is(':checked')) {
                 $("#EPA").prop("checked", false);
@@ -304,7 +304,7 @@ function InicializarCargaCupos() {
             event.preventDefault();
         }
     });
-    MostrarVisualizarStock();    
+    MostrarVisualizarStock();
 }
 
 function checkFason() {
@@ -597,14 +597,16 @@ function copiarImagen() {
 
 
 function GuardarCupo() {
-    if ($("#buscadorProveedor").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#planta").val() == "1029" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" &&
+        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin")) &&
+        $("#planta").val() == "1029" &&
+        $("#material").val() == Materiales.SOJA) {
         VisualizarStock(true);
     } else {
         stockDisponible = true;
     }
 
     if (stockDisponible) {
-
         BlockUi("Grabando...");
         setTimeout(function () {
             var date1 = $("#fechaEntrega").val();
@@ -615,8 +617,6 @@ function GuardarCupo() {
             for (var i = 0; i <= diffDays; i++) {
                 dias.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
             }
-
-
 
             var cupo = {
                 Id: $("#Id").val(),
@@ -690,8 +690,7 @@ function GuardarCupo() {
                 //MostrarVisualizarStock();
             }
         }, 1000);
-
     } else {
-        MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
+        MensErr("No se pudo guardar porque no existen establecimientos con stock disponible.");
     }
 }

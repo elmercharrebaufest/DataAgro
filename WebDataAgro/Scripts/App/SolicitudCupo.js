@@ -787,7 +787,11 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Complete el CUIT del destinatario."); return;
     }
 
-    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || $("#EUDR").is(':checked')) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3" && grupoSegmentacion == "Productores") {
+    if ($("#buscadorProveedorSE").val() != "" &&
+        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin")) &&
+        $("#CentroIdSE").val() == "1029" &&
+        $("#MaterialIdSE").val() == Materiales.SOJA &&
+        grupoSegmentacion == "Productores") {
         VisualizarStock(true);
         if (!stockDisponible) {
             MensErr("No se pudo guardar porque no existen establecimientos con stock disponible.");
