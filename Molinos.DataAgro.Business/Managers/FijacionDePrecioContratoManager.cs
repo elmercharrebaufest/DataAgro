@@ -1272,16 +1272,22 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.NegocioId == fijacionId);
         }
+
         public void FinalizacionAutomatica(string idActiveDirectory)
         {
-            var fijacioneConfirmados = repositorio.Listar<FijacionDePrecioContrato>(x => x.EstadoId == 2 || x.EstadoId == 4);
-            logger.Debug("Fijaciones a Finalizar: " + fijacioneConfirmados.Count);
+            List<FijacionDePrecioContrato> fijacioneConfirmados = repositorio.Listar<FijacionDePrecioContrato>(x => x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Con_Error);
+
+            List<int> idsFijacionesConfirmadas = new List<int>();
+            fijacioneConfirmados.ForEach(x => idsFijacionesConfirmadas.Add(x.Id));
+
+            logger.Debug($"{idsFijacionesConfirmadas.Count} Fijaciones a finalizar con los ID {String.Join(", ", idsFijacionesConfirmadas)}");
+
             var oEntityErrors = new GrabarContratoResult();
             foreach (var fijacion in fijacioneConfirmados)
             {
                 try
                 {
-                    logger.Debug("Finalizando Finalizacion: " + fijacion.Id);
+                    logger.Debug("Finalizando Fijación ID: " + fijacion.Id);
                     var error = FinalizarFijacion(fijacion.Id, idActiveDirectory);
                 }
                 catch (Exception ex)
@@ -1291,6 +1297,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
+
         public GrabarFijacionResult AprobarFijacion(int id)
         {
             var oEntityErrors = new GrabarFijacionResult();

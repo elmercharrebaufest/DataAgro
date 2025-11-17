@@ -3535,7 +3535,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void FinalizacionAutomatica(string idActiveDirectory)
         {
             var contratosConfirmados = repositorio.Listar<Contrato, int>(a => a.Id, x => x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Con_Error);
-            logger.Debug($"{contratosConfirmados.Count} contratos a finalizar con los ID {String.Join(", ", contratosConfirmados)}");
+            logger.Debug($"{contratosConfirmados.Count} Contratos a finalizar con los ID {String.Join(", ", contratosConfirmados)}");
             var oEntityErrors = new GrabarContratoResult();
             foreach (var id in contratosConfirmados)
             {

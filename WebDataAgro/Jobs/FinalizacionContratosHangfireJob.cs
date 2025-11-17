@@ -31,10 +31,14 @@ namespace WebDataAgro.Jobs
                 return;
 
             string idActiveDirectory = "DATAAGRO";
-            logger.Info($"HANGFIRE - Finalización Automatica - Iniciando");
+
+            logger.Info($"HANGFIRE - FinalizacionContratos - Contratos - Inicio");
             contratoManager.FinalizacionAutomatica(idActiveDirectory);
+            logger.Info($"HANGFIRE - FinalizacionContratos - Contratos - Fin");
+
+            logger.Info($"HANGFIRE - FinalizacionContratos - Fijaciones - Inicio");
             fijacionManager.FinalizacionAutomatica(idActiveDirectory);
-            logger.Info($"HANGFIRE - Finalización Automatica - Finalizado");
+            logger.Info($"HANGFIRE - FinalizacionContratos - Fijaciones - Fin");
         }
     }
 }
