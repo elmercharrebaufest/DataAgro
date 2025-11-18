@@ -36,7 +36,7 @@ namespace WebDataAgro.App_Start
             // Required for Azure webapps, as by default they force TLS 1.2 and this project attempts 1.0
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            //app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
             //app.UseCookieAuthentication(new CookieAuthenticationOptions
             //{
@@ -75,7 +75,6 @@ namespace WebDataAgro.App_Start
             //});
 
 
-            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
