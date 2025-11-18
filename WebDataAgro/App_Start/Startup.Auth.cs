@@ -33,6 +33,8 @@ namespace WebDataAgro.App_Start
         public void ConfigureAuth(IAppBuilder app)
         {
             app.UseAutofacMiddleware(_container);
+            // Required for Azure webapps, as by default they force TLS 1.2 and this project attempts 1.0
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
@@ -71,8 +73,7 @@ namespace WebDataAgro.App_Start
             //        SecurityTokenValidated = OnSecurityTokenValidated
             //    }
             //});
-            // Required for Azure webapps, as by default they force TLS 1.2 and this project attempts 1.0
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
 
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
