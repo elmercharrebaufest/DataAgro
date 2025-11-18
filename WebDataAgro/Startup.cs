@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Hangfire.Dashboard;
+﻿using Autofac;
 using Microsoft.Owin;
 using Owin;
 
@@ -7,31 +6,22 @@ using Owin;
 
 namespace WebDataAgro.App_Start
 {
-    public class Startup
+    public partial class Startup
     {
+        private IContainer _container;
+
         public void Configuration(IAppBuilder app)
         {
-            // Servidor Hangfire
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 1 });
+            var builder = new ContainerBuilder();
 
-            var dashboardOptions = new DashboardOptions
-            {
-                Authorization = new[]
-                {
-                    new AuthorizationFilter { Roles = "ConfiguracionTareasProgramadas"}
-                }
-            };
+            RegistrarDependencias(builder);
 
-            app.UseHangfireDashboard("/Hangfire", dashboardOptions);
+            _container = builder.Build();
 
-            var backgroundJobServerOptions = new BackgroundJobServerOptions
-            {
-                WorkerCount = 1 // Solo un worker, una tarea a la vez
-            };
-            app.UseHangfireServer(backgroundJobServerOptions);
+            ConfigureAuth(app);
+            ConfigureMvcAutofac(app);
+            ConfigureHangfire(app);
 
-            // Registrar jobs
-            JobRegistration.HangfireJobRegistry.Register();
         }
     }
 }

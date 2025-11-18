@@ -2,7 +2,7 @@
 using static WebDataAgro.MvcApplication;
 using Molinos.DataAgro.Interfaces;
 using WebDataAgro.Helpers.Excel;
-using Autofac.Extras.NLog;
+using NLog;
 using System.Web.Mvc;
 using System;
 

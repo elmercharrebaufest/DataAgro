@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using MailKit;
 using MailKit.Search;
 using MimeKit;
@@ -10,7 +10,6 @@ using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -75,35 +74,18 @@ namespace Molinos.DataAgro.Business
             if (ConfigurationManager.AppSettings["AmbienteLocal"] == "1")
                 return "dataagro@baufest.com";
 
-            DirectoryEntry entry = new DirectoryEntry();
-            string userName = UserName;
-            try
+            string mail = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == UserName, x => x.Email);
+            if (string.IsNullOrWhiteSpace(mail))
             {
-                var userNameArray = UserName.Split('\\');
-                userName = userNameArray.Length == 1 ? userNameArray[0] : userNameArray[1];
-
+                logger.Error($"No se encontró el mail para el usuario {UserName}");
+                return string.Empty;
             }
-            catch { }
-
-            DirectorySearcher search = new DirectorySearcher(entry);
-            search.Filter = String.Format("(sAMAccountName={0})", userName);
-            search.PropertiesToLoad.Add("givenName");   // first name
-            search.PropertiesToLoad.Add("sn");          // last name
-            search.PropertiesToLoad.Add("mail");        // smtp mail address
-
-            // perform the search
-            SearchResult result = search.FindOne();
-            try
+            else
             {
-                return result.Properties.Contains("mail") ? result.Properties["mail"][0].ToString() : result.Properties["userPrincipalName"][0].ToString();
+                return mail;
             }
-            catch
-            {
-                logger.Error($"No se encontró el mail en AD para el usuario {userName}");
-            }
-            return string.Empty;
+
         }
-
         private MailMessage CrearMailBase(string cuerpo, string asunto, List<string> enviarA, List<string> remitente = null)
         {
             MailMessage oMensaje = new MailMessage

@@ -1,5 +1,4 @@
-﻿using Autofac.Extras.NLog;
-using Microsoft.Web.Mvc;
+﻿using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -7,11 +6,11 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -410,7 +409,7 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerInformeComercialApertura()
         {
             var model = new InformeComercialAperturaDto();
-                model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
+            model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
             return new JsonResult()
             {
                 Data = model,

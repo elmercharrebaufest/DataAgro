@@ -1,31 +1,19 @@
-﻿using Autofac;
-using Autofac.Extras.NLog;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.Wcf;
-using Hangfire;
-using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using WebDataAgro.Core;
-using WebDataAgro.Services;
 
 namespace WebDataAgro
 {
@@ -55,92 +43,20 @@ namespace WebDataAgro
 
             // Habilita TLS 1.2
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            //Autofac Configuration
-            var builder = new ContainerBuilder();
-
-            builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
-            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
-            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
-
-            builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.EndsWith("Manager"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Agent"))
-                   .Where(t => t.Name.EndsWith("Agent"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterModule<NLogModule>();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.EndsWith("Criterios"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.StartsWith("Procesador"))
-                   .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("Clausulas"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasConfirma"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasCartaOferta"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasBoletoFisico"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasGenericos"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<Cache>().As<ICache>().SingleInstance();
-
-            // Hangfire job
-            var assembly = Assembly.Load("WebDataAgro");
-            builder.RegisterAssemblyTypes(assembly)
-                   .Where(t => t.Name.EndsWith("HangfireJob") && !t.IsAbstract)
-                   .AsImplementedInterfaces()
-                   .InstancePerDependency();
-
-            var container = builder.Build();
-
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-            AutofacHostFactory.Container = container;
-
-            // Configurar Hangfire con Autofac y SQL Server
-            GlobalConfiguration.Configuration
-                .UseSqlServerStorage("HfContexto")
-                .UseAutofacActivator(container);
-
-            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
-            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
         }
 
 
         public void Session_OnStart()
         {
-            var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
-            var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
-            //GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.Equipo = equipo.Equipo;
-            GlobalVariables.EquipoReal = equipo.EquipoReal;
-            GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
+            //var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
+            //var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
+            ////GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.Equipo = equipo.Equipo;
+            //GlobalVariables.EquipoReal = equipo.EquipoReal;
+            //GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
         }
 
 

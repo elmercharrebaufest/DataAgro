@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System.Configuration;

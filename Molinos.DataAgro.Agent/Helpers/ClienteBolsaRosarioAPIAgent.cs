@@ -1,7 +1,7 @@
 ﻿using System;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Autofac.Extras.NLog;
+using NLog;
 using System.Configuration;
 using RestSharp;
 using System.Net;

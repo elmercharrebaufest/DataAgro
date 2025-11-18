@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using JsonDiffPatchDotNet;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;

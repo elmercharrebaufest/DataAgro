@@ -1,5 +1,4 @@
-﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -8,6 +7,7 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -319,8 +319,8 @@ namespace Molinos.DataAgro.Business
         public List<int> CadenaComerciales(int comercialId)
         {
             var listaSuperiores = new List<int>();
-            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, 
-                x => x.Deshabilitado != true && 
+            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId,
+                x => x.Deshabilitado != true &&
                      x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             if (permiso)
             {
@@ -429,6 +429,18 @@ namespace Molinos.DataAgro.Business
             var comerciales = repositorio.ObtenerConsultaEscalar(new BusquedaContactosComercialReporte(request, proveedorId));
 
             return comerciales;
+        }
+
+        public List<string> ObtenerPermisosPorEmail(string email)
+        {
+            var permisos = repositorio.Listar<Comercial, IEnumerable<string>>(
+                x => x.RolesAsociados.SelectMany(y => y.PermisosAsociados).Select(z => z.Permiso.ToString()),
+                x => x.Email == email
+            )
+            .SelectMany(p => p)
+            .Distinct()
+            .ToList();
+            return permisos;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Molinos.DataAgro.Entities.ClausulasBoleto.CartaOferta;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;

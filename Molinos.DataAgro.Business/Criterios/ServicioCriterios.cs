@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces.Criterios;
 using System;
