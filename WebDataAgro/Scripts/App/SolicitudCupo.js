@@ -973,7 +973,7 @@ function imageToBlob(imageURL) {
 }
 
 function VisualizarStock(noabrir) {
-    var esEPAoEUDR = $("#EPA").is(':checked') || $("#EUDR").is(':checked');
+    var esEPAoEUDR = $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin");
     var cuitProv = $("#buscadorProveedorSE").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');
