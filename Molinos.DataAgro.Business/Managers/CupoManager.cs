@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
         private readonly ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent;
         private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
+        private readonly string activarSojaEUDR = ConfigurationManager.AppSettings["ActivarSojaEUDR"];
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
@@ -549,9 +550,9 @@ namespace Molinos.DataAgro.Business.Managers
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
             var tieneQueValidar = proveedor.SegmentacionId == 2 || proveedor.SegmentacionId == 3 || proveedor.SegmentacionId == 4;
-            if (proveedor != null && tieneQueValidar && centro != null && (cupo.Sustentable || cupo.EPA || cupo.EUDR))
+            if (proveedor != null && tieneQueValidar && centro != null && (cupo.Sustentable || cupo.EPA || (cupo.EUDR && activarSojaEUDR == "Twin")))
             {
-                var establecimientos = TraerEstablecimientos(proveedor.CUIT, cupo.EPA || cupo.EUDR);
+                var establecimientos = TraerEstablecimientos(proveedor.CUIT, cupo.EPA || (cupo.EUDR && activarSojaEUDR == "Twin"));
                 var cantidadCupo = 0;
                 if (establecimientos != null && establecimientos.Count > 0)
                 {
