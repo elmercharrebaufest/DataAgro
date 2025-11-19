@@ -6177,7 +6177,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 contrato.TipoAgenteCompraId = acuerdo.TipoAgenteCompraId;
                 contrato.FechaCierta = acuerdo.FechaCierta;
-                contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 90.0m : 97.5m;
+                contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 95.0m : 97.5m;
                 contrato.NivelTarifaId = acuerdo.NivelTarifaId;
                 contrato.TarifaFlete = acuerdo.TarifaFlete;
                 contrato.Observacion = acuerdo.Observacion;
@@ -7282,7 +7282,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.ZonaId = null;
             }
 
-            contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 90.0m : 97.5m;
+            contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 95.0m : 97.5m;
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? null : contrato.PagoDiferidoTerceroId;
 
             return GrabarContrato(contrato);
@@ -7358,7 +7358,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 90.0m : 97.5m;
+            contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 95.0m : 97.5m;
 
             return GrabarContrato(contrato);
         }
@@ -7715,7 +7715,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.GrupoCompra = contrato.Comercial.GrupoDeComprasId;
                         contrato.UsuarioId = contrato.Comercial.IdActiveDirectory;
                         contrato.ComercialCreadorId = ComercialId;
-                        contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 90.0m : 97.5m;
+                        contrato.PorcentajeDePago = contrato.MaterialId == (int)EnumMateriales.TRIGO ? 95.0m : 97.5m;
 
                         CalcularKgMaximoYMinimo(contrato);
                         contrato.Calidad = new List<Calidad>();
