@@ -803,7 +803,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Hasta = y.Hasta,
                     TipoServicioId = y.ServicioValor.TipoServicio.Id,
                     Modificado = y.Modificado
-                }).ToList()
+                }).ToList(),
+                PorcentajeDePago = x.PorcentajeDePago,
             });
             return contrato;
         }
