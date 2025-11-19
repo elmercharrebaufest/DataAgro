@@ -110,8 +110,8 @@ namespace WebDataAgro.Controllers
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
-            ViewBag.Contrato = mobjContratoManager.ObtenerSapContrato(id.HasValue ? id.Value : 0);
-            ViewBag.Fijacion = mobjContratoManager.ObtenerSapFijacion(id.HasValue ? id.Value : 0);
+            ViewBag.Contrato = mobjContratoManager.ObtenerSapContrato(id ?? 0);
+            ViewBag.Fijacion = mobjContratoManager.ObtenerSapFijacion(id ?? 0);
             ViewBag.Siguientes = siguientes;
             ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
             ViewBag.Obj = null;
@@ -127,7 +127,7 @@ namespace WebDataAgro.Controllers
             }
             if (id > 0 || (PermisosHelper.Is(PermisosDataAgro.ModificarCanje)))
             {
-                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) && (id == null || id == 0) ? 1 : tipoId.HasValue ? tipoId.Value : 2;
+                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) && (id == null || id == 0) ? 1 : tipoId ?? 2;
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
                 return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
@@ -1190,7 +1190,7 @@ namespace WebDataAgro.Controllers
             var result = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= cantidadDia).OrderBy(x => x.CantidadDia).FirstOrDefault();
             return new JsonResult()
             {
-                Data = result != null ? result : new HabilitacionPagoDiferidoDto(),
+                Data = result ?? new HabilitacionPagoDiferidoDto(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -1343,7 +1343,8 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje, PermisosDataAgro.ModificarDolarizadoExpress, PermisosDataAgro.ModificarDolarizadoFinalizado)]
         public ActionResult AltaMasivaContratos()
         {
-            var tipoAlta = new List<SelectListItem>(); tipoAlta.Add(new SelectListItem
+            var tipoAlta = new List<SelectListItem>();
+            tipoAlta.Add(new SelectListItem
             {
                 Text = "Seleccione",
                 Value = "0",

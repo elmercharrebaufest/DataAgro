@@ -1579,7 +1579,7 @@ function InicializarElementos() {
         change: function () {
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
             if (this.value() == "") {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
                 if ($("#tipoId").val() == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
@@ -1930,7 +1930,7 @@ function InicializarElementos() {
         min: 0,
         value: 97.5
     });
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
     $("#fechaOperacionId").kendoDatePicker({
@@ -3634,7 +3634,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha((contrato.FechaCiertaFormateado)));
     //$("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5));
 
     if (!hijo) {
         //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));

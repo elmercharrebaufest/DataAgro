@@ -15,6 +15,8 @@ var esEdicion;
 var feriados = [];
 var boletoId;
 var cantidadEditar, fechaHastaEditar;
+var porcentajeDePago = null;
+var materialSeleccionado = null;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -1047,6 +1049,21 @@ function InicializarElementos() {
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
+
+
+            if (porcentajeDePago == null) {
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+            }
+            else {
+                if (materialSeleccionado != null && $("#material").val() == materialSeleccionado) {
+                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(porcentajeDePago);
+                }
+                else {
+                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+                }
+            }
+
+            materialSeleccionado = $("#material").val();
         }
     });
 
@@ -1449,7 +1466,7 @@ function InicializarElementos() {
             validarCredito();
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
             if (this.value() == "") {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
                 if ($("#tipoId").val() == "6") {
                     //$("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
@@ -1798,7 +1815,7 @@ function InicializarElementos() {
         min: 0,
         value: 97.5
     });
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
     $("#fechaOperacionId").kendoDatePicker({
@@ -4176,8 +4193,9 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaHastaId").val(contrato.FechaHastaFormateado);
     $("#fechaCiertaId").val(contrato.FechaCiertaFormateado);
     $("#fechaCiertaAcuerdo").val(contrato.FechaCiertaFormateado);
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
-
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5));
+    porcentajeDePago = contrato.PorcentajeDePago;
+    materialSeleccionado = contrato.MaterialId;
 
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
