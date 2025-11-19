@@ -937,14 +937,14 @@ function InicializarElementos() {
             MostrarServiciosYCalidades();
 
             if (porcentajeDePago == null) {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
             }
             else {
                 if (materialSeleccionado != null && $("#material").val() == materialSeleccionado) {
                     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(porcentajeDePago);
                 }
                 else {
-                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
                 }
             }
 
@@ -1348,7 +1348,7 @@ function InicializarElementos() {
             validarCredito();
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
             if (this.value() == "") {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
                 if ($("#tipoId").val() == "6") {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
@@ -1705,7 +1705,7 @@ function InicializarElementos() {
         min: 0,
         value: 97.5
     });
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
     $("#fechaOperacionId").kendoDatePicker({
@@ -4033,7 +4033,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaHastaId").val(contrato.FechaHastaFormateado);
     $("#fechaCiertaId").val(contrato.FechaCiertaFormateado);
     $("#fechaCiertaAcuerdo").val(contrato.FechaCiertaFormateado);
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5));
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO));
     porcentajeDePago = contrato.PorcentajeDePago;
     materialSeleccionado = contrato.MaterialId;
 

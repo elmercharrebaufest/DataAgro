@@ -886,7 +886,7 @@ function InicializarElementos() {
             var tienePorcentajeDePago = porcentajeDePago !== null && porcentajeDePago !== undefined && porcentajeDePago !== "";
             var numericPorcentajeDePagoId = $("#porcentajeDePagoId").data("kendoNumericTextBox");
             var materialActual = $("#material").val();
-            var porcentajeDePagoPorDefecto = materialActual == Materiales.TRIGO ? 90.0 : 97.5;
+            var porcentajeDePagoPorDefecto = materialActual == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO;
 
             if (!tienePorcentajeDePago) {
                 numericPorcentajeDePagoId.value(porcentajeDePagoPorDefecto);
@@ -975,6 +975,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+
     function validarFechaCampana() {
         var campana = $("#campanaId").data("kendoDropDownList").text();
         var anios = campana.split('-');
@@ -1202,7 +1203,7 @@ function InicializarElementos() {
         change: function () {
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
             if (this.value() == "") {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
                 if ($("#tipoId").val() == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
                     $("#pagoCbuId").show();
                 }
@@ -1548,7 +1549,7 @@ function InicializarElementos() {
         min: 0,
         value: 97.5
     });
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
     $("#fechaOperacionId").kendoDatePicker({
@@ -3046,7 +3047,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaHastaId").val(contrato.FechaHastaFormateado);
     //$("#fechaCiertaId").val(contrato.FechaCiertaFormateado);
     //$("#fechaCiertaAcuerdo").val(contrato.FechaCiertaFormateado);
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5));
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO));
     porcentajeDePago = contrato.PorcentajeDePago;
     materialSeleccionado = contrato.MaterialId;
 
@@ -4191,7 +4192,7 @@ function ocultarSiHayPrestamos() {
     $("#insumoId").val("");
     $("#plantaDestinoDiv").show();
     $("#porcentajePagoDiv").hide();
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? 90.0 : 97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
     LimpiarBoleto();
     $("#boletoNingunoId").prop("checked", true);
     $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
