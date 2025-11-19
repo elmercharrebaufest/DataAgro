@@ -537,7 +537,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.FleteNivel = contrato.NivelTarifaId.HasValue ? repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "";
                 detalle.FleteTarifa = contrato.TarifaFlete ?? 0;
                 detalle.FechaCierta = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
-                detalle.Porcparcial = contrato.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)90.0 : (decimal)97.5);
+                detalle.Porcparcial = contrato.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)95.0 : (decimal)97.5);
                 detalle.AgenteCompra = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
                 detalle.Caratula = contrato.CaratulaMAT;
                 detalle.CaratulaExt = contrato.CaratulaExtension;
@@ -1142,7 +1142,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.FLETE_NIVEL = contrato.NivelTarifaId.HasValue ? repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "";
                 detalle.FLETE_TARIFA = contrato.TarifaFlete ?? 0;
                 detalle.FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
-                detalle.PORCPARCIAL = contrato.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)90.0 : (decimal)97.5);
+                detalle.PORCPARCIAL = contrato.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)95.0 : (decimal)97.5);
                 detalle.AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
                 detalle.CARATULA = contrato.CaratulaMAT;
                 detalle.CARATULA_EXT = contrato.CaratulaExtension;
