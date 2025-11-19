@@ -632,7 +632,7 @@ function ObtenerDatos(error) {
         obj.ComercialId = $("#comercialFijacionId").val();
         obj.ContratoSAP = $("#contratoId").val();
     }
-    if (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2") {
+    if (obj.TipoNegocioId == TIPO_NEGOCIO.A_FIJAR || obj.TipoNegocioId == TIPO_NEGOCIO.A_PRECIO || obj.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
         obj.PorcentajeDePago = $("#porcentajeDePagoId").data("kendoNumericTextBox").value();
     }
 

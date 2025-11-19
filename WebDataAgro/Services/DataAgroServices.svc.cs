@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -491,7 +492,7 @@ namespace WebDataAgro.Services
 
             contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : contratoOriginal.ZonaId;
 
-            contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (decimal)97.5;
+            contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)90.0 : (decimal)97.5);
 
 
             logger.Debug("Alta Contrato calidades");

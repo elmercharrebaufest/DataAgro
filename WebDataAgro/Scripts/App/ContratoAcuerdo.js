@@ -14,7 +14,9 @@ var cargaFijacionAyer;
 var esEdicion;
 var feriados = [];
 var boletoId;
-var cantidadEditar, fechaHastaEditar;;
+var cantidadEditar, fechaHastaEditar;
+var porcentajeDePago = null;
+var materialSeleccionado = null;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -934,6 +936,19 @@ function InicializarElementos() {
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
 
+            if (porcentajeDePago == null) {
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
+            }
+            else {
+                if (materialSeleccionado != null && $("#material").val() == materialSeleccionado) {
+                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(porcentajeDePago);
+                }
+                else {
+                    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
+                }
+            }
+
+            materialSeleccionado = $("#material").val();
         }
     });
 
@@ -1333,7 +1348,7 @@ function InicializarElementos() {
             validarCredito();
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
             if (this.value() == "") {
-                $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
                 if ($("#tipoId").val() == "6") {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
@@ -1690,7 +1705,7 @@ function InicializarElementos() {
         min: 0,
         value: 97.5
     });
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
     $("#fechaOperacionId").kendoDatePicker({
@@ -3539,7 +3554,7 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
-    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
+    if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_FIJAR || nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_PRECIO || nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
         if (cantidadCamiones > 0) {
@@ -3565,7 +3580,7 @@ function GrabarContrato(nuevoContrato) {
             return;
         }
 
-        if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
+        if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_PRECIO && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El contrato madre es obligatorio al fijar el convenio");
             $.unblockUI();
             $("#guardarBtn").prop('disabled', false);
@@ -3578,7 +3593,7 @@ function GrabarContrato(nuevoContrato) {
                     listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
                 }
 
-                if (nuevoContrato.TipoNegocioId == 6) {
+                if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
                     result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
                 } else
                     result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
@@ -3589,11 +3604,11 @@ function GrabarContrato(nuevoContrato) {
         //LiberarPantalla();
         /*dataTabla = [];*/
 
-    } else if (nuevoContrato.TipoNegocioId == 3) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.FIJACION) {
         result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 4) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.FASON) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 5) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.AGENTE_DE_COMPRAS) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
     }
 
@@ -4010,7 +4025,6 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaOperacionId").val("");
         $("#fechaFijacionId").val("");
         $("#fechaOperacionAgenteId").val("");
-
     }
 
     $("#tipoAgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
@@ -4019,8 +4033,9 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaHastaId").val(contrato.FechaHastaFormateado);
     $("#fechaCiertaId").val(contrato.FechaCiertaFormateado);
     $("#fechaCiertaAcuerdo").val(contrato.FechaCiertaFormateado);
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
-
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago ?? ($("#material").val() == Materiales.TRIGO ? PORCENTAJE_PAGO_TRIGO : PORCENTAJE_PAGO));
+    porcentajeDePago = contrato.PorcentajeDePago;
+    materialSeleccionado = contrato.MaterialId;
 
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
