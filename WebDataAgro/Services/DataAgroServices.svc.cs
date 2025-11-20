@@ -34,6 +34,8 @@ namespace WebDataAgro.Services
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly IProveedorManager proveedorManager;
         private readonly IHomeManager homeManager;
+        private readonly IConfiguracionInternaManager configuracionInternaManager;
+
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
             ICampaniaActualManager campanaActual,
@@ -46,7 +48,8 @@ namespace WebDataAgro.Services
             IFijacionDePrecioContratoManager fijacionDePrecioContratoManager,
             ITipoDeCambioAgent tipoDeCambioAgent,
             IProveedorManager proveedorManager,
-            IHomeManager homeManager
+            IHomeManager homeManager,
+            IConfiguracionInternaManager configuracionInternaManager
             )
         {
             this.logger = logger;
@@ -62,6 +65,7 @@ namespace WebDataAgro.Services
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.proveedorManager = proveedorManager;
             this.homeManager = homeManager;
+            this.configuracionInternaManager = configuracionInternaManager;
         }
 
         public ResultadoSap Ping()
@@ -1316,5 +1320,38 @@ namespace WebDataAgro.Services
             var resultado = homeManager.ObtenerEstadoProveedores(string.Join(",", GlobalVariables.EquipoReal), listaCuits);
             return resultado;
         }
+
+        #region MOA_Operaciones
+        public DatosIniContrato InicializarContrato(int? tipoNegocioId)
+        {
+            var resultado = contratoManager.TraerDatosCombo(tipoNegocioId);
+            return resultado;
+        }
+
+        public DatosCompraNetDto ObtenerDatosCompraNet(int id)
+        {
+            var resultado = contratoManager.TraerDatosCompraNet(id);
+            return resultado;
+        }
+
+        public List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false)
+        {
+            var resultado = esVirtual ? fijacionDePrecioContratoManager.TraerDatosFijacionVirtual(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId) :
+                fijacionDePrecioContratoManager.TraerDatosFijacion(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId);
+            return resultado;
+        }
+
+        public AltaTempranaNRCODto ValidarProveedor(int proveedorId)
+        {
+            var resultado = contratoManager.ValidarProveedor(proveedorId);
+            return resultado;
+        }
+
+        //public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId)
+        //{
+        //    var resultado = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
+        //    return resultado;
+        //}
+        #endregion MOA_Operaciones
     }
 }

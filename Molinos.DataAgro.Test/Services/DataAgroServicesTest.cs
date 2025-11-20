@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgent;
         private Mock<IProveedorManager> proveedorManager;
         private Mock<IHomeManager> homeManager;
+        private Mock<IConfiguracionInternaManager> configuracionInternaManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -54,15 +55,17 @@ namespace Molinos.DataAgro.Test.Services
             tipoDeCambioAgent = new Mock<ITipoDeCambioAgent>();
             proveedorManager = new Mock<IProveedorManager>();
             homeManager = new Mock<IHomeManager>();
+            configuracionInternaManager = new Mock<IConfiguracionInternaManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
+
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
-                camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, cupoManagerMock.Object
-                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, homeManager.Object);
+                camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, 
+                cupoManagerMock.Object, mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, 
+                homeManager.Object, configuracionInternaManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
-
         }
 
         [Test]
@@ -72,6 +75,7 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
         }
+
         [Test]
         public void GrabarRiesgoComercialOk()
         {
@@ -83,9 +87,8 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count(), 0);
-
-
         }
+
         [Test]
         public void GrabarRiesgoComercialError()
         {
@@ -97,8 +100,8 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
+
         [Test]
         public void GrabarCampaniaActualTestOk()
         {
@@ -109,8 +112,8 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
+
         [Test]
         public void GrabarCampaniaActualTestError()
         {
@@ -121,12 +124,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
+
         [Test]
         public void ActualizarCampaniaMaterialTestOk()
         {
-
             var campania = new List<CampaniaMaterialSAPDTO>{
 
                 new CampaniaMaterialSAPDTO
@@ -146,12 +148,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
+
         [Test]
         public void ActualizarCampaniaMaterialTestError()
         {
-
             var campania = new List<CampaniaMaterialSAPDTO>{
 
                 new CampaniaMaterialSAPDTO
@@ -171,12 +172,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
+
         [Test]
         public void ActualizarEstadoComercialTestOk()
         {
-
             var informe = new List<InformeComercialSAPDTO>{
 
                 new InformeComercialSAPDTO
@@ -192,13 +192,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
         public void ActualizarEstadoComercialTestError()
         {
-
             var informe = new List<InformeComercialSAPDTO>{
 
                 new InformeComercialSAPDTO
@@ -214,13 +212,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
         public void ActualizarContratoSAPTestOk()
         {
-
             var contratoSap = new ContratoSAPDto
             {
                 ContratoSAP = "0002657570",
@@ -297,13 +293,11 @@ namespace Molinos.DataAgro.Test.Services
             contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
             var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
-
         }
 
         [Test]
         public void ActualizarContratoSAPTestError()
         {
-
             var contratoSap = new ContratoSAPDto
             {
                 ContratoSAP = "0002657570",
@@ -374,13 +368,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
         public void ActualizarCupoSAPTestOk()
         {
-
             var cupoSap =
                 new CupoSapDto
                 {
@@ -413,13 +405,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
         public void ActualizarCupoSAPTestError()
         {
-
             var cupoSap =
                 new CupoSapDto
                 {
@@ -451,14 +441,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
-
 
         [Test]
         public void AltaCupoSAPTestOk()
         {
-
             var cupoSap =
                 new CupoSapDto
                 {
@@ -490,13 +477,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
         public void AltaCupoSAPTestError()
         {
-
             var cupoSap =
                 new CupoSapDto
                 {
@@ -529,15 +514,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
-
-
 
         [Test]
         public void AnularContratoSAPError()
         {
-
             var contratoSap = new ContratoSAP
             {
                 Cantidad = "25000",
@@ -548,13 +529,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
         public void AnularContratoSAPOk()
         {
-
             var contratoSap = new ContratoSAP
             {
                 Cantidad = "25000",
@@ -565,8 +544,8 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
+
         [Test]
         public void ValidarProveedorComercialOk()
         {
@@ -596,7 +575,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
@@ -627,13 +605,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
         public void AltaContratoSAPTestOk()
         {
-
             var contratoSap = new ContratoSAPDto
             {
                 ContratoSAP = "0002657570",
@@ -713,13 +689,11 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
         public void AltaContratoSAPTestError()
         {
-
             var contratoSap = new ContratoSAPDto
             {
                 ContratoSAP = "0002657570",
@@ -800,7 +774,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
@@ -818,7 +791,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
@@ -836,8 +808,8 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
+
         [Test]
         public void AltaFijacionSAPError()
         {
@@ -890,7 +862,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
         [Test]
@@ -946,7 +917,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
@@ -964,7 +934,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
-
         }
 
         [Test]
@@ -982,7 +951,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
-
         }
 
 
@@ -994,7 +962,6 @@ namespace Molinos.DataAgro.Test.Services
             var result = target.ProveedorApocrifo("");
 
             Assert.IsTrue(result);
-
         }
 
         [Test]
@@ -1081,7 +1048,6 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.AreEqual(false, result.HayError);
         }
-
 
         [Test]
         public void ObtenerEstadoProveedoresTestOk()

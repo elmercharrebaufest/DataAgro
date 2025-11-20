@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 
 namespace WebDataAgro.Services
@@ -9,7 +10,6 @@ namespace WebDataAgro.Services
     [ServiceContract]
     public interface IDataAgroServices
     {
-        #region Servicios del ABM de Destinatarios
         [OperationContract]
         ResultadoSap Ping();
 
@@ -75,6 +75,20 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits);
-        #endregion
+
+        [OperationContract]
+        DatosIniContrato InicializarContrato(int? tipoNegocioId = null);
+
+        [OperationContract]
+        DatosCompraNetDto ObtenerDatosCompraNet(int id);
+
+        [OperationContract]
+        List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false);
+
+        [OperationContract]
+        AltaTempranaNRCODto ValidarProveedor(int proveedorId);
+
+        //[OperationContract]
+        //IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId);
     }
 }
