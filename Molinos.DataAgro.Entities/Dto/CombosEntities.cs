@@ -14,16 +14,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Nombre { get; set; }
     }
 
-
     public class MaterialCombo 
     {
         public int MaterialId { get; set; }
         public string Descripcion { get; set; }
-
         public string Codigo { get; set; }
-
         public string Campaña { get; set; }
-
         public decimal? IVA { get; set; }
     }
 
@@ -32,27 +28,25 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MotivoId { get; set; }
         public string Descripcion { get; set; }
     }
+
     public class NivelTarifaCombo
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
-
         public string CodigoSap { get; set; }
-
     }
+
     public class CampaniaCombo
     {
         public int CampaniaId { get; set; }
         public string Descripcion { get; set; }
-    
     }
+
     public class CampaniaTableroCombo
     {
         public int CampaniaTableroId { get; set; }
         public string Descripcion { get; set; }
-
     }
-
 
     public class ComercialCombo 
     {
@@ -70,7 +64,6 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ProveedorId { get; set; }
         public string RazonSocial { get; set; }
-
         public string Cuit { get; set; }
         public string Alias { get; set; }
 
@@ -102,39 +95,45 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Provinciaid;
         public string Nombre;
         public bool Inscripto { get; set; }
-
         public int Orden { get; set; }
     }
+
     public class MonedaQry
     {
         public string MonedaId;
         public string Descripcion;
     }
+
     public class TipoFasonQry
     {
         public int Id;
         public string Descripcion;
     }
+
     public class TipoAgenteCompraQry
     {
         public int Id;
         public string Descripcion;
     }
+
     public class OperadorQry
     {
         public int Id;
         public string Descripcion;
     }
+
     public class TipoNegocioQry
     {
         public int TipoNegocioId;
         public string Descripcion;
     }
+
     public class ClaseNegocioQry
     {
         public int ClaseNegocioId;
         public string Descripcion;
     }
+
     public class EstadoICQry
     {
         public int EstadoInformeId { get; set; }
@@ -230,12 +229,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion;
         public string CodigoSap;
     }
+
     public class StandardDeCalidadQry
     {
         public int Id;
         public string Descripcion;
         public string CodigoSap;
     }
+
     public class CalidadesEspecialesQry
     {
         public int Id;
@@ -243,28 +244,32 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CodigoSap;
         public string MaterialId;
     }
+
     public class TipoDBQry
     {
         public int Id;
         public string Descripcion;
         public string CodigoSap;        
     }
+
     public class TipoPeriodoDBQry
     {
         public int Id;
         public string Descripcion;
         public string CodigoSap;
     }
-    public class EstadosContratos {
 
+    public class EstadosContratos {
         public int EstadosContratosId { get; set; }
         public string Descripcion { get; set; }
 
+        public EstadosContratos() { }
         public EstadosContratos(int EstadosContratosId, string Descripcion) {
             this.EstadosContratosId = EstadosContratosId;
             this.Descripcion = Descripcion;
         }
     }
+
     public class CentroCombo
     {
         public int Id;
@@ -278,12 +283,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion;
         public string CodigoSap;
     }
+
     public class ZonaCombo
     {
         public int Id;
         public string Descripcion;
         public string CodigoSap;
     }
+
     public class OperadorCombo
     {
         public int Id;
@@ -294,6 +301,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int Id;
     }
+
     public class CamaraQry
     {
         public int Id;
@@ -313,6 +321,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id;
         public string Descripcion;
     }
+
     public class FleteACargoQry
     {
         public string Descripcion;
@@ -348,13 +357,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaId { get; set; }
         public DateTime FechaDesde { get; set; }
     }
+
     public class RolCombo
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
-
         public bool Disabled { get; set; }
     }
 }
-
-
