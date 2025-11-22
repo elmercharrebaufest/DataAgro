@@ -164,7 +164,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return IdActiveDirectoryCompleto.Split('\\').Length > 1 ? IdActiveDirectoryCompleto.Split('\\')[1] : IdActiveDirectoryCompleto;
+                    return (string)HttpContext.Current.Session["IdActiveDirectory"];
+                }
+                set
+                {
+                    HttpContext.Current.Session["IdActiveDirectory"] = value;
                 }
             }
 
@@ -172,8 +176,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.User.Identity.Name;
-                    //return "molinosagro\\nunezml";
+                    return (string)HttpContext.Current.Session["IdActiveDirectoryCompleto"];
+                }
+                set
+                {
+                    HttpContext.Current.Session["IdActiveDirectoryCompleto"] = value;
                 }
             }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Web.Mvc;
+﻿using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -6,11 +8,18 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report;
+using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IdentityModel.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -19,7 +28,7 @@ using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
-    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
+    //[Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class HomeController : Controller
     {
         private readonly IHomeManager mobjHomeManager;
@@ -40,9 +49,152 @@ namespace WebDataAgro.Controllers
             this.logger = logger;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index(string code, string error)
         {
+            if (!string.IsNullOrEmpty(error))
+                return Content("Error: " + error);
+
+            // Si viene el "code" desde Azure → canjeamos por token
+            if (!string.IsNullOrEmpty(code))
+            {
+                var token = await ExchangeCodeForToken(code);
+
+                var email = GetEmailFromAccessToken(token.AccessToken);
+
+                // Tus roles desde DB o servicio
+                var roles = comercialManager.ObtenerPermisosPorEmail(email);
+                var comercial = comercialManager.TraerComercial(email);
+                // Crear identidad con claims
+                var identity = new ClaimsIdentity(
+                    CookieAuthenticationDefaults.AuthenticationType,
+                    System.IdentityModel.Claims.ClaimTypes.Email,
+                    ClaimTypes.Role
+                );
+
+                identity.AddClaim(new Claim(ClaimTypes.Email, email));
+                identity.AddClaim(new Claim(ClaimTypes.Name, email));
+
+                foreach (var rol in roles)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, rol));
+
+                var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory);
+                GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory);
+                GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(comercial.IdActiveDirectory);
+                GlobalVariables.EsCupera = comercialManager.EsCupera(comercial.IdActiveDirectory);
+                GlobalVariables.IdActiveDirectory = comercial.IdActiveDirectory;
+                GlobalVariables.IdActiveDirectoryCompleto = "molinosagro\\" + comercial.IdActiveDirectory;
+                GlobalVariables.Equipo = equipo.Equipo;
+                GlobalVariables.EquipoReal = equipo.EquipoReal;
+                GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
+                GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
+
+
+                // Loguear: emitir cookie OWIN
+                var ctx = HttpContext.GetOwinContext();
+                var auth = ctx.Authentication;
+
+                auth.SignIn(new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
+                }, identity);
+
+                return RedirectToAction("Index");
+            }
+
+            logger.Debug($"Inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
+            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal.ToJson()}");
+            logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo.ToJson()}");
             return View();
+        }
+        private string GetEmailFromAccessToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+
+            // 1) Email si existe
+            var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            if (!string.IsNullOrEmpty(email))
+                return email;
+
+            // 2) preferred_username (muy común)
+            email = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+            if (!string.IsNullOrEmpty(email))
+                return email;
+
+            // 3) upn como fallback
+            email = jwt.Claims.FirstOrDefault(c => c.Type == "upn")?.Value;
+            return email;
+        }
+        [AllowAnonymous]
+        public ActionResult Login()
+        {
+            string tenantId = ConfigurationManager.AppSettings["AzureAd_TenantId"];
+            string clientId = ConfigurationManager.AppSettings["AzureAd_ClientId"];
+            string redirectUri = ConfigurationManager.AppSettings["AzureAd_RedirectUri"];
+
+            string url =
+                $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize" +
+                $"?client_id={clientId}" +
+                $"&response_type=code" +
+                $"&redirect_uri={HttpUtility.UrlEncode(redirectUri)}" +
+                $"&response_mode=query" +
+                $"&scope=openid%20email%20profile%20offline_access" +
+                $"&prompt=select_account";
+
+            return Redirect(url);
+        }
+
+        private async Task<TokenResponse> ExchangeCodeForToken(string code)
+        {
+            using (var client = new HttpClient())
+            {
+                var values = new Dictionary<string, string>
+            {
+                { "client_id", ConfigurationManager.AppSettings["AzureAd_ClientId"] },
+                { "client_secret", ConfigurationManager.AppSettings["AzureAd_ClientSecret"] },
+                { "grant_type", "authorization_code" },
+                { "code", code },
+                { "redirect_uri", ConfigurationManager.AppSettings["AzureAd_RedirectUri"] }
+            };
+
+                var response = await client.PostAsync(
+                    $"https://login.microsoftonline.com/{ConfigurationManager.AppSettings["AzureAd_TenantId"]}/oauth2/v2.0/token",
+                    new FormUrlEncodedContent(values));
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TokenResponse>(json);
+            }
+        }
+
+        private async Task<GraphUser> GetUserFromGraph(string accessToken)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+                var response = await client.GetAsync("https://graph.microsoft.com/v1.0/me");
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<GraphUser>(json);
+            }
+        }
+
+
+
+        public class TokenResponse
+        {
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
+        }
+
+        public class GraphUser
+        {
+            public string Id { get; set; }
+            public string UserPrincipalName { get; set; }
+            public string Mail { get; set; }
+            public string DisplayName { get; set; }
         }
 
         public ActionResult ErrorDePermisos()

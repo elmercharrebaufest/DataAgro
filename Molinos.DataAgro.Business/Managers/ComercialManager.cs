@@ -71,7 +71,12 @@ namespace Molinos.DataAgro.Business
                 Comercial = result
             };
         }
-
+        public ComercialDto TraerComercial(string email)
+        {
+            var comercial = repositorio.Obtener<Comercial, int>(x => x.Email == email, x => x.ComercialId);
+            var comercialDto = TraerComercial(comercial);
+            return comercialDto;
+        }
         public ComercialDto TraerComercial(int intComercialId)
         {
             var comercial = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
@@ -433,14 +438,17 @@ namespace Molinos.DataAgro.Business
 
         public List<string> ObtenerPermisosPorEmail(string email)
         {
-            var permisos = repositorio.Listar<Comercial, IEnumerable<string>>(
-                x => x.RolesAsociados.SelectMany(y => y.PermisosAsociados).Select(z => z.Permiso.ToString()),
-                x => x.Email == email
-            )
-            .SelectMany(p => p)
-            .Distinct()
-            .ToList();
-            return permisos;
+            email = email.ToLower();
+            var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.Email == email);
+            if (usuario != null)
+            {
+                var permisos = usuario.RolesAsociados
+                    .SelectMany(rol => rol.PermisosAsociados)
+                    .Distinct()
+                    .ToList();
+                return permisos.Select(a => a.Permiso.ToString()).Distinct().ToList();
+            }
+            return new List<string>();
         }
     }
 }
