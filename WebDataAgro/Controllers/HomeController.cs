@@ -13,7 +13,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
@@ -60,53 +59,54 @@ namespace WebDataAgro.Controllers
                 var token = await ExchangeCodeForToken(code);
 
                 var email = GetEmailFromAccessToken(token.AccessToken);
-
-                // Tus roles desde DB o servicio
-                var roles = comercialManager.ObtenerPermisosPorEmail(email);
-                var comercial = comercialManager.TraerComercial(email);
-                // Crear identidad con claims
-                var identity = new ClaimsIdentity(
-                    CookieAuthenticationDefaults.AuthenticationType,
-                    System.IdentityModel.Claims.ClaimTypes.Email,
-                    ClaimTypes.Role
-                );
-
-                identity.AddClaim(new Claim(ClaimTypes.Email, email));
-                identity.AddClaim(new Claim(ClaimTypes.Name, email));
-
-                foreach (var rol in roles)
-                    identity.AddClaim(new Claim(ClaimTypes.Role, rol));
-
-                var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory);
-                GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory);
-                GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(comercial.IdActiveDirectory);
-                GlobalVariables.EsCupera = comercialManager.EsCupera(comercial.IdActiveDirectory);
-                GlobalVariables.IdActiveDirectory = comercial.IdActiveDirectory;
-                GlobalVariables.IdActiveDirectoryCompleto = "molinosagro\\" + comercial.IdActiveDirectory;
-                GlobalVariables.Equipo = equipo.Equipo;
-                GlobalVariables.EquipoReal = equipo.EquipoReal;
-                GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
-                GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
-
-
-                // Loguear: emitir cookie OWIN
-                var ctx = HttpContext.GetOwinContext();
-                var auth = ctx.Authentication;
-
-                auth.SignIn(new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
-                }, identity);
+                CrearOActualizarSesion(email);
 
                 return RedirectToAction("Index");
             }
 
-            logger.Debug($"Inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
-            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal.ToJson()}");
-            logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo.ToJson()}");
             return View();
         }
+
+        private void CrearOActualizarSesion(string email)
+        {
+            // Tus roles desde DB o servicio
+            var roles = comercialManager.ObtenerPermisosPorEmail(email);
+            var comercial = comercialManager.TraerComercial(email);
+            // Crear identidad con claims
+            var identity = new ClaimsIdentity(
+                CookieAuthenticationDefaults.AuthenticationType,
+                System.IdentityModel.Claims.ClaimTypes.Email,
+                ClaimTypes.Role
+            );
+
+            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+            identity.AddClaim(new Claim(ClaimTypes.Name, email));
+
+            foreach (var rol in roles)
+                identity.AddClaim(new Claim(ClaimTypes.Role, rol));
+
+            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory);
+            identity.AddClaim(new Claim("perfil", JsonConvert.SerializeObject(comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("esAdministrador", JsonConvert.SerializeObject(comercialManager.EsAdministrador(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("EsCupera", JsonConvert.SerializeObject(comercialManager.EsCupera(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("comercialId", JsonConvert.SerializeObject(comercial.ComercialId)));
+            identity.AddClaim(new Claim("equipo", JsonConvert.SerializeObject(equipo.Equipo)));
+            identity.AddClaim(new Claim("equipoReal", JsonConvert.SerializeObject(equipo.EquipoReal)));
+            identity.AddClaim(new Claim("IdActiveDirectory", JsonConvert.SerializeObject(comercial.IdActiveDirectory)));
+            identity.AddClaim(new Claim("IdActiveDirectoryCompleto", JsonConvert.SerializeObject("molinosagro\\" + comercial.IdActiveDirectory)));
+            identity.AddClaim(new Claim("corredoresComercial", JsonConvert.SerializeObject(comercialManager.ListarCorredoresComercial())));
+
+            // Loguear: emitir cookie OWIN
+            var ctx = HttpContext.GetOwinContext();
+            var auth = ctx.Authentication;
+
+            auth.SignIn(new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
+            }, identity);
+        }
+
         private string GetEmailFromAccessToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -131,13 +131,14 @@ namespace WebDataAgro.Controllers
         {
             string tenantId = ConfigurationManager.AppSettings["AzureAd_TenantId"];
             string clientId = ConfigurationManager.AppSettings["AzureAd_ClientId"];
-            string redirectUri = ConfigurationManager.AppSettings["AzureAd_RedirectUri"];
+            var request = HttpContext.Request;
+            string baseUrl = request.Url.Scheme + "://" + request.Url.Authority;
 
             string url =
                 $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize" +
                 $"?client_id={clientId}" +
                 $"&response_type=code" +
-                $"&redirect_uri={HttpUtility.UrlEncode(redirectUri)}" +
+                $"&redirect_uri={HttpUtility.UrlEncode(baseUrl)}" +
                 $"&response_mode=query" +
                 $"&scope=openid%20email%20profile%20offline_access" +
                 $"&prompt=select_account";
@@ -147,6 +148,8 @@ namespace WebDataAgro.Controllers
 
         private async Task<TokenResponse> ExchangeCodeForToken(string code)
         {
+            var request = HttpContext.Request;
+            string baseUrl = request.Url.Scheme + "://" + request.Url.Authority;
             using (var client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -155,7 +158,7 @@ namespace WebDataAgro.Controllers
                 { "client_secret", ConfigurationManager.AppSettings["AzureAd_ClientSecret"] },
                 { "grant_type", "authorization_code" },
                 { "code", code },
-                { "redirect_uri", ConfigurationManager.AppSettings["AzureAd_RedirectUri"] }
+                { "redirect_uri", baseUrl }
             };
 
                 var response = await client.PostAsync(
@@ -196,7 +199,14 @@ namespace WebDataAgro.Controllers
             public string Mail { get; set; }
             public string DisplayName { get; set; }
         }
+        public ActionResult Logout()
+        {
+            //Cerrar cookie OWIN de autenticación
+            var auth = HttpContext.GetOwinContext().Authentication;
+            auth.SignOut(CookieAuthenticationDefaults.AuthenticationType);
 
+            return RedirectToAction("Login", "Home");
+        }
         public ActionResult ErrorDePermisos()
         {
 
@@ -492,10 +502,9 @@ namespace WebDataAgro.Controllers
         [AjaxOnly]
         public void BorrarCookies()
         {
-            if (FederatedAuthentication.SessionAuthenticationModule != null)
-            {
-                FederatedAuthentication.SessionAuthenticationModule.DeleteSessionTokenCookie();
-            }
+            string Email = HttpContext.User.Identity.Name;
+
+            CrearOActualizarSesion(Email);
         }
 
         public ActionResult TraerCompras(int? comercialId, int? zonaId)

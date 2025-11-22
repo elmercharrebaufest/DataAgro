@@ -1,5 +1,6 @@
 ﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,6 +9,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Web;
@@ -80,16 +82,61 @@ namespace WebDataAgro
 
         public static class GlobalVariables
         {
-            // read-write variable
+            private static ClaimsIdentity Identity
+            {
+                get
+                {
+                    var principal = HttpContext.Current.User as ClaimsPrincipal;
+                    return principal?.Identity as ClaimsIdentity;
+                }
+            }
+
+            // -------------------
+            // Helpers
+            // -------------------
+            private static T GetClaimValue<T>(string claimType, T defaultValue = default(T))
+            {
+                var claim = Identity?.FindFirst(claimType);
+                if (claim == null) return defaultValue;
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(claim.Value);
+                }
+                catch
+                {
+                    return defaultValue;
+                }
+            }
+
+            private static void SetClaimValue<T>(string claimType, T value)
+            {
+                if (Identity == null) return;
+
+                // Borro si ya existe
+                var existing = Identity.FindFirst(claimType);
+                if (existing != null)
+                    Identity.RemoveClaim(existing);
+
+                // Guardo serializado
+                var json = JsonConvert.SerializeObject(value);
+                Identity.AddClaim(new Claim(claimType, json));
+            }
+
+
+            // -------------------------
+            // Variables reemplazadas
+            // -------------------------
+
             public static EnumPerfil Perfil
             {
                 get
                 {
-                    return (EnumPerfil)HttpContext.Current.Session["perfil"];
+                    return GetClaimValue("perfil", EnumPerfil.Visualizador);
                 }
                 set
                 {
-                    HttpContext.Current.Session["perfil"] = value;
+                    SetClaimValue("perfil", value);
                 }
             }
 
@@ -97,33 +144,35 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.Session["esAdministrador"] as bool? ?? false;
+                    return GetClaimValue("esAdministrador", false);
                 }
                 set
                 {
-                    HttpContext.Current.Session["esAdministrador"] = value;
+                    SetClaimValue("esAdministrador", value);
                 }
             }
+
             public static bool EsCupera
             {
                 get
                 {
-                    return HttpContext.Current.Session["EsCupera"] as bool? ?? false;
+                    return GetClaimValue("EsCupera", false);
                 }
                 set
                 {
-                    HttpContext.Current.Session["EsCupera"] = value;
+                    SetClaimValue("EsCupera", value);
                 }
             }
+
             public static int ComercialId
             {
                 get
                 {
-                    return (int)HttpContext.Current.Session["comercialId"];
+                    return GetClaimValue("comercialId", 0);
                 }
                 set
                 {
-                    HttpContext.Current.Session["comercialId"] = value;
+                    SetClaimValue("comercialId", value);
                 }
             }
 
@@ -131,7 +180,6 @@ namespace WebDataAgro
             {
                 get
                 {
-
                     return Equipo.Count > 0;
                 }
             }
@@ -140,11 +188,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["equipo"];
+                    return GetClaimValue("equipo", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["equipo"] = value;
+                    SetClaimValue("equipo", value);
                 }
             }
 
@@ -152,11 +200,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["equipoReal"];
+                    return GetClaimValue("equipoReal", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["equipoReal"] = value;
+                    SetClaimValue("equipoReal", value);
                 }
             }
 
@@ -164,11 +212,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (string)HttpContext.Current.Session["IdActiveDirectory"];
+                    return GetClaimValue("IdActiveDirectory", "");
                 }
                 set
                 {
-                    HttpContext.Current.Session["IdActiveDirectory"] = value;
+                    SetClaimValue("IdActiveDirectory", value);
                 }
             }
 
@@ -176,11 +224,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (string)HttpContext.Current.Session["IdActiveDirectoryCompleto"];
+                    return GetClaimValue("IdActiveDirectoryCompleto", "");
                 }
                 set
                 {
-                    HttpContext.Current.Session["IdActiveDirectoryCompleto"] = value;
+                    SetClaimValue("IdActiveDirectoryCompleto", value);
                 }
             }
 
@@ -188,13 +236,14 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["corredoresComercial"];
+                    return GetClaimValue("corredoresComercial", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["corredoresComercial"] = value;
+                    SetClaimValue("corredoresComercial", value);
                 }
             }
+
         }
 
         private static void EnviarMailTimeOut(SqlException filterContext)

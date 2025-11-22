@@ -368,11 +368,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.Dependencias.cs" />
     <Compile Include="App_Start\Startup.MvcAutofac.cs" />
-    <Compile Include="Helpers\ClaimConstants.cs" />
-    <Compile Include="Helpers\ClaimsPrincipalExtension.cs" />
-    <Compile Include="Helpers\MsalAppBuilder.cs" />
-    <Compile Include="Helpers\MSALPerUserMemoryTokenCache.cs" />
-    <Compile Include="Helpers\SameSiteCookieManager.cs" />
     <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />
     <Compile Include="Jobs\ProcessCapacidadProductivaHangfireJob.cs" />
     <Compile Include="Jobs\ProcessComprasAyerHangfireJob.cs" />

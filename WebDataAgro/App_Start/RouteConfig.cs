@@ -8,7 +8,6 @@ namespace WebDataAgro
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("signin-oidc");
             routes.IgnoreRoute(".well-known/{*pathInfo}");
 
             routes.MapRoute(
