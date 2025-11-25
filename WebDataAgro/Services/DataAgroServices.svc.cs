@@ -1,4 +1,9 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -12,6 +17,10 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
+using System.Web.Mvc;
+using WebDataAgro.Helpers.Excel;
+using WebDataAgro.Models;
+using static Microsoft.IdentityModel.Protocols.WSTrust.WSTrustServiceContractConstants;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Services
@@ -35,6 +44,11 @@ namespace WebDataAgro.Services
         private readonly IProveedorManager proveedorManager;
         private readonly IHomeManager homeManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
+        private readonly IMaterialManager materialManager;
+        private readonly ICentroManager centroManager;
+        private readonly ICampañaManager campañaManager;
+        private readonly IConfiguracionBolsaManager configuracionBolsaManager;
+        private readonly ILocalidadManager localidadManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -49,7 +63,12 @@ namespace WebDataAgro.Services
             ITipoDeCambioAgent tipoDeCambioAgent,
             IProveedorManager proveedorManager,
             IHomeManager homeManager,
-            IConfiguracionInternaManager configuracionInternaManager
+            IConfiguracionInternaManager configuracionInternaManager,
+            IMaterialManager materialManager,
+            ICentroManager centroManager,
+            ICampañaManager campañaManager,
+            IConfiguracionBolsaManager configuracionBolsaManager,
+            ILocalidadManager localidadManager
             )
         {
             this.logger = logger;
@@ -66,6 +85,11 @@ namespace WebDataAgro.Services
             this.proveedorManager = proveedorManager;
             this.homeManager = homeManager;
             this.configuracionInternaManager = configuracionInternaManager;
+            this.materialManager = materialManager;
+            this.centroManager = centroManager;
+            this.campañaManager = campañaManager;
+            this.configuracionBolsaManager = configuracionBolsaManager;
+            this.localidadManager = localidadManager;
         }
 
         public ResultadoSap Ping()
@@ -610,7 +634,7 @@ namespace WebDataAgro.Services
                     // los importes en USDM que llegan de sap tienen un 0 demás
                     if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM")
                     {
-                        desc.Importe = desc.Importe / 10;
+                        desc.Importe /= 10;
                     }
                 }
             }
@@ -622,10 +646,12 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoFijacion" + fijacionSAP.ToXml());
-                var fijacion = new FijacionDePrecioContrato();
-                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
-                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
-                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
+                var fijacion = new FijacionDePrecioContrato
+                {
+                    FijacionSAP = fijacionSAP.FijacionSAP,
+                    ChequeElectronico = fijacionSAP.ZLSCH == "=",
+                    PagoCBU = fijacionSAP.CUENTA_MRP
+                };
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
@@ -719,8 +745,8 @@ namespace WebDataAgro.Services
                 fijacion.ComercialCreadorId = comercialCreador.ComercialId;
                 fijacion.GrupoCompra = comercial.GrupoDeComprasId;
 
-                fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
-                fijacion.Virtual = fijacionSAP.Virtual == "X" ? true : false;
+                fijacion.Canje = fijacionSAP.Canje == "X";
+                fijacion.Virtual = fijacionSAP.Virtual == "X";
                 logger.Debug("Alta fijacion Apertura");
 
                 var aperturas = new List<AperturaPrecio>();
@@ -825,11 +851,13 @@ namespace WebDataAgro.Services
                     return oEntityErrors;
                 }
 
-                var cupo = new Cupo();
-                cupo.Id = cupoOriginal.Id;
-                cupo.FechaIngreso = DateTime.ParseExact(cupoSAP.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                cupo.CupoSap = cupoSAP.Codigo;
-                cupo.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == cupoSAP.Material, x => x.MaterialId);
+                var cupo = new Cupo
+                {
+                    Id = cupoOriginal.Id,
+                    FechaIngreso = DateTime.ParseExact(cupoSAP.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    CupoSap = cupoSAP.Codigo,
+                    MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == cupoSAP.Material, x => x.MaterialId)
+                };
                 string cuit = cupoSAP.Proveedor;
                 int ProveedorId = 0;
                 if (cuit.StartsWith("C"))
@@ -900,10 +928,12 @@ namespace WebDataAgro.Services
                 //    return oEntityErrors;
                 //}
 
-                var cupo = new Cupo();
-                cupo.FechaIngreso = DateTime.ParseExact(cupoSAP.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                cupo.CupoSap = cupoSAP.Codigo;
-                cupo.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == cupoSAP.Material, x => x.MaterialId);
+                var cupo = new Cupo
+                {
+                    FechaIngreso = DateTime.ParseExact(cupoSAP.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    CupoSap = cupoSAP.Codigo,
+                    MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == cupoSAP.Material, x => x.MaterialId)
+                };
                 string cuit = cupoSAP.Proveedor;
                 int ProveedorId = 0;
 
@@ -1147,7 +1177,6 @@ namespace WebDataAgro.Services
         public ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion)
         {
             var oEntityErrors = new ResultadoSap();
-            var contrato = new Contrato();
             try
             {
                 logger.Debug("ActualizarCesionContratoSAP" + contratoSAP + " " + cesion.ToString());
@@ -1250,7 +1279,6 @@ namespace WebDataAgro.Services
         public ResultadoSap ConfirmarFijacionSAP(string fijacionSAP)
         {
             var oEntityErrors = new ResultadoSap();
-            var contrato = new Contrato();
             try
             {
                 logger.Debug("ConfirmarFijacion" + (fijacionSAP ?? ""));
@@ -1352,6 +1380,195 @@ namespace WebDataAgro.Services
         //    var resultado = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
         //    return resultado;
         //}
+
+        //public BasicoContrato TraerContratoCompleto(int id, string tipo) 
+        //{
+        //    var copia = (tipo != "acuerdo") ? contratoManager.TraerContrato(id) : contratoManager.TraerContratoAcuerdoACopiar(id);
+        //    if (copia.ContratoId == 0)
+        //    {
+        //        var err = new Resultado();
+        //        err.Error("acuerdo", "Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior.");
+        //        return new JsonResult()
+        //        {
+        //            Data = err,
+        //            MaxJsonLength = Int32.MaxValue
+        //        };
+        //    }
+        //    if (copia.Venta == true && copia.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+        //        copia.Cantidad = Math.Abs(copia.Cantidad);
+
+        //    return copia;
+        //}
+
+        public BasicoContrato TraerFijacionCompleto(int id) 
+        {
+            var resultado = fijacionDePrecioContratoManager.TraerFijacion(id);
+            return resultado;
+        }
+
+        public GrabarContratoResult GrabarContratoAPrecio(Contrato contrato) 
+        {
+            var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
+            return resultado;
+        }
+
+        public GrabarContratoResult GrabarContratoAFijar(Contrato contrato) 
+        {
+            var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
+            return resultado;
+        }
+
+        public bool ValidarDirecto(string cuit) 
+        {
+            var resultado = proveedorManager.ValidarDirecto(cuit);
+            return resultado;
+        }
+
+        public HabilitacionPizarraDto HabilitarPizarra(int material, int tiponegocio) 
+        {
+            var resultado = configuracionInternaManager.HabilitarPizarraExterno(material, tiponegocio);
+            return resultado;
+        }
+
+        public List<HabilitacionPagoDiferidoDto> TraerPagosDiferido()
+        {
+            var resultado = configuracionInternaManager.TraerPagosDiferido();
+            return resultado;
+        }
+
+        public List<HabilitacionCampañaDto> HabilitarCampaña(int material)
+        {
+            var resultado = configuracionInternaManager.HabilitarCampañaExterno(material);
+            return resultado;
+        }
+
+        public List<PrecioMoaCompraNetDto> TraerPrecioMoa(int material, int tiponegocio) 
+        { 
+            var resultado = configuracionInternaManager.TraerPrecioCompraNet(material, tiponegocio);
+            return resultado;
+        }
+
+        public GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato)
+        { 
+            var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
+            return resultado;
+        }
+
+        public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId) 
+        {
+            var resultado = contratoManager.TraerContratosAcuerdoPorCorredor(corredorId);
+            return resultado;
+        }
+
+        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos) 
+        {
+            var resultado = contratoManager.GrabarContratoMasivo(contratos);
+            return resultado;
+        }
+
+        public Resultado AnularContrato(int negocioId, string MotivoRechazo) 
+        {
+            var resultado = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
+            return resultado;
+        }
+
+        public Resultado AnularFijacion(int negocioId, string MotivoRechazo)
+        {
+            var resultado = fijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
+            return resultado;
+        }
+
+        public List<HabilitacionSustentableDto> HabilitarSustentable()
+        {
+            var resultado = configuracionInternaManager.TraerSustentables();
+            return resultado;
+        }
+
+        public List<BusquedaHome> BuscarProveedoresConCorredor(string filtroProveedor, string filtro, int? agenteCompraId)
+        {
+            if (filtro == "")
+            {
+                return proveedorManager.DevolverProveedores(filtroProveedor, 0, GlobalVariables.Equipo, agenteCompraId);
+            }
+            else
+            {
+                return proveedorManager.DevolverProveedoresConCorredor(filtroProveedor, filtro);
+            }
+        }
+
+        //public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro) 
+        //{
+        //    if (filtro.Sort == null)
+        //    {
+        //        filtro.Sort = new List<Sort> {
+        //            new Sort {Field= "Material",Dir="desc" }
+        //        };
+        //    }
+
+        //    var equipo = GlobalVariables.EquipoReal;
+        //    var resultado = contratoManager.TraerContratosFiltrados(filtro, equipo);
+        //    return resultado;
+        //}
+
+        public ResultIniMaterialModel BuscarMateriales() 
+        {
+            var model = new ResultIniMaterialModel();
+
+            var resultado = materialManager.TraerTodoMaterial();
+
+            if (resultado != null)
+            {
+                model.Datos = resultado.Material;
+            }
+
+            return model;
+        }
+
+        public ResultIniCentroModel BuscarCentro() 
+        {
+            var model = new ResultIniCentroModel();
+
+            var resultado = centroManager.TraerTodoCentro();
+
+            if (resultado != null)
+            {
+                model.Datos = resultado.Centro;
+            }
+
+            return model;
+        }
+
+        public List<CampañaDto> BuscarCampana() 
+        {
+            var resultado = campañaManager.TraerTodoCampania();
+            return resultado;
+        }
+
+        //public KendoGrid<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridMvcRequest request) 
+        //{
+        //    var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
+        //    return resultado;
+        //}
+
+        //public ActionResult ExcelModeloAltaMasiva()
+        //{
+        //    var materiales = materialManager.TraerTodoMaterial().Material;
+        //    var centros = centroManager.TraerTodoCentro().Centro;
+        //    return File(ExcelReporteCompleto.ExcelModeloAltaMasiva(materiales, centros), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        //}
+
+        public List<LocalidadDto> ListarLocalidades() 
+        {
+            var resultado = localidadManager.ListarLocalidadTodas();
+            return resultado;
+        }
+
+        public List<PartidoDto> ListarPartidos()
+        {
+            var resultado = localidadManager.ListarPartidos();
+            return resultado;
+        }
+
         #endregion MOA_Operaciones
     }
 }
