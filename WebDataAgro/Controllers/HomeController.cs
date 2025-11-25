@@ -170,22 +170,6 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        private async Task<GraphUser> GetUserFromGraph(string accessToken)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-
-                var response = await client.GetAsync("https://graph.microsoft.com/v1.0/me");
-
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<GraphUser>(json);
-            }
-        }
-
-
-
         public class TokenResponse
         {
             [JsonProperty("access_token")]
@@ -218,7 +202,7 @@ namespace WebDataAgro.Controllers
 
             return View("ErrorUsuarioSinDerechos");
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult Inicializar(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -284,7 +268,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BusquedaHome(string filtro)
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
@@ -295,7 +279,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerBusquedaContacto(oParamBusqueda filtro, int pagina)
         {
             var model = new ResultIniContactoModel();
@@ -326,7 +310,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerActividadesPorComercialId()
         {
             var model = new ResultActividadesModel();
@@ -413,7 +397,7 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerPostIt()
         {
             var model = new ResultIniPostItModel();
@@ -432,7 +416,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarPostIt(PostIt post)
         {
             var model = new GrabarPostItResult();
@@ -452,6 +436,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarObjetivoComercial(ObjetivoComercial objetivo)
         {
             var model = new Resultado();
@@ -471,6 +456,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerObjetivos(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -483,7 +469,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult EliminarObjetivo(int id)
         {
             var resultado = objetivoManager.EliminarObjetivo(id);
@@ -493,7 +479,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BorrarCookie()
         {
             return View();
@@ -506,7 +492,7 @@ namespace WebDataAgro.Controllers
 
             CrearOActualizarSesion(Email);
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerCompras(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -534,6 +520,7 @@ namespace WebDataAgro.Controllers
         }
 
         #region Informes Comerciales
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult VerificarInformesComerciales()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
@@ -545,6 +532,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult ExportarCapProdDesactualizadas()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
@@ -553,6 +541,7 @@ namespace WebDataAgro.Controllers
             return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GrabarInformeComercialApertura()
         {
             InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
@@ -567,6 +556,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerInformeComercialApertura()
         {
             var model = new InformeComercialAperturaDto();
