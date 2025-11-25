@@ -1,4 +1,6 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -36,6 +38,11 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IProveedorManager> proveedorManager;
         private Mock<IHomeManager> homeManager;
         private Mock<IConfiguracionInternaManager> configuracionInternaManager;
+        private Mock<IMaterialManager> materialManager;
+        private Mock<ICentroManager> centroManager;
+        private Mock<ICampañaManager> campañaManager;
+        private Mock<IConfiguracionBolsaManager> configuracionBolsaManager;
+        private Mock<ILocalidadManager> localidadManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -56,13 +63,19 @@ namespace Molinos.DataAgro.Test.Services
             proveedorManager = new Mock<IProveedorManager>();
             homeManager = new Mock<IHomeManager>();
             configuracionInternaManager = new Mock<IConfiguracionInternaManager>();
+            materialManager = new Mock<IMaterialManager>();
+            centroManager = new Mock<ICentroManager>();
+            campañaManager = new Mock<ICampañaManager>();
+            configuracionBolsaManager = new Mock<IConfiguracionBolsaManager>();
+            localidadManager = new Mock<ILocalidadManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, 
                 cupoManagerMock.Object, mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, 
-                homeManager.Object, configuracionInternaManager.Object);
+                homeManager.Object, configuracionInternaManager.Object, materialManager.Object, centroManager.Object, campañaManager.Object,
+                configuracionBolsaManager.Object, localidadManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;

@@ -1,9 +1,14 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Web.Mvc;
+using WebDataAgro.Models;
 
 namespace WebDataAgro.Services
 {
@@ -90,5 +95,77 @@ namespace WebDataAgro.Services
 
         //[OperationContract]
         //IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId);
+
+        //[OperationContract]
+        //BasicoContrato TraerContratoCompleto(int id, string tipo);
+
+        [OperationContract]
+        BasicoContrato TraerFijacionCompleto(int id);
+
+        [OperationContract]
+        GrabarContratoResult GrabarContratoAPrecio(Contrato contrato);
+
+        [OperationContract]
+        GrabarContratoResult GrabarContratoAFijar(Contrato contrato);
+
+        [OperationContract]
+        bool ValidarDirecto(string cuit);
+
+        [OperationContract]
+        HabilitacionPizarraDto HabilitarPizarra(int material, int tiponegocio);
+
+        [OperationContract]
+        List<HabilitacionPagoDiferidoDto> TraerPagosDiferido();
+
+        [OperationContract]
+        List<HabilitacionCampañaDto> HabilitarCampaña(int material);
+
+        [OperationContract]
+        List<PrecioMoaCompraNetDto> TraerPrecioMoa(int material, int tiponegocio);
+
+        [OperationContract]
+        GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato);
+
+        [OperationContract]
+        List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
+
+        [OperationContract]
+        List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
+
+        [OperationContract]
+        Resultado AnularContrato(int negocioId, string MotivoRechazo);
+
+        [OperationContract]
+        Resultado AnularFijacion(int negocioId, string MotivoRechazo);
+
+        [OperationContract]
+        List<HabilitacionSustentableDto> HabilitarSustentable();
+
+        [OperationContract]
+        List<BusquedaHome> BuscarProveedoresConCorredor(string filtroProveedor, string filtro, int? agenteCompraId);
+
+        //[OperationContract]
+        //DataSourceResult BuscaDatosTabla(DataSourceRequest filtro);
+
+        [OperationContract]
+        ResultIniMaterialModel BuscarMateriales();
+
+        [OperationContract]
+        ResultIniCentroModel BuscarCentro();
+
+        [OperationContract]
+        List<CampañaDto> BuscarCampana();
+
+        //[OperationContract]
+        //KendoGrid<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridMvcRequest request);
+
+        //[OperationContract]
+        //ActionResult ExcelModeloAltaMasiva();
+
+        [OperationContract]
+        List<LocalidadDto> ListarLocalidades();
+
+        [OperationContract]
+        List<PartidoDto> ListarPartidos();
     }
 }
