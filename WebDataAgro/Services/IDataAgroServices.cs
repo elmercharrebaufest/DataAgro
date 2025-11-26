@@ -93,11 +93,12 @@ namespace WebDataAgro.Services
         [OperationContract]
         AltaTempranaNRCODto ValidarProveedor(int proveedorId);
 
-        //[OperationContract]
-        //IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId);
+        [OperationContract]
+        List<PrecioMoaGroupDto> TraerPrecioMoa(int? tipoNegocioId);
 
-        //[OperationContract]
-        //BasicoContrato TraerContratoCompleto(int id, string tipo);
+        [OperationContract]
+        [FaultContract(typeof(ResultadoDto))]
+        BasicoContrato TraerContratoCompleto(int id, string tipo);
 
         [OperationContract]
         BasicoContrato TraerFijacionCompleto(int id);
@@ -121,7 +122,7 @@ namespace WebDataAgro.Services
         List<HabilitacionCampañaDto> HabilitarCampaña(int material);
 
         [OperationContract]
-        List<PrecioMoaCompraNetDto> TraerPrecioMoa(int material, int tiponegocio);
+        List<PrecioMoaCompraNetDto> TraerPrecioMoaV2(int material, int tiponegocio);
 
         [OperationContract]
         GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato);
