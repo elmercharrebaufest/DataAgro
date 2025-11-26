@@ -146,6 +146,14 @@ namespace WebDataAgro
 
         protected void Application_Error(object sender, EventArgs e)
         {
+            var context = HttpContext.Current;
+            var path = context?.Request?.Path;
+            // Si es un servicio WCF, NO redirigir
+            if (path != null && path.EndsWith(".svc", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
             Exception exception = Server.GetLastError();
             if (exception is SqlException && (exception as SqlException).Number == -2)
             {

@@ -27,7 +27,9 @@ namespace WebDataAgro.Services
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "DataAgroServices" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select DataAgroServices.svc or DataAgroServices.svc.cs at the Solution Explorer and start debugging.
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+    [ServiceBehavior(
+        InstanceContextMode = InstanceContextMode.PerCall,
+        IncludeExceptionDetailInFaults = true)]
     public class DataAgroServices : IDataAgroServices
     {
         private readonly ILogger logger;
@@ -1375,56 +1377,67 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        //public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId)
-        //{
-        //    var resultado = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
-        //    return resultado;
-        //}
+        public List<PrecioMoaGroupDto> TraerPrecioMoa(int? tipoNegocioId)
+        {
+            var result = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
 
-        //public BasicoContrato TraerContratoCompleto(int id, string tipo) 
-        //{
-        //    var copia = (tipo != "acuerdo") ? contratoManager.TraerContrato(id) : contratoManager.TraerContratoAcuerdoACopiar(id);
-        //    if (copia.ContratoId == 0)
-        //    {
-        //        var err = new Resultado();
-        //        err.Error("acuerdo", "Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior.");
-        //        return new JsonResult()
-        //        {
-        //            Data = err,
-        //            MaxJsonLength = Int32.MaxValue
-        //        };
-        //    }
-        //    if (copia.Venta == true && copia.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-        //        copia.Cantidad = Math.Abs(copia.Cantidad);
+            var resultado = result
+                .Select(g => new PrecioMoaGroupDto
+                {
+                    MaterialId = g.Key,
+                    PrecioMoaCompraNetDtoList = g.ToList()
+                })
+                .ToList();
 
-        //    return copia;
-        //}
+            return resultado;
+        }
 
-        public BasicoContrato TraerFijacionCompleto(int id) 
+        public BasicoContrato TraerContratoCompleto(int id, string tipo)
+        {
+            var copia = (tipo != "acuerdo") ? contratoManager.TraerContrato(id) : contratoManager.TraerContratoAcuerdoACopiar(id);
+
+            if (copia.ContratoId == 0)
+            {
+                var resultado = new ResultadoDto
+                {
+                    Ok = false
+                };
+                resultado.Errores.Add("Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior.");
+
+                throw new FaultException<ResultadoDto>(resultado, new FaultReason("Error de validación"));
+            }
+
+            if (copia.Venta == true && copia.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+                copia.Cantidad = Math.Abs(copia.Cantidad);
+
+            return copia;
+        }
+
+        public BasicoContrato TraerFijacionCompleto(int id)
         {
             var resultado = fijacionDePrecioContratoManager.TraerFijacion(id);
             return resultado;
         }
 
-        public GrabarContratoResult GrabarContratoAPrecio(Contrato contrato) 
+        public GrabarContratoResult GrabarContratoAPrecio(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
             return resultado;
         }
 
-        public GrabarContratoResult GrabarContratoAFijar(Contrato contrato) 
+        public GrabarContratoResult GrabarContratoAFijar(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
             return resultado;
         }
 
-        public bool ValidarDirecto(string cuit) 
+        public bool ValidarDirecto(string cuit)
         {
             var resultado = proveedorManager.ValidarDirecto(cuit);
             return resultado;
         }
 
-        public HabilitacionPizarraDto HabilitarPizarra(int material, int tiponegocio) 
+        public HabilitacionPizarraDto HabilitarPizarra(int material, int tiponegocio)
         {
             var resultado = configuracionInternaManager.HabilitarPizarraExterno(material, tiponegocio);
             return resultado;
@@ -1442,31 +1455,31 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public List<PrecioMoaCompraNetDto> TraerPrecioMoa(int material, int tiponegocio) 
-        { 
+        public List<PrecioMoaCompraNetDto> TraerPrecioMoaV2(int material, int tiponegocio)
+        {
             var resultado = configuracionInternaManager.TraerPrecioCompraNet(material, tiponegocio);
             return resultado;
         }
 
         public GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato)
-        { 
+        {
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
             return resultado;
         }
 
-        public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId) 
+        public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId)
         {
             var resultado = contratoManager.TraerContratosAcuerdoPorCorredor(corredorId);
             return resultado;
         }
 
-        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos) 
+        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
             var resultado = contratoManager.GrabarContratoMasivo(contratos);
             return resultado;
         }
 
-        public Resultado AnularContrato(int negocioId, string MotivoRechazo) 
+        public Resultado AnularContrato(int negocioId, string MotivoRechazo)
         {
             var resultado = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
             return resultado;
@@ -1496,7 +1509,7 @@ namespace WebDataAgro.Services
             }
         }
 
-        //public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro) 
+        //public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro)
         //{
         //    if (filtro.Sort == null)
         //    {
@@ -1510,7 +1523,7 @@ namespace WebDataAgro.Services
         //    return resultado;
         //}
 
-        public ResultIniMaterialModel BuscarMateriales() 
+        public ResultIniMaterialModel BuscarMateriales()
         {
             var model = new ResultIniMaterialModel();
 
@@ -1524,7 +1537,7 @@ namespace WebDataAgro.Services
             return model;
         }
 
-        public ResultIniCentroModel BuscarCentro() 
+        public ResultIniCentroModel BuscarCentro()
         {
             var model = new ResultIniCentroModel();
 
@@ -1538,7 +1551,7 @@ namespace WebDataAgro.Services
             return model;
         }
 
-        public List<CampañaDto> BuscarCampana() 
+        public List<CampañaDto> BuscarCampana()
         {
             var resultado = campañaManager.TraerTodoCampania();
             return resultado;
@@ -1557,7 +1570,7 @@ namespace WebDataAgro.Services
         //    return File(ExcelReporteCompleto.ExcelModeloAltaMasiva(materiales, centros), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         //}
 
-        public List<LocalidadDto> ListarLocalidades() 
+        public List<LocalidadDto> ListarLocalidades()
         {
             var resultado = localidadManager.ListarLocalidadTodas();
             return resultado;

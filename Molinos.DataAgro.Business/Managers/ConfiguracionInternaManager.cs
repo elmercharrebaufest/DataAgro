@@ -635,8 +635,6 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Fecha", "Vigencia no debe ser anterior al dia de la fecha");
             }
 
-
-
             return error;
         }
 
@@ -644,9 +642,9 @@ namespace Molinos.DataAgro.Business.Managers
         {
             tiponegocio = tiponegocio == null ? 3 : 0;
             var listaPrecio = new List<PrecioMoaCompraNetDto>();
-            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
+            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != (int)EnumMateriales.GIRASOL_AO);
             var tipoNegocios = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion },
-                x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == 3);
+                x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION);
             var habilitado = repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x => new EstadoPrecioMOADto { TipoNegocioId = x.TipoNegocioId, MaterialId = x.MaterialId }, x => x.Habilitado == true);
 
 
@@ -666,14 +664,16 @@ namespace Molinos.DataAgro.Business.Managers
                 HastaFijacion = x.HastaFijacion,
                 DestinoId = x.DestinoId,
                 Destino = x.Destino.Descripcion
-            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora
-            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0), 0, "DestinoId", Entities.Helpers.DirOrden.Desc);
+            }, x => x.DesdeVigencia <= ahora &&
+                    x.HastaVigencia >= ahora &&
+                    (x.TipoNegocioId == tiponegocio || tiponegocio == 0), 0, "DestinoId", Entities.Helpers.DirOrden.Desc);
 
             preciosMoa = preciosMoa.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
 
             var hoy = DateTime.Today;
-            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora &&
-            (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora &&
+                                                                             x.HastaVigencia >= ahora &&
+                                                                             (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
 
             existePizarra = existePizarra.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
 
@@ -683,28 +683,18 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var mon in monedas)
                     {
-                        //if (tiponegocio == 3)
-                        //{
-                        //    var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
-                        //    if (precio == null)
-                        //    {
-                        //        precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
-                        //    }
-                        //    precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
-                        //    listaPrecio.Add(precio);
-                        //}
-                        //else
-                        //{
-                        if (neg.TipoNegocioId == 1 && mon.Descripcion == "ARP")
+                        if (neg.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && mon.Descripcion == "ARP")
                         {
                             continue;
                         }
-                        var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).ToList();
+
+                        var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).ToList();
 
                         foreach (var item in precio)
                         {
                             item.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
                         }
+
                         if (existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId) && mon.Descripcion == "ARP")
                         {
                             var pizarra = existePizarra.FirstOrDefault();
@@ -721,19 +711,27 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoNegocioId = neg.TipoNegocioId
                             });
                         }
+
                         if (precio.Count == 0)
                         {
-                            precio.Add(new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId });
+                            precio.Add(new PrecioMoaCompraNetDto
+                            {
+                                MaterialId = mat.MaterialId,
+                                MonedaId = mon.Descripcion,
+                                Material = mat.Descripcion,
+                                Retirado = true,
+                                TipoNegocio = neg.Descripcion,
+                                TipoNegocioId = neg.TipoNegocioId
+                            });
                         }
                         listaPrecio.AddRange(precio);
-                        //}
-
                     }
                 }
             }
 
             return listaPrecio.GroupBy(x => x.MaterialId);
         }
+
         public List<PrecioMoaCompraNetDto> TraerPrecioCompraNet(int materialId, int? tiponegocio = null)
         {
             tiponegocio = tiponegocio ?? 3;
@@ -762,6 +760,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return precios;
         }
+
         public bool HabilitarPizarra(int material)
         {
             var ahora = DateTime.Now;
@@ -1039,7 +1038,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         try
                         {
-                            
+
                             var tipo = configuracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
                             repositorio.GuardarCambios();
                             logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(configuracion.Id), tipo);
@@ -1076,7 +1075,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
                     logger.Debug("Se guardó correctamente");
                 }
-            
+
                 return oEntityErrors;
             }
         }
@@ -1122,7 +1121,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
-        }    
+        }
 
         public List<EstadoPrecioMOADto> TraerPausadoGeneral()
         {
@@ -1145,7 +1144,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-             var estadosPrecio = repositorio.Listar<EstadoPrecioMOA>();
+                var estadosPrecio = repositorio.Listar<EstadoPrecioMOA>();
                 if (precios != null && precios.Count > 0)
                 {
                     foreach (var precio in precios)

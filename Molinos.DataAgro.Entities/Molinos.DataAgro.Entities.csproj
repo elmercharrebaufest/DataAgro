@@ -315,6 +315,8 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYDos.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
+    <Compile Include="Dto\PrecioMoaGroupDto.cs" />
+    <Compile Include="Dto\ResultadoDto.cs" />
     <Compile Include="Entities\ClausulaConfirma.cs" />
     <Compile Include="Entities\ClausulaGenericos.cs" />
     <Compile Include="Entities\ClausulaBoletoFisico.cs" />
