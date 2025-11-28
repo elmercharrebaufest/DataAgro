@@ -161,8 +161,8 @@ namespace WebDataAgro.Services
         //[OperationContract]
         //KendoGrid<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridMvcRequest request);
 
-        //[OperationContract]
-        //ActionResult ExcelModeloAltaMasiva();
+        [OperationContract]
+        byte[] ExcelModeloAltaMasiva();
 
         [OperationContract]
         List<LocalidadDto> ListarLocalidades();

@@ -1615,12 +1615,13 @@ namespace WebDataAgro.Services
         //    return resultado;
         //}
 
-        //public ActionResult ExcelModeloAltaMasiva()
-        //{
-        //    var materiales = materialManager.TraerTodoMaterial().Material;
-        //    var centros = centroManager.TraerTodoCentro().Centro;
-        //    return File(ExcelReporteCompleto.ExcelModeloAltaMasiva(materiales, centros), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        //}
+        public byte[] ExcelModeloAltaMasiva()
+        {
+            var materiales = materialManager.TraerTodoMaterial().Material;
+            var centros = centroManager.TraerTodoCentro().Centro;
+            var excelBytes = ExcelReporteCompleto.ExcelModeloAltaMasiva(materiales, centros);
+            return excelBytes;
+        }
 
         public List<LocalidadDto> ListarLocalidades()
         {
