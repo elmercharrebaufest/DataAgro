@@ -9,6 +9,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web.Mvc;
 using WebDataAgro.Models;
+using static WebDataAgro.Services.DataAgroServices;
 
 namespace WebDataAgro.Services
 {
@@ -82,7 +83,7 @@ namespace WebDataAgro.Services
         ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits);
 
         [OperationContract]
-        DatosIniContrato InicializarContrato(int? tipoNegocioId = null);
+        ContratoModel_prueba InicializarContrato(int? tipoNegocioId = null);
 
         [OperationContract]
         DatosCompraNetDto ObtenerDatosCompraNet(int id);
@@ -145,8 +146,8 @@ namespace WebDataAgro.Services
         [OperationContract]
         List<BusquedaHome> BuscarProveedoresConCorredor(string filtroProveedor, string filtro, int? agenteCompraId);
 
-        //[OperationContract]
-        //DataSourceResult BuscaDatosTabla(DataSourceRequest filtro);
+        [OperationContract]
+        KendoDataSourceResultDto BuscaDatosTablaContrato(KendoDataSourceRequestDto filtro);
 
         [OperationContract]
         ResultIniMaterialModel BuscarMateriales();
