@@ -1385,18 +1385,11 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        // TODO: corregir
-        public List<PrecioMoaGroupDto> TraerPrecioMoa(int? tipoNegocioId)
+        public List<List<PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId)
         {
-            var result = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
+            var grupos = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
 
-            var resultado = result
-                .Select(g => new PrecioMoaGroupDto
-                {
-                    MaterialId = g.Key,
-                    PrecioMoaCompraNetDtoList = g.ToList()
-                })
-                .ToList();
+            var resultado = grupos.Select(g => g.ToList()).ToList();
 
             return resultado;
         }

@@ -95,7 +95,7 @@ namespace WebDataAgro.Services
         AltaTempranaNRCODto ValidarProveedor(int proveedorId);
 
         [OperationContract]
-        List<PrecioMoaGroupDto> TraerPrecioMoa(int? tipoNegocioId);
+        List<List<PrecioMoaCompraNetDto>> TraerPrecioMoa(int? tipoNegocioId);
 
         [OperationContract]
         [FaultContract(typeof(ResultadoDto))]
