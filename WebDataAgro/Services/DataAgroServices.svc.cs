@@ -16,12 +16,16 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Web.Mvc;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
 using static Microsoft.IdentityModel.Protocols.WSTrust.WSTrustServiceContractConstants;
 using static WebDataAgro.MvcApplication;
+using static WebDataAgro.Services.DataAgroServices;
+using Filter = Kendo.DynamicLinq.Filter;
+using Sort = Kendo.DynamicLinq.Sort;
 
 namespace WebDataAgro.Services
 {
@@ -1352,9 +1356,13 @@ namespace WebDataAgro.Services
         }
 
         #region MOA_Operaciones
-        public DatosIniContrato InicializarContrato(int? tipoNegocioId)
+        public ContratoModel_prueba InicializarContrato(int? tipoNegocioId)
         {
-            var resultado = contratoManager.TraerDatosCombo(tipoNegocioId);
+            var resultado = new ContratoModel_prueba
+            {
+                Datos = contratoManager.TraerDatosCombo(tipoNegocioId)
+            };
+
             return resultado;
         }
 
@@ -1377,6 +1385,7 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
+        // TODO: corregir
         public List<PrecioMoaGroupDto> TraerPrecioMoa(int? tipoNegocioId)
         {
             var result = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId);
@@ -1509,19 +1518,69 @@ namespace WebDataAgro.Services
             }
         }
 
-        //public DataSourceResult BuscaDatosTabla(DataSourceRequest filtro)
-        //{
-        //    if (filtro.Sort == null)
-        //    {
-        //        filtro.Sort = new List<Sort> {
-        //            new Sort {Field= "Material",Dir="desc" }
-        //        };
-        //    }
+        public KendoDataSourceResultDto BuscaDatosTablaContrato(KendoDataSourceRequestDto filtro)
+        {
+            // Convertir el DTO SOAP → DataSourceRequest de Kendo
+            var filtroKendo = MapperToKendoRequest(filtro);
 
-        //    var equipo = GlobalVariables.EquipoReal;
-        //    var resultado = contratoManager.TraerContratosFiltrados(filtro, equipo);
-        //    return resultado;
-        //}
+            var equipo = GlobalVariables.EquipoReal;
+            var resultado = contratoManager.TraerContratosFiltrados(filtroKendo, equipo);
+
+            return MapperToKendoResult(resultado);
+        }
+
+        private DataSourceRequest MapperToKendoRequest(KendoDataSourceRequestDto dto)
+        {
+            if (dto.Sort == null)
+            {
+                dto.Sort = new List<KendoSortDto> {
+                    new KendoSortDto {
+                        Field = "Material",
+                        Dir = "desc"
+                    }
+                };
+            }
+
+            return new DataSourceRequest
+            {
+                Take = dto.Take,
+                Skip = dto.Skip,
+                Sort = dto.Sort?.Select(s => new Sort
+                {
+                    Field = s.Field,
+                    Dir = s.Dir
+                }).ToList(),
+                Filter = MapperFilter(dto.Filter)
+            };
+        }
+
+        private Filter MapperFilter(KendoFilterDto dto)
+        {
+            if (dto == null) return null;
+
+            return new Filter
+            {
+                Field = dto.Field,
+                Operator = dto.Operator,
+                Value = dto.Value, // se parseará después según necesidad
+                Logic = dto.Logic,
+                Filters = dto.Filters?.Select(MapperFilter).ToList()
+            };
+        }
+
+        private KendoDataSourceResultDto MapperToKendoResult(DataSourceResult result)
+        {
+            return new KendoDataSourceResultDto
+            {
+                Data = result.Data.Cast<BasicoContrato>()
+                                  //.Select(MapperBasicoContrato)
+                                  .ToList(),
+
+                Total = result.Total,
+
+                AggregatesJson = JsonConvert.SerializeObject(result.Aggregates)
+            };
+        }
 
         public ResultIniMaterialModel BuscarMateriales()
         {
