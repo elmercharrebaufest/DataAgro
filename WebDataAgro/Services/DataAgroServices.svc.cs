@@ -1356,9 +1356,9 @@ namespace WebDataAgro.Services
         }
 
         #region MOA_Operaciones
-        public ContratoModel_prueba InicializarContrato(int? tipoNegocioId)
+        public InicializarContratoDto InicializarContrato(int? tipoNegocioId)
         {
-            var resultado = new ContratoModel_prueba
+            var resultado = new InicializarContratoDto
             {
                 Datos = contratoManager.TraerDatosCombo(tipoNegocioId)
             };
