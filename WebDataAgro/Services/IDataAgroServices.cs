@@ -83,7 +83,7 @@ namespace WebDataAgro.Services
         ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits);
 
         [OperationContract]
-        ContratoModel_prueba InicializarContrato(int? tipoNegocioId = null);
+        InicializarContratoDto InicializarContrato(int? tipoNegocioId = null);
 
         [OperationContract]
         DatosCompraNetDto ObtenerDatosCompraNet(int id);
