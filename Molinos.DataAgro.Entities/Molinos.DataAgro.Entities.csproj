@@ -315,6 +315,7 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYDos.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
+    <Compile Include="Dto\InicializarContratoDto.cs" />
     <Compile Include="Dto\KendoDataSourceRequestDto.cs" />
     <Compile Include="Dto\KendoDataSourceResultDto.cs" />
     <Compile Include="Dto\PrecioMoaGroupDto.cs" />
