@@ -1,6 +1,8 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
 using KendoGridBinder;
+using KendoGridBinder.Containers;
+using KendoGridBinder.Containers.Json;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
@@ -1589,9 +1591,9 @@ namespace WebDataAgro.Services
             return model;
         }
 
-        public ResultIniCentroModel BuscarCentro()
+        public BuscarCentroDto BuscarCentro()
         {
-            var model = new ResultIniCentroModel();
+            var model = new BuscarCentroDto();
 
             var resultado = centroManager.TraerTodoCentro();
 
@@ -1609,10 +1611,62 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        //public KendoGrid<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridMvcRequest request) 
+        //public KendoGridResponseDto<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridRequestDto req)
         //{
+        //    var request = new KendoGridMvcRequest
+        //    {
+        //        Take = req.Take,
+        //        Skip = req.Skip,
+        //        Page = req.Page,
+        //        PageSize = req.PageSize,
+        //        Logic = req.Logic,
+        //        FilterObjectWrapper = ConvertFilter(req.FilterObjectWrapper),
+        //        SortObjects = (IEnumerable<KendoGridBinder.Containers.SortObject>)(req.SortObjects?.Select(x => new SortObjectDto
+        //        {
+        //            Field = x.Field,
+        //            Dir = x.Dir
+        //        }).ToList()),
+        //        GroupObjects = (IEnumerable<GroupObject>)(req.GroupObjects?.Select(x => new GroupObjectDto
+        //        {
+        //            Field = x.Field,
+        //            Direction = x.Direction,
+        //            AggregateObjects = x.AggregateObjects?.Select(a => new AggregateObjectDto
+        //            {
+        //                Field = a.Field,
+        //                Aggregate = a.Aggregate,
+        //                Direction = a.Direction
+        //            }).ToList()
+        //        }).ToList()),
+        //        AggregateObjects = req.AggregateObjects?.Select(a => new AggregateObject
+        //        {
+        //            Field = a.Field,
+        //            Aggregate = a.Aggregate,
+        //            Direction = a.Direction
+        //        }).ToList()
+        //    };
+
+        //    //var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
+        //    //return resultado;
+
         //    var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
-        //    return resultado;
+
+        //    return new KendoGridResponseDto<ConfiguracionBolsaDto>
+        //    {
+        //        Data = resultado.Data.Select(MapDto).ToList(),
+        //        Total = resultado.Total
+        //    };
+        //}
+
+        //private FilterObjectWrapper ConvertFilter(FilterObjectWrapperSOAP soap)
+        //{
+        //    if (soap == null)
+        //        return null;
+
+        //    return new FilterObjectWrapper
+        //    {
+        //        Logic = soap.Logic,
+        //        FilterObjects = soap.Filters?.Select(ConvertFilterObject).ToList()
+        //    };
         //}
 
         public byte[] ExcelModeloAltaMasiva()
