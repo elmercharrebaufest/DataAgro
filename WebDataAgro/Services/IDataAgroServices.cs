@@ -153,13 +153,13 @@ namespace WebDataAgro.Services
         ResultIniMaterialModel BuscarMateriales();
 
         [OperationContract]
-        ResultIniCentroModel BuscarCentro();
+        BuscarCentroDto BuscarCentro();
 
         [OperationContract]
         List<CampañaDto> BuscarCampana();
 
         //[OperationContract]
-        //KendoGrid<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridMvcRequest request);
+        //KendoGridResponseDto<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridRequestDto request);
 
         [OperationContract]
         byte[] ExcelModeloAltaMasiva();
