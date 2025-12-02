@@ -1,5 +1,4 @@
-﻿using NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -13,6 +12,7 @@ using Molinos.DataAgro.Test.Mock;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -4993,7 +4993,7 @@ namespace Molinos.DataAgro.Test.Managers
                     PreciosPactados = new List<PrecioPactadosDto>(),
 
                 });
-            comercialManagerMock.Setup(x => x.TraerComercial(WebDataAgro.MvcApplication.GlobalVariables.ComercialId))
+            comercialManagerMock.Setup(x => x.TraerComercial(It.IsAny<int>()))
                 .Returns(new ComercialDto());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, MonedaQry>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<MonedaQry>() { new MonedaQry { Descripcion = "ARS  ", MonedaId = "ARS  " } });

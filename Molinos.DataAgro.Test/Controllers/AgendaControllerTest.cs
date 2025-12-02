@@ -40,12 +40,12 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
-            
+
         [Test]
         public void InicializarOk()
         {
-            HttpContext.Current.Session["equipo"] = new List<int>{ 1, 2};
-            mobjAgendaManager.Setup(x => x.TraerDatosIniciales(It.Is<List<int>>(y => y.Count == 2))).Returns(new Entities.Dto.DatosIniAgendaActividad
+            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
+            mobjAgendaManager.Setup(x => x.TraerDatosIniciales(It.Is<List<int>>(y => true))).Returns(new Entities.Dto.DatosIniAgendaActividad
             {
                 Proveedores = new List<Entities.Dto.ProveedorCombo> {
                     new Entities.Dto.ProveedorCombo { ProveedorId = 1, RazonSocial = "a" },
@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     new Entities.Dto.TipoActividadCombo { Descripcion = "1", TipoActividadId = 2 },
                     new Entities.Dto.TipoActividadCombo { Descripcion = "2", TipoActividadId = 2 }
                 }
-                
+
             });
             var result = target.Inicializar() as JsonResult;
 

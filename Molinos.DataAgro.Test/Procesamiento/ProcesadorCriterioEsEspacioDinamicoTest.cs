@@ -1,16 +1,12 @@
-﻿using NLog;
-using Molinos.DataAgro.Business.Procesamiento;
+﻿using Molinos.DataAgro.Business.Procesamiento;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Test.Procesamiento
 {
@@ -19,12 +15,14 @@ namespace Molinos.DataAgro.Test.Procesamiento
     {
         private ProcesadorCriterioEsEspacioDinamico target;
         private Mock<IRepositorio> repositorioMock;
+        private Mock<ILogger> logger;
 
         [SetUp]
         public void SetUp()
         {
+            logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            target = new ProcesadorCriterioEsEspacioDinamico(repositorioMock.Object, new NullLogger());
+            target = new ProcesadorCriterioEsEspacioDinamico(repositorioMock.Object, logger.Object);
         }
 
         [Test]
@@ -32,14 +30,14 @@ namespace Molinos.DataAgro.Test.Procesamiento
         {
             repositorioMock.Setup(y => y.ObtenerPrimero<TipoNegocio>(It.IsAny<Expression<Func<TipoNegocio, bool>>>()))
                .Returns(new TipoNegocio { TipoNegocioId = 7, Descripcion = "ESPACIO DINAMICO" });
-            var criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto {TipoNegocioId=7 } };
+            var criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto { TipoNegocioId = 7 } };
             var resultado = target.Calcular(criterio);
-            
+
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 1);
 
-             criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto { TipoNegocioId = 1 } };
-             resultado = target.Calcular(criterio);
+            criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto { TipoNegocioId = 1 } };
+            resultado = target.Calcular(criterio);
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 0);
 
