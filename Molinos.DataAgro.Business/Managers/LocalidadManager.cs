@@ -157,12 +157,24 @@ namespace Molinos.DataAgro.Business
 
         public List<LocalidadDto> ListarLocalidad(string localidad)
         {
-            return repositorio.Listar<Localidad, LocalidadDto>(x => new LocalidadDto { LocalidadId = x.LocalidadId, Nombre = x.Nombre }, x => localidad == "" || x.Nombre.Contains(localidad), 15);
+            return repositorio.Listar<Localidad, LocalidadDto>(x => new LocalidadDto
+            {
+                LocalidadId = x.LocalidadId,
+                Nombre = x.Nombre
+            }, x => localidad == "" || x.Nombre.Contains(localidad), 15);
         }
 
         public List<LocalidadDto> ListarLocalidadTodas()
         {
-            return repositorio.Listar<Localidad, LocalidadDto>(x => new LocalidadDto { LocalidadId = x.LocalidadId, Nombre = x.Nombre, Provincia_Nombre = x.Provincia.Nombre, ProvinciaId = x.ProvinciaId, Partido_Nombre = x.Partido.Descripcion, PartidoId = x.PartidoId }, x => true);
+            return repositorio.Listar<Localidad, LocalidadDto>(x => new LocalidadDto
+            {
+                LocalidadId = x.LocalidadId,
+                Nombre = x.Nombre,
+                Provincia_Nombre = x.Provincia.Nombre,
+                ProvinciaId = x.ProvinciaId,
+                Partido_Nombre = x.Partido.Descripcion,
+                PartidoId = x.PartidoId
+            }, x => true);
         }
 
         public List<BusquedaLocalidad> DevolverLocalidades(string filtro)
@@ -195,7 +207,13 @@ namespace Molinos.DataAgro.Business
 
         public List<PartidoDto> ListarPartidos()
         {
-            return repositorio.Listar<Partido, PartidoDto>(x => new PartidoDto { Id = x.Id, Descripcion = x.Descripcion, Provincia = x.Provincia.Nombre, ProvinciaId = x.ProvinciaId}, x => true);
+            return repositorio.Listar<Partido, PartidoDto>(x => new PartidoDto
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion,
+                Provincia = x.Provincia.Nombre,
+                ProvinciaId = x.ProvinciaId
+            }, x => true);
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.Containers;
-using KendoGridBinder.Containers.Json;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -18,14 +12,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.Web.Mvc;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
-using static Microsoft.IdentityModel.Protocols.WSTrust.WSTrustServiceContractConstants;
 using static WebDataAgro.MvcApplication;
-using static WebDataAgro.Services.DataAgroServices;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
 
