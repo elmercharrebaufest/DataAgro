@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Helpers;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;

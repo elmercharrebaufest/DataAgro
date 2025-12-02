@@ -1,4 +1,5 @@
-﻿using Autofac.Extras.NLog;
+﻿using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -7,11 +8,17 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report;
+using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Services;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -20,7 +27,7 @@ using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
-    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
+    //[Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class HomeController : Controller
     {
         private readonly IHomeManager mobjHomeManager;
@@ -41,11 +48,149 @@ namespace WebDataAgro.Controllers
             this.logger = logger;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index(string code, string error)
         {
+            if (!string.IsNullOrEmpty(error))
+                return Content("Error: " + error);
+
+            // Si viene el "code" desde Azure → canjeamos por token
+            if (!string.IsNullOrEmpty(code))
+            {
+                var token = await ExchangeCodeForToken(code);
+
+                var email = GetEmailFromAccessToken(token.AccessToken);
+                CrearOActualizarSesion(email);
+
+                return RedirectToAction("Index");
+            }
+
             return View();
         }
 
+        private void CrearOActualizarSesion(string email)
+        {
+            // Tus roles desde DB o servicio
+            var roles = comercialManager.ObtenerPermisosPorEmail(email);
+            var comercial = comercialManager.TraerComercial(email);
+            // Crear identidad con claims
+            var identity = new ClaimsIdentity(
+                CookieAuthenticationDefaults.AuthenticationType,
+                System.IdentityModel.Claims.ClaimTypes.Email,
+                ClaimTypes.Role
+            );
+
+            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+            identity.AddClaim(new Claim(ClaimTypes.Name, email));
+
+            foreach (var rol in roles)
+                identity.AddClaim(new Claim(ClaimTypes.Role, rol));
+
+            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory);
+            identity.AddClaim(new Claim("perfil", JsonConvert.SerializeObject(comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("esAdministrador", JsonConvert.SerializeObject(comercialManager.EsAdministrador(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("EsCupera", JsonConvert.SerializeObject(comercialManager.EsCupera(comercial.IdActiveDirectory))));
+            identity.AddClaim(new Claim("comercialId", JsonConvert.SerializeObject(comercial.ComercialId)));
+            identity.AddClaim(new Claim("equipo", JsonConvert.SerializeObject(equipo.Equipo)));
+            identity.AddClaim(new Claim("equipoReal", JsonConvert.SerializeObject(equipo.EquipoReal)));
+            identity.AddClaim(new Claim("IdActiveDirectory", JsonConvert.SerializeObject(comercial.IdActiveDirectory)));
+            identity.AddClaim(new Claim("IdActiveDirectoryCompleto", JsonConvert.SerializeObject("molinosagro\\" + comercial.IdActiveDirectory)));
+            identity.AddClaim(new Claim("corredoresComercial", JsonConvert.SerializeObject(comercialManager.ListarCorredoresComercial())));
+
+            // Loguear: emitir cookie OWIN
+            var ctx = HttpContext.GetOwinContext();
+            var auth = ctx.Authentication;
+
+            auth.SignIn(new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
+            }, identity);
+        }
+
+        private string GetEmailFromAccessToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+
+            // 1) Email si existe
+            var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            if (!string.IsNullOrEmpty(email))
+                return email;
+
+            // 2) preferred_username (muy común)
+            email = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+            if (!string.IsNullOrEmpty(email))
+                return email;
+
+            // 3) upn como fallback
+            email = jwt.Claims.FirstOrDefault(c => c.Type == "upn")?.Value;
+            return email;
+        }
+        [AllowAnonymous]
+        public ActionResult Login()
+        {
+            string tenantId = ConfigurationManager.AppSettings["AzureAd_TenantId"];
+            string clientId = ConfigurationManager.AppSettings["AzureAd_ClientId"];
+            var request = HttpContext.Request;
+            string baseUrl = request.Url.Scheme + "://" + request.Url.Authority;
+
+            string url =
+                $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize" +
+                $"?client_id={clientId}" +
+                $"&response_type=code" +
+                $"&redirect_uri={HttpUtility.UrlEncode(baseUrl)}" +
+                $"&response_mode=query" +
+                $"&scope=openid%20email%20profile%20offline_access" +
+                $"&prompt=select_account";
+
+            return Redirect(url);
+        }
+
+        private async Task<TokenResponse> ExchangeCodeForToken(string code)
+        {
+            var request = HttpContext.Request;
+            string baseUrl = request.Url.Scheme + "://" + request.Url.Authority;
+            using (var client = new HttpClient())
+            {
+                var values = new Dictionary<string, string>
+            {
+                { "client_id", ConfigurationManager.AppSettings["AzureAd_ClientId"] },
+                { "client_secret", ConfigurationManager.AppSettings["AzureAd_ClientSecret"] },
+                { "grant_type", "authorization_code" },
+                { "code", code },
+                { "redirect_uri", baseUrl }
+            };
+
+                var response = await client.PostAsync(
+                    $"https://login.microsoftonline.com/{ConfigurationManager.AppSettings["AzureAd_TenantId"]}/oauth2/v2.0/token",
+                    new FormUrlEncodedContent(values));
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TokenResponse>(json);
+            }
+        }
+
+        public class TokenResponse
+        {
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
+        }
+
+        public class GraphUser
+        {
+            public string Id { get; set; }
+            public string UserPrincipalName { get; set; }
+            public string Mail { get; set; }
+            public string DisplayName { get; set; }
+        }
+        public ActionResult Logout()
+        {
+            //Cerrar cookie OWIN de autenticación
+            var auth = HttpContext.GetOwinContext().Authentication;
+            auth.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+
+            return RedirectToAction("Login", "Home");
+        }
         public ActionResult ErrorDePermisos()
         {
 
@@ -57,7 +202,7 @@ namespace WebDataAgro.Controllers
 
             return View("ErrorUsuarioSinDerechos");
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult Inicializar(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -123,7 +268,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BusquedaHome(string filtro)
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
@@ -134,7 +279,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerBusquedaContacto(oParamBusqueda filtro, int pagina)
         {
             var model = new ResultIniContactoModel();
@@ -165,7 +310,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerActividadesPorComercialId()
         {
             var model = new ResultActividadesModel();
@@ -252,7 +397,7 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerPostIt()
         {
             var model = new ResultIniPostItModel();
@@ -271,7 +416,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarPostIt(PostIt post)
         {
             var model = new GrabarPostItResult();
@@ -291,6 +436,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarObjetivoComercial(ObjetivoComercial objetivo)
         {
             var model = new Resultado();
@@ -310,6 +456,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerObjetivos(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -322,7 +469,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult EliminarObjetivo(int id)
         {
             var resultado = objetivoManager.EliminarObjetivo(id);
@@ -332,7 +479,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BorrarCookie()
         {
             return View();
@@ -341,12 +488,11 @@ namespace WebDataAgro.Controllers
         [AjaxOnly]
         public void BorrarCookies()
         {
-            if (FederatedAuthentication.SessionAuthenticationModule != null)
-            {
-                FederatedAuthentication.SessionAuthenticationModule.DeleteSessionTokenCookie();
-            }
-        }
+            string Email = HttpContext.User.Identity.Name;
 
+            CrearOActualizarSesion(Email);
+        }
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerCompras(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
@@ -374,6 +520,7 @@ namespace WebDataAgro.Controllers
         }
 
         #region Informes Comerciales
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult VerificarInformesComerciales()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
@@ -385,6 +532,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult ExportarCapProdDesactualizadas()
         {
             bool esAdministrador = PermisosHelper.Is(PermisosDataAgro.Administracion_Proveedores);
@@ -393,6 +541,7 @@ namespace WebDataAgro.Controllers
             return File(archivoBytes, "application/vnd.ms-excel", "Informes comerciales faltantes.xls");
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GrabarInformeComercialApertura()
         {
             InformeComercialApertura informeComercialApertura = new InformeComercialApertura();
@@ -407,10 +556,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerInformeComercialApertura()
         {
             var model = new InformeComercialAperturaDto();
-                model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
+            model = mobjInformeComercialAperturaManager.TraerInformeComercialApertura(GlobalVariables.ComercialId);
             return new JsonResult()
             {
                 Data = model,

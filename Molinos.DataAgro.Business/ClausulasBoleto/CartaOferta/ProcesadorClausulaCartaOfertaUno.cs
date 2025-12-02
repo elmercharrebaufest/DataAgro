@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Humanizer;
 using Molinos.DataAgro.Entities.ClausulasBoleto.CartaOferta;
 using Molinos.DataAgro.Entities.Common.Enums;

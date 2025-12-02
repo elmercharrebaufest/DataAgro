@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.Containers;

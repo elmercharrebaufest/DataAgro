@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Agent.DatosDelComercial;
 using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;

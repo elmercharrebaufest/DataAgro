@@ -2,7 +2,7 @@
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using Autofac.Extras.NLog;
+using NLog;
 using System.Globalization;
 using System.Linq;
 using System.Text;

@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using KendoGridBinder;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;

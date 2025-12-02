@@ -5,7 +5,6 @@ using System.IdentityModel.Services;
 using System.Security.Claims;
 using System.Threading;
 using System.Web.Mvc;
-using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Controllers
 {
@@ -19,11 +18,11 @@ namespace WebDataAgro.Controllers
             this.tokenManager = tokenManager;
             this.usuarioManager = usuarioManager;
         }
-        
+
         public ActionResult Index(string t)
         {
             var token = tokenManager.ValidarToken(t);
-            if(token != null)
+            if (token != null)
             {
                 var claims = new List<Claim>
                 {
@@ -45,7 +44,7 @@ namespace WebDataAgro.Controllers
                 {
                     return RedirectToAction("Index", "TerminosYCondiciones");
                 }
-                else if(PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
+                else if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
                 {
                     return RedirectToAction("Index", "CompraNet");
                 }
