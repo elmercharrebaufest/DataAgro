@@ -1,19 +1,13 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
+    [DataContract]
     public class PartidoDto
     {
-        public int Id { get; set; }
-        public string Descripcion { get; set; }
-        public int ProvinciaId { get; set; }
-        public virtual string Provincia { get; set; }
+        [DataMember] public int Id { get; set; }
+        [DataMember] public string Descripcion { get; set; }
+        [DataMember] public int ProvinciaId { get; set; }
+        [DataMember] public virtual string Provincia { get; set; }
     }
 }
