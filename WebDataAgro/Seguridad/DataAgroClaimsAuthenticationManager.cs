@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Repository;
 using NLog;
 using System;
+using System.IdentityModel.Selectors;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
 using System.Linq;
@@ -121,6 +122,20 @@ namespace WebDataAgro.Seguridad
         {
             var sessionSecurityToken = new SessionSecurityToken(transformedPrincipal, TimeSpan.FromHours(8));
             FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(sessionSecurityToken);
+        }
+
+
+
+    }
+
+    public class CustomUserValidator : UserNamePasswordValidator
+    {
+        public override void Validate(string username, string password)
+        {
+            if (username != "usuario" || password != "password123")
+            {
+                throw new SecurityTokenException("Credenciales inválidas");
+            }
         }
     }
 }
