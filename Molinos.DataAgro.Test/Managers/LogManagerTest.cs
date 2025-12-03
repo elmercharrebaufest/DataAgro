@@ -1,10 +1,9 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Repository;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Log, LogDto>>>(), It.IsAny<Expression<Func<Log, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<LogDto>() { new LogDto { Fecha = DateTime.Now, Id = 1, Xml = "a" } });
 
-            var target = new LogManager(repositorioMock.Object, loggerMock.Object);
+            var target = new Business.Managers.LogManager(repositorioMock.Object, loggerMock.Object);
             var resultado = target.TraerTodoLog(DateTime.Now);
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Log, LogDto>>>(), It.IsAny<Expression<Func<Log, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()));
@@ -88,7 +87,7 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         // Clase que permite testear sin tocar el filesystem
-        public class LogManagerTestable : LogManager
+        public class LogManagerTestable : Business.Managers.LogManager
         {
             private readonly List<Archivo> archivosMock;
 

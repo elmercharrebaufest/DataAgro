@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;

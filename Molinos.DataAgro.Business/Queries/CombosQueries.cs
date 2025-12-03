@@ -1,9 +1,8 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace Molinos.DataAgro.Business
             //if(provinciaId == -1)
             //    listPartido = repositorio.Listar<Partido>().OrderBy(x => x.Descripcion).ToList();
             //else
-                listPartido = repositorio.Listar<Partido>(x => x.ProvinciaId == provinciaId).OrderBy(x => x.Descripcion).ToList();
+            listPartido = repositorio.Listar<Partido>(x => x.ProvinciaId == provinciaId).OrderBy(x => x.Descripcion).ToList();
 
             //return repositorio.Listar<Partido>(x => x.ProvinciaId == provinciaId).OrderBy(x => x.Descripcion).ToList();
             return listPartido;

@@ -2,7 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Autofac.Extras.NLog;
+using NLog;
 
 namespace Molinos.DataAgro.Business.ClausulasBoleto.BoletoFisico
 {

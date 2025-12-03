@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -35,9 +34,10 @@ namespace Molinos.DataAgro.Test.Mock
             objClaim.AddClaim(new Claim(System.IdentityModel.Claims.ClaimTypes.Name, "dominio\\nombre"));
             objClaim.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, "Level3"));
             objClaim.AddClaim(new Claim(ClaimTypes.Name, "dominio\\nombre"));
+            objClaim.AddClaim(new Claim("ComercialId", "1"));
             string[] Roles = { "Recipient" };
             GenericPrincipal MyPrincipal = new GenericPrincipal(objClaim, Roles);
-            IPrincipal Identity = (IPrincipal)MyPrincipal;
+            IPrincipal Identity = MyPrincipal;
             httpContext.User = Identity;
 
 

@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;

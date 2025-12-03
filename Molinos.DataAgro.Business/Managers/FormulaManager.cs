@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Repository.ConsultasEF;

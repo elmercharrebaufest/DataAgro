@@ -1,11 +1,11 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent.FinalizarFijacion;
+﻿using Molinos.DataAgro.Agent.FinalizarFijacion;
 using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

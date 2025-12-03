@@ -1,6 +1,4 @@
-﻿using System.Web;
-using System.Web.Mvc;
-
+﻿using System.Web.Mvc;
 using WebDataAgro.Filters;
 
 namespace WebDataAgro
@@ -12,7 +10,9 @@ namespace WebDataAgro
             //filters.Add(new HandleErrorAttribute());
             filters.Add(new CustomExceptionHandlerAttribute());
             filters.Add(new MyValidateAntiForgeryTokenAttribute());
-            
+            filters.Add(new RequireLoginAttribute());
         }
     }
+
+
 }

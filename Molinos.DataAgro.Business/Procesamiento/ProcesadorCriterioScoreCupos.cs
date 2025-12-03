@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using iTextSharp.text;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;

@@ -1,6 +1,6 @@
-﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
+using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;

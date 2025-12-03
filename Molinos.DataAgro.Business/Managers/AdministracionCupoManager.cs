@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;

@@ -1,7 +1,7 @@
 ﻿using Molinos.DataAgro.Entities.Seguridad;
 using WebDataAgro.Atributos;
 using System.Web.Mvc;
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using Molinos.DataAgro.Interfaces;

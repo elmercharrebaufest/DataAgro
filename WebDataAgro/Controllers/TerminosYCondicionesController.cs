@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
 using Newtonsoft.Json;

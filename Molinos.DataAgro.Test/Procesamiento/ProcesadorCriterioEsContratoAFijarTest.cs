@@ -1,16 +1,10 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business.Procesamiento;
+﻿using Molinos.DataAgro.Business.Procesamiento;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Moq;
+using NLog;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Test.Procesamiento
 {
@@ -19,25 +13,28 @@ namespace Molinos.DataAgro.Test.Procesamiento
     {
         private ProcesadorCriterioEsContratoAFijar target;
         private Mock<IRepositorio> repositorioMock;
+        private Mock<ILogger> logger;
+
 
         [SetUp]
         public void SetUp()
         {
+            logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            target = new ProcesadorCriterioEsContratoAFijar(repositorioMock.Object, new NullLogger());
+            target = new ProcesadorCriterioEsContratoAFijar(repositorioMock.Object, logger.Object);
         }
 
         [Test]
         public void CalcularTest()
         {
-            var criterio = new CriterioEsContratoAFijar { Dto = new SugerenciaCupoDto {TipoNegocioId=1 } };
+            var criterio = new CriterioEsContratoAFijar { Dto = new SugerenciaCupoDto { TipoNegocioId = 1 } };
             var resultado = target.Calcular(criterio);
-            
+
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 1);
 
-             criterio = new CriterioEsContratoAFijar { Dto = new SugerenciaCupoDto { TipoNegocioId = 99 } };
-             resultado = target.Calcular(criterio);
+            criterio = new CriterioEsContratoAFijar { Dto = new SugerenciaCupoDto { TipoNegocioId = 99 } };
+            resultado = target.Calcular(criterio);
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 0);
 

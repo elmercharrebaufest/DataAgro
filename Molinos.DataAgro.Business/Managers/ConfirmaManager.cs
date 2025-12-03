@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.ClausulasBoleto;

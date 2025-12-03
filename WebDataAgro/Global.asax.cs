@@ -1,31 +1,21 @@
-﻿using Autofac;
-using Autofac.Extras.NLog;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.Wcf;
-using Hangfire;
-using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Repository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
-using System.Reflection;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using WebDataAgro.Core;
-using WebDataAgro.Services;
 
 namespace WebDataAgro
 {
@@ -55,92 +45,20 @@ namespace WebDataAgro
 
             // Habilita TLS 1.2
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            //Autofac Configuration
-            var builder = new ContainerBuilder();
-
-            builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
-            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
-            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
-
-            builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.EndsWith("Manager"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Agent"))
-                   .Where(t => t.Name.EndsWith("Agent"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterModule<NLogModule>();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.EndsWith("Criterios"))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                   .Where(t => t.Name.StartsWith("Procesador"))
-                   .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("Clausulas"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasConfirma"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasCartaOferta"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasBoletoFisico"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
-                 .Where(t => t.Name.EndsWith("ClausulasGenericos"))
-                 .AsImplementedInterfaces()
-                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<Cache>().As<ICache>().SingleInstance();
-
-            // Hangfire job
-            var assembly = Assembly.Load("WebDataAgro");
-            builder.RegisterAssemblyTypes(assembly)
-                   .Where(t => t.Name.EndsWith("HangfireJob") && !t.IsAbstract)
-                   .AsImplementedInterfaces()
-                   .InstancePerDependency();
-
-            var container = builder.Build();
-
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-            AutofacHostFactory.Container = container;
-
-            // Configurar Hangfire con Autofac y SQL Server
-            GlobalConfiguration.Configuration
-                .UseSqlServerStorage("HfContexto")
-                .UseAutofacActivator(container);
-
-            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
-            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
         }
 
 
         public void Session_OnStart()
         {
-            var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
-            var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
-            //GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.Equipo = equipo.Equipo;
-            GlobalVariables.EquipoReal = equipo.EquipoReal;
-            GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
+            //var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
+            //var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
+            ////GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.Equipo = equipo.Equipo;
+            //GlobalVariables.EquipoReal = equipo.EquipoReal;
+            //GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
         }
 
 
@@ -172,16 +90,61 @@ namespace WebDataAgro
 
         public static class GlobalVariables
         {
-            // read-write variable
+            private static ClaimsIdentity Identity
+            {
+                get
+                {
+                    var principal = HttpContext.Current.User as ClaimsPrincipal;
+                    return principal?.Identity as ClaimsIdentity;
+                }
+            }
+
+            // -------------------
+            // Helpers
+            // -------------------
+            private static T GetClaimValue<T>(string claimType, T defaultValue = default(T))
+            {
+                var claim = Identity?.FindFirst(claimType);
+                if (claim == null) return defaultValue;
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(claim.Value);
+                }
+                catch
+                {
+                    return defaultValue;
+                }
+            }
+
+            private static void SetClaimValue<T>(string claimType, T value)
+            {
+                if (Identity == null) return;
+
+                // Borro si ya existe
+                var existing = Identity.FindFirst(claimType);
+                if (existing != null)
+                    Identity.RemoveClaim(existing);
+
+                // Guardo serializado
+                var json = JsonConvert.SerializeObject(value);
+                Identity.AddClaim(new Claim(claimType, json));
+            }
+
+
+            // -------------------------
+            // Variables reemplazadas
+            // -------------------------
+
             public static EnumPerfil Perfil
             {
                 get
                 {
-                    return (EnumPerfil)HttpContext.Current.Session["perfil"];
+                    return GetClaimValue("perfil", EnumPerfil.Visualizador);
                 }
                 set
                 {
-                    HttpContext.Current.Session["perfil"] = value;
+                    SetClaimValue("perfil", value);
                 }
             }
 
@@ -189,33 +152,35 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.Session["esAdministrador"] as bool? ?? false;
+                    return GetClaimValue("esAdministrador", false);
                 }
                 set
                 {
-                    HttpContext.Current.Session["esAdministrador"] = value;
+                    SetClaimValue("esAdministrador", value);
                 }
             }
+
             public static bool EsCupera
             {
                 get
                 {
-                    return HttpContext.Current.Session["EsCupera"] as bool? ?? false;
+                    return GetClaimValue("EsCupera", false);
                 }
                 set
                 {
-                    HttpContext.Current.Session["EsCupera"] = value;
+                    SetClaimValue("EsCupera", value);
                 }
             }
+
             public static int ComercialId
             {
                 get
                 {
-                    return (int)HttpContext.Current.Session["comercialId"];
+                    return GetClaimValue("comercialId", 0);
                 }
                 set
                 {
-                    HttpContext.Current.Session["comercialId"] = value;
+                    SetClaimValue("comercialId", value);
                 }
             }
 
@@ -223,7 +188,6 @@ namespace WebDataAgro
             {
                 get
                 {
-
                     return Equipo.Count > 0;
                 }
             }
@@ -232,11 +196,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["equipo"];
+                    return GetClaimValue("equipo", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["equipo"] = value;
+                    SetClaimValue("equipo", value);
                 }
             }
 
@@ -244,11 +208,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["equipoReal"];
+                    return GetClaimValue("equipoReal", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["equipoReal"] = value;
+                    SetClaimValue("equipoReal", value);
                 }
             }
 
@@ -256,7 +220,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return IdActiveDirectoryCompleto.Split('\\').Length > 1 ? IdActiveDirectoryCompleto.Split('\\')[1] : IdActiveDirectoryCompleto;
+                    return GetClaimValue("IdActiveDirectory", "");
+                }
+                set
+                {
+                    SetClaimValue("IdActiveDirectory", value);
                 }
             }
 
@@ -264,8 +232,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.User.Identity.Name;
-                    //return "molinosagro\\nunezml";
+                    return GetClaimValue("IdActiveDirectoryCompleto", "");
+                }
+                set
+                {
+                    SetClaimValue("IdActiveDirectoryCompleto", value);
                 }
             }
 
@@ -273,13 +244,14 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Session["corredoresComercial"];
+                    return GetClaimValue("corredoresComercial", new List<int>());
                 }
                 set
                 {
-                    HttpContext.Current.Session["corredoresComercial"] = value;
+                    SetClaimValue("corredoresComercial", value);
                 }
             }
+
         }
 
         private static void EnviarMailTimeOut(SqlException filterContext)

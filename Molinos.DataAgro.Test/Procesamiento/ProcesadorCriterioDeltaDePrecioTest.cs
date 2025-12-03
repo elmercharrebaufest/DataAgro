@@ -1,11 +1,11 @@
-﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business;
+﻿using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -19,13 +19,15 @@ namespace Molinos.DataAgro.Test.Procesamiento
         private ProcesadorCriterioDeltaDePrecio target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioMock;
+        private Mock<ILogger> logger;
 
         [SetUp]
         public void SetUp()
         {
+            logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
-            target = new ProcesadorCriterioDeltaDePrecio(repositorioMock.Object, new NullLogger(), tipoDeCambioMock.Object);
+            target = new ProcesadorCriterioDeltaDePrecio(repositorioMock.Object, logger.Object, tipoDeCambioMock.Object);
         }
 
         [Test]

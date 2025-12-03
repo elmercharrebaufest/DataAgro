@@ -1,4 +1,4 @@
-using Autofac.Extras.NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using WebDataAgro.Job;

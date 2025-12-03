@@ -6,7 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System.Collections.Generic;
 using System.Configuration;
-using Autofac.Extras.NLog;
+using NLog;
 using System.Linq;
 using System;
 using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;

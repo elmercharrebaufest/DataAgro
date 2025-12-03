@@ -1,5 +1,4 @@
-﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -8,6 +7,7 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -71,7 +71,12 @@ namespace Molinos.DataAgro.Business
                 Comercial = result
             };
         }
-
+        public ComercialDto TraerComercial(string email)
+        {
+            var comercial = repositorio.Obtener<Comercial, int>(x => x.Email == email, x => x.ComercialId);
+            var comercialDto = TraerComercial(comercial);
+            return comercialDto;
+        }
         public ComercialDto TraerComercial(int intComercialId)
         {
             var comercial = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
@@ -319,8 +324,8 @@ namespace Molinos.DataAgro.Business
         public List<int> CadenaComerciales(int comercialId)
         {
             var listaSuperiores = new List<int>();
-            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, 
-                x => x.Deshabilitado != true && 
+            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId,
+                x => x.Deshabilitado != true &&
                      x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             if (permiso)
             {
@@ -429,6 +434,21 @@ namespace Molinos.DataAgro.Business
             var comerciales = repositorio.ObtenerConsultaEscalar(new BusquedaContactosComercialReporte(request, proveedorId));
 
             return comerciales;
+        }
+
+        public List<string> ObtenerPermisosPorEmail(string email)
+        {
+            email = email.ToLower();
+            var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.Email == email);
+            if (usuario != null)
+            {
+                var permisos = usuario.RolesAsociados
+                    .SelectMany(rol => rol.PermisosAsociados)
+                    .Distinct()
+                    .ToList();
+                return permisos.Select(a => a.Permiso.ToString()).Distinct().ToList();
+            }
+            return new List<string>();
         }
     }
 }

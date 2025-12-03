@@ -1,4 +1,4 @@
-﻿using Autofac.Extras.NLog;
+﻿using NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Interfaces;
 using System;
