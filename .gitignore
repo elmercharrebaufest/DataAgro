@@ -26,3 +26,5 @@
 /WebDataAgro/WebDataAgro.csproj.user
 Molinos.DataAgro.Test/bin
 .vs
+/WebDataAgro/accesos.log
+/WebDataAgro/whitelist.json
