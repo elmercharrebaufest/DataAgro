@@ -787,8 +787,9 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Complete el CUIT del destinatario."); return;
     }
 
+    // TODO: Validación comentada por ticket DAT-882
     if ($("#buscadorProveedorSE").val() != "" &&
-        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin")) &&
+        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') /*&& ActivarSojaEUDR == "Twin"*/)) &&
         $("#CentroIdSE").val() == "1029" &&
         $("#MaterialIdSE").val() == Materiales.SOJA &&
         grupoSegmentacion == "Productores") {
@@ -972,8 +973,9 @@ function imageToBlob(imageURL) {
     })
 }
 
+// TODO: Validación comentada por ticket DAT-882
 function VisualizarStock(noabrir) {
-    var esEPAoEUDR = $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin");
+    var esEPAoEUDR = $("#EPA").is(':checked') || ($("#EUDR").is(':checked') /*&& ActivarSojaEUDR == "Twin"*/);
     var cuitProv = $("#buscadorProveedorSE").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');

@@ -549,10 +549,13 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
-            var tieneQueValidar = proveedor.SegmentacionId == 2 || proveedor.SegmentacionId == 3 || proveedor.SegmentacionId == 4;
-            if (proveedor != null && tieneQueValidar && centro != null && (cupo.Sustentable || cupo.EPA || (cupo.EUDR && activarSojaEUDR == "Twin")))
+
+            var tieneQueValidar = proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Grande || proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Mediano || proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Chico;
+            
+            // TODO: Validación comentada por ticket DAT-882
+            if (proveedor != null && tieneQueValidar && centro != null && (cupo.Sustentable || cupo.EPA || (cupo.EUDR /*&& activarSojaEUDR == "Twin"*/)))
             {
-                var establecimientos = TraerEstablecimientos(proveedor.CUIT, cupo.EPA || (cupo.EUDR && activarSojaEUDR == "Twin"));
+                var establecimientos = TraerEstablecimientos(proveedor.CUIT, cupo.EPA || (cupo.EUDR /*&& activarSojaEUDR == "Twin"*/));
                 var cantidadCupo = 0;
                 if (establecimientos != null && establecimientos.Count > 0)
                 {

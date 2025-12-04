@@ -510,8 +510,9 @@ function copiarTablaEstablecimiento() {
     copiarImagen();
 }
 
+// TODO: Validación comentada por ticket DAT-882
 function VisualizarStock(noabrir) {
-    var esEPAoEUDR = $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin");
+    var esEPAoEUDR = $("#EPA").is(':checked') || ($("#EUDR").is(':checked') /*&& ActivarSojaEUDR == "Twin"*/);
     var cuitProv = $("#buscadorProveedor").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');
@@ -596,9 +597,10 @@ function copiarImagen() {
 }
 
 
+// TODO: Validación comentada por ticket DAT-882
 function GuardarCupo() {
     if ($("#buscadorProveedor").val() != "" &&
-        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') && ActivarSojaEUDR == "Twin")) &&
+        ($("#Sustentable").is(':checked') || $("#EPA").is(':checked') || ($("#EUDR").is(':checked') /*&& ActivarSojaEUDR == "Twin"*/)) &&
         $("#planta").val() == "1029" &&
         $("#material").val() == Materiales.SOJA) {
         VisualizarStock(true);
