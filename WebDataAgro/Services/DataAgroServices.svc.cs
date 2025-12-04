@@ -1,12 +1,13 @@
 ﻿using Kendo.DynamicLinq;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
-using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -1601,63 +1602,24 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        //public KendoGridResponseDto<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridRequestDto req)
-        //{
-        //    var request = new KendoGridMvcRequest
-        //    {
-        //        Take = req.Take,
-        //        Skip = req.Skip,
-        //        Page = req.Page,
-        //        PageSize = req.PageSize,
-        //        Logic = req.Logic,
-        //        FilterObjectWrapper = ConvertFilter(req.FilterObjectWrapper),
-        //        SortObjects = (IEnumerable<KendoGridBinder.Containers.SortObject>)(req.SortObjects?.Select(x => new SortObjectDto
-        //        {
-        //            Field = x.Field,
-        //            Dir = x.Dir
-        //        }).ToList()),
-        //        GroupObjects = (IEnumerable<GroupObject>)(req.GroupObjects?.Select(x => new GroupObjectDto
-        //        {
-        //            Field = x.Field,
-        //            Direction = x.Direction,
-        //            AggregateObjects = x.AggregateObjects?.Select(a => new AggregateObjectDto
-        //            {
-        //                Field = a.Field,
-        //                Aggregate = a.Aggregate,
-        //                Direction = a.Direction
-        //            }).ToList()
-        //        }).ToList()),
-        //        AggregateObjects = req.AggregateObjects?.Select(a => new AggregateObject
-        //        {
-        //            Field = a.Field,
-        //            Aggregate = a.Aggregate,
-        //            Direction = a.Direction
-        //        }).ToList()
-        //    };
+        public KendoGridResponseDto<ConfiguracionBolsaDto> ObtenerConfiguracionBolsa()
+        {
+            var request = new KendoGridMvcRequest
+            {
+                Take = 1000,
+                Skip = 0,
+                Page = 1,
+                PageSize = 1000
+            };
 
-        //    //var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
-        //    //return resultado;
+            var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
 
-        //    var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
-
-        //    return new KendoGridResponseDto<ConfiguracionBolsaDto>
-        //    {
-        //        Data = resultado.Data.Select(MapDto).ToList(),
-        //        Total = resultado.Total
-        //    };
-        //}
-
-        //private FilterObjectWrapper ConvertFilter(FilterObjectWrapperSOAP soap)
-        //{
-        //    if (soap == null)
-        //        return null;
-
-        //    return new FilterObjectWrapper
-        //    {
-        //        Logic = soap.Logic,
-        //        FilterObjects = soap.Filters?.Select(ConvertFilterObject).ToList()
-        //    };
-        //}
+            return new KendoGridResponseDto<ConfiguracionBolsaDto>
+            {
+                Data = resultado.Data.ToList(),
+                Total = resultado.Total
+            };
+        }
 
         public byte[] ExcelModeloAltaMasiva()
         {
@@ -1678,6 +1640,7 @@ namespace WebDataAgro.Services
             var resultado = localidadManager.ListarPartidos();
             return resultado;
         }
+
 
         #endregion MOA_Operaciones
     }

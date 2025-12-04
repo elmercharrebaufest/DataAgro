@@ -152,8 +152,8 @@ namespace WebDataAgro.Services
         [OperationContract]
         List<CampañaDto> BuscarCampana();
 
-        //[OperationContract]
-        //KendoGridResponseDto<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridRequestDto request);
+        [OperationContract]
+        KendoGridResponseDto<ConfiguracionBolsaDto> ObtenerConfiguracionBolsa();
 
         [OperationContract]
         byte[] ExcelModeloAltaMasiva();
@@ -163,5 +163,7 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         List<PartidoDto> ListarPartidos();
+
+
     }
 }
