@@ -281,7 +281,7 @@ namespace Molinos.DataAgro.Business
 
         public EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId)
         {
-            return (EnumPerfil)repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeDirectoryId, x => x.PerfilId.Value);
+            return (EnumPerfil)repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeDirectoryId, x => x.PerfilId ?? 0);
         }
 
         public bool EsAdministrador(string activeDirectoryId)

@@ -3,6 +3,7 @@ namespace Molinos.DataAgro.Entities.Common.Enums
 {
     public enum EnumPerfil
     {
+        SinPerfil = 0,
         Comercial = 1,
         Jefe = 2,
         Director = 3,

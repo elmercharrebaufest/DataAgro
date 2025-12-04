@@ -50,6 +50,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Index(string code, string error)
         {
+            logger.Debug("Home/Index called with error: " + error);
             if (!string.IsNullOrEmpty(error))
                 return Content("Error: " + error);
 
@@ -57,10 +58,14 @@ namespace WebDataAgro.Controllers
             if (!string.IsNullOrEmpty(code))
             {
                 var token = await ExchangeCodeForToken(code);
+                if (token == null)
+                    return Content("Error al obtener el token.");
 
                 var email = GetEmailFromAccessToken(token.AccessToken);
+                logger.Debug("Create session for email: " + email);
                 CrearOActualizarSesion(email);
 
+                logger.Debug("User session created for email: " + email);
                 return RedirectToAction("Index");
             }
 
@@ -153,19 +158,27 @@ namespace WebDataAgro.Controllers
             using (var client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
-            {
-                { "client_id", ConfigurationManager.AppSettings["AzureAd_ClientId"] },
-                { "client_secret", ConfigurationManager.AppSettings["AzureAd_ClientSecret"] },
-                { "grant_type", "authorization_code" },
-                { "code", code },
-                { "redirect_uri", baseUrl }
-            };
+                {
+                    { "client_id", ConfigurationManager.AppSettings["AzureAd_ClientId"] },
+                    { "client_secret", ConfigurationManager.AppSettings["AzureAd_ClientSecret"] },
+                    { "grant_type", "authorization_code" },
+                    { "code", code },
+                    { "redirect_uri", baseUrl }
+                };
 
                 var response = await client.PostAsync(
                     $"https://login.microsoftonline.com/{ConfigurationManager.AppSettings["AzureAd_TenantId"]}/oauth2/v2.0/token",
                     new FormUrlEncodedContent(values));
 
                 var json = await response.Content.ReadAsStringAsync();
+
+                // Log full response details
+                logger.Debug("Token response StatusCode: " + response.StatusCode);
+                logger.Debug("Token response ReasonPhrase: " + response.ReasonPhrase);
+                logger.Debug("Token response Headers: " + JsonConvert.SerializeObject(response.Headers.ToDictionary(h => h.Key, h => h.Value)));
+                logger.Debug("Token response ContentHeaders: " + JsonConvert.SerializeObject(response.Content.Headers.ToDictionary(h => h.Key, h => h.Value)));
+
+
                 return JsonConvert.DeserializeObject<TokenResponse>(json);
             }
         }
