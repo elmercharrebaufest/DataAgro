@@ -144,7 +144,7 @@ namespace WebDataAgro.Services
         KendoDataSourceResultDto BuscaDatosTablaContrato(KendoDataSourceRequestDto filtro);
 
         [OperationContract]
-        ResultIniMaterialModel BuscarMateriales();
+        BuscarMaterialesDto BuscarMateriales();
 
         [OperationContract]
         BuscarCentroDto BuscarCentro();
