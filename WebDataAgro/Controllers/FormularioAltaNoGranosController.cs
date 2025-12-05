@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
+using Molinos.DataAgro.Report.Clases;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers

@@ -73,6 +73,44 @@ namespace Molinos.DataAgro.Report.Clases
             return identif;
         }
 
+        public Reportes Generar(RptCartaDePresentacionInfo oParam)
+        {
+            var oReporte = new Reportes();
+            var oRptInformeComercial = new RptCartaDePresentacion();
+            oRptInformeComercial.PageSettings.DefaultPaperSize = false;
+            oRptInformeComercial.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.Custom;
+            oRptInformeComercial.PageSettings.PaperName = "Mi Pagina";
+            oRptInformeComercial.Document.Printer.PrinterName = "";
+
+            var oDatos = new List<RptCartaDePresentacionInfo>();
+            var oRptProduccionInfo = new List<CartaDePresentacionAcopiadores>();
+            var oRptAlmacenamientoInfo = new List<CartaDePresentacionAcopiadores>();
+
+            oDatos.Add(oParam);
+
+            oRptProduccionInfo.AddRange(oParam.CapProduccion);
+            oRptAlmacenamientoInfo.AddRange(oParam.CapAlmacenaje);
+            oRptInformeComercial.CapProduccion = oRptProduccionInfo;
+            oRptInformeComercial.CapAlmacenamiento = oRptAlmacenamientoInfo;
+            oRptInformeComercial.DataSource = oDatos;
+            oRptInformeComercial.Run(false);
+            var oExportPDF = new PdfExport();
+            var identif = Varios.GetIdentif();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                //oRptInformeComercial.Document.
+                oExportPDF.Export(oRptInformeComercial.Document, ms);
+                oReporte = new Reportes()
+                {
+                    Identificador = identif,
+                    FileName = oParam.corredorCuit.ToString() + " - " + oParam.vendedorCuit.ToString() + ".pdf",
+                    Contenido = ms.ToArray().ReplaceText()
+                };
+                reportesManager.GrabarReporte(oReporte);
+            }
+
+            return oReporte;
+        }
 
 
     }

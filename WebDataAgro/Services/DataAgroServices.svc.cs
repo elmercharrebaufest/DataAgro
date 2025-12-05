@@ -6,6 +6,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report.Clases;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
 using NLog;
@@ -13,13 +14,16 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Web.Http.Results;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
+using Molinos.DataAgro.Report;
 
 namespace WebDataAgro.Services
 {
@@ -50,7 +54,8 @@ namespace WebDataAgro.Services
         private readonly IConfiguracionBolsaManager configuracionBolsaManager;
         private readonly ILocalidadManager localidadManager;
         private readonly IFechaFeriadoManager fechaFeriadoManager;
-
+        private readonly IReportesManager reportesManager;
+        private readonly ICartaDePresentacionManager cartaDePresentacionManager;
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
             ICampaniaActualManager campanaActual,
@@ -70,7 +75,9 @@ namespace WebDataAgro.Services
             ICampañaManager campañaManager,
             IConfiguracionBolsaManager configuracionBolsaManager,
             ILocalidadManager localidadManager,
-            IFechaFeriadoManager fechaFeriadoManager
+            IFechaFeriadoManager fechaFeriadoManager,
+            IReportesManager reportesManager,
+            ICartaDePresentacionManager cartaDePresentacionManager
             )
         {
             this.logger = logger;
@@ -93,6 +100,8 @@ namespace WebDataAgro.Services
             this.configuracionBolsaManager = configuracionBolsaManager;
             this.localidadManager = localidadManager;
             this.fechaFeriadoManager = fechaFeriadoManager;
+            this.reportesManager = reportesManager;
+            this.cartaDePresentacionManager = cartaDePresentacionManager;
         }
 
         public ResultadoSap Ping()
@@ -1701,6 +1710,169 @@ namespace WebDataAgro.Services
 
             return model;
         }
+        public RespuestaArchivoDto FormularioAltaNoGranos(ProveedorAltaDto oParam)
+        {
+            try
+            {
+                if (oParam.CUIT.Length == 11)
+                {
+                    oParam.CUIT = oParam.CUIT.Substring(0, 2) + "-" + oParam.CUIT.Substring(2, 8) + "-" + oParam.CUIT.Substring(10, 1);
+                }
+                var formularioAltaNoGranos = new LstFormularioAltaNoGranos(reportesManager);
+                var oReporte = formularioAltaNoGranos.Generar(oParam);
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = true,
+                    Mensaje = "Archivo obtenido correctamente.",
+                    NombreArchivo = oReporte.FileName,
+                    Contenido = oReporte.Contenido,
+                    Errores = new List<string>()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = false,
+                    Mensaje = string.Empty,
+                    Contenido = null,
+                    NombreArchivo = null,
+                    Errores = new List<string> { $"Error al obtener el archivo: {ex.Message}" }
+                };
+            }
+        }
+        public RespuestaArchivoDto CartaDePresentacion(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
+        {
+            try
+            {
+                var cartaDePresentacion = new LstCartaDePresentacion(reportesManager);
+                var datos = cartaDePresentacionManager.GenerarCartaDePresentacion(oParam, nuevosCampos, nuevosAcopios);
+                var oReporte = cartaDePresentacion.Generar(datos);
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = true,
+                    Mensaje = "Archivo obtenido correctamente.",
+                    NombreArchivo = oReporte.FileName,
+                    Contenido = oReporte.Contenido,
+                    Errores = new List<string>()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = false,
+                    Mensaje = string.Empty,
+                    Contenido = null,
+                    NombreArchivo = null,
+                    Errores = new List<string> { $"Error al obtener el archivo: {ex.Message}" }
+                };
+            }
+        }
+        public RespuestaArchivoDto CamposSustentables(DeclaracionCampoSustentable datos)
+        {
+            int i = 1;
+            foreach (var item in datos.Campos)
+            {
+                item.N = i++;
+            }
+
+            try
+            {
+                var cartaDePresentacion = new LstCamposSustentables(reportesManager);
+                var oReporte = cartaDePresentacion.Generar(datos);
+
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = true,
+                    Mensaje = "Archivo obtenido correctamente.",
+                    NombreArchivo = oReporte.FileName,
+                    Contenido = oReporte.Contenido,
+                    Errores = new List<string>()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = false,
+                    Mensaje = string.Empty,
+                    Contenido = null,
+                    NombreArchivo = null,
+                    Errores = new List<string> { $"Error al obtener el archivo: {ex.Message}" }
+                };
+            }
+        }
+
+        public RespuestaArchivoDto InformeComercial(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
+            List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId)
+        {
+
+            try
+            {
+                var oReporte = new Reportes();
+                if (!ComercialId.HasValue)
+                {
+                    ComercialId = homeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
+                }
+                oParam.ComercialId = ComercialId.Value;
+                var entityError = informeComercial.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios,
+                    contactoComercial, direccion, codigoPostal, localidadId);
+
+                if (!entityError.HayErrores)
+                {
+                    var oLstInformeComercial = new LstInformeComercial(reportesManager);
+                    var datos = informeComercial.GenerarInformeComercial(oParam, (int)entityError.InformeId);
+                    oReporte = oLstInformeComercial.GenerarListado(datos);
+                    informeComercial.EnviarMailInformeComercial(oReporte.Identificador);
+                }
+                else
+                {
+                    return new RespuestaArchivoDto
+                    {
+                        EsExitoso = false,
+                        Mensaje = string.Empty,
+                        Contenido = null,
+                        NombreArchivo = null,
+                        Errores = entityError.Errores.Select(x => x.Message).ToList()
+                    };
+                }
+
+
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = true,
+                    Mensaje = "Archivo obtenido correctamente.",
+                    NombreArchivo = oReporte.FileName,
+                    Contenido = oReporte.Contenido
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaArchivoDto
+                {
+                    EsExitoso = false,
+                    Mensaje = string.Empty,
+                    Contenido = null,
+                    NombreArchivo = null,
+                    Errores = new List<string> { $"Error al obtener el archivo: {ex.Message}" }
+                };
+            }
+        }
+
         #endregion MOA_Operaciones
+
+
     }
+
+    #region Clase para la respuesta a los reportes
+    public class RespuestaArchivoDto
+    {
+        public bool EsExitoso { get; set; }
+        public string Mensaje { get; set; }
+        public List<string> Errores { get; set; }
+        public string NombreArchivo { get; set; }
+        public byte[] Contenido { get; set; }
+    }
+    #endregion
 }
