@@ -1,12 +1,14 @@
 ﻿using Kendo.DynamicLinq;
+using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Common.Enums;
-using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -47,6 +49,7 @@ namespace WebDataAgro.Services
         private readonly ICampañaManager campañaManager;
         private readonly IConfiguracionBolsaManager configuracionBolsaManager;
         private readonly ILocalidadManager localidadManager;
+        private readonly IFechaFeriadoManager fechaFeriadoManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -66,7 +69,8 @@ namespace WebDataAgro.Services
             ICentroManager centroManager,
             ICampañaManager campañaManager,
             IConfiguracionBolsaManager configuracionBolsaManager,
-            ILocalidadManager localidadManager
+            ILocalidadManager localidadManager,
+            IFechaFeriadoManager fechaFeriadoManager
             )
         {
             this.logger = logger;
@@ -88,6 +92,7 @@ namespace WebDataAgro.Services
             this.campañaManager = campañaManager;
             this.configuracionBolsaManager = configuracionBolsaManager;
             this.localidadManager = localidadManager;
+            this.fechaFeriadoManager = fechaFeriadoManager;
         }
 
         public ResultadoSap Ping()
@@ -1413,16 +1418,22 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public GrabarContratoResult GrabarContratoAPrecio(Contrato contrato)
+        public GrabarContratoResultDto GrabarContratoAPrecio(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.ContratoId = resultado.ContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
-        public GrabarContratoResult GrabarContratoAFijar(Contrato contrato)
+        public GrabarContratoResultDto GrabarContratoAFijar(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.ContratoId = resultado.ContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
         public bool ValidarDirecto(string cuit)
@@ -1455,10 +1466,13 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato)
+        public GrabarContratoResultDto GrabarFijacion(FijacionDePrecioContrato contrato)
         {
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
         public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId)
@@ -1467,21 +1481,55 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos)
+        public List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
-            var resultado = contratoManager.GrabarContratoMasivo(contratos);
+            var resultados = contratoManager.GrabarContratoMasivo(contratos);
+            List<GrabarContratoResultDto> resultado2 = new List<GrabarContratoResultDto>();
+            foreach (var resultado in resultados)
+            {
+                GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+                result2.ContratoId = resultado.ContratoId;
+                resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+                resultado2.Add(result2);
+            }
+            return resultado2;
+        }
+
+        public ResultadoSap AnularContrato(int negocioId, string MotivoRechazo)
+        {
+            var resultado = new ResultadoSap();
+            try
+            {
+                var result = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
+                resultado.ListaErrores.AddRange(result.Errores);
+            }
+            catch (Exception ex)
+            {
+                resultado.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            resultado.HayError = resultado.ListaErrores.Any();
             return resultado;
         }
 
-        public Resultado AnularContrato(int negocioId, string MotivoRechazo)
+        public ResultadoSap AnularFijacion(int negocioId, string MotivoRechazo)
         {
-            var resultado = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
-            return resultado;
-        }
-
-        public Resultado AnularFijacion(int negocioId, string MotivoRechazo)
-        {
-            var resultado = fijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
+            var resultado = new ResultadoSap();
+            try
+            {
+                var result = fijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
+                resultado.ListaErrores.AddRange(result.Errores);
+            }
+            catch (Exception ex)
+            {
+                resultado.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            resultado.HayError = resultado.ListaErrores.Any();
             return resultado;
         }
 
@@ -1567,9 +1615,9 @@ namespace WebDataAgro.Services
             };
         }
 
-        public ResultIniMaterialModel BuscarMateriales()
+        public BuscarMaterialesDto BuscarMateriales()
         {
-            var model = new ResultIniMaterialModel();
+            var model = new BuscarMaterialesDto();
 
             var resultado = materialManager.TraerTodoMaterial();
 
@@ -1601,63 +1649,24 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        //public KendoGridResponseDto<ConfiguracionBolsaDto> DatosConfiguracion(KendoGridRequestDto req)
-        //{
-        //    var request = new KendoGridMvcRequest
-        //    {
-        //        Take = req.Take,
-        //        Skip = req.Skip,
-        //        Page = req.Page,
-        //        PageSize = req.PageSize,
-        //        Logic = req.Logic,
-        //        FilterObjectWrapper = ConvertFilter(req.FilterObjectWrapper),
-        //        SortObjects = (IEnumerable<KendoGridBinder.Containers.SortObject>)(req.SortObjects?.Select(x => new SortObjectDto
-        //        {
-        //            Field = x.Field,
-        //            Dir = x.Dir
-        //        }).ToList()),
-        //        GroupObjects = (IEnumerable<GroupObject>)(req.GroupObjects?.Select(x => new GroupObjectDto
-        //        {
-        //            Field = x.Field,
-        //            Direction = x.Direction,
-        //            AggregateObjects = x.AggregateObjects?.Select(a => new AggregateObjectDto
-        //            {
-        //                Field = a.Field,
-        //                Aggregate = a.Aggregate,
-        //                Direction = a.Direction
-        //            }).ToList()
-        //        }).ToList()),
-        //        AggregateObjects = req.AggregateObjects?.Select(a => new AggregateObject
-        //        {
-        //            Field = a.Field,
-        //            Aggregate = a.Aggregate,
-        //            Direction = a.Direction
-        //        }).ToList()
-        //    };
+        public KendoGridResponseDto<ConfiguracionBolsaDto> ObtenerConfiguracionBolsa()
+        {
+            var request = new KendoGridMvcRequest
+            {
+                Take = 1000,
+                Skip = 0,
+                Page = 1,
+                PageSize = 1000
+            };
 
-        //    //var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
-        //    //return resultado;
+            var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
 
-        //    var resultado = configuracionBolsaManager.TraerTodaConfiguracionBolsa(request);
-
-        //    return new KendoGridResponseDto<ConfiguracionBolsaDto>
-        //    {
-        //        Data = resultado.Data.Select(MapDto).ToList(),
-        //        Total = resultado.Total
-        //    };
-        //}
-
-        //private FilterObjectWrapper ConvertFilter(FilterObjectWrapperSOAP soap)
-        //{
-        //    if (soap == null)
-        //        return null;
-
-        //    return new FilterObjectWrapper
-        //    {
-        //        Logic = soap.Logic,
-        //        FilterObjects = soap.Filters?.Select(ConvertFilterObject).ToList()
-        //    };
-        //}
+            return new KendoGridResponseDto<ConfiguracionBolsaDto>
+            {
+                Data = resultado.Data.ToList(),
+                Total = resultado.Total
+            };
+        }
 
         public byte[] ExcelModeloAltaMasiva()
         {
@@ -1679,6 +1688,19 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
+        public ListarFeriadosDto ListarFeriados()
+        {
+            var model = new ListarFeriadosDto();
+
+            var result = fechaFeriadoManager.TraerTodo();
+
+            if (result != null)
+            {
+                model.Datos = result;
+            }
+
+            return model;
+        }
         #endregion MOA_Operaciones
     }
 }

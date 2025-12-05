@@ -11,7 +11,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.DirectoryServices.AccountManagement;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business
@@ -114,30 +113,36 @@ namespace Molinos.DataAgro.Business
                 return oEntityErrors;
             }
 
-            try
-            {
-                if (oComercial.Deshabilitado != true)
-                {
-                    using (var ctx = new PrincipalContext(ContextType.Domain))
-                    {
-                        var user = UserPrincipal.FindByIdentity(ctx, oComercial.IdActiveDirectory);
+            //try
+            //{
+            //    if (oComercial.Deshabilitado != true)
+            //    {
+            //        using (var ctx = new PrincipalContext(ContextType.Domain))
+            //        {
+            //            var user = UserPrincipal.FindByIdentity(ctx, oComercial.IdActiveDirectory);
 
-                        if (user == null)
-                        {
-                            oEntityErrors.Error("Usuario", "El usuario no existe en Active Directory.");
-                            return oEntityErrors;
-                        }
-                    }
-                }
+            //            if (user == null)
+            //            {
+            //                oEntityErrors.Error("Usuario", "El usuario no existe en Active Directory.");
+            //                return oEntityErrors;
+            //            }
+            //        }
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    logger.Error(ex);
+            //}
             if (repositorio.Existe<Comercial>(x => x.IdActiveDirectory == oComercial.IdActiveDirectory && x.ComercialId != oComercial.ComercialId))
             {
                 oEntityErrors.Error("Usuario", "El usuario de Active Directory ya ha sido usado por otro comercial.");
+                return oEntityErrors;
+            }
+
+            if (repositorio.Existe<Comercial>(x => x.Email == oComercial.Email && x.ComercialId != oComercial.ComercialId))
+            {
+                oEntityErrors.Error("Usuario", "El usuario de Email ya ha sido usado por otro comercial.");
                 return oEntityErrors;
             }
             if (roles == null)

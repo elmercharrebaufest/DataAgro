@@ -316,11 +316,13 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
     <Compile Include="Dto\BuscarCentroDto.cs" />
+    <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\InicializarContratoDto.cs" />
     <Compile Include="Dto\KendoDataSourceRequestDto.cs" />
     <Compile Include="Dto\KendoDataSourceResultDto.cs" />
     <Compile Include="Dto\KendoGridRequestDto.cs" />
     <Compile Include="Dto\KendoGridResponseDto.cs" />
+    <Compile Include="Dto\ListarFeriadosDto.cs" />
     <Compile Include="Dto\PrecioMoaGroupDto.cs" />
     <Compile Include="Dto\ResultadoDto.cs" />
     <Compile Include="Entities\ClausulaConfirma.cs" />
