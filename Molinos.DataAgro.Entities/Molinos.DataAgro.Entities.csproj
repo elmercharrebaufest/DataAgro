@@ -322,6 +322,7 @@
     <Compile Include="Dto\KendoDataSourceResultDto.cs" />
     <Compile Include="Dto\KendoGridRequestDto.cs" />
     <Compile Include="Dto\KendoGridResponseDto.cs" />
+    <Compile Include="Dto\ListarFeriadosDto.cs" />
     <Compile Include="Dto\PrecioMoaGroupDto.cs" />
     <Compile Include="Dto\ResultadoDto.cs" />
     <Compile Include="Entities\ClausulaConfirma.cs" />
