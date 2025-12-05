@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
@@ -92,9 +93,19 @@ namespace WebDataAgro.Seguridad
         {
             lock (_lock)
             {
+                string hostPorIP = "";
+                try
+                {
+                    IPHostEntry entry = Dns.GetHostEntry(ip);
+                    hostPorIP = entry.HostName;
+                }
+                catch
+                {
+                    hostPorIP = "No resuelto";
+                }
                 string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "accesos.log");
 
-                string linea = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | IP: {ip} | Host: {host} | Operación: {operacion}";
+                string linea = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | IP: {ip} | Host: {host} / {hostPorIP} | Operación: {operacion}";
                 File.AppendAllLines(path, new[] { linea });
             }
         }
