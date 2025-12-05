@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<ICampañaManager> campañaManager;
         private Mock<IConfiguracionBolsaManager> configuracionBolsaManager;
         private Mock<ILocalidadManager> localidadManager;
+        private Mock<IFechaFeriadoManager> fechaFeriadoManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -68,6 +69,7 @@ namespace Molinos.DataAgro.Test.Services
             campañaManager = new Mock<ICampañaManager>();
             configuracionBolsaManager = new Mock<IConfiguracionBolsaManager>();
             localidadManager = new Mock<ILocalidadManager>();
+            fechaFeriadoManager = new Mock<IFechaFeriadoManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
@@ -75,7 +77,7 @@ namespace Molinos.DataAgro.Test.Services
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, 
                 cupoManagerMock.Object, mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, 
                 homeManager.Object, configuracionInternaManager.Object, materialManager.Object, centroManager.Object, campañaManager.Object,
-                configuracionBolsaManager.Object, localidadManager.Object);
+                configuracionBolsaManager.Object, localidadManager.Object, fechaFeriadoManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
