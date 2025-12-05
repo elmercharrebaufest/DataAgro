@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class Resultado
     {
         public List<ErrorMessage> Errores { get; set; } = new List<ErrorMessage>();
-        
+
         [DataMember]
         public List<ErrorMessage> ListaErrores { get { return Errores; } }
 
@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool HayErrores
         {
             get { return Errores.Count != 0; }
-        }   
+        }
 
         public void Error(string clave, string descripcion)
         {

@@ -3,7 +3,6 @@ using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using WebDataAgro.Models;
 
 namespace WebDataAgro.Services
 {
@@ -99,10 +98,10 @@ namespace WebDataAgro.Services
         BasicoContrato TraerFijacionCompleto(int id);
 
         [OperationContract]
-        GrabarContratoResult GrabarContratoAPrecio(Contrato contrato);
+        GrabarContratoResultDto GrabarContratoAPrecio(Contrato contrato);
 
         [OperationContract]
-        GrabarContratoResult GrabarContratoAFijar(Contrato contrato);
+        GrabarContratoResultDto GrabarContratoAFijar(Contrato contrato);
 
         [OperationContract]
         bool ValidarDirecto(string cuit);
@@ -120,19 +119,19 @@ namespace WebDataAgro.Services
         List<PrecioMoaCompraNetDto> TraerPrecioMoaV2(int material, int tiponegocio);
 
         [OperationContract]
-        GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato);
+        GrabarContratoResultDto GrabarFijacion(FijacionDePrecioContrato contrato);
 
         [OperationContract]
         List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
 
         [OperationContract]
-        List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
+        List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos);
 
         [OperationContract]
-        Resultado AnularContrato(int negocioId, string MotivoRechazo);
+        ResultadoSap AnularContrato(int negocioId, string MotivoRechazo);
 
         [OperationContract]
-        Resultado AnularFijacion(int negocioId, string MotivoRechazo);
+        ResultadoSap AnularFijacion(int negocioId, string MotivoRechazo);
 
         [OperationContract]
         List<HabilitacionSustentableDto> HabilitarSustentable();
