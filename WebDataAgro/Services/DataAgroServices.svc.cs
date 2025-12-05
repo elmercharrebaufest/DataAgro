@@ -15,7 +15,6 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using WebDataAgro.Helpers.Excel;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
@@ -1568,9 +1567,9 @@ namespace WebDataAgro.Services
             };
         }
 
-        public ResultIniMaterialModel BuscarMateriales()
+        public BuscarMaterialesDto BuscarMateriales()
         {
-            var model = new ResultIniMaterialModel();
+            var model = new BuscarMaterialesDto();
 
             var resultado = materialManager.TraerTodoMaterial();
 
