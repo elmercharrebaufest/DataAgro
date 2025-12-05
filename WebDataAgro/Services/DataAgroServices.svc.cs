@@ -1413,16 +1413,22 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public GrabarContratoResult GrabarContratoAPrecio(Contrato contrato)
+        public GrabarContratoResultDto GrabarContratoAPrecio(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.ContratoId = resultado.ContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
-        public GrabarContratoResult GrabarContratoAFijar(Contrato contrato)
+        public GrabarContratoResultDto GrabarContratoAFijar(Contrato contrato)
         {
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.ContratoId = resultado.ContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
         public bool ValidarDirecto(string cuit)
@@ -1455,10 +1461,13 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public GrabarFijacionResult GrabarFijacion(FijacionDePrecioContrato contrato)
+        public GrabarContratoResultDto GrabarFijacion(FijacionDePrecioContrato contrato)
         {
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
-            return resultado;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+            result2.FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId;
+            resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+            return result2;
         }
 
         public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId)
@@ -1467,10 +1476,18 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
-        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos)
+        public List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
-            var resultado = contratoManager.GrabarContratoMasivo(contratos);
-            return resultado;
+            var resultados = contratoManager.GrabarContratoMasivo(contratos);
+            List<GrabarContratoResultDto> resultado2 = new List<GrabarContratoResultDto>();
+            foreach (var resultado in resultados)
+            {
+                GrabarContratoResultDto result2 = new GrabarContratoResultDto();
+                result2.ContratoId = resultado.ContratoId;
+                resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
+                resultado2.Add(result2);
+            }
+            return resultado2;
         }
 
         public Resultado AnularContrato(int negocioId, string MotivoRechazo)
