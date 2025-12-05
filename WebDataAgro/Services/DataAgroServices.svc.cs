@@ -1,5 +1,6 @@
 ﻿using Kendo.DynamicLinq;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -15,6 +16,7 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using WebDataAgro.Helpers.Excel;
+using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
@@ -47,6 +49,7 @@ namespace WebDataAgro.Services
         private readonly ICampañaManager campañaManager;
         private readonly IConfiguracionBolsaManager configuracionBolsaManager;
         private readonly ILocalidadManager localidadManager;
+        private readonly IFechaFeriadoManager fechaFeriadoManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -66,7 +69,8 @@ namespace WebDataAgro.Services
             ICentroManager centroManager,
             ICampañaManager campañaManager,
             IConfiguracionBolsaManager configuracionBolsaManager,
-            ILocalidadManager localidadManager
+            ILocalidadManager localidadManager,
+            IFechaFeriadoManager fechaFeriadoManager
             )
         {
             this.logger = logger;
@@ -88,6 +92,7 @@ namespace WebDataAgro.Services
             this.campañaManager = campañaManager;
             this.configuracionBolsaManager = configuracionBolsaManager;
             this.localidadManager = localidadManager;
+            this.fechaFeriadoManager = fechaFeriadoManager;
         }
 
         public ResultadoSap Ping()
@@ -1683,7 +1688,19 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
+        public ListarFeriadosDto ListarFeriados()
+        {
+            var model = new ListarFeriadosDto();
 
+            var result = fechaFeriadoManager.TraerTodo();
+
+            if (result != null)
+            {
+                model.Datos = result;
+            }
+
+            return model;
+        }
         #endregion MOA_Operaciones
     }
 }

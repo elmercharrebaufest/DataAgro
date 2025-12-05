@@ -163,6 +163,7 @@ namespace WebDataAgro.Services
         [OperationContract]
         List<PartidoDto> ListarPartidos();
 
-
+        [OperationContract]
+        ListarFeriadosDto ListarFeriados();
     }
 }
