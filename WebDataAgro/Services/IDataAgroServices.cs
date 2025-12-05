@@ -128,10 +128,10 @@ namespace WebDataAgro.Services
         List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos);
 
         [OperationContract]
-        Resultado AnularContrato(int negocioId, string MotivoRechazo);
+        ResultadoSap AnularContrato(int negocioId, string MotivoRechazo);
 
         [OperationContract]
-        Resultado AnularFijacion(int negocioId, string MotivoRechazo);
+        ResultadoSap AnularFijacion(int negocioId, string MotivoRechazo);
 
         [OperationContract]
         List<HabilitacionSustentableDto> HabilitarSustentable();

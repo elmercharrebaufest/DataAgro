@@ -1490,15 +1490,41 @@ namespace WebDataAgro.Services
             return resultado2;
         }
 
-        public Resultado AnularContrato(int negocioId, string MotivoRechazo)
+        public ResultadoSap AnularContrato(int negocioId, string MotivoRechazo)
         {
-            var resultado = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
+            var resultado = new ResultadoSap();
+            try
+            {
+                var result = contratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
+                resultado.ListaErrores.AddRange(result.Errores);
+            }
+            catch (Exception ex)
+            {
+                resultado.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            resultado.HayError = resultado.ListaErrores.Any();
             return resultado;
         }
 
-        public Resultado AnularFijacion(int negocioId, string MotivoRechazo)
+        public ResultadoSap AnularFijacion(int negocioId, string MotivoRechazo)
         {
-            var resultado = fijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
+            var resultado = new ResultadoSap();
+            try
+            {
+                var result = fijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
+                resultado.ListaErrores.AddRange(result.Errores);
+            }
+            catch (Exception ex)
+            {
+                resultado.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            resultado.HayError = resultado.ListaErrores.Any();
             return resultado;
         }
 
