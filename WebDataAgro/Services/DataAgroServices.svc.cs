@@ -1,6 +1,5 @@
 ﻿using Kendo.DynamicLinq;
 using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -16,7 +15,6 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using WebDataAgro.Helpers.Excel;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
@@ -1555,8 +1553,7 @@ namespace WebDataAgro.Services
         {
             // Convertir el DTO SOAP → DataSourceRequest de Kendo
             var filtroKendo = MapperToKendoRequest(filtro);
-
-            var equipo = GlobalVariables.EquipoReal;
+            var equipo = repositorio.Listar<Comercial, int>(x => x.ComercialId);
             var resultado = contratoManager.TraerContratosFiltrados(filtroKendo, equipo);
 
             return MapperToKendoResult(resultado);
