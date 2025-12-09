@@ -1708,6 +1708,7 @@ namespace WebDataAgro.Services
 
             return model;
         }
+
         public RespuestaArchivoDto FormularioAltaNoGranos(ProveedorAltaDto oParam)
         {
             try
@@ -1739,6 +1740,7 @@ namespace WebDataAgro.Services
                 };
             }
         }
+
         public RespuestaArchivoDto CartaDePresentacion(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
         {
             try
@@ -1767,6 +1769,7 @@ namespace WebDataAgro.Services
                 };
             }
         }
+
         public RespuestaArchivoDto CamposSustentables(DeclaracionCampoSustentable datos)
         {
             int i = 1;
@@ -1859,18 +1862,5 @@ namespace WebDataAgro.Services
         }
 
         #endregion MOA_Operaciones
-
-
     }
-
-    #region Clase para la respuesta a los reportes
-    public class RespuestaArchivoDto
-    {
-        public bool EsExitoso { get; set; }
-        public string Mensaje { get; set; }
-        public List<string> Errores { get; set; }
-        public string NombreArchivo { get; set; }
-        public byte[] Contenido { get; set; }
-    }
-    #endregion
 }

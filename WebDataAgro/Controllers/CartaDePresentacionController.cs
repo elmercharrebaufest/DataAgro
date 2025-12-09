@@ -1,6 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
@@ -18,7 +16,7 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CartaDePresentacionController : Controller
     {
-        private ICartaDePresentacionManager cartaDePresentacionManager;
+        private readonly ICartaDePresentacionManager cartaDePresentacionManager;
         private readonly IReportesManager reportesManager;
 
         public CartaDePresentacionController(IReportesManager reportesManager, ICartaDePresentacionManager cartaDePresentacionManager)
@@ -28,7 +26,7 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> Generar(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
-        { 
+        {
             var model = new ReportesModel();
 
             var cartaDePresentacion = new LstCartaDePresentacion(reportesManager);
@@ -39,16 +37,11 @@ namespace WebDataAgro.Controllers
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
-
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
-
-

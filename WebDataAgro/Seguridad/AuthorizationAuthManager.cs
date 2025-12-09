@@ -31,7 +31,7 @@ namespace WebDataAgro.Seguridad
             }
             catch (Exception e)
             {
-                log.Error($"No se pudo authorizar al usuario: {usuarioDominio}", e);
+                log.Error(e, $"No se pudo authorizar al usuario: {usuarioDominio}");
             }
             return autorizado;
         }

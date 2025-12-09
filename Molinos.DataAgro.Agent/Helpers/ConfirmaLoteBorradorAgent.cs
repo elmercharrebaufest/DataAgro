@@ -843,7 +843,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error: No se pudo procesar el XML en WS Confirma", e);
+                    logger.Error(e, "Error: No se pudo procesar el XML en WS Confirma");
                     throw;
                 }
             }

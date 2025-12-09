@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("SincronizarDatosResearch", e);
+                logger.Error(e, "SincronizarDatosResearch");
                 throw;
             }
         }

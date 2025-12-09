@@ -1,9 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-#VisualStudioVersion = 16.0.29215.179
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDataAgro", "WebDataAgro\WebDataAgro.csproj", "{4A4B326D-1ED3-4AED-A2B9-06EC9464810D}"
 EndProject
@@ -167,41 +165,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CC7CFC5-B00C-442F-BAEC-DFD89AFA1741}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs-ms.baufest.com:8080/tfs/molinos%20rio%20de%20la%20plata
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = WebDataAgro\\WebDataAgro.csproj
-		SccProjectName1 = WebDataAgro
-		SccLocalPath1 = WebDataAgro
-		SccProjectUniqueName2 = Molinos.DataAgro.Business\\Molinos.DataAgro.Business.csproj
-		SccProjectName2 = Molinos.DataAgro.Business
-		SccLocalPath2 = Molinos.DataAgro.Business
-		SccProjectUniqueName3 = Molinos.DataAgro.Entities\\Molinos.DataAgro.Entities.csproj
-		SccProjectName3 = Molinos.DataAgro.Entities
-		SccLocalPath3 = Molinos.DataAgro.Entities
-		SccProjectUniqueName4 = Molinos.DataAgro.Interfaces\\Molinos.DataAgro.Interfaces.csproj
-		SccProjectName4 = Molinos.DataAgro.Interfaces
-		SccLocalPath4 = Molinos.DataAgro.Interfaces
-		SccProjectUniqueName5 = Molinos.DataAgro.Report\\Molinos.DataAgro.Report.csproj
-		SccProjectName5 = Molinos.DataAgro.Report
-		SccLocalPath5 = Molinos.DataAgro.Report
-		SccProjectUniqueName6 = Molinos.DataAgro.Agent\\Molinos.DataAgro.Agent.csproj
-		SccProjectName6 = Molinos.DataAgro.Agent
-		SccLocalPath6 = Molinos.DataAgro.Agent
-		SccProjectUniqueName7 = Base\u0020de\u0020Datos\\Base\u0020de\u0020Datos.sqlproj
-		SccProjectName7 = Base\u0020de\u0020Datos
-		SccLocalPath7 = Base\u0020de\u0020Datos
-		SccProjectUniqueName8 = Molinos.DataAgro.Build\\Molinos.DataAgro.Build.csproj
-		SccProjectName8 = Molinos.DataAgro.Build
-		SccLocalPath8 = Molinos.DataAgro.Build
-		SccProjectUniqueName9 = Molinos.DataAgro.Test\\Molinos.DataAgro.Test.csproj
-		SccProjectName9 = Molinos.DataAgro.Test
-		SccLocalPath9 = Molinos.DataAgro.Test
-		SccProjectUniqueName10 = Molinos.DataAgro.Repository\\Molinos.DataAgro.Repository.csproj
-		SccProjectName10 = Molinos.DataAgro.Repository
-		SccLocalPath10 = Molinos.DataAgro.Repository
 	EndGlobalSection
 EndGlobal

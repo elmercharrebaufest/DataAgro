@@ -1,13 +1,10 @@
 ﻿using NLog;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -21,7 +18,7 @@ namespace WebDataAgro.Controllers
     public class CamposSustentablesController : Controller
     {
         private readonly IReportesManager reportesManager;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public CamposSustentablesController(IReportesManager reportesManager, ILogger logger)
         {
@@ -40,7 +37,6 @@ namespace WebDataAgro.Controllers
             {
             }
 
-
             int i = 1;
             foreach (var item in datos.Campos)
             {
@@ -54,16 +50,11 @@ namespace WebDataAgro.Controllers
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
-
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
-
-
