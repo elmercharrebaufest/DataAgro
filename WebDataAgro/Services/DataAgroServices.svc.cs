@@ -1424,7 +1424,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarContratoAPrecio(Contrato contrato)
         {
-            logger.Debug("GrabarContratoAPrecio " + contrato.ToXml());
+            logger.Debug("GrabarContratoAPrecio " + contrato.ToJson());
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.ContratoId = resultado.ContratoId;
@@ -1434,7 +1434,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarContratoAFijar(Contrato contrato)
         {
-            logger.Debug("GrabarContratoAFijar " + contrato.ToXml());
+            logger.Debug("GrabarContratoAFijar " + contrato.ToJson());
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.ContratoId = resultado.ContratoId;
@@ -1474,7 +1474,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarFijacion(FijacionDePrecioContrato contrato)
         {
-            logger.Debug("GrabarFijacion " + contrato.ToXml());
+            logger.Debug("GrabarFijacion " + contrato.ToJson());
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId;
@@ -1490,7 +1490,7 @@ namespace WebDataAgro.Services
 
         public List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
-            logger.Debug("GrabarContratoMasivo " + contratos.ToXml());
+            logger.Debug("GrabarContratoMasivo " + contratos.ToJson());
             var resultados = contratoManager.GrabarContratoMasivo(contratos);
             List<GrabarContratoResultDto> resultado2 = new List<GrabarContratoResultDto>();
             foreach (var resultado in resultados)
