@@ -1,5 +1,4 @@
-﻿using NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -10,6 +9,7 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7294,6 +7294,7 @@ namespace Molinos.DataAgro.Business.Managers
             contrato.NoInformaSio = false;
             contrato.TrigoEspecial = false;
             contrato.EsFason = false;
+            contrato.FechaOperacion = new DateTime(contrato.FechaOperacion.Year, contrato.FechaOperacion.Month, contrato.FechaOperacion.Day);
 
             if (contrato.ComercialId == null || contrato.ComercialId == 0)
             {

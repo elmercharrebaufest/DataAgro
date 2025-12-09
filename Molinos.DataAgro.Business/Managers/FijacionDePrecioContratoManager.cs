@@ -1,5 +1,4 @@
-﻿using NLog;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -7,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -2037,6 +2037,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public GrabarFijacionResult GrabarFijacionDePrecioTercero(FijacionDePrecioContrato fijacion)
         {
+            fijacion.FechaOperacion = new DateTime(fijacion.FechaOperacion.Year, fijacion.FechaOperacion.Month, fijacion.FechaOperacion.Day);
+
             if (fijacion.ComercialId == null || fijacion.ComercialId == 0)
             {
                 fijacion.ComercialId = mobjComercialManager.ComercialAsociado(fijacion.CorredorId.HasValue && fijacion.CorredorId != 0 ? fijacion.CorredorId.Value : fijacion.ProveedorId ?? 0);
@@ -2164,7 +2166,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("comisionPorcentaje: " + comisionPorcentaje);
                 }
             }
-            fijacion.PagoDiferidoTerceroId = fijacion.PagoDiferidoTerceroId == -1 ? (int?)null : fijacion.PagoDiferidoTerceroId;
+            fijacion.PagoDiferidoTerceroId = fijacion.PagoDiferidoTerceroId == -1 ? null : fijacion.PagoDiferidoTerceroId;
             fijacion.ContratoId = null;
 
             return GrabarFijacionDePrecio(fijacion);
