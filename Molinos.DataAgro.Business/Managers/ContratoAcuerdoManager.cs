@@ -568,7 +568,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error("Error en GrabarAcuerdo: ", ex);
+                logger.Error(ex, "Error en GrabarAcuerdo: ");
                 throw;
             }
 
@@ -1006,7 +1006,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error($"Error al Anular Acuerdos. ", ex);
+                logger.Error(ex, $"Error al Anular Acuerdos. ");
                 throw;
             }
         }

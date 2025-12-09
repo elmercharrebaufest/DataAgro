@@ -213,7 +213,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método BoletoEnByte.", ex);
+                logger.Error(ex, "Error en método BoletoEnByte.");
                 throw;
             }
         }
@@ -499,7 +499,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al generar PDF de boleto. ", e);
+                logger.Error(e, "Error al generar PDF de boleto. ");
                 throw;
             }
         }

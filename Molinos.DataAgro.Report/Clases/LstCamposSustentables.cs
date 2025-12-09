@@ -1,29 +1,22 @@
 ﻿using DataDynamics.ActiveReports.Export.Pdf;
-using iTextSharp.text.pdf;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.ActiveReport;
-using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report.Clases
 {
     public class LstCamposSustentables
     {
-        private IReportesManager reportesManager;
+        private readonly IReportesManager reportesManager;
 
         public LstCamposSustentables(IReportesManager reportesManager)
         {
             this.reportesManager = reportesManager;
         }
-
-        //-----------------------------------------------------------------------------------
-        //  Metodos Publicos
-        //-----------------------------------------------------------------------------------
 
         public async Task<string> GenerarAsync(DeclaracionCampoSustentable oParam)
         {
@@ -33,17 +26,16 @@ namespace Molinos.DataAgro.Report.Clases
             oRptCamposSustentables.PageSettings.PaperName = "Mi Pagina";
             oRptCamposSustentables.Document.Printer.PrinterName = "";
 
-            var oDatos = new List<DeclaracionCampoSustentable>();
-
-            oDatos.Add(oParam);
+            var oDatos = new List<DeclaracionCampoSustentable>
+            {
+                oParam
+            };
 
             oRptCamposSustentables.Campos = oParam.Campos;
             oRptCamposSustentables.DataSource = oDatos;
-
             oRptCamposSustentables.Run(false);
 
             var oExportPDF = new PdfExport();
-
             var identif = Varios.GetIdentif();
 
             using (MemoryStream ms = new MemoryStream())
@@ -63,7 +55,6 @@ namespace Molinos.DataAgro.Report.Clases
             return identif;
         }
 
-
         public Reportes Generar(DeclaracionCampoSustentable oParam)
         {
             var oReporte = new Reportes();
@@ -73,32 +64,32 @@ namespace Molinos.DataAgro.Report.Clases
             oRptCamposSustentables.PageSettings.PaperName = "Mi Pagina";
             oRptCamposSustentables.Document.Printer.PrinterName = "";
 
-            var oDatos = new List<DeclaracionCampoSustentable>();
-            oDatos.Add(oParam);
+            var oDatos = new List<DeclaracionCampoSustentable>
+            {
+                oParam
+            };
 
             oRptCamposSustentables.Campos = oParam.Campos;
             oRptCamposSustentables.DataSource = oDatos;
-
             oRptCamposSustentables.Run(false);
+
             var oExportPDF = new PdfExport();
             var identif = Varios.GetIdentif();
+
             using (MemoryStream ms = new MemoryStream())
             {
                 oExportPDF.Export(oRptCamposSustentables.Document, ms);
+
                 oReporte = new Reportes()
                 {
                     Identificador = identif,
                     FileName = oParam.RazonSocial.ToString() + " - " + oParam.CUIT.ToString() + ".pdf",
                     Contenido = ms.ToArray().ReplaceText()
                 };
+
                 reportesManager.GrabarReporte(oReporte);
             }
             return oReporte;
         }
-
-
-
-
-
     }
 }

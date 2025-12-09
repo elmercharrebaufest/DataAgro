@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error al Crear Cupo.", e);
+                logger.Error(e, "Error al Crear Cupo.");
                 throw;
             }
         }
@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error al transmitir Cupos.", e);
+                logger.Error(e, "Error al transmitir Cupos.");
                 throw;
             }
         }
@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error en EliminarCupo", e);
+                logger.Error(e, "Error en EliminarCupo");
                 throw;
             }
         }
@@ -109,7 +109,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error al consultar cupos diarias.", e);
+                logger.Error(e, "Error al consultar cupos diarias.");
                 throw;
             }
         }
@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error al modificar Cupo", e);
+                logger.Error(e, "Error al modificar Cupo");
                 throw;
             }
         }
@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error al consultar turnos activos", e);
+                logger.Error(e, "Error al consultar turnos activos");
                 throw;
             }
         }

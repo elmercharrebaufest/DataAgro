@@ -2085,7 +2085,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("No se pudo ValidarComprasDiferencial en GrabarContrato", ex);
+                    logger.Error(ex, "No se pudo ValidarComprasDiferencial en GrabarContrato");
                 }
             }
 
@@ -2232,7 +2232,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("No se pudo ValidarComprasDiferencial", ex);
+                    logger.Error(ex, "No se pudo ValidarComprasDiferencial");
                 }
 
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.ComercialId.Value);
@@ -5416,7 +5416,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error AnularContratoSAP ", e);
+                    logger.Error(e, "Error AnularContratoSAP ");
                     oEntityErrors.Error("", e.Message);
                 }
             }
@@ -5546,7 +5546,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error AltaContratoSAP ", e);
+                logger.Error(e, "Error AltaContratoSAP");
             }
             return error;
         }
@@ -7569,7 +7569,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método AltaMasivaContratos.", ex);
+                logger.Error(ex, "Error en método AltaMasivaContratos.");
                 throw;
             }
         }
@@ -7806,7 +7806,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método AltaMasivaConvenios.", ex);
+                logger.Error(ex, "Error en método AltaMasivaConvenios.");
                 throw;
             }
         }
@@ -9071,7 +9071,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método AltaMasivaMATBA.", ex);
+                logger.Error(ex, "Error en método AltaMasivaMATBA.");
                 throw;
             }
         }

@@ -1110,7 +1110,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     catch (Exception e)
                     {
-                        logger.Error("Error al obtener el email del AD del Comercial asignado: ", e);
+                        logger.Error(e, "Error al obtener el email del AD del Comercial asignado: ");
                     }
                 }
 
@@ -4611,7 +4611,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception e)
                         {
-                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            logger.Error(e, "Error al anular el cupo " + c.CupoSap);
                             var cuposOk = new CupoDto
                             {
                                 CupoSap = c.CupoSap,

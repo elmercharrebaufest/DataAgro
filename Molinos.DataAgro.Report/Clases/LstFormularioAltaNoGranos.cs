@@ -1,29 +1,22 @@
 ﻿using DataDynamics.ActiveReports.Export.Pdf;
-using iTextSharp.text.pdf;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.ActiveReport;
-using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report.Clases
 {
     public class LstFormularioAltaNoGranos
     {
-        private IReportesManager reportesManager;
+        private readonly IReportesManager reportesManager;
 
         public LstFormularioAltaNoGranos(IReportesManager reportesManager)
         {
             this.reportesManager = reportesManager;
         }
-
-        //-----------------------------------------------------------------------------------
-        //  Metodos Publicos
-        //-----------------------------------------------------------------------------------
 
         public async Task<string> GenerarAsync(ProveedorAltaDto oParam)
         {
@@ -33,12 +26,12 @@ namespace Molinos.DataAgro.Report.Clases
             report.PageSettings.PaperName = "Mi Pagina";
             report.Document.Printer.PrinterName = "";
 
-            var oDatos = new List<ProveedorAltaDto>();
+            var oDatos = new List<ProveedorAltaDto>
+            {
+                oParam
+            };
 
-            oDatos.Add(oParam);
-            
             report.DataSource = oDatos;
-
             report.Run(false);
 
             var oExportPDF = new PdfExport();
@@ -47,13 +40,12 @@ namespace Molinos.DataAgro.Report.Clases
 
             using (MemoryStream ms = new MemoryStream())
             {
-                //oRptInformeComercial.Document.
                 oExportPDF.Export(report.Document, ms);
 
                 var oReporte = new Reportes()
                 {
                     Identificador = identif,
-                    FileName = oParam.CUIT+".pdf",
+                    FileName = oParam.CUIT + ".pdf",
                     Contenido = ms.ToArray().ReplaceText()
                 };
 
@@ -72,12 +64,12 @@ namespace Molinos.DataAgro.Report.Clases
             report.PageSettings.PaperName = "Mi Pagina";
             report.Document.Printer.PrinterName = "";
 
-            var oDatos = new List<ProveedorAltaDto>();
-
-            oDatos.Add(oParam);
+            var oDatos = new List<ProveedorAltaDto>
+            {
+                oParam
+            };
 
             report.DataSource = oDatos;
-
             report.Run(false);
 
             var oExportPDF = new PdfExport();
@@ -86,7 +78,6 @@ namespace Molinos.DataAgro.Report.Clases
 
             using (MemoryStream ms = new MemoryStream())
             {
-                //oRptInformeComercial.Document.
                 oExportPDF.Export(report.Document, ms);
 
                 oReporte = new Reportes()
@@ -101,7 +92,5 @@ namespace Molinos.DataAgro.Report.Clases
 
             return oReporte;
         }
-
-
     }
 }

@@ -45,7 +45,7 @@ namespace WebDataAgro.Jobs
             }
             catch (Exception ex)
             {
-                logger.Error("HANGFIRE - Error al ejecutar job CerrarDiaHangfireJob", ex);
+                logger.Error(ex, "HANGFIRE - Error al ejecutar job CerrarDiaHangfireJob");
                 throw;
             }
         }

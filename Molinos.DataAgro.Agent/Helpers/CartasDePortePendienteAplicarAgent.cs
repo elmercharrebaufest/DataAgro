@@ -194,7 +194,7 @@ namespace Molinos.DataAgro.Agent
                 catch (Exception e)
                 {
                     logger.Error($"Última request procesada: {request}");
-                    logger.Error("Error en método ListarCartasDePortePendienteAplicar.", e);
+                    logger.Error(e, "Error en método ListarCartasDePortePendienteAplicar.");
                     throw;
                 }
             }
