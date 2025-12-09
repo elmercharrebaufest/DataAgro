@@ -1,6 +1,4 @@
-﻿using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using NLog;
+﻿using NLog;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -44,6 +42,8 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IConfiguracionBolsaManager> configuracionBolsaManager;
         private Mock<ILocalidadManager> localidadManager;
         private Mock<IFechaFeriadoManager> fechaFeriadoManager;
+        private Mock<IReportesManager> reportesManager;
+        private Mock<ICartaDePresentacionManager> cartaDePresentacionManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -70,6 +70,8 @@ namespace Molinos.DataAgro.Test.Services
             configuracionBolsaManager = new Mock<IConfiguracionBolsaManager>();
             localidadManager = new Mock<ILocalidadManager>();
             fechaFeriadoManager = new Mock<IFechaFeriadoManager>();
+            reportesManager = new Mock<IReportesManager>();
+            cartaDePresentacionManager = new Mock<ICartaDePresentacionManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
@@ -77,7 +79,7 @@ namespace Molinos.DataAgro.Test.Services
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, 
                 cupoManagerMock.Object, mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, 
                 homeManager.Object, configuracionInternaManager.Object, materialManager.Object, centroManager.Object, campañaManager.Object,
-                configuracionBolsaManager.Object, localidadManager.Object, fechaFeriadoManager.Object);
+                configuracionBolsaManager.Object, localidadManager.Object, fechaFeriadoManager.Object, reportesManager.Object, cartaDePresentacionManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
