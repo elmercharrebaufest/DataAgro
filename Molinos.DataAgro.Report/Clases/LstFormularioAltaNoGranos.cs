@@ -63,6 +63,44 @@ namespace Molinos.DataAgro.Report.Clases
             return identif;
         }
 
+        public Reportes Generar(ProveedorAltaDto oParam)
+        {
+            var oReporte = new Reportes();
+            var report = new RptFormularioAltaNoGranos();
+            report.PageSettings.DefaultPaperSize = false;
+            report.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.Custom;
+            report.PageSettings.PaperName = "Mi Pagina";
+            report.Document.Printer.PrinterName = "";
+
+            var oDatos = new List<ProveedorAltaDto>();
+
+            oDatos.Add(oParam);
+
+            report.DataSource = oDatos;
+
+            report.Run(false);
+
+            var oExportPDF = new PdfExport();
+
+            var identif = Varios.GetIdentif();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                //oRptInformeComercial.Document.
+                oExportPDF.Export(report.Document, ms);
+
+                oReporte = new Reportes()
+                {
+                    Identificador = identif,
+                    FileName = oParam.CUIT + ".pdf",
+                    Contenido = ms.ToArray().ReplaceText()
+                };
+
+                reportesManager.GrabarReporte(oReporte);
+            }
+
+            return oReporte;
+        }
 
 
     }
