@@ -78,6 +78,50 @@ namespace Molinos.DataAgro.Report.Clases
             return identif;
         }
 
+        public Reportes GenerarListado(RptInformeComercialInfo oParam)
+        {
+            var oReporte = new Reportes();
+            var oRptInformeComercial = new RptInformeComercial();
+            oRptInformeComercial.PageSettings.DefaultPaperSize = false;
+            oRptInformeComercial.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.Custom;
+            oRptInformeComercial.PageSettings.PaperName = "Mi Pagina";
+            oRptInformeComercial.Document.Printer.PrinterName = "";
+
+            var oDatos = new List<RptInformeComercialInfo>();
+            var dato = new RptInformeComercialInfo();
+            var oRptProduccionInfo = new List<InformeComercialAcopiadores>();
+            var oRptAlmacenamientoInfo = new List<InformeComercialAcopiadores>();
+            var oRptObjetivosInfo = new List<RptObjetivosInfo>();
+            var ProduccionInfo = new InformeComercialAcopiadores();
+            var AlmacenamientoInfo = new InformeComercialAcopiadores();
+
+            oDatos.Add(oParam);
+
+            oRptProduccionInfo.AddRange(oParam.CapProduccion);
+            oRptAlmacenamientoInfo.AddRange(oParam.CapAlmacenaje);
+            oRptInformeComercial.CapProduccion = oRptProduccionInfo;
+            oRptInformeComercial.CapAlmacenamiento = oRptAlmacenamientoInfo;
+            oRptInformeComercial.DataSource = oDatos;
+            oRptInformeComercial.Run(false);
+
+            var oExportPDF = new PdfExport();
+            var identif = Varios.GetIdentif();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                oExportPDF.Export(oRptInformeComercial.Document, ms);
+                oReporte = new Reportes()
+                {
+                    Identificador = identif,
+                    FileName = oParam.CUIT.ToString() + " - " + oParam.RazonSocial.ToString() + ".pdf",
+                    Contenido = ms.ToArray().ReplaceText()
+                };
+                reportesManager.GrabarReporte(oReporte);
+            }
+            return oReporte;
+        }
+
+
         public string GenerarInformesExcel(List<ResultCapacidadProductiva> oDatos)
         {
             var excel = new ExcelPackage();

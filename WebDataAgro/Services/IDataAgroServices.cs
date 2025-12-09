@@ -165,5 +165,19 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ListarFeriadosDto ListarFeriados();
+
+        [OperationContract]
+        RespuestaArchivoDto FormularioAltaNoGranos(ProveedorAltaDto oParam);
+        
+        [OperationContract]
+        RespuestaArchivoDto CartaDePresentacion(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios);
+        
+        [OperationContract]
+        RespuestaArchivoDto CamposSustentables(DeclaracionCampoSustentable datos);
+
+        [OperationContract]
+        RespuestaArchivoDto InformeComercial(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
+            List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
+
     }
 }
