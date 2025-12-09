@@ -13,15 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.ServiceModel;
-using System.Web.Http.Results;
 using WebDataAgro.Helpers.Excel;
 using static WebDataAgro.MvcApplication;
 using Filter = Kendo.DynamicLinq.Filter;
 using Sort = Kendo.DynamicLinq.Sort;
-using Molinos.DataAgro.Report;
 
 namespace WebDataAgro.Services
 {
@@ -1427,6 +1424,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarContratoAPrecio(Contrato contrato)
         {
+            logger.Debug("GrabarContratoAPrecio " + contrato.ToXml());
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.ContratoId = resultado.ContratoId;
@@ -1436,6 +1434,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarContratoAFijar(Contrato contrato)
         {
+            logger.Debug("GrabarContratoAFijar " + contrato.ToXml());
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.ContratoId = resultado.ContratoId;
@@ -1475,6 +1474,7 @@ namespace WebDataAgro.Services
 
         public GrabarContratoResultDto GrabarFijacion(FijacionDePrecioContrato contrato)
         {
+            logger.Debug("GrabarFijacion " + contrato.ToXml());
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
             GrabarContratoResultDto result2 = new GrabarContratoResultDto();
             result2.FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId;
@@ -1490,6 +1490,7 @@ namespace WebDataAgro.Services
 
         public List<GrabarContratoResultDto> GrabarContratoMasivo(List<BasicoContrato> contratos)
         {
+            logger.Debug("GrabarContratoMasivo " + contratos.ToXml());
             var resultados = contratoManager.GrabarContratoMasivo(contratos);
             List<GrabarContratoResultDto> resultado2 = new List<GrabarContratoResultDto>();
             foreach (var resultado in resultados)
