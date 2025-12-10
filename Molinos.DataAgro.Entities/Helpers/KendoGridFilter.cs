@@ -312,7 +312,21 @@ namespace Molinos.DataAgro.Entities.Helpers
                         }
                         if (dataType == "datetime")
                         {
-                            f.Value = new DateTime(((DateTime)f.Value).Year, ((DateTime)f.Value).Month, ((DateTime)f.Value).Day);
+                            //f.Value = new DateTime(((DateTime)f.Value).Year, ((DateTime)f.Value).Month, ((DateTime)f.Value).Day);
+                            if (f.Value != null)
+                            {
+                                DateTime dt;
+
+                                if (f.Value is DateTime d1)
+                                    dt = d1;
+                                else if (f.Value is DateTimeOffset dto)
+                                    dt = dto.DateTime;
+                                else if (f.Value is string s && DateTime.TryParse(s, out var parsed))
+                                    dt = parsed;
+                                else
+                                    continue;
+                                f.Value = dt.Date;
+                            }
                         }
                     }
                     else
