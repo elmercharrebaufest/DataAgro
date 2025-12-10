@@ -1772,12 +1772,6 @@ namespace WebDataAgro.Services
 
         public RespuestaArchivoDto CamposSustentables(DeclaracionCampoSustentable datos)
         {
-            int i = 1;
-            foreach (var item in datos.Campos)
-            {
-                item.N = i++;
-            }
-
             try
             {
                 var cartaDePresentacion = new LstCamposSustentables(reportesManager);
