@@ -1,17 +1,12 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
-using Molinos.DataAgro.Entities.Seguridad;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -52,6 +47,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Utilizado = cupo.CupoId == null ? false : true
                 };
             queryCupos = queryCupos.OrderByDescending(c => c.FechaIngreso);
+            GridHelper.TruncateTime(request.Filter, ref queryCupos);
+
             return queryCupos.ToDataSourceResult<CupoNoPropioDto>(request);
         }
 

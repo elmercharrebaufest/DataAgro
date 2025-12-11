@@ -6,13 +6,9 @@ using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Net.Http;
-using System.Transactions;
-using Molinos.DataAgro;
-using System.Security.Cryptography;
-using System.Web.UI.WebControls.WebParts;
 using System.Diagnostics;
+using System.Linq;
+using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -148,6 +144,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                              Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres,
                                              FechaConfirmadoSAP = negocio.FechaConfirmadoSAP,
                                          };
+                GridHelper.TruncateTime(request.Filter, ref queryBasicoBoletos);
 
                 return queryBasicoBoletos.ToDataSourceResult(request);
             }

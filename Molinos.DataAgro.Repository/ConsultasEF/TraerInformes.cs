@@ -40,9 +40,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialId = x.InformeComercial.ComercialId,
                     FechaAlta = DbFunctions.TruncateTime(x.InformeComercial.FechaAlta),
                     FechaAltaConHora = x.InformeComercial.FechaAlta,
-                    FechaDescarga = x.FechaDescarga != null? true: false,
+                    FechaDescarga = x.FechaDescarga != null ? true : false,
                     FechaDescargaConHora = x.FechaDescarga,
-                    OrigenDA = x.InformeComercial.OrigenDA == true ? true: false,
+                    OrigenDA = x.InformeComercial.OrigenDA == true ? true : false,
                     UsuarioSAP = x.InformeComercial.Comercial.IdUsuarioSAP,
                     OrigenDAVal = x.InformeComercial.OrigenDA == true ? "Si" : "No",
                     FechaDescargaVal = DbFunctions.TruncateTime(x.FechaDescarga)
@@ -74,6 +74,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                    FechaDescargaVal = x.FirstOrDefault().FechaDescargaVal
                }
             );
+            GridHelper.TruncateTime(filtro.Filter, ref resultado);
+
             return resultado.ToDataSourceResult(filtro);
         }
 
