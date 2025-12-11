@@ -2,8 +2,6 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Transactions;
@@ -16,7 +14,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly DataSourceRequest request;
         private readonly int? proveedorId;
 
-        public BusquedaContactosComercialReporte(DataSourceRequest request,int? proveedorId)
+        public BusquedaContactosComercialReporte(DataSourceRequest request, int? proveedorId)
         {
             this.request = request;
             this.proveedorId = proveedorId;
@@ -44,6 +42,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                  EstadoHome = prov.EstadoHome.Descripcion,
                  ComercialAsignado = string.Concat(proCom.Comercial.Apellido, " ", proCom.Comercial.Nombres)
              };
+            GridHelper.TruncateTime(request.Filter, ref resultado);
 
             return resultado.ToDataSourceResult(request);
         }

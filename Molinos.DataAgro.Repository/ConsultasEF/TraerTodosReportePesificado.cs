@@ -1,13 +1,8 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Transactions;
-using Molinos.DataAgro.Entities.Helpers;
-using System.Linq;
-using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {

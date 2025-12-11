@@ -1,13 +1,10 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Helpers;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Transactions;
-using Molinos.DataAgro.Entities.Helpers;
 using System.Linq;
-using Molinos.DataAgro.Entities.Entities;
+using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -29,6 +26,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryRango = TraerTodoPesificadoSinFiltro.Query(contexto, request, equipo);
             queryRango = queryRango.Where(x => x.CantidadPendiente > 0);
+            GridHelper.TruncateTime(request.Filter, ref queryRango);
+
             return queryRango.ToDataSourceResult<ReportePesificadoDto>(request);
         }
 
