@@ -102,6 +102,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ContratoSAP = contrato.ContratoSAP,
                     ContratoCorredor = contrato.ContratoCorredor ?? "",
                 };
+            GridHelper.TruncateTime(request.Filter, ref queryContratos);
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);
 

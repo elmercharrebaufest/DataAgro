@@ -1,20 +1,10 @@
-﻿using JsonDiffer;
-using Kendo.DynamicLinq;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
-using Molinos.DataAgro.Entities.Seguridad;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
@@ -58,6 +48,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ProveedorId = log.ProveedorId,
                     CorredorId = log.CorredorId,
                 };
+            GridHelper.TruncateTime(request.Filter, ref queryLogs);
 
             return queryLogs.ToDataSourceResult<LogDataAgroDto>(request);
         }
