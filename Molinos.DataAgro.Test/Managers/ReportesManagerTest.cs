@@ -1,5 +1,4 @@
-﻿using NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -8,6 +7,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampañaQry>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Desc))
                 .Returns(new List<CampañaQry>() { new CampañaQry { CampañaId = 1, Descripcion = "18-19" } });
-            comercialManagerMock.Setup(y => y.ListarEquipo("a"))
+            comercialManagerMock.Setup(y => y.ListarEquipo("a", null))
                 .Returns(new EquipoDto { Equipo = new List<int>() { 1, 2, 3 }, EquipoReal = new List<int>() { 1, 2, 3 } });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, ComercialQry>>>())).Returns(new ComercialQry { ComercialId = 1, Nombre = "a a" });

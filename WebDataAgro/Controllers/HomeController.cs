@@ -90,7 +90,7 @@ namespace WebDataAgro.Controllers
             foreach (var rol in roles)
                 identity.AddClaim(new Claim(ClaimTypes.Role, rol));
 
-            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory);
+            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory, roles);
             identity.AddClaim(new Claim("perfil", JsonConvert.SerializeObject(comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory))));
             identity.AddClaim(new Claim("esAdministrador", JsonConvert.SerializeObject(comercialManager.EsAdministrador(comercial.IdActiveDirectory))));
             identity.AddClaim(new Claim("EsCupera", JsonConvert.SerializeObject(comercialManager.EsCupera(comercial.IdActiveDirectory))));
@@ -99,7 +99,7 @@ namespace WebDataAgro.Controllers
             identity.AddClaim(new Claim("equipoReal", JsonConvert.SerializeObject(equipo.EquipoReal)));
             identity.AddClaim(new Claim("IdActiveDirectory", JsonConvert.SerializeObject(comercial.IdActiveDirectory)));
             identity.AddClaim(new Claim("IdActiveDirectoryCompleto", JsonConvert.SerializeObject("molinosagro\\" + comercial.IdActiveDirectory)));
-            identity.AddClaim(new Claim("corredoresComercial", JsonConvert.SerializeObject(comercialManager.ListarCorredoresComercial())));
+            identity.AddClaim(new Claim("corredoresComercial", JsonConvert.SerializeObject(comercialManager.ListarCorredoresComercial(roles))));
 
             // Loguear: emitir cookie OWIN
             var ctx = HttpContext.GetOwinContext();
