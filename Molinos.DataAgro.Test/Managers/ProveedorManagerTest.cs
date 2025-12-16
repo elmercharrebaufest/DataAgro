@@ -1,5 +1,4 @@
-﻿using NLog;
-using Molinos.DataAgro.Business.Managers;
+﻿using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -10,6 +9,7 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Molinos.DataAgro.Test.Mock;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -68,12 +68,12 @@ namespace Molinos.DataAgro.Test.Managers
             scoringCuposAgentMock = new Mock<IScoringCuposAgent>();
 
             target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
-                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object, visualizarCapacidadProductivaAgentMock.Object, 
+                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object, estadoProveedorManagerMock.Object, visualizarCapacidadProductivaAgentMock.Object,
                 scoringCuposAgentMock.Object);
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a" };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
@@ -791,7 +791,7 @@ namespace Molinos.DataAgro.Test.Managers
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -1229,7 +1229,7 @@ namespace Molinos.DataAgro.Test.Managers
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -1562,7 +1562,7 @@ namespace Molinos.DataAgro.Test.Managers
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -1701,7 +1701,7 @@ namespace Molinos.DataAgro.Test.Managers
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -1948,7 +1948,7 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateEstablecimiento
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<CampoDetalle>() { new CampoDetalle { Id = 1 }, new CampoDetalle { Id = 3 } });
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
@@ -2207,7 +2207,7 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateEstablecimiento
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<CampoDetalle>() { new CampoDetalle { Id = 1 }, new CampoDetalle { Id = 3 } });
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false }, GrupoDeComprasId = 45 };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
@@ -2369,7 +2369,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Comercial>(It.IsAny<int>()))
                 .Returns(comercialP);
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
@@ -2499,7 +2499,7 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateEstablecimiento
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<CampoDetalle>());
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
 
 
@@ -2654,7 +2654,7 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateEstablecimiento
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<CampoDetalle>());
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
@@ -2921,7 +2921,7 @@ namespace Molinos.DataAgro.Test.Managers
 
 
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -3123,7 +3123,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<CorredorProveedor>() { new CorredorProveedor { CorredorId = 1, ProveedorId = 2 } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>()))
                             .Returns(new CorredorProveedor { CorredorId = 1, ProveedorId = 2 });
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
               .Returns(new List<CapacidadProductivaDto>());
 
@@ -3267,7 +3267,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarRolOkTest()
         {
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };
@@ -3404,7 +3404,7 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>()))
                 .Returns("dataagro.baufest@gmail.com");
             //para pasar el logDataA
-            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
+            comercialManagerMock.Setup(x => x.ListarEquipo(It.IsAny<string>(), It.IsAny<List<string>>())).Returns(new EquipoDto { Equipo = new List<int> { 1, 2, 3 } });
 
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "21-22" };

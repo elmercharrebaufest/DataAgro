@@ -297,13 +297,18 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera ?? false);
         }
-        public EquipoDto ListarEquipo(string idActiveDirectory)
+        public EquipoDto ListarEquipo(string idActiveDirectory, List<string> roles = null)
         {
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
             var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
+            var noVerCorredorComercial = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+            if (roles != null && roles.Any())
+            {
+                noVerCorredorComercial = !roles.Any(r => r == PermisosDataAgro.VerCorredorComercial.ToString());
+            }
             var resultado = new EquipoDto
             {
-                Equipo = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ?
+                Equipo = noVerCorredorComercial ?
 
                 ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)))
             };
@@ -362,9 +367,14 @@ namespace Molinos.DataAgro.Business
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
         }
 
-        public List<int> ListarCorredoresComercial()
+        public List<int> ListarCorredoresComercial(List<string> roles = null)
         {
-            var resultado = (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
+            var verCorredorComercial = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+            if (roles != null && roles.Any())
+            {
+                verCorredorComercial = roles.Any(r => r == PermisosDataAgro.VerCorredorComercial.ToString());
+            }
+            var resultado = verCorredorComercial ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
             return resultado;
         }
 

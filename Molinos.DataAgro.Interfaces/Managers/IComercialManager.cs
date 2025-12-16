@@ -20,10 +20,10 @@ namespace Molinos.DataAgro.Interfaces
         EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId);
         bool EsAdministrador(string activeDirectoryId);
         bool EsCupera(string activeDirectoryId);
-        EquipoDto ListarEquipo(string idActiveDirectory);
+        EquipoDto ListarEquipo(string idActiveDirectory, List<string> roles = null);
         int ObtenerComercialId(string idActiveDirectory);
         List<int> CadenaComerciales(int comercialId);
-        List<int> ListarCorredoresComercial();
+        List<int> ListarCorredoresComercial(List<string> roles = null);
         List<Comercial> ListarComercialesCorredor();
         List<GrupoDeCompras> ListarGrupoDeCompras(string filtro);
         int ComercialAsociado(int proveedorId);
