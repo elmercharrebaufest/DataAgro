@@ -98,6 +98,7 @@ namespace WebDataAgro.Controllers
             identity.AddClaim(new Claim("equipo", JsonConvert.SerializeObject(equipo.Equipo)));
             identity.AddClaim(new Claim("equipoReal", JsonConvert.SerializeObject(equipo.EquipoReal)));
             identity.AddClaim(new Claim("IdActiveDirectory", JsonConvert.SerializeObject(comercial.IdActiveDirectory)));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, comercial.IdActiveDirectory));
             identity.AddClaim(new Claim("IdActiveDirectoryCompleto", JsonConvert.SerializeObject("molinosagro\\" + comercial.IdActiveDirectory)));
             identity.AddClaim(new Claim("corredoresComercial", JsonConvert.SerializeObject(comercialManager.ListarCorredoresComercial(roles))));
 
