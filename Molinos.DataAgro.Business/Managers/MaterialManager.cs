@@ -1,10 +1,11 @@
-﻿using NLog;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
@@ -32,7 +33,8 @@ namespace Molinos.DataAgro.Business
                        {
                            MaterialId = x.MaterialId,
                            Codigo = x.Codigo,
-                           Descripcion = x.Descripcion
+                           Descripcion = x.Descripcion,
+                           DestinoId = x.DestinoId,
                        },
                        x => (oParam.Codigo.Trim() == "" || x.Codigo.Contains(oParam.Codigo.Trim())) &&
                                    (oParam.Descripcion.Trim() == "" || x.Descripcion.Contains(oParam.Descripcion.Trim())), 500, "Descripcion")
@@ -50,7 +52,8 @@ namespace Molinos.DataAgro.Business
                 CampañaId = x.CampañaId,
                 Codigo = x.Codigo,
                 Descripcion = x.Descripcion,
-                IVA = x.IVA
+                IVA = x.IVA,
+                DestinoId = x.DestinoId
             }) ?? new MaterialDto();
         }
 
@@ -74,6 +77,7 @@ namespace Molinos.DataAgro.Business
                 oMaterialSave.CampañaId = oMaterial.CampañaId;
                 oMaterialSave.CampaniaTableroId = oMaterial.CampaniaTableroId;
                 oMaterialSave.IVA = oMaterial.IVA;
+                oMaterialSave.DestinoId = oMaterial.DestinoId;
             }
             else
             {
@@ -118,7 +122,8 @@ namespace Molinos.DataAgro.Business
             {
                 Material = qry.GetAbmMaterialCombo(),
                 Campania = qry.GetAbmCampaniaCombo(),
-                CampaniaTablero = qry.GetAbmCampaniaTableroCombo()
+                CampaniaTablero = qry.GetAbmCampaniaTableroCombo(),
+                Destino = qry.GetAbmCentroCombo().Where(a => a.CargaNegocios).ToList()
             };
         }
 
@@ -135,14 +140,16 @@ namespace Molinos.DataAgro.Business
                     CampaniaIdActual = x.CampañaId ?? 0,
                     CampaniaTablero = x.CampaniaTablero.Descripcion,
                     CampaniaTableroId = x.CampaniaTableroId ?? 0,
-                    IVA = x.IVA                     
+                    IVA = x.IVA,
+                    Destino = x.Destino.Descripcion,
+                    DestinoId = x.DestinoId
                 }, x => x.Descripcion != "Girasol AO", 0, "Descripcion") //el Alto Oleico no se usa
             };
         }
-        
+
         public decimal DevolverIVAPorMaterial(int materialId)
         {
-          return  repositorio.Obtener<Material, decimal>(x => x.MaterialId == materialId, x => x.IVA??0);
+            return repositorio.Obtener<Material, decimal>(x => x.MaterialId == materialId, x => x.IVA ?? 0);
         }
     }
 }

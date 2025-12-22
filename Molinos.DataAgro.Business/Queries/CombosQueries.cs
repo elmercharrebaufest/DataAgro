@@ -133,8 +133,10 @@ namespace Molinos.DataAgro.Business
             {
                 return repositorio.Listar<Centro, CentroCombo>(x => new CentroCombo()
                 {
+                    Id = x.Id,
                     CodigoSap = x.CodigoSap,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion,
+                    CargaNegocios = x.CargaNegocios,
                 }, null, 0, "Descripcion");
             }
             catch (Exception ex)
@@ -170,7 +172,8 @@ namespace Molinos.DataAgro.Business
                     MaterialId = x.MaterialId,
                     Codigo = x.Codigo,
                     Descripcion = x.Descripcion,
-                    IVA = x.IVA
+                    IVA = x.IVA,
+                    DestinoId = x.DestinoId
                 }, null, 0, "Descripcion");
             }
             catch (Exception ex)

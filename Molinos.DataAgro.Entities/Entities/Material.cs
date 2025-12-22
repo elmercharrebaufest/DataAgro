@@ -15,11 +15,15 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public decimal? IVA { get; set; }
 
+        public int DestinoId { get; set; }
+
         [ForeignKey("CampañaId")]
         public virtual Campaña Campaña { get; set; }
         [ForeignKey("CampaniaTableroId")]
         public virtual Campaña CampaniaTablero { get; set; }
 
+        [ForeignKey("DestinoId")]
+        public virtual Centro Destino { get; set; }
         public Material()
         {
             Codigo = "";
@@ -27,7 +31,7 @@ namespace Molinos.DataAgro.Entities.Entities
         }
     }
 }
-   
+
 
 
 

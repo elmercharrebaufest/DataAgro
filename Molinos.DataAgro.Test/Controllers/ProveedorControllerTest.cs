@@ -1,16 +1,13 @@
-﻿using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Report.Clases;
 using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -319,7 +316,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"MaterialId\":1,\"Codigo\":null,\"Descripcion\":\"A\",\"CampañaId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"MaterialId\":1,\"Codigo\":null,\"Descripcion\":\"A\",\"CampañaId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
