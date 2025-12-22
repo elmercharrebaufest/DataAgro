@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null,\"IVA\":null}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}]},\"RangoPrecio\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"Material\":null,\"Moneda\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null,\"IVA\":null,\"DestinoId\":0}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}]},\"RangoPrecio\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"Material\":null,\"Moneda\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 PrecioMinimo = 1
             };
             rangoManagerMock.Setup(x => x.TraerRango(1)).Returns(rangoPrecio);
-            var result = target.RangoCombo(new AbmRangoParam() { Id = 1});
+            var result = target.RangoCombo(new AbmRangoParam() { Id = 1 });
 
             Assert.NotNull(result);
 
@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarRangoTest()
         {
             rangoManagerMock.Setup(x => x.EliminarRango(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmRangoParam { Id = 1});
+            var result = target.Eliminar(new AbmRangoParam { Id = 1 });
 
             Assert.NotNull(result);
 

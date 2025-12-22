@@ -6,9 +6,11 @@
     [CampaniaTableroId] INT NULL, 
 	[CodigoEspecie]	INT	NULL,   
     [IVA] DECIMAL(11, 2) NULL, 
+    [DestinoId] INT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_Material] PRIMARY KEY CLUSTERED ([MaterialId] ASC),
     CONSTRAINT [FK_Material_Campania] FOREIGN KEY ([CampaniaTableroId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
-	CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId])
+	CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
+    CONSTRAINT [FK_Material_Centro] FOREIGN KEY ([DestinoId]) REFERENCES [dbo].[Centro] ([Id])
 );
 
 

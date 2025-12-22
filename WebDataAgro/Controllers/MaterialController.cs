@@ -14,7 +14,7 @@ namespace WebDataAgro.Controllers
     {
         private readonly IMaterialManager materialManager;
 
-        public MaterialController(IMaterialManager materialManager) 
+        public MaterialController(IMaterialManager materialManager)
         {
             this.materialManager = materialManager;
         }

@@ -11,6 +11,7 @@
         public string CampaniaTablero { get; set; }
 
         public decimal? IVA { get; set; }
+        public int DestinoId { get; set; }
     }
 }
    

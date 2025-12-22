@@ -8,19 +8,20 @@ namespace Molinos.DataAgro.Entities.Dto
     // cuando la entidad original tiene muchos campos
     //---------------------------------------------------------
 
-    public class LocalidadCombo 
+    public class LocalidadCombo
     {
         public int LocalidadId { get; set; }
         public string Nombre { get; set; }
     }
 
-    public class MaterialCombo 
+    public class MaterialCombo
     {
         public int MaterialId { get; set; }
         public string Descripcion { get; set; }
         public string Codigo { get; set; }
         public string Campaña { get; set; }
         public decimal? IVA { get; set; }
+        public int DestinoId { get; set; }
     }
 
     public class MotivoCombo
@@ -48,7 +49,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
     }
 
-    public class ComercialCombo 
+    public class ComercialCombo
     {
         public int ComercialId { get; set; }
         public string Apellido { get; set; }
@@ -162,6 +163,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion;
         public int CampañaIdActual;
         public int CampaniaTableroId;
+
+        public int DestinoId { get; set; }
     }
 
     public class DestinatarioQry
@@ -249,7 +252,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int Id;
         public string Descripcion;
-        public string CodigoSap;        
+        public string CodigoSap;
     }
 
     public class TipoPeriodoDBQry
@@ -259,12 +262,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CodigoSap;
     }
 
-    public class EstadosContratos {
+    public class EstadosContratos
+    {
         public int EstadosContratosId { get; set; }
         public string Descripcion { get; set; }
 
         public EstadosContratos() { }
-        public EstadosContratos(int EstadosContratosId, string Descripcion) {
+        public EstadosContratos(int EstadosContratosId, string Descripcion)
+        {
             this.EstadosContratosId = EstadosContratosId;
             this.Descripcion = Descripcion;
         }
@@ -272,9 +277,10 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class CentroCombo
     {
-        public int Id;
-        public string Descripcion;
-        public string CodigoSap;
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+        public string CodigoSap { get; set; }
+        public bool CargaNegocios { get; set; }
     }
 
     public class ZonaCupoCombo

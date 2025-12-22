@@ -16,19 +16,19 @@ namespace Molinos.DataAgro.Test.Controllers
     public class MaterialControllerTest
     {
         private MaterialController target;
-        private Mock<IMaterialManager>materialManagerMock;
+        private Mock<IMaterialManager> materialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();            
+            this.serializer = new JavaScriptSerializer();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
             materialManagerMock = new Mock<IMaterialManager>();
             target = new MaterialController(materialManagerMock.Object);
         }
-               
+
 
         [Test]
         public void AplicarCondicionTest()
@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":1,\"Codigo\":\"A\",\"Descripcion\":\"A\",\"CampañaId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":1,\"Codigo\":\"A\",\"Descripcion\":\"A\",\"CampañaId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -76,7 +76,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarCondicionTest()
         {
             materialManagerMock.Setup(x => x.EliminarMaterial(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmMaterialParam { Id = 1});
+            var result = target.Eliminar(new AbmMaterialParam { Id = 1 });
 
             Assert.NotNull(result);
 
@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }
