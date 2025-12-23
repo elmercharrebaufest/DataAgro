@@ -796,8 +796,10 @@ function InicializarElementos() {
                 $("#boton-ampliar").trigger("click");
             }
 
-            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
-                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            if ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR) {
+                var destinoId = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val()).DestinoId;
+                $("#destinoId").data("kendoDropDownList").value(destinoId)
+                //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
             }
         }
     });
@@ -928,8 +930,10 @@ function InicializarElementos() {
                 }
             }
 
-            if ($("#material").val() == Materiales.TRIGO && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
-                $("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            if ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR) {
+                var destinoId = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val()).DestinoId;
+                $("#destinoId").data("kendoDropDownList").value(destinoId)
+                //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
             }
 
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());

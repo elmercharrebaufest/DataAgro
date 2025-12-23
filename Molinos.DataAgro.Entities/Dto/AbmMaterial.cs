@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CampaniaCombo> Campania { get; set; }
 
         public List<CampaniaTableroCombo> CampaniaTablero { get; set; }
+        public List<CentroCombo> Destino { get; set; }
     }
 
     public class MaterialIni
@@ -31,6 +32,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CampaniaTableroId { get; set; }
         public string CampaniaTablero { get; set; }
         public decimal? IVA { get; set; }
+        public string Destino { get; set; }
+        public int DestinoId { get; set; }
     }
 
     public class DataAbmMaterial : Resultado
