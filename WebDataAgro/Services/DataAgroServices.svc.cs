@@ -1345,7 +1345,7 @@ namespace WebDataAgro.Services
             }
             catch (Exception ex)
             {
-                logger.Debug("Error en DatosCupoSap: ", ex);
+                logger.Debug(ex, "Error en DatosCupoSap: ");
                 throw;
             }
         }

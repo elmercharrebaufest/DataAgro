@@ -2410,7 +2410,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("EnviarMailInvitacionMOAOperaciones", e);
+                logger.Error(e, "EnviarMailInvitacionMOAOperaciones");
             }
         }
 
@@ -2435,6 +2435,7 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
+
         private GrabarProveedorResult UpdateProduccion(NuevoProveedor oParam)
         {
             var resultado = new GrabarProveedorResult();
@@ -3661,7 +3662,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("ImportarEstablecimientos: ", e);
+                logger.Error(e, "ImportarEstablecimientos: ");
                 throw;
             }
         }
@@ -4009,7 +4010,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
-            
+
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -4559,7 +4560,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += " (" + oContrato.CantidadCamiones + " camiones)<br />";
             }
-            
+
             htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + oContrato.Localidad.Nombre.ToUpper() + " - " + oContrato.Provincia.Nombre.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. DESDE</th>" + Td(ref linea) + Split(oContrato.FechaDesde.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. HASTA</th>" + Td(ref linea) + Split(oContrato.FechaHasta.ToShortDateString()) + "</td></tr>";
@@ -4825,7 +4826,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("error GrabarMailProveedor", e);
+                logger.Error(e, "error GrabarMailProveedor");
             }
         }
 
@@ -5092,7 +5093,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", oytNorte.Select(x => x.IdActiveDirectory)));
             foreach (Comercial oytNorteCopia in oytNorte)
             {
-                if(oytNorteCopia.Deshabilitado == true) { continue; }
+                if (oytNorteCopia.Deshabilitado == true) { continue; }
                 try
                 {
                     var emailComerciales = mailManager.GetEmailUserActiveDirectory(oytNorteCopia.IdActiveDirectory);
@@ -5276,7 +5277,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error al actualizar Scoring Cupos de Proveedores.", ex);
+                logger.Error(ex, "Error al actualizar Scoring Cupos de Proveedores.");
                 throw;
             }
         }

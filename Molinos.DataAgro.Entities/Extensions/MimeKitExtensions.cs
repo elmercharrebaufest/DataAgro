@@ -46,20 +46,20 @@ namespace Molinos.DataAgro.Entities.Extensions
 
                 //if (multipart.ContentType.Matches("multipart", "alternative"))
                 //{
-                    foreach (var part in multipart.OfType<MimeKit.MimePart>())
-                    {
-                        // clone the content
-                        var content = new MemoryStream();
-                        part.ContentObject.DecodeTo(content);
-                        content.Position = 0;
+                foreach (var part in multipart.OfType<MimeKit.MimePart>())
+                {
+                    // clone the content
+                    var content = new MemoryStream();
+                    part.ContentObject.DecodeTo(content);
+                    content.Position = 0;
 
-                        var view = new AlternateView(content, GetContentType(part.ContentType));
-                        view.TransferEncoding = GetTransferEncoding(part.ContentTransferEncoding);
-                        if (!string.IsNullOrEmpty(part.ContentId))
-                            view.ContentId = part.ContentId;
+                    var view = new AlternateView(content, GetContentType(part.ContentType));
+                    view.TransferEncoding = GetTransferEncoding(part.ContentTransferEncoding);
+                    if (!string.IsNullOrEmpty(part.ContentId))
+                        view.ContentId = part.ContentId;
 
-                        message.AlternateViews.Add(view);
-                    }
+                    message.AlternateViews.Add(view);
+                }
                 //}
                 //else
                 //{

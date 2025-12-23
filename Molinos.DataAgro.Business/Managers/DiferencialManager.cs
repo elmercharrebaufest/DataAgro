@@ -155,7 +155,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception e)
             {
-                logger.Error("Error en validar compras diferencial", e);
+                logger.Error(e, "Error en validar compras diferencial");
                 var resultado = new Resultado();
                 resultado.Errores.Add(new ErrorMessage(400, "Error en validar compras diferencial"));
                 return resultado;

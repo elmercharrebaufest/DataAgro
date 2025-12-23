@@ -255,7 +255,7 @@ namespace Molinos.DataAgro.Business.Managers
             catch (Exception ex)
             {
                 logger.Debug(oFason.ToXml());
-                logger.Error("Error al " + (oFason.Id != 0 ? "modificar" : "crear") + " Fason", ex);
+                logger.Error(ex, "Error al " + (oFason.Id != 0 ? "modificar" : "crear") + " Fason");
                 throw;
             }
             return oEntityErrors;

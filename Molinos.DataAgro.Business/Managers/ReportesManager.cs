@@ -2760,7 +2760,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("GrabarDatosReporteCompraNet", e);
+                logger.Error(e, "GrabarDatosReporteCompraNet");
             }
         }
 
@@ -3568,7 +3568,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception e) { logger.Error("EnviarMailPesificacionVencida: ", e); }
+            catch (Exception e)
+            {
+                logger.Error(e, "EnviarMailPesificacionVencida: ");
+            }
         }
 
         private List<string> DevolverMailComercialDeNegocio(ReportePesificadoDto reporte)

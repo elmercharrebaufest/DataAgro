@@ -844,7 +844,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método BuscaFechaYFormatea", ex);
+                logger.Error(ex, "Error en método BuscaFechaYFormatea");
             }
 
             if (s == "1/1/0001 00:00:00")

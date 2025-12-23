@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception ex)
             {
-                logger.Error("Error al consultar el Scoring de Cupos", ex);
+                logger.Error(ex, "Error al consultar el Scoring de Cupos");
                 throw;
             }
 

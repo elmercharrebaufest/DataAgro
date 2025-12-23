@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al eliminar cupo.", e);
+                    logger.Error(e, "Error comunicacion SAP al eliminar cupo.");
                     throw;
                 }
             }
@@ -111,7 +111,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al eliminar cupo.", e);
+                    logger.Error(e, "Error comunicacion SAP al eliminar cupo.");
                     throw;
                 }
             }

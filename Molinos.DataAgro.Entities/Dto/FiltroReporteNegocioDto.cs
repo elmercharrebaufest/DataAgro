@@ -43,8 +43,8 @@ namespace Molinos.DataAgro.Entities.Dto
             var result = false;
             Type type = typeof(FiltroReporteNegocioDto);
             var propiedades = type.GetProperties();
-            propiedades = propiedades.Where(x => x.Name != "Page"&& x.Name != "PageSize" && x.Name != "Sort").ToArray();
-            
+            propiedades = propiedades.Where(x => x.Name != "Page" && x.Name != "PageSize" && x.Name != "Sort").ToArray();
+
             foreach (PropertyInfo pi in propiedades)
             {
                 if (!result)
@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Entities.Dto
                     else if (pi.PropertyType == typeof(int[]))
                     {
                         value = (int[])pi.GetValue(obj);
-                        result = value == null || value.Length == 0? false : true;
+                        result = value == null || value.Length == 0 ? false : true;
                     }
                     else if (pi.PropertyType == typeof(string[]))
                     {

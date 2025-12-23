@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Business
                     }
                     catch (Exception e)
                     {
-                        logger.Error("Error ReenviarMailCierreDia", e);
+                        logger.Error(e, "Error ReenviarMailCierreDia");
                     }
                     client.Disconnect(true);
                 }
@@ -324,7 +324,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception e)
             {
-                logger.Error("Error final ReenviarMailCierreDia", e);
+                logger.Error(e, "Error final ReenviarMailCierreDia");
             }
         }
 

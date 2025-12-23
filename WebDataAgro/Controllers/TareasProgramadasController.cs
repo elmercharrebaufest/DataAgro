@@ -232,7 +232,7 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("ReportePagosDiferidos", ex);
+                logger.Error(ex, "ReportePagosDiferidos");
             }
             logger.Info("FIN ReportePagosDiferidos");
             return Content("ok");
@@ -247,7 +247,7 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("ActualizarCumplimientoCupos", ex);
+                logger.Error(ex, "ActualizarCumplimientoCupos");
             }
             logger.Info("FIN ActualizarCumplimientoCupos");
             return Content("ok");

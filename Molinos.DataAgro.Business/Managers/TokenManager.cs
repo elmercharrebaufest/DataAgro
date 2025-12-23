@@ -38,7 +38,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Cuit = x.Cuit,
                     NombreUsuario = x.NombreUsuario
                 });
-            if(tokenAuth != null){
+            if (tokenAuth != null)
+            {
                 repositorio.EliminarTokens(tokenAuth.Cuit);
             }
             return tokenAuth;
@@ -46,7 +47,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public TokenDto GenerarToken(long cuit, string nombreUsuario)
         {
-            if(cuit <= 0)
+            if (cuit <= 0)
             {
                 return new TokenDto
                 {
@@ -63,7 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fecha = DateTime.Now;
             repositorio.EliminarTokens(cuit);
-                        
+
             var tokenActivo = repositorio.Agregar(new TokenAuth
             {
                 Cuit = cuit,
@@ -77,7 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al generar el token", e);
+                logger.Error(e, "Error al generar el token");
                 return new TokenDto
                 {
                     Error = "Error al generar el token"

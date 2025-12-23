@@ -459,7 +459,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP: No se pudo finalizar el contrato.", e);
+                logger.Error(e, "Error comunicacion SAP: No se pudo finalizar el contrato.");
                 throw;
             }
         }
@@ -888,7 +888,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP: No se pudo finalizar el contrato.", e);
+                logger.Error(e, "Error comunicacion SAP: No se pudo finalizar el contrato.");
                 throw;
             }
         }

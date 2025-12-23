@@ -35,7 +35,7 @@ namespace WebDataAgro.Jobs
             }
             catch (Exception ex)
             {
-                logger.Error("HANGFIRE - Error en TransmitirCupoStop.", ex);
+                logger.Error(ex, "HANGFIRE - Error en TransmitirCupoStop.");
             }
             logger.Info("HANGFIRE - FIN TransmitirCupoStop");
         }

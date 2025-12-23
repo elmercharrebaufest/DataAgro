@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Business
     {
         protected IRepositorio Repositorio { get; private set; }
         protected ILogger Log { get; private set; }
-       
+
         protected ProcesadorCriterio(IRepositorio repositorio, ILogger log)
         {
             Log = log;
@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Business
                 catch (Exception e)
                 {
                     Thread.Sleep(count * 1500);
-                    Log.Error(String.Format("Ocurrió un error el ejecutar el criterio - Intento numero:" + count), e);
+                    Log.Error(e, String.Format("Ocurrió un error el ejecutar el criterio - Intento numero:" + count));
                     if (++count == maxTries)
                     {
                         throw;
