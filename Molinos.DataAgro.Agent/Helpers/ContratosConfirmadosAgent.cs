@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP al confirmar contrato.", e);
+                logger.Error(e, "Error comunicacion SAP al confirmar contrato.");
                 throw;
             }
         }

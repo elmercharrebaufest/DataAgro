@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al validar liquidación parcial.", e);
+                    logger.Error(e, "Error comunicacion SAP al validar liquidación parcial.");
                     throw;
                 }
             }

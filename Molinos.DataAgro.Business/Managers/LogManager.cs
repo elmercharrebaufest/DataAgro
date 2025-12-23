@@ -69,13 +69,13 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     catch (Exception ex)
                     {
-                        logger.Error($"Error al eliminar {archivo}: {ex.Message}", ex);
+                        logger.Error(ex, $"Error al eliminar {archivo}: {ex.Message}");
                     }
                 }
             }
             catch (Exception e)
             {
-                logger.Error("Error al acceder al directorio: " + e.Message, e);
+                logger.Error(e, "Error al acceder al directorio: " + e.Message);
             }
 
             return archivosEliminados;

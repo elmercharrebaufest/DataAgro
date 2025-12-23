@@ -116,7 +116,7 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception e)
             {
-                logger.Error("Error en ActualizarPrecioPizarra(): ", e);
+                logger.Error(e, "Error en ActualizarPrecioPizarra(): ");
                 throw;
             }
         }

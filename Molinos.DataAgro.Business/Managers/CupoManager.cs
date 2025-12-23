@@ -551,7 +551,7 @@ namespace Molinos.DataAgro.Business.Managers
             //}
 
             var tieneQueValidar = proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Grande || proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Mediano || proveedor.SegmentacionId == (int)EnumSegmentacion.Productor_Chico;
-            
+
             // TODO: Validación comentada por ticket DAT-882
             if (proveedor != null && tieneQueValidar && centro != null && (cupo.Sustentable || cupo.EPA || (cupo.EUDR /*&& activarSojaEUDR == "Twin"*/)))
             {
@@ -1128,7 +1128,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     catch (Exception e)
                     {
-                        logger.Error("Error al obtener el email del AD del Comercial creador: ", e);
+                        logger.Error(e, "Error al obtener el email del AD del Comercial creador: ");
                     }
                 }
 
@@ -1168,7 +1168,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception ex)
                         {
-                            logger.Error("Error al obtener el email del Comercial en el AD: ", ex);
+                            logger.Error(ex, "Error al obtener el email del Comercial en el AD: ");
                         }
 
                     }
@@ -1231,7 +1231,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error al enviar el email de aceptación de Cupo: ", ex);
+                logger.Error(ex, "Error al enviar el email de aceptación de Cupo: ");
             }
         }
 
@@ -3185,7 +3185,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Panel CupoManager error.", e);
+                logger.Error(e, "Panel CupoManager error.");
                 return lista;
             }
             return lista.OrderBy(x => x.Fecha).ToList();
@@ -3287,7 +3287,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception ex)
                         {
-                            logger.Error($"Error al obtener el email del Comercial {item.Apellido} {item.Nombres}.", ex);
+                            logger.Error(ex, $"Error al obtener el email del Comercial {item.Apellido} {item.Nombres}.");
                         }
                     }
                 }
@@ -4496,7 +4496,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al obtener establecimientos desde scato. Proveedor: " + proveedor + ", cosecha: " + cosecha, e);
+                logger.Error(e, "Error al obtener establecimientos desde scato. Proveedor: " + proveedor + ", cosecha: " + cosecha);
                 return new List<EstablecimientoStockDto>();
             }
 
@@ -4633,7 +4633,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al anular los cupos", e);
+                logger.Error(e, "Error al anular los cupos");
             }
         }
 
@@ -4683,7 +4683,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception e)
                         {
-                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            logger.Error(e, "Error al anular el cupo " + c.CupoSap);
                             var cuposOk = new CupoDto
                             {
                                 CupoSap = c.CupoSap,
@@ -4764,7 +4764,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception e)
                         {
-                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            logger.Error(e, "Error al anular el cupo " + c.CupoSap);
                             var cuposOk = new CupoDto
                             {
                                 CupoSap = c.CupoSap,
@@ -4787,7 +4787,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al anular los cupos", e);
+                logger.Error(e, "Error al anular los cupos");
             }
         }
 
@@ -5445,7 +5445,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("Error al GenerarSolicitudExtraordinaria: ", e);
+                logger.Error(e, "Error al GenerarSolicitudExtraordinaria: ");
                 result.Error("", "Ha ocurrido un error al generar la solicitud.");
                 return result;
             }
@@ -7129,7 +7129,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Info("Error en DatosCupoSap de CupoManager", ex);
+                logger.Info(ex, "Error en DatosCupoSap de CupoManager");
                 return null;
             }
 

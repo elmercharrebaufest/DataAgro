@@ -479,7 +479,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al obtener contratos para fijación.", e);
+                    logger.Error(e, "Error comunicacion SAP al obtener contratos para fijación.");
                     throw;
                 }
             }

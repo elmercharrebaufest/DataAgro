@@ -281,7 +281,7 @@ namespace Molinos.DataAgro.Agent
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP en ContratosParaFijacionVirtualAgent ", e);
+                    logger.Error(e, "Error comunicacion SAP en ContratosParaFijacionVirtualAgent ");
                     throw;
                 }
             }

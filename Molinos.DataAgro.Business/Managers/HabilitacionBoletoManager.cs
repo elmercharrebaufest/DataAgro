@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Business
                 ProvinciaNombre = x.Provincia.Nombre
             });
         }
-        
+
         public List<BoletoCompraNetDto> ListarBoletoCompraNet()
         {
             return repositorio.Listar<BoletoCompraNet, BoletoCompraNetDto>(x => new BoletoCompraNetDto()
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error("", ex);
+                logger.Error(ex, "Error al GuardarCambios en ActualizarTipoNegocioDetalle.");
             }
         }
 
@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Business
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("AgregarTipoNegocioDetalle ", ex);
+                    logger.Error(ex, "AgregarTipoNegocioDetalle ");
                     resultado.Error("AgregarTipoNegocioDetalle", ex.Message);
                 }
             }
@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error("Error en EliminarBoletoCompraNetProvincia ", ex);
+                logger.Error(ex, "Error en EliminarBoletoCompraNetProvincia ");
                 resultado.Error("400", ex.Message);
             }
             return resultado;

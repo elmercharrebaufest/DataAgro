@@ -312,7 +312,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al finalizar fijación.", e);
+                    logger.Error(e, "Error comunicacion SAP al finalizar fijación.");
                     throw;
                 }
             }

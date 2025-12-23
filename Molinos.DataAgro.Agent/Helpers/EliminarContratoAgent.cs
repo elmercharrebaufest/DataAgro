@@ -81,7 +81,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Error comunicacion SAP al eliminar contrato.", e);
+                    logger.Error(e, "Error comunicacion SAP al eliminar contrato.");
                     throw;
                 }
             }

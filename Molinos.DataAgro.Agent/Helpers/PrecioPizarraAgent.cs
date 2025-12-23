@@ -150,7 +150,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
+                logger.Error(e, "Error comunicacion SAP");
                 throw;
             }
         }
@@ -188,7 +188,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
+                logger.Error(e, "Error comunicacion SAP");
                 throw;
             }
         }

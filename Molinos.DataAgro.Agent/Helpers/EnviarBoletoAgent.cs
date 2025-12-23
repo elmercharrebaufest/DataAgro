@@ -120,7 +120,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP en EnviarBoleto ", e);
+                logger.Error(e, "Error comunicacion SAP en EnviarBoleto ");
                 throw;
             }
 

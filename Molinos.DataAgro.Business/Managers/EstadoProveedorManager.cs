@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                logger.Error("Error en ActualizarProveedores", ex);
+                logger.Error(ex, "Error en ActualizarProveedores");
                 throw;
             }
         }

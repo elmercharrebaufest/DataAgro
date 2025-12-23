@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto
                 catch (Exception e)
                 {
                     Thread.Sleep(count * 1500);
-                    Log.Error(String.Format("Ocurrió un error al ejecutar la ClausulaBoletoFisico - Intento número:" + count), e);
+                    Log.Error(e, String.Format("Ocurrió un error al ejecutar la ClausulaBoletoFisico - Intento número:" + count));
                     if (++count == maxTries)
                     {
                         throw;

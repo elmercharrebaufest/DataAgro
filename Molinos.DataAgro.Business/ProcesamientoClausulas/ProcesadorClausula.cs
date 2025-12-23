@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business
                 catch (Exception e)
                 {
                     Thread.Sleep(count * 1500);
-                    Log.Error(String.Format("Ocurrió un error al ejecutar la Clausula - Intento número:" + count), e);
+                    Log.Error(e, String.Format("Ocurrió un error al ejecutar la Clausula - Intento número:" + count));
                     if (++count == maxTries)
                     {
                         throw;

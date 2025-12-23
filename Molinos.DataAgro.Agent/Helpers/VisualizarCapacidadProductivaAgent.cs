@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception e)
             {
-                logger.Error($"No se pudo obtener la capacidad productiva para el proveedor con ID {proveedorID}. ", e);
+                logger.Error(e, $"No se pudo obtener la capacidad productiva para el proveedor con ID {proveedorID}. ");
                 return new List<CapacidadProductivaDto> { };
             }
 

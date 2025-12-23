@@ -97,7 +97,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception ex)
             {
-                logger.Error($"Error en ContratosAPesificarAgent, ConsultarProveedores(). Últimos CUITS antes del error: {lastBeforeTheError}", ex);
+                logger.Error(ex, $"Error en ContratosAPesificarAgent, ConsultarProveedores(). Últimos CUITS antes del error: {lastBeforeTheError}");
                 throw;
             }
         }

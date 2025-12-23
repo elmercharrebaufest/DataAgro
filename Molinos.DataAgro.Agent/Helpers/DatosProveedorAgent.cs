@@ -233,7 +233,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception ex)
             {
-                logger.Error("Error en método ObtenerDatosDeProveedorEstado al consultar RFC ZMprfcDatosProveedor.", ex);
+                logger.Error(ex, "Error en método ObtenerDatosDeProveedorEstado al consultar RFC ZMprfcDatosProveedor.");
                 throw;
             }
         }
