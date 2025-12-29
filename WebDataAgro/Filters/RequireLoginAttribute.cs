@@ -13,7 +13,7 @@ namespace WebDataAgro.Filters
 
             // Si viene del Login, no hacemos nada
             var path = request.Url?.AbsolutePath?.ToLower();
-            if (path == "/home/login")
+            if (path == "/home/login" || path == "/home/error")
                 return;
             // Si Azure está enviando el "code", dejamos seguir
             var code = filterContext.HttpContext.Request.QueryString["code"];
