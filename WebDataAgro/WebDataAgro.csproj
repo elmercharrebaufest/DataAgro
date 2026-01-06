@@ -368,6 +368,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.Dependencias.cs" />
     <Compile Include="App_Start\Startup.MvcAutofac.cs" />
+    <Content Include="Views\Home\Error.cshtml" />
     <None Include="whitelist.json" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />
     <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />

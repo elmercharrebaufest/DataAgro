@@ -50,24 +50,36 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Index(string code, string error)
         {
-            logger.Debug("Home/Index called with error: " + error);
-            if (!string.IsNullOrEmpty(error))
-                return Content("Error: " + error);
-
-            // Si viene el "code" desde Azure → canjeamos por token
-            if (!string.IsNullOrEmpty(code))
+            try
             {
-                var token = await ExchangeCodeForToken(code);
-                if (token == null)
-                    return Content("Error al obtener el token.");
+                if (!string.IsNullOrEmpty(error))
+                {
+                    logger.Debug("Home/Index called with error: " + error);
+                    throw new Exception("Error: " + error);
 
-                var email = GetEmailFromAccessToken(token.AccessToken);
-                logger.Debug("Create session for email: " + email);
-                CrearOActualizarSesion(email);
+                }
+                // Si viene el "code" desde Azure → canjeamos por token
+                if (!string.IsNullOrEmpty(code))
+                {
+                    var token = await ExchangeCodeForToken(code);
+                    if (token == null)
+                        throw new Exception("Error al obtener el token.");
 
-                logger.Debug("User session created for email: " + email);
-                return RedirectToAction("Index");
+                    var email = GetEmailFromAccessToken(token.AccessToken);
+                    logger.Debug("Create session for email: " + email);
+                    CrearOActualizarSesion(email);
+
+                    logger.Debug("User session created for email: " + email);
+                    return RedirectToAction("Index");
+                }
             }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                TempData["Error"] = e.Message;
+                return RedirectToAction("Error");
+            }
+
 
             return View();
         }
@@ -77,6 +89,12 @@ namespace WebDataAgro.Controllers
             // Tus roles desde DB o servicio
             var roles = comercialManager.ObtenerPermisosPorEmail(email);
             var comercial = comercialManager.TraerComercial(email);
+
+            if (comercial == null)
+                throw new Exception($"El usuario {email} no se encuentra habilitado en dataagro.");
+
+            if (comercial.Deshabilitado)
+                throw new Exception($"El usuario {email} se encuentra deshabilitado.");
             // Crear identidad con claims
             var identity = new ClaimsIdentity(
                 CookieAuthenticationDefaults.AuthenticationType,
@@ -409,6 +427,10 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Error()
         {
+            if (TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"];
+            }
             return View();
         }
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
