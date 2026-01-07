@@ -183,10 +183,29 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
                 var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
                 int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
-                if (materialId == (int)EnumMateriales.TRIGO && mes == 12)
-                    anio += 1;
+                string anioStr = anio.ToString();
+                string descripcionBuscar = anioStr;
+                // Caso especial SOJA y MAIZ
+                if ((materialId == (int)EnumMateriales.SOJA ||
+                     materialId == (int)EnumMateriales.MAIZ))
+                {
+                    bool esCampaniaAnterior = (mes == 1 || mes == 2);
+                    descripcionBuscar = esCampaniaAnterior ? $"{anio - 2}-{anio - 1}" : anioStr;
+                }
+                else if (materialId == (int)EnumMateriales.TRIGO)
+                {
+                    // Regla especial trigo
+                    if ((mes == 11 || mes == 12))
+                    {
+                        descripcionBuscar = $"{anio}-{anio + 1}";
+                    }
+                }
 
-                int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio.ToString())).Select(a => a.CampañaId).SingleOrDefault();
+                int? campaña =  campanias
+                    .Where(c => c.Descripcion.StartsWith(descripcionBuscar))
+                    .Select(c => c.CampañaId)
+                    .SingleOrDefault();
+
                 return campaña ?? 0;
             }
             else
