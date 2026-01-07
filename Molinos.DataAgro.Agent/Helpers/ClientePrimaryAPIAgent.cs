@@ -189,11 +189,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 if ((materialId == (int)EnumMateriales.SOJA ||
                      materialId == (int)EnumMateriales.MAIZ))
                 {
-                    bool esCampaniaAnterior =
-                        materialId == (int)EnumMateriales.SOJA
-                            ? mes == 1 || mes == 2
-                            : mes == 1;
-
+                    bool esCampaniaAnterior = (mes == 1 || mes == 2);
                     descripcionBuscar = esCampaniaAnterior ? $"{anio - 2}-{anio - 1}" : anioStr;
                 }
                 else if (materialId == (int)EnumMateriales.TRIGO)
