@@ -180,25 +180,24 @@ namespace Molinos.DataAgro.Agent.Helpers
                     logger.Error($"ObtenerCampania - No se puede grabar MATBA porque el instrumento con SecurityID {tradeCaptureReportInstrument.SecurityID} no tiene la posición (MaturityMonthYear).");
                     return 0;
                 }
-                var anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
-                var mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
                 int materialId = ObtenerMaterial(instruments, tradeCaptureReportInstrument);
-                string anioStr = anio.ToString();
-                string descripcionBuscar = anioStr;
-                // Caso especial SOJA y MAIZ
+                int anio = int.Parse(item.MaturityMonthYear.Substring(2, 2));
+                int mes = int.Parse(item.MaturityMonthYear.Substring(4, 2));
+                string descripcionBuscar = string.Empty;
+
                 if ((materialId == (int)EnumMateriales.SOJA ||
-                     materialId == (int)EnumMateriales.MAIZ))
+                     materialId == (int)EnumMateriales.MAIZ) && ((mes == 1 || mes == 2)))
                 {
-                    bool esCampaniaAnterior = (mes == 1 || mes == 2);
-                    descripcionBuscar = esCampaniaAnterior ? $"{anio - 2}-{anio - 1}" : anioStr;
+                    descripcionBuscar = $"{anio - 2}-{anio - 1}";
                 }
-                else if (materialId == (int)EnumMateriales.TRIGO)
+                else if (materialId == (int)EnumMateriales.TRIGO && (mes == 11 || mes == 12))
                 {
-                    // Regla especial trigo
-                    if ((mes == 11 || mes == 12))
-                    {
-                        descripcionBuscar = $"{anio}-{anio + 1}";
-                    }
+                    descripcionBuscar = $"{anio}-{anio + 1}";
+                }
+                else
+                {
+                    anio = int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1;
+                    descripcionBuscar = anio.ToString();
                 }
 
                 int? campaña =  campanias
