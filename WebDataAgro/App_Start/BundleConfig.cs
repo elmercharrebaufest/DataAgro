@@ -310,7 +310,7 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/GenerarConfirma").Include(
                                        "~/Scripts/App/Filtros.js",
                                        "~/Scripts/App/GenerarConfirma.js",
-                                       "~/Scripts/KendoExtensions.js",                                       
+                                       "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
                                        ));
             bundles.Add(new ScriptBundle("~/bundles/DescargarConfirma").Include(
@@ -326,6 +326,10 @@ namespace WebDataAgro
                                        "~/Scripts/App/GestionarClausulasConfirma.js",
                                        "~/Scripts/KendoExtensions.js"
                                        ));
+
+            bundles.Add(new ScriptBundle("~/bundles/CambioDePerfil").Include(
+                                      "~/Scripts/App/CambioDePerfil.js"));
+
             bundles.IgnoreList.Clear();
         }
     }
