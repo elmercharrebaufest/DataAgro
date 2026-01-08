@@ -421,6 +421,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cambio de Perfil.
+        /// </summary>
+        public static string Cambio_De_Perfil {
+            get {
+                return ResourceManager.GetString("Cambio_De_Perfil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Campaña.
         /// </summary>
         public static string Campana {

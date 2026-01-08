@@ -46,10 +46,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-
         public Resultado GrabarReporte(Reportes oReporte)
         {
             var oEntityErrors = new Resultado();
@@ -84,8 +80,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }, null, 3, "CampañaId", DirOrden.Desc)
             };
 
-            //var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
-            //Datos.come = query.Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
             var lista = oComercial.ListarEquipo(idActiveDirectory);
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? lista.Equipo : lista.EquipoReal;
             equipo.ForEach(x => Datos.come.Add(repositorio.Obtener<Comercial, ComercialQry>(y => y.ComercialId == x, y => new ComercialQry { ComercialId = x, Nombre = y.Apellido + " " + y.Nombres })));
@@ -366,32 +360,31 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
 
-            var sojaToneladas = materialId.Contains(3) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(3, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            var sojaToneladas = materialId.Contains((int)EnumMateriales.SOJA) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.SOJA, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
             sojaToneladas.Material = "Soja";
-            sojaToneladas.MaterialId = 3;
-            var maizToneladas = materialId.Contains(1) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
-            maizToneladas.Material = "Maiz";
-            maizToneladas.MaterialId = 1;
-            var trigoCamaraToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
-            trigoCamaraToneladas.Material = "Trigo";
-            trigoCamaraToneladas.MaterialId = 2;
-            //var trigoCalidadToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 2, centroId)) : new ToneladasGranoTipoDto();
-            //trigoCalidadToneladas.Material = "Trigo Calidad";
-            //trigoCalidadToneladas.MaterialId = 2;
-            //var trigoGradoToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, 7, centroId)) : new ToneladasGranoTipoDto();
-            //trigoGradoToneladas.Material = "Trigo Grado 2";
-            //trigoGradoToneladas.MaterialId = 2;
-            var girasolToneladas = materialId.Contains(4) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(4, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
-            girasolToneladas.Material = "Girasol";
-            girasolToneladas.MaterialId = 4;
-            var girasolAltoToneladas = materialId.Contains(5) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
-            girasolAltoToneladas.Material = "Girasol Alto Oleico";
-            girasolAltoToneladas.MaterialId = 5;
-            var sorgoToneladas = materialId.Contains(6) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(6, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
-            sorgoToneladas.Material = "Sorgo";
-            sorgoToneladas.MaterialId = 6;
+            sojaToneladas.MaterialId = (int)EnumMateriales.SOJA;
 
-            return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, /*trigoCalidadToneladas, trigoGradoToneladas,*/ girasolToneladas, girasolAltoToneladas, sorgoToneladas };
+            var maizToneladas = materialId.Contains((int)EnumMateriales.MAIZ) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.MAIZ, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            maizToneladas.Material = "Maiz";
+            maizToneladas.MaterialId = (int)EnumMateriales.MAIZ;
+
+            var trigoCamaraToneladas = materialId.Contains((int)EnumMateriales.TRIGO) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.TRIGO, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            trigoCamaraToneladas.Material = "Trigo";
+            trigoCamaraToneladas.MaterialId = (int)EnumMateriales.TRIGO;
+
+            var girasolToneladas = materialId.Contains((int)EnumMateriales.GIRASOL) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.GIRASOL, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            girasolToneladas.Material = "Girasol";
+            girasolToneladas.MaterialId = (int)EnumMateriales.GIRASOL;
+
+            var girasolAltoToneladas = materialId.Contains((int)EnumMateriales.GIRASOL_AO) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.GIRASOL_AO, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            girasolAltoToneladas.Material = "Girasol Alto Oleico";
+            girasolAltoToneladas.MaterialId = (int)EnumMateriales.GIRASOL_AO;
+
+            var sorgoToneladas = materialId.Contains((int)EnumMateriales.SORGO) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano((int)EnumMateriales.SORGO, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            sorgoToneladas.Material = "Sorgo";
+            sorgoToneladas.MaterialId = (int)EnumMateriales.SORGO;
+
+            return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, girasolToneladas, girasolAltoToneladas, sorgoToneladas };
         }
 
         public ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
@@ -517,9 +510,12 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+
             var kilosPosicionSoja = materialId.Contains(3) ?
-                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
+                (TraerPosicionMaterialCampaña ?
+                TraerPosicionMaterialPorCampaña(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
                 TraerPosicionMaterial(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)) : new List<PosicionKilos>();
+
             var posicionSoja = new PosicionComprasDto
             {
                 Material = "Soja",
@@ -527,6 +523,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionSoja,
                 Total = kilosPosicionSoja.Sum(x => x.KilosPesos + x.KilosDolares)
             };
+
             var kilosPosicionMaiz = materialId.Contains(1) ?
                 (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(1, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
                 TraerPosicionMaterial(1, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)) : new List<PosicionKilos>();
@@ -547,28 +544,6 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionTrigoCamara,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            //var kilosPosicionTrigoCalidad = materialId.Contains(2) ?
-            //    (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId) :
-            //    TraerPosicionMaterial(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId)
-            //    ) : new List<PosicionKilos>();
-            //var posicionTrigoCalidad = new PosicionComprasDto
-            //{
-            //    Material = "Trigo Calidad",
-            //    MaterialId = 2,
-            //    PosicionKilos = kilosPosicionTrigoCalidad,
-            //    Total = kilosPosicionTrigoCalidad.Sum(x => x.KilosPesos + x.KilosDolares)
-            //};
-            //var kilosPosicionTrigoGrado = materialId.Contains(2) ?
-            //    (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId) :
-            //    TraerPosicionMaterial(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId))
-            //    : new List<PosicionKilos>();
-            //var posicionTrigoGrado = new PosicionComprasDto
-            //{
-            //    Material = "Trigo Grado 2",
-            //    MaterialId = 2,
-            //    PosicionKilos = kilosPosicionTrigoGrado,
-            //    Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
-            //};
             var kilosPosiciongirasol = materialId.Contains(4) ?
                 (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
                 TraerPosicionMaterial(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)) : new List<PosicionKilos>();
@@ -811,17 +786,45 @@ namespace Molinos.DataAgro.Business.Managers
             var fechaFin = fechaHasta.Date.AddDays(1).AddTicks(-1);
 
             var objetivos = repositorio.Listar<HedgeTC>(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin);
-            var contratos = repositorio.Listar<Contrato>(x =>
-            materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoAgenteCompraId == null &&
-            x.AnulaYReemplazaContratoId == null && x.FechaOperacion >= fechaInicio &&
-            x.FechaOperacion <= fechaFin && x.MonedaId == "ARP  " &&
-            x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) /*&& x.Canje != true*/)
+
+            var contratos = repositorio.Listar<Contrato>(x => materialId.Contains(x.MaterialId) &&
+                x.OcultarEnTablero == false &&
+                x.TipoAgenteCompraId == null &&
+                x.AnulaYReemplazaContratoId == null &&
+                x.FechaOperacion >= fechaInicio &&
+                x.FechaOperacion <= fechaFin &&
+                x.MonedaId == "ARP  " &&
+                x.CampanaId == x.Material.CampaniaTableroId &&
+                (x.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                x.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                x.EstadoId == (int)EnumEstadoContrato.Finalizado) /*&& x.Canje != true*/)
                 .Sum(x => x.Precio);
-            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones && x.TipoPosicionCBOTId != 3 &&
-            materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.FechaOperacion >= fechaInicio && x.Fecha <= fechaFin && x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
-            !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true) && x.Canje != true)
+
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => verFijaciones &&
+                x.TipoPosicionCBOTId != (int)EnumTipoPosicionCBOT.PASE &&
+                materialId.Contains(x.MaterialId) &&
+                x.OcultarEnTablero == false &&
+                x.FechaOperacion >= fechaInicio &&
+                x.Fecha <= fechaFin &&
+                x.MonedaId == "ARP  " &&
+                x.CampanaId == x.Material.CampaniaTableroId &&
+                (x.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                x.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                x.EstadoId == (int)EnumEstadoContrato.Finalizado) &&
+                !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true) &&
+                x.Canje != true)
                 .Sum(x => x.Precio);
-            var fason = repositorio.Listar<Fason>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.Fecha >= fechaInicio && x.Fecha <= fechaFin && x.MonedaId == "ARP  " && x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Precio);
+
+            var fason = repositorio.Listar<Fason>(x => materialId.Contains(x.MaterialId) &&
+                x.OcultarEnTablero == false &&
+                x.Fecha >= fechaInicio &&
+                x.Fecha <= fechaFin &&
+                x.MonedaId == "ARP  " &&
+                x.CampanaId == x.Material.CampaniaTableroId &&
+                (x.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                x.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                x.EstadoId == (int)EnumEstadoContrato.Finalizado))
+                .Sum(x => x.Precio);
 
             if (objetivos != null)
             {
@@ -846,9 +849,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var listaAgentes = new List<AgenteCompraDto>();
-            //if (fechaDesde == fechaHasta)
-            //{
-            // GSIAN: No hay negocio de referencia para traer el "typeOfRate"
             var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
 
             // Ajustamos las fechas para el rango del día completo
@@ -859,7 +859,11 @@ namespace Molinos.DataAgro.Business.Managers
                 x.OcultarEnTablero == false &&
                 x.FechaOperacion >= fechaInicio &&
                 x.FechaOperacion <= fechaFin &&
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value, x.DolarExportador });
+                (x.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                x.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                x.EstadoId == (int)EnumEstadoContrato.Finalizado))
+                .GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value, x.DolarExportador });
+
             foreach (var agentesPorPosicionYMaterial in agentes)
             {
                 var agenteTemp = new AgenteCompraDto() { Operador = new List<AgenteCompraDto.OperadorCantidad>() };
@@ -882,7 +886,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 listaAgentes.Add(agenteTemp);
             }
-            //}
+
             return listaAgentes.OrderBy(x => x.MaterialId).ThenBy(x => new DateTime(int.Parse(x.Posicion.Split('.')[1]), int.Parse(x.Posicion.Split('.')[0]), 1)).ToList();
         }
 
@@ -971,6 +975,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }).ToList();
             return posicionKilos;
         }
+
         private List<PosicionKilos> TraerPosicionMaterialPorCampaña(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId = 0)
         {
             var posicionKilos = new List<PosicionKilos>();
@@ -1029,6 +1034,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }).ToList();
             return posicionKilos;
         }
+
         private static void ObtenerPosicionMaterialBase(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId, List<PosicionKilos> posicionKilos)
         {
             var standard = calidad ?? 1;
@@ -1066,6 +1072,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var cont in contratos)
             {
+                // Acá se clasifican los negocios A FIJAR y A PRECIO en Disponible, Forward o NewCrop
                 var posicion = new DateTime();
                 if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
                 {
@@ -1079,11 +1086,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
-                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
-                cont.TipoNegocioId == 2 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
-                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
+                cont.ClasificacionNegocio = cont.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
+                cont.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
+                cont.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                cont.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
             var fijaciones = negocios.Where(
@@ -1148,9 +1155,6 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
             foreach (var cont in fason)
             {
-                //var mes = int.Parse(cont.Posicion.Substring(0, 2));
-                //var anio = int.Parse(cont.Posicion.Substring(3, 4));
-                //var posicion = new DateTime(anio, mes, 1);
                 var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
 
                 cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
@@ -1191,22 +1195,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
 
-                //if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
-                //{
-                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
-                //}
-                //else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
-                //{
-                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
-                //}
-                //else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
-                //{
-                //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
-                //}
-                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? (cont.Precio > 0 ? EnumClasificacionNegocio.DisponibleAPrecio : EnumClasificacionNegocio.DisponibleAFijar) :
-                /*cont.TipoNegocioId == 1 &&*/
-                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
-                (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ?
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.DisponibleAPrecio : EnumClasificacionNegocio.DisponibleAFijar) :
+                    cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ?
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
             }
             contratos.AddRange(acuerdos);
 
@@ -1369,9 +1362,6 @@ namespace Molinos.DataAgro.Business.Managers
                 x => negociosIds.Contains(x.Id));
             foreach (var cont in fason)
             {
-                //var mes = int.Parse(cont.Posicion.Substring(0, 2));
-                //var anio = int.Parse(cont.Posicion.Substring(3, 4));
-                //var posicion = new DateTime(anio, mes, 1);
                 var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
 
                 cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
@@ -1398,22 +1388,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
 
-                //if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
-                //{
-                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
-                //}
-                //else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
-                //{
-                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
-                //}
-                //else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
-                //{
-                //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
-                //}
-                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? (cont.Precio > 0 ? EnumClasificacionNegocio.DisponibleAPrecio : EnumClasificacionNegocio.DisponibleAFijar) :
-                /*cont.TipoNegocioId == 1 &&*/
-                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
-                (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ?
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.DisponibleAPrecio : EnumClasificacionNegocio.DisponibleAFijar) :
+                    cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ?
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
+                    (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
             }
             contratos.AddRange(acuerdos);
 
@@ -1698,82 +1677,6 @@ namespace Molinos.DataAgro.Business.Managers
                 data.AddRange(fijaciones);
             }
 
-            //if (verDepositoTipoNegocio == -1)
-            //{
-            //    foreach (var cont in data)
-            //    {
-            //        if (cont.TipoNegocioId == 3)
-            //        {
-            //            if ((DateTime.DaysInMonth(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month) - cont.FechaDesdeDate.Day) >= 10)
-            //            {
-            //                cont.mesPosision = cont.FechaDesdeDate.Month;
-            //                cont.anioPosision = cont.FechaDesdeDate.Year;
-            //            }
-            //            else if (cont.FechaDesdeDate.AddMonths(1).Month <= cont.FechaHastaDate.Month)
-            //            {
-            //                cont.FechaDesdeDate = cont.FechaDesdeDate.AddMonths(1);
-            //                cont.mesPosision = cont.FechaDesdeDate.Month;
-            //                cont.anioPosision = cont.FechaDesdeDate.Year;
-
-            //            }
-            //            else if (cont.FechaDesdeDate.AddMonths(1).Month > cont.FechaHastaDate.Month)
-            //            {
-            //                cont.mesPosision = cont.FechaHastaDate.Month;
-            //                cont.anioPosision = cont.FechaHastaDate.Year;
-            //            }
-            //        }
-            //        else if (cont.TipoNegocioId == 2)
-            //        {
-            //            if (new DateTime(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
-            //            {
-            //                cont.mesPosision = DateTime.Now.Month;
-            //                cont.anioPosision = DateTime.Now.Year;
-            //            }
-            //            else
-            //            {
-            //                cont.mesPosision = cont.FechaDesdeDate.Month;
-            //                cont.anioPosision = cont.FechaDesdeDate.Year;
-            //            }
-            //        }
-            //    }
-            //    //if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
-            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
-            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
-            //    //{
-            //    //    if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
-            //    //    {
-            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
-            //    //        posKil.Anio = cont.FechaDesde.Year;
-            //    //    }
-            //    //    else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
-            //    //    {
-            //    //        cont.FechaDesde = cont.FechaDesde.AddMonths(1);
-            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
-            //    //        posKil.Anio = cont.FechaDesde.Year;
-
-            //    //    }
-            //    //    else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
-            //    //    {
-            //    //        posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
-            //    //        posKil.Anio = cont.FechaHasta.Year;
-            //    //    }
-            //    //}
-            //    //else
-            //    //{
-            //    //    if (new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
-            //    //    {
-            //    //        posKil.Mes = (EnumMeses)DateTime.Now.Month;
-            //    //        posKil.Anio = DateTime.Now.Year;
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
-            //    //        posKil.Anio = cont.FechaDesde.Year;
-            //    //    }
-            //    //}
-            //}
-
-
             var fasones = repositorio.Listar<Fason, DetalleContratoDto>(x => new DetalleContratoDto
             {
                 Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
@@ -1830,9 +1733,6 @@ namespace Molinos.DataAgro.Business.Managers
                 data.AddRange(fasones);
             }
 
-
-
-
             var acuerdos = repositorio.Listar<ContratoAcuerdo, DetalleContratoDto>(x => new DetalleContratoDto
             {
                 Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
@@ -1887,12 +1787,10 @@ namespace Molinos.DataAgro.Business.Managers
                 && (moneda == "" || x.MonedaId == moneda)
             );
 
-
             if (acuerdos != null)
             {
                 data.AddRange(acuerdos);
             }
-
 
             var agente = repositorio.Listar<AgenteCompra, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1970,7 +1868,6 @@ namespace Molinos.DataAgro.Business.Managers
             return data;
         }
 
-
         private string ObtenerPrecioNetoFijacionVirtual(int idFijacionVirtual)
         {
             var fijacionVirtual = repositorio.Obtener<FijacionDePrecioContrato>(idFijacionVirtual);
@@ -1989,7 +1886,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             precioNeto = Decimal.Parse(precioNeto.ToString("0.00"));
             return precioNeto.ToString("0.00").Replace(",", ".");
-
         }
 
         private List<DetalleContratoDto> TraerDetallePosicion(int materialId, int? mes, int? anio, DateTime fechaDesdeFiltro, DateTime fechaHastaFiltro, int? calidad, int centroId = 0, bool verFijaciones = true)
@@ -2490,8 +2386,8 @@ namespace Molinos.DataAgro.Business.Managers
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = TraerTcPromedio(fechaDesde, fechaHasta, materialId, verFijaciones),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
-                SojaSustentable = (materialId == null || materialId.Contains(3)) ? TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro) : new ReporteSojaSustDto(),
-                SojaEPAyEUDR = (materialId == null || materialId.Contains(3)) ? TraerToneladasSojaEPAyEUDR(fechaDesde, fechaHasta, idCentro) : new ReporteSojaEPAyEUDRDto()
+                SojaSustentable = (materialId == null || materialId.Contains((int)EnumMateriales.SOJA)) ? TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro) : new ReporteSojaSustDto(),
+                SojaEPAyEUDR = (materialId == null || materialId.Contains((int)EnumMateriales.SOJA)) ? TraerToneladasSojaEPAyEUDR(fechaDesde, fechaHasta, idCentro) : new ReporteSojaEPAyEUDRDto()
             };
             return result;
         }
@@ -2500,14 +2396,20 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = new List<HedgeMaterialModel>()
             {
-                new HedgeMaterialModel {MaterialId = 1, MaterialDescripcion ="Hedge Maíz",
-                Disponible = hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
-                Forward= hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
-                NewCrop= hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)},
-                new HedgeMaterialModel {MaterialId = 3, MaterialDescripcion ="Hedge Soja",
-                Disponible = hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
-                Forward= hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
-                NewCrop= hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad) }
+                new HedgeMaterialModel {
+                    MaterialId = (int)EnumMateriales.MAIZ,
+                    MaterialDescripcion = "Hedge Maíz",
+                    Disponible = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.MAIZ && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
+                    Forward = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.MAIZ && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
+                    NewCrop = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.MAIZ && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)
+                },
+                new HedgeMaterialModel {
+                    MaterialId = (int)EnumMateriales.SOJA,
+                    MaterialDescripcion = "Hedge Soja",
+                    Disponible = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.SOJA && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
+                    Forward = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.SOJA && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
+                    NewCrop = hedgeMat.Where(x=>x.MaterialId == (int)EnumMateriales.SOJA && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)
+                }
             };
             return lista;
         }
@@ -2519,6 +2421,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("GrabarDatosReporteCompraNet - inicio obtener datos");
                 ReporteCompraNetModel result = ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId, materialId);
                 logger.Debug("GrabarDatosReporteCompraNet - fin obtener datos");
+
                 var PosicionCompras = TraerPosicionCompras(fechaDesde, fechaHasta, materialId, int.Parse(centroId), true);
                 List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
                 List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
@@ -2647,72 +2550,60 @@ namespace Molinos.DataAgro.Business.Managers
                     switch (datos.Id)
                     {
                         case 11:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.MAIZ).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 12:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.MAIZ).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 21:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.TRIGO).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 22:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.TRIGO).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 31:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.SOJA).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 32:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.SOJA).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 41:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.GIRASOL).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 42:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.GIRASOL).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 51:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.GIRASOL_AO).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 52:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.GIRASOL_AO).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 61:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.DispAgente + x.FrwAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.SORGO).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.DispAgente + x.FrwAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         case 62:
-                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == 6).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.NewAgente);
+                            sumaPricing = result.PosicionCompras.Where(x => x.MaterialId == (int)EnumMateriales.SORGO).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Sorgo").Sum(x => x.NewAgente);
                             datos.Pricing = sumaPricing;
-
                             break;
                         default:
                             sumaPricing = 0;
                             datos.Pricing = sumaPricing;
-
                             break;
                     }
                 }
+
                 logger.Debug("GrabarDatosReporteCompraNet - inicio pricing");
                 foreach (var pricing in result.PricingCampania)
                 {
@@ -2729,9 +2620,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 logger.Debug("GrabarDatosReporteCompraNet - fin armadatos");
 
-
                 logger.Debug("GrabarDatosReporteCompraNet - inicio  removertodos");
-
                 repositorio.RemoverTodos<ReporteCompraNetPosicionCompras>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetPrecioCantidad>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetSojaSustentable>(a => true);
@@ -3160,9 +3049,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error(e);
                     throw;
                 }
-
             }
-
 
             var result = repositorio.ObtenerConsultaEscalar(new TraerTodosReportePesificado(filtro, equipo));
 
@@ -3238,7 +3125,6 @@ namespace Molinos.DataAgro.Business.Managers
             var dia = desde;
             while (dia <= hasta)
             {
-                // GSIAN: No hay negocio de referencia para traer el "typeOfRate"
                 cotizaciones.Add(dia, tipoDeCambio.TraerTipoDeCambio(dia));
                 dia = dia.AddDays(1);
             }
@@ -3292,13 +3178,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             }
             return new ResultReportePagosDiferidos { Contratos = datos, Desde = desdeDias, Hasta = hastaDias };
-
-
         }
 
         public void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy)
         {
-
             string cuerpoMail = "";
 
             if (datos != null)
@@ -3818,34 +3701,7 @@ namespace Molinos.DataAgro.Business.Managers
                 alternateViewT.LinkedResources.Add(res);
                 return alternateViewT;
             }
-            //else
-            //{
-            //    htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
-            //    htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
-            //    htmlBody += "<tr >";
-            //    htmlBody += $"<th {thHead}>Vendedor: {corredor.RazonSocialProveedor} </th>";
-            //    htmlBody += $"<th {thHead}>Fijación </th>";
-            //    htmlBody += $"<th {thHead}>Total</th>";
-            //    htmlBody += "</tr>";
-            //    htmlBody += "</thead>";
-            //    htmlBody += "<tbody>";
-            //    foreach (var item in corredor.AgrupracionPesificados)
-            //    {
-            //        htmlBody += "<tr style=\"text-align: center\">";
-            //        htmlBody += $"<td {td}>  { Split(item.Contrato.TrimStart('0')) } </td>";
-            //        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? Split(item.Contrato.TrimStart('0')) + "-" + item.Fijacion.Substring((item.Fijacion.Length - 2), 2) : "") } </td>";
-            //        htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
-            //        htmlBody += "</tr>";
-            //    }
-            //    htmlBody += $"<tr style=\"background: #1c6ea4; color:white; text-align: center\">";
-            //    htmlBody += $"<td><strong>Total General</strong></td>";
-            //    htmlBody += $"<td {td}></td>";
-            //    htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
-            //    htmlBody += "</tr>";
-            //    htmlBody += "</tbody>";
-            //    htmlBody += "</table>";
 
-            //}
             htmlBody += "<br/>";
             htmlBody += $"Asimismo, de no haber generado la pesificación antes del  {instruccion.ToString("dd-MM-yyyy")}, no será necesario que ingresen a la página WEB para tomar el TC, tomándose como " +
                   $"pesificación efectiva esta comunicación con el TC del día {FechaALetras(instruccion)}.";

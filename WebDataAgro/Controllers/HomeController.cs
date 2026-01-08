@@ -603,7 +603,52 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        #endregion
 
+        [Autorizacion(PermisosDataAgro.CambioDePerfil)]
+        public ActionResult CambioDePerfil()
+        {
+            TempData["Comerciales"] = comercialManager.ObtenerComerciales(new List<int>(), 0);
+            return View();
+        }
+        [HttpPost]
+        [Autorizacion(PermisosDataAgro.CambioDePerfil)]
+        public ActionResult CambioDePerfil(int ComercialId)
+        {
+            try
+            {
+                var comercial = comercialManager.TraerComercial(ComercialId);
+
+                CrearOActualizarSesion(comercial.Email);
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                TempData["Error"] = e.Message;
+                return RedirectToAction("Error");
+            }
+
+        }
+        [HttpPost]
+        public JsonResult ComercialDatos(int ComercialId)
+        {
+
+            var comercial = comercialManager.TraerComercial(ComercialId);
+            var email = comercial.Email;
+            var roles = comercialManager.ObtenerPermisosPorEmail(email);
+            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory, roles);
+
+            List<RolDto> rolesDisplay = comercialManager.ObtenerRolesYPermisosPorEmail(email);
+            List<ComercialDto> equipoComercial = comercialManager.ListarComercial("-", equipo.Equipo);
+
+            return new JsonResult()
+            {
+                Data = new { rolesPermisos = rolesDisplay, comercialesAsociados = equipoComercial },
+                MaxJsonLength = Int32.MaxValue,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+        #endregion
     }
 }

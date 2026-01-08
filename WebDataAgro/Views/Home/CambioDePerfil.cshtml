@@ -1,0 +1,49 @@
+﻿@model Molinos.DataAgro.Entities.Dto.ComercialCombo
+
+@{
+    var comerciales = TempData["Comerciales"] as List<Molinos.DataAgro.Entities.Dto.ComercialCombo>;
+    ViewBag.Title = "Cambio de Perfil";
+}
+@section Scripts{
+    @Scripts.Render("~/bundles/CambioDePerfil")
+}
+
+@using (Html.BeginForm())
+{
+
+    <div class="form-horizontal">
+        <h4>Cambio de Perfil</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label for="ComercialId" class="control-label col-md-2">Comercial</label>
+            <div class="col-md-3">
+                <select id="ComercialId" name="ComercialId" class="form-control" required>
+                    <option value="">Seleccione uno</option>
+                    @if (comerciales != null)
+                    {
+                        foreach (var comercial in comerciales)
+                        {
+                            <option value="@comercial.ComercialId">@comercial.Apellido</option>
+                        }
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.ComercialId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Cambiar" class="btn btn-default" />
+            </div>
+        </div>
+
+        <h4>Equipo Comercial</h4>
+        <div id="gridComerciales"></div>
+
+        <h4>Roles y Permisos</h4>
+        <div id="gridRoles"></div>
+
+    </div>
+}

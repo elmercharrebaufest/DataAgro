@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Molinos.DataAgro.Entities.Resources;
+﻿using Molinos.DataAgro.Entities.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Seguridad
 {
     public enum PermisosDataAgro
     {
+        [Display(ResourceType = typeof(Text), Name = "Cambio_De_Perfil")]
+        CambioDePerfil = -1,
         [Display(ResourceType = typeof(Text), Name = "Ingreso_DataAgro")]
         IngresoDataAgro = 0,
 
