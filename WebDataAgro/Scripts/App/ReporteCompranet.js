@@ -153,6 +153,7 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
         } else {
             crearGrilladetallePosicion(data);
         }
+        console.log('data---->>', data);
     }, "json");
     return false;
 }
@@ -311,7 +312,9 @@ function crearGrilladetallePosicion(href, esFijacion) {
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
-                    endswith: "Finaliza con"
+                    endswith: "Finaliza con",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a",
                 },
                 date: {
                     eq: "Igual",
@@ -556,7 +559,9 @@ function crearGrilladetalleFijacion(href) {
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
-                    endswith: "Finaliza con"
+                    endswith: "Finaliza con",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a",
                 },
                 date: {
                     eq: "Igual",
