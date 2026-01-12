@@ -153,7 +153,6 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
         } else {
             crearGrilladetallePosicion(data);
         }
-        console.log('data---->>', data);
     }, "json");
     return false;
 }
