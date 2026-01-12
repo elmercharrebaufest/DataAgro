@@ -946,4 +946,7 @@
   <data name="Ver_Todos_Contactos_Por_Proveedor" xml:space="preserve">
     <value>Ver Todos Contactos Por Proveedor</value>
   </data>
+  <data name="Cambio_De_Perfil" xml:space="preserve">
+    <value>Cambio de Perfil</value>
+  </data>
 </root>

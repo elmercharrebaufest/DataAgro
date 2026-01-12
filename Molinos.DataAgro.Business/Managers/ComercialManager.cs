@@ -465,5 +465,19 @@ namespace Molinos.DataAgro.Business
             }
             return new List<string>();
         }
+
+        public List<RolDto> ObtenerRolesYPermisosPorEmail(string email)
+        {
+            email = email.ToLower();
+            var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.Email == email);
+            if (usuario != null)
+            {
+                var roles = repositorio.ObtenerConsultaEscalar(new TraerRolesPermisos()).OrderBy(x => x.Descripcion).ToList();
+                var usuarioRolesIds = usuario.RolesAsociados.Select(ra => ra.Id).ToList();
+                roles = roles.Where(r => usuarioRolesIds.Contains(r.Id)).ToList();
+                return roles;
+            }
+            return new List<RolDto>();
+        }
     }
 }
