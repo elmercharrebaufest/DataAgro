@@ -365,6 +365,8 @@
     <Build Include="dbo\Tables\ClausulaCartaOferta.sql" />
     <Build Include="dbo\Tables\ClausulaConfirma.sql" />
     <Build Include="dbo\Tables\ClausulaGenericos.sql" />
+    <Build Include="dbo\Tables\ControlDeBoletosEstado.sql" />
+    <Build Include="dbo\Tables\ControlDeBoletos.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

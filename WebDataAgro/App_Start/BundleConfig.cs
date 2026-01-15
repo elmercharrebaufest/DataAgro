@@ -330,6 +330,12 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/CambioDePerfil").Include(
                                       "~/Scripts/App/CambioDePerfil.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletos").Include(
+                                       "~/Scripts/App/Filtros.js",
+                                       "~/Scripts/App/ControlDeBoletos.js",
+                                       "~/Scripts/KendoExtensions.js",
+                                       "~/Scripts/moment.js"
+                                       ));
             bundles.IgnoreList.Clear();
         }
     }

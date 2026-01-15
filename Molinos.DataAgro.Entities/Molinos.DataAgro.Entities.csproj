@@ -317,6 +317,8 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
     <Compile Include="Dto\BuscarCentroDto.cs" />
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosEstadoDto.cs" />
     <Compile Include="Dto\InicializarContratoDto.cs" />
     <Compile Include="Dto\KendoDataSourceRequestDto.cs" />
     <Compile Include="Dto\KendoDataSourceResultDto.cs" />
@@ -705,6 +707,8 @@
     <Compile Include="Entities\ConfirmaAltaEstado.cs" />
     <Compile Include="Entities\ConfirmaAltaEstadoDocumento.cs" />
     <Compile Include="Entities\ConfirmaAltaEstadoLote.cs" />
+    <Compile Include="Entities\ControlDeBoletos.cs" />
+    <Compile Include="Entities\ControlDeBoletosEstado.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\CriterioScoreCupos.cs" />
