@@ -52,6 +52,10 @@ namespace WebDataAgro.Controllers
                 CantidadMaximaDiasNegocioConDescarga = conf != null ? conf.CantidadMaximaDiasNegocioConDescarga : 0,
                 PorcentajeVolumenNegocioConDescarga = conf != null ? conf.PorcentajeVolumenNegocioConDescarga : 0,
                 ExigirNegocioEnSolExt = conf?.ExigirNegocioEnSolExt ?? false,
+                ExigirNegocioEnSolExt_Soja = conf?.ExigirNegocioEnSolExt_Soja ?? false,
+                ExigirNegocioEnSolExt_Maiz = conf?.ExigirNegocioEnSolExt_Maiz ?? false,
+                ExigirNegocioEnSolExt_Trigo = conf?.ExigirNegocioEnSolExt_Trigo ?? false,
+                ExigirNegocioEnSolExt_Girasol = conf?.ExigirNegocioEnSolExt_Girasol ?? false,
                 ApiKeyScoringCupos = conf.ApiKeyScoringCupos,
             });
         }
@@ -104,7 +108,12 @@ namespace WebDataAgro.Controllers
                 CantidadMaximaDiasNegocioConDescarga = configuracion.CantidadMaximaDiasNegocioConDescarga,
                 PorcentajeVolumenNegocioConDescarga = configuracion.PorcentajeVolumenNegocioConDescarga,
                 ExigirNegocioEnSolExt = configuracion.ExigirNegocioEnSolExt,
+                ExigirNegocioEnSolExt_Soja = configuracion.ExigirNegocioEnSolExt_Soja,
+                ExigirNegocioEnSolExt_Maiz = configuracion.ExigirNegocioEnSolExt_Maiz,
+                ExigirNegocioEnSolExt_Trigo = configuracion.ExigirNegocioEnSolExt_Trigo,
+                ExigirNegocioEnSolExt_Girasol = configuracion.ExigirNegocioEnSolExt_Girasol,
                 ApiKeyScoringCupos = configuracion.ApiKeyScoringCupos,
+
             };
 
             return entidad;

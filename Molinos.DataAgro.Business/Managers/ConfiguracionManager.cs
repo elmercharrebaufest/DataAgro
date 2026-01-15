@@ -63,6 +63,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.PorcentajeVolumenNegocioConDescarga = oConfiguracion.PorcentajeVolumenNegocioConDescarga;
                 oConfiguracionSave.ExigirNegocioEnSolExt = oConfiguracion.ExigirNegocioEnSolExt;
                 oConfiguracionSave.ApiKeyScoringCupos = oConfiguracion.ApiKeyScoringCupos;
+                oConfiguracionSave.ExigirNegocioEnSolExt_Soja = oConfiguracion.ExigirNegocioEnSolExt_Soja;
+                oConfiguracionSave.ExigirNegocioEnSolExt_Maiz = oConfiguracion.ExigirNegocioEnSolExt_Maiz;
+                oConfiguracionSave.ExigirNegocioEnSolExt_Trigo = oConfiguracion.ExigirNegocioEnSolExt_Trigo;
+                oConfiguracionSave.ExigirNegocioEnSolExt_Girasol = oConfiguracion.ExigirNegocioEnSolExt_Girasol;
             }
             else
             {
@@ -90,14 +94,28 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public Resultado SetExigirNegocioEnSolExt(bool valor)
+        public Resultado SetExigirNegocioEnSolExt(bool valor , string type)
         {
             var resultado = new Resultado();
             var config = TraerConfiguraciones();
 
             if (config != null)
             {
-                config.ExigirNegocioEnSolExt = valor;
+                switch (type)
+                {
+                    case "soja":
+                        config.ExigirNegocioEnSolExt_Soja = valor;
+                        break;
+                    case "trigo":
+                        config.ExigirNegocioEnSolExt_Trigo = valor;
+                        break;
+                    case "maiz":
+                        config.ExigirNegocioEnSolExt_Maiz  = valor;
+                        break;
+                    case "girasol":
+                        config.ExigirNegocioEnSolExt_Girasol = valor;
+                        break;
+                }
             }
             else
             {

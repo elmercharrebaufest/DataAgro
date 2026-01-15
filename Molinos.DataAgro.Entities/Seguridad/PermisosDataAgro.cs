@@ -360,6 +360,14 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerTodasLasSugerencias = 731,
         [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt")]
         VincularNegocioConSolExt = 735,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt_Soja")]
+        VincularNegocioConSolExt_Soja = 736,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt_Maiz")]
+        VincularNegocioConSolExt_Maiz = 737,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt_Trigo")]
+        VincularNegocioConSolExt_Trigo = 738,
+        [Display(ResourceType = typeof(Text), Name = "Vincular_Negocio_Con_SolExt_Girasol")]
+        VincularNegocioConSolExt_Girasol = 739,
         [Display(ResourceType = typeof(Text), Name = "Mail_SolExt_Pendientes")]
         Mail_SolExt_Pendientes = 740,
         //Cupo NO Propio

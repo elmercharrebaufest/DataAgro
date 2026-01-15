@@ -28,7 +28,10 @@
     [CantidadMaximaDiasNegocioConDescarga] INT NULL DEFAULT 15,
     [PorcentajeVolumenNegocioConDescarga] INT NULL DEFAULT 30,
     [ActivarLogDebug] BIT NULL DEFAULT 1,
-    [ExigirNegocioEnSolExt] BIT NULL DEFAULT 0,
     [ApiKeyScoringCupos] VARCHAR(500) DEFAULT 'iYr0s8Bm9p2iHZAqOrEYt2836ep61wFM3CGki4hp' NOT NULL,
+    [ExigirNegocioEnSolExt_Soja] BIT NULL DEFAULT 0,
+    [ExigirNegocioEnSolExt_Trigo] BIT NULL DEFAULT 0,
+    [ExigirNegocioEnSolExt_Maiz] BIT NULL DEFAULT 0,
+    [ExigirNegocioEnSolExt_Girasol] BIT NULL DEFAULT 0,
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
