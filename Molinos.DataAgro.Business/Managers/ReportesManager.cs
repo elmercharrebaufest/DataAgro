@@ -1936,26 +1936,29 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (verDepositoTipoNegocio != null)
             {
-                var negociosConDescarga = contratos.Where(a => a.TipoNegocioId == 2 && a.CantidadDeposito > 0).ToList();
+                if (contratos != null)
+                {
+                    var negociosConDescarga = contratos.Where(a => a.TipoNegocioId == 2 && a.CantidadDeposito > 0).ToList();
 
-                foreach (var x in negociosConDescarga)
-                {
-                    var negocio = contratos.Where(y => y.Contrato == x.Contrato).Single();
-                    var fijacion = (DetalleContratoModalDto)negocio.Clone();
-                    fijacion.CantidadD = fijacion.CantidadDeposito.GetValueOrDefault(0);
-                    fijacion.Cantidad = fijacion.CantidadD.ToString();
-                    contratos.Add(fijacion);
-                    negocio.CantidadD -= negocio.CantidadDeposito.GetValueOrDefault(0);
-                    negocio.CantidadDeposito = null;
-                    negocio.Cantidad = negocio.CantidadD.ToString();
-                }
-                if (verDepositoTipoNegocio == (int)EnumTipoNegocio.A_PRECIO)
-                {
-                    contratos = contratos.Where(x => x.CantidadDeposito == 0 || x.CantidadDeposito == null).ToList();
-                }
-                else if (verDepositoTipoNegocio == (int)EnumTipoNegocio.FIJACION)
-                {
-                    contratos = contratos.Where(x => x.CantidadDeposito > 0).ToList();
+                    foreach (var x in negociosConDescarga)
+                    {
+                        var negocio = contratos.Where(y => y.Contrato == x.Contrato).Single();
+                        var fijacion = (DetalleContratoModalDto)negocio.Clone();
+                        fijacion.CantidadD = fijacion.CantidadDeposito.GetValueOrDefault(0);
+                        fijacion.Cantidad = fijacion.CantidadD.ToString();
+                        contratos.Add(fijacion);
+                        negocio.CantidadD -= negocio.CantidadDeposito.GetValueOrDefault(0);
+                        negocio.CantidadDeposito = null;
+                        negocio.Cantidad = negocio.CantidadD.ToString();
+                    }
+                    if (verDepositoTipoNegocio == (int)EnumTipoNegocio.A_PRECIO)
+                    {
+                        contratos = contratos.Where(x => x.CantidadDeposito == 0 || x.CantidadDeposito == null).ToList();
+                    }
+                    else if (verDepositoTipoNegocio == (int)EnumTipoNegocio.FIJACION)
+                    {
+                        contratos = contratos.Where(x => x.CantidadDeposito > 0).ToList();
+                    }
                 }
             }
 
@@ -2022,13 +2025,9 @@ namespace Molinos.DataAgro.Business.Managers
                 && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))
             );
 
-            foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
-            {
-                item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
-            }
-
             if (fijaciones != null)
             {
+
                 data.AddRange(fijaciones);
             }
 
