@@ -983,6 +983,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Fecha = DateTime.Now.Date,
                 Dias = new List<DiaCupo> { new DiaCupo { Cantidad = 1, Fecha = DateTime.Now.Date } },
                 Calidad = "Fabrica",
+                Proveedor = "Provedor"
+                
             };
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
