@@ -2,13 +2,17 @@
     ViewBag.Title = "Control de Boletos";
 }
 
+@section Styles{
+    <link href="~/Content/css/control-boletos.css" rel="stylesheet" />
+}
+
 @section Scripts{
     @Scripts.Render("~/bundles/ControlDeBoletos")
 }
 
 <div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;">
     <!-- Header Section -->
-    <div class="row header-section" style="padding: 15px 0px; border-bottom: 2px solid #017940; margin-bottom: 20px;">
+    <div class="row header-section">
         <div class="col-12">
             <h2 class="page-title">
                 <i class="fa fa-clipboard-check" aria-hidden="true"></i>
@@ -19,7 +23,7 @@
     </div>
 
     <!-- Filters Section -->
-    <div class="card filter-card">
+    <div class="card filter-card fade-in">
         <div class="card-header">
             <h5 class="card-title mb-0">
                 <i class="fa fa-filter" aria-hidden="true"></i>
@@ -29,47 +33,32 @@
         <div class="card-body">
             <!-- First Row -->
             <div class="row form-row">
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Contrato SAP</label>
-                        <div class="input-group filter-espacio-input">
-                            @Html.TextBox("NegocioSAP", "", new
-                            {
-                                placeholder = "Número SAP desde",
-                                @class = "form-control filtroBusquedaNumeroRangoDesde",
-                                @id = "NegocioSAP-desde"
-                            })
-                            @Html.TextBox("NegocioSAP", "", new
-                            {
-                                placeholder = "Número SAP hasta",
-                                @type = "number",
-                                @class = "form-control filtroBusquedaNumeroRangoHasta",
-                                @id = "NegocioSAP-hasta"
-                            })
+                        <div class="filter-espacio-input">
+                            <input type="number" id="NegocioSAP-desde" class="form-control" placeholder="SAP desde" min="0" />
+                            <input type="number" id="NegocioSAP-hasta" class="form-control" placeholder="SAP hasta" min="0" />
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Material</label>
-                        @*@Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new
-                            {
-                                @class = "form-control filtroBusquedaPorId",
-                                @id = "materialId"
-                            })*@
+                        <select id="materialId" class="form-control">
+                            <option value="">Cargando materiales...</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Estado de Control</label>
-                        @*@Html.DropDownList("EstadoControlId", new SelectList(ViewBag.EstadosControl, "Value", "Text"), "Seleccione el Estado", new
-                            {
-                                @class = "form-control filtroBusquedaPorId",
-                                @id = "estadoControlId"
-                            })*@
+                        <select id="estadoControlId" class="form-control">
+                            <option value="">Cargando estados...</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Tipo de Boleto</label>
                         <div class="custom-control custom-checkbox mt-2">
@@ -82,32 +71,30 @@
 
             <!-- Second Row -->
             <div class="row form-row">
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="form-label">Fecha de Envío (SAP/Confirma)</label>
-                        <input id="fechaCargaId" class="form-control filtroFecha" name="FechaCarga-desde" type="date" />
+                        <label class="form-label">Fecha de Envío Desde</label>
+                        <input id="fechaCargaDesde" class="form-control" type="date" />
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="form-label">Fecha Hasta</label>
-                        <input id="fechaCargaHastaId" class="form-control filtroFecha" name="FechaCarga-hasta" type="date" />
+                        <label class="form-label">Fecha de Envío Hasta</label>
+                        <input id="fechaCargaHasta" class="form-control" type="date" />
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Proveedor</label>
-                        <input type="text" id="proveedorFiltro" class="form-control" placeholder="Buscar por CUIT o razón social" />
+                        <input type="text" id="proveedorFiltro" class="form-control" placeholder="Buscar por CUIT o razón social" maxlength="100" />
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6">
                     <div class="form-group">
                         <label class="form-label">Comercial</label>
-                        @*@Html.DropDownList("ComercialId", new SelectList(ViewBag.Comerciales, "Value", "Text"), "Seleccione el Comercial", new
-                            {
-                                @class = "form-control filtroBusquedaPorId",
-                                @id = "comercialId"
-                            })*@
+                        <select id="comercialId" class="form-control">
+                            <option value="">Cargando comerciales...</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -118,15 +105,15 @@
                 <div class="col-md-4 filter-actions">
                     <button type="button" id="filtrarBoletos" class="btn btn-primary">
                         <i class="fa fa-search" aria-hidden="true"></i>
-                        Buscar Boletos
+                        <span class="d-none d-sm-inline">Buscar</span>
                     </button>
                     <button type="button" id="limpiarFiltros" class="btn btn-secondary">
                         <i class="fa fa-eraser" aria-hidden="true"></i>
-                        Limpiar Filtros
+                        <span class="d-none d-sm-inline">Limpiar</span>
                     </button>
-                    <button type="button" id="exportarExcel" class="btn btn-success">
+                    <button type="button" id="exportarExcel" class="btn btn-success" disabled>
                         <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                        Exportar a Excel
+                        <span class="d-none d-sm-inline">Excel</span>
                     </button>
                 </div>
             </div>
@@ -134,7 +121,7 @@
     </div>
 
     <!-- Results Section -->
-    <div class="card results-card mt-3">
+    <div class="card results-card mt-3 fade-in">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">
                 <i class="fa fa-list" aria-hidden="true"></i>
@@ -154,22 +141,24 @@
                             <label for="selectAll" class="form-check-label mr-3">Seleccionar Todos</label>
                             <button type="button" id="iniciarControlMasivo" class="btn btn-sm btn-outline-primary" disabled>
                                 <i class="fa fa-play" aria-hidden="true"></i>
-                                Iniciar Control
+                                <span class="d-none d-md-inline">Iniciar Control</span>
                             </button>
                             <button type="button" id="finalizarControlMasivo" class="btn btn-sm btn-outline-success" disabled>
                                 <i class="fa fa-check" aria-hidden="true"></i>
-                                Finalizar Control
+                                <span class="d-none d-md-inline">Finalizar Control</span>
                             </button>
                         </div>
                     </div>
                     <div class="col-md-6 text-right">
                         <div class="view-options">
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary active" id="vistaTabla">
+                                <button type="button" class="btn btn-sm btn-outline-secondary active tooltip-custom" id="vistaTabla">
                                     <i class="fa fa-table" aria-hidden="true"></i>
+                                    <span class="tooltiptext">Vista Tabla</span>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" id="vistaCartas">
+                                <button type="button" class="btn btn-sm btn-outline-secondary tooltip-custom" id="vistaCartas">
                                     <i class="fa fa-th-large" aria-hidden="true"></i>
+                                    <span class="tooltiptext">Vista Cartas</span>
                                 </button>
                             </div>
                         </div>
@@ -178,54 +167,60 @@
             </div>
 
             <!-- Grid Container -->
-            <div id="boletos-grid" class="grid-container"></div>
+            <div id="boletos-grid" class="grid-container">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border-custom" role="status">
+                        <span class="sr-only">Cargando datos...</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Progress Indicators -->
-    <div class="progress-indicators mt-3">
+    <div class="progress-indicators mt-3 fade-in">
         <div class="row">
-            <div class="col-md-3">
-                <div class="progress-card pending">
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card pending" role="button" data-filter="pendiente">
                     <div class="progress-icon">
                         <i class="fa fa-clock-o" aria-hidden="true"></i>
                     </div>
                     <div class="progress-info">
                         <h6>Pendientes</h6>
-                        <span id="countPendientes">0</span>
+                        <span id="countPendientes">-</span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="progress-card in-progress">
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card in-progress" role="button" data-filter="proceso">
                     <div class="progress-icon">
                         <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
                     </div>
                     <div class="progress-info">
                         <h6>En Proceso</h6>
-                        <span id="countEnProceso">0</span>
+                        <span id="countEnProceso">-</span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="progress-card completed">
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card completed" role="button" data-filter="completado">
                     <div class="progress-icon">
                         <i class="fa fa-check-circle" aria-hidden="true"></i>
                     </div>
                     <div class="progress-info">
                         <h6>Completados</h6>
-                        <span id="countCompletados">0</span>
+                        <span id="countCompletados">-</span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="progress-card certified">
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card certified" role="button" data-filter="certificado">
                     <div class="progress-icon">
                         <i class="fa fa-certificate" aria-hidden="true"></i>
                     </div>
                     <div class="progress-info">
                         <h6>Certificados</h6>
-                        <span id="countCertificados">0</span>
+                        <span id="countCertificados">-</span>
                     </div>
                 </div>
             </div>
@@ -233,157 +228,22 @@
     </div>
 </div>
 
-<style>
-    /* Estilos específicos para Control de Boletos - Solo estilos únicos */
-    .page-title {
-        color: steelblue;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .page-subtitle {
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 0;
-    }
-
-    .header-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 8px;
-        margin-bottom: 20px;
-        padding: 20px;
-    }
-
-    .filter-card, .results-card {
-        border: 1px solid #e3e6f0;
-        border-radius: 8px;
-    }
-
-        .filter-card .card-header {
-            background: steelblue;
-            color: white;
-            border-radius: 8px 8px 0 0 !important;
-            padding: 12px 20px;
-        }
-
-    .form-label {
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .form-control:focus {
-        border-color: #017940;
-        box-shadow: 0 0 0 0.2rem rgba(1, 121, 64, 0.25);
-    }
-
-    .filter-espacio-input {
-        display: flex;
-        gap: 10px;
-    }
-
-    .filter-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-    }
-
-    .btn-primary {
-        background-color: #017940;
-        border-color: #017940;
-    }
-
-        .btn-primary:hover {
-            background-color: #015a32;
-            border-color: #015a32;
-        }
-
-    .quick-actions-bar {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .bulk-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .grid-container {
-        min-height: 400px;
-    }
-
-    .progress-indicators {
-        margin-top: 20px;
-    }
-
-    .progress-card {
-        background: white;
-        border: 1px solid #e3e6f0;
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.15s ease-in-out;
-    }
-
-        .progress-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .progress-card.pending {
-            border-left: 4px solid #ffc107;
-        }
-
-        .progress-card.in-progress {
-            border-left: 4px solid #17a2b8;
-        }
-
-        .progress-card.completed {
-            border-left: 4px solid #28a745;
-        }
-
-        .progress-card.certified {
-            border-left: 4px solid #6f42c1;
-        }
-
-    .progress-icon {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .progress-card.pending .progress-icon {
-        color: #ffc107;
-    }
-
-    .progress-card.in-progress .progress-icon {
-        color: #17a2b8;
-    }
-
-    .progress-card.completed .progress-icon {
-        color: #28a745;
-    }
-
-    .progress-card.certified .progress-icon {
-        color: #6f42c1;
-    }
-
-    .progress-info h6 {
-        margin: 0 0 5px 0;
-        font-weight: 600;
-        color: #374151;
-        font-size: 14px;
-    }
-
-    .progress-info span {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1f2937;
-    }
-
-    .custom-control-input:checked ~ .custom-control-label::before {
-        background-color: #017940;
-        border-color: #017940;
-    }
-</style>
+<!-- Modal para mensajes -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mensajeModalTitle">Información</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="mensajeModalBody">
+                <!-- Mensaje dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

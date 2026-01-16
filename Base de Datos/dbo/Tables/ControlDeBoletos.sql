@@ -2,6 +2,7 @@
     Id INT IDENTITY(1,1) PRIMARY KEY,
     NegocioId INT NOT NULL,
     ControlDeBoletosEstadoId INT NOT NULL,
+    CodigoEstadoConfirma INT NULL,
     EsConfirma BIT NOT NULL,
     IdentificadorConfirma INT NULL,
     FechaCreacion DATETIME NOT NULL,

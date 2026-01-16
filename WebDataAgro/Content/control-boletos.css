@@ -1,0 +1,364 @@
+﻿/* Estilos específicos para Control de Boletos */
+.page-title {
+    color: steelblue;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.header-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom: 2px solid #017940 !important;
+}
+
+.filter-card, .results-card {
+    border: 1px solid #e3e6f0;
+    border-radius: 8px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+    .filter-card .card-header {
+        background: steelblue;
+        color: white;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 12px 20px;
+    }
+
+.form-label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control:focus {
+    border-color: #017940;
+    box-shadow: 0 0 0 0.2rem rgba(1, 121, 64, 0.25);
+}
+
+.filter-espacio-input {
+    display: flex;
+    gap: 10px;
+}
+
+    .filter-espacio-input .form-control {
+        flex: 1;
+    }
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background-color: #017940;
+    border-color: #017940;
+}
+
+    .btn-primary:hover {
+        background-color: #015a32;
+        border-color: #015a32;
+    }
+
+.quick-actions-bar {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.grid-container {
+    min-height: 400px;
+    position: relative;
+}
+
+.progress-indicators {
+    margin-top: 20px;
+}
+
+.progress-card {
+    background: white;
+    border: 1px solid #e3e6f0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 15px;
+}
+
+    .progress-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .progress-card.pending {
+        border-left: 4px solid #ffc107;
+    }
+
+    .progress-card.in-progress {
+        border-left: 4px solid #17a2b8;
+    }
+
+    .progress-card.completed {
+        border-left: 4px solid #28a745;
+    }
+
+    .progress-card.certified {
+        border-left: 4px solid #6f42c1;
+    }
+
+.progress-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.progress-card.pending .progress-icon {
+    color: #ffc107;
+}
+
+.progress-card.in-progress .progress-icon {
+    color: #17a2b8;
+}
+
+.progress-card.completed .progress-icon {
+    color: #28a745;
+}
+
+.progress-card.certified .progress-icon {
+    color: #6f42c1;
+}
+
+.progress-info h6 {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-info span {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #017940;
+    border-color: #017940;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
+.spinner-border-custom {
+    width: 3rem;
+    height: 3rem;
+    border: 0.3em solid rgba(1, 121, 64, 0.25);
+    border-right-color: #017940;
+    border-radius: 50%;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estados del grid */
+.estado-badge {
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    border-radius: 0.375rem;
+    text-transform: uppercase;
+}
+
+.estado-pendiente {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+}
+
+.estado-proceso {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+}
+
+.estado-completado {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.estado-certificado {
+    color: #4c1d95;
+    background-color: #e9d5ff;
+    border: 1px solid #d8b4fe;
+}
+
+/* Botones de acción */
+.btn-acciones {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    margin: 0 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-fluid {
+        margin-left: 1em !important;
+        margin-right: 1em !important;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+        .filter-actions .btn {
+            width: 100%;
+        }
+
+    .bulk-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .filter-espacio-input {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .quick-actions-bar .row {
+        flex-direction: column;
+    }
+
+    .quick-actions-bar .text-right {
+        text-align: left !important;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .progress-card {
+        padding: 15px;
+    }
+
+    .progress-info span {
+        font-size: 20px;
+    }
+
+    .progress-icon {
+        font-size: 20px;
+    }
+}
+
+/* Animaciones */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Mejoras de UX */
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(1, 121, 64, 0.25);
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    opacity: 0.8;
+}
+
+/* Grid personalizado */
+.k-grid-content {
+    max-height: 500px;
+}
+
+.k-grid .k-header {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+}
+
+.k-grid tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.k-grid .k-state-selected {
+    background-color: rgba(1, 121, 64, 0.1);
+    color: #017940;
+}
+
+/* Tooltips personalizados */
+.tooltip-custom {
+    position: relative;
+    display: inline-block;
+}
+
+    .tooltip-custom .tooltiptext {
+        visibility: hidden;
+        width: 140px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 8px;
+        position: absolute;
+        z-index: 1000;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -70px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+    }
+
+    .tooltip-custom:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }

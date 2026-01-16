@@ -1141,3 +1141,81 @@ IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Sot
 	UPDATE Centro SET Descripcion = 'Rio del Valle' 
 	 WHERE Id = @IdRioValle;
    END
+
+--Estado Confirma
+if not exists(select 1 from EstadoConfirma where Codigo = 1)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (1, 'Contrato pendiente de Control')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 2)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (2, 'Controlado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 3)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (3, 'En Firma')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 4)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (4, 'Pendiente de Registración')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 5)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (5, 'Registrado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 7)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (7, 'Anulado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 99)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (99, 'Anulado post-registración')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 9)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (9, 'Excluído porTiempo Excedido')
+end
+
+
+--Estado ControlDeBoletos
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 1)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (1, 'Pendiente')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 2)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (2, 'En Proceso')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 3)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (3, 'En Oblea')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 4)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (4, 'En Certificacion')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 5)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (5, 'Enviado Afip / Arca')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 6)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (6, 'Finalizado')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Codigo = 7)
+begin
+ insert into ControlDeBoletosEstado(Codigo,Descripcion) values (7, 'Anulado')
+end

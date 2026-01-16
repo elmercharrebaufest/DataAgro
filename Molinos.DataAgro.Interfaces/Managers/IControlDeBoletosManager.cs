@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IControlDeBoletosManager
     {
+        Resultado RegistroContratoDA(int negocioId);
+        Resultado AsociarConfirma(int negocioId);
     }
 }

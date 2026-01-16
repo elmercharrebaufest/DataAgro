@@ -1,618 +1,648 @@
-﻿//Inicializar
-$(document).ready(function () {
-    $('#ContratosPendientesCheck').prop('checked', true);
-    inicializarFiltros();
-    inicializarGrillaContratos();
-});
+﻿// Control de Boletos - JavaScript optimizado para .NET Framework 4.7.2
+var ControlBoletos = (function () {
+    'use strict';
 
-function inicializarFiltros() {
-    var hoy = new Date();
-    var ayer = new Date(hoy);
-    ayer.setDate(hoy.getDate() - 1);
-
-    $("#FechaConfirmadoSAPDesde").kendoDatePicker({
-        weekNumber: true,
-        format: "dd/MM/yyyy",
-        value: ayer
-    });
-
-    $("#FechaConfirmadoSAPHasta").kendoDatePicker({
-        weekNumber: true,
-        format: "dd/MM/yyyy",
-        value: hoy
-    });
-
-    $("#fechaCargaId").kendoDatePicker({
-        weekNumber: true,
-        format: "dd/MM/yyyy",
-    });
-
-    $("#fechaCargaHastaId").kendoDatePicker({
-        weekNumber: true,
-        format: "dd/MM/yyyy",
-    });
-    inicializarPopUpSap("Contratos");
-}
-
-function inicializarGrillaContratos() {
-    var ds = {
-        transport: {
-            parameterMap: function (options, operation) {
-                if (operation == "read") {
-                    return JSON.stringify(options)
-                }
-                if (options.filter) {
-                    KendoGrid_FixFilter(ds, options.filter);
-                }
-                return options;
-            },
-            read: {
-                type: 'post',
-                dataType: 'json',
-                contentType: "application/json",
-                url: '/Confirma/BuscaDatosTabla',
-
-                data: function () {
-                    let filtroCompleto = TraerFiltrosConValores();
-                    return filtroCompleto;
-                }
-            }
-        },
-        schema: {
-            data: 'Data',
-            total: 'Total',
-            model: {
-                id: 'Id',
-                fields: {
-                    Select: { type: "string" },
-                    NegocioSAP: { type: "string" },
-                    Material: { type: "string" },
-                    TipoBoleto: { type: "string" },
-                    Bolsa: { type: "string" },
-                    Version: { type: "string" },
-                    Estado_Version: { type: "string" },
-                    FechaGeneracion: { type: "date" },
-                    FechaOperacion: { type: "date" },
-                    FechaConfirmadoSAP: { type: "date" },
-                    FechaAnulacion: { type: "date" },
-                    ContratoVendedor: { type: "string" },
-                    ContratoCorredor: { type: "string" },
-                    Vendedor: { type: "string" },
-                    Corredor: { type: "string" },
-                    Comercial: { type: "string" },
-                    Precio: { type: "number" },
-                    Moneda: { type: "string" },
-                    TipoNegocio: { type: "string" }
-                }
-            }
-        },
-        serverPaging: true,
-        serverSorting: true,
-        serverFiltering: false,
-        pageSize: 15,
-        requestEnd: function (e) {
-            if (e.type === "read" && e.response && e.response.Data) {
-                var checkPendiente = $('#ContratosPendientesCheck').is(':checked');
-                if (checkPendiente) {
-                    let datosFiltrados = e.response.Data.filter(x => x.Estado_Version == 'Pendiente');
-                    // Reemplazar los datos originales por los filtrados
-                    var grid = $("#contratos-grid").data("kendoGrid");
-                    grid.dataSource.data(datosFiltrados);
-                }
-            }
+    var config = {
+        urls: {
+            getMateriales: '/ControlDeBoletos/GetMateriales',
+            getEstados: '/ControlDeBoletos/GetEstadosControl',
+            getComerciales: '/ControlDeBoletos/GetComerciales',
+            getBoletos: '/ControlDeBoletos/GetBoletos',
+            getContadores: '/ControlDeBoletos/GetContadores',
+            controlMasivo: '/ControlDeBoletos/ControlMasivo',
+            exportarExcel: '/ControlDeBoletos/ExportarExcel',
+            detalle: '/ControlDeBoletos/Detalle'
         }
     };
 
-    $("#contratos-grid").kendoGrid({
-        toolbar: ["excel"],
-        excel: {
-            fileName: "Reporte Seleccionado.xlsx",
-            allPages: false
+    var state = {
+        grid: null,
+        cargandoDatos: false,
+        datosInicializados: false
+    };
+
+    // Funciones privadas
+    function mostrarSpinner(mostrar) {
+        var spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.display = mostrar ? 'flex' : 'none';
+        }
+    }
+
+    function mostrarMensaje(titulo, mensaje, tipo) {
+        tipo = tipo || 'info';
+        $('#mensajeModalTitle').text(titulo);
+        $('#mensajeModalBody').html('<div class="alert alert-' + tipo + '">' + mensaje + '</div>');
+        $('#mensajeModal').modal('show');
+    }
+
+    function actualizarBoton(selector, habilitado, texto) {
+        var btn = $(selector);
+        btn.prop('disabled', !habilitado);
+        if (texto) {
+            btn.find('span').text(texto);
+        }
+    }
+
+    function validarNumero(valor) {
+        return valor === '' || (!isNaN(valor) && parseInt(valor) >= 0);
+    }
+
+    function formatearFecha(fecha) {
+        if (!fecha) return '';
+        var date = new Date(fecha);
+        return date.toLocaleDateString('es-AR');
+    }
+
+    function cargarDropdown(url, selector, textoCarga, textoDefault) {
+        var $select = $(selector);
+        $select.html('<option value="">' + textoCarga + '</option>');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            cache: true,
+            timeout: 10000,
+            success: function (data) {
+                $select.empty().append('<option value="">' + textoDefault + '</option>');
+
+                if (data && Array.isArray(data)) {
+                    $.each(data, function (i, item) {
+                        $select.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                } else {
+                    $select.append('<option value="">Sin datos disponibles</option>');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error cargando dropdown ' + selector + ':', error);
+                $select.html('<option value="">Error al cargar datos</option>');
+            }
+        });
+    }
+
+    // Funciones públicas
+    return {
+        init: function () {
+            if (state.datosInicializados) return;
+
+            this.cargarDatosIniciales();
+            this.configurarEventos();
+            this.inicializarGrid();
+            this.cargarContadores();
+
+            state.datosInicializados = true;
         },
-        excelExport: function (e) {
-            var grid = $("#contratos-grid").data("kendoGrid");
-            var selectedRows = [];
-            $("#contratos-grid tbody input.row-checkbox:checked").each(function () {
-                var row = $(this).closest("tr");
-                var dataItem = grid.dataItem(row);
-                selectedRows.push(dataItem);
+
+        cargarDatosIniciales: function () {
+            cargarDropdown(config.urls.getMateriales, '#materialId', 'Cargando...', 'Todos los materiales');
+            cargarDropdown(config.urls.getEstados, '#estadoControlId', 'Cargando...', 'Todos los estados');
+            cargarDropdown(config.urls.getComerciales, '#comercialId', 'Cargando...', 'Todos los comerciales');
+        },
+
+        configurarEventos: function () {
+            var self = this;
+
+            // Validación en tiempo real para campos numéricos
+            $('#NegocioSAP-desde, #NegocioSAP-hasta').on('input', function () {
+                var valor = this.value;
+                if (!validarNumero(valor)) {
+                    this.setCustomValidity('Ingrese un número válido');
+                    $(this).addClass('is-invalid');
+                } else {
+                    this.setCustomValidity('');
+                    $(this).removeClass('is-invalid');
+                }
             });
 
-            if (selectedRows.length === 0) {
-                MensAlerta("No hay filas seleccionadas para exportar.");
-                e.preventDefault();
+            // Eventos de botones
+            $('#filtrarBoletos').off('click').on('click', function () {
+                self.filtrarBoletos();
+            });
+
+            $('#limpiarFiltros').off('click').on('click', function () {
+                self.limpiarFiltros();
+            });
+
+            $('#exportarExcel').off('click').on('click', function () {
+                self.exportarExcel();
+            });
+
+            // Selección múltiple
+            $('#selectAll').off('change').on('change', function () {
+                self.seleccionarTodos(this.checked);
+            });
+
+            // Control masivo
+            $('#iniciarControlMasivo').off('click').on('click', function () {
+                self.iniciarControlMasivo();
+            });
+
+            $('#finalizarControlMasivo').off('click').on('click', function () {
+                self.finalizarControlMasivo();
+            });
+
+            // Vista
+            $('#vistaTabla, #vistaCartas').off('click').on('click', function () {
+                self.cambiarVista(this.id);
+            });
+
+            // Cards de progreso como filtros rápidos
+            $('.progress-card[data-filter]').off('click').on('click', function () {
+                var filtro = $(this).data('filter');
+                self.aplicarFiltroRapido(filtro);
+            });
+
+            // Filtrar al presionar Enter
+            $('#proveedorFiltro').off('keypress').on('keypress', function (e) {
+                if (e.which === 13) {
+                    self.filtrarBoletos();
+                }
+            });
+        },
+
+        inicializarGrid: function () {
+            var self = this;
+
+            try {
+                state.grid = $("#boletos-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        serverPaging: true,
+                        serverSorting: true,
+                        serverFiltering: true,
+                        pageSize: 50,
+                        transport: {
+                            read: {
+                                url: config.urls.getBoletos,
+                                type: "POST",
+                                dataType: "json",
+                                data: function () {
+                                    return self.obtenerFiltros();
+                                }
+                            },
+                            parameterMap: function (options, operation) {
+                                if (operation === "read") {
+                                    return kendo.stringify(options);
+                                }
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Id: { type: "number" },
+                                    ContratoSAP: { type: "string" },
+                                    Material: { type: "string" },
+                                    Estado: { type: "string" },
+                                    FechaCarga: { type: "date" },
+                                    Proveedor: { type: "string" },
+                                    Comercial: { type: "string" }
+                                }
+                            }
+                        },
+                        error: function (e) {
+                            console.error("Error cargando datos del grid:", e);
+                            mostrarMensaje('Error', 'Error al cargar los datos: ' + (e.errors || 'Error desconocido'), 'danger');
+                            mostrarSpinner(false);
+                        },
+                        requestStart: function () {
+                            mostrarSpinner(true);
+                            state.cargandoDatos = true;
+                        },
+                        requestEnd: function () {
+                            mostrarSpinner(false);
+                            state.cargandoDatos = false;
+                            actualizarBoton('#exportarExcel', true);
+                        }
+                    },
+                    height: 550,
+                    sortable: {
+                        mode: "single",
+                        allowUnsort: false
+                    },
+                    filterable: false,
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [25, 50, 100, 200],
+                        buttonCount: 5,
+                        messages: {
+                            display: "Mostrando {0}-{1} de {2} registros",
+                            empty: "No se encontraron registros",
+                            page: "Página",
+                            of: "de {0}",
+                            itemsPerPage: "registros por página",
+                            first: "Primera página",
+                            last: "Última página",
+                            next: "Página siguiente",
+                            previous: "Página anterior",
+                            refresh: "Actualizar"
+                        }
+                    },
+                    selectable: "multiple row",
+                    columns: [
+                        {
+                            field: "Selected",
+                            title: "<input type='checkbox' id='gridSelectAll' class='form-check-input' />",
+                            template: "<input type='checkbox' class='row-checkbox form-check-input' data-id='#=Id#' />",
+                            width: 50,
+                            sortable: false,
+                            filterable: false
+                        },
+                        {
+                            field: "ContratoSAP",
+                            title: "Contrato SAP",
+                            width: 120,
+                            template: "<span class='font-weight-bold'>#=ContratoSAP#</span>"
+                        },
+                        {
+                            field: "Material",
+                            title: "Material",
+                            width: 120
+                        },
+                        {
+                            field: "Estado",
+                            title: "Estado",
+                            width: 100,
+                            template: function (dataItem) {
+                                return self.generarBadgeEstado(dataItem.Estado);
+                            }
+                        },
+                        {
+                            field: "FechaCarga",
+                            title: "Fecha Carga",
+                            width: 120,
+                            format: "{0:dd/MM/yyyy}",
+                            template: "#= formatearFecha(FechaCarga) #"
+                        },
+                        {
+                            field: "Proveedor",
+                            title: "Proveedor",
+                            width: 250
+                        },
+                        {
+                            field: "Comercial",
+                            title: "Comercial",
+                            width: 150
+                        },
+                        {
+                            field: "Acciones",
+                            title: "Acciones",
+                            width: 120,
+                            template: function (dataItem) {
+                                return self.generarBotonesAccion(dataItem);
+                            },
+                            sortable: false,
+                            filterable: false
+                        }
+                    ],
+                    dataBound: function (e) {
+                        self.configurarEventosGrid();
+                        self.actualizarContadores();
+                        self.actualizarSeleccion();
+                    },
+                    change: function (e) {
+                        self.actualizarBotonesControlMasivo();
+                    }
+                }).data("kendoGrid");
+
+                // Ocultar spinner inicial después de crear el grid
+                setTimeout(function () {
+                    mostrarSpinner(false);
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error inicializando grid:", error);
+                mostrarMensaje('Error', 'Error al inicializar la tabla de datos', 'danger');
+                mostrarSpinner(false);
+            }
+        },
+
+        configurarEventosGrid: function () {
+            var self = this;
+
+            // Checkbox del header
+            $('#gridSelectAll').off('change').on('change', function () {
+                self.seleccionarTodos(this.checked);
+            });
+
+            // Checkboxes individuales
+            $('.row-checkbox').off('change').on('change', function () {
+                self.actualizarBotonesControlMasivo();
+
+                // Actualizar estado del checkbox principal
+                var total = $('.row-checkbox').length;
+                var seleccionados = $('.row-checkbox:checked').length;
+                $('#gridSelectAll').prop('indeterminate', seleccionados > 0 && seleccionados < total);
+                $('#gridSelectAll').prop('checked', seleccionados === total);
+            });
+        },
+
+        obtenerFiltros: function () {
+            return {
+                contratoSAPDesde: $('#NegocioSAP-desde').val().trim(),
+                contratoSAPHasta: $('#NegocioSAP-hasta').val().trim(),
+                materialId: $('#materialId').val(),
+                estadoControlId: $('#estadoControlId').val(),
+                esConfirma: $('#esConfirma').is(':checked'),
+                fechaCargaDesde: $('#fechaCargaDesde').val(),
+                fechaCargaHasta: $('#fechaCargaHasta').val(),
+                proveedor: $('#proveedorFiltro').val().trim(),
+                comercialId: $('#comercialId').val()
+            };
+        },
+
+        validarFiltros: function () {
+            var filtros = this.obtenerFiltros();
+            var errores = [];
+
+            if (filtros.contratoSAPDesde && !validarNumero(filtros.contratoSAPDesde)) {
+                errores.push('El número SAP desde debe ser un número válido');
+            }
+
+            if (filtros.contratoSAPHasta && !validarNumero(filtros.contratoSAPHasta)) {
+                errores.push('El número SAP hasta debe ser un número válido');
+            }
+
+            if (filtros.contratoSAPDesde && filtros.contratoSAPHasta &&
+                parseInt(filtros.contratoSAPDesde) > parseInt(filtros.contratoSAPHasta)) {
+                errores.push('El número SAP desde debe ser menor o igual al número SAP hasta');
+            }
+
+            if (filtros.fechaCargaDesde && filtros.fechaCargaHasta &&
+                new Date(filtros.fechaCargaDesde) > new Date(filtros.fechaCargaHasta)) {
+                errores.push('La fecha desde debe ser anterior a la fecha hasta');
+            }
+
+            return errores;
+        },
+
+        filtrarBoletos: function () {
+            var errores = this.validarFiltros();
+            if (errores.length > 0) {
+                mostrarMensaje('Errores en los filtros', errores.join('<br>'), 'warning');
                 return;
             }
 
-            // Usa el workbook existente en e.workbook
-            var workbook = e.workbook;
-
-            var sheet = workbook.sheets[0];
-            if (!sheet) {
-                sheet = {
-                    name: "Datos Seleccionados",
-                    rows: [],
-                    columns: []
-                };
-                workbook.sheets.push(sheet);
-            } else {
-                // Vacíar las filas existentes del sheet
-                sheet.rows = [];
-                sheet.columns = [];
-                sheet.name = "Datos Seleccionados";
-            }
-
-            var columns = [
-                { field: "NegocioSAP", title: "Contrato", width: 150 },
-                { field: "Material", title: "Material", width: 150 },
-                { field: "TipoBoleto", title: "Tipo Boleto", width: 150 },
-                { field: "Bolsa", title: "Bolsa", width: 150 },
-                { field: "Version", title: "Vers.", width: 150 },
-                { field: "Estado_Version", title: "Estado V.", width: 150 },
-                { field: "FechaGeneracion", title: "Fecha Generación", width: 150 },
-                { field: "FechaOperacion", title: "Fecha Operación", width: 150 },
-                { field: "FechaConfirmadoSAP", title: "Fecha Confirmación", width: 150 },
-                { field: "FechaAnulacion", title: "Fecha Anulación", width: 150 },
-                { field: "ContratoVendedor", title: "Contrato Vendedor", width: 150 },
-                { field: "ContratoCorredor", title: "Contrato Corredor", width: 150 },
-                { field: "Corredor", title: "Corredor", width: 150 },
-                { field: "Vendedor", title: "Vendedor", width: 150 },
-                { field: "Comercial", title: "Comercial", width: 150 },
-                { field: "Precio", title: "Precio", width: 150 },
-                { field: "Moneda", title: "Moneda", width: 150 },
-                { field: "TipoNegocio", title: "Tipo de Contrato", width: 150 },
-                { field: "UsuarioAnulacion", title: "Usuario Anulación", width: 35 },
-            ];
-
-            var header = columns.map(function (column) {
-                return { value: column.title, background: "#f4f4f4", bold: true };
-            });
-
-            sheet.rows.push({ cells: header });
-
-            // Agregar filas seleccionadas
-            selectedRows.forEach(function (dataItem) {
-                var row = columns.map(function (column) {
-                    var value = dataItem[column.field];
-                    if (value instanceof Date) {
-                        // Formatear fechas
-                        value = kendo.toString(value, "dd/MM/yyyy");
-                    }
-                    return { value: value };
-                });
-                sheet.rows.push({ cells: row });
-            });
-
-            // Ajustar el ancho de todas las columnas a 150
-            columns.forEach(function (column, index) {
-                sheet.columns[index] = { width: 150 };
-            });
-
-            // Actualizar el workbook en e.data
-            e.workbook = workbook;
-            console.log(e.workbook);
-        },
-        dataSource: ds,
-        pageable: {
-            refresh: true,
-            pageSizes: [10, 20, 50, 100, 1000, "all"],
-            buttonCount: 5,
-            messages: {
-                display: "{0} - {1} de {2} elementos",
-                empty: "No hay elementos para mostrar",
-                page: "Página",
-                of: "de {0}",
-                itemsPerPage: "elementos por página",
-                first: "Primero",
-                last: "Último",
-                next: "Siguiente",
-                previous: "Anterior"
+            if (state.grid && !state.cargandoDatos) {
+                mostrarSpinner(true);
+                state.grid.dataSource.read();
             }
         },
-        sortable: true,
-        filterable: false,
-        columns: [
-            {
-                field: "Select",
-                title: "<input type='checkbox' id='select-all'>",
-                template: "<input type='checkbox' class='row-checkbox'/>",
-                width: 25,
-                sortable: false,
-                filterable: false
-            },
-            {
-                title: "",
-                template: `
-                    <div style="display: flex; flex-direction: column;">
-                        <a onclick="GenerarConfirma('#= NegocioSAP #')" title="Generar Confirma">
-                            <img style="width:16px;height:16px;" src="/Content/Images/agregar-tel-mail.png" hidden>
-                        </a>
-                        <a onclick="GestionarClausulas('#= NegocioSAP #')" title="Gestionar Clausulas">
-                            <img style="width:16px;height:16px;" src="/Content/Images/contacto-edit.png">
-                        </a>
-                    </div>
-                `,
-                width: 30,
-                sortable: false,
-                filterable: false
-            },
-            { field: "NegocioSAP", title: "Contrato", width: 80, type: "string", headerAttributes: { "title": "Contrato" } },
-            {
-                field: "Material", title: "Material", width: 50, editable: false, type: "string", headerAttributes: { "title": "Material" },
-                filterable: {
-                    multi: true,
-                    dataSource: [
-                        { Material: "Maiz" },
-                        { Material: "Trigo" },
-                        { Material: "Soja" },
-                        { Material: "Girasol" }
-                    ],
-                }
-            },
-            { field: "TipoBoleto", title: "Tipo Boleto", width: 60, headerAttributes: { "title": "Tipo Boleto" }, type: "string" },
-            {
-                field: "Bolsa", title: "Bolsa", width: 50, editable: false, type: "string",
-                filterable: {
-                    multi: true,
-                    dataSource: [
-                        { Bolsa: "Buenos Aires" },
-                        { Bolsa: "Rosario" },
-                        { Bolsa: "Bahía Blanca" },
-                        { Bolsa: "Santa Fe" },
-                        { Bolsa: "Cordoba" },
-                        { Bolsa: "Entre Ríos" },
-                        { Bolsa: "Chaco" }
-                    ],
-                }
-            },
-            { field: "Version", title: "Vers.", width: 38, headerAttributes: { "title": "Versión" }, type: "number" },
-            {
-                field: "Estado_Version", title: "Estado V.", width: 65, headerAttributes: { "title": "Estado Versión" }, editable: false, type: "string",
-                filterable: {
-                    multi: true,
-                    dataSource: [
-                        { Estado_Version: "Pendiente" },
-                        { Estado_Version: "Vigente" },
-                        { Estado_Version: "Anulado" }
-                    ],
-                }
-            },
-            { field: "FechaGeneracion", title: "F. Generación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Generación" }, type: "date" },
-            { field: "FechaOperacion", title: "F. Operación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Operación" }, type: "date" },
-            { field: "FechaConfirmadoSAP", title: "F. Confirmación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Confirmación" }, type: "date" },
-            { field: "FechaAnulacion", title: "F. Anulación", width: 70, format: "{0:dd/MM/yyyy}", headerAttributes: { "title": "Fecha Anulación" }, type: "date" },
-            { field: "ContratoVendedor", title: "C. Vendedor", width: 80, headerAttributes: { "title": "Contrato Vendedor" }, type: "string" },
-            { field: "ContratoCorredor", title: "C. Corredor", width: 80, headerAttributes: { "title": "Contrato Corredor" }, type: "string" },
-            {
-                field: "Vendedor",
-                title: "Vendedor",
-                width: 150,
-                headerAttributes: { "title": "Vendedor" },
-                filterable: {
-                    multi: true,
-                    ui: function (element) {
-                        element.kendoMultiSelect({
-                            placeholder: "Seleccione vendedores...",
-                            dataTextField: "Vendedor",
-                            dataValueField: "Vendedor",
-                            dataSource: [], // Inicialmente vacío
-                            change: function () {
-                                var values = this.value();
-                                var grid = $("#contratos-grid").data("kendoGrid");
-                                grid.dataSource.filter({
-                                    logic: "or",
-                                    filters: values.map(function (value) {
-                                        return { field: "Vendedor", operator: "eq", value: value };
-                                    })
-                                });
-                            }
-                        });
-                    }
-                }
-            },
-            {
-                field: "Corredor",
-                title: "Corredor",
-                width: 150,
-                headerAttributes: { "title": "Corredor" },
-                filterable: {
-                    multi: true,
-                    ui: function (element) {
-                        element.kendoMultiSelect({
-                            placeholder: "Seleccione corredores...",
-                            dataTextField: "Corredor",
-                            dataValueField: "Corredor",
-                            dataSource: [], // Inicialmente vacío
-                            change: function () {
-                                var values = this.value();
-                                var grid = $("#contratos-grid").data("kendoGrid");
-                                grid.dataSource.filter({
-                                    logic: "or",
-                                    filters: values.map(function (value) {
-                                        return { field: "Corredor", operator: "eq", value: value };
-                                    })
-                                });
-                            }
-                        });
-                    }
-                }
-            },
-            {
-                field: "Comercial",
-                title: "Comercial",
-                width: 150,
-                headerAttributes: { "title": "Comercial" },
-                filterable: {
-                    multi: true, // Permitir selección múltiple
-                    ui: function (element) {
-                        element.kendoMultiSelect({
-                            placeholder: "Seleccione comerciales...",
-                            dataTextField: "Comercial",
-                            dataValueField: "Comercial",
-                            dataSource: [], // Inicialmente vacío
-                            change: function () {
-                                var values = this.value();
-                                var grid = $("#contratos-grid").data("kendoGrid");
-                                grid.dataSource.filter({
-                                    logic: "or",
-                                    filters: values.map(function (value) {
-                                        return { field: "Comercial", operator: "eq", value: value };
-                                    })
-                                });
-                            }
-                        });
-                    }
-                }
-            },
-            { field: "Precio", title: "Precio", type: "number", width: 70, format: "{0:#,##0.00}", headerAttributes: { "title": "Precio" } },
-            {
-                field: "Moneda", title: "Moneda", width: 35, headerAttributes: { "title": "Moneda" }, editable: false, type: "string",
-                filterable: {
-                    multi: true,
-                    dataSource: [
-                        { Moneda: "USD" },
-                        { Moneda: "ARP" }
-                    ],
-                }
-            },
-            {
-                field: "TipoNegocio", title: "Tipo Contrato", width: 55, headerAttributes: { "title": "Tipo Contrato" }, editable: false, type: "string",
-                filterable: {
-                    multi: true,
-                    dataSource: [
-                        { TipoNegocio: "CONVENIO" },
-                        { TipoNegocio: "FIJ. CONVENIO" },
-                        { TipoNegocio: "FASON MP" },
-                        { TipoNegocio: "AGENTE DE COMPRAS MP" },
-                        { TipoNegocio: "ACUERDO AGENTE" },
-                        { TipoNegocio: "CANJE" },
-                        { TipoNegocio: "PRESTAMO DEVOLUCION" },
-                        { TipoNegocio: "VENTA" },
-                        { TipoNegocio: "A FIJAR PASE" },
-                        { TipoNegocio: "FIJACION VIRTUAL" },
-                        { TipoNegocio: "FIJACION CANJE" },
-                        { TipoNegocio: "A FIJAR" },
-                        { TipoNegocio: "A PRECIO" },
-                        { TipoNegocio: "FIJACION" },
-                        { TipoNegocio: "FASON" },
-                        { TipoNegocio: "AGENTE DE COMPRAS" },
-                        { TipoNegocio: "CONTRATO ACUERDO" },
-                        { TipoNegocio: "ESPACIO DINAMICO" }
-                    ],
-                }
+
+        limpiarFiltros: function () {
+            $('#NegocioSAP-desde, #NegocioSAP-hasta').val('').removeClass('is-invalid');
+            $('#materialId, #estadoControlId, #comercialId').val('');
+            $('#esConfirma').prop('checked', false);
+            $('#fechaCargaDesde, #fechaCargaHasta').val('');
+            $('#proveedorFiltro').val('');
+
+            this.filtrarBoletos();
+        },
+
+        aplicarFiltroRapido: function (estado) {
+            this.limpiarFiltros();
+
+            var estadoId = '';
+            switch (estado) {
+                case 'pendiente': estadoId = '1'; break;
+                case 'proceso': estadoId = '2'; break;
+                case 'completado': estadoId = '3'; break;
+                case 'certificado': estadoId = '4'; break;
             }
-        ],
-    });
-}
 
-//Eventos
-$("body").on("click", "#filtrarConfirmas", function () {
-    FiltrarNegocios();
-});
+            if (estadoId) {
+                $('#estadoControlId').val(estadoId);
+                this.filtrarBoletos();
+            }
+        },
 
-$("body").on("change", "#NegocioSAP-desde", function () {
-    let lista = trimEnd($("#NegocioSAP-desde").val()).split(';');
-    if (lista.length > 1) {
-        $("#NegocioSAP-hasta").attr('disabled', 'disabled');
-        $("#NegocioSAP-hasta").val("");
-    } else {
-        $("#NegocioSAP-hasta").removeAttr('disabled');
-    }
-});
+        exportarExcel: function () {
+            var filtros = this.obtenerFiltros();
+            var queryString = $.param(filtros);
 
-$("#NegocioSAP-desde").bind("paste", function (e) {//En caso de Pegar Codigos
-    e.preventDefault();
-    if (e.originalEvent.clipboardData !== undefined) {
-        clipText = e.originalEvent.clipboardData.getData('text/plain');
-    } else {
-        clipText = window.clipboardData.getData('text');
-    }
-    $("#NegocioSAP-desde").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
-});
+            var url = config.urls.exportarExcel + '?' + queryString;
 
-function CargarTablaModal(contratos) {
-    $("#modal-respuestas-confirma").empty();
-    let descargaHabilitada = $("#checkDescargar").is(":checked");
-    var tabla = '';
-    for (var i = 0; i < contratos.length; i++) {
-        tabla += '<tr><td>'
-            + contratos[i].NegocioSAP
-            + '</td><td '
-            + (contratos[i].TieneFechaGeneracionUltimoConfirma ? 'title="Último Confirma generado"' : '') + '>'
-            + (contratos[i].FechaGeneracionFormateada == '1/1/0001' ? '' : contratos[i].FechaGeneracionFormateada)
-            + '</td><td>'
-            + (contratos[i].Generado ? '<i class="fa fa-check generado" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
-            + '</td><td>'
-            + (contratos[i].IsWebService ? '<i class="fa fa-check web" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times generado" aria-hidden="true" style="color:red; text-align: center"></i>')
-            + (contratos[i].Generado && descargaHabilitada ? ('<a href="/Confirma/DescargarArchivoConfirma?nombreArchivo=' + contratos[i].Archivo + '" class="k-button k-button-icontext" style="height: 34px;text-align: center;margin-left: 1rem;"><i class="fa fa-download generado" style="text-align: center"></i></a>') : "")
-            + '</td><td>'
-            + contratos[i].Mensaje
-            + '</td></tr>';
-    }
-    $("#modal-respuestas-confirma").append(tabla);
-}
+            // Crear elemento temporal para descarga
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'ControlBoletos_' + new Date().toISOString().slice(0, 10) + '.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
 
-function FiltrarNegocios() {
-    BlockUi('Consultando...');
-    setTimeout(function () {
-        try {
-            if (esContratoDesdeValido() && validarFechasYContratos()) {
+        seleccionarTodos: function (seleccionar) {
+            $('.row-checkbox').prop('checked', seleccionar);
+            this.actualizarBotonesControlMasivo();
+        },
 
-                $('#contratos-grid').data('kendoGrid').dataSource.read();
+        actualizarSeleccion: function () {
+            this.actualizarBotonesControlMasivo();
+        },
 
+        actualizarBotonesControlMasivo: function () {
+            var seleccionados = $('.row-checkbox:checked').length;
+            var habilitado = seleccionados > 0;
+
+            actualizarBoton('#iniciarControlMasivo', habilitado);
+            actualizarBoton('#finalizarControlMasivo', habilitado);
+
+            // Actualizar checkbox principal
+            var total = $('.row-checkbox').length;
+            $('#selectAll').prop('checked', seleccionados === total && total > 0);
+        },
+
+        iniciarControlMasivo: function () {
+            var ids = this.obtenerSeleccionados();
+            if (ids.length === 0) {
+                mostrarMensaje('Atención', 'Debe seleccionar al menos un boleto para iniciar el control', 'warning');
+                return;
+            }
+
+            var mensaje = '¿Está seguro de iniciar el control para ' + ids.length + ' boleto(s) seleccionado(s)?';
+            if (confirm(mensaje)) {
+                this.procesarControlMasivo('iniciar', ids);
+            }
+        },
+
+        finalizarControlMasivo: function () {
+            var ids = this.obtenerSeleccionados();
+            if (ids.length === 0) {
+                mostrarMensaje('Atención', 'Debe seleccionar al menos un boleto para finalizar el control', 'warning');
+                return;
+            }
+
+            var mensaje = '¿Está seguro de finalizar el control para ' + ids.length + ' boleto(s) seleccionado(s)?';
+            if (confirm(mensaje)) {
+                this.procesarControlMasivo('finalizar', ids);
+            }
+        },
+
+        obtenerSeleccionados: function () {
+            var ids = [];
+            $('.row-checkbox:checked').each(function () {
+                var id = $(this).data('id');
+                if (id) {
+                    ids.push(id);
+                }
+            });
+            return ids;
+        },
+
+        procesarControlMasivo: function (accion, ids) {
+            var self = this;
+
+            if (!ids || ids.length === 0) {
+                mostrarMensaje('Error', 'No hay elementos seleccionados', 'warning');
+                return;
+            }
+
+            // Deshabilitar botones durante el procesamiento
+            actualizarBoton('#iniciarControlMasivo', false);
+            actualizarBoton('#finalizarControlMasivo', false);
+
+            $.ajax({
+                url: config.urls.controlMasivo,
+                type: 'POST',
+                data: JSON.stringify({
+                    accion: accion,
+                    ids: ids
+                }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                timeout: 30000,
+                success: function (response) {
+                    if (response && response.success) {
+                        mostrarMensaje('Éxito', response.message || 'Operación completada correctamente', 'success');
+                        self.filtrarBoletos(); // Recargar datos
+                        $('#selectAll').prop('checked', false); // Limpiar selección
+                    } else {
+                        mostrarMensaje('Error', response.message || 'Error al procesar la solicitud', 'danger');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error en control masivo:', error);
+                    mostrarMensaje('Error', 'Error de comunicación con el servidor: ' + error, 'danger');
+                },
+                complete: function () {
+                    // Rehabilitar botones
+                    self.actualizarBotonesControlMasivo();
+                }
+            });
+        },
+
+        cambiarVista: function (vista) {
+            $('#vistaTabla, #vistaCartas').removeClass('active');
+            $('#' + vista).addClass('active');
+
+            if (vista === 'vistaCartas') {
+                this.mostrarVistaCartas();
             } else {
-                if (!esContratoDesdeValido()) MensErr("Solo se admiten números y el ';' en el campo Contrato.");
-                else MensErr("El Rango de Contratos o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
+                this.mostrarVistaTabla();
             }
-        } catch (e) {
-            console.error("Error al filtrar negocios: ", e);
-            MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
-        } finally {
-            $.unblockUI();
-        }
-    }, 200);
-}
+        },
 
-function ValidarNegocio(codigoSAP) {
-    let claseNegocio = $("#ClaseNegocio").val();
-    BlockUi("Consultando...");
-    var data = { codigoSAP: codigoSAP, claseNegocio: claseNegocio };
-    var result = MSExecuteOnServer('/Confirma/ValidarNegocio', data);
-    $.unblockUI();
-    return result;
-}
+        mostrarVistaTabla: function () {
+            $('#boletos-grid').show();
+        },
 
-//Funciones Utiles
-function isNullOrWhitespace(input) {
-    return !input || !input.trim();
-}
+        mostrarVistaCartas: function () {
+            mostrarMensaje('Información', 'La vista de cartas estará disponible en una próxima versión', 'info');
+            $('#vistaTabla').click(); // Volver a vista tabla
+        },
 
-function trimEnd(cadena) {
-    return cadena.at(cadena.length - 1) == ';' ? cadena.slice(0, cadena.length - 1) : cadena;
-}
-
-// Función para validar el contenido de contratoDesde
-function esContratoDesdeValido() {
-    var contratoDesde = $("#NegocioSAP-desde").val();
-
-    // Si contratoDesde es nulo o vacío, lo consideramos válido
-    if (contratoDesde === null || contratoDesde.trim() === '') {
-        return true;
-    }
-
-    // Verificar que contratoDesde contenga solo números o el símbolo ';'
-    return /^[0-9;]+$/.test(contratoDesde.trim());
-}
-
-// Función para validar fechas y contratos
-function validarFechasYContratos() {
-    var contratoDesde = ($("#NegocioSAP-desde").val().endsWith(';') ? $("#NegocioSAP-desde").val().slice(0, -1) : $("#NegocioSAP-desde").val()).trim();
-    var contratoHasta = $("#NegocioSAP-hasta").val().trim();
-
-    if (contratoDesde == '' && contratoHasta == '') {
-        var fechaDesde = $("#FechaConfirmadoSAPDesde").data("kendoDatePicker").value();
-        var fechaHasta = $("#FechaConfirmadoSAPHasta").data("kendoDatePicker").value();
-        if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
-            return false; // La fecha desde no puede ser mayor que la fecha hasta
-        }
-    } else {
-        // Validar contratos solo si ambos valores están presentes
-        if (contratoDesde) {
-            if (contratoHasta) {
-                // Verificar que contratoDesde sea menor que contratoHasta
-                if (parseInt(contratoDesde) >= parseInt(contratoHasta)) {
-                    return false; // El contrato desde debe ser menor que el contrato hasta
+        cargarContadores: function () {
+            $.ajax({
+                url: config.urls.getContadores,
+                type: 'GET',
+                timeout: 10000,
+                success: function (data) {
+                    if (data) {
+                        $('#countPendientes').text(data.Pendientes || 0);
+                        $('#countEnProceso').text(data.EnProceso || 0);
+                        $('#countCompletados').text(data.Completados || 0);
+                        $('#countCertificados').text(data.Certificados || 0);
+                    }
+                },
+                error: function () {
+                    console.warn('Error cargando contadores');
                 }
+            });
+        },
+
+        actualizarContadores: function () {
+            this.cargarContadores();
+            if (state.grid) {
+                var total = state.grid.dataSource.total();
+                $('#totalRegistros').text(total + ' registro' + (total !== 1 ? 's' : ''));
             }
-        }
-    }
+        },
 
-    // Si todas las validaciones pasan
-    return true;
-}
-
-function parseDate(jsonDate) {
-    if (jsonDate) {
-        // Extraer el timestamp de la cadena JSON
-        var timestamp = parseInt(jsonDate.replace('/Date(', '').replace(')/', ''));
-        // Crear una fecha a partir del timestamp
-        return new Date(timestamp);
-    }
-    return null;
-}
-
-function GenerarConfirmas() {
-    // Obtener las filas seleccionadas
-    var grid = $("#contratos-grid").data("kendoGrid");
-    var negocioSAPList = [];
-    $("#contratos-grid tbody input.row-checkbox:checked").each(function () {
-        var row = $(this).closest("tr");
-        var dataItem = grid.dataItem(row);
-        negocioSAPList.push(dataItem.NegocioSAP);
-    });
-
-    // Validar y Unir todos los codigos en un solo string
-    if (negocioSAPList.length > 0) {
-        var negocioSAPString = negocioSAPList.join(';');
-        GenerarConfirma(negocioSAPString);
-    } else {
-        MensErr("No hay ningún negocio seleccionado.");
-    }
-}
-
-//Funcion Generar Confirma
-function GenerarConfirma(negocioSAP) {
-    BlockUi('Cargando...');
-    setTimeout(function () {
-        try {
-            var data = {
-                ContratoSAP: negocioSAP,
-                ClaseNegocioId: $("#ClaseNegocio").val(),
-                IsWebService: $("#servicioConfirmaId").is(":checked")
-            };
-
-            var url = '/Confirma/GenerarConfirma';
-            var result = MSExecuteOnServer(url, data);
-
-            if (result.confirmasGenerados == undefined || result.confirmasGenerados.length == 0) {
-                if (result.HayError) {
-                    result.ListaErrores.forEach(err => MensErr(err.Message));
-                } else {
-                    MensErr("No se generó ningún Confirma.");
-                }
-            } else {
-                CargarTablaModal(result.confirmasGenerados);
-                $("#ModalConfirma").modal("show");
+        generarBadgeEstado: function (estado) {
+            var claseEstado = '';
+            switch (estado) {
+                case 'Pendiente': claseEstado = 'estado-pendiente'; break;
+                case 'En Proceso': claseEstado = 'estado-proceso'; break;
+                case 'Completado': claseEstado = 'estado-completado'; break;
+                case 'Certificado': claseEstado = 'estado-certificado'; break;
+                default: claseEstado = 'badge-secondary';
             }
-        } catch (e) {
-            console.error("Error al Generar Confirma: ", e);
-            MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
-        } finally {
-            $.unblockUI();
+            return '<span class="estado-badge ' + claseEstado + '">' + estado + '</span>';
+        },
+
+        generarBotonesAccion: function (data) {
+            var botones = [];
+
+            if (data.Estado === 'Pendiente') {
+                botones.push('<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.iniciarControl(' + data.Id + ')" title="Iniciar Control"><i class="fa fa-play"></i><span class="tooltiptext">Iniciar Control</span></button>');
+            }
+
+            if (data.Estado === 'En Proceso') {
+                botones.push('<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' + data.Id + ')" title="Finalizar Control"><i class="fa fa-check"></i><span class="tooltiptext">Finalizar Control</span></button>');
+            }
+
+            botones.push('<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletos.verDetalle(' + data.Id + ')" title="Ver Detalle"><i class="fa fa-eye"></i><span class="tooltiptext">Ver Detalle</span></button>');
+
+            return '<div class="btn-group" role="group">' + botones.join(' ') + '</div>';
+        },
+
+        iniciarControl: function (id) {
+            this.procesarControlMasivo('iniciar', [id]);
+        },
+
+        finalizarControl: function (id) {
+            this.procesarControlMasivo('finalizar', [id]);
+        },
+
+        verDetalle: function (id) {
+            var url = config.urls.detalle + '/' + id;
+            window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
         }
-    }, 200);
-}
-
-$("#contratos-grid").on("change", "#select-all", function () {
-    var isChecked = $(this).is(":checked");
-    $("#contratos-grid").find("input.row-checkbox").prop("checked", isChecked);
-});
-
-function GestionarClausulas(negocioSAP) {
-    var tipoNegocioId = $("#ClaseNegocio").val();
-    // Validar el negocio
-    var url = '/Confirma/ValidarNegocio';
-    var data = {
-        NegocioSAP: negocioSAP
     };
-    var response = MSExecuteOnServer(url, data);
+})();
 
-    if (response && response.Mensaje == '') {
-        // Redireccionar si el negocio es válido
-        var redirectUrl = `/Confirma/GestionarClausulas?numeroSap=${encodeURIComponent(negocioSAP)}&tipoNegocio=${tipoNegocioId}`;
-        window.location.href = redirectUrl;
-    } else {
-        // Mostrar mensaje de error si el negocio no es válido
-        MensErr(response.Mensaje || "Ocurrió un error al intentar validar el Negocio.");
-    }
+// Función global para formatear fechas (necesaria para el template del grid)
+function formatearFecha(fecha) {
+    if (!fecha) return '';
+    var date = new Date(fecha);
+    return date.toLocaleDateString('es-AR');
 }
+
+// Inicializar cuando el DOM esté listo
+$(document).ready(function () {
+    try {
+        ControlBoletos.init();
+    } catch (error) {
+        console.error('Error inicializando Control de Boletos:', error);
+        alert('Error al inicializar la aplicación. Por favor, recargue la página.');
+    }
+});
+
+// Manejar errores globales
+window.addEventListener('error', function (e) {
+    console.error('Error global:', e.error);
+});

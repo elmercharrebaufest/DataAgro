@@ -368,6 +368,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.Dependencias.cs" />
     <Compile Include="App_Start\Startup.MvcAutofac.cs" />
+    <Content Include="Content\control-boletos.css" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Views\Home\Error.cshtml" />
