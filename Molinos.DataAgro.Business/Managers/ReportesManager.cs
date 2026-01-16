@@ -2027,7 +2027,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (fijaciones != null)
             {
-
+                foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
+                {
+                    item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
+                }
                 data.AddRange(fijaciones);
             }
 
