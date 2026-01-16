@@ -61,7 +61,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.MinutosCronometroConDescarga = oConfiguracion.MinutosCronometroConDescarga;
                 oConfiguracionSave.CantidadMaximaDiasNegocioConDescarga = oConfiguracion.CantidadMaximaDiasNegocioConDescarga;
                 oConfiguracionSave.PorcentajeVolumenNegocioConDescarga = oConfiguracion.PorcentajeVolumenNegocioConDescarga;
-                oConfiguracionSave.ExigirNegocioEnSolExt = oConfiguracion.ExigirNegocioEnSolExt;
                 oConfiguracionSave.ApiKeyScoringCupos = oConfiguracion.ApiKeyScoringCupos;
                 oConfiguracionSave.ExigirNegocioEnSolExt_Soja = oConfiguracion.ExigirNegocioEnSolExt_Soja;
                 oConfiguracionSave.ExigirNegocioEnSolExt_Maiz = oConfiguracion.ExigirNegocioEnSolExt_Maiz;

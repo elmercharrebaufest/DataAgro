@@ -547,78 +547,114 @@ function actualizarTiposNegociosExcluidos() {
     
 }
 
-$("body").on("change", '#vincularSolicitudExtraordinaria_soja', function () {
-    let valor = $("#vincularSolicitudExtraordinaria_soja").prop("checked");
-    $("#vincularSolicitudExtraordinaria_soja").prop("checked", !valor);
 
-    var datos = {
-        valor: valor,
-        type :"soja"
-    }
-    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-    if (result != null) {
+$("body").on(
+    "change",
+    "[id^='vincularSolicitudExtraordinaria_']",
+    function () {
+
+        const $checkbox = $(this);
+        const valor = $checkbox.prop("checked");
+
+        // Obtener el tipo desde el id
+        const type = this.id.split("_")[1];
+
+        // Revertimos el cambio hasta confirmar en el server
+        $checkbox.prop("checked", !valor);
+
+        const datos = {
+            type: type
+        };
+
+            valor: valor,
+        const result = MSExecuteOnServer(
+            "/Formula/VincularSolicitudExtraordinaria",
+            datos
+        );
+
+        if (!result) return;
+
         if (ExistsErrorMessages(result.Errores)) {
             ShowErrorMessages(result.Errores);
         } else {
-            $("#vincularSolicitudExtraordinaria_soja").prop("checked", valor);
+            $checkbox.prop("checked", valor);
             MensInfo("Actualización exitosa.");
         }
     }
-});
+);
 
-$("body").on("change", '#vincularSolicitudExtraordinaria_maiz', function () {
-    let valor = $("#vincularSolicitudExtraordinaria_maiz").prop("checked");
-    $("#vincularSolicitudExtraordinaria_maiz").prop("checked", !valor);
+//$("body").on("change", '#vincularSolicitudExtraordinaria_soja', function () {
+//    let valor = $("#vincularSolicitudExtraordinaria_soja").prop("checked");
+//    $("#vincularSolicitudExtraordinaria_soja").prop("checked", !valor);
 
-    var datos = {
-        valor: valor,
-        type : "maiz"
-    }
-    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowErrorMessages(result.Errores);
-        } else {
-            $("#vincularSolicitudExtraordinaria_maiz").prop("checked", valor);
-            MensInfo("Actualización exitosa.");
-        }
-    }
-});
+//    var datos = {
+//        valor: valor,
+//        type :"soja"
+//    }
+//    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
+//    if (result != null) {
+//        if (ExistsErrorMessages(result.Errores)) {
+//            ShowErrorMessages(result.Errores);
+//        } else {
+//            $("#vincularSolicitudExtraordinaria_soja").prop("checked", valor);
+//            MensInfo("Actualización exitosa.");
+//        }
+//    }
+//});
 
-$("body").on("change", '#vincularSolicitudExtraordinaria_trigo', function () {
-    let valor = $("#vincularSolicitudExtraordinaria_trigo").prop("checked");
-    $("#vincularSolicitudExtraordinaria_trigo").prop("checked", !valor);
+//$("body").on("change", '#vincularSolicitudExtraordinaria_maiz', function () {
+//    let valor = $("#vincularSolicitudExtraordinaria_maiz").prop("checked");
+//    $("#vincularSolicitudExtraordinaria_maiz").prop("checked", !valor);
 
-    var datos = {
-        valor: valor,
-        type : "trigo"
-    }
-    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowErrorMessages(result.Errores);
-        } else {
-            $("#vincularSolicitudExtraordinaria_trigo").prop("checked", valor);
-            MensInfo("Actualización exitosa.");
-        }
-    }
-});
+//    var datos = {
+//        valor: valor,
+//        type : "maiz"
+//    }
+//    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
+//    if (result != null) {
+//        if (ExistsErrorMessages(result.Errores)) {
+//            ShowErrorMessages(result.Errores);
+//        } else {
+//            $("#vincularSolicitudExtraordinaria_maiz").prop("checked", valor);
+//            MensInfo("Actualización exitosa.");
+//        }
+//    }
+//});
 
-$("body").on("change", '#vincularSolicitudExtraordinaria_girasol', function () {
-    let valor = $("#vincularSolicitudExtraordinaria_girasol").prop("checked");
-    $("#vincularSolicitudExtraordinaria_girasol").prop("checked", !valor);
+//$("body").on("change", '#vincularSolicitudExtraordinaria_trigo', function () {
+//    let valor = $("#vincularSolicitudExtraordinaria_trigo").prop("checked");
+//    $("#vincularSolicitudExtraordinaria_trigo").prop("checked", !valor);
 
-    var datos = {
-        valor: valor,
-        type : "girasol"
-    }
-    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowErrorMessages(result.Errores);
-        } else {
-            $("#vincularSolicitudExtraordinaria_girasol").prop("checked", valor);
-            MensInfo("Actualización exitosa.");
-        }
-    }
-});
+//    var datos = {
+//        valor: valor,
+//        type : "trigo"
+//    }
+//    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
+//    if (result != null) {
+//        if (ExistsErrorMessages(result.Errores)) {
+//            ShowErrorMessages(result.Errores);
+//        } else {
+//            $("#vincularSolicitudExtraordinaria_trigo").prop("checked", valor);
+//            MensInfo("Actualización exitosa.");
+//        }
+//    }
+//});
+
+//$("body").on("change", '#vincularSolicitudExtraordinaria_girasol', function () {
+//    let valor = $("#vincularSolicitudExtraordinaria_girasol").prop("checked");
+//    $("#vincularSolicitudExtraordinaria_girasol").prop("checked", !valor);
+
+//    var datos = {
+//        valor: valor,
+//        type : "girasol"
+//    }
+//    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
+//    if (result != null) {
+//        if (ExistsErrorMessages(result.Errores)) {
+//            ShowErrorMessages(result.Errores);
+//        } else {
+//            $("#vincularSolicitudExtraordinaria_girasol").prop("checked", valor);
+//            MensInfo("Actualización exitosa.");
+//        }
+//    }
+//});
