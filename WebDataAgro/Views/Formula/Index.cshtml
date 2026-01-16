@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = "Algoritmo de Cupos";
-    var vincularActivo = (bool)ViewBag.Vincular;
+    var vincular_SojaActivo = (bool)ViewBag.Vincular_Soja;
+    var vincular_MaizActivo = (bool)ViewBag.Vincular_Maiz;
+    var vincular_TrigoActivo = (bool)ViewBag.Vincular_Trigo;
+    var vincular_GirasolActivo = (bool)ViewBag.Vincular_Girasol;
 }
 @section Scripts {
     @Scripts.Render("~/bundles/AbmFormula")
@@ -22,11 +25,41 @@
         </div>
         @if (PermisosHelper.Is(PermisosDataAgro.VincularNegocioConSolExt))
         {
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <label>Vincular Solic. Extraord. con Negocio</label>
-            </div>
-            <div class="col-sm-1">
-                @Html.CheckBox("vincularSolicitudExtraordinaria", vincularActivo)
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <label>Soja</label>
+                        </div>
+                        <div class="col-sm-1">
+                            @Html.CheckBox("vincularSolicitudExtraordinaria_soja", vincular_SojaActivo)
+                        </div>
+                    <div class="col-sm-2">
+                            <label>Maiz</label>
+                        </div>
+                        <div class="col-sm-1">
+                            @Html.CheckBox("vincularSolicitudExtraordinaria_maiz", vincular_MaizActivo)
+                        </div>
+                   <div class="col-sm-2">
+                            <label>Trigo</label>
+                        </div>
+                        <div class="col-sm-1">
+                            @Html.CheckBox("vincularSolicitudExtraordinaria_trigo", vincular_TrigoActivo)
+                        </div>
+                    <div class="col-sm-2">
+                            <label>Girasol</label>
+                        </div>
+                        <div class="col-sm-1">
+                            @Html.CheckBox("vincularSolicitudExtraordinaria_girasol", vincular_GirasolActivo)
+                        </div>
+
+
+
+
+
+
+
+                </div>
             </div>
         }
     </div>

@@ -42,7 +42,10 @@ namespace WebDataAgro.Models
         public int MinutosCronometroConDescarga { get; set; }
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
-        public bool ExigirNegocioEnSolExt { get; set; }
+        public bool ExigirNegocioEnSolExt_Soja { get; set; }
+        public bool ExigirNegocioEnSolExt_Maiz { get; set; }
+        public bool ExigirNegocioEnSolExt_Trigo { get; set; }
+        public bool ExigirNegocioEnSolExt_Girasol { get; set; }
         public string ApiKeyScoringCupos { get; set; }
     }
 }
