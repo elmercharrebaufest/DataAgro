@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IControlDeBoletosManager
     {
-        Resultado RegistroContratoDA(int negocioId);
+        Resultado RegistroContratoPendienteDeControl(int negocioId, int? identificadorConfirma = null);
         Resultado AsociarConfirma(int negocioId);
     }
 }

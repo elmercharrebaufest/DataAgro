@@ -18,9 +18,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool EsConfirma { get; set; }
         public int? IdentificadorConfirma { get; set; }
         public DateTime FechaCreacion { get; set; }
-        public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public string UsuarioModificacion { get; set; }
+        public int? EstadoConfirmaId { get; set; }
+
+
 
         public bool ControlIniciado { get; set; }
         public bool ControlFinalizado { get; set; }

@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Clausulas;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
@@ -42,13 +43,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent;
         private readonly IServicioClausulasConfirma servicioClausulaConfirma;
         private readonly IServicioClausulasGenericos servicioClausulasGenericos;
+        private readonly IControlDeBoletosManager controlDeBoletosManager;
         private readonly string pathConfirmas;
         private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
             IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
             IServicioClausulas servicioClausula, IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent, 
-            IServicioClausulasConfirma servicioClausulaConfirma, IServicioClausulasGenericos servicioClausulasGenericos)
+            IServicioClausulasConfirma servicioClausulaConfirma, IServicioClausulasGenericos servicioClausulasGenericos, IControlDeBoletosManager controlDeBoletosManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -62,6 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulaConfirma = servicioClausulaConfirma;
             pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
             this.servicioClausulasGenericos = servicioClausulasGenericos;
+            this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -279,6 +282,10 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;
+
+                                        //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, nuevoConfirma.Id);
+
                                     }
                                     else
                                     {

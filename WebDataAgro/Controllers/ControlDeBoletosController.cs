@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Newtonsoft.Json;
 
 namespace WebDataAgro.Controllers
 {
@@ -10,9 +14,16 @@ namespace WebDataAgro.Controllers
     {
         // TODO: Inyectar servicios reales
         // private readonly IBoletoService _boletoService;
-        // private readonly IMaterialService _materialService;
+        private readonly IMaterialManager _materialManager;
+        private readonly IControlDeBoletosEstadoManager _controlDeBoletosEstadoManager;
         // private readonly IEstadoService _estadoService;
         // private readonly IComercialService _comercialService;
+
+        public ControlDeBoletosController(IMaterialManager materialManager, IControlDeBoletosEstadoManager controlDeBoletosEstadoManager)
+        {
+            this._materialManager = materialManager;
+            this._controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
+        }
 
         public ActionResult Index()
         {
@@ -34,18 +45,17 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                // TODO: Reemplazar con tu servicio real
-                var materiales = new List<object>
-                {
-                    new { Value = "1", Text = "Soja" },
-                    new { Value = "2", Text = "Maíz" },
-                    new { Value = "3", Text = "Trigo" },
-                    new { Value = "4", Text = "Girasol" },
-                    new { Value = "5", Text = "Sorgo" },
-                    new { Value = "6", Text = "Cebada" }
-                };
+                var material = _materialManager.TraerTodoMaterial();
+                var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+                ViewBag.Material = materialesListItems;
 
-                return Json(materiales, JsonRequestBehavior.AllowGet);
+                return Json(materialesListItems, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -60,15 +70,17 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var estados = new List<object>
-                {
-                    new { Value = "1", Text = "Pendiente" },
-                    new { Value = "2", Text = "En Proceso" },
-                    new { Value = "3", Text = "Completado" },
-                    new { Value = "4", Text = "Certificado" }
-                };
+                var listaEstados = this._controlDeBoletosEstadoManager.ListarTodo();
+                var estadoItems = listaEstados.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value
+                    );
 
-                return Json(estados, JsonRequestBehavior.AllowGet);
+                return Json(estadoItems, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

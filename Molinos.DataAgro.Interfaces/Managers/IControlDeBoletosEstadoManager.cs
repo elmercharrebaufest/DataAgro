@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IControlDeBoletosEstadoManager
     {
+        List<ControlDeBoletosEstadoDto> ListarTodo();
     }
 }

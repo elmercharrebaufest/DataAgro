@@ -1,5 +1,4 @@
-﻿using NLog;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.css;
@@ -19,8 +18,10 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Clausulas;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -48,13 +49,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulasCartaOferta servicioClausulasCartaOferta;
         private readonly IServicioClausulasBoletoFisico servicioClausulasBoletoFisico;
         private readonly IServicioClausulasGenericos servicioClausulasGenericos;
+        private readonly IControlDeBoletosManager controlDeBoletosManager;
 
         private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public BoletoManager(IRepositorio repositorio, ILogger logger, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
             IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
             IStatusContratoAgent status, IServicioClausulas servicioClausula, IServicioClausulasCartaOferta servicioClausulasCartaOferta,
-            IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos)
+            IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos, IControlDeBoletosManager controlDeBoletosManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -67,6 +69,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulasBoletoFisico = servicioClausulasBoletoFisico;
             this.servicioClausulasGenericos = servicioClausulasGenericos;
             this.status = status;
+            this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, BoletoDto boletoContrato, List<int> equipo)
@@ -162,6 +165,9 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoDto.Generado = true;
                             boletoDto.Mensaje = "El boleto se generó correctamente.";
                             boletoResult.BoletosDto.Add(boletoDto);
+
+                            // 6. SEXTO: Registrar Control de Boleto
+                            controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
                         }
                         catch (IOException ioEx)
                         {

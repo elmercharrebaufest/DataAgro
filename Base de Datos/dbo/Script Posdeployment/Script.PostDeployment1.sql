@@ -1183,39 +1183,38 @@ begin
  insert into EstadoConfirma(Codigo,Descripcion) values (9, 'Excluído porTiempo Excedido')
 end
 
-
 --Estado ControlDeBoletos
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 1)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Pendiente')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (1, 'Pendiente')
+ insert into ControlDeBoletosEstado(Descripcion) values ('Pendiente')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 2)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Proceso')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (2, 'En Proceso')
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Proceso')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 3)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Oblea')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (3, 'En Oblea')
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Oblea')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 4)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Certificacion')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (4, 'En Certificacion')
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Certificacion')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 5)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Enviado Afip / Arca')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (5, 'Enviado Afip / Arca')
+ insert into ControlDeBoletosEstado(Descripcion) values ('Enviado Afip / Arca')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 6)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Finalizado')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (6, 'Finalizado')
+ insert into ControlDeBoletosEstado(Descripcion) values ('Finalizado')
 end
 
-if not exists(select 1 from ControlDeBoletosEstado where Codigo = 7)
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Anulado')
 begin
- insert into ControlDeBoletosEstado(Codigo,Descripcion) values (7, 'Anulado')
+ insert into ControlDeBoletosEstado(Descripcion) values ('Anulado')
 end

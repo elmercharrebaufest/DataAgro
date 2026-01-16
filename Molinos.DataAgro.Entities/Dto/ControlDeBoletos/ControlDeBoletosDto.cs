@@ -14,9 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public bool EsConfirma { get; set; }
         public int? IdentificadorConfirma { get; set; }
         public DateTime FechaCreacion { get; set; }
-        public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
-        public string UsuarioModificacion { get; set; }
         // Campos BIT para control de procesos
         public bool ControlIniciado { get; set; }
         public bool ControlFinalizado { get; set; }
