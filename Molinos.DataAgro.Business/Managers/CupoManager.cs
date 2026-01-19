@@ -5222,6 +5222,18 @@ namespace Molinos.DataAgro.Business.Managers
                 var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
                 var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
                 Negocio negocioAsociado = new Negocio();
+                var material = solicitud.MaterialId;
+                bool esMaterialConExigencia =
+                (material == (int)EnumMateriales.SOJA && datosConfiguracion.ExigirNegocioEnSolExt_Soja == true) ||
+                (material == (int)EnumMateriales.MAIZ && datosConfiguracion.ExigirNegocioEnSolExt_Maiz == true) ||
+                (material == (int)EnumMateriales.TRIGO && datosConfiguracion.ExigirNegocioEnSolExt_Trigo == true) ||
+                (material == (int)EnumMateriales.GIRASOL && datosConfiguracion.ExigirNegocioEnSolExt_Girasol == true);
+
+                bool proveedorExcluido =
+                solicitud.Proveedor.Contains("30715118773") ||
+                solicitud.Proveedor.Contains("30500858628");//no se vincula a un negocio cuando el proveedor es MOA
+
+
                 if (solicitud.NegocioId.HasValue)
                 {
                     if (solicitud.CantidadCupo > solicitud.CuposRestantes)
@@ -5233,8 +5245,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                         negocioAsociado = repositorio.Obtener<Negocio>(x => x.Id == solicitud.NegocioId && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
                 }
-                else if (datosConfiguracion.ExigirNegocioEnSolExt.HasValue && datosConfiguracion.ExigirNegocioEnSolExt.Value && solicitud.Fason != true
-                    && !solicitud.Proveedor.Contains("30715118773") && !solicitud.Proveedor.Contains("30500858628")) //no se vincula a un negocio cuando el proveedor es MOA
+                else if (esMaterialConExigencia && solicitud.Fason != true && !proveedorExcluido) 
                 {
                     result.Error("VincularNegocio", "Debe vincular la solicitud a un negocio completando el campo 'N° de Contrato'.");
                     return result;

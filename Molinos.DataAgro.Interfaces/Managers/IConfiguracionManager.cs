@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         Configuracion TraerConfiguraciones();
         Resultado GrabarFechaPesificacionDolarizado(Configuracion oConfiguracion);
-        Resultado SetExigirNegocioEnSolExt(bool valor);
+        Resultado SetExigirNegocioEnSolExt(bool valor ,string type);
 
     }
 }
