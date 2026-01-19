@@ -20,7 +20,6 @@
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
 
-	<!-- Para S4: Inicio2025! - Para R3: Data2015 -->
 	<setParameter name="SapPass Key" value="Inicio2025!" />
 
 	<setParameter name="SinConexionSap Key" value="0" />
