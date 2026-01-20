@@ -287,7 +287,7 @@ namespace Molinos.DataAgro.Entities.Helpers
 
         public static void TruncateTime<T>(Filter filter, ref IQueryable<T> queryable)
         {
-            if (filter != null)
+            if (filter != null && filter.Filters != null)
             {
                 var filters = filter.Filters;
                 for (int i = 0; i < filters.Count(); i++)
