@@ -2627,10 +2627,6 @@ function GrabarContrato(nuevoContrato) {
         }
         else {
 
-            //detenerIntervalo();
-            //LiberarPantalla();
-            //dataTabla = [];
-
             if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
                 var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
                 var primero = siguientesObj.shift();
