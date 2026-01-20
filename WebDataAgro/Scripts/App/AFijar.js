@@ -2603,9 +2603,11 @@ function GrabarContrato(nuevoContrato) {
             }
         }
 
-        detenerIntervalo();
-        LiberarPantalla();
-        dataTabla = [];
+        if (result != null && !ExistsErrorMessages(result.Errores)) {
+            detenerIntervalo();
+            LiberarPantalla();
+            dataTabla = [];
+        }
 
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
@@ -2624,6 +2626,11 @@ function GrabarContrato(nuevoContrato) {
             $.unblockUI();
         }
         else {
+
+            //detenerIntervalo();
+            //LiberarPantalla();
+            //dataTabla = [];
+
             if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
                 var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
                 var primero = siguientesObj.shift();
