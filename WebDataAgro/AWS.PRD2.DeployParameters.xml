@@ -16,7 +16,7 @@
 	<setParameter name="CredentialUserNamePesificados Key" value="materias.primas@molinosagro.com.ar" />
 	<setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
 	<setParameter name="EmailAgenda Key" value="0" />
-	<setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
+	<setParameter name="EmailInformeComercial Key" value="documentacion@molinosagro.com.ar" />
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
 
@@ -25,10 +25,7 @@
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
 	<setParameter name="SAPsinPI Key" value="1" />
-	<setParameter name="AmbientePruebas Key" value="1" />
-	<setParameter name="AmbienteStaging Key" value="0" />
-	<setParameter name="AmbienteUATMOA Key" value="1" />
-	<setParameter name="AmbienteUATDA Key" value="0" />
+	<setParameter name="AmbientePruebas Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />
 
 	<setParameter name="Rg2300 Key" value="\\sapshareprd\share\ftproot\transf\matprim\RG2300.LST" />
@@ -38,104 +35,102 @@
 	<setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
 	<setParameter name="ServicePass Key" value="MOA.Test" />
 
-	<setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
+	<setParameter name="UrlBaseSTOP Key" value="https://www.ssta.gob.ar/turnos/" />
 	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
-	<setParameter name="UrlBaseDataAgro Key" value="https://test.DataAgro.com.ar/" />
-	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
+	<setParameter name="UrlBaseDataAgro Key" value="https://DataAgro.com.ar/" />
+	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperaciones.com.ar/" />
 
-	<!--Parametro para nueva version de boletos-->
-	<setParameter name="BoletosNuevaVersion Key" value="1" />
-
-	<!--Primary Producción-->
-	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
+	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
-	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />-->
-	<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
-	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
-	<setParameter name="PassPrimary Key" value="Demo2024" />
+	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />
 
 	<setParameter name="ActivarBLEND Key" value="No" />
 
-	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
-	<setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMAS\" />
+	<setParameter name="PathBoletos Key" value="\\MOAFS\SHARE\MATERIAS_PRIMAS\CONTRATOSGAP\" />
+	<setParameter name="PathConfirmas Key" value="\\MOAFS\SHARE\MATERIAS_PRIMAS\XML_BACKUP\" />
+	<setParameter name="LibraryNameResearch Key" value="Datos research" />
 
 	<setParameter name="ConfirmaUser Key" value="molinosagro" />
 	<setParameter name="ConfirmaPass Key" value="molinosagro" />
 	<setParameter name="ValorPruebaConfirma Key" value="0" />
-	<setParameter name="ActivarConfirmaWS Key" value="1" />
-	<setParameter name="PruebaRapidaDeConfirma Key" value="0" />
+	<setParameter name="ActivarConfirmaWS Key" value="0" />
 	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
 	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
 	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
+
+	<!--Parametro para nueva version de boletos-->
+	<setParameter name="BoletosNuevaVersion Key" value="1" />
 	<setParameter name="ActivarSojaEUDR Key" value="No" />
 
-	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://gsloscatoapq01.molinosagro.ad/Scato.serviciosWeb/ServicioRepositorio.svc" />
+	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scato.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://vhmgkgapci.sap.molinosagro.ad:44300/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />
 
-	<setParameter name="HTTP_Port Service Endpoint Address"  value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port1 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port2 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port3 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port4 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_PRE_SLIP&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port5 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port6 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port7 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port8 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port9 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port10 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CREAR_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port11 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULAR_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port12 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port13 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port14 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CUPO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port15 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port16 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_PRECIO_PIZARRA&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port17 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port18 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port19 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CD_WARRANTS&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port20 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port21 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port22 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port23 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port24 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ADMIN_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port25 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port26 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_CREDITO&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port27 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port28 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port29 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port30 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port31 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REG_ORD_PROCESAMIENTO&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port32 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port33 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_CANT_ACUERDO&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port34 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CAPAC_PRODUCTIVA_DISPO&amp;interfaceNamespace=namespace%3Adataagro"  />
-	<setParameter name="HTTP_Port35 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port36 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port37 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENE&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port38 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOS&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port39 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLET&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port41 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port43 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_OBTENER_MAILS&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port44 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_COMISIONES&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port45 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_FINAL&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port46 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_PARCIAL&amp;interfaceNamespace=namespace%3Adataagro"/>
-	<setParameter name="HTTP_Port47 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONES&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
-	<setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port Service Endpoint Address"  value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port1 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port2 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port3 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port4 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_PRE_SLIP&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port5 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port6 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port7 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port8 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port9 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port10 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CREAR_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port11 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULAR_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port12 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port13 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port14 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CUPO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port15 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port16 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_PRECIO_PIZARRA&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port17 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port18 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port19 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CD_WARRANTS&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port20 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port21 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port22 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port23 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port24 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ADMIN_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"  />
+	<setParameter name="HTTP_Port25 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port26 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_CREDITO&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port27 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro"  />
+	<setParameter name="HTTP_Port28 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR&amp;interfaceNamespace=namespace%3Adataagro"  />
+	<setParameter name="HTTP_Port29 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro"  />
+	<setParameter name="HTTP_Port30 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro"  />
 
-	<setParameter name="Default Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
-	<setParameter name="Default1 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
-	<setParameter name="Default2 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
-	<setParameter name="Default3 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
-	<setParameter name="Default4 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
-	<setParameter name="Default5 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
-	<setParameter name="Default6 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
-	<setParameter name="Default7 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
-	<setParameter name="Default8 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
-	<setParameter name="Default9 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
-	<setParameter name="Default10 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
-	<setParameter name="Default11 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
+	<!--<setParameter name="HTTP_Port31 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REG_ORD_PROCESAMIENTO&amp;interfaceNamespace=namespace%3Adataagro"  />
+  <setParameter name="HTTP_Port32 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS&amp;interfaceNamespace=namespace%3Adataagro"  />
+  <setParameter name="HTTP_Port33 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_CANT_ACUERDO&amp;interfaceNamespace=namespace%3Adataagro"  />-->
+
+	<setParameter name="HTTP_Port34 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CAPAC_PRODUCTIVA_DISPO&amp;interfaceNamespace=namespace%3Adataagro"  />
+	<setParameter name="HTTP_Port35 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ANULAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port36 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port37 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENE&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port38 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOS&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port39 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLET&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port41 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port43 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_OBTENER_MAILS&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port44 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_COMISIONES&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port45 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_FINAL&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port46 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_PARCIAL&amp;interfaceNamespace=namespace%3Adataagro"/>
+	<setParameter name="HTTP_Port47 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONES&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port49 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
+	<setParameter name="HTTP_Port50 Service Endpoint Address" value="http://gslopiprd00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA&amp;interfaceNamespace=namespace%3Adataagro" />
+
+	<setParameter name="Default Endpoint Confirma" value="https://services.confirma.com.ar/LoteDocumentosService.svc" />
+	<setParameter name="Default1 Endpoint Confirma" value="https://services.confirma.com.ar/LoteDocumentosAsyncService.svc" />
+	<setParameter name="Default2 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaLoteService.svc" />
+	<setParameter name="Default3 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" />
+	<setParameter name="Default4 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
+	<setParameter name="Default5 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" />
+	<setParameter name="Default6 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosService.svc" />
+	<setParameter name="Default7 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
+	<setParameter name="Default8 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaEmpresasService.svc" />
+	<setParameter name="Default9 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
+	<setParameter name="Default10 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
+	<setParameter name="Default11 Endpoint Confirma" value="https://services.confirma.com.ar/LoteBorradorService.svc" />
 </parameters>
