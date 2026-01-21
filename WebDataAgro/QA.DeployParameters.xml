@@ -46,13 +46,14 @@
 	<!--Parametro para nueva version de boletos-->
 	<setParameter name="BoletosNuevaVersion Key" value="1" />
 
-	<!--Primary Producción-->
-	<!--<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
+	<!-- Primary Producción -->
+	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
-	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />-->
-	<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
+	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
+	<!-- Primary Prueba -->
+	<!--<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
-	<setParameter name="PassPrimary Key" value="Demo2024" />
+	<setParameter name="PassPrimary Key" value="Demo2024" />-->
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />

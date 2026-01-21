@@ -42,6 +42,7 @@
 	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
 	<setParameter name="UrlBaseDataAgro Key" value="https://DataAgro.com.ar/" />
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperaciones.com.ar/" />
+
 	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
 	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
