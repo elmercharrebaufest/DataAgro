@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -14,15 +15,15 @@ namespace WebDataAgro.Controllers
     {
         // TODO: Inyectar servicios reales
         // private readonly IBoletoService _boletoService;
-        private readonly IMaterialManager _materialManager;
         private readonly IControlDeBoletosEstadoManager _controlDeBoletosEstadoManager;
+        private readonly IControlDeBoletosManager _controlDeBoletosManager;
         // private readonly IEstadoService _estadoService;
         // private readonly IComercialService _comercialService;
 
-        public ControlDeBoletosController(IMaterialManager materialManager, IControlDeBoletosEstadoManager controlDeBoletosEstadoManager)
+        public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager)
         {
-            this._materialManager = materialManager;
             this._controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
+            this._controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public ActionResult Index()
@@ -45,8 +46,8 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var material = _materialManager.TraerTodoMaterial();
-                var materialesListItems = material.Material.Select(
+                var material = _controlDeBoletosManager.GetMaterial();
+                var materialesListItems = material.Select(
                     x => new SelectListItem
                     {
                         Text = x.Descripcion,
@@ -90,20 +91,68 @@ namespace WebDataAgro.Controllers
 
         [HttpGet]
         [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetBolsaCompraNet()
+        {
+            try
+            {
+                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                var estadoItems = listaEstados.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value
+                    );
+
+                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetComerciales()
         {
             try
             {
-                var comerciales = new List<object>
-                {
-                    new { Value = "1", Text = "Juan Pérez" },
-                    new { Value = "2", Text = "María García" },
-                    new { Value = "3", Text = "Carlos López" },
-                    new { Value = "4", Text = "Ana Martínez" },
-                    new { Value = "5", Text = "Luis Rodríguez" }
-                };
 
-                return Json(comerciales, JsonRequestBehavior.AllowGet);
+                var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
+
+                var comercialesListItems = comercial.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Apellido,
+                        Value = x.ComercialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+                return Json(comercialesListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetProveedores()
+        {
+            try
+            {
+                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x=> x.RazonSocial);
+                var proveedoresListItems = proveedores.Select(comercial =>
+                    new SelectListItem
+                    {
+                        Text = comercial.RazonSocial,
+                        Value = comercial.ProveedorId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+
+                return Json(proveedoresListItems, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -262,8 +311,53 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        #region Métodos Privados
 
+        [HttpGet]
+        public JsonResult GetTrackingBoleto(int controlDeBoletosId)
+        {
+            try
+            {
+                var result = new
+                {
+                    Data = new List<object>(),
+                    Total = 0
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+
+                #region Vistas Parciales
+                [HttpGet]
+        public PartialViewResult _ModificarDatosDelContrato(int id)
+        {
+            var model = new ModificarControlBoletoViewModel
+            {
+                Id = id
+                // Si quieres, aquí puedes precargar datos del boleto
+            };
+
+            return PartialView("_ModificarDatosDelContrato", model);
+        }
+        [HttpGet]
+        public PartialViewResult _TrackingControlDeBoletos(int id)
+        {
+            ViewBag.ControlDeBoletosId = id;
+            return PartialView("_TrackingControlDeBoletos");
+        }
+
+        #endregion
+
+        #region Métodos Privados
         private List<BoletoViewModel> GenerarDatosEjemplo()
         {
             var random = new Random();
@@ -377,6 +471,16 @@ namespace WebDataAgro.Controllers
     }
 
     #region ViewModels y DTOs
+    public class ModificarControlBoletoViewModel
+    {
+        public int Id { get; set; }
+        public string ImProvincia { get; set; }
+        public string ImClasificacion { get; set; }
+        public string ImCosecha { get; set; }
+        public string ImProcedencia { get; set; }
+        public DateTime? ImFecha { get; set; }
+        public TimeSpan? ImHora { get; set; }
+    }
 
     public class BoletoViewModel
     {

@@ -321,6 +321,7 @@
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosEstadoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosPreCertificacionDto.cs" />
     <Compile Include="Dto\InicializarContratoDto.cs" />
     <Compile Include="Dto\KendoDataSourceRequestDto.cs" />
     <Compile Include="Dto\KendoDataSourceResultDto.cs" />
@@ -711,6 +712,7 @@
     <Compile Include="Entities\ConfirmaAltaEstadoLote.cs" />
     <Compile Include="Entities\ControlDeBoletos.cs" />
     <Compile Include="Entities\ControlDeBoletosEstado.cs" />
+    <Compile Include="Entities\ControlDeBoletosPreCertificacion.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\CriterioScoreCupos.cs" />

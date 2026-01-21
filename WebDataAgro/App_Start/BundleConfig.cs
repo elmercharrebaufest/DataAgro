@@ -333,6 +333,8 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletos").Include(
                                        "~/Scripts/App/Filtros.js",
                                        "~/Scripts/App/ControlDeBoletos.js",
+                                       "~/Scripts/App/ControlDeBoletosModificarContrato.js",
+                                       "~/Scripts/App/ControlDeBoletosTracking.js",
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
                                        ));

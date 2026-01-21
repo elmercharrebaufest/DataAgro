@@ -54,19 +54,19 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
-                listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
-                {
-                    Id = x.Id,
-                    Material = x.Material.Descripcion,
-                    MaterialId = x.MaterialId,
-                    Campana = x.Campana.Descripcion,
-                    Toneladas = x.ToneladasObjetivos,
-                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                    ComercialId = x.ComercialId,
-                    GrupoDeComprasId = x.GrupoDeComprasId
-                }, x => equipo.Contains(x.ComercialId)
-                && (idComercial == null || idComercial == x.ComercialId)
-                && campañaAñoFiscal.CampañaId == x.CampanaId);
+                //listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+                //{
+                //    Id = x.Id,
+                //    Material = x.Material.Descripcion,
+                //    MaterialId = x.MaterialId,
+                //    Campana = x.Campana.Descripcion,
+                //    Toneladas = x.ToneladasObjetivos,
+                //    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                //    ComercialId = x.ComercialId,
+                //    GrupoDeComprasId = x.GrupoDeComprasId
+                //}, x => equipo.Contains(x.ComercialId)
+                //&& (idComercial == null || idComercial == x.ComercialId)
+                //&& campañaAñoFiscal.CampañaId == x.CampanaId);
                 //&& (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId);
             }
 

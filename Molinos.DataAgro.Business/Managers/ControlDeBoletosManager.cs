@@ -31,6 +31,30 @@ namespace Molinos.DataAgro.Business.Managers
             throw new NotImplementedException();
         }
 
+        public List<BolsaCompraNetQry> GetBolsaCompraNet()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetBolsaCompraNet();
+        }
+
+        public List<ComercialCombo> GetComercial()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetAbmComercialCombo();
+        }
+
+        public List<MaterialCombo> GetMaterial()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetAbmMaterialCombo();
+        }
+
+        public List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo)
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetProveedorPorComercialCombo(equipo);
+        }
+
         public Resultado RegistroContratoPendienteDeControl(int negocioId, int? identificadorConfirma = null)
         {
             var oResultado = new Resultado();
@@ -56,5 +80,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oResultado;
         }
+    
+    
+    
     }
 }

@@ -33,7 +33,7 @@
         <div class="card-body">
             <!-- First Row -->
             <div class="row form-row">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Contrato SAP</label>
                         <div class="filter-espacio-input">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Material</label>
                         <select id="materialId" class="form-control">
@@ -50,7 +50,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Estado de Control</label>
                         <select id="estadoControlId" class="form-control">
@@ -58,7 +58,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Tipo de Boleto</label>
                         <div class="custom-control custom-checkbox mt-2">
@@ -71,25 +71,35 @@
 
             <!-- Second Row -->
             <div class="row form-row">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha de Envío Desde</label>
                         <input id="fechaCargaDesde" class="form-control" type="date" />
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha de Envío Hasta</label>
                         <input id="fechaCargaHasta" class="form-control" type="date" />
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Proveedor</label>
-                        <input type="text" id="proveedorFiltro" class="form-control" placeholder="Buscar por CUIT o razón social" maxlength="100" />
+                        <label class="form-label">Bolsa</label>
+                        <select id="bolsaCompraNetId" class="form-control">
+                            <option value="">Cargando Bolsas...</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Proveedor</label>
+                        <select id="proveedorId" class="form-control">
+                            <option value="">Cargando proveedores...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Comercial</label>
                         <select id="comercialId" class="form-control">
@@ -247,3 +257,27 @@
         </div>
     </div>
 </div>
+
+<!--Modal tracking boletos-->
+<div id="modalTrackingBoleto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tracking del Boleto</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalTrackingBoletoBody">
+                <!-- Partial View -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@* Modal para modificar contrato *@
+@Html.Partial("_ModificarDatosDelContrato")
+@Html.Partial("_TrackingControlDeBoletos")

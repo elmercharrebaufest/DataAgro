@@ -12,5 +12,10 @@ namespace Molinos.DataAgro.Interfaces.Managers
     {
         Resultado RegistroContratoPendienteDeControl(int negocioId, int? identificadorConfirma = null);
         Resultado AsociarConfirma(int negocioId);
+
+        List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo);
+        List<MaterialCombo> GetMaterial();
+        List<ComercialCombo> GetComercial();
+        List<BolsaCompraNetQry> GetBolsaCompraNet();
     }
 }

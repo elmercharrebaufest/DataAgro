@@ -368,6 +368,8 @@
     <Build Include="dbo\Tables\ControlDeBoletosEstado.sql" />
     <Build Include="dbo\Tables\ControlDeBoletos.sql" />
     <Build Include="dbo\Tables\EstadoConfirma.sql" />
+    <Build Include="dbo\Tables\ControlDeBoletosPreCertificacion.sql" />
+    <Build Include="dbo\Tables\ControlDeBoletosTracking.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

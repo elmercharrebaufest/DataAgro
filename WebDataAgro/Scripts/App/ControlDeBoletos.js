@@ -7,6 +7,8 @@ var ControlBoletos = (function () {
             getMateriales: '/ControlDeBoletos/GetMateriales',
             getEstados: '/ControlDeBoletos/GetEstadosControl',
             getComerciales: '/ControlDeBoletos/GetComerciales',
+            getProveedores: '/ControlDeBoletos/GetProveedores',
+            getBolsaCompraNet: '/ControlDeBoletos/GetBolsaCompraNet',
             getBoletos: '/ControlDeBoletos/GetBoletos',
             getContadores: '/ControlDeBoletos/GetContadores',
             controlMasivo: '/ControlDeBoletos/ControlMasivo',
@@ -98,6 +100,9 @@ var ControlBoletos = (function () {
             cargarDropdown(config.urls.getMateriales, '#materialId', 'Cargando...', 'Todos los materiales');
             cargarDropdown(config.urls.getEstados, '#estadoControlId', 'Cargando...', 'Todos los estados');
             cargarDropdown(config.urls.getComerciales, '#comercialId', 'Cargando...', 'Todos los comerciales');
+            cargarDropdown(config.urls.getProveedores, '#proveedorId', 'Cargando...', 'Todos los proveedores');
+            cargarDropdown(config.urls.getBolsaCompraNet, '#bolsaCompraNetId', 'Cargando...', 'Todas las Bolsas');
+
         },
 
         configurarEventos: function () {
@@ -350,7 +355,7 @@ var ControlBoletos = (function () {
                 esConfirma: $('#esConfirma').is(':checked'),
                 fechaCargaDesde: $('#fechaCargaDesde').val(),
                 fechaCargaHasta: $('#fechaCargaHasta').val(),
-                proveedor: $('#proveedorFiltro').val().trim(),
+                proveedor: $('#proveedorId').val().trim(),
                 comercialId: $('#comercialId').val()
             };
         },
@@ -398,7 +403,7 @@ var ControlBoletos = (function () {
             $('#materialId, #estadoControlId, #comercialId').val('');
             $('#esConfirma').prop('checked', false);
             $('#fechaCargaDesde, #fechaCargaHasta').val('');
-            $('#proveedorFiltro').val('');
+            $('#proveedorId').val('');
 
             this.filtrarBoletos();
         },
@@ -606,7 +611,8 @@ var ControlBoletos = (function () {
             }
 
             botones.push('<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletos.verDetalle(' + data.Id + ')" title="Ver Detalle"><i class="fa fa-eye"></i><span class="tooltiptext">Ver Detalle</span></button>');
-
+            botones.push('<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlBoletosModificacion.abrir(' + data.Id + ')" title="Modificar Contrato"><i class="fa fa-edit"></i><span class="tooltiptext">Modificar Contrato</span></button>');
+            botones.push('<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' + data.Id + ')" title="Tracking Boleto"><i class="fa fa-edit"></i><span class="tooltiptext">Tracking</span></button>');
             return '<div class="btn-group" role="group">' + botones.join(' ') + '</div>';
         },
 
