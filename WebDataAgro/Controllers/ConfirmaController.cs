@@ -175,7 +175,7 @@ namespace WebDataAgro.Controllers
         public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
         {
             ViewBag.ValidacionContrato = confirmaManager.ValidarContratoConfirma(numeroSap, tipoNegocio, GlobalVariables.EquipoReal);
-            string mensajeValidacion = (string) ViewBag.ValidacionContrato;
+            string mensajeValidacion = (string)ViewBag.ValidacionContrato;
             if (mensajeValidacion.Length == 0)
             {
                 ViewBag.Clausulas = confirmaManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
