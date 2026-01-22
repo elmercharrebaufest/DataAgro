@@ -1081,35 +1081,95 @@ namespace Molinos.DataAgro.Test.Managers
             var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
             var ids = new List<int>() { 1, 1 };
 
-            // Ajustar el mock para DetalleContratoModalDto
-            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoModalDto>(
-                It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(),
+            // Ajustar el mock para DetalleContratoDto (no DetalleContratoModalDto)
+            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
                 It.IsAny<Expression<Func<Contrato, bool>>>(),
                 It.IsAny<int>(),
                 It.IsAny<string>(),
                 Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<DetalleContratoModalDto>() {
-            new DetalleContratoModalDto {
-                Contrato = "a",
-                RazonSocial = "a",
-                Cuit = "1",
-                Comercial = "a",
-                Cantidad = "1",
-                Precio = "1",
-                PrecioNeto = "1",
-                TipoNegocio = "1",
-                Fecha = fecha.ToShortDateString(),
-                FechaDesde = fechadesde.ToShortDateString(),
-                FechaHasta = fechahasta.ToShortDateString()
-            }
+                .Returns(new List<DetalleContratoDto>() {
+    new DetalleContratoDto {
+        Contrato = "a",
+        RazonSocial = "a",
+        Cuit = "1",
+        Comercial = "a",
+        Cantidad = "1",
+        Precio = "1",
+        PrecioNeto = "1",
+        TipoNegocio = "1",
+        Fecha = fecha.ToShortDateString(),
+        FechaDesde = fechadesde.ToShortDateString(),
+        FechaHasta = fechahasta.ToShortDateString()
+    }
                 });
+
+            repositorioMock.Setup(y => y.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            repositorioMock.Setup(y => y.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            repositorioMock.Setup(y => y.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            repositorioMock.Setup(y => y.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
 
             var result = target.DetallePosicionModalIds(ids, "", null);
 
-            // Verificar la llamada correcta
-            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoModalDto>(
-                It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(),
+            // Verificar las llamadas correctas para DetalleContratoDto
+            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
                 It.IsAny<Expression<Func<Contrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
                 It.IsAny<int>(),
                 It.IsAny<string>(),
                 Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -1123,31 +1183,107 @@ namespace Molinos.DataAgro.Test.Managers
             var fecha = new DateTime(2018, 1, 16);
             var fechadesde = new DateTime(2018, 1, 16);
             var fechahasta = new DateTime(2018, 3, 16);
-            var mat = new Material { MaterialId = 1, CampañaId = 1, Descripcion = "a" };
-            var ope = new Operador { Descripcion = "a", Id = 1 };
-            var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
-            var ids = new List<int>() { 1, 1 };
+            var ids = new List<int>() { 1, 2 };
 
-            // Cambiar DetalleContratoDto por DetalleContratoModalDto para que coincida con la implementación real
-            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", Precio = "1", PrecioNeto = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<FijacionDePrecioContrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<Fason, DetalleContratoModalDto>(It.IsAny<Expression<Func<Fason, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<ContratoAcuerdo, DetalleContratoModalDto>(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<AgenteCompra, DetalleContratoModalDto>(It.IsAny<Expression<Func<AgenteCompra, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
+            // Setup para Contrato
+            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Contrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>() {
+            new DetalleContratoDto {
+                Contrato = "a",
+                RazonSocial = "a",
+                Cuit = "1",
+                Comercial = "a",
+                Cantidad = "1",
+                Precio = "1",
+                PrecioNeto = "1",
+                TipoNegocio = "1",
+                Fecha = fecha.ToShortDateString(),
+                FechaDesde = fechadesde.ToShortDateString(),
+                FechaHasta = fechahasta.ToShortDateString(),
+                TipoNegocioId = 2,
+                CantidadDeposito = 100
+            }
+                });
+
+            // Setup para FijacionDePrecioContrato
+            repositorioMock.Setup(y => y.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            // Setup para Fason
+            repositorioMock.Setup(y => y.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            // Setup para ContratoAcuerdo
+            repositorioMock.Setup(y => y.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            // Setup para AgenteCompra
+            repositorioMock.Setup(y => y.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
 
             var result = target.DetallePosicionModalIds(ids, "", 2);
 
-            // Cambiar las verificaciones para que coincidan con DetalleContratoModalDto
-            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<FijacionDePrecioContrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<Fason, DetalleContratoModalDto>(It.IsAny<Expression<Func<Fason, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<ContratoAcuerdo, DetalleContratoModalDto>(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<AgenteCompra, DetalleContratoModalDto>(It.IsAny<Expression<Func<AgenteCompra, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
+            // Verificaciones
+            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Contrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
             Assert.NotNull(result);
         }
 
@@ -1157,32 +1293,122 @@ namespace Molinos.DataAgro.Test.Managers
             var fecha = new DateTime(2018, 1, 16);
             var fechadesde = new DateTime(2018, 1, 16);
             var fechahasta = new DateTime(2018, 3, 16);
-            var mat = new Material { MaterialId = 1, CampañaId = 1, Descripcion = "a" };
-            var ope = new Operador { Descripcion = "a", Id = 1 };
-            var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
-            var ids = new List<int>() { 1, 1 };
-            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", Precio = "1", PrecioNeto = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<FijacionDePrecioContrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<Fason, DetalleContratoModalDto>(It.IsAny<Expression<Func<Fason, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<ContratoAcuerdo, DetalleContratoModalDto>(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
-            repositorioMock.Setup(y => y.Listar<AgenteCompra, DetalleContratoModalDto>(It.IsAny<Expression<Func<AgenteCompra, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoModalDto>() { new DetalleContratoModalDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
+            var ids = new List<int>() { 1, 2 };
+
+            // Setup para Contrato - usando DetalleContratoDto
+            repositorioMock.Setup(y => y.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Contrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>() {
+            new DetalleContratoDto {
+                Contrato = "a",
+                RazonSocial = "a",
+                Cuit = "1",
+                Comercial = "a",
+                Cantidad = "1",
+                Precio = "1",
+                PrecioNeto = "1",
+                TipoNegocio = "1",
+                Fecha = fecha.ToShortDateString(),
+                FechaDesde = fechadesde.ToShortDateString(),
+                FechaHasta = fechahasta.ToShortDateString(),
+                TipoNegocioId = 3
+            }
+                });
+
+            // Setup para FijacionDePrecioContrato
+            repositorioMock.Setup(y => y.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>() {
+            new DetalleContratoDto {
+                Contrato = "b",
+                RazonSocial = "b",
+                Cuit = "2",
+                Comercial = "b",
+                Cantidad = "2",
+                Precio = "2",
+                PrecioNeto = "2",
+                TipoNegocio = "FIJACION",
+                Fecha = fecha.ToShortDateString(),
+                FechaDesde = fechadesde.ToShortDateString(),
+                FechaHasta = fechahasta.ToShortDateString(),
+                TipoNegocioId = 3
+            }
+                });
+
+            // Setup para Fason
+            repositorioMock.Setup(y => y.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            // Setup para ContratoAcuerdo
+            repositorioMock.Setup(y => y.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
+
+            // Setup para AgenteCompra
+            repositorioMock.Setup(y => y.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<DetalleContratoDto>());
 
             var result = target.DetallePosicionModalIds(ids, "", 3);
 
-            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<Contrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<FijacionDePrecioContrato, DetalleContratoModalDto>(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<Fason, DetalleContratoModalDto>(It.IsAny<Expression<Func<Fason, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<ContratoAcuerdo, DetalleContratoModalDto>(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
-            repositorioMock.Verify(x => x.Listar<AgenteCompra, DetalleContratoModalDto>(It.IsAny<Expression<Func<AgenteCompra, DetalleContratoModalDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
+            // Verificaciones - para verDepositoTipoNegocio = 3 (FIJACIONES) se llaman todos los métodos
+            repositorioMock.Verify(x => x.Listar<Contrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Contrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<FijacionDePrecioContrato, DetalleContratoDto>(
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<Fason, DetalleContratoDto>(
+                It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<Fason, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<ContratoAcuerdo, DetalleContratoDto>(
+                It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
+            repositorioMock.Verify(x => x.Listar<AgenteCompra, DetalleContratoDto>(
+                It.IsAny<Expression<Func<AgenteCompra, DetalleContratoDto>>>(),
+                It.IsAny<Expression<Func<AgenteCompra, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                Entities.Helpers.DirOrden.Asc), Times.Once);
+
             Assert.NotNull(result);
-            //Assert.AreEqual(
-            //    "{\"items\":[{\"Contrato\":\"a\",\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Material\":null,\"TipoNegocio\":\"1\",\"Comercial\":\"a\",\"Cantidad\":\"1\",\"CantidadCamiones\":null,\"Campana\":null,\"FechaDesde\":\"16/1/2018\",\"FechaHasta\":\"16/3/2018\",\"Precio\":\"1,00\",\"PrecioNeto\":\"1,00\",\"Moneda\":null,\"Fecha\":\"16/1/2018\",\"Provincia\":null,\"Localidad\":null,\"Boleto\":null,\"Bolsa\":null,\"Destino\":null,\"CondicionFijacion\":null,\"DesdeFijacion\":null,\"HastaFijacion\":null,\"Base\":null,\"ImporteSustentable\":null,\"FechaDolarizado\":null,\"DiasPesificado\":null,\"NoInformaSio\":null,\"Ampliaciones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Pago\":null,\"CalidadEspecial\":null,\"EstablecimientoPropio\":null,\"Observacion\":null},{\"Contrato\":\"a\",\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Material\":null,\"TipoNegocio\":\"1\",\"Comercial\":\"a\",\"Cantidad\":\"1\",\"CantidadCamiones\":null,\"Campana\":null,\"FechaDesde\":\"16/1/2018\",\"FechaHasta\":\"16/3/2018\",\"Precio\":\"1,00\",\"PrecioNeto\":\"1,00\",\"Moneda\":null,\"Fecha\":\"16/1/2018\",\"Provincia\":null,\"Localidad\":null,\"Boleto\":null,\"Bolsa\":null,\"Destino\":null,\"CondicionFijacion\":null,\"DesdeFijacion\":null,\"HastaFijacion\":null,\"Base\":null,\"ImporteSustentable\":null,\"FechaDolarizado\":null,\"DiasPesificado\":null,\"NoInformaSio\":null,\"Ampliaciones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Pago\":null,\"CalidadEspecial\":null,\"EstablecimientoPropio\":null,\"Observacion\":null},{\"Contrato\":\"a\",\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Material\":null,\"TipoNegocio\":\"1\",\"Comercial\":\"a\",\"Cantidad\":\"1\",\"CantidadCamiones\":null,\"Campana\":null,\"FechaDesde\":\"16/1/2018\",\"FechaHasta\":\"16/3/2018\",\"Precio\":\"1,00\",\"PrecioNeto\":\"1,00\",\"Moneda\":null,\"Fecha\":\"16/1/2018\",\"Provincia\":null,\"Localidad\":null,\"Boleto\":null,\"Bolsa\":null,\"Destino\":null,\"CondicionFijacion\":null,\"DesdeFijacion\":null,\"HastaFijacion\":null,\"Base\":null,\"ImporteSustentable\":null,\"FechaDolarizado\":null,\"DiasPesificado\":null,\"NoInformaSio\":null,\"Ampliaciones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Pago\":null,\"CalidadEspecial\":null,\"EstablecimientoPropio\":null,\"Observacion\":null},{\"Contrato\":\"a\",\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Material\":null,\"TipoNegocio\":\"1\",\"Comercial\":\"a\",\"Cantidad\":\"1\",\"CantidadCamiones\":null,\"Campana\":null,\"FechaDesde\":\"16/1/2018\",\"FechaHasta\":\"16/3/2018\",\"Precio\":\"1,00\",\"PrecioNeto\":\"1,00\",\"Moneda\":null,\"Fecha\":\"16/1/2018\",\"Provincia\":null,\"Localidad\":null,\"Boleto\":null,\"Bolsa\":null,\"Destino\":null,\"CondicionFijacion\":null,\"DesdeFijacion\":null,\"HastaFijacion\":null,\"Base\":null,\"ImporteSustentable\":null,\"FechaDolarizado\":null,\"DiasPesificado\":null,\"NoInformaSio\":null,\"Ampliaciones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Pago\":null,\"CalidadEspecial\":null,\"EstablecimientoPropio\":null,\"Observacion\":null}],\"total\":4}",
-            //    result);
         }
 
         [Test]
