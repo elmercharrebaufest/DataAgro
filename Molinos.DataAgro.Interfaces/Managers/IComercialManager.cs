@@ -38,8 +38,6 @@ namespace Molinos.DataAgro.Interfaces
         List<RolDto> ObtenerRolesYPermisosPorEmail(string email);
 
         ComercialDto TraerComercial(string email);
-
-
-
+        List<ComercialCambioDePerfilDto> ListarComerciales(string comercial, List<int> comerciales);
     }
 }
