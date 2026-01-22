@@ -1501,7 +1501,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string DetallePosicionModalIds(List<int> negocios, string moneda, int? verDepositoTipoNegocio)
         {
-            var detalle = TraerDetallePosicionModal(negocios, moneda, verDepositoTipoNegocio);
+            var detalle = TraerDetallePosicion(negocios, moneda, verDepositoTipoNegocio);
             detalle.ForEach(x => x.Cantidad = (int.Parse(x.Cantidad)).ToString("n0"));
             detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio.Replace('.', ',')).ToString("n2"));
             detalle.ForEach(x => x.PrecioNeto = decimal.Parse(x.PrecioNeto.Replace('.', ',')).ToString("n2"));
