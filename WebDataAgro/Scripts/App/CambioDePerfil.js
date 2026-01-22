@@ -8,8 +8,6 @@
     inicializarGrids();
 });
 
-
-
 function inicializarGrids() {
 
     gridComerciales = $("#gridComerciales").kendoGrid({
@@ -20,7 +18,9 @@ function inicializarGrids() {
                     fields: {
                         ComercialId: { type: "string" },
                         Apellido: { type: "string" },
-                        Nombres: { type: "string" }
+                        Nombres: { type: "string" },
+                        EmpleadorACargo: { type: "string" },
+                        GrupoDeCompras: { type: "string" }
                     }
                 }
             }
@@ -31,7 +31,9 @@ function inicializarGrids() {
         columns: [
             { field: "ComercialId", title: "ID" },
             { field: "Apellido", title: "Apellido" },
-            { field: "Nombres", title: "Nombres" }
+            { field: "Nombres", title: "Nombres" },
+            { field: "EmpleadorACargo", title: "EmpleadorACargo" },
+            { field: "GrupoDeCompras", title: "GrupoDeCompras" }
         ]
     }).data("kendoGrid");
 

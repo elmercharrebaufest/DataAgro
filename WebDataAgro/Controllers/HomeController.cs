@@ -629,17 +629,17 @@ namespace WebDataAgro.Controllers
             }
 
         }
+
         [HttpPost]
         public JsonResult ComercialDatos(int ComercialId)
         {
-
             var comercial = comercialManager.TraerComercial(ComercialId);
             var email = comercial.Email;
             var roles = comercialManager.ObtenerPermisosPorEmail(email);
             var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory, roles);
 
             List<RolDto> rolesDisplay = comercialManager.ObtenerRolesYPermisosPorEmail(email);
-            List<ComercialDto> equipoComercial = comercialManager.ListarComercial("-", equipo.Equipo);
+            List<ComercialCambioDePerfilDto> equipoComercial = comercialManager.ListarComerciales("-", equipo.Equipo);
 
             return new JsonResult()
             {
