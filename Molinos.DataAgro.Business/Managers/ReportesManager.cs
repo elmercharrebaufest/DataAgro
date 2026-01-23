@@ -1669,13 +1669,12 @@ namespace Molinos.DataAgro.Business.Managers
                 && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))
             );
 
-            foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
-            {
-                item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
-            }
-
             if (fijaciones != null)
             {
+                foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
+                {
+                    item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
+                }
                 data.AddRange(fijaciones);
             }
 
