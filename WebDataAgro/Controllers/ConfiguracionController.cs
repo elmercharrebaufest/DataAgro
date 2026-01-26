@@ -60,7 +60,7 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult GuardarPesificacionDolarizado(ConfiguracionModel configuracion)
+        public ActionResult GrabarConfiguracion(ConfiguracionModel configuracion)
         {
             var configuracionGrabada = configuracionManager.GrabarFechaPesificacionDolarizado(TransformarAEntidad(configuracion));
 

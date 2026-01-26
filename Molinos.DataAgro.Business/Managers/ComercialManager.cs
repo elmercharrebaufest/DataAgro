@@ -337,10 +337,13 @@ namespace Molinos.DataAgro.Business
             var resultado = new EquipoDto
             {
                 Equipo = verCorredorComercial ?
+                                // Todo Comercial con el Rol "Comercial Corredor"
                                 repositorio.Listar<Comercial, int>(x => x.ComercialId,
                                                                    x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) :
+                                // Si corresponde, arma el equipo según jerarquías.
                                 ListarEquipo(comercialId, comerciales),
 
+                // Todos los Comerciales
                 EquipoReal = comerciales.Select(x => x.ComercialId).ToList()
             };
 
@@ -350,10 +353,12 @@ namespace Molinos.DataAgro.Business
         private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)
         {
             var resultado = new List<int> { comercialId };
+            // Si no tiene estos dos permisos, devuelve comercialId
             if (!PermisosHelper.Is(PermisosDataAgro.VerJerarquia) && !PermisosHelper.Is(PermisosDataAgro.VerTodos))
             {
                 return resultado;
             }
+            // Por ahora, para pasar por acá debe tener alguno de estos roles: Mesa, Visualizador, Administrativo, Archivos KMZ, Visualizador General
             foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
             {
                 resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
