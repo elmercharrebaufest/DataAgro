@@ -321,7 +321,8 @@
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) ||
                          PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico) ||
                          PermisosHelper.Is(PermisosDataAgro.Habilitacion_Boleto) ||
-                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionLocalidad))
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionLocalidad) ||
+                         PermisosHelper.Is(PermisosDataAgro.CambioDePerfil))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
@@ -558,11 +559,20 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas))
+                                @*@if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas))
                                 {
                                     <li>
                                         <a href="~/TareaProgramada" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Tareas Programadas
+                                        </a>
+                                    </li>
+                                }*@
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.CambioDePerfil))
+                                {
+                                    <li>
+                                        <a href="~/Home/CambioDePerfil" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Cambio de Perfil
                                         </a>
                                     </li>
                                 }

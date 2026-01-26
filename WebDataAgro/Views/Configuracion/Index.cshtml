@@ -20,7 +20,7 @@
             @Html.ValidationSummary()
         </div>
     </div>}
-@using (Html.BeginForm("GuardarPesificacionDolarizado", "Configuracion", FormMethod.Post))
+@using (Html.BeginForm("GrabarConfiguracion", null, FormMethod.Post))
 {
     <div id="form">
         <div class="container">
@@ -188,12 +188,37 @@
                 <div class="col-md-1">
                     @Html.TextBoxFor(m => m.Actualizacion, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
+            </div>
+            <h4>Exigir vincular Negocio con Solicitud Extraordinaria</h4>
+            <div class="row-botones-material row padding">
+
+
 
                 <div class="col-md-2">
-                    <label>Exigir vincular Negocio con Solicitud Extraordinaria</label>
+                    <label>Soja</label>
                 </div>
                 <div class="col-md-1">
-                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt)
+                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt_Soja)
+                </div>
+
+                <div class="col-md-2">
+                    <label>Maiz</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt_Maiz)
+                </div>
+
+                <div class="col-md-2">
+                    <label>Trigo</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt_Trigo)
+                </div>
+                <div class="col-md-2">
+                    <label>Girasol</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.ExigirNegocioEnSolExt_Girasol)
                 </div>
             </div>
 
@@ -256,5 +281,5 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div>
 }

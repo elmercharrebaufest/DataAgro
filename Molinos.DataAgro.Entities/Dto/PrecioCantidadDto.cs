@@ -10,10 +10,12 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string Moneda { get; set; }
         public double? Cantidad { get; set; }
+        public double? Tonelada { get; set; }
         public PrecioCantidadDto()
         {
             Moneda = "ARP ";
             Cantidad = 0;
+            Tonelada = 0;
         }
     }
 }

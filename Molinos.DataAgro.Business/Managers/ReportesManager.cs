@@ -704,8 +704,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var moneda = repositorio.ListarConsulta(new TraerMonedaKilo(fechaDesde, fechaHasta, materialId, centroId, verFijaciones));
 
-            return new List<PrecioCantidadDto>() { new PrecioCantidadDto {Moneda = "Pesos" , Cantidad= moneda.Exists(x=>x.Moneda == "ARP  ")?moneda.Where(x=>x.Moneda== "ARP  ").Select(x=>x.Cantidad).First():0},
-                new PrecioCantidadDto {Moneda = "Dólares" , Cantidad=moneda.Exists(x=>x.Moneda == "USDM ")? moneda.Where(x=>x.Moneda== "USDM ").Select(x=>x.Cantidad).First():0}};
+            return new List<PrecioCantidadDto>() { 
+                new PrecioCantidadDto {Moneda = "Pesos"   , Cantidad= moneda.Exists(x=>x.Moneda == "ARP  ")? moneda.Where(x=>x.Moneda== "ARP  ").Select(x=>x.Cantidad).First():0, Tonelada = moneda.Exists(x=>x.Moneda == "ARP  ")? moneda.Where(x=>x.Moneda== "ARP  ").Select(x=>x.Tonelada).First():0},
+                new PrecioCantidadDto {Moneda = "Dólares" , Cantidad= moneda.Exists(x=>x.Moneda == "USDM ")? moneda.Where(x=>x.Moneda== "USDM ").Select(x=>x.Cantidad).First():0, Tonelada = moneda.Exists(x=>x.Moneda == "USDM ")? moneda.Where(x=>x.Moneda== "USDM ").Select(x=>x.Tonelada).First():0}
+            };
         }
         public List<HedgeMaterialDto> TraerTodosHedgeMaterial(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId)
         {
@@ -1667,13 +1669,12 @@ namespace Molinos.DataAgro.Business.Managers
                 && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))
             );
 
-            foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
-            {
-                item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
-            }
-
             if (fijaciones != null)
             {
+                foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
+                {
+                    item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
+                }
                 data.AddRange(fijaciones);
             }
 
@@ -1867,6 +1868,443 @@ namespace Molinos.DataAgro.Business.Managers
 
             return data;
         }
+
+        private List<DetalleContratoModalDto> TraerDetallePosicionModal(List<int> negocios, string moneda, int? verDepositoTipoNegocio)
+        {
+            if (string.IsNullOrWhiteSpace(moneda))
+                moneda = "";
+            var data = new List<DetalleContratoModalDto>();
+            var contratos = repositorio.Listar<Contrato, DetalleContratoModalDto>(x => new DetalleContratoModalDto
+            {
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                RazonCorredor = x.Corredor.RazonSocial,
+                CuitCorredor = x.Corredor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = x.Madre == true ? "MADRE" : x.Madre == false ? "HIJO" : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "A PRECIO" : x.TipoNegocio.Descripcion,
+                TipoNegocioId = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? 2 : x.TipoNegocioId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                CampanaId = x.CampanaId,
+                FechaDesdeDate = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaDate = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
+                CantidadDeposito = x.CantidadDeposito,
+                CantidadCamiones = x.CantidadCamiones.ToString(),
+                Campana = x.Campana != null ? x.Campana.Descripcion : "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? (x.PrecioNetoPonderado ?? 0).ToString() : x.Precio.ToString(),
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USD" : "",
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = x.Provincia != null ? x.Provincia.Nombre : "",
+                Localidad = x.Localidad != null ? x.Localidad.Nombre : "",
+                Boleto = x.Boleto != null ? x.Boleto.Descripcion : "",
+                Bolsa = x.Bolsa != null ? x.Bolsa.Descripcion : "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = x.CondicionFijacion != null ? x.CondicionFijacion.Descripcion : "",
+                DesdeFijacion = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                HastaFijacion = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                Base = x.Base == true ? "X" : "",
+                ImporteSustentable = x.ImporteSustentable.HasValue && x.MonedaSustentable != null ? x.ImporteSustentable.Value.ToString() + " " + x.MonedaSustentable.Descripcion : "0",
+                FechaDolarizado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado) + "/" + SqlFunctions.DatePart("month", x.FechaDolarizado) + "/" + SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                DiasPesificado = x.DiasPesificado.ToString(),
+                NoInformaSio = x.NoInformaSio == true ? "X" : "",
+                Ampliaciones = x.Ampliaciones.ToString(),
+                Consignatario = x.Consignatario == true ? "X" : "",
+                PlanCanje = x.PlanCanje == true ? "X" : "",
+                Pago = x.PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : x.Warrant == true ? "Warrant" : "",
+                CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 6 || x.StandardDeCalidadId == 7 ? "X" : "",
+                EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
+                Observacion = x.Observacion ?? "",
+                PrecioNeto = x.Condicional == true ?
+                        (x.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/(x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + ((x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * x.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                MercsDeposito = x.MercsDeposito == true ? "X" : "",
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+            },
+            x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda || (moneda == "USDM " && x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) || (x.Pizarra == true && moneda == "ARP  "))
+            );
+
+            if (verDepositoTipoNegocio != null)
+            {
+                if (contratos != null)
+                {
+                    var negociosConDescarga = contratos.Where(a => a.TipoNegocioId == 2 && a.CantidadDeposito > 0).ToList();
+
+                    foreach (var x in negociosConDescarga)
+                    {
+                        var negocio = contratos.Where(y => y.Contrato == x.Contrato).Single();
+                        var fijacion = (DetalleContratoModalDto)negocio.Clone();
+                        fijacion.CantidadD = fijacion.CantidadDeposito.GetValueOrDefault(0);
+                        fijacion.Cantidad = fijacion.CantidadD.ToString();
+                        contratos.Add(fijacion);
+                        negocio.CantidadD -= negocio.CantidadDeposito.GetValueOrDefault(0);
+                        negocio.CantidadDeposito = null;
+                        negocio.Cantidad = negocio.CantidadD.ToString();
+                    }
+                    if (verDepositoTipoNegocio == (int)EnumTipoNegocio.A_PRECIO)
+                    {
+                        contratos = contratos.Where(x => x.CantidadDeposito == 0 || x.CantidadDeposito == null).ToList();
+                    }
+                    else if (verDepositoTipoNegocio == (int)EnumTipoNegocio.FIJACION)
+                    {
+                        contratos = contratos.Where(x => x.CantidadDeposito > 0).ToList();
+                    }
+                }
+            }
+
+            if (contratos != null)
+            {
+                data.AddRange(contratos);
+            }
+
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoModalDto>(x => new DetalleContratoModalDto
+            {
+                Id = x.Id,
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.FijacionSAP != null && x.FijacionSAP != "") ? x.FijacionSAP : x.Id.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                RazonCorredor = x.Corredor.RazonSocial,
+                CuitCorredor = x.Corredor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = x.Virtual == true ? "FIJACION VIRTUAL" : "FIJACION",
+                TipoNegocioId = 3,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                FechaDesdeDate = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaDate = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
+                CantidadCamiones = "",
+                Campana = x.Campana != null ? x.Campana.Descripcion : "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = "",
+                Localidad = "",
+                Boleto = "",
+                Bolsa = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = "",
+                DesdeFijacion = "",
+                HastaFijacion = x.Contrato == null ?
+                    SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta) :
+                    SqlFunctions.DateName("day", x.Contrato.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.Contrato.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.Contrato.HastaFijacion),
+                Base = "",
+                ImporteSustentable = "",
+                FechaDolarizado = "",
+                DiasPesificado = "",
+                NoInformaSio = "",
+                Ampliaciones = x.Ampliaciones.ToString(),
+                Consignatario = "",
+                PlanCanje = "",
+                Pago = "",
+                CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                EstablecimientoPropio = "",
+                Observacion = x.Observacion ?? "",
+                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                MercsDeposito = "",
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+
+            },
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))
+            );
+
+            if (fijaciones != null)
+            {
+                foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
+                {
+                    item.PrecioNeto = ObtenerPrecioNetoFijacionVirtual(item.Id);
+                }
+                data.AddRange(fijaciones);
+            }
+
+            //if (verDepositoTipoNegocio == -1)
+            //{
+            //    foreach (var cont in data)
+            //    {
+            //        if (cont.TipoNegocioId == 3)
+            //        {
+            //            if ((DateTime.DaysInMonth(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month) - cont.FechaDesdeDate.Day) >= 10)
+            //            {
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+            //            }
+            //            else if (cont.FechaDesdeDate.AddMonths(1).Month <= cont.FechaHastaDate.Month)
+            //            {
+            //                cont.FechaDesdeDate = cont.FechaDesdeDate.AddMonths(1);
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+
+            //            }
+            //            else if (cont.FechaDesdeDate.AddMonths(1).Month > cont.FechaHastaDate.Month)
+            //            {
+            //                cont.mesPosision = cont.FechaHastaDate.Month;
+            //                cont.anioPosision = cont.FechaHastaDate.Year;
+            //            }
+            //        }
+            //        else if (cont.TipoNegocioId == 2)
+            //        {
+            //            if (new DateTime(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+            //            {
+            //                cont.mesPosision = DateTime.Now.Month;
+            //                cont.anioPosision = DateTime.Now.Year;
+            //            }
+            //            else
+            //            {
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+            //            }
+            //        }
+            //    }
+            //    //if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
+            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
+            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
+            //    //{
+            //    //    if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+            //    //    }
+            //    //    else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+            //    //    {
+            //    //        cont.FechaDesde = cont.FechaDesde.AddMonths(1);
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+
+            //    //    }
+            //    //    else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
+            //    //        posKil.Anio = cont.FechaHasta.Year;
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    if (new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)DateTime.Now.Month;
+            //    //        posKil.Anio = DateTime.Now.Year;
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+            //    //    }
+            //    //}
+            //}
+
+
+            var fasones = repositorio.Listar<Fason, DetalleContratoModalDto>(x => new DetalleContratoModalDto
+            {
+                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = "FASÓN",
+                TipoNegocioId = 4,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                FechaDesdeDate = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaDate = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert(x.Cantidad),
+                CantidadD = x.Cantidad,
+                CantidadCamiones = "",
+                Campana = x.Campana != null ? x.Campana.Descripcion : "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = "",
+                Localidad = "",
+                Boleto = "",
+                Bolsa = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = "",
+                DesdeFijacion = "",
+                HastaFijacion = "",
+                Base = "",
+                ImporteSustentable = "",
+                FechaDolarizado = "",
+                DiasPesificado = "",
+                NoInformaSio = "",
+                Ampliaciones = x.Ampliaciones.ToString(),
+                Consignatario = "",
+                PlanCanje = "",
+                Pago = "",
+                CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                EstablecimientoPropio = "",
+                Observacion = "",
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito = "",
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+            },
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
+            if (fasones != null)
+            {
+                data.AddRange(fasones);
+            }
+
+
+
+
+            var acuerdos = repositorio.Listar<ContratoAcuerdo, DetalleContratoModalDto>(x => new DetalleContratoModalDto
+            {
+                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                RazonCorredor = x.Corredor.RazonSocial,
+                CuitCorredor = x.Corredor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = "Acuerdo",
+                TipoNegocioId = 6,
+                CampanaId = null,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                FechaDesdeDate = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaDate = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = (double)x.Cantidad,
+                CantidadCamiones = "",
+                Campana = "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda.Descripcion,
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = "",
+                Localidad = "",
+                Boleto = "",
+                Bolsa = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = "",
+                DesdeFijacion = "",
+                HastaFijacion = "",
+                Base = "",
+                ImporteSustentable = "0",
+                FechaDolarizado = "",
+                DiasPesificado = "",
+                NoInformaSio = "",
+                Ampliaciones = "",
+                Consignatario = "",
+                PlanCanje = "",
+                Pago = "",
+                CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 7 ? "X" : "",
+                EstablecimientoPropio = "",
+                Observacion = "",
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito = "",
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+            },
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
+
+
+            if (acuerdos != null)
+            {
+                data.AddRange(acuerdos);
+            }
+
+
+            var agente = repositorio.Listar<AgenteCompra, DetalleContratoModalDto>(x => new DetalleContratoModalDto
+            {
+                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                RazonSocial = "",
+                Cuit = "",
+                RazonCorredor = "",
+                CuitCorredor = "",
+                Material = x.DolarExportador == true ? x.Material.Descripcion + " Dolar Export." : x.Material.Descripcion,
+                TipoNegocio = "Agente",
+                TipoNegocioId = 6,
+                CampanaId = null,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                FechaDesdeDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaHastaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
+                CantidadCamiones = "",
+                Campana = "",
+                FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaHasta = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda.Descripcion,
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = "",
+                Localidad = "",
+                Boleto = "",
+                Bolsa = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = "",
+                DesdeFijacion = "",
+                HastaFijacion = "",
+                Base = "",
+                ImporteSustentable = "0",
+                FechaDolarizado = "",
+                DiasPesificado = "",
+                NoInformaSio = "",
+                Ampliaciones = "",
+                Consignatario = "",
+                PlanCanje = "",
+                Pago = "",
+                CalidadEspecial = "",
+                EstablecimientoPropio = "",
+                Observacion = "",
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito = "",
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+
+            },
+            x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
+
+            if (agente != null)
+            {
+                data.AddRange(agente);
+            }
+
+            if (data.Count > 0 && data.Any(a => a.Pizarra == true))
+            {
+                var maxFecha = data.Where(a => a.Pizarra == true).Max(a => Convert.ToDateTime(a.FechaDate));
+                var preciosPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= maxFecha);
+                foreach (var item in data.Where(a => a.Pizarra == true && a.TipoNegocioId != 1).ToList())
+                {
+                    var precioPizarra = preciosPizarra.Where(x => x.Material.Descripcion == item.Material && x.FechaHasta <= Convert.ToDateTime(item.FechaDate)).ToList();
+                    var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
+                    item.Moneda = precio.MonedaId;
+                    item.Precio = precio.Precio.ToString();
+                }
+            }
+
+            return data;
+        }
+
 
         private string ObtenerPrecioNetoFijacionVirtual(int idFijacionVirtual)
         {

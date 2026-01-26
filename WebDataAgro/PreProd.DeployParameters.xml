@@ -20,8 +20,7 @@
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
 
-	<!-- Para S4: Inicio2025! - Para R3: Data2015 -->
-	<setParameter name="SapPass Key" value="Data2015" />
+	<setParameter name="SapPass Key" value="Inicio2025!" />
 
 	<setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
@@ -32,9 +31,9 @@
 	<setParameter name="AmbienteUATDA Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />
 
-	<setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG2300.LST" />
-	<setParameter name="Facacop Key" value="\\sapprgap\ftproot\transf\matprim\facacop.txt" />
-	<setParameter name="SISA Key" value="\\sapprgap\ftproot\transf\matprim\RG_4310.txt" />
+	<setParameter name="Rg2300 Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG2300.LST" />
+	<setParameter name="Facacop Key" value="\\sapshareqadev\share\ftproot\transf\matprim\facacop.txt" />
+	<setParameter name="SISA Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG_4310.txt" />
 
 	<setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
 	<setParameter name="ServicePass Key" value="MOA.Test" />
@@ -43,9 +42,15 @@
 	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
 	<setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
 	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
+
+	<!-- Primary Producción -->
 	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
 	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
+	<!-- Primary Prueba -->
+	<!--<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
+	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
+	<setParameter name="PassPrimary Key" value="Demo2024" />-->
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />
@@ -69,7 +74,7 @@
 
 	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
-	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://gviceccqa.molinosagro.ad/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
+	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://vhmgkgaqci.sap.molinosagro.ad:44300/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
 	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />
 
 	<setParameter name="HTTP_Port Service Endpoint Address"  value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />

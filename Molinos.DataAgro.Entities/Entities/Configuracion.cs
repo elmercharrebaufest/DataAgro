@@ -34,7 +34,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
         public bool? ActivarLogDebug { get; set; }
-        public bool? ExigirNegocioEnSolExt { get; set; }
+        public bool? ExigirNegocioEnSolExt_Soja { get; set; }
+        public bool? ExigirNegocioEnSolExt_Trigo { get; set; }
+        public bool? ExigirNegocioEnSolExt_Maiz { get; set; }
+        public bool? ExigirNegocioEnSolExt_Girasol { get; set; }
         public string ApiKeyScoringCupos { get; set; }
     }
 }

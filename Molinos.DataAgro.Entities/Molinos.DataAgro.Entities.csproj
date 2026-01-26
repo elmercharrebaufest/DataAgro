@@ -319,6 +319,8 @@
     <Compile Include="Common\Enums\EnumEstadoConfirma.cs" />
     <Compile Include="Dto\BuscarCentroDto.cs" />
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
+    <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
+    <Compile Include="Dto\DetalleContratoModalDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosEstadoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosPreCertificacionDto.cs" />

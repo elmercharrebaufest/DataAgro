@@ -61,7 +61,11 @@ namespace WebDataAgro.Controllers
                }).OrderBy(x => x.Text);
             ViewBag.TipoNegocio = tipoNegocioListItems;
             var config = configuracionManager.TraerConfiguraciones();
-            ViewBag.Vincular = config.ExigirNegocioEnSolExt.GetValueOrDefault();
+            ViewBag.Vincular_Soja = config.ExigirNegocioEnSolExt_Soja.GetValueOrDefault();
+            ViewBag.Vincular_Maiz = config.ExigirNegocioEnSolExt_Maiz.GetValueOrDefault();
+            ViewBag.Vincular_Trigo = config.ExigirNegocioEnSolExt_Trigo.GetValueOrDefault();
+            ViewBag.Vincular_Girasol = config.ExigirNegocioEnSolExt_Girasol.GetValueOrDefault();
+            
         }
 
         public ActionResult Inicializar(int? MaterialId)
@@ -243,9 +247,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult VincularSolicitudExtraordinaria(bool valor)
+        public ActionResult VincularSolicitudExtraordinaria(bool valor,string type)
         {
-            var resultado = configuracionManager.SetExigirNegocioEnSolExt(valor);
+            var resultado = configuracionManager.SetExigirNegocioEnSolExt(valor , type);
 
             return new JsonResult()
             {

@@ -284,6 +284,30 @@ namespace Molinos.DataAgro.Business
                 x => comercial == "" || comerciales.Contains(x.ComercialId) || (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)));
         }
 
+        public List<ComercialCambioDePerfilDto> ListarComerciales(string comercial, List<int> comerciales)
+        {
+            List<Comercial> comercialesList = repositorio.Listar<Comercial>();
+            List<GrupoDeCompras> grupoDeComprasList = repositorio.Listar<GrupoDeCompras>();
+
+            return repositorio
+                .Listar<Comercial>()
+                .AsEnumerable()
+                .Where(x => comercial == "" ||
+                            comerciales.Contains(x.ComercialId) ||
+                            (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)))
+                .Select(x => new ComercialCambioDePerfilDto
+                {
+                    ComercialId = x.ComercialId,
+                    Nombres = x.Nombres,
+                    Apellido = x.Apellido,
+                    EmpleadorACargo = x.EmpleadorACargoId != null ?
+                        comercialesList.FirstOrDefault(y => y.ComercialId == x.EmpleadorACargoId)?.Apellido + " " +
+                        comercialesList.FirstOrDefault(y => y.ComercialId == x.EmpleadorACargoId)?.Nombres ?? "" : "",
+                    GrupoDeCompras = x.GrupoDeComprasId != null ?
+                        grupoDeComprasList.FirstOrDefault(y => y.Id == x.GrupoDeComprasId)?.Descripcion ?? "" : ""
+                }).ToList();
+        }
+
         public EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId)
         {
             return (EnumPerfil)repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeDirectoryId, x => x.PerfilId ?? 0);
@@ -297,22 +321,31 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera ?? false);
         }
+
         public EquipoDto ListarEquipo(string idActiveDirectory, List<string> roles = null)
         {
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
             var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
-            var noVerCorredorComercial = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+
+            var verCorredorComercial = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+
             if (roles != null && roles.Any())
             {
-                noVerCorredorComercial = !roles.Any(r => r == PermisosDataAgro.VerCorredorComercial.ToString());
+                verCorredorComercial = roles.Any(r => r == PermisosDataAgro.VerCorredorComercial.ToString());
             }
+
             var resultado = new EquipoDto
             {
-                Equipo = noVerCorredorComercial ?
+                Equipo = verCorredorComercial ?
+                                // Todo Comercial con el Rol "Comercial Corredor"
+                                repositorio.Listar<Comercial, int>(x => x.ComercialId,
+                                                                   x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) :
+                                // Si corresponde, arma el equipo según jerarquías.
+                                ListarEquipo(comercialId, comerciales),
 
-                ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)))
+                // Todos los Comerciales
+                EquipoReal = comerciales.Select(x => x.ComercialId).ToList()
             };
-            resultado.EquipoReal = comerciales.Select(x => x.ComercialId).ToList();
 
             return resultado;
         }
@@ -320,10 +353,12 @@ namespace Molinos.DataAgro.Business
         private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)
         {
             var resultado = new List<int> { comercialId };
+            // Si no tiene estos dos permisos, devuelve comercialId
             if (!PermisosHelper.Is(PermisosDataAgro.VerJerarquia) && !PermisosHelper.Is(PermisosDataAgro.VerTodos))
             {
                 return resultado;
             }
+            // Por ahora, para pasar por acá debe tener alguno de estos roles: Mesa, Visualizador, Administrativo, Archivos KMZ, Visualizador General
             foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
             {
                 resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));

@@ -66,9 +66,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000)
+                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000),
+                    Tonelada = x.Sum(y=> y.Cantidad / 1000)
                 }).ToList();
-
+                
             var fijaciones = contexto.Set<FijacionDePrecioContrato>()
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.FechaOperacion >= fechaInicio
                 && x.FechaOperacion <= fechaFin &&
@@ -117,7 +118,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 .Select(x => new PrecioCantidadDto()
                                 {
                                     Moneda = x.Key,
-                                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000)
+                                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000),
+                                    Tonelada = x.Sum(y => y.Cantidad / 1000)
                                 }).ToList();
             }
 
@@ -138,6 +140,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Moneda = precioPizarraPorMaterial.Any(y => y.MaterialId == x.Key) ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == x.Key).MonedaId : "",
                     Cantidad = precioPizarraPorMaterial.Any(y => y.MaterialId == x.Key) ?
                      x.Sum(y => precioPizarraPorMaterial.FirstOrDefault(z => z.MaterialId == x.Key).Precio * y.Cantidad / 1000) : 0,
+                    Tonelada = x.Sum(y => y.Cantidad / 1000) 
                 }).ToList();
 
             var fijPizarra = contexto.Set<FijacionDePrecioContrato>()
@@ -153,6 +156,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Moneda = precioPizarraPorMaterial.Any(y => y.MaterialId == x.Key) ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == x.Key).MonedaId : "",
                     Cantidad = precioPizarraPorMaterial.Any(y => y.MaterialId == x.Key) ?
                      x.Sum(y => precioPizarraPorMaterial.FirstOrDefault(z => z.MaterialId == x.Key).Precio * y.Cantidad / 1000) : 0,
+                    Tonelada = x.Sum(y => y.Cantidad / 1000)
                 }).ToList();
 
             var fas = contexto.Set<Fason>().Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.FechaOperacion >= fechaInicio && x.FechaOperacion <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
@@ -160,7 +164,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+                    Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000),
+                    Tonelada = x.Sum(y => y.Cantidad / 1000)
                 }).ToList();
 
             var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => x.TipoAgenteCompraId == null && materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0) && x.Fecha >= fechaInicio && x.Fecha <= fechaFin && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId))
@@ -168,14 +173,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                .Select(x => new PrecioCantidadDto()
                {
                    Moneda = x.Key,
-                   Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+                   Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000),
+                   Tonelada = x.Sum(y => y.Cantidad / 1000) 
                }).ToList();
 
             var res = cont.Union(fij).Union(fas).Union(contAcuerdo).Union(contPizarra).Union(fijPizarra).GroupBy(x => x.Moneda)
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad = x.Sum(y => y.Cantidad)
+                    Cantidad = x.Sum(y => y.Cantidad),
+                    Tonelada = x.Sum(y => y.Tonelada)
                 }).ToList();
             return res;
         }

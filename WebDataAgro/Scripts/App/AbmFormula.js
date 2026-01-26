@@ -1,9 +1,7 @@
-﻿
-var viewModel;
+﻿var viewModel;
 var data = new Array();
 
 $(document).ready(function () {
-
     kendo.culture("es-AR");
     $('[data-toggle="popover"]').popover();
     traerDatosIniciales();
@@ -13,8 +11,6 @@ $(document).ready(function () {
     crearPopupAgregarHijo();
     iniciarCampos();
     cargarTiposNegociosExcluidos();
-
-
 });
 
 function traerDatosIniciales(MaterialId) {
@@ -22,11 +18,9 @@ function traerDatosIniciales(MaterialId) {
     var funcionRetornada = function (data) {
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
-
         }
         else {
             viewModel.set("DatosDeInicio", data.Datos);
-
 
             var cuposDesde = $("#cuposDesde").data("kendoDatePicker");
             cuposDesde.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.CuposDesde.substr(6))));
@@ -40,13 +34,10 @@ function traerDatosIniciales(MaterialId) {
             var negociosHasta = $("#negociosHasta").data("kendoDatePicker");
             negociosHasta.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.NegociosHasta.substr(6))));
 
-
             $("#deshabilitar").prop("checked", viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.Cierre);
 
             $("#MaterialId").data("kendoDropDownList").dataSource.data(data.Datos.materiales);
             $("#MaterialId").data("kendoDropDownList").value(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.MaterialId);
-
-
         }
     };
     var url = '/Formula/Inicializar';
@@ -57,9 +48,7 @@ function traerDatosIniciales(MaterialId) {
 }
 
 function CrearViewModel() {
-
     viewModel = kendo.observable({
-
         DatosDeInicio: new Object()
     });
 }
@@ -109,17 +98,13 @@ function crearArbol() {
                         PadreId: { field: "PadreId", type: "number", nullable: true, editable: true },
                         Id: { field: "Id", type: "number" },
                         DisplayName: { type: "string", editable: false, nullable: false }
-
                     },
                     expanded: true
                 }
             },
         },
 
-
-
         dataBound: function (e) {
-
             var datos = e.sender.dataSource.data();
 
             for (var i = 0; i < datos.length; i++) {
@@ -131,9 +116,7 @@ function crearArbol() {
                     $("#treelist").find("[data-uid='" + dataItem.uid + "']").find(".k-grid-agregarhijo").hide();
                 }
 
-
                 if (dataItem.PadreId != idCriterioRaiz && dataItem.PadreId != null) {
-
                     var padreDeEsteItem = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Id == dataItem.PadreId })[0];
                     $("#treelist").find("[data-uid='" + padreDeEsteItem.uid + "']").find(".k-grid-delete").hide();
                 }
@@ -152,14 +135,12 @@ function crearArbol() {
             //console.log(e);
             //e.sender.dataSource.options.transport.destroy.data = datosDias();
             //recargarPantalla();
-
         },
 
         save: function (e) {
             validarPrioridadIngresadaEnEditar(e);
             cargarTiposNegociosExcluidos();
         },
-
 
         autoSync: false,
         editable: {
@@ -168,8 +149,6 @@ function crearArbol() {
                 title: "Editar Criterio",
             }
         },
-
-
 
         columns: [
 
@@ -184,18 +163,15 @@ function crearArbol() {
             }
         ],
 
-
         messages: {
             commands: {
                 edit: "Editar",
                 update: "Guardar",
                 canceledit: "Cancelar",
                 destroy: "Eliminar",
-
             }
         }
     });
-
 }
 
 function crearPopupAgregarHijo() {
@@ -209,8 +185,6 @@ function crearPopupAgregarHijo() {
             width: 400,
 
         }).data("kendoWindow");
-
-
 
     $("#prioridad").kendoNumericTextBox({
         format: "0",
@@ -270,7 +244,6 @@ function iniciarCampos() {
 }
 
 function iniciarDatosComboAgregarCriterios() {
-
     data = viewModel.DatosDeInicio.Criterios.Criterios;
     cargarCombo();
 }
@@ -299,11 +272,9 @@ function actualizarCierre() {
 }
 
 function agregar(e) {
-
     recargarPantalla();
     var id = $("#padreid").val();
     var maximoParaEsteCriterio = parseInt($("#maximo").val());
-
 
     var prioridad = parseInt($("#prioridad").val());
     //var prioridadMaxima = $("#prioridad").data("kendoNumericTextBox").max();
@@ -313,18 +284,13 @@ function agregar(e) {
 
     var result = null;
 
-
     var datos = {
         "Descripcion": dataItem.Descripcion,
         "PadreId": id,
         "Prioridad": prioridad
     };
 
-
-
-
     if (maximoParaEsteCriterio < prioridad) {
-
         if (maximoParaEsteCriterio == 0) {
             PopUpError("No se pueden Agregar mas Criterios");
         } else {
@@ -335,7 +301,6 @@ function agregar(e) {
         result = MSExecuteOnServer('/Formula/update', datos);
     }
 
-
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
@@ -344,15 +309,13 @@ function agregar(e) {
             recargarPantalla();
             cargarTiposNegociosExcluidos();
         }
-    }    
-
+    }
 
     $("#treelist").data("kendoTreeList").dataSource.read();
     $("#popUpAgregarCriterio").data("kendoWindow").close();
 }
 
 function datosDias() {
-
     var cuposDesde = $("#cuposDesde").val();
     var cuposHasta = $("#cuposHasta").val();
     var negociosDesde = $("#negociosDesde").val();
@@ -368,7 +331,6 @@ function datosDias() {
         "Cierre": cierre,
         MaterialId: MaterialId
     };
-
 
     return formulaDias;
 }
@@ -396,8 +358,6 @@ function abrirVentanaAgregarHijo(e) {
 }
 
 function validarPrioridadIngresadaEnEditar(e) {
-
-
     let prioridadIngresada = parseInt(e.model.Prioridad);
     let criteriosHermanos = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.PadreId == e.model.PadreId && x.Id != e.model.Id });
     let criterioPadre = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Id == e.model.PadreId })[0];
@@ -408,12 +368,8 @@ function validarPrioridadIngresadaEnEditar(e) {
     //let PrioridadMaximaDisponible = criterioPadre.Prioridad - sumaPrioridadHermanos;
     let PrioridadMaximaDisponible = 100 - sumaPrioridadHermanos;
 
-
     if (PrioridadMaximaDisponible - prioridadIngresada < 0) {
-
         PopUpError("La Prioridad debe ser Menor o Igual a " + PrioridadMaximaDisponible);
-
-
         //var treeList = $("#treelist").data("kendoTreeList");
         //treeList.cancelChanges();
     }
@@ -421,16 +377,12 @@ function validarPrioridadIngresadaEnEditar(e) {
 }
 
 function cargarCombo() {
-
     var criteriosParaAgregar = data;
-
     var criteriosAgregados = $("#treelist").data("kendoTreeList").dataSource.data();
 
     criteriosAgregados.forEach(function (criAgregado) {
-
         return criteriosParaAgregar = criteriosParaAgregar.filter(function (criterio) { return criterio.Descripcion != criAgregado.Descripcion });
     });
-
 
     $("#dropdown").kendoDropDownList({
         dataTextField: "DisplayName",
@@ -454,7 +406,6 @@ function PopUpError(mensaje) {
             Format: ""
         }]
     );
-
 }
 
 $("#agregarCriterio").kendoButton();
@@ -542,24 +493,36 @@ function actualizarTiposNegociosExcluidos() {
             cargarTiposNegociosExcluidos();
         }
     }
-
-    
 }
 
-$("body").on("change", '#vincularSolicitudExtraordinaria', function () {
-    let valor = $("#vincularSolicitudExtraordinaria").prop("checked");
-    $("#vincularSolicitudExtraordinaria").prop("checked", !valor);
+$("body").on(
+    "change",
+    "[id^='vincularSolicitudExtraordinaria_']",
+    function () {
 
-    var datos = {
-        valor: valor,
-    }
-    var result = MSExecuteOnServer('/Formula/VincularSolicitudExtraordinaria', datos);
-    if (result != null) {
+        const $checkbox = $(this);
+        const valor = $checkbox.prop("checked");
+
+        // Obtener el tipo desde el id
+        const type = this.id.split("_")[1];
+
+        // Revertimos el cambio hasta confirmar en el server
+        $checkbox.prop("checked", !valor);
+
+        const datos = {
+            type: type,
+            valor: valor
+        };
+
+        var result = MSExecuteOnServer("/Formula/VincularSolicitudExtraordinaria", datos);
+
+        if (!result) return;
+
         if (ExistsErrorMessages(result.Errores)) {
             ShowErrorMessages(result.Errores);
         } else {
-            $("#vincularSolicitudExtraordinaria").prop("checked", valor);
+            $checkbox.prop("checked", valor);
             MensInfo("Actualización exitosa.");
         }
     }
-});
+);
