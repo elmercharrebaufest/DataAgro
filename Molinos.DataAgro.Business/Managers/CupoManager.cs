@@ -1,5 +1,4 @@
-﻿using NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -13,6 +12,7 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -674,40 +675,27 @@ namespace Molinos.DataAgro.Business.Managers
             var r = repo ?? repositorio;
             Configuracion datosConfiguracion = r.Obtener<Configuracion>(1);
             List<CupoEliminarResult> listaResultado = new List<CupoEliminarResult>();
-            List<Task<CupoEliminarResult>> tareasConsulta = new List<Task<CupoEliminarResult>>();
 
-            foreach (int id in listaIdCupos)
+            var semaphore = new SemaphoreSlim(15);
+            var tasks = listaIdCupos.Select(async id =>
             {
-                Cupo cupoSap = r.Obtener<Cupo>(id);
-
-                if (!cupoSap.Centro.NoPropio)
+                await semaphore.WaitAsync();
+                try
                 {
-                    System.Diagnostics.Debug.WriteLine("AGREGA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
-                    tareasConsulta.Add(Task.Run(() => AnularCupoStopAsync(cupoSap, datosConfiguracion, null, token, (RepositorioEF)r)));
-                }
-            }
-            System.Diagnostics.Debug.WriteLine($"agrego todos {DateTime.Now}");
 
-            // Espera a que todas las tareas se completen
-            Task.WhenAll(tareasConsulta).ContinueWith(completedTasks =>
-            {
-                if (completedTasks.IsFaulted)
-                {
-                    System.Diagnostics.Debug.WriteLine("Al menos una tarea falló.");
-                }
-                else
-                {
-                    listaResultado = completedTasks.Result.ToList();
-                    System.Diagnostics.Debug.WriteLine("Todos los procesos se completaron:");
-                    foreach (CupoEliminarResult result in listaResultado)
-                    {
-                        System.Diagnostics.Debug.WriteLine("resultados " + result.ToJson());
-                    }
-                }
-            }).Wait();
-            System.Diagnostics.Debug.WriteLine($"Finnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn {DateTime.Now}");
+                    var cupo = r.Obtener<Cupo>(id);
+                    return await AnularCupoStopAsync(cupo, datosConfiguracion, /*null,*/ token/*, (RepositorioEF)r*/);
 
-            return listaResultado;
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
+
+            var resultados = await Task.WhenAll(tasks);
+
+            return resultados.ToList();
         }
 
         private Resultado EliminarCupoSap(CupoEliminarResult cupoEliminar, string comercial, bool enviarMail)
@@ -859,7 +847,7 @@ namespace Molinos.DataAgro.Business.Managers
             return nuevoResultado;
         }
 
-        private async Task<CupoEliminarResult> AnularCupoStopAsync(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente, TokenStop token = null, RepositorioEF repo = null)
+        private async Task<CupoEliminarResult> AnularCupoStopAsync(Cupo cupoSap, Configuracion datosConfiguracion/*, ClienteStopAgent cliente*/, TokenStop token = null/*, RepositorioEF repo = null*/)
         {
             System.Diagnostics.Debug.WriteLine("INICIA TAREA - " + cupoSap.CupoSap + " - " + DateTime.Now);
             logger.Debug("AnularCupoStopAsync " + cupoSap?.CupoSap ?? "SIN CUPO" + " " + cupoSap.ToJson());
@@ -876,7 +864,7 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevoResultado.cupo = cupoSap;
                     return nuevoResultado;
                 }
-                var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap, token, repo) : clienteStopAgent.EliminarCupo(cupoSap, token, repo);
+                var resultadoStop = /*cliente != null ? cliente.EliminarCupo(cupoSap, token, repo) : */clienteStopAgent.EliminarCupo(cupoSap, token/*, repo*/);
                 if (resultadoStop.HayError)
                 {
                     logger.Debug("AnularCupoStopAsync HayError_2 " + cupoSap?.CupoSap ?? "SIN CUPO");
@@ -4637,7 +4625,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public void AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path)
+        public async Task AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path)
         {
             try
             {
@@ -5245,7 +5233,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                         negocioAsociado = repositorio.Obtener<Negocio>(x => x.Id == solicitud.NegocioId && x.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
                 }
-                else if (esMaterialConExigencia && solicitud.Fason != true && !proveedorExcluido) 
+                else if (esMaterialConExigencia && solicitud.Fason != true && !proveedorExcluido)
                 {
                     result.Error("VincularNegocio", "Debe vincular la solicitud a un negocio completando el campo 'N° de Contrato'.");
                     return result;

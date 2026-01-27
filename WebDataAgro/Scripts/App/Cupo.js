@@ -456,7 +456,7 @@ function InicializarCuposIndex() {
             input: true,
             numeric: true,
             pageSize: 20,
-            //pageSizes: [5, 10, 20, 40]
+            pageSizes: [20,50,100,200]
         },
         scrollable: true,
 

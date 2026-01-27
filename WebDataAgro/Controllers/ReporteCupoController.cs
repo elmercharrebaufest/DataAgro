@@ -1,11 +1,12 @@
-﻿using Kendo.DynamicLinq;
+﻿using Hangfire;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
+using WebDataAgro.Jobs;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -119,28 +120,46 @@ namespace WebDataAgro.Controllers
         }
         static readonly object _lockAnulacionMasiva = new object();
 
-        public async Task<string> AnulacionMasivaAsync(List<int> equipo, List<int> ids, string path)
-        {
-            var comercialId = GlobalVariables.IdActiveDirectory;
-            await Task.Run(() =>
-            {
-                //Thread.Sleep(5000);
-                //cupoManager.AnulacionMasiva(equipo, comercialId, ids, path);
-                cupoManager.AnulacionMasiva2(equipo, comercialId, ids, path);
-            });
+        //public async Task<string> AnulacionMasivaAsync(List<int> equipo, List<int> ids, string path)
+        //{
+        //    var comercialId = GlobalVariables.IdActiveDirectory;
+        //    await Task.Run(() =>
+        //    {
+        //        //Thread.Sleep(5000);
+        //        //cupoManager.AnulacionMasiva(equipo, comercialId, ids, path);
+        //        cupoManager.AnulacionMasiva2(equipo, comercialId, ids, path);
+        //    });
 
-            return "";
-        }
+        //    return "";
+        //}
 
+
+        //public ActionResult AnulacionMasiva(List<int> ids)
+        //{
+        //    var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+        //    var path = httpContextManager.ObtenerPathLogoMail();
+        //    if (ids.Count == 0)
+        //    {
+        //        return Json("Ningún cupo para anular");
+        //    }
+        //    var a = AnulacionMasivaAsync(equipo, ids, path);
+        //    return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail.");
+        //}
         public ActionResult AnulacionMasiva(List<int> ids)
         {
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var path = httpContextManager.ObtenerPathLogoMail();
-            if (ids.Count == 0)
-            {
+            if (ids == null || !ids.Any())
                 return Json("Ningún cupo para anular");
-            }
-            var a = AnulacionMasivaAsync(equipo, ids, path);
+
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos)
+                ? GlobalVariables.EquipoReal
+                : GlobalVariables.Equipo;
+
+            var path = httpContextManager.ObtenerPathLogoMail();
+            var comercialId = GlobalVariables.IdActiveDirectory;
+
+            BackgroundJob.Enqueue<IAnulacionMasivaJob>(job =>
+                job.Ejecutar(equipo, ids, path, comercialId));
+
             return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail.");
         }
     }
