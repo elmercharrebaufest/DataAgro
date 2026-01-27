@@ -243,6 +243,16 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato.");
                 }
+                var KilosMaximos = fijacion.KgMaximos;
+                if (KilosMaximos < oParam.Cantidad)
+                {
+                    oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos Máximos ("+ fijacion.KgMaximos + ") del contrato.");
+                }
+                var KilosMinimos = fijacion.KgMinimos;
+                if (KilosMinimos > oParam.Cantidad)
+                {
+                    oErrorMessages.Error("Cantidad", "La cantidad es menor a los kilos Minimos (" + fijacion.KgMinimos + ") del contrato.");
+                }
                 oParam.TrigoEspecial = oParam.Virtual != true && (fijacion.Calidad != null && fijacion.Calidad.Value);
             }
             if (oParam.Cantidad < 0)
@@ -1465,6 +1475,16 @@ namespace Molinos.DataAgro.Business.Managers
             if ((oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true) && (oContratoSave.Cesion == true || oContratoSave.Anticipo == true))
             {
                 result.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
+            }
+            var KilosMaximos = oContrato.KgMaximo;
+            if (KilosMaximos < oContratoSave.Cantidad)
+            {
+                result.Error("Cantidad", "La cantidad es menor a los kilos Máximos (" +  KilosMaximos + ") del contrato.");
+            }
+            var KilosMinimos = oContrato.KgMinimo;
+            if (KilosMinimos > oContratoSave.Cantidad)
+            {
+                result.Error("Cantidad", "La cantidad es menor a los kilos Minimos (" + KilosMinimos + ") del contrato.");
             }
 
             if (!oContrato.FechaDolarizado.HasValue && (oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true))
