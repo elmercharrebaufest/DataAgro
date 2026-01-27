@@ -1,8 +1,8 @@
-﻿using NLog;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -76,14 +76,14 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 if (versionClienteStop == "1.1.0")
                 {
-                    return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo, repo);
+                    return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo/*, repo*/);
                 }
                 if (versionClienteStop == "2.0.0")
                 {
-                    return clienteStopV2Agent.EliminarCupo(cupo, tokenNuevo, repo);
+                    return clienteStopV2Agent.EliminarCupo(cupo, tokenNuevo/*, repo*/);
                 }
 
-                return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo, repo);
+                return clienteStopV1Agent.EliminarCupo(cupo, tokenNuevo/*, repo*/);
             }
             catch (Exception e)
             {
