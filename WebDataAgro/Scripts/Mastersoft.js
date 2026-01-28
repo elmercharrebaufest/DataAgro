@@ -61,8 +61,12 @@ function MSExecuteOnServer(url, datos, onCallBack) {
         success: function (data) {
             respuesta = data;
         },
-        error: function (error) {
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+        error: function (jqXHR) {
+            if (jqXHR.status === 401 || jqXHR.status === 409) {
+                return "error";
+            } else {
+                MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            }
         },
         complete: function () {
             if (onCallBack) {
