@@ -16,6 +16,7 @@
                 $("#modalTrackingBoletoBody").html(html);
                 $("#modalTrackingBoleto").modal("show");
             });
+        this.init(controlDeBoletosId);
     }
 
     function init(controlDeBoletosId) {

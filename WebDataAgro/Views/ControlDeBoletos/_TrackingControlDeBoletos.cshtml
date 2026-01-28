@@ -5,5 +5,11 @@
 <div id="gridTrackingBoleto"></div>
 
 <script>
-    ControlBoletosTracking.init(@ViewBag.ControlDeBoletosId);
+    $(document).ready(function() {
+        if (typeof ControlBoletosTracking !== 'undefined') {
+            ControlBoletosTracking.init(@ViewBag.ControlDeBoletosId);
+        } else {
+            console.error('ControlBoletosTracking no está definido. Verifique que el script esté cargado.');
+        }
+    });
 </script>

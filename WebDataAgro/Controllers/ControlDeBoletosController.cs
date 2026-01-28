@@ -1,5 +1,8 @@
-﻿using Molinos.DataAgro.Business;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Newtonsoft.Json;
@@ -17,13 +20,14 @@ namespace WebDataAgro.Controllers
         // private readonly IBoletoService _boletoService;
         private readonly IControlDeBoletosEstadoManager _controlDeBoletosEstadoManager;
         private readonly IControlDeBoletosManager _controlDeBoletosManager;
-        // private readonly IEstadoService _estadoService;
+        private readonly IContratoManager _contratoManager;
         // private readonly IComercialService _comercialService;
 
-        public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager)
+        public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager, IContratoManager contratoManager)
         {
             this._controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
             this._controlDeBoletosManager = controlDeBoletosManager;
+            this._contratoManager = contratoManager;
         }
 
         public ActionResult Index()
@@ -143,7 +147,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x=> x.RazonSocial);
+                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
                 var proveedoresListItems = proveedores.Select(comercial =>
                     new SelectListItem
                     {
@@ -185,9 +189,12 @@ namespace WebDataAgro.Controllers
                 }
 
                 // TODO: Implementar paginación real con Kendo DataSourceRequest
-                var boletos = GenerarDatosEjemplo()
-                    .Where(b => AplicarFiltros(b, filtrosObj))
-                    .ToList();
+
+                var boletos = this._controlDeBoletosManager.GetControlBoletosPendientes();
+
+                //var boletos = GenerarDatosEjemplo()
+                //    .Where(b => AplicarFiltros(b, filtrosObj))
+                //    .ToList();
 
                 var result = new
                 {
@@ -296,22 +303,6 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public ActionResult Detalle(int id)
-        {
-            try
-            {
-                // TODO: Implementar vista de detalle real
-                ViewBag.BoletoId = id;
-                return View();
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Error al cargar detalle: " + ex.Message;
-                return RedirectToAction("Index");
-            }
-        }
-
-
         [HttpGet]
         public JsonResult GetTrackingBoleto(int controlDeBoletosId)
         {
@@ -336,8 +327,59 @@ namespace WebDataAgro.Controllers
             }
         }
 
-                #region Vistas Parciales
-                [HttpGet]
+        [HttpGet]
+        public ActionResult ObtenerDetalleContrato(int id)
+        {
+            if (id <= 0)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+
+            var filtro = new Kendo.DynamicLinq.Filter
+            {
+                Logic = "and",
+                Filters = new List<Kendo.DynamicLinq.Filter>
+                {
+                    new Kendo.DynamicLinq.Filter
+                    {
+                        Field = "Id",
+                        Operator = "eq",
+                        Value = id
+                    }
+                }
+            };
+
+            var request = new DataSourceRequest();
+            request.Filter = filtro;
+            request.Sort = new List<Sort> { new Sort { Field = "Estado_Order", Dir = "asc" }, new Sort { Field = "Fecha_Order", Dir = "desc" } };
+
+            var model = _contratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
+
+            // Convertir la colección de resultados a List<object>
+            List<object> dataList;
+            if (model != null && model.Data != null)
+            {
+                dataList = model.Data.Cast<object>().ToList();
+            }
+            else
+            {
+                dataList = new List<object>();
+            }
+
+            var result = new
+            {
+                Data = dataList.FirstOrDefault(),
+                Total = dataList.Count
+            };
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        #region Vistas Parciales
+        [HttpGet]
         public PartialViewResult _ModificarDatosDelContrato(int id)
         {
             var model = new ModificarControlBoletoViewModel
@@ -353,6 +395,13 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.ControlDeBoletosId = id;
             return PartialView("_TrackingControlDeBoletos");
+        }
+
+        [HttpGet]
+        public PartialViewResult _VisualizarContrato(int id)
+        {
+            ViewBag.NegocioId = id;
+            return PartialView("_VisualizarContrato");
         }
 
         #endregion

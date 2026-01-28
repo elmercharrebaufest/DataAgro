@@ -4,6 +4,7 @@
     ControlDeBoletosEstadoId INT NOT NULL,
     EstadoConfirmaId INT NULL,
     EsConfirma BIT NOT NULL,
+    AltaIdLoteConfirma INT NULL,
     IdentificadorConfirma INT NULL,
     FechaCreacion DATETIME NOT NULL,
     FechaModificacion DATETIME NULL,

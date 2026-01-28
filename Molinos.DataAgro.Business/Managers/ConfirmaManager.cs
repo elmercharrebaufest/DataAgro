@@ -234,19 +234,20 @@ namespace Molinos.DataAgro.Business.Managers
                             Generado = true
                         };
 
-                        // Enviar a RFC
-                        logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
-                        var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
-                        logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
-
-                        if (respuestaRFC != "Se actualizan correctamente los datos")
-                        {
-                            resultado.confirmasGenerados.Add(DevolverDto(contrato, false, respuestaRFC));
-                            continue;
-                        }
 
                         try
                         {
+                            // Enviar a RFC
+                            logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
+                            var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
+                            logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
+
+                            if (respuestaRFC != "Se actualizan correctamente los datos")
+                            {
+                                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, respuestaRFC));
+                                continue;
+                            }
+
                             // Guardar XML
                             var xml = GenerarXML(contrato, clausulas);
                             var rutaArchivo = Path.Combine(pathConfirmas, tempConfirma.Archivo);
@@ -282,10 +283,8 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;
-
                                         //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
-                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, nuevoConfirma.Id);
-
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteBorradorResult.altaIdLote));
                                     }
                                     else
                                     {

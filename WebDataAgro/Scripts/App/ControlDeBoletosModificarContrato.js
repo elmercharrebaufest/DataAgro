@@ -1,8 +1,5 @@
-﻿// Control de Boletos - Modificación (Popup)
-// JavaScript optimizado para .NET Framework 4.7.2
-var ControlBoletosModificacion = (function () {
+﻿var ControlBoletosModificacion = (function () {
     'use strict';
-    console.log('xxxxx>>>>>');
     var config = {
         urls: {
             getProvincias: '/ControlDeBoletos/GetProvincias',
@@ -99,7 +96,6 @@ var ControlBoletosModificacion = (function () {
 
         abrir: function (boletoId, data) {
             state.boletoId = boletoId;
-            console.log('xxxxxssssxxxxx>>>>>');
             this.cargarCombos();
 
             if (data) {

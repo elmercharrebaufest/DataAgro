@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int NegocioId { get; set; }
         public int ControlDeBoletosEstadoId { get; set; }
         public bool EsConfirma { get; set; }
+        public int? AltaIdLoteConfirma { get; set; }
         public int? IdentificadorConfirma { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }

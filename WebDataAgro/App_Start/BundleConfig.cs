@@ -335,6 +335,7 @@ namespace WebDataAgro
                                        "~/Scripts/App/ControlDeBoletos.js",
                                        "~/Scripts/App/ControlDeBoletosModificarContrato.js",
                                        "~/Scripts/App/ControlDeBoletosTracking.js",
+                                       "~/Scripts/App/ControlDeBoletosVisualizarContrato.js",
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
                                        ));

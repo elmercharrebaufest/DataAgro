@@ -1,0 +1,100 @@
+﻿<div class="modal fade" id="modalVisualizar" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4>Contrato N° SAP: <span id="lineModalLabel"></span></h4>
+                    <button class="icon-btn"><i class="fa fa-copy"></i></button>
+                </div>
+                <div class="status-bar status-finalizado">
+                    FINALIZADO
+                    <div><button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button></div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-label">Proveedor</div><div id="visualizar_proveedor" class="metric-value"></div></div>
+                    <div class="metric-item"><div class="metric-label">Material</div><div id="visualizar_material" class="metric-value"></div></div>
+                    <div class="metric-item"><div class="metric-label">KG</div><div id="visualizar_cantidad" class="metric-value"></div></div>
+                    <div class="metric-item"><div class="metric-label">Precio</div><div id="visualizar_precio" class="metric-value highlight"></div></div>
+                </div>
+
+                <!-- INFORMACIÓN GENERAL -->
+                <div class="card-section">
+                    <div class="section-title">Información General</div>
+
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">Fecha Operación</div><div id="fechacontrato" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Campaña</div><div id="visualizar_campana" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Clasificación</div><div id="visualizar_clasificacion" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Destino</div><div id="visualizar_destino" class="info-value"></div></div>
+                    </div>
+                </div>
+
+                <!-- APERTURA PRECIO -->
+                <div class="card-section">
+                    <div class="section-title">Apertura de Precio</div>
+
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">Precio Neto</div><div id="visualizar_aperturaFinancieroPrecioNeto" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Financiero</div><div id="visualizar_aperturaFinanciero" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Redespacho</div><div id="visualizar_aperturaRedespacho" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Comisiones</div><div id="visualizar_aperturaComisiones" class="info-value"></div></div>
+                    </div>
+                </div>
+
+                <!-- LOGÍSTICA -->
+                <div class="card-section">
+                    <div class="section-title">Logística</div>
+
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">Procedencia</div><div id="visualizar_procedencia" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Flete</div><div id="visualizar_tarifaFlete" class="info-value"></div></div>
+                        <div class="info-item"><div class="info-label">Nivel Tarifa</div><div id="visualizar_nivelFlete" class="info-value"></div></div>
+                    </div>
+                </div>
+
+                <!-- PRECIOS PACTADOS -->
+                <div class="card-section">
+                    <div class="section-title">Precios Pactados</div>
+                    <table id="tabla-precios-pactados" class="table table-pro">
+                        <thead>
+                            <tr>
+                                <th>Desde</th>
+                                <th>Hasta</th>
+                                <th>Precio</th>
+                                <th>Importe</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="source:PreciosVisualizar" data-template="precio-pactado-template"></tbody>
+                    </table>
+                </div>
+
+                <!-- OBSERVACIONES -->
+                <div class="card-section">
+                    <div class="section-title">Observaciones</div>
+                    <div class="observacion" id="visualizar_observacion"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TEMPLATE KENDO UI PARA PRECIOS PACTADOS -->
+<script id="precio-pactado-template" type="text/x-kendo-template">
+    <tr>
+        <td>#: Desde ? kendo.toString(new Date(Desde), "dd/MM/yyyy") : "-" #</td>
+        <td>#: Hasta ? kendo.toString(new Date(Hasta), "dd/MM/yyyy") : "-" #</td>
+        <td>#: Precio ? kendo.toString(parseFloat(Precio), "n2") : "-" #</td>
+        <td>#: Importe ? kendo.toString(parseFloat(Importe), "n2") : "-" #</td>
+        <td>#: Porcentaje ? kendo.toString(parseFloat(Porcentaje), "n2") + "%" : "-" #</td>
+    </tr>
+</script>
