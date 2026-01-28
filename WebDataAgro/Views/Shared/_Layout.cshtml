@@ -57,7 +57,17 @@
 
         gtag('config', 'UA-125418413-1', { 'user_id' : '@global_asax.GlobalVariables.IdActiveDirectory'});
     </script>
-
+    
+    <script type="text/javascript">
+        $(document).ajaxError(function (event, jqXHR) {
+            if (jqXHR.status === 401 ) {
+                window.location.href = '/';
+            }
+            if (jqXHR.status === 409) {
+                window.location.href = '/ErrorDePermisos';
+            }
+        });
+    </script>
     <!--Firebase -->
     @*<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>*@
 
