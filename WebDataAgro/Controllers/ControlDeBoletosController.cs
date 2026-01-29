@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
 
@@ -356,7 +357,6 @@ namespace WebDataAgro.Controllers
             request.Sort = new List<Sort> { new Sort { Field = "Estado_Order", Dir = "asc" }, new Sort { Field = "Fecha_Order", Dir = "desc" } };
 
             var model = _contratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
-
             // Convertir la colección de resultados a List<object>
             List<object> dataList;
             if (model != null && model.Data != null)

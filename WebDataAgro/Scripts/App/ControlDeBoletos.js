@@ -52,41 +52,26 @@ var ControlBoletos = (function () {
     return valor === "" || (!isNaN(valor) && parseInt(valor) >= 0);
   }
 
-  function formatearFecha(fecha) {
-    if (!fecha) return "";
-    var date = new Date(fecha);
-    return date.toLocaleDateString("es-AR");
-  }
-
   function cargarDropdown(url, selector, textoCarga, textoDefault) {
     var $select = $(selector);
     $select.html('<option value="">' + textoCarga + "</option>");
 
-    $.ajax({
-      url: url,
-      type: "GET",
-      cache: true,
-      timeout: 10000,
-      success: function (data) {
-        $select
-          .empty()
-          .append('<option value="">' + textoDefault + "</option>");
-
-        if (data && Array.isArray(data)) {
-          $.each(data, function (i, item) {
-            $select.append(
-              '<option value="' + item.Value + '">' + item.Text + "</option>",
-            );
-          });
-        } else {
-          $select.append('<option value="">Sin datos disponibles</option>');
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error("Error cargando dropdown " + selector + ":", error);
-        $select.html('<option value="">Error al cargar datos</option>');
-      },
-    });
+    try {
+      var data = MSExecuteGetOnServer(url);
+      $select.empty().append('<option value="">' + textoDefault + "</option>");
+      if (data && Array.isArray(data)) {
+        $.each(data, function (i, item) {
+          $select.append(
+            '<option value="' + item.Value + '">' + item.Text + "</option>",
+          );
+        });
+      } else {
+        $select.append('<option value="">Sin datos disponibles</option>');
+      }
+    } catch (error) {
+      console.error("Error cargando dropdown " + selector + ":", error);
+      $select.html('<option value="">Error al cargar datos</option>');
+    }
   }
 
   // Funciones públicas
