@@ -177,7 +177,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Generado = true
                         };
                         //Enviando Confirma a RFC como BoletoGeneradoDto
-                        logger.Debug("Confirma: Enviando Boleto confirma" + tempConfirma.ToString());
+                        logger.Debug("Confirma: Enviando Boleto confirma - " + tempConfirma.ToString());
                         var res = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
                         logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
