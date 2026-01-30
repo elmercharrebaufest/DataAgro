@@ -1,10 +1,9 @@
-﻿using NLog;
-using Molinos.DataAgro.Agent.PrecioPizarra;
-using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Configuration;
 
@@ -35,42 +34,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var material = repositorio.Obtener<Material>(precioPizarra.MaterialId);
                 var pizarra = repositorio.Obtener<Pizarra>(precioPizarra.PizarraId);
 
-                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+                var rq = new ZMprfcPrecioPizarra
                 {
-                    var rq = new ZMprfcPrecioPizarra
-                    {
-                        ImFechaDesde = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
-                        ImFechaHasta = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
-                        ImMatnr = material.Codigo,
-                        ImPizarra = pizarra.Codigo,
-                        ImPrecio = Convert.ToDecimal(precioPizarra.Precio.ToString()),
-                        ImPrecioSpecified = true,
-                        ImUdate = DateTime.Now.ToString("yyyy-MM-dd"),
-                        ImUnimed = precioPizarra.UnidadMedida,
-                        ImUsuario = comercial.IdActiveDirectory,
-                        ImUtime = DateTime.Now.ToString("HH:mm:ss"),
-                        ImWaers = precioPizarra.MonedaId
-                    };
-                    return EjecutarSinPi(rq);
-                }
-                else
-                {
-                    var rq = new Z_MPRFC_PRECIO_PIZARRA
-                    {
-                        IM_FECHA_DESDE = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
-                        IM_FECHA_HASTA = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
-                        IM_MATNR = material.Codigo,
-                        IM_PIZARRA = pizarra.Codigo,
-                        IM_PRECIO = precioPizarra.Precio,
-                        IM_UDATE = DateTime.Now.ToString("yyyy-MM-dd"),
-                        IM_UNIMED = precioPizarra.UnidadMedida,
-                        IM_USUARIO = comercial.IdActiveDirectory,
-                        IM_UTIME = DateTime.Now.ToString("HH:mm:ss"),
-                        IM_WAERS = precioPizarra.MonedaId
+                    ImFechaDesde = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
+                    ImFechaHasta = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
+                    ImMatnr = material.Codigo,
+                    ImPizarra = pizarra.Codigo,
+                    ImPrecio = Convert.ToDecimal(precioPizarra.Precio.ToString()),
+                    ImPrecioSpecified = true,
+                    ImUdate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    ImUnimed = precioPizarra.UnidadMedida,
+                    ImUsuario = comercial.IdActiveDirectory,
+                    ImUtime = DateTime.Now.ToString("HH:mm:ss"),
+                    ImWaers = precioPizarra.MonedaId
+                };
+                return EjecutarSinPi(rq);
 
-                    };
-                    return Ejecutar(rq);
-                }
 
             }
         }
@@ -86,72 +65,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var material = repositorio.Obtener<Material>(precioPizarra.MaterialId);
                 var pizarra = repositorio.Obtener<Pizarra>(precioPizarra.PizarraId);
 
-                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+
+                var rq = new ZMprfcPrecioPizarra
                 {
-                    var rq = new ZMprfcPrecioPizarra
-                    {
-                        ImFechaDesde = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
-                        ImFechaHasta = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
-                        ImMatnr = material.Codigo,
-                        ImPizarra = pizarra.Codigo,
-                        ImAnulacion = "X"
-                    };
-                    return EjecutarSinPi(rq);
-                }
-                else
-                {
-                    var rq = new Z_MPRFC_PRECIO_PIZARRA
-                    {
-                        IM_FECHA_DESDE = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
-                        IM_FECHA_HASTA = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
-                        IM_MATNR = material.Codigo,
-                        IM_PIZARRA = pizarra.Codigo,
-                        IM_ANULACION = "X"
-                    };
-                    return Ejecutar(rq);
-                }
+                    ImFechaDesde = precioPizarra.FechaDesde.ToString("yyyy-MM-dd"),
+                    ImFechaHasta = precioPizarra.FechaHasta.ToString("yyyy-MM-dd"),
+                    ImMatnr = material.Codigo,
+                    ImPizarra = pizarra.Codigo,
+                    ImAnulacion = "X"
+                };
+                return EjecutarSinPi(rq);
 
 
-            }
-        }
 
-        string Ejecutar(Z_MPRFC_PRECIO_PIZARRA request)
-        {
-            try
-            {
-                var agent = new SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var logId = repositorio.Agregar(new Log
-                {
-                    Fecha = DateTime.Now,
-                    Xml = request.ToXml()
-                });
-                repositorio.GuardarCambios();
-                logger.Debug(request.ToXml());
-
-                Z_MPRFC_PRECIO_PIZARRAResponse devolucion = agent.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRA(request);
-
-                logger.Debug(devolucion.ToXml());
-                var log = repositorio.Obtener<Log>(logId.Id);
-                log.Xml += devolucion.ToXml();
-                repositorio.GuardarCambios();
-                logger.Debug("Guardado en la base");
-
-                if (devolucion.EX_MENSAJE != "OK")
-                {
-                    throw new Exception(devolucion.EX_MENSAJE);
-                }
-                logger.Debug("Sin Error");
-
-                return devolucion.EX_MENSAJE;
-            }
-            catch (Exception e)
-            {
-                logger.Error(e, "Error comunicacion SAP");
-                throw;
             }
         }
 

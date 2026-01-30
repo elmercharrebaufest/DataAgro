@@ -1,11 +1,10 @@
-﻿using NLog;
-using Molinos.DataAgro.Agent.FinalizarFijacion;
-using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -41,209 +40,79 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 try
                 {
-                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var listaApertura = new List<Zmpes5440>();
+                    var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
+
+                    decimal precioApertura = 0;
+                    var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
+                    var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    if (ImportFinanciero != null)
                     {
-                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
-                        agent.ClientCredentials.UserName.UserName = UserSap;
-                        agent.ClientCredentials.UserName.Password = PassSap;
-
-                        var listaApertura = new List<Zmpes5440>();
-                        var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
-
-                        decimal precioApertura = 0;
-                        var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
-                        var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (ImportFinanciero != null)
-                        {
-                            precioApertura += ImportFinanciero.Importe;
-                        }
-
-                        var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (ImportBonificaciones != null)
-                        {
-                            precioApertura += ImportBonificaciones.Importe;
-                        }
-
-                        var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (Comisiones != null)
-                        {
-                            precioApertura += Comisiones.Importe;
-                        }
-
-                        decimal im_precio = fijacion.Precio + precioApertura;
-
-                        var rq = new ZMprfcRegistrarFijacion()
-                        {
-                            ImProveedor = fijacion.Proveedor.CUIT,
-                            ImMaterial = fijacion.Material.Codigo,
-                            ImKilos = (decimal)fijacion.Cantidad,
-                            ImPrecio = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? im_precio : 0 : 0,
-                            ImMoneda = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
-                            ImContrato = fijacion.ContratoSAP.ToString(),
-                            ImCorredor = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
-                            ImApertura = listaApertura.ToArray(),
-                            ImPagoDifArp = "",
-                            ImDiasDiferim = "",
-                            ImFecha = DateTime.Now.ToString("yyyy-MM-dd"),
-                            ImZlsch = "",
-                            ImCuentaMrp = "",
-                            ImDolarizado = "",
-                            ImDolExpress = "",
-                            ImFechaLimite = "",
-                            ImDolCorredor = "",
-                            ImFechaCierta = "",
-                            ImAnulacion = "X",
-                            ImPedido = fijacion.FijacionSAP
-
-                        };
-                        logger.Debug(rq.ToXml());
-                        logger.Debug("Anular fijacion log 10" + im_precio);
-                        var log = new Log
-                        {
-                            Fecha = DateTime.Now,
-                            Xml = rq.ToXml()
-                        };
-
-                        var logId = repositorio.Agregar(log);
-                        repositorio.GuardarCambios();
-                        logger.Debug("Anular fijacion log 11" + im_precio);
-                        var devolucion = agent.ZMprfcRegistrarFijacion(rq);
-
-                        logger.Debug(devolucion.ToXml());
-
-                        log = repositorio.Obtener<Log>(logId.Id);
-                        log.Xml += devolucion.ToXml();
-                        repositorio.GuardarCambios();
-                        return devolucion.ExSalida;
+                        precioApertura += ImportFinanciero.Importe;
                     }
-                    else
+
+                    var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    if (ImportBonificaciones != null)
                     {
-                        SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONClient agent = new SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONClient();
-                        agent.ClientCredentials.UserName.UserName = UserSap;
-                        agent.ClientCredentials.UserName.Password = PassSap;
-
-                        var listaApertura = new List<ZMPES5440>();
-                        var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
-                        //var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
-                        //logger.Debug("Anular fijacion log 1" + oContrato);
-                        //if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
-                        //{
-                        //    var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
-
-                        //    if (fijacion.MonedaId.Trim() == "ARP")
-                        //    {
-                        //        oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
-                        //    }
-                        //    if (fijacion.MonedaId.Trim() == "USMD")
-                        //    {
-                        //        oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio / cotizacion;
-                        //    }
-                        //}
-                        //logger.Debug("Anular fijacion log 2" + oContrato);
-                        //var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
-                        //var modificoImporteComisionesAFijarViejo = (oContrato != null && oContrato.Aperturas == null || oContrato.Aperturas.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).ToList().Count == 0)
-                        //                                        && importeComisiones != 0
-                        //                                        && oContrato.ImporteSobrePrecio != 0
-                        //                                        && importeComisiones != oContrato.ImporteSobrePrecio;
-                        //logger.Debug("Anular fijacion log 3" + oContrato);
-                        //if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
-                        //    || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
-                        //    || modificoImporteComisionesAFijarViejo
-                        //    )
-                        //{
-                        //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                        //}
-                        //logger.Debug("Anular fijacion log 4" + oContrato);
-                        //if (oContrato != null && oContrato.Aperturas != null
-                        //    && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
-                        //{
-                        //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
-                        //}
-                        //logger.Debug("Anular fijacion log 5" + oContrato);
-                        //if (fijacion.Pizarra != true)
-                        //{
-                        //foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
-                        //{
-                        //    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
-                        //    {
-                        //        var a = new ZMPES5440
-                        //        {
-                        //            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                        //            IMPORTE = apertura.Importe,
-                        //            MONEDA = apertura.MonedaId,
-                        //            PORC = apertura.Porcentaje
-                        //        };
-                        //        listaApertura.Add(a);
-                        //    }
-                        //}
-                        //}
-
-
-                        decimal precioApertura = 0;
-                        var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
-                        var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (ImportFinanciero != null)
-                        {
-                            precioApertura += ImportFinanciero.Importe;
-                        }
-
-                        var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (ImportBonificaciones != null)
-                        {
-                            precioApertura += ImportBonificaciones.Importe;
-                        }
-
-                        var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                        if (Comisiones != null)
-                        {
-                            precioApertura += Comisiones.Importe;
-                        }
-
-                        decimal im_precio = fijacion.Precio + precioApertura;
-
-                        var rq = new Z_MPRFC_REGISTRAR_FIJACION()
-                        {
-                            IM_PROVEEDOR = fijacion.Proveedor.CUIT,
-                            IM_MATERIAL = fijacion.Material.Codigo,
-                            IM_KILOS = (decimal)fijacion.Cantidad,
-                            IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? im_precio : 0 : 0,
-                            IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
-                            IM_CONTRATO = fijacion.ContratoSAP.ToString(),
-                            IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
-                            IM_APERTURA = listaApertura.ToArray(),
-                            IM_PAGO_DIF_ARP = "",
-                            IM_DIAS_DIFERIM = "",
-                            IM_FECHA = DateTime.Now.ToString("yyyy-MM-dd"),
-                            IM_ZLSCH = "",
-                            IM_CUENTA_MRP = "",
-                            IM_DOLARIZADO = "",
-                            IM_DOL_EXPRESS = "",
-                            IM_FECHA_LIMITE = "",
-                            IM_DOL_CORREDOR = "",
-                            IM_FECHA_CIERTA = "",
-                            IM_ANULACION = "X",
-                            IM_PEDIDO = fijacion.FijacionSAP
-
-                        };
-                        logger.Debug(rq.ToXml());
-                        logger.Debug("Anular fijacion log 10" + im_precio);
-                        var log = new Log
-                        {
-                            Fecha = DateTime.Now,
-                            Xml = rq.ToXml()
-                        };
-
-                        var logId = repositorio.Agregar(log);
-                        repositorio.GuardarCambios();
-                        logger.Debug("Anular fijacion log 11" + im_precio);
-                        var devolucion = agent.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION(rq);
-                        logger.Debug(devolucion.ToXml());
-
-                        log = repositorio.Obtener<Log>(logId.Id);
-                        log.Xml += devolucion.ToXml();
-                        repositorio.GuardarCambios();
-                        return devolucion.EX_SALIDA;
+                        precioApertura += ImportBonificaciones.Importe;
                     }
+
+                    var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    if (Comisiones != null)
+                    {
+                        precioApertura += Comisiones.Importe;
+                    }
+
+                    decimal im_precio = fijacion.Precio + precioApertura;
+
+                    var rq = new ZMprfcRegistrarFijacion()
+                    {
+                        ImProveedor = fijacion.Proveedor.CUIT,
+                        ImMaterial = fijacion.Material.Codigo,
+                        ImKilos = (decimal)fijacion.Cantidad,
+                        ImPrecio = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? im_precio : 0 : 0,
+                        ImMoneda = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
+                        ImContrato = fijacion.ContratoSAP.ToString(),
+                        ImCorredor = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
+                        ImApertura = listaApertura.ToArray(),
+                        ImPagoDifArp = "",
+                        ImDiasDiferim = "",
+                        ImFecha = DateTime.Now.ToString("yyyy-MM-dd"),
+                        ImZlsch = "",
+                        ImCuentaMrp = "",
+                        ImDolarizado = "",
+                        ImDolExpress = "",
+                        ImFechaLimite = "",
+                        ImDolCorredor = "",
+                        ImFechaCierta = "",
+                        ImAnulacion = "X",
+                        ImPedido = fijacion.FijacionSAP
+
+                    };
+                    logger.Debug(rq.ToXml());
+                    logger.Debug("Anular fijacion log 10" + im_precio);
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                    logger.Debug("Anular fijacion log 11" + im_precio);
+                    var devolucion = agent.ZMprfcRegistrarFijacion(rq);
+
+                    logger.Debug(devolucion.ToXml());
+
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += devolucion.ToXml();
+                    repositorio.GuardarCambios();
+                    return devolucion.ExSalida;
+
                 }
                 catch (Exception e)
                 {

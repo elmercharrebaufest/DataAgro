@@ -80,12 +80,6 @@
                            /@value" />
 	</parameter>
 
-	<parameter name="SAPsinPI Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
-						match="/configuration/appSettings/add[@key='SAPsinPI']
-                           /@value" />
-	</parameter>
-
 	<parameter name="Rg2300 Key">
 		<parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='Rg2300']
