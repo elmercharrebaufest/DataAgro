@@ -269,13 +269,12 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo)
+        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo, bool EsSoloPendientes)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoConfirma>;
-
-            // Iterar sobre los datos y modificar atributos
-            foreach (var boleto in data)
+            IQueryable<BasicoConfirma> queryableData = data.AsQueryable();
+            foreach (var boleto in queryableData)
             {
                 boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
                 if (boleto.Estado_Version == "Anulado")
@@ -287,7 +286,15 @@ namespace Molinos.DataAgro.Business.Managers
                     boleto.UsuarioAnulacion = null;
                 }
             }
-            return result;
+            if (EsSoloPendientes)
+            {
+                queryableData = queryableData.Where(b => b.Estado_Version == "Pendiente");
+            }
+            return new DataSourceResult
+            {
+                Data = queryableData.ToList(),
+                Total = queryableData.Count()
+            };
         }
 
         private string ValidarContrato(BasicoContrato contrato)
