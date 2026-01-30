@@ -557,11 +557,6 @@
     <Compile Include="Seguridad\ClaimsTransformationHttpModule.cs" />
     <Compile Include="Seguridad\AuthorizationManager.cs" />
     <Compile Include="Seguridad\DataAgroClaimsAuthenticationManager.cs" />
-    <Compile Include="Service References\Compras\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Services\AuthService.svc.cs">
       <DependentUpon>AuthService.svc</DependentUpon>
     </Compile>
@@ -2263,12 +2258,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <None Include="Service References\Compras\configuration91.svcinfo" />
-    <None Include="Service References\Compras\configuration.svcinfo" />
-    <None Include="Service References\Compras\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="Services\AuthService.svc" />
     <Content Include="Services\DataAgroServices.svc" />
     <Content Include="ExternalLibs\Kendo.DynamicLinq.dll" />
@@ -2905,13 +2894,6 @@
     <Content Include="Views\Cubproveedores\Index.cshtml" />
     <Content Include="Views\Agenda\Index.cshtml" />
     <Content Include="Views\Comercial\Index.cshtml" />
-    <None Include="Service References\Compras\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS.wsdl" />
-    <Content Include="Service References\Compras\WebDataAgro.Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
-    <Content Include="Service References\Compras\WebDataAgro.Compras.Z_MPRFC_DATOS_COMPRASResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
     <Content Include="Views\Shared\ErrorDePermisos.cshtml" />
     <Content Include="Views\Shared\ErrorUsuarioSinDerechos.cshtml" />
     <Content Include="Views\Proveedor\ReporteProveedor.cshtml" />
@@ -3153,9 +3135,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\Compras\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />

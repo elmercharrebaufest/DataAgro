@@ -1,11 +1,10 @@
-﻿using NLog;
-using Molinos.DataAgro.Agent.CapacidadProductivaDisponible;
-using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -40,100 +39,52 @@ namespace Molinos.DataAgro.Agent
             {
                 try
                 {
-                    if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+
+                    var resultado = new List<CapacidadProductivaPendienteDto>();
+
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new ZMprfcCapacProductivaDispo()
                     {
-                        var resultado = new List<CapacidadProductivaPendienteDto>();
+                        ImCuit = cuit
+                    };
 
-                        Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
-                        agent.ClientCredentials.UserName.UserName = UserSap;
-                        agent.ClientCredentials.UserName.Password = PassSap;
-
-                        var rq = new ZMprfcCapacProductivaDispo()
-                        {
-                            ImCuit = cuit
-                        };
-
-                        var log = new Log
-                        {
-                            Fecha = DateTime.Now,
-                            Xml = rq.ToXml()
-                        };
-                        var logId = repositorio.Agregar(log);
-                        repositorio.GuardarCambios();
-                        logger.Debug(rq.ToXml());
-
-                        var valor = agent.ZMprfcCapacProductivaDispo(rq);
-                        logger.Debug(valor.ToXml());
-                        log = repositorio.Obtener<Log>(logId.Id);
-                        log.Xml += valor.ToXml();
-                        repositorio.GuardarCambios();
-                        var materiales = repositorio.Listar<Material>().ToList();
-                        if (valor != null && valor.ExSalida != null && valor.ExSalida.Count() > 0)
-                        {
-                            foreach (var a in valor.ExSalida)
-                            {
-                                var item = new CapacidadProductivaPendienteDto
-                                {
-                                    CAP_PROD = a.CapProd,
-                                    CAP_PROD_PORC = a.CapProdPorc,
-                                    COMPRAS_ACT = a.ComprasAct,
-                                    COMPRAS_ANT = a.ComprasAnt,
-                                    CUIT = a.Cuit,
-                                    MATERIAL = materiales.Where(x => x.Codigo == a.Material).Single().Descripcion,
-                                    UNIDAD = a.Unidad,
-                                };
-                                resultado.Add(item);
-                            }
-                        }
-                        return resultado;
-                    }
-                    else
+                    var log = new Log
                     {
-                        var resultado = new List<CapacidadProductivaPendienteDto>();
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                    logger.Debug(rq.ToXml());
 
-                        SI_ZMPWS_DATAAGRO_CAPAC_PRODUCTIVA_DISPOClient agent = new SI_ZMPWS_DATAAGRO_CAPAC_PRODUCTIVA_DISPOClient();
-                        agent.ClientCredentials.UserName.UserName = UserSap;
-                        agent.ClientCredentials.UserName.Password = PassSap;
-
-                        var rq = new Z_MPRFC_CAPAC_PRODUCTIVA_DISPO()
+                    var valor = agent.ZMprfcCapacProductivaDispo(rq);
+                    logger.Debug(valor.ToXml());
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += valor.ToXml();
+                    repositorio.GuardarCambios();
+                    var materiales = repositorio.Listar<Material>().ToList();
+                    if (valor != null && valor.ExSalida != null && valor.ExSalida.Count() > 0)
+                    {
+                        foreach (var a in valor.ExSalida)
                         {
-                            IM_CUIT = cuit
-                        };
-
-                        var log = new Log
-                        {
-                            Fecha = DateTime.Now,
-                            Xml = rq.ToXml()
-                        };
-                        var logId = repositorio.Agregar(log);
-                        repositorio.GuardarCambios();
-                        logger.Debug(rq.ToXml());
-
-                        var valor = agent.SI_ZMPWS_DATAAGRO_CAPAC_PRODUCTIVA_DISPO(rq);
-                        logger.Debug(valor.ToXml());
-                        log = repositorio.Obtener<Log>(logId.Id);
-                        log.Xml += valor.ToXml();
-                        repositorio.GuardarCambios();
-                        var materiales = repositorio.Listar<Material>().ToList();
-                        if (valor != null && valor.EX_SALIDA != null && valor.EX_SALIDA.Count() > 0)
-                        {
-                            foreach (var a in valor.EX_SALIDA)
+                            var item = new CapacidadProductivaPendienteDto
                             {
-                                var item = new CapacidadProductivaPendienteDto
-                                {
-                                    CAP_PROD = a.CAP_PROD,
-                                    CAP_PROD_PORC = a.CAP_PROD_PORC,
-                                    COMPRAS_ACT = a.COMPRAS_ACT,
-                                    COMPRAS_ANT = a.COMPRAS_ANT,
-                                    CUIT = a.CUIT,
-                                    MATERIAL = materiales.Where(x => x.Codigo == a.MATERIAL).Single().Descripcion,
-                                    UNIDAD = a.UNIDAD,
-                                };
-                                resultado.Add(item);
-                            }
+                                CAP_PROD = a.CapProd,
+                                CAP_PROD_PORC = a.CapProdPorc,
+                                COMPRAS_ACT = a.ComprasAct,
+                                COMPRAS_ANT = a.ComprasAnt,
+                                CUIT = a.Cuit,
+                                MATERIAL = materiales.Where(x => x.Codigo == a.Material).Single().Descripcion,
+                                UNIDAD = a.Unidad,
+                            };
+                            resultado.Add(item);
                         }
-                        return resultado;
                     }
+                    return resultado;
+
                 }
                 catch (Exception e)
                 {

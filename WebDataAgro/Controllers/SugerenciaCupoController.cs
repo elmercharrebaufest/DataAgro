@@ -43,6 +43,7 @@ namespace WebDataAgro.Controllers
             CargarVista(materialId, centroId, ComercialSeleccionado.Value, muestraModal);
             return View();
         }
+
         public ActionResult PartialTabla(int materialId, string centroId, int? ComercialSeleccionado2, bool muestraModal = false)
         {
             ComercialSeleccionado2 = ComercialSeleccionado2 ?? GlobalVariables.ComercialId;
@@ -138,6 +139,7 @@ namespace WebDataAgro.Controllers
                 ViewBag.Mensajes = cupoManager.MostrarDetalle(ComercialSeleccionado, centroId, materialId.Value);
             }
         }
+
         public ActionResult DatosConfiguracion(KendoGridMvcRequest request, int? ComercialId)
         {
             ComercialId = ComercialId ?? GlobalVariables.ComercialId;
@@ -180,6 +182,7 @@ namespace WebDataAgro.Controllers
             }
             return Json(resultado);
         }
+
         public JsonResult DatosConfirmar(List<ConfirmacionSugerenciaCupoDto> datosTabla, List<DiaCupo> devoluciones, int materialId, string centroId, int? comercialId)
         {
             var comercialSeleccionado = comercialId ?? GlobalVariables.ComercialId;
@@ -239,11 +242,6 @@ namespace WebDataAgro.Controllers
 
         public JsonResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
         {
-            //List<CupoResult> resultados = new List<CupoResult>();
-            //CupoResult resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
-            //resultados.Add(resultado);
-            //return Json(resultados);
-
             List<CupoResult> resultado = new List<CupoResult>();
             resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
             return Json(resultado);

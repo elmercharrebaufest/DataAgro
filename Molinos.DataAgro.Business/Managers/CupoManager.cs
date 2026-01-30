@@ -168,9 +168,12 @@ namespace Molinos.DataAgro.Business.Managers
                                                 // cupos para Vicentin en CupoExterno
                                                 if (cupo.Centro.NoPropio)
                                                 {
-                                                    var consumidos = repositorio.Contar<Cupo>(x =>
-                                                    x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
-                                                    cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+                                                    var consumidos = repositorio.Contar<Cupo>(x => x.CentroId == cupo.CentroId &&
+                                                                                                   x.MaterialId == cupo.MaterialId &&
+                                                                                                   x.FechaIngreso == cupo.FechaIngreso &&
+                                                                                                   x.ZonaCupoId == cupo.ZonaCupoId &&
+                                                                                                   x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                                                                                                   x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado);
 
                                                     //if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA TraerLimitePorZona()");
                                                     //ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
@@ -196,8 +199,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                                                     //disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
 
-                                                    var cuposNoPropiosDisponibles = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
-                                                        d.Cantidad.Value);
+                                                    var cuposNoPropiosDisponibles = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null &&
+                                                                                                                          x.Disponible &&
+                                                                                                                          x.CentroId == cupo.CentroId &&
+                                                                                                                          x.MaterialId == cupo.MaterialId &&
+                                                                                                                          x.FechaIngreso == cupo.FechaIngreso, d.Cantidad.Value);
 
                                                     if (cuposNoPropiosDisponibles.Count < d.Cantidad.Value)
                                                     {
@@ -388,11 +394,11 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Cupera", $"Error en el envio de datos.");
                 return error;
             }
-            var creados = repositorio.Contar<Cupo>(
-                                                x => x.FechaIngreso == fechaIngreso
-                                                && x.MaterialId == materialId
-                                                && x.CentroId == centroId
-                                                && x.EstadoCupoId != 9 && x.EstadoCupoId != 4);
+            var creados = repositorio.Contar<Cupo>(x => x.FechaIngreso == fechaIngreso &&
+                                                        x.MaterialId == materialId &&
+                                                        x.CentroId == centroId &&
+                                                        x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                                                        x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
             fechaIngreso = fechaIngreso.Date;
             var total = repositorio.Obtener<ConfiguracionCupo, int>(
                 x => x.MaterialId == materialId && x.Fecha == fechaIngreso && x.CentroId == centroId,
@@ -404,7 +410,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (CierreCupera)
             {
                 CupoResult error = new CupoResult();
-                error.Error("Cupera", $"La cupera se encuentra cerrada para la fecha {fechaIngreso.ToString("dd/MM/yyyy")}");
+                error.Error("Cupera", $"La cupera se encuentra cerrada para la fecha {fechaIngreso:dd/MM/yyyy}");
                 return error;
             }
             if (cantidad > total - creados)
@@ -431,8 +437,8 @@ namespace Molinos.DataAgro.Business.Managers
             var cuposCreados = repositorio.Contar<Cupo>(x => x.FechaIngreso == fechaIngreso &&
                                                              x.MaterialId == materialId &&
                                                              x.CentroId == centroId &&
-                                                             x.EstadoCupoId != 9 &&
-                                                             x.EstadoCupoId != 4);
+                                                             x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                                                             x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
 
             var limiteCupo = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
                                                                               x.Fecha == fechaIngreso &&
@@ -450,8 +456,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                                         x.FechaIngreso == fechaIngreso &&
                                                                         x.MaterialId == materialId &&
                                                                         x.CentroId == centroId &&
-                                                                        x.EstadoCupoId != 9 &&
-                                                                        x.EstadoCupoId != 4);
+                                                                        x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                                                                        x.EstadoCupoId != (int)EnumEstadoCupo.Anulado);
 
             int limiteDescarga = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
                                                                                   x.Fecha == fechaIngreso &&
@@ -463,7 +469,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (cierreCupera)
             {
                 CupoResult error = new CupoResult();
-                error.Error("Cupera", $"La cupera se encuentra cerrada para la fecha {fechaIngreso.ToString("dd/MM/yyyy")}");
+                error.Error("Cupera", $"La cupera se encuentra cerrada para la fecha {fechaIngreso:dd/MM/yyyy}");
                 return error;
             }
             if (cantidad > limiteDescarga - cuposConDescargaCreados)
@@ -510,7 +516,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "La Cantidad no debe estar vacía"));
             }
-            if (cupo.MaterialId == 3 && (cupo.Calidad == "" || cupo.Calidad == null))
+            if (cupo.MaterialId == (int)EnumMateriales.SOJA && (cupo.Calidad == "" || cupo.Calidad == null))
             {
                 error.Errores.Add(new ErrorMessage(400, "La calidad no debe estar vacia para Soja"));
             }
@@ -718,7 +724,7 @@ namespace Molinos.DataAgro.Business.Managers
                         cuponoPropio.CupoId = null;
                     }
 
-                    cupoSap.EstadoCupoId = 4;
+                    cupoSap.EstadoCupoId = (int)EnumEstadoCupo.Anulado;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSap.Id, null), TipoAccionLogDataAgro.Eliminar);
                     if (!cupoSap.Centro.NoPropio)
@@ -774,7 +780,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (cupoSap.Centro.NoPropio)
                     {
-                        if (cupoSap.EstadoCupoId != 1)
+                        if (cupoSap.EstadoCupoId != (int)EnumEstadoCupo.SinCTG)
                         {
                             var nuevoError = new Resultado();
                             nuevoError.Error("Error", "El cupo no puede ser anulado. Cupo: " + cupoSap.CupoSap);
@@ -784,7 +790,7 @@ namespace Molinos.DataAgro.Business.Managers
                         cuponoPropio.CupoId = null;
                     }
 
-                    cupoSap.EstadoCupoId = 4;
+                    cupoSap.EstadoCupoId = (int)EnumEstadoCupo.Anulado;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSap.Id, null), TipoAccionLogDataAgro.Eliminar);
                     if (!cupoSap.Centro.NoPropio)
@@ -826,7 +832,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new Resultado();
-            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == 1 || cupoSap.EstadoCupoId == 6) && cupoSap.CupoStop != null)
+            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == (int)EnumEstadoCupo.SinCTG || cupoSap.EstadoCupoId == (int)EnumEstadoCupo.SinSTOP) && cupoSap.CupoStop != null)
             {
                 if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                 {
@@ -1256,17 +1262,20 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            var destino = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? "SAN LORENZO - SANTA FE - BENIELLI 398 - N° de planta 408411" : cupo.Centro.Descripcion;
+            var destino = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? "SAN LORENZO - SANTA FE - BENIELLI 398 - N° de planta 408411" :
+                cupo.Centro.CodigoSap == "9999" ? "ROSARIO - SANTA FE - URIBURU 3480 - N° de planta 16581" :
+                cupo.Centro.Descripcion;
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
-            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + (cupo.Centro.CodigoSap == "1034" ? "Molinos Río de la Plata - 30500858628" : "MOLINOS AGRO S.A.-30715118773") + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable ? " (Sustentable)"
-                : cupo.EPA && !cupo.EUDR ? " (EPA)" : cupo.EUDR && !cupo.EPA ? " (EUDR)" : cupo.EPA && cupo.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
-
+            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + (cupo.Centro.CodigoSap == "1034" || cupo.Centro.CodigoSap == "9999" ? "Molinos Río de la Plata - 30500858628" : "MOLINOS AGRO S.A.-30715118773") + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (
+                cupo.Sustentable ? " (Sustentable)" :
+                cupo.EPA && !cupo.EUDR ? " (EPA)" :
+                cupo.EUDR && !cupo.EPA ? " (EUDR)" :
+                cupo.EPA && cupo.EUDR ? " (EPA/EUDR)" : "") + "</td></tr>";
             htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'." + "<br>" + (cupo.EPA || cupo.EUDR ? "<p> SOJA EPA/EUDR: no se reciben camiones escalables chasis acoplado ni bateas. Solamente escalables Tolva y camiones comunes.</p></td></tr>" : "</td></tr>");
-
 
             if (cupo.MaterialId == (int)EnumMateriales.MAIZ || cupo.MaterialId == (int)EnumMateriales.TRIGO || (cupo.MaterialId == (int)EnumMateriales.SOJA && (cupo.Sustentable || cupo.EPA || cupo.EUDR)) || cupo.Observaciones != null)
             {
@@ -1286,7 +1295,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += cupo.Sustentable ? "SUSTENTABLE<br />" : cupo.EPA && cupo.EUDR ? "EPA/EUDR<br />" : cupo.EPA && !cupo.EUDR ? "EPA<br />" : !cupo.EPA && cupo.EUDR ? "EUDR<br />" : "";
                 }
-
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1754,7 +1762,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<Cupo> cupos = repositorio.Listar<Cupo>(x =>
                 x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != 4 && x.EstadoCupoId != 9 &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
                 (x.NegocioId != null || x.ConfiguracionEspacioDinamicoId != null)
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos creados de sugerencias.");
@@ -1793,7 +1801,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<Cupo> cuposTotales = repositorio.Listar<Cupo>(x =>
                 x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado);
 
             foreach (var config in disponibilidadEnPlantas)
             {
@@ -2080,7 +2088,7 @@ namespace Molinos.DataAgro.Business.Managers
                     !tienenAnulaYReemplaza.Any(a => a == x.Id) &&
                     !idsTiposNegociosExcluidos.Any(a => a == x.TipoNegocioId) &&
                     formula.NegociosDesde <= (x.FechaHastaOriginal ?? x.FechaHasta) && formula.NegociosHasta >= (x.FechaHastaOriginal ?? x.FechaHasta) //solo compara fechaHasta ¡!
-                    && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MaterialId == formula.MaterialId);
+                    && x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.DestinoId == formula.CentroId && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
@@ -2273,7 +2281,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var cuposPendientesSustentables = repositorio.Listar<Cupo, CupoDto>(
                 x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId, Sustentable = x.Sustentable, Proveedor = x.Proveedor.CUIT },
-                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer && x.Sustentable)
+                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado && x.FechaIngreso >= ayer && x.Sustentable)
                 .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
             foreach (var item in stockSustentable)
@@ -2309,11 +2317,27 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             // Traer stock para cupos EPA y EUDR (mientras se use solo soja twin) por proveedor
-            var stockEPAyEUDR = contratos.Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR)).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
+            var stockEPAyEUDR = contratos.Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR))
+                .Select(a => a.ProveedorCUIT).Distinct()
+                .Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
-            var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId, EPA = x.EPA, EUDR = x.EUDR, Proveedor = x.Proveedor.CUIT },
-                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer && (x.EPA || x.EUDR))
+            var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(x =>
+            new CupoDto
+            {
+                Id = x.Id,
+                Cumplimiento = x.Cumplimiento,
+                FechaIngreso = x.FechaIngreso,
+                NegocioId = x.NegocioId,
+                EPA = x.EPA,
+                EUDR = x.EUDR,
+                Proveedor = x.Proveedor.CUIT
+            }, x => x.Cumplimiento != true &&
+                x.NegocioId != null &&
+                negociosId.Contains(x.NegocioId ?? 0) &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                x.FechaIngreso >= ayer &&
+                (x.EPA || x.EUDR))
                 .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
             foreach (var item in stockEPAyEUDR)
@@ -2381,9 +2405,15 @@ namespace Molinos.DataAgro.Business.Managers
             var espacioDinamicoIds = espacioDinamicoLista.Select(a => a.Id).ToList();
 
             Dictionary<int, int> espacioDinamicoUsados = repositorio.Listar<Cupo>(x =>
-                 x.ConfiguracionEspacioDinamicoId != null && espacioDinamicoIds.Contains(x.NegocioId ?? 0) &&
-                 x.EstadoCupoId != 1 && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.Cumplimiento != false
-                 && x.ComercialId != null).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
+                 x.ConfiguracionEspacioDinamicoId != null &&
+                 espacioDinamicoIds.Contains(x.NegocioId ?? 0) &&
+                 x.EstadoCupoId != (int)EnumEstadoCupo.SinCTG &&
+                 x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                 x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                 x.Cumplimiento != false &&
+                 x.ComercialId != null)
+                .GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value)
+                .ToDictionary(a => a.Key, a => a.Count());
 
             //cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
             //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.ConfiguracionEspacioDinamicoId, },
@@ -5308,13 +5338,13 @@ namespace Molinos.DataAgro.Business.Managers
                             Observaciones = null,
                             CupoSap = "",
                             FleteProcedencia = solicitud.CantidadFleteProcedencia > 0,
-                            EstadoCupoId = 1,
+                            EstadoCupoId = (int)EnumEstadoCupo.SinCTG,
                             CupoStop = null,
                             CreacionStop = "",
                             ErrorStop = "",
                             NegocioId = negocioAsociado.Id > 0 ? negocioAsociado.Id : (int?)null,
                             ConfiguracionEspacioDinamicoId = null,
-                            TipoNegocioId = 7,
+                            TipoNegocioId = (int)EnumTipoNegocio.ESPACIO_DINAMICO,
                             ConDescarga = solicitud.ConDescarga,
                             ComercialCreadorId = solicitud.ComercialCreadorId,
                             Sustentable = solicitud.Sustentable,
