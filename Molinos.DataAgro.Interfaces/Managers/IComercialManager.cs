@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Interfaces
         bool EsAdministrador(string activeDirectoryId);
         bool EsCupera(string activeDirectoryId);
         EquipoDto ListarEquipo(string idActiveDirectory, List<string> roles = null);
+        EquipoDto ListarEquipoParaLogin(string idActiveDirectory, List<string> roles = null);
         int ObtenerComercialId(string idActiveDirectory);
         List<int> CadenaComerciales(int comercialId);
         List<int> ListarCorredoresComercial(List<string> roles = null);
@@ -36,7 +37,6 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult TraerComercialesProveedorReporte(int? proveedorId, DataSourceRequest request);
         List<string> ObtenerPermisosPorEmail(string email);
         List<RolDto> ObtenerRolesYPermisosPorEmail(string email);
-
         ComercialDto TraerComercial(string email);
         List<ComercialCambioDePerfilDto> ListarComerciales(string comercial, List<int> comerciales);
     }

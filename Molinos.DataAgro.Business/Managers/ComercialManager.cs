@@ -28,10 +28,6 @@ namespace Molinos.DataAgro.Business
             this.oDatoDelComercialAgent = oDatoDelComercialAgent;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-
         public DatosIniAbmComercial TraerDatosIniciales()
         {
             //si es alta le mandoo cero, si modifico le mando el id desde la grilla
@@ -70,12 +66,14 @@ namespace Molinos.DataAgro.Business
                 Comercial = result
             };
         }
+
         public ComercialDto TraerComercial(string email)
         {
             var comercial = repositorio.Obtener<Comercial, int>(x => x.Email == email, x => x.ComercialId);
             var comercialDto = TraerComercial(comercial);
             return comercialDto;
         }
+
         public ComercialDto TraerComercial(int intComercialId)
         {
             var comercial = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
@@ -317,6 +315,7 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Administrador ?? false);
         }
+
         public bool EsCupera(string activeDirectoryId)
         {
             return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera ?? false);
@@ -362,6 +361,58 @@ namespace Molinos.DataAgro.Business
             foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
             {
                 resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
+            }
+            return resultado;
+        }
+
+        public EquipoDto ListarEquipoParaLogin(string idActiveDirectory, List<string> roles = null)
+        {
+            var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+            var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
+
+            var verCorredorComercial = false;
+            if (roles != null && roles.Any())
+            {
+                verCorredorComercial = roles.Any(r => r == PermisosDataAgro.VerCorredorComercial.ToString());
+            }
+
+            var resultado = new EquipoDto
+            {
+                Equipo = verCorredorComercial ?
+                                // Todo Comercial con el Rol "Comercial Corredor"
+                                repositorio.Listar<Comercial, int>(x => x.ComercialId,
+                                                                   x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) :
+                                // Si corresponde, arma el equipo según jerarquías.
+                                ListarEquipoParaLogin(comercialId, comerciales, roles),
+
+                // Todos los Comerciales
+                EquipoReal = comerciales.Select(x => x.ComercialId).ToList()
+            };
+
+            return resultado;
+        }
+
+        private static List<int> ListarEquipoParaLogin(int comercialId, List<ComercialQry> comerciales, List<string> roles = null)
+        {
+            var resultado = new List<int> { comercialId };
+            var tienePermiso_VerJerarquia = false;
+            var tienePermiso_VerTodos = false;
+
+            if (roles != null)
+            {
+                tienePermiso_VerJerarquia = roles.Any(r => r == PermisosDataAgro.VerJerarquia.ToString());
+                tienePermiso_VerTodos = roles.Any(r => r == PermisosDataAgro.VerTodos.ToString());
+            }
+
+            // Si no tiene estos dos permisos, devuelve comercialId
+            if (!tienePermiso_VerJerarquia && !tienePermiso_VerTodos)
+            {
+                return resultado;
+            }
+            // Por ahora, para pasar por acá debe tener alguno de estos roles: Mesa, Visualizador, Administrativo, Archivos KMZ, Visualizador General
+            foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
+            {
+                resultado.AddRange(ListarEquipoParaLogin(comercial.ComercialId, comerciales, roles));
             }
             return resultado;
         }
@@ -468,9 +519,9 @@ namespace Molinos.DataAgro.Business
                 Comercial = x.Nombres + " " + x.Apellido,
                 IdActiveDirectory = x.IdActiveDirectory
             },
-              x => x.Deshabilitado != true && ((x.AsignarNegocios == true &&
-              x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)))
-              || x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AltaCupos))), 0, "Comercial");
+            x => x.Deshabilitado != true &&
+                ((x.AsignarNegocios == true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet))) ||
+                x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AltaCupos))), 0, "Comercial");
             //se listan también los usuarios con rol Cupos
         }
 

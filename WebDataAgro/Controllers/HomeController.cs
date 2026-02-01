@@ -80,7 +80,6 @@ namespace WebDataAgro.Controllers
                 return RedirectToAction("Error");
             }
 
-
             return View();
         }
 
@@ -112,7 +111,7 @@ namespace WebDataAgro.Controllers
             foreach (var rol in roles)
                 identity.AddClaim(new Claim(ClaimTypes.Role, rol));
 
-            var equipo = comercialManager.ListarEquipo(comercial.IdActiveDirectory, roles);
+            var equipo = comercialManager.ListarEquipoParaLogin(comercial.IdActiveDirectory, roles);
             identity.AddClaim(new Claim("perfil", JsonConvert.SerializeObject(comercialManager.ObtenerPerfilDeUsuario(comercial.IdActiveDirectory))));
             identity.AddClaim(new Claim("esAdministrador", JsonConvert.SerializeObject(comercialManager.EsAdministrador(comercial.IdActiveDirectory))));
             identity.AddClaim(new Claim("EsCupera", JsonConvert.SerializeObject(comercialManager.EsCupera(comercial.IdActiveDirectory))));
@@ -154,6 +153,7 @@ namespace WebDataAgro.Controllers
             email = jwt.Claims.FirstOrDefault(c => c.Type == "upn")?.Value;
             return email;
         }
+
         [AllowAnonymous]
         public ActionResult Login()
         {
@@ -201,7 +201,6 @@ namespace WebDataAgro.Controllers
                 logger.Debug("Token response Headers: " + JsonConvert.SerializeObject(response.Headers.ToDictionary(h => h.Key, h => h.Value)));
                 logger.Debug("Token response ContentHeaders: " + JsonConvert.SerializeObject(response.Content.Headers.ToDictionary(h => h.Key, h => h.Value)));
 
-
                 return JsonConvert.DeserializeObject<TokenResponse>(json);
             }
         }
@@ -219,6 +218,7 @@ namespace WebDataAgro.Controllers
             public string Mail { get; set; }
             public string DisplayName { get; set; }
         }
+
         public ActionResult Logout()
         {
             //Cerrar cookie OWIN de autenticación
@@ -227,17 +227,17 @@ namespace WebDataAgro.Controllers
 
             return RedirectToAction("Login", "Home");
         }
+
         public ActionResult ErrorDePermisos()
         {
-
             return View("ErrorDePermisos");
         }
 
         public ActionResult ErrorUsuarioSinDerechos()
         {
-
             return View("ErrorUsuarioSinDerechos");
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult Inicializar(int? comercialId, int? zonaId)
         {
@@ -251,7 +251,7 @@ namespace WebDataAgro.Controllers
             var proveedorZonaPropia = PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia);
             var comercialesConMismaZona = mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId);
 
-            logger.Debug($"Inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
+            logger.Debug($"Inicializar GlobalVariables.ComercialId: {GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.VerTodos): {verTodos}");
             logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal.ToJson()}");
             logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo.ToJson()}");
@@ -268,12 +268,13 @@ namespace WebDataAgro.Controllers
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(comercialId, equipo, zonaId, GlobalVariables.ComercialId);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
             model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo, comercialId, zonaId);
-            //model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
             model.Campaña = new CampañaHome();
+
             if (result != null)
             {
                 model.Contactos = result;
             }
+
             if (model.Detalle != null)
             {
                 foreach (var item in model.Detalle.GroupBy(a => a.Material))
@@ -287,16 +288,6 @@ namespace WebDataAgro.Controllers
                         });
                 }
             }
-            //if (model.Campaña.Materiales != null)
-            //{
-            //    foreach (var item in model.Campaña.Materiales)
-            //    {
-            //        var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
-            //        item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
-            //            + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
-            //            + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
-            //    }
-            //}
 
             return new JsonResult()
             {
@@ -304,6 +295,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BusquedaHome(string filtro)
         {
@@ -313,8 +305,8 @@ namespace WebDataAgro.Controllers
                 Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, equipo, GlobalVariables.CorredoresComercial),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerBusquedaContacto(oParamBusqueda filtro, int pagina)
         {
@@ -322,7 +314,6 @@ namespace WebDataAgro.Controllers
 
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
-
 
             ResultIniContacto result;
             if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
@@ -344,8 +335,8 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerActividadesPorComercialId()
         {
@@ -363,15 +354,14 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.DescargaPdf)]
         public ActionResult ExportarContactosPDF(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
-
 
             var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
@@ -401,6 +391,7 @@ namespace WebDataAgro.Controllers
 
             return Json(model);
         }
+
         [Autorizacion(PermisosDataAgro.DescargaExportAllComercial, PermisosDataAgro.DescargaExportAllVisualizador)]
         public ActionResult ExportarAll(oParamBusqueda filtro)
         {
@@ -437,6 +428,7 @@ namespace WebDataAgro.Controllers
             }
             return View();
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerPostIt()
         {
@@ -454,8 +446,8 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarPostIt(PostIt post)
         {
@@ -468,14 +460,13 @@ namespace WebDataAgro.Controllers
                 model = mobjHomeManager.GuardarPostIt(post);
             }
 
-
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult GuardarObjetivoComercial(ObjetivoComercial objetivo)
         {
@@ -488,14 +479,13 @@ namespace WebDataAgro.Controllers
                 model = objetivoManager.GuardarObjetivo(objetivo);
             }
 
-
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerObjetivos(int? comercialId, int? zonaId)
         {
@@ -509,6 +499,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult EliminarObjetivo(int id)
         {
@@ -519,6 +510,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BorrarCookie()
         {
@@ -532,6 +524,7 @@ namespace WebDataAgro.Controllers
 
             CrearOActualizarSesion(Email);
         }
+
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult TraerCompras(int? comercialId, int? zonaId)
         {
@@ -614,6 +607,7 @@ namespace WebDataAgro.Controllers
             TempData["Comerciales"] = comercialManager.ObtenerComerciales(new List<int>(), 0);
             return View();
         }
+
         [HttpPost]
         [Autorizacion(PermisosDataAgro.CambioDePerfil)]
         public ActionResult CambioDePerfil(int ComercialId)
@@ -631,7 +625,6 @@ namespace WebDataAgro.Controllers
                 TempData["Error"] = e.Message;
                 return RedirectToAction("Error");
             }
-
         }
 
         [HttpPost]
