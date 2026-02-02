@@ -48,8 +48,8 @@
 
 	<setParameter name="ActivarBLEND Key" value="No" />
 
-	<setParameter name="PathBoletos Key" value="\\MOAFS\SHARE\MATERIAS_PRIMAS\CONTRATOSGAP\" />
-	<setParameter name="PathConfirmas Key" value="\\MOAFS\SHARE\MATERIAS_PRIMAS\XML_BACKUP\" />
+	<setParameter name="PathBoletos Key" value="\\sapshareprd\share\ftproot\transf\matprim\boletosgap\" />
+	<setParameter name="PathConfirmas Key" value="\\sapshareprd\share\ftproot\transf\matprim\confirmas\" />
 	<setParameter name="LibraryNameResearch Key" value="Datos research" />
 
 	<setParameter name="ConfirmaUser Key" value="molinosagro" />
