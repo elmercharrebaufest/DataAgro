@@ -355,6 +355,7 @@ IF NOT EXISTS (select 1 from Rol where Descripcion = 'Recibir Sugerencia FAQ') B
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Algoritmo de Cupos') and Permiso = 735) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Algoritmo de Cupos'), 735); END
 IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Administrador') and Permiso = -1) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Administrador'), -1); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='BoletoAdmin') and Permiso = 920) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='BoletoAdmin'), 920); END
 
 --ResearchCoeficienteCultivo
 IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Trigo') and Coeficiente='0.9') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Trigo'),'0.9'); END
@@ -1142,3 +1143,4 @@ IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Sot
 	UPDATE Centro SET Descripcion = 'Rio del Valle' 
 	 WHERE Id = @IdRioValle;
    END
+
