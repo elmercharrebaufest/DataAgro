@@ -8,6 +8,7 @@ namespace WebDataAgro.App_Start
 {
     public partial class Startup
     {
+
         public void ConfigureAuth(IAppBuilder app)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -18,14 +19,12 @@ namespace WebDataAgro.App_Start
             {
                 AuthenticationType = CookieAuthenticationDefaults.AuthenticationType,
                 CookieName = ".DataAgro.Auth",
-                // Seguridad
-                CookieSecure = CookieSecureOption.Always,               // HTTPS obligatorio. Antes: Never
-                CookieHttpOnly = true,                                  // No accesible por JS
-                CookieSameSite = Microsoft.Owin.SameSiteMode.Strict,    // Antes: Lax
-                // Sesión
+                CookieSecure = CookieSecureOption.Never,
+                CookieSameSite = Microsoft.Owin.SameSiteMode.Lax,
                 ExpireTimeSpan = TimeSpan.FromHours(8),
-                SlidingExpiration = false // True: Asegura que las cookies se renueven con actividad del usuario.
+                SlidingExpiration = false
             });
+
         }
     }
 }
