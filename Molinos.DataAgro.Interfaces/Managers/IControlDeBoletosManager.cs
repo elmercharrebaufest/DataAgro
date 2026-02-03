@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
     {
         Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null);
         Resultado AsociarConfirma(int negocioId);
-        List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes();
+        List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
 
         List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo);
         List<MaterialCombo> GetMaterial();

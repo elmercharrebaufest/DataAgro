@@ -1,6 +1,7 @@
 ﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -45,125 +46,6 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")] // Cache por 5 minutos
-        public JsonResult GetMateriales()
-        {
-            try
-            {
-                var material = _controlDeBoletosManager.GetMaterial();
-                var materialesListItems = material.Select(
-                    x => new SelectListItem
-                    {
-                        Text = x.Descripcion,
-                        Value = x.MaterialId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-                ViewBag.Material = materialesListItems;
-
-                return Json(materialesListItems, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                // Log del error
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
-        public JsonResult GetEstadosControl()
-        {
-            try
-            {
-                var listaEstados = this._controlDeBoletosEstadoManager.ListarTodo();
-                var estadoItems = listaEstados.Select(
-                    x => new SelectListItem
-                    {
-                        Text = x.Descripcion,
-                        Value = x.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value
-                    );
-
-                return Json(estadoItems, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
-        public JsonResult GetBolsaCompraNet()
-        {
-            try
-            {
-                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
-                var estadoItems = listaEstados.Select(
-                    x => new SelectListItem
-                    {
-                        Text = x.Descripcion,
-                        Value = x.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value
-                    );
-
-                return Json(estadoItems, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
-        public JsonResult GetComerciales()
-        {
-            try
-            {
-
-                var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
-
-                var comercialesListItems = comercial.Select(
-                    x => new SelectListItem
-                    {
-                        Text = x.Apellido,
-                        Value = x.ComercialId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-                return Json(comercialesListItems, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
-        public JsonResult GetProveedores()
-        {
-            try
-            {
-                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
-                var proveedoresListItems = proveedores.Select(comercial =>
-                    new SelectListItem
-                    {
-                        Text = comercial.RazonSocial,
-                        Value = comercial.ProveedorId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-
-                return Json(proveedoresListItems, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-            }
-        }
 
         [HttpPost]
         public JsonResult GetBoletos(string filtros)
@@ -171,30 +53,30 @@ namespace WebDataAgro.Controllers
             try
             {
                 // Deserializar filtros si vienen como JSON
-                FiltrosBoletoModel filtrosObj = null;
+                ControlDeBoletoFiltroBusquedaDto filtrosBusqueda = null;
                 if (!string.IsNullOrEmpty(filtros))
                 {
                     try
                     {
-                        filtrosObj = JsonConvert.DeserializeObject<FiltrosBoletoModel>(filtros);
+                        filtrosBusqueda = JsonConvert.DeserializeObject<ControlDeBoletoFiltroBusquedaDto>(filtros);
                     }
                     catch
                     {
                         // Si falla la deserialización, crear objeto vacío
-                        filtrosObj = new FiltrosBoletoModel();
+                        filtrosBusqueda = new ControlDeBoletoFiltroBusquedaDto();
                     }
                 }
                 else
                 {
-                    filtrosObj = new FiltrosBoletoModel();
+                    filtrosBusqueda = new ControlDeBoletoFiltroBusquedaDto();
                 }
 
                 // TODO: Implementar paginación real con Kendo DataSourceRequest
 
-                var boletos = this._controlDeBoletosManager.GetControlBoletosPendientes();
+                var boletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
 
                 //var boletos = GenerarDatosEjemplo()
-                //    .Where(b => AplicarFiltros(b, filtrosObj))
+                //    .Where(b => AplicarFiltros(b, filtrosBusqueda))
                 //    .ToList();
 
                 var result = new
@@ -377,6 +259,127 @@ namespace WebDataAgro.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        #region Metodos Get para cargar combos
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")] // Cache por 5 minutos
+        public JsonResult GetMateriales()
+        {
+            try
+            {
+                var material = _controlDeBoletosManager.GetMaterial();
+                var materialesListItems = material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+                ViewBag.Material = materialesListItems;
+
+                return Json(materialesListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log del error
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetEstadosControl()
+        {
+            try
+            {
+                var listaEstados = this._controlDeBoletosEstadoManager.ListarTodo();
+                var estadoItems = listaEstados.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value
+                    );
+
+                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetBolsaCompraNet()
+        {
+            try
+            {
+                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                var estadoItems = listaEstados.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value
+                    );
+
+                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetComerciales()
+        {
+            try
+            {
+
+                var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
+
+                var comercialesListItems = comercial.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Apellido,
+                        Value = x.ComercialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+                return Json(comercialesListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetProveedores()
+        {
+            try
+            {
+                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
+                var proveedoresListItems = proveedores.Select(comercial =>
+                    new SelectListItem
+                    {
+                        Text = comercial.RazonSocial,
+                        Value = comercial.ProveedorId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+
+                return Json(proveedoresListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
 
         #region Vistas Parciales
         [HttpGet]
@@ -406,117 +409,6 @@ namespace WebDataAgro.Controllers
 
         #endregion
 
-        #region Métodos Privados
-        private List<BoletoViewModel> GenerarDatosEjemplo()
-        {
-            var random = new Random();
-            var estados = new[] { "Pendiente", "En Proceso", "Completado", "Certificado" };
-            var materiales = new[] { "Soja", "Maíz", "Trigo", "Girasol", "Sorgo" };
-            var proveedores = new[] { "Proveedor A S.A.", "Proveedor B S.R.L.", "Proveedor C S.A.", "Cooperativa XYZ", "Agropecuaria ABC" };
-            var comerciales = new[] { "Juan Pérez", "María García", "Carlos López", "Ana Martínez", "Luis Rodríguez" };
-
-            var boletos = new List<BoletoViewModel>();
-
-            for (int i = 1; i <= 100; i++)
-            {
-                boletos.Add(new BoletoViewModel
-                {
-                    Id = i,
-                    ContratoSAP = (1000000 + i).ToString(),
-                    Material = materiales[random.Next(materiales.Length)],
-                    Estado = estados[random.Next(estados.Length)],
-                    FechaCarga = DateTime.Today.AddDays(-random.Next(0, 30)),
-                    Proveedor = proveedores[random.Next(proveedores.Length)],
-                    Comercial = comerciales[random.Next(comerciales.Length)]
-                });
-            }
-
-            return boletos;
-        }
-
-        private bool AplicarFiltros(BoletoViewModel boleto, FiltrosBoletoModel filtros)
-        {
-            if (filtros == null) return true;
-
-            // Filtro por rango de contrato SAP
-
-            /*
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde) &&
-                int.TryParse(boleto.ContratoSAP, out int contratoNum) &&
-                int.TryParse(filtros.ContratoSAPDesde, out int contratoDesde) &&
-                contratoNum < contratoDesde)
-                return false;
-
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta) &&
-                int.TryParse(boleto.ContratoSAP, out contratoNum) &&
-                int.TryParse(filtros.ContratoSAPHasta, out int contratoHasta) &&
-                contratoNum > contratoHasta)
-                return false;
-            */
-
-            // Filtro por material
-            if (!string.IsNullOrEmpty(filtros.MaterialId) &&
-                boleto.Material != GetMaterialPorId(filtros.MaterialId))
-                return false;
-
-            // Filtro por estado
-            if (!string.IsNullOrEmpty(filtros.EstadoControlId) &&
-                boleto.Estado != GetEstadoPorId(filtros.EstadoControlId))
-                return false;
-
-            // Filtro por proveedor
-            if (!string.IsNullOrEmpty(filtros.Proveedor) &&
-                !boleto.Proveedor.ToLower().Contains(filtros.Proveedor.ToLower()))
-                return false;
-
-            // Filtro por comercial
-            if (!string.IsNullOrEmpty(filtros.ComercialId) &&
-                boleto.Comercial != GetComercialPorId(filtros.ComercialId))
-                return false;
-
-            // Filtro por fecha
-            if (filtros.FechaCargaDesde.HasValue &&
-                boleto.FechaCarga < filtros.FechaCargaDesde.Value)
-                return false;
-
-            if (filtros.FechaCargaHasta.HasValue &&
-                boleto.FechaCarga > filtros.FechaCargaHasta.Value)
-                return false;
-
-            return true;
-        }
-
-        private string GetMaterialPorId(string id)
-        {
-            var materiales = new Dictionary<string, string>
-            {
-                {"1", "Soja"}, {"2", "Maíz"}, {"3", "Trigo"},
-                {"4", "Girasol"}, {"5", "Sorgo"}, {"6", "Cebada"}
-            };
-            return materiales.ContainsKey(id) ? materiales[id] : "";
-        }
-
-        private string GetEstadoPorId(string id)
-        {
-            var estados = new Dictionary<string, string>
-            {
-                {"1", "Pendiente"}, {"2", "En Proceso"},
-                {"3", "Completado"}, {"4", "Certificado"}
-            };
-            return estados.ContainsKey(id) ? estados[id] : "";
-        }
-
-        private string GetComercialPorId(string id)
-        {
-            var comerciales = new Dictionary<string, string>
-            {
-                {"1", "Juan Pérez"}, {"2", "María García"}, {"3", "Carlos López"},
-                {"4", "Ana Martínez"}, {"5", "Luis Rodríguez"}
-            };
-            return comerciales.ContainsKey(id) ? comerciales[id] : "";
-        }
-
-        #endregion
     }
 
     #region ViewModels y DTOs
@@ -531,28 +423,18 @@ namespace WebDataAgro.Controllers
         public TimeSpan? ImHora { get; set; }
     }
 
-    public class BoletoViewModel
-    {
-        public int Id { get; set; }
-        public string ContratoSAP { get; set; }
-        public string Material { get; set; }
-        public string Estado { get; set; }
-        public DateTime FechaCarga { get; set; }
-        public string Proveedor { get; set; }
-        public string Comercial { get; set; }
-    }
-
     public class FiltrosBoletoModel
     {
         public string ContratoSAPDesde { get; set; }
         public string ContratoSAPHasta { get; set; }
-        public string MaterialId { get; set; }
-        public string EstadoControlId { get; set; }
+        public int? MaterialId { get; set; }
+        public int? EstadoControlId { get; set; }
         public bool EsConfirma { get; set; }
         public DateTime? FechaCargaDesde { get; set; }
         public DateTime? FechaCargaHasta { get; set; }
-        public string Proveedor { get; set; }
-        public string ComercialId { get; set; }
+        public int? Proveedor { get; set; }
+        public int? BolsaId { get; set; }
+        public int? ComercialId { get; set; }
     }
 
     #endregion

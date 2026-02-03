@@ -82,7 +82,78 @@ namespace Molinos.DataAgro.Business.Managers
             return oResultado;
         }
 
-        public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes()
+        public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
+        {
+            var query = repositorio.Listar<ControlDeBoletos>()
+                .Where(x => x.ControlDeBoletosEstadoId == (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL);
+
+            // 🔎 FILTROS DINÁMICOS
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
+                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
+
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
+                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
+
+            if (filtros.MaterialId.HasValue)
+                query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
+
+            if (filtros.EstadoControlId.HasValue)
+                query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
+
+            if (filtros.EsConfirma)
+                query = query.Where(x => x.EsConfirma == true);
+
+            if (filtros.FechaCargaDesde.HasValue)
+                query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
+
+            if (filtros.FechaCargaHasta.HasValue)
+                query = query.Where(x => x.FechaCreacion <= filtros.FechaCargaHasta.Value);
+
+            if (filtros.Proveedor.HasValue)
+                query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
+
+            if (filtros.BolsaId.HasValue)
+                query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
+
+            if (filtros.ComercialId.HasValue)
+                query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
+
+            // 🚀 PROYECCIÓN FINAL
+            return query.Select(controlBoleto => new ControlDeBoletosConsultaDto
+            {
+                Id = controlBoleto.Id,
+                NegocioId = controlBoleto.NegocioId,
+                ControlDeBoletosEstadoId = controlBoleto.ControlDeBoletosEstadoId,
+                ControlDeBoletosEstado = controlBoleto.ControlDeBoletosEstado.Descripcion,
+                EsConfirma = controlBoleto.EsConfirma,
+                AltaIdLoteConfirma = controlBoleto.AltaIdLoteConfirma,
+                IdentificadorConfirma = controlBoleto.IdentificadorConfirma,
+                FechaCreacion = controlBoleto.FechaCreacion,
+                FechaModificacion = controlBoleto.FechaModificacion,
+                EstadoConfirmaId = controlBoleto.EstadoConfirmaId,
+                EstadoConfirma = controlBoleto.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(controlBoleto.EstadoConfirmaId.Value)?.Descripcion : null,
+                ControlIniciado = controlBoleto.ControlIniciado,
+                ControlFinalizado = controlBoleto.ControlFinalizado,
+                CertificacionCompletada = controlBoleto.CertificacionCompletada,
+                RegistroDatosOblea = controlBoleto.RegistroDatosOblea,
+                FechaControlIniciado = controlBoleto.FechaControlIniciado,
+                FechaControlFinalizado = controlBoleto.FechaControlFinalizado,
+                FechaCertificacionCompletada = controlBoleto.FechaCertificacionCompletada,
+                FechaRegistroDatosOblea = controlBoleto.FechaRegistroDatosOblea,
+                MaterialId = controlBoleto.Negocio.MaterialId,
+                Material = controlBoleto.Negocio.Material.Descripcion,
+                BolsaCompraNetId = controlBoleto.Negocio.BolsaId,
+                BolsaCompraNet = controlBoleto.Negocio.Bolsa.Descripcion,
+                ComercialId = controlBoleto.Negocio.ComercialId,
+                Comercial = controlBoleto.Negocio.Comercial.Nombres + " " + controlBoleto.Negocio.Comercial.Apellido,
+                ContratoSAP = controlBoleto.Negocio.ContratoSAP,
+                ProveedorId = controlBoleto.Negocio.ProveedorId,
+                Proveedor = controlBoleto.Negocio.Proveedor.RazonSocial
+            }).ToList();
+        }
+
+        /*
+        public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
         {
             var listaControlBoleto = repositorio.Listar<ControlDeBoletos>(x => x.ControlDeBoletosEstadoId == (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL);
             var listadoBoletosPendienteControl = listaControlBoleto.Select(controlBoleto => new ControlDeBoletosConsultaDto()
@@ -115,10 +186,13 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoSAP = controlBoleto.Negocio.ContratoSAP,
                 ProveedorId = controlBoleto.Negocio.ProveedorId,
                 Proveedor = controlBoleto.Negocio.Proveedor != null ? controlBoleto.Negocio.Proveedor.RazonSocial : null
-            }).ToList();
+            })
+               
+            .ToList();
 
             return listadoBoletosPendienteControl;
         }
+        */
 
     }
 }

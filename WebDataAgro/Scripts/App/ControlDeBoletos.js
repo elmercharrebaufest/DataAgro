@@ -188,15 +188,6 @@ var ControlBoletos = (function () {
           var filtro = $(this).data("filter");
           self.aplicarFiltroRapido(filtro);
         });
-
-      // Filtrar al presionar Enter
-      $("#proveedorFiltro")
-        .off("keypress")
-        .on("keypress", function (e) {
-          if (e.which === 13) {
-            self.filtrarBoletos();
-          }
-        });
     },
 
     inicializarGrid: function () {
@@ -286,7 +277,11 @@ var ControlBoletos = (function () {
                 refresh: "Actualizar",
               },
             },
-            selectable: "multiple row",
+            navigatable: true,
+            selectable: {
+              mode: "multiple",
+              type: "row",
+            },
             columns: [
               {
                 field: "Selected",
@@ -407,6 +402,7 @@ var ControlBoletos = (function () {
         fechaCargaHasta: $("#fechaCargaHasta").val(),
         proveedor: $("#proveedorId").val().trim(),
         comercialId: $("#comercialId").val(),
+        bolsaId: $("#bolsaCompraNetId").val().trim(),
       };
     },
 
