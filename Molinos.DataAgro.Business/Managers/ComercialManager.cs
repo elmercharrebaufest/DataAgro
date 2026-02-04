@@ -189,7 +189,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Perfil = oComercial.Perfil;
                 oComercialSave.EmpleadorACargoId = oComercial.EmpleadorACargoId;
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
-                oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP;
+                oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP == null ? oComercial.IdActiveDirectory : oComercial.IdUsuarioSAP;
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeComprasId = oComercial.GrupoDeComprasId;
                 oComercialSave.Deshabilitado = oComercial.Deshabilitado;
@@ -216,6 +216,10 @@ namespace Molinos.DataAgro.Business
                 if (oComercial.Deshabilitado == true)
                 {
                     oComercial.FechaDeshabilitado = DateTime.Now;
+                }
+                if (oComercial.IdUsuarioSAP == null)
+                {
+                    oComercial.IdUsuarioSAP = oComercial.IdActiveDirectory;
                 }
                 repositorio.Agregar(oComercial);
             }
