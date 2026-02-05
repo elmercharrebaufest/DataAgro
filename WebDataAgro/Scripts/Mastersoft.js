@@ -678,28 +678,36 @@ function MSExecuteGetOnServer(url, datos, onCallBack) {
     return respuesta;
 }
 
-function MSExecuteGetOnServerAsync(url, datos, onSuccess, onError) {
+function MSExecuteGetOnServerAsync(url, datos = null) {
+    return new Promise(function (resolve, reject) {
 
-    $.ajax({
-        url: MSGetUrl(url),
-        type: 'GET',
-        cache: false,
-        data: datos,
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            if (onSuccess) onSuccess(data);
-        },
-        error: function (error) {
-            if (onError) {
-                onError(error);
-            } else {
-                MensErr("Error al consultar el servidor \n URL: " + url +
-                    "\n Información tecnica: " + JSON.stringify(error));
+        $.ajax({
+            url: MSGetUrl(url),
+            type: 'GET',
+            cache: false,
+            data: datos,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                resolve(data); // ← devuelve datos al await
+            },
+
+            error: function (xhr, status, error) {
+                const errObj = {
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                };
+
+                console.error("Error AJAX GET:", errObj);
+                reject(errObj); // ← dispara el catch
             }
-        }
+        });
+
     });
 }
+
 
 
 

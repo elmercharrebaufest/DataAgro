@@ -1,165 +1,175 @@
 ﻿var ControlBoletosModificacion = (function () {
-    'use strict';
-    var config = {
-        urls: {
-            getProvincias: '/ControlDeBoletos/GetProvincias',
-            getClasificaciones: '/ControlDeBoletos/GetClasificaciones',
-            getCosechas: '/ControlDeBoletos/GetCosechas',
-            getProcedencias: '/ControlDeBoletos/GetProcedencias',
-            modificar: '/ControlDeBoletos/Modificar'
-        },
-        modalId: '#modalModificarBoleto'
-    };
+  "use strict";
+  var config = {
+    urls: {
+      getProvincias: "/ControlDeBoletos/GetProvincias",
+      getClasificaciones: "/ControlDeBoletos/GetClasificaciones",
+      getCosechas: "/ControlDeBoletos/GetCosechas",
+      getProcedencias: "/ControlDeBoletos/GetProcedencias",
+      getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
+      modificar: "/ControlDeBoletos/ModificarContrato",
+    },
+    modalId: "#modalModificarBoleto",
+  };
 
-    var state = {
-        boletoId: null,
-        cargando: false
-    };
+  var state = {
+    negocioId: null,
+    contrato: null,
+    cargando: false,
+  };
 
-    // ======================
-    // Funciones privadas
-    // ======================
+  // ======================
+  // Funciones privadas
+  // ======================
 
-    function mostrarSpinner(mostrar) {
-        var spinner = document.getElementById('loadingSpinner');
-        if (spinner) {
-            spinner.style.display = mostrar ? 'flex' : 'none';
-        }
+  function mostrarSpinner(mostrar) {
+    var spinner = document.getElementById("loadingSpinner");
+    if (spinner) {
+      spinner.style.display = mostrar ? "flex" : "none";
     }
+  }
 
-    function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || 'info';
-        $('#mensajeModalTitle').text(titulo);
-        $('#mensajeModalBody')
-            .html('<div class="alert alert-' + tipo + '">' + mensaje + '</div>');
-        $('#mensajeModal').modal('show');
-    }
+  function mostrarMensaje(titulo, mensaje, tipo) {
+    tipo = tipo || "info";
+    $("#mensajeModalTitle").text(titulo);
+    $("#mensajeModalBody").html(
+      '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
+    );
+    $("#mensajeModal").modal("show");
+  }
 
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = $(selector);
-        $select.html('<option value="">' + textoCarga + '</option>');
+  async function cargarDropdown(url, selector, textoCarga, textoDefault) {
+    var $select = $(selector);
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                $select.empty().append('<option value="">' + textoDefault + '</option>');
-                if (data && Array.isArray(data)) {
-                    $.each(data, function (i, item) {
-                        $select.append(
-                            '<option value="' + item.Value + '">' + item.Text + '</option>'
-                        );
-                    });
-                }
-            },
-            error: function () {
-                $select.html('<option value="">Error al cargar</option>');
-            }
+    try {
+      $select.html('<option value="">' + textoCarga + "</option>");
+
+      const data = await MSExecuteGetOnServerAsync(url);
+
+      $select.empty().append('<option value="">' + textoDefault + "</option>");
+
+      if (data && Array.isArray(data)) {
+        $.each(data, function (i, item) {
+          $select.append(
+            '<option value="' + item.Value + '">' + item.Text + "</option>",
+          );
         });
+      }
+    } catch (error) {
+      console.error("Error cargando dropdown:", error);
+      $select.html('<option value="">Error al cargar</option>');
     }
+  }
 
-    function obtenerRequest() {
-        return {
-            Id: state.boletoId,
-            ImProvincia: $('#ImProvincia').val(),
-            ImClasificacion: $('#ImClasificacion').val(),
-            ImCosecha: $('#ImCosecha').val(),
-            ImProcedencia: $('#ImProcedencia').val(),
-            ImFecha: $('#ImFecha').val(),
-            ImHora: $('#ImHora').val()
-        };
-    }
-
-    function validarFormulario() {
-        var errores = [];
-
-        if (!$('#ImCosecha').val())
-            errores.push('Debe seleccionar una cosecha');
-
-        if (!$('#ImProvincia').val())
-            errores.push('Debe seleccionar una provincia');
-
-        if (!$('#ImFecha').val())
-            errores.push('Debe ingresar la fecha');
-
-        if (!$('#ImHora').val())
-            errores.push('Debe ingresar la hora');
-
-        return errores;
-    }
-
-    // ======================
-    // API pública
-    // ======================
+  function obtenerRequest() {
     return {
-
-        abrir: function (boletoId, data) {
-            state.boletoId = boletoId;
-            this.cargarCombos();
-
-            if (data) {
-                $('#ImProvincia').val(data.ImProvincia);
-                $('#ImClasificacion').val(data.ImClasificacion);
-                $('#ImCosecha').val(data.ImCosecha);
-                $('#ImProcedencia').val(data.ImProcedencia);
-                $('#ImFecha').val(data.ImFecha);
-                $('#ImHora').val(data.ImHora);
-            }
-
-            $(config.modalId).modal('show');
-        },
-
-        cargarCombos: function () {
-            cargarDropdown(config.urls.getProvincias, '#ImProvincia', 'Cargando...', 'Seleccione provincia');
-            cargarDropdown(config.urls.getClasificaciones, '#ImClasificacion', 'Cargando...', 'Seleccione clasificación');
-            cargarDropdown(config.urls.getCosechas, '#ImCosecha', 'Cargando...', 'Seleccione cosecha');
-            cargarDropdown(config.urls.getProcedencias, '#ImProcedencia', 'Cargando...', 'Seleccione procedencia');
-        },
-
-        guardar: function () {
-            if (state.cargando) return;
-
-            var errores = validarFormulario();
-            if (errores.length > 0) {
-                mostrarMensaje('Validación', errores.join('<br>'), 'warning');
-                return;
-            }
-
-            state.cargando = true;
-            mostrarSpinner(true);
-
-            $.ajax({
-                url: config.urls.modificar,
-                type: 'POST',
-                data: obtenerRequest(),
-                success: function (response) {
-                    if (response && response.success) {
-                        mostrarMensaje('Éxito', 'Boleto modificado correctamente', 'success');
-                        $(config.modalId).modal('hide');
-
-                        // Refrescar grilla principal
-                        if (window.ControlBoletos) {
-                            ControlBoletos.filtrarBoletos();
-                        }
-                    } else {
-                        mostrarMensaje('Error', response.message || 'Error al modificar el boleto', 'danger');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al modificar boleto:', error);
-                    mostrarMensaje('Error', 'Error de comunicación con el servidor', 'danger');
-                },
-                complete: function () {
-                    state.cargando = false;
-                    mostrarSpinner(false);
-                }
-            });
-        },
-
-        cerrar: function () {
-            $(config.modalId).modal('hide');
-        }
+      Contrato: state.Contrato.ContratoSAP,
+      Provincia: $("#ImProvincia").val(),
+      Clasificacion: $("#ImClasificacion").val(),
+      Cosecha: $("#ImCosecha").val(),
+      Procedencia: $("#ImProcedencia").val(),
+      Fecha: $("#ImFecha").val(),
+      Hora: $("#ImHora").val(),
+      Usuario: "Prueba",
     };
+  }
 
+  function validarFormulario() {
+    var errores = [];
+
+    if (!$("#ImCosecha").val()) errores.push("Debe seleccionar una cosecha");
+
+    if (!$("#ImProvincia").val())
+      errores.push("Debe seleccionar una provincia");
+
+    if (!$("#ImFecha").val()) errores.push("Debe ingresar la fecha");
+
+    if (!$("#ImHora").val()) errores.push("Debe ingresar la hora");
+
+    return errores;
+  }
+
+  // ======================
+  // API pública
+  // ======================
+  return {
+    abrir: async function (NegocioId, data) {
+      state.negocioId = NegocioId;
+      await this.cargarContrato(state.negocioId);
+      $(config.modalId).modal("show");
+    },
+    cargarContrato: async function (id) {
+      const url = config.urls.getContrato + "?id=" + id;
+      const contrato = await MSExecuteGetOnServerAsync(url);
+      state.Contrato = contrato.Data;
+      await this.cargarCombos(contrato.Data);
+    },
+    cargarCombos: async function (contrato) {
+      let url = config.urls.getProvincias;
+      await cargarDropdown(
+        url,
+        "#ImProvincia",
+        "Cargando...",
+        "Seleccione provincia",
+      );
+      url = config.urls.getClasificaciones;
+      await cargarDropdown(
+        url,
+        "#ImClasificacion",
+        "Cargando...",
+        "Seleccione clasificación",
+      );
+      url = config.urls.getCosechas;
+      await cargarDropdown(
+        url,
+        "#ImCosecha",
+        "Cargando...",
+        "Seleccione cosecha",
+      );
+      url =
+        config.urls.getProcedencias + "?provinciaId=" + contrato.ProvinciaId;
+      await cargarDropdown(
+        url,
+        "#ImProcedencia",
+        "Cargando...",
+        "Seleccione procedencia",
+      );
+
+      $("#ImProvincia").val(contrato.ProvinciaId);
+      $("#ImClasificacion").val(contrato.ClasificacionId);
+      $("#ImCosecha").val(contrato.CampanaId);
+      $("#ImProcedencia").val(contrato.LocalidadId);
+    },
+
+    guardar: function () {
+      if (state.cargando) return;
+
+      var errores = validarFormulario();
+      if (errores.length > 0) {
+        mostrarMensaje("Validación", errores.join("<br>"), "warning");
+        return;
+      }
+
+      state.cargando = true;
+      //mostrarSpinner(true);
+        try {
+            const request = obtenerRequest();
+            const response = MSExecuteOnServer(config.urls.modificar, request);
+            state.cargando = false;
+            //mostrarSpinner(false);
+            console.log(response);
+            if (response != null) {
+                $.unblockUI();
+            }
+            $.unblockUI();
+      } finally {
+        state.cargando = false;
+        //mostrarSpinner(false);
+      }
+    },
+
+    cerrar: function () {
+      $(config.modalId).modal("hide");
+    },
+  };
 })();

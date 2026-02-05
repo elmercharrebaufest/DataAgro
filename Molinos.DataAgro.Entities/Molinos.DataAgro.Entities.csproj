@@ -315,6 +315,7 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYDos.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
+    <Compile Include="Common\Enums\EnumControlDeBoletosAcciones.cs" />
     <Compile Include="Common\Enums\EnumControlDeBoletosEstado.cs" />
     <Compile Include="Common\Enums\EnumEstadoConfirma.cs" />
     <Compile Include="Dto\BuscarCentroDto.cs" />
@@ -323,6 +324,8 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
     <Compile Include="Dto\DetalleContratoModalDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />

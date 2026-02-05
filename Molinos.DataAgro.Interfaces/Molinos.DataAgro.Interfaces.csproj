@@ -219,6 +219,7 @@
     <Compile Include="Agent\IConfirmaLoteDocumentosAgent.cs" />
     <Compile Include="Agent\IConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Agent\IConsultarAcuerdosGeneradosAgent.cs" />
+    <Compile Include="Agent\IModificacionContratoControlBoletoAgent.cs" />
     <Compile Include="Agent\IScoringCuposAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionParcialAgent.cs" />
     <Compile Include="Agent\IValidarPesificacionAgent.cs" />

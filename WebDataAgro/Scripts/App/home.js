@@ -15,7 +15,7 @@ var checkear = function (el, nam) {
 
 $(document).ready(function () {
 
-    //InicializarDatos();
+    InicializarDatos();
     CrearObjetivo();
     armarFunciones();
     setChangeChecks();

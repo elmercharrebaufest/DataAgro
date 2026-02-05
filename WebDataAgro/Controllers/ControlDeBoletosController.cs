@@ -1,6 +1,7 @@
 ﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -48,47 +49,46 @@ namespace WebDataAgro.Controllers
 
 
         [HttpPost]
-        public JsonResult GetBoletos(string filtros)
+        public JsonResult GetBoletos(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
         {
             try
             {
-                // Deserializar filtros si vienen como JSON
-                ControlDeBoletoFiltroBusquedaDto filtrosBusqueda = null;
-                if (!string.IsNullOrEmpty(filtros))
+
+                // Obtener todos los boletos con los filtros aplicados
+                var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
+
+                // Aplicar paginación
+                var boletosQuery = todosBoletos.AsQueryable();
+                var totalRegistros = boletosQuery.Count();
+
+                // Aplicar ordenamiento si existe
+                if (filtrosBusqueda.Sort != null && filtrosBusqueda.Sort.Any())
                 {
-                    try
-                    {
-                        filtrosBusqueda = JsonConvert.DeserializeObject<ControlDeBoletoFiltroBusquedaDto>(filtros);
-                    }
-                    catch
-                    {
-                        // Si falla la deserialización, crear objeto vacío
-                        filtrosBusqueda = new ControlDeBoletoFiltroBusquedaDto();
-                    }
-                }
-                else
-                {
-                    filtrosBusqueda = new ControlDeBoletoFiltroBusquedaDto();
+                    var sortDescriptor = filtrosBusqueda.Sort.First();
+                    var orderBy = sortDescriptor.Field + (sortDescriptor.Dir == "desc" ? " descending" : " ascending");
+                    boletosQuery = boletosQuery.OrderBy(orderBy);
                 }
 
-                // TODO: Implementar paginación real con Kendo DataSourceRequest
-
-                var boletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
-
-                //var boletos = GenerarDatosEjemplo()
-                //    .Where(b => AplicarFiltros(b, filtrosBusqueda))
-                //    .ToList();
+                // Aplicar skip y take para paginación
+                var boletos = boletosQuery
+                    .Skip(filtrosBusqueda.Skip)
+                    .Take(filtrosBusqueda.Take)
+                    .ToList();
 
                 var result = new
                 {
                     Data = boletos,
-                    Total = boletos.Count
+                    Total = totalRegistros
                 };
 
                 return Json(result);
             }
             catch (Exception ex)
             {
+                // Log del error para debugging
+                System.Diagnostics.Debug.WriteLine($"Error en GetBoletos: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
                 return Json(new
                 {
                     Data = new List<object>(),
@@ -126,6 +126,7 @@ namespace WebDataAgro.Controllers
             }
         }
 
+        /*
         [HttpPost]
         public JsonResult ControlMasivo()
         {
@@ -164,6 +165,50 @@ namespace WebDataAgro.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error procesando solicitud: " + ex.Message });
+            }
+        }
+        */
+
+        [HttpPost]
+        public JsonResult ModificarContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.ModificacionContrato(controlDeBoletosModificacion);
+                string mensaje = "Contrato modificado correctamente";
+                if (resultado.HayError)
+                {
+                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
+                    return Json(new { success = false, message = mensaje });
+                }
+
+                return Json(new { success = true, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al modificar el contrato: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ControlMasivo(ControlDeBoletosRegistrarAccionesDto controlDeBoletosRegistrarAcciones)
+        {
+            try
+            {
+                var accion = (EnumControlDeBoletosAcciones)controlDeBoletosRegistrarAcciones.AccionControlDeBoletos;
+                var resultado = _controlDeBoletosManager.RegistrarAcciones(controlDeBoletosRegistrarAcciones.ControlDeBoletoIds, accion);
+                string mensaje = "Se modifico la accion en el control de boletos";
+                if (resultado.HayError)
+                {
+                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
+                    return Json(new { success = false, message = mensaje });
+                }
+
+                return Json(new { success = true, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al registrar la accion en el control de boletos: " + ex.Message });
             }
         }
 
@@ -258,6 +303,7 @@ namespace WebDataAgro.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
 
         #region Metodos Get para cargar combos
         [HttpGet]
@@ -379,6 +425,99 @@ namespace WebDataAgro.Controllers
                 return Json(new List<object>(), JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetProvincias()
+        {
+            try
+            {
+                var provincias = _controlDeBoletosManager.GetProvincias();
+                var provinciasListItems = provincias.Select(provincia =>
+                    new SelectListItem
+                    {
+                        Text = provincia.Nombre,
+                        Value = provincia.ProvinciaId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(provinciasListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetCosechas()
+        {
+            try
+            {
+                var campanias = _controlDeBoletosManager.GetCosechas();
+                var campaniasListItems = campanias.Select(campania =>
+                    new SelectListItem
+                    {
+                        Text = campania.Descripcion,
+                        Value = campania.CampaniaId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(campaniasListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetClasificaciones()
+        {
+            try
+            {
+                var clasificaciones = _controlDeBoletosManager.GetClasificaciones();
+                var clasificacionesListItems = clasificaciones.Select(clasificacion =>
+                    new SelectListItem
+                    {
+                        Text = clasificacion.Descripcion,
+                        Value = clasificacion.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(clasificacionesListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetProcedencias(int provinciaId)
+        {
+            try
+            {
+                var localidades = _controlDeBoletosManager.GetProcedencias(provinciaId);
+                var localidadesListItems = localidades.Select(localidad =>
+                    new SelectListItem
+                    {
+                        Text = localidad.Nombre,
+                        Value = localidad.LocalidadId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(localidadesListItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         #endregion
 
         #region Vistas Parciales
