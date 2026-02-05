@@ -327,6 +327,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\SeguimientoControlDeBoletosDto.cs" />
     <Compile Include="Dto\DetalleContratoModalDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosEstadoDto.cs" />
