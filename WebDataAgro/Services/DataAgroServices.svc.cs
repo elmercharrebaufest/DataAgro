@@ -1070,11 +1070,17 @@ namespace WebDataAgro.Services
                 Proveedor proveedor = null;
                 if (corredor == true)
                 {
-                    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7), 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                    proveedor = repositorio.Listar<Proveedor>(x =>
+                    x.CUIT == cuit &&
+                    (x.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                    x.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales), 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
                 }
                 else
                 {
-                    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit && x.SegmentacionId != 5 && x.SegmentacionId != 7, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                    proveedor = repositorio.Listar<Proveedor>(x =>
+                    x.CUIT == cuit &&
+                    x.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios &&
+                    x.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
                 }
                 if (corredor == null)
                 {
@@ -1159,6 +1165,189 @@ namespace WebDataAgro.Services
                 throw;
             }
 
+        }
+
+        public ResultadoValidarProveedorComercial ValidarProveedorComercialNuevo(string cuit, bool? corredor, string cuitCorredor)
+        {
+            try
+            {
+                //logger.Debug("ValidarProveedorComercial " + cuit);
+                ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
+                Proveedor proveedor = null;
+                if (corredor == true)
+                {
+                    // Corredor
+                    proveedor = repositorio.Listar<Proveedor>(x =>
+                    x.CUIT == cuit &&
+                    (x.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                    x.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales), 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                }
+                else
+                {
+                    // Proveedor
+                    proveedor = repositorio.Listar<Proveedor>(x =>
+                    x.CUIT == cuit &&
+                    x.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios &&
+                    x.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                }
+                // Esto fue parte de una modificación? Ya que reescibe al cuit que no es corredor.
+                //if (corredor == null)
+                //{
+                //    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                //}
+
+                // Datos en SISA
+                var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
+                resultado.ProveedorOperable = existeEnSISA != null;
+                resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
+                resultado.ProveedorSISAEstadoCuit = existeEnSISA != null ? existeEnSISA.EstadoCuit.ToString() : "";
+                resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? (existeEnSISA.SituacionCategoria ?? "") : "";
+                resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
+
+                if (proveedor != null && corredor == true)
+                {
+                    resultado.ProveedorMails = new List<string>();
+                    if (!string.IsNullOrEmpty(proveedor.Email1))
+                        resultado.ProveedorMails.Add(proveedor.Email1);
+                    if (!string.IsNullOrEmpty(proveedor.Email2))
+                        resultado.ProveedorMails.Add(proveedor.Email2);
+                    if (!string.IsNullOrEmpty(proveedor.Email3))
+                        resultado.ProveedorMails.Add(proveedor.Email3);
+                    if (!string.IsNullOrEmpty(proveedor.Email4))
+                        resultado.ProveedorMails.Add(proveedor.Email4);
+
+                    var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId);
+                    foreach (var contacto in contactos)
+                    {
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                            resultado.ProveedorMails.Add(contacto.Email1);
+                        if (!string.IsNullOrEmpty(contacto.Email2))
+                            resultado.ProveedorMails.Add(contacto.Email2);
+                        if (!string.IsNullOrEmpty(contacto.Email3))
+                            resultado.ProveedorMails.Add(contacto.Email3);
+                    }
+
+                    resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
+                    resultado.ProveedorId = proveedor.ProveedorId;
+                    resultado.ProveedorRazonSocial = proveedor.RazonSocial;
+                    resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
+
+                    Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId || x.CorredorId == proveedor.ProveedorId, x => x.Fecha);
+
+                    bool compras = repositorio.Existe<CampañaMaterial>(x => x.ProveedorId == proveedor.ProveedorId);
+                    if (negocio != null || compras)
+                    {
+                        resultado.ProveedorOperando = true;
+                        resultado.ProveedorUltimaOperacion = negocio == null ? (DateTime?)null : negocio.Fecha;
+                    }
+
+                    var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
+                    if (provCom != null)
+                    {
+                        resultado.ComercialApellido = provCom.Comercial.Apellido;
+                        resultado.ComercialId = provCom.Comercial.ComercialId;
+                        resultado.ComercialNombres = provCom.Comercial.Nombres;
+                        try
+                        {
+                            resultado.ComercialMail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    else
+                    {
+                        resultado.ListaErrores.Add(new ErrorMessage("El CUIT no tiene ningún comercial asociado."));
+                    }
+                }
+                else if (proveedor != null && corredor != true && !string.IsNullOrEmpty(cuitCorredor))
+                {
+                    // Lógica para proveedores que no son corredores. Se buscarán los Contactos Comerciales y Comercial asociado al Corredor.
+                    // Acá faltaría el CUIT del Corredor, ya que el Vendedor puede estar asociado a varios Corredores.
+
+                    var datosCorredor = repositorio.Listar<Proveedor>(x =>
+                    x.CUIT == cuitCorredor &&
+                    (x.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                    x.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales), 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+
+                    if (datosCorredor != null)
+                    {
+                        resultado.ProveedorMails = new List<string>();
+                        if (!string.IsNullOrEmpty(datosCorredor.Email1))
+                            resultado.ProveedorMails.Add(datosCorredor.Email1);
+                        if (!string.IsNullOrEmpty(datosCorredor.Email2))
+                            resultado.ProveedorMails.Add(datosCorredor.Email2);
+                        if (!string.IsNullOrEmpty(datosCorredor.Email3))
+                            resultado.ProveedorMails.Add(datosCorredor.Email3);
+                        if (!string.IsNullOrEmpty(datosCorredor.Email4))
+                            resultado.ProveedorMails.Add(datosCorredor.Email4);
+
+                        var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == datosCorredor.ProveedorId);
+                        foreach (var contacto in contactos)
+                        {
+                            if (!string.IsNullOrEmpty(contacto.Email1))
+                                resultado.ProveedorMails.Add(contacto.Email1);
+                            if (!string.IsNullOrEmpty(contacto.Email2))
+                                resultado.ProveedorMails.Add(contacto.Email2);
+                            if (!string.IsNullOrEmpty(contacto.Email3))
+                                resultado.ProveedorMails.Add(contacto.Email3);
+                        }
+
+                        resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
+                        resultado.ProveedorId = datosCorredor.ProveedorId;
+                        resultado.ProveedorRazonSocial = datosCorredor.RazonSocial;
+                        resultado.ProveedorClasificacion = datosCorredor.ClasificacionCompraNet == null ? "" : datosCorredor.ClasificacionCompraNet.Descripcion;
+
+                        Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == datosCorredor.ProveedorId || x.CorredorId == datosCorredor.ProveedorId, x => x.Fecha);
+
+                        bool compras = repositorio.Existe<CampañaMaterial>(x => x.ProveedorId == datosCorredor.ProveedorId);
+                        if (negocio != null || compras)
+                        {
+                            resultado.ProveedorOperando = true;
+                            resultado.ProveedorUltimaOperacion = negocio == null ? (DateTime?)null : negocio.Fecha;
+                        }
+
+                        var provCom = datosCorredor.ProveedorComercialAsociados.FirstOrDefault();
+                        if (provCom != null)
+                        {
+                            resultado.ComercialApellido = provCom.Comercial.Apellido;
+                            resultado.ComercialId = provCom.Comercial.ComercialId;
+                            resultado.ComercialNombres = provCom.Comercial.Nombres;
+                            try
+                            {
+                                resultado.ComercialMail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                        else
+                        {
+                            resultado.ListaErrores.Add(new ErrorMessage("El CUIT del Corredor no tiene ningún comercial asociado."));
+                        }
+                    }
+                    else
+                    {
+                        resultado.ListaErrores.Add(new ErrorMessage("No se encontró el CUIT del Corredor."));
+                    }
+                }
+                else
+                {
+                    resultado.ListaErrores.Add(new ErrorMessage("No se encontró el CUIT."));
+                }
+
+                resultado.HayError = resultado.ListaErrores.Count() > 0;
+                //logger.Debug("ValidarProveedorComercial resultado" + resultado.ToJson());
+
+                return resultado;
+            }
+            catch (Exception e)
+            {
+                logger.Debug(e);
+                throw;
+            }
         }
 
         public bool ProveedorApocrifo(string cuit)
@@ -1426,8 +1615,10 @@ namespace WebDataAgro.Services
         {
             logger.Debug("GrabarContratoAPrecio " + contrato.ToJson());
             var resultado = contratoManager.GrabarContratoAPrecioTercero(contrato);
-            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
-            result2.ContratoId = resultado.ContratoId;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto
+            {
+                ContratoId = resultado.ContratoId
+            };
             resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
             return result2;
         }
@@ -1436,8 +1627,10 @@ namespace WebDataAgro.Services
         {
             logger.Debug("GrabarContratoAFijar " + contrato.ToJson());
             var resultado = contratoManager.GrabarContratoAFijarTercero(contrato);
-            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
-            result2.ContratoId = resultado.ContratoId;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto
+            {
+                ContratoId = resultado.ContratoId
+            };
             resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
             return result2;
         }
@@ -1476,8 +1669,10 @@ namespace WebDataAgro.Services
         {
             logger.Debug("GrabarFijacion " + contrato.ToJson());
             var resultado = fijacionDePrecioContratoManager.GrabarFijacionDePrecioTercero(contrato);
-            GrabarContratoResultDto result2 = new GrabarContratoResultDto();
-            result2.FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId;
+            GrabarContratoResultDto result2 = new GrabarContratoResultDto
+            {
+                FijacionDePrecioContratoId = resultado.FijacionDePrecioContratoId
+            };
             resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
             return result2;
         }
@@ -1495,8 +1690,10 @@ namespace WebDataAgro.Services
             List<GrabarContratoResultDto> resultado2 = new List<GrabarContratoResultDto>();
             foreach (var resultado in resultados)
             {
-                GrabarContratoResultDto result2 = new GrabarContratoResultDto();
-                result2.ContratoId = resultado.ContratoId;
+                GrabarContratoResultDto result2 = new GrabarContratoResultDto
+                {
+                    ContratoId = resultado.ContratoId
+                };
                 resultado.Errores.ForEach(a => result2.Errores.Add(a.Message));
                 resultado2.Add(result2);
             }
