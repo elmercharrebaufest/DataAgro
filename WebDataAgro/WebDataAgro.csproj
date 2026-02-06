@@ -372,6 +372,7 @@
     <Content Include="Content\control-boletos-contrato.css" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
+    <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
     <Content Include="Scripts\App\ControlDeBoletosModificarContrato.js" />
     <Content Include="Scripts\App\ControlDeBoletosTracking.js" />
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
@@ -381,6 +382,7 @@
     <Content Include="Views\ControlDeBoletos\_ModificarDatosDelContrato.cshtml" />
     <Content Include="Views\ControlDeBoletos\_TrackingControlDeBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\_VisualizarContrato.cshtml" />
+    <Content Include="Views\ControlDeBoletos\_DatosCertificacion.cshtml" />
     <None Include="whitelist.json" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />

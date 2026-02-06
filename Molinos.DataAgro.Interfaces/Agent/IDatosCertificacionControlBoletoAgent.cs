@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces.Agent
 {
-    public interface ISeguimientoControlBoletoAgent
+    public interface IDatosCertificacionControlBoletoAgent
     {
-        string RegistrarSeguimiento(SeguimientoControlDeBoletosDto seguimientoControlDeBoletos);
+        string RegistrarDatosCertificacion(RegistroDatosCertificacionControlDeBoletosDto registroDatosCertificacion);
     }
 }

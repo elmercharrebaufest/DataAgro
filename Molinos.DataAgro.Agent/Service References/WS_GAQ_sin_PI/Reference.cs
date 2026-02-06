@@ -16358,7 +16358,7 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         
         private string imFijacionField;
         
-        private System.DateTime imHoraField;
+        private string imHoraField;
         
         private string imUsuarioField;
         
@@ -16412,8 +16412,8 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=4)]
-        public System.DateTime ImHora {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="string", Order=4)]
+        public string ImHora {
             get {
                 return this.imHoraField;
             }

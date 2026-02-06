@@ -126,54 +126,12 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        /*
-        [HttpPost]
-        public JsonResult ControlMasivo()
-        {
-            try
-            {
-                // Leer datos del cuerpo de la petición
-                var requestBody = "";
-                using (var reader = new System.IO.StreamReader(Request.InputStream))
-                {
-                    requestBody = reader.ReadToEnd();
-                }
-
-                if (string.IsNullOrEmpty(requestBody))
-                {
-                    return Json(new { success = false, message = "No se recibieron datos" });
-                }
-
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
-                string accion = data.accion;
-                List<int> ids = ((Newtonsoft.Json.Linq.JArray)data.ids).ToObject<List<int>>();
-
-                if (ids == null || !ids.Any())
-                {
-                    return Json(new { success = false, message = "No se han seleccionado boletos" });
-                }
-
-                // TODO: Implementar lógica real de control masivo
-                // _boletoService.ProcesarControlMasivo(accion, ids);
-
-                var mensaje = accion == "iniciar"
-                    ? $"Control iniciado correctamente para {ids.Count} boleto(s)"
-                    : $"Control finalizado correctamente para {ids.Count} boleto(s)";
-
-                return Json(new { success = true, message = mensaje });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error procesando solicitud: " + ex.Message });
-            }
-        }
-        */
-
         [HttpPost]
         public JsonResult ModificarContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion)
         {
             try
             {
+                controlDeBoletosModificacion.Usuario = PermisosHelper.ObtenerUsuario();
                 var resultado = _controlDeBoletosManager.ModificacionContrato(controlDeBoletosModificacion);
                 string mensaje = "Contrato modificado correctamente";
                 if (resultado.HayError)
@@ -527,7 +485,6 @@ namespace WebDataAgro.Controllers
             var model = new ModificarControlBoletoViewModel
             {
                 Id = id
-                // Si quieres, aquí puedes precargar datos del boleto
             };
 
             return PartialView("_ModificarDatosDelContrato", model);
@@ -545,7 +502,12 @@ namespace WebDataAgro.Controllers
             ViewBag.NegocioId = id;
             return PartialView("_VisualizarContrato");
         }
-
+        [HttpGet]
+        public PartialViewResult _DatosCertificacion(int id)
+        {
+            ViewBag.ControlDeBoletosId = id;
+            return PartialView("_DatosCertificacion");
+        }
         #endregion
 
     }

@@ -1,0 +1,88 @@
+﻿
+<div class="modal fade" id="modalCertificacion" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content clearfix modal-certificacion">
+
+            <div class="modal-header">
+                <button type="button" class="modal-close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <div class="header-top">
+                    <h5 class="titulo-modal modal-titulo-contrato">
+                        Datos de Certificación
+                    </h5>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="frmCertificacion">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Bolsa</label>
+                            <select id="Bolsa" class="form-control">
+                                <option value="">Cargando Bolsas...</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Fecha Certificación</label>
+                            <input type="date" id="FechaCertificacion" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Fecha Vencimiento</label>
+                            <input type="date" id="FechaVencimientoCertificacion" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <label>Oblea</label>
+                            <input type="text" id="Bolsa" class="form-control" maxlength="10"/>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Tipo</label>
+                            <select id="Tipo" class="form-control">
+                                <option value="">Cargando Bolsas...</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label class="mt-4">
+                                <input type="checkbox" id="Rechazado" />
+                                Rechazado
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="ControlDeBoletosDaCertificacion.cerrar()">Cancelar</button>
+                <button class="btn btn-primary" onclick="ControlDeBoletosDaCertificacion.guardar()">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    .modal-certificacion {
+        background-color: white !important;
+    }
+
+    .modal-close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 0.2;
+        background: none !important;
+        text-indent: 0;
+        border-color: transparent !important;
+        cursor: pointer;
+    }
+</style>

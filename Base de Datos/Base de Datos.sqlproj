@@ -370,6 +370,7 @@
     <Build Include="dbo\Tables\EstadoConfirma.sql" />
     <Build Include="dbo\Tables\ControlDeBoletosPreCertificacion.sql" />
     <Build Include="dbo\Tables\ControlDeBoletosTracking.sql" />
+    <Build Include="dbo\Tables\TipoOblea.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

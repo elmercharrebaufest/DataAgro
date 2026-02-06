@@ -655,51 +655,6 @@ var ControlBoletos = (function () {
             if (response) {
                 self.actualizarBotonesControlMasivo();
             }
-
-            console.log('response--->>', response);
-
-            /*
-            $.ajax({
-                url: config.urls.controlMasivo,
-                type: "POST",
-                data: JSON.stringify({
-                    accion: accion,
-                    ids: ids,
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                timeout: 30000,
-                success: function (response) {
-                    if (response && response.success) {
-                        mostrarMensaje(
-                            "Éxito",
-                            response.message || "Operación completada correctamente",
-                            "success",
-                        );
-                        self.filtrarBoletos(); // Recargar datos
-                        $("#selectAll").prop("checked", false); // Limpiar selección
-                    } else {
-                        mostrarMensaje(
-                            "Error",
-                            response.message || "Error al procesar la solicitud",
-                            "danger",
-                        );
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error en control masivo:", error);
-                    mostrarMensaje(
-                        "Error",
-                        "Error de comunicación con el servidor: " + error,
-                        "danger",
-                    );
-                },
-                complete: function () {
-                    // Rehabilitar botones
-                    self.actualizarBotonesControlMasivo();
-                },
-            });
-            */
         },
 
         cargarContadores: function () {
@@ -738,21 +693,22 @@ var ControlBoletos = (function () {
                 data.NegocioId +
                 ')" title="Visualizar Contrato"><i class="fa fa-file-text-o"></i><span class="tooltiptext"></span></button>',
             );
-            botones.push(
-                '<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlBoletosModificacion.abrir(' +
-                data.NegocioId +
-                ')" title="Modificar Contrato"><i class="fa fa-edit"></i><span class="tooltiptext"></span></button>',
-            );
-
-            // Solo agregar botón de Tracking si el módulo está cargado
-            if (typeof ControlBoletosTracking !== "undefined") {
+            if (data.ControlIniciado) {
                 botones.push(
-                    '<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
-                    data.Id +
-                    ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
+                    '<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlBoletosModificacion.abrir(' +
+                    data.NegocioId +
+                    ')" title="Modificar Contrato"><i class="fa fa-edit"></i><span class="tooltiptext"></span></button>',
                 );
-            }
 
+                // Solo agregar botón de Tracking si el módulo está cargado
+                if (typeof ControlBoletosTracking !== "undefined") {
+                    botones.push(
+                        '<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
+                        data.Id +
+                        ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
+                    );
+                }
+            }
             if (!data.ControlIniciado) {
                 botones.push(
                     '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.iniciarControl(' +
@@ -762,6 +718,18 @@ var ControlBoletos = (function () {
             }
 
             if (data.ControlIniciado) {
+                botones.push(
+                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosDaCertificacion.abrir(' +
+                    data.Id +
+                    ')" title="Registro de Obleado"><i class="fa fa-list-alt"></i><span class="tooltiptext"></span></button>',
+                );
+
+                botones.push(
+                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' +
+                    data.Id +
+                    ')" title="Registro de Certificación"><i class="fa fa-certificate"></i><span class="tooltiptext"></span></button>',
+                );
+
                 botones.push(
                     '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' +
                     data.Id +

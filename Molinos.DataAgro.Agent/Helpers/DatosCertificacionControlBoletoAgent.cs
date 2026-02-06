@@ -1,15 +1,18 @@
 ﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces.Agent;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.Runtime.InteropServices.WindowsRuntime;
-
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class ModificacionContratoControlBoletoAgent : IModificacionContratoControlBoletoAgent
+    public class DatosCertificacionControlBoletoAgent : IDatosCertificacionControlBoletoAgent
     {
         private readonly ILogger logger;
 
@@ -19,22 +22,14 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly bool valorPruebaSap = ConfigurationManager.AppSettings["ValorPruebaSap"] == "1";
         private readonly bool sapSinPi = ConfigurationManager.AppSettings["SAPsinPI"] == "1";
 
-        public ModificacionContratoControlBoletoAgent(ILogger logger)
+        public DatosCertificacionControlBoletoAgent(ILogger logger)
         {
             this.logger = logger;
         }
 
-        public string ModificarContrato(
-            string clasificacion,
-            string contrato,
-            string cosecha,
-            string fecha,
-            string hora,
-            string procedencia,
-            string provincia,
-            string usuario)
+        public string RegistrarDatosCertificacion(RegistroDatosCertificacionControlDeBoletosDto dto)
         {
-            // Modo prueba
+            // Modo prueba SAP
             if (valorPruebaSap)
             {
                 return "Modificación de contrato satisfactoria";
@@ -52,19 +47,29 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 var agent = CrearClienteSap();
 
-                var request = new ZMprfcModContCtrBoleto
+                var datosCertificacion = dto.Detalle
+                    .Select(d => new Zmpes7080
+                    {
+                        Bolsa = d.Bolsa,
+                        FeCertificacion = d.FeCertificacion,
+                        FeVencCerti = d.FeVencCerti,
+                        Oblea = d.Oblea,
+                        Tipo = d.Tipo,
+                        Rechazado = d.Rechazado
+                    })
+                    .ToArray();
+
+                var request = new ZMprfcDatosCertificacion
                 {
-                    ImClasificacion = clasificacion,
-                    ImContrato = contrato,
-                    ImCosecha = cosecha,
-                    ImFecha = fecha,
-                    ImHora = hora,
-                    ImProcedencia = procedencia,
-                    ImProvincia = provincia,
-                    ImUsuario = usuario
+                    ImContrato = dto.Contrato,
+                    ImFecha = dto.Fecha,
+                    ImFijacion = dto.Fijacion,
+                    ImHora = dto.Hora,
+                    ImUsuario = dto.Usuario,
+                    DatosCertificacion = datosCertificacion
                 };
 
-                var response = agent.ZMprfcModContCtrBoleto(request);
+                var response = agent.ZMprfcDatosCertificacion(request);
 
                 if (activarLogDebug)
                 {
@@ -76,7 +81,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error al modificar contrato de control de boleto en SAP.");
+                logger.Error(ex, "Error al registrar datos de certificación en SAP.");
                 throw;
             }
         }
@@ -89,4 +94,5 @@ namespace Molinos.DataAgro.Agent.Helpers
             return client;
         }
     }
+
 }

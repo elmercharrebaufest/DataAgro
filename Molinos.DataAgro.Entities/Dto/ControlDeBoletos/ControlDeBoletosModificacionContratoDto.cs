@@ -9,13 +9,14 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
 {
     public class ControlDeBoletosModificacionContratoDto
     {
-        public string Clasificacion { get; set; }
+        public int NegocioId { get; set; }
+        public int ClasificacionId { get; set; }
         public string Contrato { get; set; }
-        public string Cosecha { get; set; }
+        public int CosechaId { get; set; }
         public string Fecha { get; set; }
         public string Hora { get; set; }
-        public string Procedencia { get; set; }
-        public string Provincia { get; set; }
+        public int ProcedenciaId { get; set; }
+        public int ProvinciaId { get; set; }
         public string Usuario { get; set; } 
     }
 

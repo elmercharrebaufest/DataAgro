@@ -184,31 +184,59 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
         }
 
-        public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion)
+        public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto dto)
         {
-            var oResultado = new Resultado();
+            var resultado = new Resultado();
+
             try
             {
-                var mensaje = modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificacion.Clasificacion,
-                                                                                       controlDeBoletosModificacion.Contrato, 
-                                                                                       controlDeBoletosModificacion.Cosecha, 
-                                                                                       controlDeBoletosModificacion.Fecha, 
-                                                                                       controlDeBoletosModificacion.Hora, 
-                                                                                       controlDeBoletosModificacion.Procedencia, 
-                                                                                       controlDeBoletosModificacion.Provincia, 
-                                                                                       controlDeBoletosModificacion.Usuario);
-                return oResultado;
-            }
-            catch(Exception ex)
-            {
-                oResultado.Errores.Add(new ErrorMessage()
+                var negocio = repositorio.Obtener<Negocio>(x => x.Id == dto.NegocioId);
+
+                if (negocio == null)
                 {
-                    Message = ex.Message,
-                });
-                logger.Error(ex.Message);
-                return oResultado;
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Message = "No se encontró el negocio."
+                    });
+                    return resultado;
+                }
+
+                var provincia = repositorio.Obtener<Provincia>(dto.ProvinciaId);
+                var campana = repositorio.Obtener<Campaña>(dto.CosechaId);
+                var procedencia = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
+                var clasificacion = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
+
+                negocio.Provincia = provincia;
+                negocio.Campana = campana;
+                negocio.ProcedenciaVenta = procedencia;
+                negocio.Clasificacion = clasificacion;
+
+                modificacionContratoControlBoletoAgent.ModificarContrato(
+                    clasificacion.Descripcion,
+                    dto.Contrato,
+                    campana.Descripcion,
+                    dto.Fecha,
+                    dto.Hora,
+                    procedencia.CodLocalidad,
+                    dto.ProvinciaId.ToString(),
+                    dto.Usuario
+                );
+
+                repositorio.GuardarCambios();
             }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage
+                {
+                    Message = "Ocurrió un error al modificar el contrato."
+                });
+
+                logger.Error(ex);
+            }
+
+            return resultado;
         }
+
 
         public Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion)
         {
@@ -279,7 +307,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oResultado = new Resultado();
             try
             {
-                var mensaje = seguimientoControlBoletoAgent.SeguimientoBoletos(seguimientoControlDeBoletos);
+                var mensaje = seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
                 return oResultado;
             }
             catch (Exception ex)

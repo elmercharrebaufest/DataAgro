@@ -327,6 +327,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\RegistroDatosCertificacionControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\SeguimientoControlDeBoletosDto.cs" />
     <Compile Include="Dto\DetalleContratoModalDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDto.cs" />
@@ -341,6 +342,7 @@
     <Compile Include="Dto\PrecioMoaGroupDto.cs" />
     <Compile Include="Dto\RespuestaArchivoDto.cs" />
     <Compile Include="Dto\ResultadoDto.cs" />
+    <Compile Include="Dto\TipoObleaDto.cs" />
     <Compile Include="Entities\ClausulaConfirma.cs" />
     <Compile Include="Entities\ClausulaGenericos.cs" />
     <Compile Include="Entities\ClausulaBoletoFisico.cs" />
@@ -749,6 +751,7 @@
     <Compile Include="Entities\ResearchTipoMuestra.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
     <Compile Include="Entities\TipoDeCambio.cs" />
+    <Compile Include="Entities\TipoOblea.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />
     <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />

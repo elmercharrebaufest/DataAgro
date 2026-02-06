@@ -166,7 +166,7 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoDto.Mensaje = "El boleto se generó correctamente.";
                             boletoResult.BoletosDto.Add(boletoDto);
 
-                            // 6. SEXTO: Registrar Control de Boleto
+                            // 6. SEXTO: RegistrarDatosCertificacion Control de Boleto
                             controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
                         }
                         catch (IOException ioEx)
