@@ -299,7 +299,8 @@ namespace WebDataAgro.Controllers
 
             int sumaCuposCargaMasiva = 0;
             bool cargaMasiva = cupo.Dias != null && cupo.Dias.Count() > 1;
-            if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
+            bool cargaMasivaNull = cupo.Dias.Any(x => x.Cantidad == null);
+            if (cargaMasiva && !cargaMasivaNull) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
 
