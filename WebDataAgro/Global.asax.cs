@@ -47,6 +47,38 @@ namespace WebDataAgro
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
+        protected void Application_EndRequest()
+        {
+            var context = HttpContext.Current;
+            if (context == null)
+                return;
+
+            var request = context.Request;
+            var response = context.Response;
+
+            bool isAjaxRequest =
+                request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
+            if (response.StatusCode == 302 && isAjaxRequest)
+            {
+                var location = response.RedirectLocation;
+
+                if (!string.IsNullOrEmpty(location) &&
+                    location.Contains("login.microsoftonline.com"))
+                {
+                    response.Clear();
+                    response.StatusCode = 401;
+                    response.SuppressFormsAuthenticationRedirect = true;
+                }
+            }
+            if (response.StatusCode == 401 && isAjaxRequest)
+            {
+                response.Clear();
+                response.StatusCode = 409;
+                response.SuppressFormsAuthenticationRedirect = true;
+            }
+        }
+
 
         public void Session_OnStart()
         {

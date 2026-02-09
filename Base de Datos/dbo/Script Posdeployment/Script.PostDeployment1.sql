@@ -352,9 +352,10 @@ IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 Mater
 IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Girasol AO')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Girasol AO'), 0); END
 
 IF NOT EXISTS (select 1 from Rol where Descripcion = 'Recibir Sugerencia FAQ') BEGIN insert into Rol (Descripcion) values ('Recibir Sugerencia FAQ'); END
-IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END
-IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Algoritmo de Cupos') and Permiso = 735) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Algoritmo de Cupos'), 735); END
-IF NOT EXISTS (select 1 from RolPermiso where RolId = (select RolId from Rol where Descripcion ='Administrador') and Permiso = -1) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Administrador'), -1); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select Id from Rol where Descripcion ='Recibir Sugerencia FAQ') and Permiso = 50) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Recibir Sugerencia FAQ'), 50); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select Id from Rol where Descripcion ='Algoritmo de Cupos') and Permiso = 735) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Algoritmo de Cupos'), 735); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select Id from Rol where Descripcion ='Administrador') and Permiso = -1) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='Administrador'), -1); END
+IF NOT EXISTS (select 1 from RolPermiso where RolId = (select Id from Rol where Descripcion ='BoletoAdmin') and Permiso = 920) BEGIN insert into RolPermiso (RolId, Permiso) values ((select Id from Rol where Descripcion ='BoletoAdmin'), 920); END
 
 --ResearchCoeficienteCultivo
 IF NOT EXISTS (select 1 from ResearchCoeficienteCultivo where MaterialId = (select MaterialId from Material where Descripcion='Trigo') and Coeficiente='0.9') BEGIN insert into ResearchCoeficienteCultivo (MaterialId, Coeficiente) values((select MaterialId from Material where Descripcion='Trigo'),'0.9'); END
@@ -544,16 +545,17 @@ BEGIN
     INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
 END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
-    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
-END;
+---- SE COMENTA POR ERROR: "Lock request time out period exceeded."
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
+--    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
+--END;
 
 IF NOT EXISTS (
     SELECT 1 
@@ -1142,6 +1144,60 @@ IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Sot
 	UPDATE Centro SET Descripcion = 'Rio del Valle' 
 	 WHERE Id = @IdRioValle;
    END
+
+
+-- ConfirmaAltaEstado
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Correcta')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Correcta', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Permisos Insuficientes')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Permisos Insuficientes', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Error')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Error', 3);
+
+
+-- ConfirmaAltaEstadoLote
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Recepción con éxito')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Recepción con éxito', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Recepción con falla')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Recepción con falla', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'En Proceso')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('En Proceso', 3);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Procesado')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Procesado', 4);
+
+
+-- ConfirmaAltaEstadoDocumento
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Recepción con éxito')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Recepción con éxito', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Recepción con falla')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Recepción con falla', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'En Proceso')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('En Proceso', 3);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Proceso con éxito')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Proceso con éxito', 4);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Proceso con falla')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Proceso con falla', 5);
 
 --Estado Confirma
 if not exists(select 1 from EstadoConfirma where Codigo = 1)

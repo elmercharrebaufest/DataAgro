@@ -1,13 +1,12 @@
-﻿using System;
-using System.Configuration;
-using NLog;
-using Molinos.DataAgro.Agent.DatosDelComercial;
-using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
+using System;
+using System.Configuration;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -33,58 +32,30 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             try
             {
+                Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
 
-                if (ConfigurationManager.AppSettings["SAPsinPI"] == "1")
+                var rq = new ZMprfcDatosComercial() { ImUsuario = Usuario.ToUpper() };
+                logger.Debug(rq.ToXml());
+
+                var log = new Log
                 {
-                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
+                    Fecha = DateTime.Now.Date,
+                    Xml = rq.ToXml()
+                };
 
-
-                    var rq = new ZMprfcDatosComercial() { ImUsuario = Usuario.ToUpper() };
-                    logger.Debug(rq.ToXml());
-
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now.Date,
-                        Xml = rq.ToXml()
-                    };
-
-                    repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    var valor1 = agent.ZMprfcDatosComercial(rq);
-                    logger.Debug(valor1.ToXml());
-                    return new DatosComercialAgentDto { EX_GRUPO_COMPRAS = valor1.ExGrupoCompras, EX_ZONA = valor1.ExZona };
-                }
-                else
-                {
-                    SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESClient agent = new SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESClient();
-                    agent.ClientCredentials.UserName.UserName = UserSap;
-                    agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_DATOS_COMERCIAL() { IM_USUARIO = Usuario.ToUpper() };
-                    logger.Debug(rq.ToXml());
-
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now.Date,
-                        Xml = rq.ToXml()
-                    };
-
-                    repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES(rq);
-                    logger.Debug(valor1.ToXml());
-                    return new DatosComercialAgentDto { EX_GRUPO_COMPRAS = valor1.EX_GRUPO_COMPRAS, EX_ZONA = valor1.EX_ZONA };
-                }
-
+                repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+                var valor1 = agent.ZMprfcDatosComercial(rq);
+                logger.Debug(valor1.ToXml());
+                return new DatosComercialAgentDto { EX_GRUPO_COMPRAS = valor1.ExGrupoCompras, EX_ZONA = valor1.ExZona };
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error(ex, "Error al obtener datos del Comercial con RFC ZMprfcDatosComercial.");
                 throw;
             }
         }
-
     }
 }

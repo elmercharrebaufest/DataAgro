@@ -77,10 +77,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     // Deshabilita temporalmente la validación del certificado SSL. Aplicar sólo para UAT/Staging. No para PRD.
                     if (ambientePruebas == "1") ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-                    LoteBorradorServiceClient agent = new LoteBorradorServiceClient();
-                    agent.ClientCredentials.UserName.UserName = userConfirma;
-                    agent.ClientCredentials.UserName.Password = passConfirma;
-
                     string numeroSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP;
 
                     EstadoSAPDto estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
@@ -830,7 +826,31 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
 
-                    altaLoteResult devolucion = agent.AltaBorrador(lote);
+                    altaLoteResult devolucion;
+                    
+                    // Usar using para asegurar que el cliente se cierre correctamente
+                    using (LoteBorradorServiceClient agent = new LoteBorradorServiceClient("Default11"))
+                    {
+                        try
+                        {
+                            agent.ClientCredentials.UserName.UserName = userConfirma;
+                            agent.ClientCredentials.UserName.Password = passConfirma;
+
+                            devolucion = agent.AltaBorrador(lote);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Error al llamar al servicio AltaBorrador de Confirma");
+                            
+                            // Si el canal está en estado Faulted, hay que abortarlo
+                            if (agent.State == System.ServiceModel.CommunicationState.Faulted)
+                            {
+                                agent.Abort();
+                            }
+                            throw;
+                        }
+                    }
+
                     logger.Debug(devolucion.ToXml());
 
                     log = repositorio.Obtener<Log>(logId.Id);

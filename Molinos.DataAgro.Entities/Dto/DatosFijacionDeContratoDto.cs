@@ -56,5 +56,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ImporteSustentable { get; set; }
         public Moneda MonedaSustentable { get; set; }
         public int? SustentableTipoDBId { get; set; }
+        //public int? KgMaximos { get; set; }
+        //public int? KgMinimos { get; set; }
     }
 }

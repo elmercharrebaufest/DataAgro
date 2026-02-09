@@ -449,7 +449,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Generado = true
                         };
                         //Enviando Confirma a RFC como BoletoGeneradoDto
-                        logger.Debug("Confirma: Enviando Boleto confirma" + tempConfirma.ToString());
+                        logger.Debug("Confirma: Enviando Boleto confirma - " + tempConfirma.ToString());
                         var res = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
                         logger.Debug("Confirma: Respuesta de la RFC" + res.ToString());
                         if (res == "Se actualizan correctamente los datos")
@@ -472,14 +472,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     bool tieneItems = false;
                                     if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0) tieneItems = true;
-                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}. altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}. " +
-                                        $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
-                                        $"altaEstadoDocumento = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
-                                        $"altaIdDocumentoExistenteLote = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
-                                        $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
-                                        $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
+                                    //logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}. altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}. " +
+                                    //    $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
+                                    //    $"altaEstadoDocumento = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
+                                    //    $"altaIdDocumentoExistenteLote = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
+                                    //    $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
+                                    //    $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
-                                    if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                                    if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
                                     {
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;
@@ -541,13 +541,12 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo)
+        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo, bool EsSoloPendientes)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result.Data as IEnumerable<BasicoConfirma>;
-
-            // Iterar sobre los datos y modificar atributos
-            foreach (var boleto in data)
+            IQueryable<BasicoConfirma> queryableData = data.AsQueryable();
+            foreach (var boleto in queryableData)
             {
                 boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
                 if (boleto.Estado_Version == "Anulado")
@@ -559,7 +558,15 @@ namespace Molinos.DataAgro.Business.Managers
                     boleto.UsuarioAnulacion = null;
                 }
             }
-            return result;
+            if (EsSoloPendientes)
+            {
+                queryableData = queryableData.Where(b => b.Estado_Version == "Pendiente");
+            }
+            return new DataSourceResult
+            {
+                Data = queryableData.ToList(),
+                Total = queryableData.Count()
+            };
         }
 
         private string ValidarContrato(BasicoContrato contrato)

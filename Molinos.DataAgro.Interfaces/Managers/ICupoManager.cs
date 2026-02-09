@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -48,7 +49,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPAoEUDR);
         void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
-        void AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path);
+        Task AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
         void EnviarMailSugerenciasPendientesPorComercial();

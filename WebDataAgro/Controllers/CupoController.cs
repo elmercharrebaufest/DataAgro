@@ -299,7 +299,7 @@ namespace WebDataAgro.Controllers
 
             int sumaCuposCargaMasiva = 0;
             bool cargaMasiva = cupo.Dias != null && cupo.Dias.Count() > 1;
-            if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
+            if (cargaMasiva && !cupo.Dias.Any(x => x.Cantidad == null)) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
 
@@ -419,7 +419,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.CodigoSap.ToString(),
-                    Selected = i.CodigoSap == "1029" ? true : false
+                    Selected = i.CodigoSap == "1029"
                 });
             }
             foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Descripcion))
@@ -428,7 +428,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.CodigoSap.ToString(),
-                    Selected = i.CodigoSap == "1029" ? true : false
+                    Selected = i.CodigoSap == "1029"
                 });
             }
             ViewBag.Centro = listaCentro;//.OrderBy(x => x.Value);
@@ -438,7 +438,6 @@ namespace WebDataAgro.Controllers
             {
                 var materialExterno = habilitacionManager.TraerTodoMaterialRetirado(comercialManager.TraerZonaDelComercialAsociado());
                 material.Material = material.Material.Where(x => materialExterno.Where(y => y.Descripcion == "Disponible".ToUpper()).Any(y => y.Id == x.MaterialId)).ToList();
-
             }
 
             var listaMaterial = new List<SelectListItem>();
@@ -448,7 +447,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.MaterialId.ToString(),
-                    Selected = i.MaterialId == 3 ? true : false
+                    Selected = i.MaterialId == (int)EnumMateriales.SOJA
                 });
             }
             ViewBag.Material = listaMaterial.OrderBy(x => x.Value);
@@ -461,14 +460,17 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
+                    Selected = comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower()
                 });
             }
             ViewBag.Zona = listaZona;
             ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
 
-            ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
-                new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
+            ViewBag.Calidad = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Camara", Value = "1", Selected = false },
+                new SelectListItem { Text = "Fabrica", Value = "2", Selected = true }
+            };
         }
 
         private Cupo TransformarAEntidad(CupoModel cupo)
@@ -526,9 +528,11 @@ namespace WebDataAgro.Controllers
         {
             if (request.Sort == null)
             {
-                request.Sort = new List<Sort> {
-                    new Sort {Field= "FechaIngreso",Dir="desc" },
-                    new Sort { Field="Material",Dir="desc" } };
+                request.Sort = new List<Sort>
+                {
+                    new Sort { Field = "FechaIngreso", Dir = "desc" },
+                    new Sort { Field = "Material", Dir = "desc" }
+                };
             }
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
@@ -541,6 +545,7 @@ namespace WebDataAgro.Controllers
             var model = cupoManager.EliminarCupo(id, GlobalVariables.IdActiveDirectory, true);
             return Json(model);
         }
+
         public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = proveedorManager.ListarProveedor(text);
@@ -552,6 +557,7 @@ namespace WebDataAgro.Controllers
             var proveedores = proveedorManager.ListarProveedorTodos(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult ListarComercial(string text = "")
         {
             var comerciales = comercialManager.ListarComercial(text, GlobalVariables.Equipo);
@@ -570,7 +576,6 @@ namespace WebDataAgro.Controllers
             var resultado = cupoManager.EliminarVarios(listaCupos, GlobalVariables.IdActiveDirectory);
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
-
 
         [Autorizacion(PermisosDataAgro.DisponibilidadDeCupos)]
         public ActionResult Disponibilidad()
@@ -632,13 +637,11 @@ namespace WebDataAgro.Controllers
             if (!String.IsNullOrEmpty(FechaDesde))
             {
                 DateTime.TryParseExact(FechaDesde, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaDesde);
-
             }
             DateTime fechaHasta = DateTime.Today;
             if (!String.IsNullOrEmpty(FechaHasta))
             {
                 DateTime.TryParseExact(FechaHasta, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaHasta);
-
             }
             List<DisponibilidadCuposDto> model = cupoManager.TraerDisponibilidadCupo(fechaDesde, fechaHasta, CentroId, MaterialId);
 

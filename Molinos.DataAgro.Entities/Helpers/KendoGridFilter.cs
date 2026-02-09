@@ -1,14 +1,10 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
+﻿using Kendo.DynamicLinq;
+using KendoGridBinder.ModelBinder.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
-using System.Threading;
 using System.Linq.Dynamic;
-using Kendo.DynamicLinq;
+using System.Reflection;
 
 namespace Molinos.DataAgro.Entities.Helpers
 {
@@ -165,9 +161,9 @@ namespace Molinos.DataAgro.Entities.Helpers
                     else
                     {
                         ProcessFilters(f, ref queryable);
-                        if (whereClause !="")
+                        if (whereClause != "")
                         {
-                        queryable = queryable.Where(whereClause, parameters.ToArray());
+                            queryable = queryable.Where(whereClause, parameters.ToArray());
                         }
                     }
                 }
@@ -294,7 +290,7 @@ namespace Molinos.DataAgro.Entities.Helpers
                 {
                     var f = filters.ToList()[i];
 
-                    if (f.Filters == null)
+                    if (f.Filters == null && f.Field != null)
                     {
                         var entityType = (typeof(T));
                         PropertyInfo property;
@@ -303,6 +299,7 @@ namespace Molinos.DataAgro.Entities.Helpers
                             property = GetNestedProp<T>(f.Field);
                         else
                             property = entityType.GetProperty(f.Field);
+
                         var properties = property.PropertyType.GetProperties();
                         var dataType = property.PropertyType.Name.ToLower();
                         foreach (var prop in properties)

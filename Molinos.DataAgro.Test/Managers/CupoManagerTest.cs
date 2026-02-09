@@ -1,5 +1,4 @@
-﻿using NLog;
-using Molinos.DataAgro.Business.Managers;
+﻿using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -9,6 +8,7 @@ using Molinos.DataAgro.Interfaces.Criterios;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -363,7 +363,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.EliminarVarios(new List<int>() { 1, 2 }, "a");
 
-            repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Exactly(4));
             repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Exactly(1));
             //eliminarCupoAgentMock.Verify(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
             //clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>(), null, null), Times.Exactly(2));
@@ -984,7 +984,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Dias = new List<DiaCupo> { new DiaCupo { Cantidad = 1, Fecha = DateTime.Now.Date } },
                 Calidad = "Fabrica",
                 Proveedor = "Provedor"
-                
+
             };
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -1087,7 +1087,8 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void VerificarSolicitudesExtraordinariasPendientesTest() {
+        public void VerificarSolicitudesExtraordinariasPendientesTest()
+        {
             target.VerificarSolicitudesExtraordinariasPendientes(DateTime.Now);
         }
 

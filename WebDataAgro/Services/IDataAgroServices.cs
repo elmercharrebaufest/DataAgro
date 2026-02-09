@@ -38,6 +38,7 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit, bool? corredor);
+        ResultadoValidarProveedorComercial ValidarProveedorComercialNuevo(string cuit, bool? corredor, string cuitCorredor);
 
         [OperationContract]
         ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP);
