@@ -1,9 +1,6 @@
-﻿using Kendo.DynamicLinq;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -72,15 +69,16 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
+
         [Test]
         public void CrearCupoNuevoTest()
         {
-
             var result = target.CrearCupo(null, "") as ViewResult;
 
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
+
         [Test]
         public void CrearCupoTest()
         {
@@ -127,6 +125,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
+
         [Test]
         public void CrearCupoOkTest()
         {
@@ -147,7 +146,6 @@ namespace Molinos.DataAgro.Test.Controllers
                 PlantaId = "1600",
                 CuitId = "A",
                 Siguientes = null
-
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
@@ -180,7 +178,6 @@ namespace Molinos.DataAgro.Test.Controllers
                 PlantaId = "1600",
                 CuitId = "A",
                 Siguientes = null
-
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
@@ -228,6 +225,7 @@ namespace Molinos.DataAgro.Test.Controllers
             result.RouteValues["action"].Equals("Index");
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
+
         [Test]
         public void BuscarProveedorTest()
         {
@@ -240,6 +238,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         //[Test]
         //public void BuscaDatosTablaTest()
         //{
@@ -282,6 +281,7 @@ namespace Molinos.DataAgro.Test.Controllers
         //    //    "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"Proveedor\":\"a\",\"CentroId\":1,\"Centro\":\"a\",\"MaterialId\":1,\"Material\":\"a\",\"FechaIngreso\":\"\\/Date(1579489200000)\\/\",\"HoraIngreso\":\"\\/Date(1577847600000)\\/\",\"CupoSap\":\"a\",\"CupoStop\":\"1\",\"ZonaCupoId\":1,\"ZonaCupo\":\"a\",\"ComercialId\":1,\"Comercial\":\"a\",\"FleteProcedencia\":false,\"Calidad\":\"Camara\",\"Observaciones\":\"\",\"Fason\":false,\"Destinatario\":\"A\",\"FechaGeneracion\":\"\\/Date(1577847600000)\\/\",\"EstadoCupoId\":1,\"EstadoCupo\":\"a\",\"MensajeError\":\"\",\"Acopio\":true,\"Fecha\":\"1/1/2020\",\"Hora\":\"1:1\"}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
         //    //    a);
         //}
+
         [Test]
         public void EliminarCupoTest()
         {
@@ -295,6 +295,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void ListarProveedorTest()
         {
@@ -308,6 +309,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"Proveedor\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void ListarComercialTest()
         {
@@ -321,6 +323,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ComercialId\":1,\"Comercial\":\" \"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void TransmitirCuposTest()
         {
@@ -334,6 +337,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void EliminarVariosTest()
         {

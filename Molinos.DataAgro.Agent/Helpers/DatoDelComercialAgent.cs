@@ -32,12 +32,9 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             try
             {
-
-
                 Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-
 
                 var rq = new ZMprfcDatosComercial() { ImUsuario = Usuario.ToUpper() };
                 logger.Debug(rq.ToXml());
@@ -53,14 +50,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var valor1 = agent.ZMprfcDatosComercial(rq);
                 logger.Debug(valor1.ToXml());
                 return new DatosComercialAgentDto { EX_GRUPO_COMPRAS = valor1.ExGrupoCompras, EX_ZONA = valor1.ExZona };
-
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error(ex, "Error al obtener datos del Comercial con RFC ZMprfcDatosComercial.");
                 throw;
             }
         }
-
     }
 }

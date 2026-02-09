@@ -151,22 +151,30 @@ namespace Molinos.DataAgro.Business
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "0")
             {
-                var comercial = oDatoDelComercialAgent.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
-
-                if (comercial != null)
+                if (!string.IsNullOrEmpty(oComercial.IdActiveDirectory) && oComercial.IdActiveDirectory.Length > 12)
                 {
-                    try
-                    {
-                        oComercial.GrupoDeCompras = VerificarGrupoComercial(comercial.EX_ZONA);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex);
-                        throw;
-                    }
+                    logger.Info("No se consultará la RFC ZMprfcDatosComercial porque esta no admite un IdActiveDirectory mayor a 12 caracteres.");
+                    oComercial.GrupoDeCompras = null;
+                }
+                else
+                {
+                    var comercial = oDatoDelComercialAgent.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
 
+                    if (comercial != null)
+                    {
+                        try
+                        {
+                            oComercial.GrupoDeCompras = VerificarGrupoComercial(comercial.EX_ZONA);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Error al verificar el Grupo Comercial devuelto por SAP.");
+                            throw;
+                        }
+                    }
                 }
             }
+
             var listaRoles = roles.Select(y => y.Id).ToList();
             oComercial.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
 
@@ -189,7 +197,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Perfil = oComercial.Perfil;
                 oComercialSave.EmpleadorACargoId = oComercial.EmpleadorACargoId;
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
-                oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP == null ? oComercial.IdActiveDirectory : oComercial.IdUsuarioSAP;
+                oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP ?? string.Empty;
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeComprasId = oComercial.GrupoDeComprasId;
                 oComercialSave.Deshabilitado = oComercial.Deshabilitado;
@@ -217,10 +225,7 @@ namespace Molinos.DataAgro.Business
                 {
                     oComercial.FechaDeshabilitado = DateTime.Now;
                 }
-                if (oComercial.IdUsuarioSAP == null)
-                {
-                    oComercial.IdUsuarioSAP = oComercial.IdActiveDirectory;
-                }
+                oComercial.IdUsuarioSAP = oComercial.IdUsuarioSAP ?? string.Empty;
                 repositorio.Agregar(oComercial);
             }
 
@@ -230,7 +235,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error(ex, "Error al guardar el Comercial.");
                 throw;
             }
 
