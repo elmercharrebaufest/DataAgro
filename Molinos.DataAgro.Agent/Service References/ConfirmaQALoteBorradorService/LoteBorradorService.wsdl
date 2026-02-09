@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="LoteBorradorService" targetNamespace="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="LoteBorradorService" targetNamespace="http://confirma.com.ar/gd/2015/08/loteborrador" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsp:Policy wsu:Id="Default_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -66,6 +66,11 @@
                       <xsd:element minOccurs="0" maxOccurs="1" name="Formulario">
                         <xsd:complexType mixed="true">
                           <xsd:attribute name="formversion" type="xsd:string" />
+                        </xsd:complexType>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" maxOccurs="1" name="ModalidadAlta">
+                        <xsd:complexType mixed="true">
+                          <xsd:attribute name="CodLista" type="xsd:positiveInteger" />
                         </xsd:complexType>
                       </xsd:element>
                     </xsd:sequence>
@@ -155,8 +160,8 @@
   </wsdl:message>
   <wsdl:portType name="ILoteBorradorService">
     <wsdl:operation name="AltaBorrador">
-      <wsdl:input wsaw:Action="http://Confirma.GD.Services.Host.WAN.IIS/2015/LoteBorrador/ILoteBorradorService/AltaBorrador" name="LoteBorradores" message="tns:LoteBorradores" />
-      <wsdl:output wsaw:Action="http://confirma.com.ar/gd/2015/08/loteborrador/ILoteBorradorService/AltaBorradorResponse" name="LoteBorradoresResponse" message="tns:LoteBorradoresResponse" />
+      <wsdl:input xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" wsaw:Action="http://Confirma.GD.Services.Host.WAN.IIS/2015/LoteBorrador/ILoteBorradorService/AltaBorrador" name="LoteBorradores" message="tns:LoteBorradores" />
+      <wsdl:output xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" wsaw:Action="http://confirma.com.ar/gd/2015/08/loteborrador/ILoteBorradorService/AltaBorradorResponse" name="LoteBorradoresResponse" message="tns:LoteBorradoresResponse" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="Default" type="tns:ILoteBorradorService">

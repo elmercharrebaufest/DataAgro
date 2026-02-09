@@ -1145,3 +1145,57 @@ IF EXISTS(SELECT 1 FROM Centro WHERE Descripcion like 'Rio del Valle (Planta Sot
 	 WHERE Id = @IdRioValle;
    END
 
+
+-- ConfirmaAltaEstado
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Correcta')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Correcta', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Permisos Insuficientes')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Permisos Insuficientes', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstado WHERE Descripcion = 'Error')
+    INSERT INTO ConfirmaAltaEstado (Descripcion, CodigoConfirmaAltaEstado)
+    VALUES ('Error', 3);
+
+
+-- ConfirmaAltaEstadoLote
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Recepción con éxito')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Recepción con éxito', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Recepción con falla')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Recepción con falla', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'En Proceso')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('En Proceso', 3);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoLote WHERE Descripcion = 'Procesado')
+    INSERT INTO ConfirmaAltaEstadoLote (Descripcion, CodigoConfirmaAltaEstadoLote)
+    VALUES ('Procesado', 4);
+
+
+-- ConfirmaAltaEstadoDocumento
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Recepción con éxito')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Recepción con éxito', 1);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Recepción con falla')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Recepción con falla', 2);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'En Proceso')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('En Proceso', 3);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Proceso con éxito')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Proceso con éxito', 4);
+
+IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Proceso con falla')
+    INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
+    VALUES ('Proceso con falla', 5);
+
