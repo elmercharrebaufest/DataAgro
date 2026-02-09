@@ -725,7 +725,7 @@ var ControlBoletos = (function () {
                 );
 
                 botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' +
+                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosSeguimiento.abrir(' +
                     data.Id +
                     ')" title="Registro de Certificación"><i class="fa fa-certificate"></i><span class="tooltiptext"></span></button>',
                 );

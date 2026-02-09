@@ -508,6 +508,12 @@ namespace WebDataAgro.Controllers
             ViewBag.ControlDeBoletosId = id;
             return PartialView("_DatosCertificacion");
         }
+        [HttpGet]
+        public PartialViewResult _SeguimientoControlBoleto(int id)
+        {
+            ViewBag.ControlDeBoletosId = id;
+            return PartialView("_SeguimientoControlBoleto");
+        }
         #endregion
 
     }
