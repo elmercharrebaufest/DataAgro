@@ -705,6 +705,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     $("#EPA").prop("checked", false);
     $("#EUDR").prop("checked", false);
     contratoSapSE = null;
+    negocioIdSE = null;
     // Si tiene permiso "Cupos_Acopios", establecer valores de "ProveedorIdSE" y buscadorProveedorSE
     if (Cupos_Acopios == "True") {
         $("#ProveedorIdSE").val(2852);
@@ -717,6 +718,7 @@ function LimpiarModalSolicitudExtraordinaria() {
 
 function AbrirModalSolicitudExtraordinaria() {
     LimpiarModalSolicitudExtraordinaria();
+    
     $("#modalSolicitudExtraordinaria").modal("show");
 }
 

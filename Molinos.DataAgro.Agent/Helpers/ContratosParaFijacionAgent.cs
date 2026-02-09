@@ -166,8 +166,8 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.MonedaSustentable = contDA.MonedaSustentable;
                     contratoParaFijacion.ImporteSustentable = contDA.ImporteSustentable;
                     contratoParaFijacion.SustentableTipoDBId = contDA.SustentableTipoDBId;
-                    contratoParaFijacion.KgMaximos = contDA.KgMaximo;
-                    contratoParaFijacion.KgMinimos = contDA.KgMinimo;
+                    //contratoParaFijacion.KgMaximos = contDA.KgMaximo;
+                    //contratoParaFijacion.KgMinimos = contDA.KgMinimo;
                 }
 
                 if (!existeConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)

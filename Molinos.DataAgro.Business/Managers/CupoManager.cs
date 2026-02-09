@@ -624,7 +624,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
+                    if (sisa.EstadoCuit == (int)EnumEstadoCuit.No_incluido_Suspendido && proveedor.RiesgoComercialSap != "E")
                     {
                         error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT 3"));
                     }
@@ -649,15 +649,17 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
                 }
 
-                if (proveedor.SegmentacionId != 5 && proveedor.SegmentacionId != 7)
+                if (proveedor.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios && proveedor.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales)
                 {
-                    string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+                    //string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+                    string tipoProv = "PROV";
                     var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
                     if (string.IsNullOrEmpty(alta.Mensaje))
                     {
                         if (alta.ProveedorGrano == "SI")
                         {
-                            error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
+                            //error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
+                            error.Errores.Add(new ErrorMessage(400, "El Proveedor es un vendedor eventual"));
                         }
                     }
                     else
@@ -665,7 +667,6 @@ namespace Molinos.DataAgro.Business.Managers
                         error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
                     }
                 }
-
             }
 
             return error;
@@ -714,7 +715,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (cupoSap.Centro.NoPropio)
                     {
-                        if (cupoSap.EstadoCupoId != 1)
+                        if (cupoSap.EstadoCupoId != (int)EnumEstadoCupo.SinCTG)
                         {
                             var nuevoError = new Resultado();
                             nuevoError.Error("Error", "El cupo no puede ser anulado. Cupo: " + cupoSap.CupoSap);
@@ -908,14 +909,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
+
         public void TransmitirCupos()
         {
             clienteStopAgent.TransmitirJobCupos();
         }
+
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
             return clienteStopAgent.ConsultarCuposDiarios();
         }
+
         public CupoDto ObtenerCupo(int id, RepositorioEF repo)
         {
             var r = repo ?? repositorio;
@@ -1251,7 +1255,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "En el presente mail se detallan los cupos generados con Molinos Agro S.A.: <br /><br />  ";
 
-            if (cupo.MaterialId == 2)
+            if (cupo.MaterialId == (int)EnumMateriales.TRIGO)
             {
                 htmlBody += "<b style=\"font-size: 18px;text-decoration: underline;background-color: yellow;\">Trigo libre de HB4</b>" + "<br />";
 
@@ -1263,13 +1267,13 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             var destino = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? "SAN LORENZO - SANTA FE - BENIELLI 398 - N° de planta 408411" :
-                cupo.Centro.CodigoSap == "9999" ? "ROSARIO - SANTA FE - URIBURU 3480 - N° de planta 16581" :
+                /*cupo.Centro.CodigoSap == "9999" ? "ROSARIO - SANTA FE - URIBURU 3480 - N° de planta 16581" :*/
                 cupo.Centro.Descripcion;
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
-            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + (cupo.Centro.CodigoSap == "1034" || cupo.Centro.CodigoSap == "9999" ? "Molinos Río de la Plata - 30500858628" : "MOLINOS AGRO S.A.-30715118773") + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + (cupo.Centro.CodigoSap == "1034" /*|| cupo.Centro.CodigoSap == "9999"*/ ? "Molinos Río de la Plata - 30500858628" : "MOLINOS AGRO S.A.-30715118773") + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (
                 cupo.Sustentable ? " (Sustentable)" :
                 cupo.EPA && !cupo.EUDR ? " (EPA)" :
@@ -1378,7 +1382,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            var destino = cupo.Centro.Descripcion + " - " + cupo.Centro.Localidad.Provincia.Nombre + " - " + cupo.Centro.Direccion;
+            // ROSARIO - SANTA FE - URIBURU 3480 - N° de planta 16581
+            //var destino = cupo.Centro.Descripcion + " - " + (cupo.Centro.CodigoSap == "9999" ? cupo.Centro.Localidad.Nombre : cupo.Centro.Localidad.Provincia.Nombre) + " - " + cupo.Centro.Direccion; // TODO: Cambiar según mail
+            var destino = $"{cupo.Centro.Descripcion} - {cupo.Centro.Localidad.Nombre} - {cupo.Centro.Localidad.Provincia.Nombre} - {cupo.Centro.Direccion}" + (cupo.Centro.CodigoSap == "9999" ? " - N° de planta 16581" : "");
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
@@ -1397,7 +1403,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (cupo.MaterialId == (int)EnumMateriales.MAIZ || cupo.MaterialId == (int)EnumMateriales.TRIGO || (cupo.MaterialId == (int)EnumMateriales.SOJA && (cupo.Sustentable || cupo.EPA || cupo.EUDR)))
             {
-
                 if (cupo.MaterialId == (int)EnumMateriales.MAIZ || cupo.MaterialId == (int)EnumMateriales.TRIGO)
                 {
                     htmlBody += "ESPECIAL<br />";
@@ -1414,9 +1419,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += TablaSustentable(cupo);
             }
-            htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
-            htmlBody += "<br /><u>Molinos Agro implementó el cobro electrónico de la Tasa Municipal a través de <a href='https://www.puertos.tramitesenlinea.com.ar' target='_blank'>www.puertos.tramitesenlinea.com.ar</a>, bajo la opción \"Puerto de San Lorenzo\". Será obligatorio a partir del 1 de diciembre de 2025. La tasa deberá estar abonada antes del ingreso a planta. Esta modalidad será una ventaja en seguridad y fluidez dentro del complejo.</u><br />";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+            htmlBody += "<br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
                 "<br /> www.molinosagro.com.ar <br />" +
@@ -1436,6 +1439,7 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(store);
             return alternateView;
         }
+
         public string Split(string str)
         {
             var enumNumero = Enumerable.Range(0, str.Length / 2)
@@ -1452,6 +1456,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return nuevoString;
         }
+
         public string Td(ref int linea, int largo = 1)
         {
             string td1, td2;
@@ -1475,6 +1480,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return td2;
             }
         }
+
         private string TrEncabezado(Cupo c, ref int linea)
         {
             string style1, style2;
@@ -1508,7 +1514,6 @@ namespace Molinos.DataAgro.Business.Managers
                         "<td " + style2 + c.CupoSap + "</td>" +
                         "<td " + style2 + "Sin CTG" + "</td></ tr>";
             }
-
         }
 
         private string TablaSustentable(Cupo cupo)
@@ -1558,6 +1563,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return htmlBody;
         }
+
         public void CrearSugerenciaCupo()
         {
             var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
