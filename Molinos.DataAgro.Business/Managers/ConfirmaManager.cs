@@ -200,14 +200,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     bool tieneItems = false;
                                     if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0) tieneItems = true;
-                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}. altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}. " +
-                                        $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
-                                        $"altaEstadoDocumento = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
-                                        $"altaIdDocumentoExistenteLote = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
-                                        $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
-                                        $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
+                                    //logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}. altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}. " +
+                                    //    $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
+                                    //    $"altaEstadoDocumento = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion}. " : ". ") +
+                                    //    $"altaIdDocumentoExistenteLote = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote}. " : ". ") +
+                                    //    $"altaIdDocumentoExistente = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". ") +
+                                    //    $"codigo = " + (tieneItems ? $"{confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente}. " : ". "));
 
-                                    if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                                    if (confirmaAltaLoteBorradorResult.altaItem.Count() > 0 && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
                                     {
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;

@@ -148,6 +148,8 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService {
         
         private LoteDocumentoCabeceraDocumentoFormulario formularioField;
         
+        private LoteDocumentoCabeceraDocumentoModalidadAlta modalidadAltaField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public LoteDocumentoCabeceraDocumentoBolsa Bolsa {
@@ -181,6 +183,18 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService {
             set {
                 this.formularioField = value;
                 this.RaisePropertyChanged("Formulario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public LoteDocumentoCabeceraDocumentoModalidadAlta ModalidadAlta {
+            get {
+                return this.modalidadAltaField;
+            }
+            set {
+                this.modalidadAltaField = value;
+                this.RaisePropertyChanged("ModalidadAlta");
             }
         }
         
@@ -613,6 +627,52 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService {
             set {
                 this.formversionField = value;
                 this.RaisePropertyChanged("formversion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string[] Text {
+            get {
+                return this.textField;
+            }
+            set {
+                this.textField = value;
+                this.RaisePropertyChanged("Text");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2015/08/LoteDocumentosBorradorWSSchema")]
+    public partial class LoteDocumentoCabeceraDocumentoModalidadAlta : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string[] textField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
             }
         }
         

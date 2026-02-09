@@ -315,6 +315,7 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYDos.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
+    <Compile Include="Common\Enums\EnumConfirmaAltaEstadoLote.cs" />
     <Compile Include="Dto\BuscarCentroDto.cs" />
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
