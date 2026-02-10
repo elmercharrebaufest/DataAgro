@@ -272,14 +272,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     var tieneItemsWS = confirmaAltaLoteBorradorResult.altaItem != null && confirmaAltaLoteBorradorResult.altaItem.Any();
 
-                                    logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}. " +
-                                        $"altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}. " +
-                                        $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
-                                        $"altaEstadoDocumento = {(tieneItemsWS ? confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion : "N/A")}. " +
-                                        $"altaIdDocumentoExistenteLote = {(tieneItemsWS ? confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote.ToString() : "N/A")}. " +
-                                        $"altaIdDocumentoExistente = {(tieneItemsWS ? confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente.ToString() : "N/A")}.");
-
-                                    if (tieneItemsWS && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                                    if (tieneItemsWS && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
                                     {
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;

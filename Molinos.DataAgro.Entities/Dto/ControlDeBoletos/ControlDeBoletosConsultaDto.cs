@@ -20,6 +20,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         
+        public string TipoBoleto { get; set; }
+
         // Campos Contrato
         public string ContratoSAP { get; set; }
         public int? ProveedorId { get; set; }
