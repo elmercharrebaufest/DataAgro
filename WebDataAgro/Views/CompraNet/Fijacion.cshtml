@@ -526,11 +526,7 @@
             <label>Precio Base</label>
         </div>
         <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
-            <div class="col-xs-7 col-md-6 noPadding">
-                <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
-            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
+            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style=" display:inline-flex;">
                 <div class="w70" id="ocultarAperturaMoneda">
                     <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                     <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
@@ -543,7 +539,10 @@
                     </span>
                 </div>
             </div>
-
+            <div class="col-xs-7 col-md-6 noPadding" style="float:right;">
+                <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
+                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
         </div>
         <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
