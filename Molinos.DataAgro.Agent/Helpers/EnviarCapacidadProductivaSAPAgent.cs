@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         ImCuit = item.First().Cuit,
                         ImDetalle = item.Select(detalle => new Zmpes6970
                         {
-                            Cuit = detalle.Cuit,
+                            Cuit = ObtenerCodigoProveedor(detalle.Cuit,false),
                             Matnr = detalle.Material,
                             Cosecha = detalle.Campania,
                             Cantidad = detalle.Cantidad,
@@ -86,6 +86,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Error(e, "EnviarCapacidadProductiva - Error comunicación SAP. ");
                 throw;
             }
+        }
+
+        private string ObtenerCodigoProveedor(string cuit, bool esCorredor = false)
+        {
+            var prefix = esCorredor ? "C" : "00";
+
+            return prefix + cuit.Remove(cuit.Length - 1).Remove(0, 2);
         }
     }
 }
