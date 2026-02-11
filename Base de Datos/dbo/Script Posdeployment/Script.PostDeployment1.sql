@@ -1199,6 +1199,9 @@ IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Pr
     INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
     VALUES ('Proceso con falla', 5);
 
+-- CENTROS nuevos
+IF NOT EXISTS (select 1 from Centro where Descripcion = 'Santa Clara') BEGIN insert into Centro (Descripcion,CodigoSap,Acopio,ValidaRedespacho,LocalidadId,CodigoPostal,Direccion,Comision,CargaNegocios,CargaCupos,NoPropio,CUIT,RazonSocial,CentroPropio) VALUES ('Santa Clara','9999','0','0',12699,2000,'Uriburu 3480','0','0','1','1','30500858628','MOLINOS RIO DE LA PLATA','0'); END
+
 --Estado Confirma
 if not exists(select 1 from EstadoConfirma where Codigo = 1)
 begin
