@@ -1,5 +1,4 @@
-﻿using NLog;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.css;
@@ -19,8 +18,10 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Clausulas;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -48,13 +49,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulasCartaOferta servicioClausulasCartaOferta;
         private readonly IServicioClausulasBoletoFisico servicioClausulasBoletoFisico;
         private readonly IServicioClausulasGenericos servicioClausulasGenericos;
+        private readonly IControlDeBoletosManager controlDeBoletosManager;
 
         private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public BoletoManager(IRepositorio repositorio, ILogger logger, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent,
             IEnviarBoletoAgent oEnviarBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
             IStatusContratoAgent status, IServicioClausulas servicioClausula, IServicioClausulasCartaOferta servicioClausulasCartaOferta,
-            IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos)
+            IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos, IControlDeBoletosManager controlDeBoletosManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -67,9 +69,209 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulasBoletoFisico = servicioClausulasBoletoFisico;
             this.servicioClausulasGenericos = servicioClausulasGenericos;
             this.status = status;
+            this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public BoletoResult GrabarBoleto(List<string> contratos, List<int> tipoNegocios, BoletoDto boletoContrato, List<int> equipo)
+        {
+            var boletoResult = new BoletoResult();
+
+            try
+            {
+                // Obtener y filtrar negocios habilitados
+                var basicoContratos = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo));
+                var negociosHabilitados = FiltrarNegociosHabilitados(basicoContratos);
+
+                // Crear HashSet para búsquedas más rápidas
+                var negociosHabilitadosSet = new HashSet<string>(
+                    negociosHabilitados.SelectMany(n => new[] { n.Negocio, n.ContratoSAP })
+                );
+
+                // Validar contratos no habilitados
+                foreach (var itemContrato in contratos)
+                {
+                    if (!negociosHabilitadosSet.Contains(itemContrato))
+                    {
+                        boletoResult.BoletosDto.Add(
+                            DevolverDto(new BasicoContrato { ContratoSAP = itemContrato }, false, 0,
+                            "El negocio no está habilitado para generar boleto. "));
+                    }
+                }
+
+                // Leer configuración una sola vez
+                var pathBoletos = ConfigurationManager.AppSettings["PathBoletos"] ?? string.Empty;
+
+                // Procesar negocios habilitados
+                foreach (var negocio in negociosHabilitados)
+                {
+                    try
+                    {
+                        // Validar tipo de negocio
+                        if (!tipoNegocios.Contains(negocio.TipoNegocioId))
+                        {
+                            boletoResult.BoletosDto.Add(
+                                DevolverDto(negocio, false, 0, "El negocio no corresponde al tipo de negocio indicado."));
+                            continue;
+                        }
+
+                        // Validar y preparar boleto
+                        var boletoDto = ValidarNegocioParaGenerarBoleto(negocio);
+                        boletoDto.ComercialId = boletoContrato.ComercialId;
+
+                        if (!string.IsNullOrEmpty(boletoDto.Mensaje))
+                        {
+                            boletoDto.Generado = false;
+                            boletoResult.BoletosDto.Add(boletoDto);
+                            continue;
+                        }
+
+                        // Enviar boleto a RFC
+                        logger.Debug($"Enviando boleto {boletoDto}");
+                        var resultadoRFC = oEnviarBoletoAgent.EnviarBoleto(boletoDto);
+
+                        if (resultadoRFC != "Se actualizan correctamente los datos")
+                        {
+                            boletoDto.Generado = false;
+                            boletoDto.Mensaje = resultadoRFC;
+                            boletoResult.BoletosDto.Add(boletoDto);
+                            continue;
+                        }
+
+                        // RFC exitoso - procesar clausulas y generar PDF
+                        var clausulas = PrepararClausulas(boletoContrato.Clausulas, negocio);
+                        var pdf = GenerarPDF(negocio, clausulas, boletoDto);
+                        var nombreArchivo = GenerarNombreArchivoBoleto(negocio, boletoDto.Version);
+
+                        try
+                        {
+                            // 1. PRIMERO: Guardar archivo PDF
+                            var rutaArchivo = Path.Combine(pathBoletos, $"{nombreArchivo}.pdf");
+                            File.WriteAllBytes(rutaArchivo, pdf);
+
+                            // 2. SEGUNDO: Solo si el PDF se guardó correctamente, agregar a BD
+                            var guardarBoleto = repositorio.Agregar(ConvertirBoletoDtoAEntidad(boletoDto));
+                            boletoResult.BoletosGenerados.Add(guardarBoleto);
+
+                            // 3. TERCERO: Enviar email si está configurado
+                            if (boletoContrato.Mail)
+                            {
+                                EnviarEmailBoleto(negocio, boletoDto, boletoContrato.ComercialId, pdf, nombreArchivo);
+                            }
+
+                            // 4. CUARTO:  Guardar cambios en BD
+                            repositorio.GuardarCambios();
+
+                            // 5. QUINTO:  Agregar al resultado solo si todo fue exitoso
+                            boletoDto.Generado = true;
+                            boletoDto.Mensaje = "El boleto se generó correctamente.";
+                            boletoResult.BoletosDto.Add(boletoDto);
+
+                            // 6. SEXTO: RegistrarDatosCertificacion Control de Boleto
+                            controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
+                        }
+                        catch (IOException ioEx)
+                        {
+                            // Error al guardar PDF - no se guarda nada en BD
+                            boletoDto.Generado = false;
+                            boletoDto.Mensaje = $"Error al guardar el PDF del boleto: {ioEx.Message}";
+                            boletoResult.BoletosDto.Add(boletoDto);
+                            logger.Error(ioEx);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error general después de guardar PDF
+                            boletoDto.Mensaje += $" Error:  {ex.Message}";
+                            logger.Error(ex);
+
+                            // Ya se guardó en BD, así que agregamos al resultado
+                            boletoResult.BoletosDto.Add(boletoDto);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        boletoResult.BoletosDto.Add(
+                            DevolverDto(negocio, false, 0, $"Error procesando negocio: {ex.Message}"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                boletoResult.Error("Error en GrabarBoleto", e.Message);
+            }
+
+            return boletoResult;
+        }
+        #region Métodos auxiliares
+        private List<ResultadoClausula> PrepararClausulas(List<string> clausulasContrato, BasicoContrato negocio)
+        {
+            if (clausulasContrato == null || !clausulasContrato.Any())
+            {
+                return ObtenerClausulas(negocio);
+            }
+
+            var clausulas = new List<ResultadoClausula>(clausulasContrato.Count);
+            for (int i = 0; i < clausulasContrato.Count; i++)
+            {
+                clausulas.Add(new ResultadoClausula
+                {
+                    Texto = clausulasContrato[i],
+                    Orden = i + 1
+                });
+            }
+
+            return clausulas;
+        }
+        private string GenerarNombreArchivoBoleto(BasicoContrato negocio, int version)
+        {
+            if (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
+            {
+                var sufijo = negocio.Negocio.Length >= 2
+                    ? negocio.Negocio.Substring(negocio.Negocio.Length - 2)
+                    : negocio.Negocio;
+                return $"{negocio.ContratoSAP}_F{sufijo}";
+            }
+
+            return $"{negocio.ContratoSAP.TrimStart('0')}_V{version.ToString().PadLeft(2, '0')}";
+        }
+        private void EnviarEmailBoleto(BasicoContrato negocio, BoletoDto boletoDto, int comercialId, byte[] pdf, string nombreArchivo)
+        {
+            try
+            {
+                var proveedorId = negocio.CorredorId != 0 ? negocio.CorredorId : negocio.ProveedorId;
+                var emailProveedor = repositorio.Listar<ContactoComercial, string>(
+                    x => x.Email1,
+                    x => x.ProveedorId == proveedorId && x.Boleto == true);
+
+                var comercial = repositorio.Obtener<Comercial>(comercialId);
+                var razonSocial = !string.IsNullOrEmpty(negocio.RazonSocialCorredor)
+                    ? negocio.RazonSocialCorredor
+                    : negocio.RazonSocialProveedor;
+
+                var numeroContrato = negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                    ? negocio.Negocio.Substring(Math.Max(0, negocio.Negocio.Length - 2))
+                    : negocio.ContratoSAP.TrimStart('0');
+
+                EnviarMailBoleto(
+                    negocio.BoletoDescripcion,
+                    razonSocial,
+                    numeroContrato,
+                    boletoDto.Version.ToString(),
+                    comercial,
+                    emailProveedor,
+                    pdf,
+                    nombreArchivo);
+            }
+            catch (Exception ex)
+            {
+                boletoDto.Mensaje += $" Error al enviar el email del boleto: {ex.Message}";
+                logger.Error(ex);
+            }
+        }
+        #endregion
+
+        public BoletoResult GrabarBoletoOriginal(List<string> contratos, List<int> tipoNegocios, BoletoDto boletoContrato, List<int> equipo)
         {
             var boletoResult = new BoletoResult();
             try

@@ -1,0 +1,15 @@
+﻿@{
+    Layout = null;
+}
+
+<div id="gridTrackingBoleto"></div>
+
+<script>
+    $(document).ready(function() {
+        if (typeof ControlBoletosTracking !== 'undefined') {
+            ControlBoletosTracking.init(@ViewBag.ControlDeBoletosId);
+        } else {
+            console.error('ControlBoletosTracking no está definido. Verifique que el script esté cargado.');
+        }
+    });
+</script>

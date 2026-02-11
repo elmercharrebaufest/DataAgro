@@ -1,0 +1,90 @@
+﻿
+@model WebDataAgro.Controllers.ModificarControlBoletoViewModel
+
+<div class="modal fade" id="modalModificarBoleto" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content clearfix modal-contrato">
+
+            @*<div class="modal-header">
+                <h5 class="modal-title">Modificar Control de Boleto</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>*@
+
+            <div class="modal-header">
+                <button type="button" class="modal-close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <div class="header-top">
+                    <h5 class="titulo-modal modal-titulo-contrato">
+                        Modificar Control de Boleto
+                    </h5>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                @Html.HiddenFor(m => m.Id)
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Cosecha</label>
+                        <select id="ImCosecha" class="form-control"></select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Clasificación</label>
+                        <select id="ImClasificacion" class="form-control"></select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Provincia</label>
+                        <select id="ImProvincia" class="form-control"></select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Procedencia</label>
+                        <select id="ImProcedencia" class="form-control"></select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Fecha</label>
+                        <input type="date" id="ImFecha" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Hora</label>
+                        <input type="time" id="ImHora" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="ControlBoletosModificacion.guardar()">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    .modal-contrato {
+        background-color: white !important;
+    }
+    .modal-close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 0.2;
+        background: none !important;
+        text-indent: 0;
+        border-color: transparent !important;
+        cursor: pointer;
+    }
+</style>

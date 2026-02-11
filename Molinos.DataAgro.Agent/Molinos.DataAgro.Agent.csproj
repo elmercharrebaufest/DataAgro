@@ -220,8 +220,11 @@
     <Compile Include="Helpers\ConfirmaLoteBorradorAgent.cs" />
     <Compile Include="Helpers\ConfirmaLoteDocumentosAgent.cs" />
     <Compile Include="Helpers\ConfirmaLoteDocumentosAsyncAgent.cs" />
+    <Compile Include="Helpers\DatosCertificacionControlBoletoAgent.cs" />
     <Compile Include="Helpers\EnviarCapacidadProductivaSAPAgent.cs" />
+    <Compile Include="Helpers\ModificacionContratoControlBoletoAgent.cs" />
     <Compile Include="Helpers\ScoringCuposAgent.cs" />
+    <Compile Include="Helpers\SeguimientoControlBoletoAgent.cs" />
     <Compile Include="Helpers\ValidarPesificacionesAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionParcialAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionFinalAgent.cs" />

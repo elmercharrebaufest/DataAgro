@@ -653,6 +653,68 @@ function ConvertirStringABool(valor) {
     return valor == "True" ? true : valor == "False" ? false : valor;
 }
 
+function MSExecuteGetOnServer(url, datos, onCallBack) {
+
+    var respuesta = null;
+
+    $.ajax({
+        async: false, 
+        url: MSGetUrl(url),
+        type: 'GET',
+        cache: false,
+        data: datos, 
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            respuesta = data;
+        },
+        error: function (error) {
+            MensErr("No se pudieron obtener los datos del servidor \n URL: " + url +
+                "\n Información tecnica: " + JSON.stringify(error));
+        },
+        complete: function () {
+            if (onCallBack) {
+                onCallBack(respuesta);
+            }
+        }
+    });
+
+    return respuesta;
+}
+
+function MSExecuteGetOnServerAsync(url, datos = null) {
+    return new Promise(function (resolve, reject) {
+
+        $.ajax({
+            url: MSGetUrl(url),
+            type: 'GET',
+            cache: false,
+            data: datos,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                resolve(data); // ← devuelve datos al await
+            },
+
+            error: function (xhr, status, error) {
+                const errObj = {
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                };
+
+                console.error("Error AJAX GET:", errObj);
+                reject(errObj); // ← dispara el catch
+            }
+        });
+
+    });
+}
+
+
+
+
 const Materiales = {
     MAIZ: 1,
     TRIGO: 2,

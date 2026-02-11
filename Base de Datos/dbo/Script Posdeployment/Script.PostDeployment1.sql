@@ -1201,3 +1201,80 @@ IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Pr
 
 -- CENTROS nuevos
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'Santa Clara') BEGIN insert into Centro (Descripcion,CodigoSap,Acopio,ValidaRedespacho,LocalidadId,CodigoPostal,Direccion,Comision,CargaNegocios,CargaCupos,NoPropio,CUIT,RazonSocial,CentroPropio) VALUES ('Santa Clara','9999','0','0',12699,2000,'Uriburu 3480','0','0','1','1','30500858628','MOLINOS RIO DE LA PLATA','0'); END
+
+--Estado Confirma
+if not exists(select 1 from EstadoConfirma where Codigo = 1)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (1, 'Contrato pendiente de Control')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 2)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (2, 'Controlado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 3)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (3, 'En Firma')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 4)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (4, 'Pendiente de Registración')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 5)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (5, 'Registrado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 7)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (7, 'Anulado')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 99)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (99, 'Anulado post-registración')
+end
+
+if not exists(select 1 from EstadoConfirma where Codigo = 9)
+begin
+ insert into EstadoConfirma(Codigo,Descripcion) values (9, 'Excluído porTiempo Excedido')
+end
+
+--Estado ControlDeBoletos
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Pendiente')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('Pendiente')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Proceso')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Proceso')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Oblea')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Oblea')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Certificacion')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('En Certificacion')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Enviado Afip / Arca')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('Enviado Afip / Arca')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Finalizado')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('Finalizado')
+end
+
+if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Anulado')
+begin
+ insert into ControlDeBoletosEstado(Descripcion) values ('Anulado')
+end

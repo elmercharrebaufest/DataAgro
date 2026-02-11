@@ -22,7 +22,8 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
             var res = new ResultadoClausula();
             if (clausula.Basico.FechaCierta.HasValue && clausula.Basico.PorcentajeDePago.HasValue)
             {
-                res.Texto += $" El pago del {clausula.Basico.PorcentajeDePago.Value}% se efectuará en la fecha indicada en ‘Información sobre pagos’ con la condición que con 72 hs de anticipación se hayan cumplido los requisitos exigibles para el pago. " +
+                string porcentajeDePago = clausula.Basico.PorcentajeDePago.Value.ToString().Replace(",", ".");
+                res.Texto += $" El pago del {porcentajeDePago}% se efectuará en la fecha indicada en Información sobre pagos con la condición que con 72 hs de anticipación se hayan cumplido los requisitos exigibles para el pago. " +
                     $"En caso contrario, el pago se realizará a las 72 hs de cumplidos los requisitos previamente mencionados. El {100 - clausula.Basico.PorcentajeDePago.Value}% restante se pagará durante los 30 días posteriores.";
             }
             return res;

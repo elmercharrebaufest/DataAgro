@@ -326,6 +326,9 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Listar<Rol, RolCombo>(x => new RolCombo { Id = x.Id, Descripcion = x.Descripcion }).OrderBy(x => x.Descripcion).ToList();
         }
-
+        public List<BolsaCompraNetQry> GetBolsaCompraNet()
+        {
+            return repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x=> new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion } ).OrderBy(x => x.Descripcion).ToList();
+        }
     }
 }

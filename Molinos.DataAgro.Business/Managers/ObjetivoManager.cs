@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Business
                 campaña = hoy.Year.ToString().Substring(2) + "-" + (hoy.Year + 1).ToString().Substring(2);
             }
             var campañaAñoFiscal = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
-            if(campañaAñoFiscal == null) logger.Info("En tabla Campaña no existe la campaña " + campaña);
+            if (campañaAñoFiscal == null) logger.Info("En tabla Campaña no existe la campaña " + campaña);
             var listResult = new ObjetivoHome();
             var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercialLogeado);
             List<MaterialObjetivo> listaObjetivos = new List<MaterialObjetivo>();

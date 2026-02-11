@@ -1,5 +1,4 @@
-﻿using NLog;
-using Kendo.DynamicLinq;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -8,8 +7,10 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Clausulas;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,6 +24,7 @@ using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Mail;
 using System.ServiceModel.Channels;
+using System.Text;
 using System.Web.WebPages;
 using System.Xml.Linq;
 
@@ -41,13 +43,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent;
         private readonly IServicioClausulasConfirma servicioClausulaConfirma;
         private readonly IServicioClausulasGenericos servicioClausulasGenericos;
+        private readonly IControlDeBoletosManager controlDeBoletosManager;
         private readonly string pathConfirmas;
         private readonly string boletosNuevaVersion = ConfigurationManager.AppSettings["BoletosNuevaVersion"];
 
         public ConfirmaManager(IRepositorio repositorio, ILogger logger, IStatusContratoAgent status, IEnviarBoletoAgent oEnviarBoletoAgent,
             IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IMailManager mailManager, IHttpContextManager httpContextManager,
             IServicioClausulas servicioClausula, IConfirmaLoteBorradorAgent confirmaLoteBorradorAgent, 
-            IServicioClausulasConfirma servicioClausulaConfirma, IServicioClausulasGenericos servicioClausulasGenericos)
+            IServicioClausulasConfirma servicioClausulaConfirma, IServicioClausulasGenericos servicioClausulasGenericos, IControlDeBoletosManager controlDeBoletosManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -61,6 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulaConfirma = servicioClausulaConfirma;
             pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"].ToString();
             this.servicioClausulasGenericos = servicioClausulasGenericos;
+            this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public DatosIniContrato TraerDatosCombos()
@@ -72,6 +76,267 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
+        {
+            var resultado = new ConfirmaResult();
+
+            try
+            {
+                // Preparación inicial
+                var codigos = CompletarCodigoLista(codigosSap);
+                var contratos = ObtenerContratos(codigos, claseNegocio, equipo);
+
+                // Leer configuración una sola vez
+                var activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
+                var ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
+                var pruebaRapidaDeConfirma = ConfigurationManager.AppSettings["PruebaRapidaDeConfirma"];
+                var pathConfirmas = ConfigurationManager.AppSettings["PathConfirmas"] ?? string.Empty;
+                var esModoTest = ambienteLocal == "1" || pruebaRapidaDeConfirma == "1";
+
+                // Modo prueba
+                if (usarWebServiceConfirma && esModoTest)
+                {
+                    logger.Info("---- PRUEBA: INICIO WS CONFIRMA ----");
+
+                    try
+                    {
+                        var codigoSapCompleto = codigos[0].TrimStart('0').PadLeft(10, '0');
+                        var consultaIQ = repositorio.ObtenerConsultaEscalar(
+                            new TraerTodosContratosBoleto(new List<string> { codigoSapCompleto }, equipo));
+                        var contratoPrueba = consultaIQ.First();
+
+                        var clausulasConfirma = (clausulas == null || !clausulas.Any())
+                            ? ObtenerClausulas(contratoPrueba)
+                            : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+
+                        var estadosConfirmaDto = new EstadosConfirmaDto
+                        {
+                            ConfirmaAltaEstadoDto = repositorio.Listar<ConfirmaAltaEstado, ConfirmaAltaEstadoDto>(
+                                x => new ConfirmaAltaEstadoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstado = x.CodigoConfirmaAltaEstado }),
+                            ConfirmaAltaEstadoLoteDto = repositorio.Listar<ConfirmaAltaEstadoLote, ConfirmaAltaEstadoLoteDto>(
+                                x => new ConfirmaAltaEstadoLoteDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoLote = x.CodigoConfirmaAltaEstadoLote }),
+                            ConfirmaAltaEstadoDocumentoDto = repositorio.Listar<ConfirmaAltaEstadoDocumento, ConfirmaAltaEstadoDocumentoDto>(
+                                x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento })
+                        };
+
+                        var confirmaAltaLoteBorradorResult = confirmaLoteBorradorAgent.ConfirmaLoteBorrador(clausulasConfirma, equipo, contratoPrueba, estadosConfirmaDto);
+                        var tieneItems = confirmaAltaLoteBorradorResult.altaItem != null && confirmaAltaLoteBorradorResult.altaItem.Any();
+
+                        logger.Info($"WS: altaIdLote = {confirmaAltaLoteBorradorResult.altaIdLote}.  " +
+                            $"altaEstado = {confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion}.  " +
+                            $"altaEstadoLote = {confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. " +
+                            $"altaEstadoDocumento = {(tieneItems ? confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento.Descripcion : "N/A")}. " +
+                            $"altaIdDocumentoExistenteLote = {(tieneItems ? confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistenteLote.ToString() : "N/A")}. " +
+                            $"altaIdDocumentoExistente = {(tieneItems ? confirmaAltaLoteBorradorResult.altaItem[0].altaIdDocumentoExistente.ToString() : "N/A")}.");
+
+                        var webServiceOK = tieneItems &&
+                            confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.Id == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO;
+
+                        var sb = new StringBuilder();
+                        sb.Append(confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion ?? string.Empty);
+                        sb.Append(confirmaAltaLoteBorradorResult.altaEstadoDetalleError == null ? ".  " : $":  {confirmaAltaLoteBorradorResult.altaEstadoDetalleError}.  ");
+                        sb.Append($"{confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. ");
+
+                        if (confirmaAltaLoteBorradorResult.altaItem != null)
+                        {
+                            foreach (var item in confirmaAltaLoteBorradorResult.altaItem)
+                            {
+                                if (item.altaErrores != null)
+                                {
+                                    foreach (var error in item.altaErrores)
+                                    {
+                                        sb.Append($"{item.confirmaAltaEstadoDocumento?.Descripcion}:  {error}. ");
+                                    }
+                                }
+                            }
+                        }
+
+                        resultado.confirmasGenerados.Add(DevolverDto(contratoPrueba, false, $"WS: {sb}", webServiceOK));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        resultado.Errores.Add(new ErrorMessage(500, $"Error en prueba WS: {ex.Message}"));
+                    }
+                    finally
+                    {
+                        logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
+                    }
+
+                    return resultado;
+                }
+
+                // Validación de contratos
+                if (contratos == null || !contratos.Any())
+                {
+                    logger.Info($"Generacion Confirma: No se hallaron Negocios SAP {string.Join(",", codigos)}.");
+                    resultado.Errores.Add(new ErrorMessage(404, "Ningun Negocio Encontrado"));
+                    return resultado;
+                }
+
+                // Cargar estados una sola vez para todos los contratos
+                var estadosConfirmaDtoProduccion = new EstadosConfirmaDto
+                {
+                    ConfirmaAltaEstadoDto = repositorio.Listar<ConfirmaAltaEstado, ConfirmaAltaEstadoDto>(
+                        x => new ConfirmaAltaEstadoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstado = x.CodigoConfirmaAltaEstado }),
+                    ConfirmaAltaEstadoLoteDto = repositorio.Listar<ConfirmaAltaEstadoLote, ConfirmaAltaEstadoLoteDto>(
+                        x => new ConfirmaAltaEstadoLoteDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoLote = x.CodigoConfirmaAltaEstadoLote }),
+                    ConfirmaAltaEstadoDocumentoDto = repositorio.Listar<ConfirmaAltaEstadoDocumento, ConfirmaAltaEstadoDocumentoDto>(
+                        x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento })
+                };
+
+                // Procesar cada contrato
+                foreach (var contrato in contratos)
+                {
+                    try
+                    {
+                        // Validar contrato
+                        var mensajeValidacion = ValidarContrato(contrato);
+                        if (!string.IsNullOrEmpty(mensajeValidacion))
+                        {
+                            logger.Info($"Generacion Confirma: No es valido el Negocio SAP {contrato.Negocio}");
+                            resultado.confirmasGenerados.Add(DevolverDto(contrato, false, mensajeValidacion));
+                            continue;
+                        }
+
+                        // Consultar estado en RFC
+                        var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(
+                            contrato.ContratoSAP,
+                            contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
+
+                        // Verificar si ya existe
+                        if (!string.IsNullOrEmpty(consultaConfirma.Generado) && !consultaConfirma.Anulado.Equals("X"))
+                        {
+                            var fechaGeneracionUltimoConfirma = repositorio
+                                .Listar<Confirma>(x => x.NegocioId == contrato.Id && x.FechaAnulacion == null)
+                                .Select(x => x.FechaGeneracion)
+                                .FirstOrDefault();
+
+                            logger.Info($"Confirma. Generado = {consultaConfirma.Generado} -- contrato SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
+                            resultado.confirmasGenerados.Add(
+                                DevolverDto(contrato, false, "El boleto ya se encuentra generado en SAP.", false, fechaGeneracionUltimoConfirma));
+                            continue;
+                        }
+
+                        // Crear confirma
+                        var esFijacion = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION;
+                        var tempConfirma = new ConfirmaGeneradoDto
+                        {
+                            NegocioId = contrato.Id,
+                            Version = string.IsNullOrEmpty(consultaConfirma.Version) ? 1 : Convert.ToInt32(consultaConfirma.Version) + 1,
+                            ComercialId = ComercialId,
+                            FechaGeneracion = DateTime.Now,
+                            ContratoSAP = contrato.ContratoSAP,
+                            FijacionSAP = contrato.FijacionSAP,
+                            TipoBoletoId = esFijacion ? 1 : contrato.BoletoId.GetValueOrDefault(),
+                            IsWebService = false,
+                            NegocioSAP = esFijacion ? contrato.FijacionSAP : contrato.ContratoSAP,
+                            Mensaje = string.Empty,
+                            Generado = true
+                        };
+
+
+                        try
+                        {
+                            // Enviar a RFC
+                            logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
+                            var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
+                            logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
+
+                            if (respuestaRFC != "Se actualizan correctamente los datos")
+                            {
+                                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, respuestaRFC));
+                                continue;
+                            }
+
+                            // Guardar XML
+                            var xml = GenerarXML(contrato, clausulas);
+                            var rutaArchivo = Path.Combine(pathConfirmas, tempConfirma.Archivo);
+                            File.WriteAllBytes(rutaArchivo, xml);
+
+                            // Guardar en BD
+                            var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+
+                            // Procesar Web Service si está habilitado
+                            if (usarWebServiceConfirma && activarConfirmaWS == "1")
+                            {
+                                logger.Info("---- INICIO WS CONFIRMA ----");
+
+                                try
+                                {
+                                    var clausulasConfirmaWS = (clausulas == null || !clausulas.Any())
+                                        ? ObtenerClausulas(contrato)
+                                        : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+
+                                    var confirmaAltaLoteBorradorResult = confirmaLoteBorradorAgent.ConfirmaLoteBorrador(
+                                        clausulasConfirmaWS, equipo, contrato, estadosConfirmaDtoProduccion);
+
+                                    var tieneItemsWS = confirmaAltaLoteBorradorResult.altaItem != null && confirmaAltaLoteBorradorResult.altaItem.Any();
+
+                                    if (tieneItemsWS && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                                    {
+                                        nuevoConfirma.IsWebService = true;
+                                        tempConfirma.IsWebService = true;
+                                        //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteBorradorResult.altaIdLote));
+                                    }
+                                    else
+                                    {
+                                        var sbWS = new StringBuilder();
+                                        sbWS.Append(confirmaAltaLoteBorradorResult.confirmaAltaEstado?.Descripcion ?? string.Empty);
+                                        sbWS.Append(confirmaAltaLoteBorradorResult.altaEstadoDetalleError == null ? ". " : $": {confirmaAltaLoteBorradorResult.altaEstadoDetalleError}. ");
+                                        sbWS.Append($"{confirmaAltaLoteBorradorResult.confirmaAltaEstadoLote?.Descripcion}. ");
+
+                                        if (confirmaAltaLoteBorradorResult.altaItem != null)
+                                        {
+                                            foreach (var item in confirmaAltaLoteBorradorResult.altaItem)
+                                            {
+                                                if (item.altaErrores != null)
+                                                {
+                                                    foreach (var error in item.altaErrores)
+                                                    {
+                                                        sbWS.Append($"{item.confirmaAltaEstadoDocumento?.Descripcion}: {error}. ");
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        var prefijo = string.IsNullOrEmpty(tempConfirma.Mensaje) ? "WS: " : ".  WS: ";
+                                        tempConfirma.Mensaje += prefijo + sbWS.ToString();
+                                    }
+                                }
+                                finally
+                                {
+                                    logger.Info("---- FIN WS CONFIRMA ----");
+                                }
+                            }
+                            repositorio.GuardarCambios();
+                            resultado.confirmasGenerados.Add(tempConfirma);
+                        }
+                        catch (Exception ex)
+                        {
+                            tempConfirma.Mensaje += $"Error al guardar el XML del confirma: {ex.Message}";
+                            resultado.confirmasGenerados.Add(DevolverDto(contrato, false, "El XML del confirma No se ha almacenado correctamente. "));
+                            logger.Error(ex);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        resultado.Errores.Add(new ErrorMessage(400, $"Error procesando contrato {contrato.Negocio}:  {ex.Message}"));
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                resultado.Errores.Add(new ErrorMessage(400, e.Message));
+            }
+
+            return resultado;
+        }
+        
+        public ConfirmaResult GrabarConfirmasOriginal(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var codigos = CompletarCodigoLista(codigosSap);
             var contratos = ObtenerContratos(codigos, claseNegocio, equipo);

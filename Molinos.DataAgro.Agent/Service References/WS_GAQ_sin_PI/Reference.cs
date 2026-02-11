@@ -12703,7 +12703,7 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         
         private string imFijacionField;
         
-        private System.DateTime imHoraField;
+        private string imHoraField;
         
         private string imObsCtrlBoletoField;
         
@@ -12884,8 +12884,8 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=14)]
-        public System.DateTime ImHora {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="string", Order=14)]
+        public string ImHora {
             get {
                 return this.imHoraField;
             }
@@ -15486,7 +15486,7 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         
         private string imFechaField;
         
-        private System.DateTime imHoraField;
+        private string imHoraField;
         
         private string imProcedenciaField;
         
@@ -15543,8 +15543,8 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=4)]
-        public System.DateTime ImHora {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="string", Order=4)]
+        public string ImHora {
             get {
                 return this.imHoraField;
             }
@@ -16358,7 +16358,7 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         
         private string imFijacionField;
         
-        private System.DateTime imHoraField;
+        private string imHoraField;
         
         private string imUsuarioField;
         
@@ -16412,8 +16412,8 @@ namespace Molinos.DataAgro.Agent.WS_GAQ_sin_PI {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=4)]
-        public System.DateTime ImHora {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="string", Order=4)]
+        public string ImHora {
             get {
                 return this.imHoraField;
             }
