@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Business
                 campaña = hoy.Year.ToString().Substring(2) + "-" + (hoy.Year + 1).ToString().Substring(2);
             }
             var campañaAñoFiscal = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
-            if(campañaAñoFiscal == null) logger.Info("En tabla Campaña no existe la campaña " + campaña);
+            if (campañaAñoFiscal == null) logger.Info("En tabla Campaña no existe la campaña " + campaña);
             var listResult = new ObjetivoHome();
             var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercialLogeado);
             List<MaterialObjetivo> listaObjetivos = new List<MaterialObjetivo>();
@@ -54,19 +54,19 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
-                //listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
-                //{
-                //    Id = x.Id,
-                //    Material = x.Material.Descripcion,
-                //    MaterialId = x.MaterialId,
-                //    Campana = x.Campana.Descripcion,
-                //    Toneladas = x.ToneladasObjetivos,
-                //    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                //    ComercialId = x.ComercialId,
-                //    GrupoDeComprasId = x.GrupoDeComprasId
-                //}, x => equipo.Contains(x.ComercialId)
-                //&& (idComercial == null || idComercial == x.ComercialId)
-                //&& campañaAñoFiscal.CampañaId == x.CampanaId);
+                listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+                {
+                    Id = x.Id,
+                    Material = x.Material.Descripcion,
+                    MaterialId = x.MaterialId,
+                    Campana = x.Campana.Descripcion,
+                    Toneladas = x.ToneladasObjetivos,
+                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    ComercialId = x.ComercialId,
+                    GrupoDeComprasId = x.GrupoDeComprasId
+                }, x => equipo.Contains(x.ComercialId)
+                && (idComercial == null || idComercial == x.ComercialId)
+                && campañaAñoFiscal.CampañaId == x.CampanaId);
                 //&& (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId);
             }
 

@@ -49,7 +49,7 @@ namespace WebDataAgro.Seguridad
             // Nombre de la operación que están invocando
             string operacion = operationContext.IncomingMessageHeaders.Action ?? "(sin action)";
 
-            // RegistrarDatosCertificacion log
+            // Registrar log
             AccessLog.Registrar(ip, host, operacion);
 
             // Leer whitelist
