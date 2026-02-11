@@ -9,12 +9,11 @@ namespace Molinos.DataAgro.Entities.Common.Enums
     public enum EnumControlDeBoletosEstado
     {
         PENDIENTE_CONTROL = 1,
-        CONTROLADO = 2,
-        EN_FIRMA = 3,
-        PENDIENTE_REGISTRACIÓN = 4,
-        REGISTRADO = 5,
-        ANULADO = 6,
-        ANULADO_POST_REGISTRACIÓN = 7,
-        EXCLUÍDO = 8
+        EN_PROCESO = 2,
+        EN_OBLEA = 3,
+        EN_CERTIFICACION = 4,
+        ENVIADO_AFIP = 5,
+        FINALIZADO = 6,
+        ANULADO = 7
     }
 }

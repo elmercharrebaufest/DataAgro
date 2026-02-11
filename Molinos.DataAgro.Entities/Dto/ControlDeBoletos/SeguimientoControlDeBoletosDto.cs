@@ -21,7 +21,6 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string FeVueltaBolsa { get; set; }
         public string FecAcopio { get; set; }
         public string Fecha { get; set; }
-        public string Fijacion { get; set; }
         public string Hora { get; set; }
         public string ObsCtrlBoleto { get; set; }
         public string ObsCtrlBoleto2 { get; set; }

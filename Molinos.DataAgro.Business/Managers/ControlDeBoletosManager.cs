@@ -242,7 +242,6 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion)
         {
             var oResultado = new Resultado();
-
             try
             {
                 var boletos = repositorio.Listar<ControlDeBoletos>(x=> ControlDeBoletoIds.Contains(x.Id));
@@ -263,21 +262,25 @@ namespace Molinos.DataAgro.Business.Managers
                     switch (accion)
                     {
                         case EnumControlDeBoletosAcciones.ControlIniciado:
+                            boleto.ControlDeBoletosEstadoId = (int) EnumControlDeBoletosEstado.EN_PROCESO;
                             boleto.ControlIniciado = true;
                             boleto.FechaControlIniciado = ahora;
                             break;
 
                         case EnumControlDeBoletosAcciones.RegistroDatosOblea:
+                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_OBLEA;
                             boleto.RegistroDatosOblea = true;
                             boleto.FechaRegistroDatosOblea = ahora;
                             break;
 
                         case EnumControlDeBoletosAcciones.CertificacionCompletada:
+                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_CERTIFICACION;
                             boleto.CertificacionCompletada = true;
                             boleto.FechaCertificacionCompletada = ahora;
                             break;
 
                         case EnumControlDeBoletosAcciones.ControlFinalizado:
+                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.FINALIZADO;
                             boleto.ControlFinalizado = true;
                             boleto.FechaControlFinalizado = ahora;
                             break;

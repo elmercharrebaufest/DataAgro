@@ -371,6 +371,7 @@
     <Build Include="dbo\Tables\ControlDeBoletosPreCertificacion.sql" />
     <Build Include="dbo\Tables\ControlDeBoletosTracking.sql" />
     <Build Include="dbo\Tables\TipoOblea.sql" />
+    <Build Include="dbo\Tables\ControlDeBoletosSeguimiento.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

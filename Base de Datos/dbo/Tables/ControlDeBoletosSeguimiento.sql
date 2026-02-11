@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[ControlDeBoletosSeguimiento]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [ControlDeBoletosId] INT NOT NULL, 
+    [BolsaCompraNetId] INT NOT NULL, 
+    [BolsaSellado] VARCHAR(100) NOT NULL, 
+    [FechaEnviadoFirma] DATETIME NOT NULL,
+    [FechaEnvio] DATETIME NOT NULL,
+    [FechaEnvioAfip] DATETIME NOT NULL,
+    [FechaEnvioBolsa] DATETIME NOT NULL,
+    [FechaRecepBoleto] DATETIME NOT NULL,
+    [FechaRecibFirma] DATETIME NOT NULL,
+    [FechaVueltaAfip] DATETIME NOT NULL,
+    [FechaVueltaBolsa] DATETIME NOT NULL,
+    [FechaAcopio] DATETIME NOT NULL, 
+    [BoletoCompraNetId] INT NOT NULL, 
+    [ObsCtrlBoleto] VARCHAR(500) NULL, 
+    [ObsCtrlBoleto2] VARCHAR(500) NULL, 
+    [FechaCreacion] DATETIME NOT NULL, 
+    [FechaModificacion] DATETIME NULL,
+    CONSTRAINT FK_ControlDeBoletos_Seguimiento FOREIGN KEY (ControlDeBoletosId) REFERENCES [dbo].[ControlDeBoletos](Id),
+    CONSTRAINT FK_ControlDeBoletos_Seguimiento_Bolsa FOREIGN KEY (BolsaCompraNetId) REFERENCES [dbo].[BolsaCompraNet](Id),
+    CONSTRAINT FK_ControlDeBoletos_Seguimiento_Boleta FOREIGN KEY (BoletoCompraNetId) REFERENCES [dbo].[BoletoCompraNet](Id),
+
+)

@@ -63,7 +63,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ImFeVueltaBolsa = dto.FeVueltaBolsa,
                     ImFecAcopio = dto.FecAcopio,
                     ImFecha = dto.Fecha,
-                    ImFijacion = dto.Fijacion,
                     ImHora = dto.Hora,
                     ImObsCtrlBoleto = dto.ObsCtrlBoleto,
                     ImObsCtrlBoleto2 = dto.ObsCtrlBoleto2,
