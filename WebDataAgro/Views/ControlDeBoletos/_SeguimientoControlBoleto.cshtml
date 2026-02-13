@@ -18,6 +18,7 @@
 
                 <form id="frmSeguimientoControlBoleto">
 
+                    <!-- DATOS GENERALES -->
                     <div class="row">
                         <div class="col-md-6">
                             <label>Bolsa</label>
@@ -36,58 +37,54 @@
                         </div>
                     </div>
 
-                    <hr />
-
-                    <!-- FECHAS -->
+                    <!-- 1️⃣ FECHA BASE -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Fecha</label>
-                            <input type="date" id="dtFecha" class="form-control" />
+                            <label>Fecha Recepción Boleto</label>
+                            <input type="date" id="dtFeRecepBoleto" class="form-control" />
                         </div>
+                    </div>
+
+                    <!-- 2️⃣ ENVÍOS -->
+                    <div class="row">
                         <div class="col-md-4">
-                            <label>Envio</label>
+                            <label>Fecha Envío Firmas</label>
                             <input type="date" id="dtFeEnvio" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Envio AFIP</label>
+                            <label>Fecha Envío Obleado Bolsa</label>
+                            <input type="date" id="dtFeEnvioBolsa" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Fecha Envío Certificación AFIP</label>
                             <input type="date" id="dtFeEnvioAfip" class="form-control" />
                         </div>
                     </div>
 
+                    <!-- 3️⃣ RECEPCIONES -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Envio Bolsa</label>
-                            <input type="date" id="dtFeEnvioBolsa" class="form-control" />
+                            <label>Fecha Recepción Obleado Bolsa</label>
+                            <input type="date" id="dtFeVueltaBolsa" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Recep. Boleto</label>
-                            <input type="date" id="dtFeRecepBoleto" class="form-control" />
+                            <label>Fecha Recepción Certificación AFIP</label>
+                            <input type="date" id="dtFeVueltaAfip" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Recib. Firma</label>
+                            <label>Fecha Recepción Firmas</label>
                             <input type="date" id="dtFeRecibFirma" class="form-control" />
                         </div>
                     </div>
 
-
+                    <!-- 4️⃣ CIERRE -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Vuelta AFIP</label>
-                            <input type="date" id="dtFeVueltaAfip" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Vuelta Bolsa</label>
-                            <input type="date" id="dtFeVueltaBolsa" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Enviado Firma</label>
+                            <label>Fecha Envío Sellado</label>
                             <input type="date" id="dtFeEnviadoFirma" class="form-control" />
                         </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-4">
-                            <label>Acopio</label>
+                            <label>Fecha Acopio</label>
                             <input type="date" id="dtFecAcopio" class="form-control" />
                         </div>
                         <div class="col-md-4">
@@ -95,13 +92,14 @@
                             <input id="txtRechazadoAfip" class="form-control" />
                         </div>
                     </div>
-
+                    <!-- OBSERVACIONES -->
                     <div class="row">
                         <div class="col-md-12">
                             <label>Observación</label>
                             <textarea id="txtObsCtrlBoleto" class="form-control"></textarea>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <label>Observación 2</label>
@@ -126,6 +124,7 @@
         </div>
     </div>
 </div>
+
 <style>
     .modal-seguimiento {
         background-color: white !important;
@@ -143,5 +142,10 @@
         text-indent: 0;
         border-color: transparent !important;
         cursor: pointer;
+    }
+
+    h6 {
+        margin-top: 10px;
+        font-weight: 600;
     }
 </style>

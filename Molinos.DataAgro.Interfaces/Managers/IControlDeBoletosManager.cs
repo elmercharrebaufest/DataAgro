@@ -28,5 +28,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);
         Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion);
         Resultado SeguimientoBoleto(SeguimientoControlDeBoletosDto seguimientoControlDeBoletos);
+        Resultado ProcesarBoletosPendientesControl();
     }
 }

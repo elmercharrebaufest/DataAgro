@@ -8,24 +8,29 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class ConfirmaConsultaDocumentosDto
     {
-        public string idDocumento;
-        public string idBolsa;
-        public int consultaEstado;
-        public int consultaEstadoDocumento;
-        public EmpresaConfirmaDto enPoderDe;
-        public int estadoDocumento;
+        public string IdDocumento;
+        public string IdBolsa;
+        public int EstadoDocumento;
+        public int ConsultaEstadoDocumento;
+        public EmpresaConfirmaDto EnPoderDe;
+        public List<Acciones> Acciones;
     }
 
     public class EmpresaConfirmaDto
     {
-        public TCodCaptionDto cUIT;
-        public string razonSocial;
+        public int CUIT;
+        public string RazonSocial;
     }
 
-    public class TCodCaptionDto
+    public class Acciones
     {
-        public string caption;
-        public string codLista;
-        public string value;
+        public string FechaHora;
+        public string Accion;
+        public string Resultado;
+        public string TipoDocumento;
+        public string NroDocumento;
+        public string Apellido;
+        public string Nombre;
+        public string Cargo;
     }
 }

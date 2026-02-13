@@ -23,13 +23,19 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent;
         private readonly ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent;
-        public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent, ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent)
+        private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
+        public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, 
+                                       IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent, 
+                                       ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
+                                       IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent
+                                       )
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
             this.modificacionContratoControlBoletoAgent = modificacionContratoControlBoletoAgent;
             this.seguimientoControlBoletoAgent = seguimientoControlBoletoAgent;
+            this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
         }
 
         public Resultado AsociarConfirma(int negocioId)
@@ -238,7 +244,6 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-
         public Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion)
         {
             var oResultado = new Resultado();
@@ -325,6 +330,61 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+        public Resultado ProcesarBoletosPendientesControl()
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => x.EstadoConfirmaId == (int)EnumEstadoConfirma.PENDIENTE);
+                if (boletosPendientes.Count > 0)
+                {
+                    foreach(var boleto in boletosPendientes)
+                    {
+                        var bolsaConfirma = Convert.ToInt32(boleto.Negocio.Bolsa.CodigoConfirma);
+                        var respuestaConsultaDocumentos = confirmaConsultaDocumentosAgent.ConsultaDocumentos(bolsaConfirma, boleto.Negocio.ContratoSAP);
+                        if (respuestaConsultaDocumentos!=null && respuestaConsultaDocumentos.Count > 0)
+                        {
+                            foreach (var documento in respuestaConsultaDocumentos)
+                            {
+                                foreach(var accion in documento.Acciones)
+                                {
 
+                                    var existe = this.repositorio.Obtener<ControlDeBoletoTracking>(x=> x.ControlDeBoletosId == boleto.Id && x.Accion == accion.Accion && x.Resultado == x.Resultado && x.FechaHora == x.FechaHora);
+                                    if (existe == null)
+                                    {
+                                        var controlDeBoletoTracking = new ControlDeBoletoTracking()
+                                        {
+                                            ControlDeBoletosId = boleto.Id,
+                                            Accion = accion.Accion,
+                                            Resultado = accion.Resultado,
+                                            ValorAnterior = string.Empty,
+                                            ValorNuevo = string.Empty,
+                                            Cargo = accion.Cargo,
+                                            Nombre = accion.Nombre,
+                                            Apellido = accion.Apellido,
+                                            FechaHora = DateTime.Now,
+                                            UsuarioModificacion = string.Format("{0} {1}", accion.Nombre, accion.Apellido)
+                                        };
+                                        this.repositorio.Agregar(controlDeBoletoTracking);
+                                    }
+
+                                }
+                            }
+                            this.repositorio.GuardarCambios();
+                        }
+                    }
+                }
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message,
+                });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
     }
 }

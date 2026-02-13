@@ -25,12 +25,13 @@ namespace WebDataAgro.Controllers
         private readonly IFAQManager faqManager;
         private readonly IResearchManager researchManager;
         private readonly IConfirmaManager confirmaManager;
-
+        private readonly IControlDeBoletosManager controlDeBoletosManager;
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
-            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager, IResearchManager researchManager, IConfirmaManager confirmaManager)
+            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager, IFAQManager faqManager, IResearchManager researchManager, 
+            IConfirmaManager confirmaManager, IControlDeBoletosManager controlDeBoletosManager)
 
         {
             this.logger = logger;
@@ -48,6 +49,7 @@ namespace WebDataAgro.Controllers
             this.faqManager = faqManager;
             this.researchManager = researchManager;
             this.confirmaManager = confirmaManager;
+            this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -401,6 +403,14 @@ namespace WebDataAgro.Controllers
             logger.Info("INICIO ActualizarScoringCuposDeProveedores");
             proveedorManager.ActualizarScoringCuposDeProveedores();
             logger.Info("FIN ActualizarScoringCuposDeProveedores");
+            return Content("ok");
+        }
+
+        public ActionResult ProcesarBoletosPendientesControl()
+        {
+            logger.Info("INICIO ProcesarBoletosPendientesControl");
+            controlDeBoletosManager.ProcesarBoletosPendientesControl();
+            logger.Info("FIN ProcesarBoletosPendientesControl");
             return Content("ok");
         }
 
