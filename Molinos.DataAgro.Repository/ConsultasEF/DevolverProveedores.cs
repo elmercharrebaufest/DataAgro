@@ -41,8 +41,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                              from c in rg.DefaultIfEmpty()
                              where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
                              c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
-                             (corredor.Equals(0) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
-                             : corredor.Equals(1) ? (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7) : Proveedor.SegmentacionId > 0))
+                             (corredor.Equals(0) ? Proveedor.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios && Proveedor.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales
+                             : corredor.Equals(1) ? (Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios || Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales) : Proveedor.SegmentacionId > 0))
                              group c by Proveedor into provs
                              select new BusquedaHome
                              {
@@ -218,7 +218,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         }
                     }
                     var estadoProveedor = (from provEstado in contexto.Set<ProveedorEstado>()
-                                           where provEstado.ProveedorId == item.Id && provEstado.EstadoId == 4
+                                           where provEstado.ProveedorId == item.Id && provEstado.EstadoId == (int)EnumEstado.BAJA 
                                            select provEstado).FirstOrDefault();
 
                     if (estadoProveedor != null)

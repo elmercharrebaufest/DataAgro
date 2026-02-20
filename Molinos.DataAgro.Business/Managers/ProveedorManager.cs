@@ -3085,12 +3085,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (string.IsNullOrEmpty(alta.Mensaje))
                         {
-                            if (item.Consignatario.HasValue && item.Consignatario.Value && alta.Consignatario == "NO")
+                            if (item.Consignatario.HasValue && item.Consignatario.Value && alta.Consignatario == "NO" && String.IsNullOrEmpty(item.Estado))
                             {
                                 item.Estado = "El proveedor no está habilitado como Consignatario";
                                 continue;
                             }
-                            if (item.PlanCanje.HasValue && item.PlanCanje.Value && alta.PlanCanje == "NO")
+                            if (item.PlanCanje.HasValue && item.PlanCanje.Value && alta.PlanCanje == "NO" && String.IsNullOrEmpty(item.Estado))
                             {
                                 item.Estado = "El proveedor no está habilitado como Proveedor Plan canje";
                                 continue;
