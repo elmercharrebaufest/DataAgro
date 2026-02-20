@@ -1,39 +1,49 @@
 ﻿var ControlBoletosTracking = (function () {
-    'use strict';
+    "use strict";
 
+    // ======================
+    // Configuración
+    // ======================
     var config = {
         urls: {
-            trackingPartial: '/ControlDeBoletos/_TrackingControlDeBoletos',
-            getTracking: '/ControlDeBoletos/GetTrackingBoleto'
-        }
+            getTracking: "/ControlDeBoletos/GetTrackingBoleto"
+        },
+        modalId: "#modalTrackingBoleto",
+        modalBodyId: "#modalTrackingBoletoBody",
+        gridId: "#gridTrackingBoleto"
     };
 
-    function abrir(controlDeBoletosId) {
-        $("#modalTrackingBoletoBody").html("");
+    // ======================
+    // Estado interno
+    // ======================
+    var state = {
+        controlDeBoletosId: null,
+        gridInicializado: false
+    };
 
-        $.get(config.urls.trackingPartial, { controlDeBoletosId: controlDeBoletosId })
-            .done(function (html) {
-                $("#modalTrackingBoletoBody").html(html);
-                $("#modalTrackingBoleto").modal("show");
-            });
-        this.init(controlDeBoletosId);
-    }
+    // ======================
+    // Funciones privadas
+    // ======================
 
-    function init(controlDeBoletosId) {
-        cargarGrid(controlDeBoletosId);
-    }
-
-    function cargarGrid(controlDeBoletosId) {
-        $("#gridTrackingBoleto").kendoGrid({
+    function inicializarGrid() {
+        if ($(config.gridId).data("kendoGrid")) {
+            $(config.gridId).data("kendoGrid").destroy();
+            $(config.gridId).empty();
+        }
+        const url = `${config.urls.getTracking}?controlDeBoletosId=${encodeURIComponent(state.controlDeBoletosId)}`;
+        $(config.gridId).kendoGrid({
             dataSource: {
                 transport: {
                     read: {
-                        url: config.urls.getTracking,
-                        data: { controlDeBoletosId: controlDeBoletosId },
+                        url: url,
                         dataType: "json"
                     }
                 },
-                pageSize: 10
+                pageSize: 10,
+                schema: {
+                    data: "Data",
+                    total: "Total"
+                }
             },
             pageable: true,
             sortable: true,
@@ -49,13 +59,54 @@
                     template: "#= kendo.toString(kendo.parseDate(FechaModificacion), 'dd/MM/yyyy HH:mm') #"
                 },
                 { field: "UsuarioModificacion", title: "Usuario" }
-            ]
+            ],
+            dataBound: function(e) {
+                var data = e.sender.dataSource.data();
+                if (data.length === 0) {
+                    $("#gridTrackingBoleto").hide();
+                    $("#lblNoTrackingInfo").show();
+                } else {
+                    $("#gridTrackingBoleto").show();
+                    $("#lblNoTrackingInfo").hide();
+                }
+            }
         });
+
+        state.gridInicializado = true;
     }
 
+    function mostrarModal() {
+        $(config.modalId).modal("show");
+    }
+
+    // ======================
+    // API pública
+    // ======================
     return {
-        abrir: abrir,
-        init: init
+
+        abrir: function (controlDeBoletosId) {
+            state.controlDeBoletosId = controlDeBoletosId;
+
+            var url = "/ControlDeBoletos/_TrackingControlDeBoletos?id=" + controlDeBoletosId;
+            
+            // Remover modal anterior si existe
+            $(config.modalId).remove();
+            
+            $.get(url, function(html) {
+                $('body').append(html);
+                
+                try {
+                    inicializarGrid();
+                    mostrarModal();
+                } catch (error) {
+                    console.error("Error cargando tracking:", error);
+                }
+            });
+        },
+
+        cerrar: function () {
+            $(config.modalId).modal("hide");
+        }
     };
 
 })();

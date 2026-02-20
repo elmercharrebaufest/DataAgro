@@ -1,4 +1,4 @@
-﻿var ControlBoletosModificacion = (function () {
+﻿var ControlDeBoletosModificarContrato = (function () {
     "use strict";
     var config = {
         urls: {
@@ -7,7 +7,7 @@
             getCosechas: "/ControlDeBoletos/GetCosechas",
             getProcedencias: "/ControlDeBoletos/GetProcedencias",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
-            modificar: "/ControlDeBoletos/ModificarContrato",
+            updateContrato: "/ControlDeBoletos/ModificarContrato",
         },
         modalId: "#modalModificarBoleto",
     };
@@ -18,6 +18,11 @@
         contrato: null,
         cargando: false,
     };
+
+    let controlProvincia = $("#frmModificarContrato #Provincia");
+    let controlClasificacion = $("#frmModificarContrato #Clasificacion");
+    let controlCosecha = $("#frmModificarContrato #Cosecha");
+    let controlProcedencia = $("#frmModificarContrato #Procedencia");
 
     // ======================
     // Funciones privadas
@@ -31,14 +36,13 @@
         );
         $("#mensajeModal").modal("show");
     }
-
-    async function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = $(selector);
+    function cargarDropdown(url, selector, textoCarga, textoDefault) {
+        var $select = selector;
 
         try {
             $select.html('<option value="">' + textoCarga + "</option>");
 
-            const data = await MSExecuteGetOnServerAsync(url);
+            const data =  MSExecuteGetOnServer(url);
 
             $select.empty().append('<option value="">' + textoDefault + "</option>");
 
@@ -57,29 +61,21 @@
 
     function obtenerRequest() {
         return {
-            Contrato: state.contratoSAP,
-            ProvinciaId: $("#ImProvincia").val(),
-            ClasificacionId: $("#ImClasificacion").val(),
-            CosechaId: $("#ImCosecha").val(),
-            ProcedenciaId: $("#ImProcedencia").val(),
-            Fecha: $("#ImFecha").val(),
-            Hora: $("#ImHora").val(),
-            Usuario: "",
-            NegocioId : state.negocioId
+            ProvinciaId: controlProvincia.val(),
+            ClasificacionId: controlClasificacion.val(),
+            CosechaId: controlCosecha.val(),
+            ProcedenciaId: controlProcedencia.val(),
+            NegocioId: state.negocioId
         };
     }
 
     function validarFormulario() {
         var errores = [];
 
-        if (!$("#ImCosecha").val()) errores.push("Debe seleccionar una cosecha");
+        if (!controlCosecha.val()) errores.push("Debe seleccionar una cosecha");
 
-        if (!$("#ImProvincia").val())
+        if (!controlProvincia.val())
             errores.push("Debe seleccionar una provincia");
-
-        if (!$("#ImFecha").val()) errores.push("Debe ingresar la fecha");
-
-        if (!$("#ImHora").val()) errores.push("Debe ingresar la hora");
 
         return errores;
     }
@@ -88,52 +84,52 @@
     // API pública
     // ======================
     return {
-        abrir: async function (NegocioId, data) {
+        abrir: function (NegocioId) {
             state.negocioId = NegocioId;
-            await this.cargarContrato(state.negocioId);
-            $(config.modalId).modal("show");
+            this.cargarContrato(state.negocioId);
+            $("#modalModificarBoleto").modal("show");
         },
-        cargarContrato: async function (id) {
+        cargarContrato: function (id) {
             const url = config.urls.getContrato + "?id=" + id;
-            const contrato = await MSExecuteGetOnServerAsync(url);
+            const contrato = MSExecuteGetOnServer(url);
             state.contratoSAP = contrato.Data.ContratoSAP;
-            await this.cargarCombos(contrato.Data);
+            this.cargarCombos(contrato.Data);
         },
-        cargarCombos: async function (contrato) {
+        cargarCombos: function (contrato) {
             let url = config.urls.getProvincias;
-            await cargarDropdown(
+            cargarDropdown(
                 url,
-                "#ImProvincia",
+                controlProvincia,
                 "Cargando...",
                 "Seleccione provincia",
             );
             url = config.urls.getClasificaciones;
-            await cargarDropdown(
+            cargarDropdown(
                 url,
-                "#ImClasificacion",
+                controlClasificacion,
                 "Cargando...",
                 "Seleccione clasificación",
             );
             url = config.urls.getCosechas;
-            await cargarDropdown(
+            cargarDropdown(
                 url,
-                "#ImCosecha",
+                controlCosecha,
                 "Cargando...",
                 "Seleccione cosecha",
             );
             url =
                 config.urls.getProcedencias + "?provinciaId=" + contrato.ProvinciaId;
-            await cargarDropdown(
+            cargarDropdown(
                 url,
-                "#ImProcedencia",
+                controlProcedencia,
                 "Cargando...",
                 "Seleccione procedencia",
             );
 
-            $("#ImProvincia").val(contrato.ProvinciaId);
-            $("#ImClasificacion").val(contrato.ClasificacionId);
-            $("#ImCosecha").val(contrato.CampanaId);
-            $("#ImProcedencia").val(contrato.LocalidadId);
+            controlProvincia.val(contrato.ProvinciaId);
+            controlClasificacion.val(contrato.ClasificacionId);
+            controlCosecha.val(contrato.CampanaId);
+            controlProcedencia.val(contrato.LocalidadId);
         },
 
         guardar: function () {
@@ -149,8 +145,7 @@
             //mostrarSpinner(true);
             try {
                 const request = obtenerRequest();
-                console.log('request-->>', request);
-                const response = MSExecuteOnServer(config.urls.modificar, request);
+                const response = MSExecuteOnServer(config.urls.updateContrato, request);
                 state.cargando = false;
                 //mostrarSpinner(false);
                 console.log(response);

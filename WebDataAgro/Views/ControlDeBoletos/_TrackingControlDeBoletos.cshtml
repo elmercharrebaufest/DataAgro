@@ -1,15 +1,47 @@
-﻿@{
-    Layout = null;
-}
+﻿<!--Modal tracking boletos-->
+<div id="modalTrackingBoleto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content clearfix modal-tracking">
+            <div class="modal-header">
+                <button type="button" class="modal-close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <div class="header-top">
+                    <h5 class="titulo-modal modal-titulo-contrato">
+                        Tracking de contratos
+                    </h5>
+                </div>
+            </div>
+            <div class="modal-body" id="modalTrackingBoletoBody">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div id="gridTrackingBoleto"></div>
+                        <label id="lblNoTrackingInfo" style="display:none; color:#888; font-size:1.1em; margin-top:20px;">
+                            No existe información para mostrar.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal-tracking {
+        background-color: white !important;
+    }
 
-<div id="gridTrackingBoleto"></div>
-
-<script>
-    $(document).ready(function() {
-        if (typeof ControlBoletosTracking !== 'undefined') {
-            ControlBoletosTracking.init(@ViewBag.ControlDeBoletosId);
-        } else {
-            console.error('ControlBoletosTracking no está definido. Verifique que el script esté cargado.');
-        }
-    });
-</script>
+    .modal-close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 0.2;
+        background: none !important;
+        text-indent: 0;
+        border-color: transparent !important;
+        cursor: pointer;
+    }
+</style>

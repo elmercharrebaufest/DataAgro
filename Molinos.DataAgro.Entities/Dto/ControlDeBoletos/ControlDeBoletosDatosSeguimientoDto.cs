@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Molinos.DataAgro.Entities.Entities
+namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
 {
-    public class ControlDeBoletosSeguimiento
+    public class ControlDeBoletosDatosSeguimientoDto
     {
-        [Key]
         public int Id { get; set; }
         public int ControlDeBoletosId { get; set; }
         public int BolsaCompraNetId { get; set; }
@@ -25,17 +22,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaVueltaAfip { get; set; }
         public DateTime? FechaVueltaBolsa { get; set; }
         public DateTime? FechaAcopio { get; set; }
-
         public string ObsCtrlBoleto { get; set; }
         public string ObsCtrlBoleto2 { get; set; }
-
-        public DateTime FechaCreacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }
-
-        // 🔹 Navigation
-        public virtual ControlDeBoletos ControlDeBoletos { get; set; }
-        public virtual BolsaCompraNet BolsaCompraNet { get; set; }
-        public virtual BoletoCompraNet BoletoCompraNet { get; set; }
     }
-
 }

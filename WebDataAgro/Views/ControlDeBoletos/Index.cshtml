@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/ControlDeBoletos")
 }
 
-<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;">
+<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmPendienteControl">
     <!-- Header Section -->
     <div class="row header-section">
         <div class="col-12">
@@ -247,34 +247,18 @@
     </div>
 </div>
 
-<!--Modal tracking boletos-->
-<div id="modalTrackingBoleto" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tracking del Boleto</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modalTrackingBoletoBody">
-                <!-- Partial View -->
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-@* Modal para modificar contrato *@
+@* Renderizar vistas parciales de modales *@
+@Html.Partial("_VisualizarContrato")
+@Html.Partial("_DatosCertificacion")
+@Html.Partial("_SeguimientoControlBoleto")
+@Html.Partial("_TrackingControlDeBoletos")
 @Html.Partial("_ModificarDatosDelContrato")
 
-@* Modal para visualizar contrato *@
-@Html.Partial("_VisualizarContrato")
-
-@Html.Partial("_TrackingControlDeBoletos")
-
-@Html.Partial("_DatosCertificacion")
-
-@Html.Partial("_SeguimientoControlBoleto")
+<script>
+    function cargarModalDinamico(url, modalId, callback) {
+        $.get(url, function (html) {
+            $('body').append(html);
+            if (callback) callback();
+        });
+    }
+</script>

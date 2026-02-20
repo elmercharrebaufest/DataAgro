@@ -1,14 +1,6 @@
-﻿
-@model WebDataAgro.Controllers.ModificarControlBoletoViewModel
-
-<div class="modal fade" id="modalModificarBoleto" tabindex="-1">
+﻿<div id="modalModificarBoleto" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content clearfix modal-contrato">
-
-            @*<div class="modal-header">
-                <h5 class="modal-title">Modificar Control de Boleto</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>*@
 
             <div class="modal-header">
                 <button type="button" class="modal-close" data-dismiss="modal">
@@ -23,48 +15,37 @@
             </div>
 
             <div class="modal-body">
-                @Html.HiddenFor(m => m.Id)
+                <form id="frmModificarContrato">
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label>Cosecha</label>
-                        <select id="ImCosecha" class="form-control"></select>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Cosecha</label>
+                            <select id="Cosecha" class="form-control"></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Clasificación</label>
+                            <select id="Clasificacion" class="form-control"></select>
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <label>Clasificación</label>
-                        <select id="ImClasificacion" class="form-control"></select>
-                    </div>
-                </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Provincia</label>
+                            <select id="Provincia" class="form-control"></select>
+                        </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label>Provincia</label>
-                        <select id="ImProvincia" class="form-control"></select>
+                        <div class="col-md-6">
+                            <label>Procedencia</label>
+                            <select id="Procedencia" class="form-control"></select>
+                        </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <label>Procedencia</label>
-                        <select id="ImProcedencia" class="form-control"></select>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label>Fecha</label>
-                        <input type="date" id="ImFecha" class="form-control" />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>Hora</label>
-                        <input type="time" id="ImHora" class="form-control" />
-                    </div>
-                </div>
+                </form>
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary" onclick="ControlBoletosModificacion.guardar()">Guardar</button>
+                <button class="btn btn-primary" onclick="ControlDeBoletosModificarContrato.guardar()">Guardar</button>
             </div>
 
         </div>
@@ -74,6 +55,7 @@
     .modal-contrato {
         background-color: white !important;
     }
+
     .modal-close {
         float: right;
         font-size: 21px;

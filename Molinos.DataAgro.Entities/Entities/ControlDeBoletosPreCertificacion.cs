@@ -11,16 +11,24 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
+
         public int ControlDeBoletosId { get; set; }
+
+        public string Fijacion { get; set; }
         public string Oblea { get; set; }
+
+        public int TipoObleaId { get; set; }
         public int BolsaCompraNetId { get; set; }
+
         public DateTime FechaCertificacion { get; set; }
         public DateTime FechaVencimiento { get; set; }
+
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
 
-        // Navigation properties
-        public ControlDeBoletos ControlDeBoletos { get; set; } 
-        public BolsaCompraNet BolsaCompraNet { get; set; } 
+        // 🔹 Navigation
+        public virtual ControlDeBoletos ControlDeBoletos { get; set; }
+        public virtual TipoOblea TipoOblea { get; set; }
+        public virtual BolsaCompraNet BolsaCompraNet { get; set; }
     }
 }

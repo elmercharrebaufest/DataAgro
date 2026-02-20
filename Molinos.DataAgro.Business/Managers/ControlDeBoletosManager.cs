@@ -24,10 +24,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent;
         private readonly ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent;
         private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
+        private readonly IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent;
         public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, 
                                        IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent, 
                                        ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
-                                       IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent
+                                       IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent,
+                                       IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent
                                        )
         {
             this.logger = logger;
@@ -36,6 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.modificacionContratoControlBoletoAgent = modificacionContratoControlBoletoAgent;
             this.seguimientoControlBoletoAgent = seguimientoControlBoletoAgent;
             this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
+            this.datosCertificacionControlBoletoAgent = datosCertificacionControlBoletoAgent;
         }
 
         public Resultado AsociarConfirma(int negocioId)
@@ -44,87 +47,59 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         #region Metodo para cargar combos
-        public List<BolsaCompraNetQry> GetBolsaCompraNet()
+        public List<BolsaCompraNet> GetBolsaCompraNet()
         {
-            var qry = new CombosQueries(logger, repositorio);
-            return qry.GetBolsaCompraNet();
+            return this.repositorio.Listar<BolsaCompraNet>();
         }
-
         public List<ComercialCombo> GetComercial()
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetAbmComercialCombo();
         }
-
         public List<MaterialCombo> GetMaterial()
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetAbmMaterialCombo();
         }
-
         public List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo)
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetProveedorPorComercialCombo(equipo);
         }
-
         public List<Provincia> GetProvincias()
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetProvinciaCombo();
         }
-
         public List<CampaniaCombo> GetCosechas()
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetAbmCampaniaCombo();
         }
-
         public List<ClasificacionCompraNet> GetClasificaciones()
         {
             var qry = new CombosQueries(logger, repositorio);
             return qry.GetClasificacionCombo();
         }
-
         public List<Localidad> GetProcedencias(int provinciaId)
         {
             return this.repositorio.Listar<Localidad>(x => x.ProvinciaId == provinciaId);
         }
+        public List<TipoOblea> GetTipoOblea()
+        {
+            return this.repositorio.Listar<TipoOblea>().OrderBy(x=> x.Descripcion).ToList();
+        }
+        public List<BoletoCompraNet> GetBoletoCompraNet()
+        {
+            return this.repositorio.Listar<BoletoCompraNet>().OrderBy(x => x.Descripcion).ToList();
+        }
         #endregion
 
-        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null)
-        {
-            var oResultado = new Resultado();
-            var negocio = repositorio.Obtener<Negocio>(negocioId);
-            if (negocio != null)
-            {
-                var existe = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocioId);
-                if (existe == null)
-                {
-                    var controlDeBoletos = new ControlDeBoletos()
-                    {
-                        NegocioId = negocioId,
-                        FechaCreacion = DateTime.Now,
-                        EsConfirma = negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA,
-                        AltaIdLoteConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdLoteConfirma : (int?)null,
-                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
-                        EstadoConfirmaId = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? (int)EnumEstadoConfirma.PENDIENTE : (int?)null,
-                        ControlIniciado = false,
-                        ControlFinalizado = false,
-                        CertificacionCompletada = false,
-                        RegistroDatosOblea = false
-                    };
-                    repositorio.Agregar(controlDeBoletos);
-                    repositorio.GuardarCambios();
-                }
-            }
-            return oResultado;
-        }
-
+        #region Pendientes de Control
         public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
         {
             var query = repositorio.Listar<ControlDeBoletos>()
-                .Where(x => x.ControlDeBoletosEstadoId == (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL);
+                .Where(x => (filtros.EstadoControlId == null ||  (x.ControlDeBoletosEstadoId == (int)filtros.EstadoControlId)));
 
             if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
                 query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
@@ -157,99 +132,87 @@ namespace Molinos.DataAgro.Business.Managers
                 query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
 
             // 🚀 PROYECCIÓN FINAL
-            return query.Select(controlBoleto => new ControlDeBoletosConsultaDto
+            var list = query.ToList();
+            var result = new List<ControlDeBoletosConsultaDto>();
+
+            foreach (var controlBoleto in list)
             {
-                Id = controlBoleto.Id,
-                NegocioId = controlBoleto.NegocioId,
-                ControlDeBoletosEstadoId = controlBoleto.ControlDeBoletosEstadoId,
-                ControlDeBoletosEstado = controlBoleto.ControlDeBoletosEstado.Descripcion,
-                EsConfirma = controlBoleto.EsConfirma,
-                AltaIdLoteConfirma = controlBoleto.AltaIdLoteConfirma,
-                IdentificadorConfirma = controlBoleto.IdentificadorConfirma,
-                FechaCreacion = controlBoleto.FechaCreacion,
-                FechaModificacion = controlBoleto.FechaModificacion,
-                EstadoConfirmaId = controlBoleto.EstadoConfirmaId,
-                EstadoConfirma = controlBoleto.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(controlBoleto.EstadoConfirmaId.Value)?.Descripcion : null,
-                TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlBoleto.Negocio.BoletoId ).Descripcion,
-                ControlIniciado = controlBoleto.ControlIniciado,
-                ControlFinalizado = controlBoleto.ControlFinalizado,
-                CertificacionCompletada = controlBoleto.CertificacionCompletada,
-                RegistroDatosOblea = controlBoleto.RegistroDatosOblea,
-                FechaControlIniciado = controlBoleto.FechaControlIniciado,
-                FechaControlFinalizado = controlBoleto.FechaControlFinalizado,
-                FechaCertificacionCompletada = controlBoleto.FechaCertificacionCompletada,
-                FechaRegistroDatosOblea = controlBoleto.FechaRegistroDatosOblea,
-                MaterialId = controlBoleto.Negocio.MaterialId,
-                Material = controlBoleto.Negocio.Material.Descripcion,
-                BolsaCompraNetId = controlBoleto.Negocio.BolsaId,
-                BolsaCompraNet = controlBoleto.Negocio.Bolsa.Descripcion,
-                ComercialId = controlBoleto.Negocio.ComercialId,
-                Comercial = controlBoleto.Negocio.Comercial.Nombres + " " + controlBoleto.Negocio.Comercial.Apellido,
-                ContratoSAP = controlBoleto.Negocio.ContratoSAP,
-                ProveedorId = controlBoleto.Negocio.ProveedorId,
-                Proveedor = controlBoleto.Negocio.Proveedor.RazonSocial
-            }).ToList();
-        }
+                // Buscar PreCertificacion y Seguimiento por ControlDeBoletosId
+                var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlBoleto.Id);
+                var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlBoleto.Id);
 
-        public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto dto)
-        {
-            var resultado = new Resultado();
-
-            try
-            {
-                var negocio = repositorio.Obtener<Negocio>(x => x.Id == dto.NegocioId);
-
-                if (negocio == null)
+                result.Add(new ControlDeBoletosConsultaDto
                 {
-                    resultado.Errores.Add(new ErrorMessage
-                    {
-                        Message = "No se encontró el negocio."
-                    });
-                    return resultado;
-                }
-
-                var provincia = repositorio.Obtener<Provincia>(dto.ProvinciaId);
-                var campana = repositorio.Obtener<Campaña>(dto.CosechaId);
-                var procedencia = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
-                var clasificacion = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
-
-                negocio.Provincia = provincia;
-                negocio.Campana = campana;
-                negocio.ProcedenciaVenta = procedencia;
-                negocio.Clasificacion = clasificacion;
-
-                modificacionContratoControlBoletoAgent.ModificarContrato(
-                    clasificacion.Descripcion,
-                    dto.Contrato,
-                    campana.Descripcion,
-                    dto.Fecha,
-                    dto.Hora,
-                    procedencia.CodLocalidad,
-                    dto.ProvinciaId.ToString(),
-                    dto.Usuario
-                );
-
-                repositorio.GuardarCambios();
-            }
-            catch (Exception ex)
-            {
-                resultado.Errores.Add(new ErrorMessage
-                {
-                    Message = "Ocurrió un error al modificar el contrato."
+                    Id = controlBoleto.Id,
+                    NegocioId = controlBoleto.NegocioId,
+                    ControlDeBoletosEstadoId = controlBoleto.ControlDeBoletosEstadoId,
+                    ControlDeBoletosEstado = controlBoleto.ControlDeBoletosEstado.Descripcion,
+                    EsConfirma = controlBoleto.EsConfirma,
+                    AltaIdLoteConfirma = controlBoleto.AltaIdLoteConfirma,
+                    IdentificadorConfirma = controlBoleto.IdentificadorConfirma,
+                    FechaCreacion = controlBoleto.FechaCreacion,
+                    FechaModificacion = controlBoleto.FechaModificacion,
+                    EstadoConfirmaId = controlBoleto.EstadoConfirmaId,
+                    EstadoConfirma = controlBoleto.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(controlBoleto.EstadoConfirmaId.Value)?.Descripcion : null,
+                    TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlBoleto.Negocio.BoletoId).Descripcion,
+                    ControlIniciado = controlBoleto.ControlIniciado,
+                    ControlFinalizado = controlBoleto.ControlFinalizado,
+                    CertificacionCompletada = controlBoleto.CertificacionCompletada,
+                    RegistroDatosOblea = controlBoleto.RegistroDatosOblea,
+                    FechaControlIniciado = controlBoleto.FechaControlIniciado,
+                    FechaControlFinalizado = controlBoleto.FechaControlFinalizado,
+                    FechaCertificacionCompletada = controlBoleto.FechaCertificacionCompletada,
+                    FechaRegistroDatosOblea = controlBoleto.FechaRegistroDatosOblea,
+                    MaterialId = controlBoleto.Negocio.MaterialId,
+                    Material = controlBoleto.Negocio.Material.Descripcion,
+                    BolsaCompraNetId = controlBoleto.Negocio.BolsaId,
+                    BolsaCompraNet = controlBoleto.Negocio.Bolsa.Descripcion,
+                    ComercialId = controlBoleto.Negocio.ComercialId,
+                    Comercial = controlBoleto.Negocio.Comercial.Nombres + " " + controlBoleto.Negocio.Comercial.Apellido,
+                    ContratoSAP = controlBoleto.Negocio.ContratoSAP,
+                    ProveedorId = controlBoleto.Negocio.ProveedorId,
+                    Proveedor = controlBoleto.Negocio.Proveedor.RazonSocial,
+                    PreCertificacionId = preCertificacion != null ? (int?)preCertificacion.Id : null,
+                    SeguimientoBoletoId = seguimiento != null ? (int?)seguimiento.Id : null
                 });
-
-                logger.Error(ex);
             }
 
-            return resultado;
+            return result;
         }
-
+        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null)
+        {
+            var oResultado = new Resultado();
+            var negocio = repositorio.Obtener<Negocio>(negocioId);
+            if (negocio != null)
+            {
+                var existe = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocioId);
+                if (existe == null)
+                {
+                    var controlDeBoletos = new ControlDeBoletos()
+                    {
+                        NegocioId = negocioId,
+                        FechaCreacion = DateTime.Now,
+                        EsConfirma = negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA,
+                        AltaIdLoteConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdLoteConfirma : (int?)null,
+                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                        EstadoConfirmaId = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? (int)EnumEstadoConfirma.PENDIENTE : (int?)null,
+                        ControlIniciado = false,
+                        ControlFinalizado = false,
+                        CertificacionCompletada = false,
+                        RegistroDatosOblea = false
+                    };
+                    repositorio.Agregar(controlDeBoletos);
+                    repositorio.GuardarCambios();
+                }
+            }
+            return oResultado;
+        }
         public Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion)
         {
             var oResultado = new Resultado();
             try
             {
-                var boletos = repositorio.Listar<ControlDeBoletos>(x=> ControlDeBoletoIds.Contains(x.Id));
+                var boletos = repositorio.Listar<ControlDeBoletos>(x => ControlDeBoletoIds.Contains(x.Id));
 
                 if (boletos.Count == 0)
                 {
@@ -262,12 +225,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var ahora = DateTime.Now;
 
-                foreach(var boleto in boletos)
+                foreach (var boleto in boletos)
                 {
                     switch (accion)
                     {
                         case EnumControlDeBoletosAcciones.ControlIniciado:
-                            boleto.ControlDeBoletosEstadoId = (int) EnumControlDeBoletosEstado.EN_PROCESO;
+                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_PROCESO;
                             boleto.ControlIniciado = true;
                             boleto.FechaControlIniciado = ahora;
                             break;
@@ -310,13 +273,168 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oResultado;
         }
+        #endregion
 
-        public Resultado SeguimientoBoleto(SeguimientoControlDeBoletosDto seguimientoControlDeBoletos)
+        #region Modificacion de Contrato
+        public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto dto)
+        {
+            var resultado = new Resultado();
+
+            try
+            {
+                var negocio = repositorio.Obtener<Negocio>(x => x.Id == dto.NegocioId);
+
+                if (negocio == null)
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Message = "No se encontró el negocio."
+                    });
+                    return resultado;
+                }
+
+                var provincia = repositorio.Obtener<Provincia>(dto.ProvinciaId);
+                var campana = repositorio.Obtener<Campaña>(dto.CosechaId);
+                var procedencia = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
+                var clasificacion = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
+
+                negocio.Provincia = provincia;
+                negocio.Campana = campana;
+                negocio.ProcedenciaVenta = procedencia;
+                negocio.Clasificacion = clasificacion;
+
+                repositorio.GuardarCambios();
+
+                #region Modificar Contrato en SAP
+                var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto();
+                controlDeBoletosModificarContrato.Cosecha = campana.Descripcion;
+                controlDeBoletosModificarContrato.Contrato = negocio.ContratoSAP;
+                controlDeBoletosModificarContrato.Clasificacion = clasificacion.Descripcion;
+                controlDeBoletosModificarContrato.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                controlDeBoletosModificarContrato.Hora = DateTime.Now.ToString("HH:mm:ss");
+                controlDeBoletosModificarContrato.Procedencia = procedencia.CodLocalidad;
+                controlDeBoletosModificarContrato.Provincia = provincia.ProvinciaId.ToString();
+                controlDeBoletosModificarContrato.Usuario = dto.Usuario;
+                modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage
+                {
+                    Message = "Ocurrió un error al modificar el contrato."
+                });
+
+                logger.Error(ex);
+            }
+
+            return resultado;
+        }
+        #endregion
+
+        #region Datos de Seguimiento
+        public ControlDeBoletosDatosSeguimientoDto ObtenerDatosDeSeguimiento(int datosSeguimientoId)
+        {
+            var seguimientoControlDeBoletos = new ControlDeBoletosDatosSeguimientoDto();
+            var controlDeBoletosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.Id == datosSeguimientoId);
+            if (controlDeBoletosSeguimiento != null)
+            {
+                seguimientoControlDeBoletos.Id = controlDeBoletosSeguimiento.Id;
+                seguimientoControlDeBoletos.ControlDeBoletosId = controlDeBoletosSeguimiento.ControlDeBoletosId;
+                seguimientoControlDeBoletos.BoletoCompraNetId = controlDeBoletosSeguimiento.BoletoCompraNetId;
+                seguimientoControlDeBoletos.BolsaCompraNetId = controlDeBoletosSeguimiento.BolsaCompraNetId;
+                seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosSeguimiento.BolsaSellado;
+                seguimientoControlDeBoletos.FechaAcopio = controlDeBoletosSeguimiento.FechaAcopio;
+                seguimientoControlDeBoletos.FechaEnviadoFirma = controlDeBoletosSeguimiento.FechaEnviadoFirma;
+                seguimientoControlDeBoletos.FechaEnvio = controlDeBoletosSeguimiento.FechaEnvio;
+                seguimientoControlDeBoletos.FechaEnvioAfip = controlDeBoletosSeguimiento.FechaEnvioAfip;
+                seguimientoControlDeBoletos.FechaEnvioBolsa = controlDeBoletosSeguimiento.FechaEnvioBolsa;
+                seguimientoControlDeBoletos.FechaRecepBoleto = controlDeBoletosSeguimiento.FechaRecepBoleto;
+                seguimientoControlDeBoletos.FechaRecibFirma = controlDeBoletosSeguimiento.FechaRecibFirma;
+                seguimientoControlDeBoletos.FechaVueltaAfip = controlDeBoletosSeguimiento.FechaVueltaAfip;
+                seguimientoControlDeBoletos.FechaVueltaBolsa = controlDeBoletosSeguimiento.FechaVueltaBolsa;
+                seguimientoControlDeBoletos.ObsCtrlBoleto = controlDeBoletosSeguimiento.ObsCtrlBoleto;
+                seguimientoControlDeBoletos.ObsCtrlBoleto2 = controlDeBoletosSeguimiento.ObsCtrlBoleto2;
+            }
+            return seguimientoControlDeBoletos;
+        }
+        public Resultado RegistroDatosDeSeguimiento(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var oResultado = new Resultado();
             try
             {
-                var mensaje = seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                if (controlDeBoletosDatosSeguimiento.Id > 0)
+                {
+                    var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(controlDeBoletosDatosSeguimiento.Id);
+                    datosSeguimiento.BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId);
+                    datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
+                    datosSeguimiento.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
+
+                    datosSeguimiento.FechaAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio;
+                    datosSeguimiento.FechaEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma;
+                    datosSeguimiento.FechaEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio;
+                    datosSeguimiento.FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip;
+                    datosSeguimiento.FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa;
+                    datosSeguimiento.FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepBoleto;
+                    datosSeguimiento.FechaRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecibFirma;
+                    datosSeguimiento.FechaVueltaAfip = controlDeBoletosDatosSeguimiento.FechaVueltaAfip;
+                    datosSeguimiento.FechaVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaVueltaBolsa;
+                    datosSeguimiento.ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto;
+                    datosSeguimiento.ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2;
+                    datosSeguimiento.FechaModificacion = DateTime.Now;
+                    repositorio.GuardarCambios();
+                }
+                else
+                {
+                    var datosSeguimiento = new ControlDeBoletosSeguimiento()
+                    {
+                        ControlDeBoletosId = controlDeBoletosDatosSeguimiento.ControlDeBoletosId,
+                        BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId),
+                        BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId),
+                        BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
+                        FechaAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio,
+                        FechaEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma,
+                        FechaEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio,
+                        FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip,
+                        FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa,
+                        FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepBoleto,
+                        FechaRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecibFirma,
+                        FechaVueltaAfip = controlDeBoletosDatosSeguimiento.FechaVueltaAfip,
+                        FechaVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaVueltaBolsa,
+                        FechaCreacion = DateTime.Now,
+                        ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto,
+                        ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2,
+                    };
+                    repositorio.Agregar(datosSeguimiento);
+                    repositorio.GuardarCambios();
+                    RegistrarAcciones(new List<int> { datosSeguimiento.Id }, EnumControlDeBoletosAcciones.CertificacionCompletada);
+
+                }
+
+                #region Registro de Datos para Seguimiento
+                var seguimientoControlDeBoletos = new SeguimientoControlDeBoletosDto();
+                seguimientoControlDeBoletos.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId).CodigoSap;
+                seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
+                seguimientoControlDeBoletos.Contrato = repositorio.Obtener<Negocio>(repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId).NegocioId).ContratoSAP;
+                seguimientoControlDeBoletos.FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepBoleto?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecibFirma?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeVueltaAfip = controlDeBoletosDatosSeguimiento.FechaVueltaAfip?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FeVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaVueltaBolsa?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.FecAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio?.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                seguimientoControlDeBoletos.Hora = DateTime.Now.ToString("HH:mm:ss");
+                seguimientoControlDeBoletos.ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto;
+                seguimientoControlDeBoletos.ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2;
+                seguimientoControlDeBoletos.TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId).Id.ToString("D2");
+                seguimientoControlDeBoletos.Usuario = string.Empty;
+                seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                #endregion
+
                 return oResultado;
             }
             catch (Exception ex)
@@ -329,7 +447,118 @@ namespace Molinos.DataAgro.Business.Managers
                 return oResultado;
             }
         }
+        #endregion
 
+        #region Datos de PreCertificacion
+        public ControlDeBoletosPreCertificacionDto ObtenerDatosPreCertificacion(int datosPreCertificacionId)
+        {
+            var datosPreCertificacionDto = new ControlDeBoletosPreCertificacionDto();
+
+            var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.Id == datosPreCertificacionId);
+
+            datosPreCertificacionDto.Id = preCertificacion.Id;
+            datosPreCertificacionDto.ControlDeBoletosId = preCertificacion.ControlDeBoletosId;
+            datosPreCertificacionDto.FechaCertificacion = preCertificacion.FechaCertificacion;
+            datosPreCertificacionDto.FechaVencimiento = preCertificacion.FechaVencimiento;
+            datosPreCertificacionDto.BolsaCompraNetId = preCertificacion.BolsaCompraNetId;
+            datosPreCertificacionDto.Oblea = preCertificacion.Oblea;
+            datosPreCertificacionDto.TipoObleaId = preCertificacion.TipoObleaId;
+            return datosPreCertificacionDto;
+        }
+        public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                if (controlDeBoletosPreCertificacion.Id > 0)
+                {
+                    var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(controlDeBoletosPreCertificacion.Id);
+                    if (preCertificacion != null)
+                    {
+                        preCertificacion.FechaCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion;
+                        preCertificacion.FechaVencimiento = controlDeBoletosPreCertificacion.FechaVencimiento;
+                        preCertificacion.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId);
+                        preCertificacion.Oblea = controlDeBoletosPreCertificacion.Oblea;
+                        preCertificacion.TipoOblea = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId);
+                        preCertificacion.FechaModificacion = DateTime.Now;
+                        repositorio.GuardarCambios();
+
+                    }
+                }
+                else
+                {
+                    var preCertificacion = new ControlDeBoletosPreCertificacion()
+                    {
+                        ControlDeBoletosId = controlDeBoletosPreCertificacion.ControlDeBoletosId,
+                        FechaCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion,
+                        FechaVencimiento = controlDeBoletosPreCertificacion.FechaVencimiento,
+                        BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId),
+                        Oblea = controlDeBoletosPreCertificacion.Oblea,
+                        TipoOblea = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId),
+                        FechaCreacion = DateTime.Now
+                    };
+                    repositorio.Agregar(preCertificacion);
+                    repositorio.GuardarCambios();
+                    RegistrarAcciones(new List<int> { preCertificacion.Id}, EnumControlDeBoletosAcciones.RegistroDatosOblea);
+                }
+
+                #region Registro de Datos para Certificación
+                var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+                var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
+                var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletosPreCertificacion.ControlDeBoletosId);
+                
+                datosCertificacionCabeceraDto.Contrato = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId).ContratoSAP;
+                datosCertificacionCabeceraDto.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                datosCertificacionCabeceraDto.Hora = DateTime.Now.ToString("HH:mm:ss");
+                datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                datosCertificacionCabeceraDto.Usuario = string.Empty;
+
+                datosCertificacionDetalleDto.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId).CodigoSap;
+                datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
+                datosCertificacionDetalleDto.FeCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion.ToString("yyyy-MM-dd");
+                datosCertificacionDetalleDto.FeVencCerti = controlDeBoletosPreCertificacion.FechaVencimiento.ToString("yyyy-MM-dd");
+                datosCertificacionDetalleDto.Rechazado = string.Empty;
+                datosCertificacionDetalleDto.Tipo = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId).Codigo;
+                datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto>() { datosCertificacionDetalleDto };
+                this.datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                #endregion
+
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message,
+                });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+        #endregion
+
+        #region Tracking de Boletos
+        public List<ControlDeBoletoTrackingDto> ObtenerTrackingBoletos(int controlDeBoletosId)
+        {
+            var tracking = repositorio.Listar<ControlDeBoletoTracking>(x => x.ControlDeBoletosId == controlDeBoletosId);
+            return tracking.Select(x => new ControlDeBoletoTrackingDto
+            {
+                Id = x.Id,
+                ControlDeBoletosId = x.ControlDeBoletosId,
+                Accion = x.Accion,
+                Resultado = x.Resultado,
+                ValorAnterior = x.ValorAnterior,
+                ValorNuevo = x.ValorNuevo,
+                Cargo = x.Cargo,
+                Nombre = x.Nombre,
+                Apellido = x.Apellido,
+                FechaHora = x.FechaHora,
+                UsuarioModificacion = x.UsuarioModificacion
+            }).ToList();
+        }
+        #endregion
+
+        #region Metodo Tareas Programadas
         public Resultado ProcesarBoletosPendientesControl()
         {
             var oResultado = new Resultado();
@@ -386,5 +615,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oResultado;
             }
         }
+        #endregion
+
     }
 }

@@ -1,115 +1,115 @@
 ﻿var ModalVisualizar = (function () {
-  "use strict";
+    "use strict";
 
-  var modalId = "#modalVisualizar";
+    var modalId = "#modalVisualizar";
 
-  // =============================
-  // Helpers
-  // =============================
+    // =============================
+    // Helpers
+    // =============================
 
-  function setText(id, value) {
-    $("#" + id).text(value || "");
-  }
+    function setText(id, value) {
+        $("#frmVisualizarContrato #" + id).text(value || "");
+    }
 
-  function formatNumber(n) {
-    if (!n || n == 0 || isNaN(parseFloat(n))) return "-";
-    return kendo.toString(parseFloat(n), "n2");
-  }
+    function formatNumber(n) {
+        if (!n || n == 0 || isNaN(parseFloat(n))) return "-";
+        return kendo.toString(parseFloat(n), "n2");
+    }
 
-  function formatearFechaHora(fechaApi) {
-    if (!fechaApi) return "";
+    function formatearFechaHora(fechaApi) {
+        if (!fechaApi) return "";
 
-    const match = /Date\((\d+)\)/.exec(fechaApi);
-    if (!match) return "";
+        const match = /Date\((\d+)\)/.exec(fechaApi);
+        if (!match) return "";
 
-    const fecha = new Date(Number(match[1]));
-    if (isNaN(fecha)) return "";
+        const fecha = new Date(Number(match[1]));
+        if (isNaN(fecha)) return "";
 
-    const formatter = new Intl.DateTimeFormat("es-PE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+        const formatter = new Intl.DateTimeFormat("es-PE", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+
+        return formatter.format(fecha);
+    }
+    // =============================
+    // LIMPIEZA
+    // =============================
+
+    function limpiar() {
+        $(modalId + ' [id^="visualizar_"]').text("");
+    }
+
+    // =============================
+    // CARGA PRINCIPAL
+    // =============================
+
+    function cargarDatos(d) {
+        setText("visualizar_contratoSap", d.ContratoSAP);
+        setText("visualizar_proveedor", d.Proveedor);
+        setText("visualizar_fecha_operacion", formatearFechaHora(d.FechaOperacion));
+        setText(
+            "visualizar_fecha_desde_hasta_entrega",
+            formatearFechaHora(d.FechaDesde) +
+            " al " +
+            formatearFechaHora(d.FechaHasta),
+        );
+        setText(
+            "visualizar_fecha_desde_hasta_original",
+            formatearFechaHora(d.FechaDesde),
+        );
+        setText("visualizar_clasificacion", d.ClasificacionDescripcion);
+        setText("visualizar_material", d.Material);
+        setText("visualizar_campana", d.Campania);
+        setText("visualizar_cantidad", formatNumber(d.Cantidad));
+        setText("visualizar_camiones", "");
+        setText("visualizar_fijacion_cantidad_minimo", "");
+        setText("visualizar_fijacion_cantidad_maximo", "");
+        setText("visualizar_precio", formatNumber(d.Precio));
+        setText("visualizar_comercial", d.Comercial);
+        setText("visualizar_porcentaje_pago", d.PorcentajeDePago);
+        setText("visualizar_precio_neto", formatNumber(d.PrecioNeto));
+        setText("visualizar_redespacho", formatNumber(d.ImporteRedespacho));
+        setText("visualizar_tipo", d.TipoNegocio);
+        setText("visualizar_destino", d.DestinoDescripcion);
+        setText("visualizar_procedencia", d.Procedencia);
+        setText("visualizar_dolarizo_origen", "");
+        setText("visualizar_mercaderia_deposito", d.MercaderiaDescripcion);
+        setText("visualizar_cantidad_deposito", d.CantidadDeposito);
+        setText("visualizar_boleto", d.BoletoDescripcion);
+        setText("visualizar_bolsa", d.BolsaDescripcion);
+        setText("visualizar_calidad", d.StandardDeCalidadDescripcion);
+        setText("visualizar_observacion", d.Observacion);
+    }
+
+    // =============================
+    // INICIALIZACIÓN
+    // =============================
+
+    $(document).ready(function () {
+        // Event handler para limpiar al cerrar
+        $(modalId).on("hidden.bs.modal", function () {
+            limpiar();
+        });
     });
 
-    return formatter.format(fecha);
-  }
-  // =============================
-  // LIMPIEZA
-  // =============================
+    // =============================
+    // API PÚBLICA
+    // =============================
 
-  function limpiar() {
-    $(modalId + ' [id^="visualizar_"]').text("");
-  }
+    return {
+        abrir: function (data) {
+            cargarDatos(data);
+            $(modalId).modal("show");
+        },
 
-  // =============================
-  // CARGA PRINCIPAL
-  // =============================
+        cerrar: function () {
+            $(modalId).modal("hide");
+        },
 
-  function cargarDatos(d) {
-    setText("visualizar_contratoSap", d.ContratoSAP);
-    setText("visualizar_proveedor", d.Proveedor);
-    setText("visualizar_fecha_operacion", formatearFechaHora(d.FechaOperacion));
-    setText(
-      "visualizar_fecha_desde_hasta_entrega",
-      formatearFechaHora(d.FechaDesde) +
-        " al " +
-        formatearFechaHora(d.FechaHasta),
-    );
-    setText(
-      "visualizar_fecha_desde_hasta_original",
-      formatearFechaHora(d.FechaDesde),
-    );
-    setText("visualizar_clasificacion", d.ClasificacionDescripcion);
-    setText("visualizar_material", d.Material);
-    setText("visualizar_campana", d.Campania);
-    setText("visualizar_cantidad", formatNumber(d.Cantidad));
-    setText("visualizar_camiones", "");
-    setText("visualizar_fijacion_cantidad_minimo", "");
-    setText("visualizar_fijacion_cantidad_maximo", "");
-    setText("visualizar_precio", formatNumber(d.Precio));
-    setText("visualizar_comercial", d.Comercial);
-    setText("visualizar_porcentaje_pago", d.PorcentajeDePago);
-    setText("visualizar_precio_neto", formatNumber(d.PrecioNeto));
-    setText("visualizar_redespacho", formatNumber(d.ImporteRedespacho));
-    setText("visualizar_tipo", d.TipoNegocio);
-    setText("visualizar_destino", d.DestinoDescripcion);
-    setText("visualizar_procedencia", d.Procedencia);
-    setText("visualizar_dolarizo_origen", "");
-    setText("visualizar_mercaderia_deposito", d.MercaderiaDescripcion);
-    setText("visualizar_cantidad_deposito", d.CantidadDeposito);
-    setText("visualizar_boleto", d.BoletoDescripcion);
-    setText("visualizar_bolsa", d.BolsaDescripcion);
-    setText("visualizar_calidad", d.StandardDeCalidadDescripcion);
-    setText("visualizar_observacion", d.Observacion);
-  }
-
-  // =============================
-  // INICIALIZACIÓN
-  // =============================
-
-  $(document).ready(function () {
-    // Event handler para limpiar al cerrar
-    $(modalId).on("hidden.bs.modal", function () {
-      limpiar();
-    });
-  });
-
-  // =============================
-  // API PÚBLICA
-  // =============================
-
-  return {
-    abrir: function (data) {
-      cargarDatos(data);
-      $(modalId).modal("show");
-    },
-
-    cerrar: function () {
-      $(modalId).modal("hide");
-    },
-
-    limpiar: function () {
-      limpiar();
-    },
-  };
+        limpiar: function () {
+            limpiar();
+        },
+    };
 })();

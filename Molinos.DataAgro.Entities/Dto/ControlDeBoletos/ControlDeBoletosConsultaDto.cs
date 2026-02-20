@@ -9,6 +9,9 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
     public class ControlDeBoletosConsultaDto
     {
         public int Id { get; set; }
+        public int? PreCertificacionId { get; set; }
+        public int? SeguimientoBoletoId { get; set; }
+
         public int NegocioId { get; set; }
         public int ControlDeBoletosEstadoId { get; set; }
         public string ControlDeBoletosEstado { get; set; }
