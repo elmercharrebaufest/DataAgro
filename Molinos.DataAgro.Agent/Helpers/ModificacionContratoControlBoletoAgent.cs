@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces.Agent;
 using NLog;
@@ -24,15 +25,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logger = logger;
         }
 
-        public string ModificarContrato(
-            string clasificacion,
-            string contrato,
-            string cosecha,
-            string fecha,
-            string hora,
-            string procedencia,
-            string provincia,
-            string usuario)
+        public string ModificarContrato(ControlDeBoletosModificarContratoDto controlDeBoletosModificarContrato)
         {
             // Modo prueba
             if (valorPruebaSap)
@@ -54,14 +47,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var request = new ZMprfcModContCtrBoleto
                 {
-                    ImClasificacion = clasificacion,
-                    ImContrato = contrato,
-                    ImCosecha = cosecha,
-                    ImFecha = fecha,
-                    ImHora = hora,
-                    ImProcedencia = procedencia,
-                    ImProvincia = provincia,
-                    ImUsuario = usuario
+                    ImClasificacion = controlDeBoletosModificarContrato.Clasificacion,
+                    ImContrato = controlDeBoletosModificarContrato.Contrato,
+                    ImCosecha = controlDeBoletosModificarContrato.Cosecha,
+                    ImFecha = controlDeBoletosModificarContrato.Fecha,
+                    ImHora = controlDeBoletosModificarContrato.Hora,
+                    ImProcedencia = controlDeBoletosModificarContrato.Procedencia,
+                    ImProvincia = controlDeBoletosModificarContrato.Provincia,
+                    ImUsuario = controlDeBoletosModificarContrato.Usuario
                 };
 
                 var response = agent.ZMprfcModContCtrBoleto(request);

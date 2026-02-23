@@ -3,10 +3,10 @@
     NegocioId INT NOT NULL,
     ControlDeBoletosEstadoId INT NOT NULL,
     EstadoConfirmaId INT NULL,
-    EsConfirma BIT NOT NULL,
+    EsConfirma BIT NOT NULL DEFAULT 0,
     AltaIdLoteConfirma INT NULL,
     IdentificadorConfirma INT NULL,
-    FechaCreacion DATETIME NOT NULL,
+    FechaCreacion DATETIME NOT NULL DEFAULT SYSDATETIME(),
     FechaModificacion DATETIME NULL,
     ControlIniciado BIT NOT NULL DEFAULT 0,
     ControlFinalizado BIT NOT NULL DEFAULT 0,
@@ -16,6 +16,11 @@
     FechaControlFinalizado DATETIME NULL,
     FechaCertificacionCompletada DATETIME NULL,
     FechaRegistroDatosOblea DATETIME NULL,
-    CONSTRAINT FK_ControlDeBoletos_Negocio FOREIGN KEY (NegocioId) REFERENCES [dbo].[Negocio](Id),
-    CONSTRAINT FK_ControlDeBoletos_Estado FOREIGN KEY (ControlDeBoletosEstadoId) REFERENCES [dbo].[ControlDeBoletosEstado](Id)
+
+    CONSTRAINT FK_ControlDeBoletos_Negocio 
+        FOREIGN KEY (NegocioId) REFERENCES [dbo].[Negocio](Id),
+
+    CONSTRAINT FK_ControlDeBoletos_Estado 
+        FOREIGN KEY (ControlDeBoletosEstadoId) 
+        REFERENCES [dbo].[ControlDeBoletosEstado](Id)
 );

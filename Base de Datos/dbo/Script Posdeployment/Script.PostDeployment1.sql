@@ -1278,3 +1278,28 @@ if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Anulado'
 begin
  insert into ControlDeBoletosEstado(Descripcion) values ('Anulado')
 end
+
+-- Insert TipoOblea
+IF NOT EXISTS (SELECT 1 FROM TipoOblea WHERE Descripcion = 'Certificado AFIP')
+BEGIN
+    INSERT INTO TipoOblea (Codigo, Descripcion) 
+    VALUES ('A', 'Certificado AFIP')
+END
+
+IF NOT EXISTS (SELECT 1 FROM TipoOblea WHERE Descripcion = 'Oblea Factura Plan Canje')
+BEGIN
+    INSERT INTO TipoOblea (Codigo, Descripcion) 
+    VALUES ('F', 'Oblea Factura Plan Canje')
+END
+
+IF NOT EXISTS (SELECT 1 FROM TipoOblea WHERE Descripcion = 'Oblea Bolsa')
+BEGIN
+    INSERT INTO TipoOblea (Codigo, Descripcion) 
+    VALUES ('O', 'Oblea Bolsa')
+END
+
+IF NOT EXISTS (SELECT 1 FROM TipoOblea WHERE Descripcion = 'Oblea Provisoria')
+BEGIN
+    INSERT INTO TipoOblea (Codigo, Descripcion) 
+    VALUES ('P', 'Oblea Provisoria')
+END

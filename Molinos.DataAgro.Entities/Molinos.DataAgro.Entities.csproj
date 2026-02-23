@@ -329,9 +329,13 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificarContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosRegistrarAccionesDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoTrackingDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\RegistroDatosCertificacionControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\SeguimientoControlDeBoletosDto.cs" />
@@ -732,6 +736,7 @@
     <Compile Include="Entities\ControlDeBoletosEstado.cs" />
     <Compile Include="Entities\ControlDeBoletosPreCertificacion.cs" />
     <Compile Include="Entities\ControlDeBoletosSeguimiento.cs" />
+    <Compile Include="Entities\ControlDeBoletoTracking.cs" />
     <Compile Include="Entities\CriterioConDescarga.cs" />
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\CriterioScoreCupos.cs" />

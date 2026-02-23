@@ -18,94 +18,93 @@
 
                 <form id="frmSeguimientoControlBoleto">
 
+                    <!-- DATOS GENERALES -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Bolsa</label>
-                            <input id="txtBolsa" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label>Bolsa Sellado</label>
-                            <input id="txtBolsaSellado" class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Tipo Boleto</label>
-                            <input id="txtTipoBoleto" class="form-control" />
+                            <select id="Boleto" class="form-control">
+                                <option value="">Cargando Boleto...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Bolsa</label>
+                            <select id="Bolsa" class="form-control">
+                                <option value="">Cargando Bolsa...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Bolsa Sellado</label>
+                            <input id="BolsaSellado" class="form-control" disabled />
                         </div>
                     </div>
 
-                    <hr />
-
-                    <!-- FECHAS -->
+                    <!-- 1️⃣ FECHA BASE -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Fecha</label>
-                            <input type="date" id="dtFecha" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Envio</label>
-                            <input type="date" id="dtFeEnvio" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Envio AFIP</label>
-                            <input type="date" id="dtFeEnvioAfip" class="form-control" />
+                            <label>Fecha Recepción Boleto</label>
+                            <input type="date" id="FechaRecepBoleto" class="form-control" />
                         </div>
                     </div>
 
+                    <!-- 2️⃣ ENVÍOS -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Envio Bolsa</label>
-                            <input type="date" id="dtFeEnvioBolsa" class="form-control" />
+                            <label>Fecha Envío Firmas</label>
+                            <input type="date" id="FechaEnvio" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Recep. Boleto</label>
-                            <input type="date" id="dtFeRecepBoleto" class="form-control" />
+                            <label>Fecha Envío Obleado Bolsa</label>
+                            <input type="date" id="FechaEnvioBolsa" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Recib. Firma</label>
-                            <input type="date" id="dtFeRecibFirma" class="form-control" />
+                            <label>Fecha Envío Certificación AFIP</label>
+                            <input type="date" id="FechaEnvioAfip" class="form-control" />
                         </div>
                     </div>
 
-
+                    <!-- 3️⃣ RECEPCIONES -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Vuelta AFIP</label>
-                            <input type="date" id="dtFeVueltaAfip" class="form-control" />
+                            <label>Fecha Recepción Obleado Bolsa</label>
+                            <input type="date" id="FechaVueltaBolsa" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Vuelta Bolsa</label>
-                            <input type="date" id="dtFeVueltaBolsa" class="form-control" />
+                            <label>Fecha Recepción Certificación AFIP</label>
+                            <input type="date" id="FechaVueltaAfip" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label>Enviado Firma</label>
-                            <input type="date" id="dtFeEnviadoFirma" class="form-control" />
+                            <label>Fecha Recepción Firmas</label>
+                            <input type="date" id="FechaRecibFirma" class="form-control" />
                         </div>
                     </div>
 
+                    <!-- 4️⃣ CIERRE -->
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Acopio</label>
-                            <input type="date" id="dtFecAcopio" class="form-control" />
+                            <label>Fecha Envío Sellado</label>
+                            <input type="date" id="FechaEnviadoFirma" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Fecha Acopio</label>
+                            <input type="date" id="FechaAcopio" class="form-control" />
                         </div>
                         <div class="col-md-4">
                             <label>Rechazado AFIP</label>
-                            <input id="txtRechazadoAfip" class="form-control" />
+                            <input id="RechazadoAfip" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- OBSERVACIONES -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Observación</label>
+                            <textarea id="ObsCtrlBoleto" class="form-control"></textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Observación</label>
-                            <textarea id="txtObsCtrlBoleto" class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
                             <label>Observación 2</label>
-                            <textarea id="txtObsCtrlBoleto2" class="form-control"></textarea>
+                            <textarea id="ObsCtrlBoleto2" class="form-control"></textarea>
                         </div>
                     </div>
 
@@ -114,18 +113,19 @@
             </div>
 
             <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
                 <button class="btn btn-primary"
                         onclick="ControlDeBoletosSeguimiento.guardar()">
                     Guardar
-                </button>
-                <button class="btn btn-secondary" data-dismiss="modal">
-                    Cancelar
                 </button>
             </div>
 
         </div>
     </div>
 </div>
+
 <style>
     .modal-seguimiento {
         background-color: white !important;
@@ -143,5 +143,10 @@
         text-indent: 0;
         border-color: transparent !important;
         cursor: pointer;
+    }
+
+    h6 {
+        margin-top: 10px;
+        font-weight: 600;
     }
 </style>

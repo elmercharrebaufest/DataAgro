@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Molinos.DataAgro.Interfaces.Agent
 {
     public interface IModificacionContratoControlBoletoAgent
     {
-        string ModificarContrato(string Clasificacion, string Contrato, string Cosecha, string Fecha, string Hora, string Procedencia, string Provincia, string Usuario);
+        string ModificarContrato(ControlDeBoletosModificarContratoDto controlDeBoletosModificarContrato);
     }
 }

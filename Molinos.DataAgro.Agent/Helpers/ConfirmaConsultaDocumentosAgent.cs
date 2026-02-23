@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -30,13 +31,22 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaConfirma"] == "1")
             {
-                return new List<ConfirmaConsultaDocumentosDto>() { new ConfirmaConsultaDocumentosDto() {
-                    estadoDocumento = 2,
-                    idBolsa = "1",
-                    idDocumento = "25007039",
-                    consultaEstado = 1,
-                    consultaEstadoDocumento = 1,
-                }};
+                return new List<ConfirmaConsultaDocumentosDto>() { new ConfirmaConsultaDocumentosDto()
+                    {
+                        Acciones  = new List<Acciones>() { new Acciones()
+                        {
+                            Accion = "1",
+                            Apellido = "Perez",
+                            Cargo = "Gerente",
+                            FechaHora = "2025-08-01",
+                            Nombre = "Juan",
+                            NroDocumento = "12345678",
+                            Resultado = "1",
+                            TipoDocumento = "DNI"
+                        } 
+                        },
+                    }
+                };
             }
             else
             {
@@ -53,10 +63,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         new consultaDocumentoConsultaDocumentoItem()
                         {
-                            //consultaIdBolsa = bolsaId.ToString(),
-                            //consultaIdDocumento = documentoId,
-                            consultaIdBolsa = "1",
-                            consultaIdDocumento = "112906131",
+                            consultaIdBolsa = bolsaId.ToString(),
+                            consultaIdDocumento = documentoId,
                         }
                     };
 
@@ -69,25 +77,45 @@ namespace Molinos.DataAgro.Agent.Helpers
                     repositorio.GuardarCambios();
                     logger.Debug(rq.ToXml());
 
-                    var valor = agent.ConsultaEstadoDocumentos(rq);
+                    var response = agent.ConsultaEstadoDocumentos(rq);
 
-                    List<ConfirmaConsultaDocumentosDto> miLista = new List<ConfirmaConsultaDocumentosDto>();
-                    //foreach (var v in valor)
-                    //{
-                    //    var vv = new ConfirmaConsultaDocumentosDto()
-                    //    {
-                    //        estadoDocumentoField = v.EstadoDocumento,
-                    //        idBolsaField = v.IdBolsa,
-                    //        idDocumentoField = v.IdDocumento
-                    //    };
-                    //    miLista.Add(vv);
-                    //}
+                    List<ConfirmaConsultaDocumentosDto> listaConfirmaConsultaDocumentosDto = new List<ConfirmaConsultaDocumentosDto>();
+                    foreach (var consultaDocumento in response.consultaDocumentoResponse)
+                    {
+                        var confirmaConsultaDocumentos = new ConfirmaConsultaDocumentosDto()
+                        {
+                            IdDocumento = consultaDocumento.IdDocumento,
+                            IdBolsa = consultaDocumento.IdBolsa,
+                            EstadoDocumento = consultaDocumento.EstadoDocumento,
+                            ConsultaEstadoDocumento = (int)consultaDocumento.consultaEstadoDocumento,
+                            EnPoderDe = new EmpresaConfirmaDto()
+                            {
+                                CUIT = Convert.ToInt32(consultaDocumento.EnPoderDe.CUIT.ToString()),
+                                RazonSocial = consultaDocumento.EnPoderDe.RazonSocial
+                            },
+                            Acciones = consultaDocumento.Acciones != null
+                            ? consultaDocumento.Acciones.Select(t => new Acciones()
+                            {
+                                Accion = t.Accion.Value,
+                                Apellido = t.Usuario.Apellido,
+                                Cargo = t.Usuario.Cargo,
+                                FechaHora = t.FechaHora,
+                                Nombre = t.Usuario.Nombre,
+                                NroDocumento = t.Usuario.NroDocumento,
+                                Resultado = t.Resultado.Value,
+                                TipoDocumento = t.Usuario.TipoDocumento
+                            }).ToList()
+                            : new List<Acciones>()
 
-                    logger.Debug(valor.ToXml());
+                        };
+                        listaConfirmaConsultaDocumentosDto.Add(confirmaConsultaDocumentos);
+                    }
+
+                    logger.Debug(listaConfirmaConsultaDocumentosDto.ToXml());
                     log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
+                    log.Xml += listaConfirmaConsultaDocumentosDto.ToXml();
                     repositorio.GuardarCambios();
-                    return miLista;
+                    return listaConfirmaConsultaDocumentosDto;
                 }
                 catch (Exception e)
                 {

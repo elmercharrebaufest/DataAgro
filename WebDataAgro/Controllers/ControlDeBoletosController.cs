@@ -126,27 +126,79 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult ModificarContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion)
+
+        #region Datos de PreCertificacion
+        [HttpGet]
+        public JsonResult GetDatosPreCertificacion(int datosPreCertificacionId)
         {
             try
             {
-                controlDeBoletosModificacion.Usuario = PermisosHelper.ObtenerUsuario();
-                var resultado = _controlDeBoletosManager.ModificacionContrato(controlDeBoletosModificacion);
-                string mensaje = "Contrato modificado correctamente";
-                if (resultado.HayError)
-                {
-                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
-                    return Json(new { success = false, message = mensaje });
-                }
+                var resultado = _controlDeBoletosManager.ObtenerDatosPreCertificacion(datosPreCertificacionId);
+                return Json(resultado, JsonRequestBehavior.AllowGet);
 
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new object(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+        
+        [HttpPost]
+        public JsonResult RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.RegistrarDatosPreCertificacion(controlDeBoletosPreCertificacion);
+                string mensaje = "Modificacion los datos de pre certificacion correctamente";
                 return Json(new { success = true, message = mensaje });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Error al modificar el contrato: " + ex.Message });
+                return Json(new { success = false, message = "Error al modificar los datos de pre certificacion en el control de boletos: " + ex.Message });
             }
         }
+        #endregion
+
+        #region Datos de Seguimiento
+        [HttpGet]
+        public JsonResult GetDatosDeSeguimiento(int datosSeguimientoId)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.ObtenerDatosDeSeguimiento(datosSeguimientoId);
+                return Json(resultado, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new object(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+        [HttpPost]
+        public JsonResult RegistrarDatosDeSeguimiento(ControlDeBoletosDatosSeguimientoDto seguimientoControlDeBoleto)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.RegistroDatosDeSeguimiento(seguimientoControlDeBoleto);
+                string mensaje = "Modificacion los datos de seguimiento correctamente";
+                return Json(new { success = true, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al modificar los datos de seguimiento en el control de boletos: " + ex.Message });
+            }
+        }
+        #endregion
 
         [HttpPost]
         public JsonResult ControlMasivo(ControlDeBoletosRegistrarAccionesDto controlDeBoletosRegistrarAcciones)
@@ -194,13 +246,13 @@ namespace WebDataAgro.Controllers
         {
             try
             {
+                var tracking = _controlDeBoletosManager.ObtenerTrackingBoletos(controlDeBoletosId);
                 var result = new
                 {
-                    Data = new List<object>(),
-                    Total = 0
+                    Data = tracking,
+                    Total = tracking.Count
                 };
-
-                return Json(result);
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -210,6 +262,29 @@ namespace WebDataAgro.Controllers
                     Total = 0,
                     Errors = "Error al cargar datos: " + ex.Message
                 });
+            }
+        }
+
+        #region Modificacion de Contrato
+        [HttpPost]
+        public JsonResult ModificarContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion)
+        {
+            try
+            {
+                controlDeBoletosModificacion.Usuario = PermisosHelper.ObtenerUsuario();
+                var resultado = _controlDeBoletosManager.ModificacionContrato(controlDeBoletosModificacion);
+                string mensaje = "Contrato modificado correctamente";
+                if (resultado.HayError)
+                {
+                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
+                    return Json(new { success = false, message = mensaje });
+                }
+
+                return Json(new { success = true, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al modificar el contrato: " + ex.Message });
             }
         }
 
@@ -261,7 +336,7 @@ namespace WebDataAgro.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
 
         #region Metodos Get para cargar combos
         [HttpGet]
@@ -336,6 +411,31 @@ namespace WebDataAgro.Controllers
                 return Json(new List<object>(), JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetBolsaCompraNetSAP()
+        {
+            try
+            {
+                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                var estadoItems = listaEstados.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Id.ToString(),
+                        Value = x.CodigoSap,
+                        Selected = false
+                    }).OrderBy(x => x.Value
+                    );
+
+                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         [HttpGet]
         [OutputCache(Duration = 300, VaryByParam = "none")]
@@ -475,6 +575,52 @@ namespace WebDataAgro.Controllers
                 return Json(new List<object>(), JsonRequestBehavior.AllowGet);
             }
         }
+        
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetTipoOblea()
+        {
+            try
+            {
+                var tipoOblea = _controlDeBoletosManager.GetTipoOblea();
+                var tipoObleaItems = tipoOblea.Select(tipo =>
+                    new SelectListItem
+                    {
+                        Text = tipo.Descripcion,
+                        Value = tipo.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(tipoObleaItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        [OutputCache(Duration = 300, VaryByParam = "none")]
+        public JsonResult GetBoletoCompraNet()
+        {
+            try
+            {
+                var boletosCompraNet = _controlDeBoletosManager.GetBoletoCompraNet();
+                var boletosCompraNetItems = boletosCompraNet.Select(tipo =>
+                    new SelectListItem
+                    {
+                        Text = tipo.Descripcion,
+                        Value = tipo.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Text);
+
+                return Json(boletosCompraNetItems, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+            }
+        }
 
         #endregion
 
@@ -482,12 +628,8 @@ namespace WebDataAgro.Controllers
         [HttpGet]
         public PartialViewResult _ModificarDatosDelContrato(int id)
         {
-            var model = new ModificarControlBoletoViewModel
-            {
-                Id = id
-            };
-
-            return PartialView("_ModificarDatosDelContrato", model);
+            ViewBag.NegocioId = id;
+            return PartialView("_ModificarDatosDelContrato");
         }
         [HttpGet]
         public PartialViewResult _TrackingControlDeBoletos(int id)
