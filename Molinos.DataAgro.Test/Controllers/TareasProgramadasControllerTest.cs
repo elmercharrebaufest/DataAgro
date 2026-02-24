@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
         private Mock<IFAQManager> faqManagerMock;
         private Mock<IResearchManager> researchManagerMock;
+        private Mock<IConfirmaManager> confirmaManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -54,6 +55,7 @@ namespace Molinos.DataAgro.Test.Controllers
             precioPizarraManagerMock = new Mock<IPrecioPizarraManager>();
             faqManagerMock = new Mock<IFAQManager>();
             researchManagerMock = new Mock<IResearchManager>();
+            confirmaManagerMock = new Mock<IConfirmaManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new TareasProgramadasController(loggerMock.Object,
@@ -69,7 +71,8 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      proveedorManagerMock.Object,
                                                      precioPizarraManagerMock.Object,
                                                      faqManagerMock.Object,
-                                                     researchManagerMock.Object, null);
+                                                     researchManagerMock.Object,
+                                                     confirmaManagerMock.Object);
         }
 
         [Test]
@@ -82,6 +85,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
+
         [Test]
         public void FinalizacionContratoTest()
         {
