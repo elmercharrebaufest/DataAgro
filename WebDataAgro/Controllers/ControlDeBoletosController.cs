@@ -33,6 +33,7 @@ namespace WebDataAgro.Controllers
             this._contratoManager = contratoManager;
         }
 
+        #region Vistas Principales
         public ActionResult Index()
         {
             try
@@ -46,7 +47,33 @@ namespace WebDataAgro.Controllers
                 return View("Error");
             }
         }
-
+        public ActionResult SeguimientoBoletos()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Log del error
+                TempData["Error"] = "Error al cargar la página: " + ex.Message;
+                return View("Error");
+            }
+        }
+        public ActionResult ModificacionMasivaBoletos()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Log del error
+                TempData["Error"] = "Error al cargar la página: " + ex.Message;
+                return View("Error");
+            }
+        }
+        #endregion
 
         [HttpPost]
         public JsonResult GetBoletos(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
@@ -56,6 +83,56 @@ namespace WebDataAgro.Controllers
 
                 // Obtener todos los boletos con los filtros aplicados
                 var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
+
+                // Aplicar paginación
+                var boletosQuery = todosBoletos.AsQueryable();
+                var totalRegistros = boletosQuery.Count();
+
+                // Aplicar ordenamiento si existe
+                if (filtrosBusqueda.Sort != null && filtrosBusqueda.Sort.Any())
+                {
+                    var sortDescriptor = filtrosBusqueda.Sort.First();
+                    var orderBy = sortDescriptor.Field + (sortDescriptor.Dir == "desc" ? " descending" : " ascending");
+                    boletosQuery = boletosQuery.OrderBy(orderBy);
+                }
+
+                // Aplicar skip y take para paginación
+                var boletos = boletosQuery
+                    .Skip(filtrosBusqueda.Skip)
+                    .Take(filtrosBusqueda.Take)
+                    .ToList();
+
+                var result = new
+                {
+                    Data = boletos,
+                    Total = totalRegistros
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                // Log del error para debugging
+                System.Diagnostics.Debug.WriteLine($"Error en GetBoletos: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtrosBusqueda)
+        {
+            try
+            {
+
+                // Obtener todos los boletos con los filtros aplicados
+                var todosBoletos = this._controlDeBoletosManager.GetReporteDeSeguimientoBoletos(filtrosBusqueda);
 
                 // Aplicar paginación
                 var boletosQuery = todosBoletos.AsQueryable();

@@ -1,0 +1,336 @@
+﻿@{
+    ViewBag.Title = "Reporte de Seguimiento de Control de Boletos";
+}
+
+@section styles{
+    <link href="~/Content/css/control-boletos.css" rel="stylesheet" />
+    <link href="~/Content/control-boletos-contrato.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/ControlDeBoletosReporteSeguimiento")
+}
+
+<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmPendienteControl">
+    <!-- Header Section -->
+    <div class="row header-section">
+        <div class="col-12">
+            <h2 class="page-title">
+                <i class="fa fa-clipboard-check" aria-hidden="true"></i>
+                Reporte Seguimiento Control de Boletos
+            </h2>
+            <p class="page-subtitle">Gestión y seguimiento de boletos</p>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="card filter-card fade-in">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+                Filtros de Búsqueda
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- First Row -->
+            <div class="row form-row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Contrato SAP</label>
+                        <div class="filter-espacio-input">
+                            <input type="number" id="NegocioSAP-desde" class="form-control" placeholder="SAP desde" min="0" />
+                            <input type="number" id="NegocioSAP-hasta" class="form-control" placeholder="SAP hasta" min="0" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Material</label>
+                        <select id="materialId" class="form-control">
+                            <option value="">Cargando materiales...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Estado de Control</label>
+                        <select id="estadoControlId" class="form-control">
+                            <option value="">Cargando estados...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Boleto</label>
+                        <div class="custom-control custom-checkbox mt-2">
+                            <input type="checkbox" class="custom-control-input" id="esConfirma">
+                            <label class="custom-control-label" for="esConfirma">Solo Confirmas</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Bolsa</label>
+                        <select id="bolsaCompraNetId" class="form-control">
+                            <option value="">Cargando Bolsas...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Proveedor</label>
+                        <select id="proveedorId" class="form-control">
+                            <option value="">Cargando proveedores...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Comercial</label>
+                        <select id="comercialId" class="form-control">
+                            <option value="">Cargando comerciales...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="row form-row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Certificación Desde</label>
+                        <input id="fechaCertificacionDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Certificación Hasta</label>
+                        <input id="fechaCertificacionHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Vencimiento Certificación Desde</label>
+                        <input id="fechaVencimientoCertificacionDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Vencimiento Certificación Hasta</label>
+                        <input id="fechaVencimientoCertificacionHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Boleto Desde</label>
+                        <input id="fechaRecepBoletoDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Boleto Hasta</label>
+                        <input id="fechaRecepBoletoHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envío Firmas Desde</label>
+                        <input id="fechaEnviadoFirmaDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envío Firmas Hasta</label>
+                        <input id="fechaEnviadoFirmaHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Firmas Desde</label>
+                        <input id="fechaRecibFirmaDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Firmas Hasta</label>
+                        <input id="fechaRecibFirmaHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envio Bolsa Desde</label>
+                        <input id="fechaEnvioBolsaDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envio Bolsa Hasta</label>
+                        <input id="fechaEnvioBolsaHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Bolsa Desde</label>
+                        <input id="fechaVueltaBolsaDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Bolsa Hasta</label>
+                        <input id="fechaVueltaBolsaHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envio Afip Desde</label>
+                        <input id="fechaEnvioAfipDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Envio Afip Hasta</label>
+                        <input id="fechaEnvioAfipHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Afip Desde</label>
+                        <input id="fechaVueltaAfipDesde" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha Recepción Afip Hasta</label>
+                        <input id="fechaVueltaAfipHasta" class="form-control" type="date" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="row form-row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 filter-actions" style="display:flex; justify-content: flex-end">
+                    <button type="button" id="filtrarBoletos" class="btn btn-primary">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Buscar</span>
+                    </button>
+                    <button type="button" id="limpiarFiltros" class="btn btn-secondary">
+                        <i class="fa fa-eraser" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Limpiar</span>
+                    </button>
+                    <button type="button" id="exportarExcel" class="btn btn-success" disabled>
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Excel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card results-card mt-3 fade-in">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="fa fa-list" aria-hidden="true"></i>
+                Boletos Pendientes de Control
+            </h5>
+            <div class="results-summary">
+                <span class="badge badge-info" id="totalRegistros">0 registros</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <!-- Quick Actions Bar -->
+            <div class="quick-actions-bar">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="bulk-actions">
+                            <input type="checkbox" id="selectAll" class="form-check-input">
+                            <label for="selectAll" class="form-check-label mr-3">Seleccionar Todos</label>
+                            <button type="button" id="iniciarControlMasivo" class="btn btn-sm btn-outline-primary" disabled>
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                                <span class="d-none d-md-inline">Iniciar Control</span>
+                            </button>
+                            <button type="button" id="finalizarControlMasivo" class="btn btn-sm btn-outline-success" disabled>
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                <span class="d-none d-md-inline">Finalizar Control</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="boletos-grid" class="grid-container">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border-custom" role="status">
+                        <span class="sr-only">Cargando datos...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Indicators -->
+    <div class="progress-indicators mt-3 fade-in">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card pending" role="button" data-filter="pendiente">
+                    <div class="progress-icon">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="progress-info">
+                        <h6>Pendientes</h6>
+                        <span id="countPendientes">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card in-progress" role="button" data-filter="proceso">
+                    <div class="progress-icon">
+                        <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="progress-info">
+                        <h6>En Proceso</h6>
+                        <span id="countEnProceso">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card completed" role="button" data-filter="completado">
+                    <div class="progress-icon">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="progress-info">
+                        <h6>Completados</h6>
+                        <span id="countCompletados">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="progress-card certified" role="button" data-filter="certificado">
+                    <div class="progress-icon">
+                        <i class="fa fa-certificate" aria-hidden="true"></i>
+                    </div>
+                    <div class="progress-info">
+                        <h6>Certificados</h6>
+                        <span id="countCertificados">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cargarModalDinamico(url, modalId, callback) {
+        $.get(url, function (html) {
+            $('body').append(html);
+            if (callback) callback();
+        });
+    }
+</script>
