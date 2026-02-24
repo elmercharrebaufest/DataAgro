@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
 
         public int ComercialId { get; set; }
         public string Comercial { get; set; }
+        public string TipoBoleto { get; set; }
 
         public string ContratoSAP { get; set; }
 

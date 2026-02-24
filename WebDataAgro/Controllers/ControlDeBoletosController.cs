@@ -76,6 +76,8 @@ namespace WebDataAgro.Controllers
         #endregion
 
         [HttpPost]
+        
+        [HttpPost]
         public JsonResult GetBoletos(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
         {
             try
@@ -126,6 +128,54 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
+        public ActionResult ExportarBoletosExcel(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
+        {
+            try
+            {
+                var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
+
+                // Definir encabezados según la grilla principal
+                string[] headers = new string[] {
+                    "Tipo Boleto",
+                    "Bolsa",
+                    "Contrato SAP",
+                    "Material",
+                    "Estado Confirma",
+                    "Estado",
+                    "Fecha Creación",
+                    "Proveedor",
+                    "Comercial"
+                };
+
+                // Convertir datos
+                var data = new List<string[]>();
+                foreach (var b in todosBoletos)
+                {
+                    data.Add(new string[] {
+                        b.TipoBoleto?.ToString() ?? "",
+                        b.BolsaCompraNet?.ToString() ?? "",
+                        b.ContratoSAP ?? "",
+                        b.Material ?? "",
+                        b.EstadoConfirma ?? "",
+                        b.ControlDeBoletosEstado ?? "",
+                        b.FechaCreacion?.ToString("dd/MM/yyyy") ?? "",
+                        b.Proveedor ?? "",
+                        b.Comercial ?? ""
+                    });
+                }
+
+                var fileName = $"Boletos_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var sheetName = "Boletos";
+                return new WebDataAgro.Helpers.Excel.ExcelResult(headers, data, fileName, sheetName);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al exportar: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
         public JsonResult GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtrosBusqueda)
         {
             try
@@ -172,6 +222,66 @@ namespace WebDataAgro.Controllers
                     Total = 0,
                     Errors = "Error al cargar datos: " + ex.Message
                 });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ExportarReporteDeSeguimientoBoletosExcel(ControlDeBoletoFiltroSeguimientoDto filtrosBusqueda)
+        {
+            try
+            {
+                var todosBoletos = this._controlDeBoletosManager.GetReporteDeSeguimientoBoletos(filtrosBusqueda);
+
+                // Definir encabezados
+                string[] headers = new string[] {
+                    "Tipo Boleto",
+                    "Bolsa",
+                    "Contrato SAP",
+                    "Material",
+                    "Proveedor",
+                    "Fecha Certificación",
+                    "Fecha Vencimiento Certificación",
+                    "Fecha Envio Boleto",
+                    "Fecha Recepción Boleto",
+                    "Fecha Envío a Firma",
+                    "Fecha Recibido de Firma",
+                    "Fecha Envío a Bolsa",
+                    "Fecha Vuelta de Bolsa",
+                    "Fecha Envio a Afip",
+                    "Fecha Vuelta a Afip"
+                };
+
+                // Convertir datos
+                var data = new List<string[]>();
+                foreach (var b in todosBoletos)
+                {
+                    data.Add(new string[] {
+                        b.TipoBoleto?.ToString() ?? "",
+                        b.BolsaCompraNet?.ToString() ?? "",
+                        b.ContratoSAP ?? "",
+                        b.Material ?? "",
+                        b.Proveedor ?? "",
+                        b.FechaCertificacion?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaVencimientoCertificacion?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaEnvio?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaRecepBoleto?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaEnviadoFirma?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaRecibFirma?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaEnvioBolsa?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaVueltaBolsa?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaEnvioAfip?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaVueltaAfip?.ToString("dd/MM/yyyy") ?? ""
+                    });
+                }
+
+                var fileName = $"ReporteSeguimiento_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var sheetName = "ReporteSeguimiento";
+                return new WebDataAgro.Helpers.Excel.ExcelResult(headers, data, fileName, sheetName);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al exportar: " + ex.Message;
+                return RedirectToAction("Index");
             }
         }
 

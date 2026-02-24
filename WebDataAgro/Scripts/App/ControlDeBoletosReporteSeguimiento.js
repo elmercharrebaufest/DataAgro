@@ -5,29 +5,39 @@ var ControlBoletosReporteSeguimiento = (function () {
     var config = {
         urls: {
             getMateriales: "/ControlDeBoletos/GetMateriales",
-            getEstados: "/ControlDeBoletos/GetEstadosControl",
-            getComerciales: "/ControlDeBoletos/GetComerciales",
             getProveedores: "/ControlDeBoletos/GetProveedores",
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
-            getBoletos: "/ControlDeBoletos/GetBoletos",
-            getContadores: "/ControlDeBoletos/GetContadores",
+            getReporteSeguimiento: "/ControlDeBoletos/GetReporteDeSeguimientoBoletos",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
-            processControlMasivo: "/ControlDeBoletos/ControlMasivo",
-            exportBoletosExcel: "/ControlDeBoletos/ExportarExcel"
+            exportBoletosExcel: "/ControlDeBoletos/ExportarReporteDeSeguimientoBoletosExcel"
         }
     };
 
     let controlMaterial = $("#frmPendienteControl #materialId");
-    let controlEstadoControl = $("#frmPendienteControl #estadoControlId");
-    let controlComercial = $("#frmPendienteControl #comercialId");
     let controlProveedor = $("#frmPendienteControl #proveedorId");
     let controlBolsaCompraNet = $("#frmPendienteControl #bolsaCompraNetId");
 
     let controlNegocioSAPDesde = $("#frmPendienteControl #NegocioSAP-desde");
     let controlNegocioSAPHasta = $("#frmPendienteControl #NegocioSAP-hasta");
-    let controlFechaCargaDesde = $("#frmPendienteControl #fechaCargaDesde");
-    let controlFechaCargaHasta = $("#frmPendienteControl #fechaCargaHasta");
-    let controlEsConfirma = $("#frmPendienteControl #esConfirma");
+
+    let controlFechaVueltaAfipHasta = $("#frmPendienteControl #fechaCertificacionDesde");
+    let controlFechaVueltaAfipDesde = $("#frmPendienteControl #fechaCertificacionHasta");
+    let controlFechaEnvioAfipHasta = $("#frmPendienteControl #fechaVencimientoCertificacionDesde");
+    let controlFechaEnvioAfipDesde = $("#frmPendienteControl #fechaVencimientoCertificacionHasta");
+    let controlFechaVueltaBolsaHasta = $("#frmPendienteControl #fechaRecepBoletoDesde");
+    let controlFechaVueltaBolsaDesde = $("#frmPendienteControl #fechaRecepBoletoHasta");
+    let controlFechaEnvioBolsaHasta = $("#frmPendienteControl #fechaEnviadoFirmaDesde");
+    let controlFechaEnvioBolsaDesde = $("#frmPendienteControl #fechaEnviadoFirmaHasta");
+    let controlFechaRecibFirmaHasta = $("#frmPendienteControl #fechaRecibFirmaDesde");
+    let controlFechaRecibFirmaDesde = $("#frmPendienteControl #fechaRecibFirmaHasta");
+    let controlFechaEnviadoFirmaHasta = $("#frmPendienteControl #fechaEnvioBolsaDesde");
+    let controlFechaEnviadoFirmaDesde = $("#frmPendienteControl #fechaEnvioBolsaHasta");
+    let controlFechaRecepBoletoHasta = $("#frmPendienteControl #fechaVueltaBolsaDesde");
+    let controlFechaRecepBoletoDesde = $("#frmPendienteControl #fechaVueltaBolsaHasta");
+    let controlFechaVencimientoCertificacionHasta = $("#frmPendienteControl #fechaEnvioAfipDesde");
+    let controlFechaVencimientoCertificacionDesde = $("#frmPendienteControl #fechaEnvioAfipHasta");
+    let controlFechaCertificacionHasta = $("#frmPendienteControl #fechaVueltaAfipDesde");
+    let controlFechaCertificacionDesde = $("#frmPendienteControl #fechaVueltaAfipHasta");
 
     let controlFiltrarBoletos = $("#frmPendienteControl #filtrarBoletos");
     let controlLimpiarFiltros = $("#frmPendienteControl #limpiarFiltros");
@@ -110,7 +120,6 @@ var ControlBoletosReporteSeguimiento = (function () {
             this.cargarDatosIniciales();
             this.configurarEventos();
             this.inicializarGrid();
-            this.cargarContadores();
 
             state.datosInicializados = true;
         },
@@ -121,18 +130,6 @@ var ControlBoletosReporteSeguimiento = (function () {
                 controlMaterial,
                 "Cargando...",
                 "Todos los materiales",
-            );
-            cargarDropdown(
-                config.urls.getEstados,
-                controlEstadoControl,
-                "Cargando...",
-                "Todos los estados",
-            );
-            cargarDropdown(
-                config.urls.getComerciales,
-                controlComercial,
-                "Cargando...",
-                "Todos los comerciales",
             );
             cargarDropdown(
                 config.urls.getProveedores,
@@ -181,35 +178,7 @@ var ControlBoletosReporteSeguimiento = (function () {
                 .on("click", function () {
                     self.exportarExcel();
                 });
-
-            // Selección múltiple
-            controlSelectAll
-                .off("change")
-                .on("change", function () {
-                    self.seleccionarTodos(this.checked);
-                });
-
-            // Control masivo
-            controlIniciarControlMasivo
-                .off("click")
-                .on("click", function () {
-                    self.iniciarControlMasivo();
-                });
-
-            controlFinalizarControlMasivo
-                .off("click")
-                .on("click", function () {
-                    self.finalizarControlMasivo();
-                });
-
-            // Cards de progreso como filtros rápidos
-            $(".progress-card[data-filter]")
-                .off("click")
-                .on("click", function () {
-                    var filtro = $(this).data("filter");
-                    self.aplicarFiltroRapido(filtro);
-                });
-        },
+                         },
 
         autoFitSelectedColumns: function () {
             if (!state.grid) return;
@@ -241,7 +210,7 @@ var ControlBoletosReporteSeguimiento = (function () {
                             pageSize: 20,
                             transport: {
                                 read: {
-                                    url: config.urls.getBoletos,
+                                    url: config.urls.getReporteSeguimiento,
                                     type: "POST",
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
@@ -258,16 +227,29 @@ var ControlBoletosReporteSeguimiento = (function () {
                                             take: options.take || 50,
                                             sort: options.sort || [],
                                             // Filtros personalizados
-                                            contratoSAPDesde: filtros.contratoSAPDesde,
-                                            contratoSAPHasta: filtros.contratoSAPHasta,
                                             materialId: filtros.materialId,
-                                            estadoControlId: filtros.estadoControlId,
-                                            esConfirma: filtros.esConfirma,
                                             fechaCargaDesde: filtros.fechaCargaDesde,
                                             fechaCargaHasta: filtros.fechaCargaHasta,
                                             proveedor: filtros.proveedor,
                                             bolsaId: filtros.bolsaId,
-                                            comercialId: filtros.comercialId,
+                                            fechaCertificacionDesde: filtros.fechaVueltaAfipHasta,
+                                            fechaCertificacionHasta: filtros.fechaVueltaAfipDesde,
+                                            fechaVencimientoCertificacionDesde: filtros.fechaEnvioAfipHasta,
+                                            fechaVencimientoCertificacionHasta: filtros.fechaEnvioAfipDesde,
+                                            fechaRecepBoletoDesde: filtros.fechaVueltaBolsaHasta,
+                                            fechaRecepBoletoHasta: filtros.fechaVueltaBolsaDesde,
+                                            fechaEnviadoFirmaDesde: filtros.fechaEnvioBolsaHasta,
+                                            fechaEnviadoFirmaHasta: filtros.fechaEnvioBolsaDesde,
+                                            fechaRecibFirmaDesde: filtros.fechaRecibFirmaHasta,
+                                            fechaRecibFirmaHasta: filtros.fechaRecibFirmaDesde,
+                                            fechaEnvioBolsaDesde: filtros.fechaEnviadoFirmaHasta,
+                                            fechaEnvioBolsaHasta: filtros.fechaEnviadoFirmaDesde,
+                                            fechaVueltaBolsaDesde: filtros.fechaRecepBoletoHasta,
+                                            fechaVueltaBolsaHasta: filtros.fechaRecepBoletoDesde,
+                                            fechaEnvioAfipDesde: filtros.fechaVencimientoCertificacionHasta,
+                                            fechaEnvioAfipHasta: filtros.fechaVencimientoCertificacionDesde,
+                                            fechaVueltaAfipDesde: filtros.fechaCertificacionHasta,
+                                            fechaVueltaAfipHasta: filtros.fechaCertificacionDesde,
                                         };
                                         return kendo.stringify(parametros);
                                     }
@@ -341,19 +323,14 @@ var ControlBoletosReporteSeguimiento = (function () {
                         },
                         columns: [
                             {
-                                field: "Selected",
-                                title:
-                                    "<input type='checkbox' id='gridSelectAll' class='form-check-input' />",
-                                template:
-                                    "<input type='checkbox' class='row-checkbox form-check-input' data-id='#=Id#' />",
-                                width: 50,
-                                sortable: false,
-                                filterable: false,
-                            },
-                            {
                                 field: "TipoBoleto",
                                 title: "Boleto",
                                 width: 80,
+                            },
+                            {
+                                field: "BolsaCompraNet",
+                                title: "Bolsa",
+                                width: 120
                             },
                             {
                                 field: "ContratoSAP",
@@ -368,53 +345,85 @@ var ControlBoletosReporteSeguimiento = (function () {
                                 width: 120,
                             },
                             {
-                                field: "EstadoConfirma",
-                                title: "Estado Confirma",
-                                width: 100,
-                            },
-                            {
-                                field: "ControlDeBoletosEstado",
-                                title: "Estado",
-                                width: 100,
-                            },
-                            {
-                                field: "FechaCreacion",
-                                title: "Fecha Creación",
-                                width: 120,
-                                format: "{0:dd/MM/yyyy}",
-                                template: "#= formatearFecha(FechaCreacion) #",
-                            },
-                            {
                                 field: "Proveedor",
                                 title: "Proveedor",
                                 width: 250,
                             },
                             {
-                                field: "Comercial",
-                                title: "Comercial",
-                                width: 150,
+                                field: "FechaCertificacion",
+                                title: "Fecha Certificación",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaCertificacion) #",
                             },
                             {
-                                field: "Acciones",
-                                title: "Acciones",
-                                width: 100,
-                                template: function (dataItem) {
-                                    return self.generarBotonesAccion(dataItem);
-                                },
-                                sortable: false,
-                                filterable: false,
+                                field: "FechaVencimientoCertificacion",
+                                title: "Fecha Vencimiento Certificación",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaVencimientoCertificacion) #",
+                            },
+                            {
+                                field: "FechaEnvio",
+                                title: "Fecha Envío Boleto",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaEnvio) #",
+                            },
+                            {
+                                field: "FechaRecepBoleto",
+                                title: "Fecha Recepción Boleto",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaRecepBoleto) #",
+                            },
+                            {
+                                field: "FechaEnviadoFirma",
+                                title: "Fecha Envío a Firma",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaEnviadoFirma) #",
+                            },
+                            {
+                                field: "FechaRecibFirma",
+                                title: "Fecha Recibido de Firma",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaRecibFirma) #",
+                            },
+                            {
+                                field: "FechaEnvioBolsa",
+                                title: "Fecha Envío a Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaEnvioBolsa) #",
+                            },
+                            {
+                                field: "FechaVueltaBolsa",
+                                title: "Fecha Vuelta de Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaVueltaBolsa) #",
+                            },
+                            {
+                                field: "FechaEnvioAfip",
+                                title: "Fecha Envío a AFIP",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaEnvioAfip) #",
+                            },
+                            {
+                                field: "FechaVueltaAfip",
+                                title: "Fecha Vuelta de AFIP",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaVueltaAfip) #",
                             },
                         ],
                         dataBound: function (e) {
-                            self.configurarEventosGrid();
-                            self.actualizarContadores();
-                            self.actualizarSeleccion();
                             // Ajustar automáticamente solo las columnas solicitadas
                             //self.autoFitSelectedColumns();
-                        },
-                        change: function (e) {
-                            self.actualizarBotonesControlMasivo();
-                        },
+                        }
                     })
                     .data("kendoGrid");
 
@@ -433,50 +442,31 @@ var ControlBoletosReporteSeguimiento = (function () {
             }
         },
 
-        configurarEventosGrid: function () {
-            var self = this;
-
-            // Checkbox del header
-            // Poner headers en negrita
-            $("#boletos-grid")
-                .closest(".k-grid")
-                .find(".k-grid-header .k-header, .k-grid-header th")
-                .css("font-weight", "700");
-            $("#gridSelectAll")
-                .off("change")
-                .on("change", function () {
-                    self.seleccionarTodos(this.checked);
-                });
-
-            // Checkboxes individuales
-            $(".row-checkbox")
-                .off("change")
-                .on("change", function () {
-                    self.actualizarBotonesControlMasivo();
-
-                    // Actualizar estado del checkbox principal
-                    var total = $(".row-checkbox").length;
-                    var seleccionados = $(".row-checkbox:checked").length;
-                    $("#gridSelectAll").prop(
-                        "indeterminate",
-                        seleccionados > 0 && seleccionados < total,
-                    );
-                    $("#gridSelectAll").prop("checked", seleccionados === total);
-                });
-        },
-
         obtenerFiltros: function () {
             return {
                 contratoSAPDesde: controlNegocioSAPDesde.val().trim() || null,
                 contratoSAPHasta: controlNegocioSAPHasta.val().trim() || null,
                 materialId: controlMaterial.val() || null,
-                estadoControlId: controlEstadoControl.val() || null,
-                esConfirma: controlEsConfirma.is(":checked"),
-                fechaCargaDesde: controlFechaCargaDesde.val() || null,
-                fechaCargaHasta: controlFechaCargaHasta.val() || null,
                 proveedor: controlProveedor.val() || null,
                 bolsaId: controlBolsaCompraNet.val() || null,
-                comercialId: controlComercial.val() || null,
+                fechaCertificacionDesde: controlFechaCertificacionDesde.val() || null,
+                fechaCertificacionHasta: controlFechaCertificacionHasta.val() || null,
+                fechaVencimientoCertificacionDesde: controlFechaVencimientoCertificacionDesde.val() || null,
+                fechaVencimientoCertificacionHasta: controlFechaVencimientoCertificacionHasta.val() || null,
+                fechaRecepBoletoDesde: controlFechaRecepBoletoDesde.val() || null,
+                fechaRecepBoletoHasta: controlFechaRecepBoletoHasta.val() || null,
+                fechaEnviadoFirmaDesde: controlFechaEnviadoFirmaDesde.val() || null,
+                fechaEnviadoFirmaHasta: controlFechaEnviadoFirmaHasta.val() || null,
+                fechaRecibFirmaDesde: controlFechaRecibFirmaDesde.val() || null,
+                fechaRecibFirmaHasta: controlFechaRecibFirmaHasta.val() || null,
+                fechaEnvioBolsaDesde: controlFechaEnvioBolsaDesde.val() || null,
+                fechaEnvioBolsaHasta: controlFechaEnvioBolsaHasta.val() || null,
+                fechaVueltaBolsaDesde: controlFechaVueltaBolsaDesde.val() || null,
+                fechaVueltaBolsaHasta: controlFechaVueltaBolsaHasta.val() || null,
+                fechaEnvioAfipDesde: controlFechaEnvioAfipDesde.val() || null,
+                fechaEnvioAfipHasta: controlFechaEnvioAfipHasta.val() || null,
+                fechaVueltaAfipDesde: controlFechaVueltaAfipDesde.val() || null,
+                fechaVueltaAfipHasta: controlFechaVueltaAfipHasta.val() || null,
             };
         },
 
@@ -560,358 +550,77 @@ var ControlBoletosReporteSeguimiento = (function () {
             this.filtrarBoletos();
         },
 
-        aplicarFiltroRapido: function (estado) {
-            this.limpiarFiltros();
-
-            var estadoId = "";
-            switch (estado) {
-                case "pendiente":
-                    estadoId = "1";
-                    break;
-                case "proceso":
-                    estadoId = "2";
-                    break;
-                case "completado":
-                    estadoId = "3";
-                    break;
-                case "certificado":
-                    estadoId = "4";
-                    break;
-            }
-
-            if (estadoId) {
-                controlEstadoControl.val(estadoId);
-                this.filtrarBoletos();
-            }
-        },
-
         exportarExcel: function () {
             var filtros = this.obtenerFiltros();
-            var queryString = $.param(filtros);
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = config.urls.exportBoletosExcel;
+            form.style.display = "none";
 
-            var url = config.urls.exportarExcel + "?" + queryString;
-
-            // Crear elemento temporal para descarga
-            var link = document.createElement("a");
-            link.href = url;
-            link.download =
-                "ControlBoletos_" + new Date().toISOString().slice(0, 10) + ".xlsx";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        },
-
-        seleccionarTodos: function (seleccionar) {
-            $(".row-checkbox").prop("checked", seleccionar);
-            this.actualizarBotonesControlMasivo();
-        },
-
-        actualizarSeleccion: function () {
-            this.actualizarBotonesControlMasivo();
-        },
-
-        actualizarBotonesControlMasivo: function () {
-            var seleccionados = $(".row-checkbox:checked").length;
-            var habilitado = seleccionados > 0;
-
-            actualizarBoton(controlIniciarControlMasivo, habilitado);
-            actualizarBoton(controlFinalizarControlMasivo, habilitado);
-
-            // Actualizar checkbox principal
-            var total = $(".row-checkbox").length;
-            $("#selectAll").prop("checked", seleccionados === total && total > 0);
-        },
-
-        iniciarControlMasivo: function () {
-            var ids = this.obtenerSeleccionados();
-            if (ids.length === 0) {
-                mostrarMensaje(
-                    "Atención",
-                    "Debe seleccionar al menos un boleto para iniciar el control",
-                    "warning",
-                );
-                return;
-            }
-
-            var mensaje =
-                "¿Está seguro de iniciar el control para " +
-                ids.length +
-                " boleto(s) seleccionado(s)?";
-            if (confirm(mensaje)) {
-                this.procesarControlMasivo("iniciar", ids);
-            }
-        },
-
-        finalizarControlMasivo: function () {
-            var ids = this.obtenerSeleccionados();
-            if (ids.length === 0) {
-                mostrarMensaje(
-                    "Atención",
-                    "Debe seleccionar al menos un boleto para finalizar el control",
-                    "warning",
-                );
-                return;
-            }
-
-            var mensaje =
-                "¿Está seguro de finalizar el control para " +
-                ids.length +
-                " boleto(s) seleccionado(s)?";
-            if (confirm(mensaje)) {
-                this.procesarControlMasivo("finalizar", ids);
-            }
-        },
-
-        obtenerSeleccionados: function () {
-            var ids = [];
-            $(".row-checkbox:checked").each(function () {
-                var id = $(this).data("id");
-                if (id) {
-                    ids.push(id);
+            // Agrega los filtros como inputs
+            for (var key in filtros) {
+                if (filtros.hasOwnProperty(key)) {
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = key;
+                    input.value = filtros[key] || "";
+                    form.appendChild(input);
                 }
-            });
-            return ids;
-        },
-
-        procesarControlBoleto: function (accion, ids) {
-            var self = this;
-
-            if (!ids || ids.length === 0) {
-                mostrarMensaje("Error", "No hay elementos seleccionados", "warning");
-                return;
             }
-
-            // Deshabilitar botones durante el procesamiento
-            actualizarBoton(controlIniciarControlMasivo, false);
-            actualizarBoton(controlFinalizarControlMasivo, false);
-
-            let request = {
-                AccionControlDeBoletos: accion,
-                ControlDeBoletoIds: ids,
-            };
-
-            const response = MSExecuteOnServer(config.urls.processControlMasivo, request);
-            if (response.success) {
-                self.actualizarBotonesControlMasivo();
-                self.filtrarBoletos();
-            }
-        },
-
-        procesarControlMasivo: function (accion, ids) {
-            var self = this;
-
-            if (!ids || ids.length === 0) {
-                mostrarMensaje("Error", "No hay elementos seleccionados", "warning");
-                return;
-            }
-
-            // Deshabilitar botones durante el procesamiento
-            actualizarBoton(controlIniciarControlMasivo, false);
-            actualizarBoton(controlFinalizarControlMasivo, false);
-
-            let request = {
-                AccionControlDeBoletos: accion,
-                ControlDeBoletoIds: ids,
-            };
-
-            const response = MSExecuteOnServer(config.urls.processControlMasivo, request);
-
-            if (response) {
-                self.actualizarBotonesControlMasivo();
-            }
-        },
-
-        cargarContadores: function () {
-            $.ajax({
-                url: config.urls.getContadores,
-                type: "GET",
-                timeout: 10000,
-                success: function (data) {
-                    if (data) {
-                        $("#countPendientes").text(data.Pendientes || 0);
-                        $("#countEnProceso").text(data.EnProceso || 0);
-                        $("#countCompletados").text(data.Completados || 0);
-                        $("#countCertificados").text(data.Certificados || 0);
-                    }
-                },
-                error: function () {
-                    console.warn("Error cargando contadores");
-                },
-            });
-        },
-
-        actualizarContadores: function () {
-            this.cargarContadores();
-            if (state.grid) {
-                var total = state.grid.dataSource.total();
-                $("#totalRegistros").text(
-                    total + " registro" + (total !== 1 ? "s" : ""),
-                );
-            }
-        },
-
-        generarBotonesAccion: function (data) {
-            var botones = [];
-            botones.push(
-                '<button class="btn btn-sm btn-outline-secondary btn-acciones tooltip-custom" onclick="ControlBoletos.visualizarContrato(' +
-                data.NegocioId +
-                ')" title="Visualizar Contrato"><i class="fa fa-file-text-o"></i><span class="tooltiptext"></span></button>',
-            );
-            if (data.ControlIniciado) {
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlDeBoletosModificarContrato.abrir(' +
-                    data.NegocioId +
-                    ')" title="Modificar Contrato"><i class="fa fa-edit"></i><span class="tooltiptext"></span></button>',
-                );
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
-                    data.Id +
-                    ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
-                );
-            }
-            if (!data.ControlIniciado) {
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.iniciarControl(' +
-                    data.Id +
-                    ')" title="Iniciar Control"><i class="fa fa-play"></i><span class="tooltiptext"></span></button>',
-                );
-            }
-
-            if (data.ControlIniciado) {
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosDatosCertificacion.abrir(' +
-                    data.PreCertificacionId + ',' + data.Id +
-                    ')" title="Registro de Obleado"><i class="fa fa-list-alt"></i><span class="tooltiptext"></span></button>',
-                );
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosSeguimiento.abrir(' +
-                    data.SeguimientoBoletoId + ',' + data.Id +
-                    ')" title="Registro de Certificación"><i class="fa fa-certificate"></i><span class="tooltiptext"></span></button>',
-                );
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' +
-                    data.Id +
-                    ')" title="Finalizar Control"><i class="fa fa-check"></i><span class="tooltiptext"></span></button>',
-                );
-            }
-
-            return (
-                '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
-            );
-        },
-
-        iniciarControl: function (id) {
-            this.procesarControlBoleto(controlMasivoAccion.ControlIniciado, [id]);
-        },
-
-        finalizarControl: function (id) {
-            this.procesarControlBoleto(controlMasivoAccion.ControlFinalizado, [id]);
-        },
-
-        visualizarContrato: function (id) {
-            // Mostrar loader o indicador de carga
-            console.log("visualizarContrato - ID recibido:", id);
-
-            if (!id || id <= 0) {
-                console.error("ID inválido para visualizar contrato:", id);
-                alert("Error: ID de contrato inválido");
-                return;
-            }
-
-            var loadingMessage = "Cargando datos del contrato...";
-            if (typeof showLoading === "function") {
-                showLoading(loadingMessage);
-            }
-
-            // Llamar al servidor para obtener los datos del contrato
-            $.ajax({
-                url: config.urls.getContrato,
-                type: "GET",
-                data: { id: id },
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                success: function (response) {
-                    console.log("Respuesta recibida:", response);
-
-                    if (typeof hideLoading === "function") {
-                        hideLoading();
-                    }
-
-                    if (!response) {
-                        console.error("Respuesta vacía al solicitar contrato");
-                        alert("Error al obtener los datos del contrato: respuesta vacía");
-                        return;
-                    }
-
-                    // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
-                    var contrato = null;
-
-                    if (response.Data !== undefined) {
-                        if (Array.isArray(response.Data)) {
-                            // Es un array, tomar el primer elemento
-                            contrato = response.Data.length > 0 ? response.Data[0] : null;
-                        } else if (
-                            typeof response.Data === "object" &&
-                            response.Data !== null
-                        ) {
-                            // Es un objeto, usar directamente
-                            contrato = response.Data;
-                        }
-                    } else {
-                        // La respuesta directamente es el contrato
-                        contrato = response;
-                    }
-
-                    console.log("Contrato extraído para modal:", contrato);
-
-                    if (contrato && typeof contrato === "object") {
-                        // Verificar que ModalVisualizar esté disponible
-                        if (
-                            typeof ModalVisualizar !== "undefined" &&
-                            typeof ModalVisualizar.abrir === "function"
-                        ) {
-                            ModalVisualizar.abrir(contrato);
-                        } else {
-                            console.error("ModalVisualizar no está disponible");
-                            alert("Error: El módulo de visualización no está cargado");
-                        }
-                    } else {
-                        console.error("No se pudo extraer el contrato de la respuesta");
-                        alert("No se encontró el contrato solicitado.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    if (typeof hideLoading === "function") {
-                        hideLoading();
-                    }
-                    console.error("Error AJAX al obtener detalle del contrato:");
-                    console.error("Status:", status);
-                    console.error("Error:", error);
-                    console.error("Response:", xhr.responseText);
-
-                    var mensajeError = "Error al comunicarse con el servidor.";
-                    if (xhr.status === 404) {
-                        mensajeError = "No se encontró el contrato solicitado.";
-                    } else if (xhr.status === 500) {
-                        mensajeError = "Error interno del servidor.";
-                    }
-
-                    alert(mensajeError + " Por favor, intente nuevamente.");
-                },
-            });
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         },
     };
 })();
 
 // Función global para formatear fechas (necesaria para el template del grid)
+// Cached formatter to avoid recreating for each call
+// Formateador de fecha para español (Argentina)
+const _esArDateFormatter = new Intl.DateTimeFormat('es-AR');
+
 function formatearFecha(fecha) {
     if (!fecha) return "";
-    var date = new Date(fecha);
-    return date.toLocaleDateString("es-AR");
+
+    let date;
+
+    try {
+        // Si es un objeto Date válido
+        if (fecha instanceof Date) {
+            date = fecha;
+        }
+        // Si es un número (milisegundos desde Epoch)
+        else if (typeof fecha === 'number') {
+            date = new Date(fecha);
+        }
+        // Si es una cadena
+        else if (typeof fecha === 'string') {
+            // Formato MS Ajax: "/Date(1771995600000)/"
+            const msMatch = /\/Date\((-?\d+)(?:[+-]\d+)?\)\//.exec(fecha);
+            if (msMatch) {
+                date = new Date(parseInt(msMatch[1], 10));
+            }
+            // Formato dd/MM/yyyy
+            else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)) {
+                const [day, month, year] = fecha.split("/").map(Number);
+                date = new Date(year, month - 1, day); // mes base 0 en JS
+            }
+            // Fallback: constructor Date (ISO, etc.)
+            else {
+                date = new Date(fecha);
+            }
+        } else {
+            return ""; // Tipo no soportado
+        }
+
+        // Validar que la fecha sea válida
+        if (!date || isNaN(date.getTime())) return "";
+
+        // Formatear fecha
+        return _esArDateFormatter.format(date);
+    } catch (e) {
+        return "";
+    }
 }
 
 // Inicializar cuando el DOM esté listo

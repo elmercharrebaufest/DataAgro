@@ -158,6 +158,7 @@ namespace Molinos.DataAgro.Business.Managers
                     BolsaCompraNet = x.cb.Negocio.Bolsa.Descripcion,
                     ComercialId = x.cb.Negocio.ComercialId ?? 0,
                     Comercial = x.cb.Negocio.Comercial.Nombres + " " + x.cb.Negocio.Comercial.Apellido,
+                    TipoBoleto = repositorio.Obtener<BoletoCompraNet>(x.cb.Negocio.BoletoId).Descripcion,
                     ContratoSAP = x.cb.Negocio.ContratoSAP,
                     ProveedorId = x.cb.Negocio.ProveedorId ?? 0,
                     Proveedor = x.cb.Negocio.Proveedor.RazonSocial,
