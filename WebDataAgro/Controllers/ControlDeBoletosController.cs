@@ -76,8 +76,6 @@ namespace WebDataAgro.Controllers
         #endregion
 
         [HttpPost]
-        
-        [HttpPost]
         public JsonResult GetBoletos(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
         {
             try
@@ -158,7 +156,7 @@ namespace WebDataAgro.Controllers
                         b.Material ?? "",
                         b.EstadoConfirma ?? "",
                         b.ControlDeBoletosEstado ?? "",
-                        b.FechaCreacion?.ToString("dd/MM/yyyy") ?? "",
+                        b.FechaCreacion.ToString("dd/MM/yyyy") ?? "",
                         b.Proveedor ?? "",
                         b.Comercial ?? ""
                     });
