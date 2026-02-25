@@ -341,6 +341,13 @@ namespace WebDataAgro
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
                                        ));
+
+            bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosReporteSeguimiento").Include(
+                           "~/Scripts/App/Filtros.js",
+                           "~/Scripts/App/ControlDeBoletosReporteSeguimiento.js",
+                           "~/Scripts/KendoExtensions.js",
+                           "~/Scripts/moment.js"
+                           ));
             bundles.IgnoreList.Clear();
         }
     }

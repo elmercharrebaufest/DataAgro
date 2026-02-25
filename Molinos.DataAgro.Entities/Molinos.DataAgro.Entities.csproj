@@ -327,6 +327,7 @@
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosSeguimientoDto.cs" />
@@ -334,6 +335,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificarContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosRegistrarAccionesDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosReporteSeguimientoConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoTrackingDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />

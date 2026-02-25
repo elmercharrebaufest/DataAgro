@@ -13,7 +13,7 @@ var ControlBoletos = (function () {
             getContadores: "/ControlDeBoletos/GetContadores",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
             processControlMasivo: "/ControlDeBoletos/ControlMasivo",
-            exportBoletosExcel: "/ControlDeBoletos/ExportarExcel"
+            exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel"
         }
     };
 
@@ -356,6 +356,11 @@ var ControlBoletos = (function () {
                                 width: 80,
                             },
                             {
+                                field: "BolsaCompraNet",
+                                title: "Bolsa",
+                                width: 100
+                            },
+                            {
                                 field: "ContratoSAP",
                                 title: "Contrato SAP",
                                 width: 120,
@@ -587,18 +592,23 @@ var ControlBoletos = (function () {
 
         exportarExcel: function () {
             var filtros = this.obtenerFiltros();
-            var queryString = $.param(filtros);
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = config.urls.exportBoletosExcel;
+            form.style.display = "none";
 
-            var url = config.urls.exportarExcel + "?" + queryString;
-
-            // Crear elemento temporal para descarga
-            var link = document.createElement("a");
-            link.href = url;
-            link.download =
-                "ControlBoletos_" + new Date().toISOString().slice(0, 10) + ".xlsx";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            for (var key in filtros) {
+                if (filtros.hasOwnProperty(key)) {
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = key;
+                    input.value = filtros[key] || "";
+                    form.appendChild(input);
+                }
+            }
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         },
 
         seleccionarTodos: function (seleccionar) {

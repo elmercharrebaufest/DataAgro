@@ -46,6 +46,144 @@ namespace Molinos.DataAgro.Business.Managers
             throw new NotImplementedException();
         }
 
+        #region Reporte Seguimiento Boletos
+
+        public List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros)
+        {
+            var query = from cb in repositorio.Listar<ControlDeBoletos>()
+                        join pre in repositorio.Listar<ControlDeBoletosPreCertificacion>()
+                            on cb.Id equals pre.ControlDeBoletosId into preJoin
+                        from pre in preJoin.DefaultIfEmpty()
+                        join seg in repositorio.Listar<ControlDeBoletosSeguimiento>()
+                            on cb.Id equals seg.ControlDeBoletosId into segJoin
+                        from seg in segJoin.DefaultIfEmpty()
+                        select new { cb, pre, seg };
+
+            // FILTROS GENERALES
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
+                query = query.Where(x => string.Compare(x.cb.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
+
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
+                query = query.Where(x => string.Compare(x.cb.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
+
+            if (filtros.MaterialId.HasValue)
+                query = query.Where(x => x.cb.Negocio.MaterialId == filtros.MaterialId.Value);
+
+            if (filtros.Proveedor.HasValue)
+                query = query.Where(x => x.cb.Negocio.ProveedorId == filtros.Proveedor.Value);
+
+            if (filtros.BolsaId.HasValue)
+                query = query.Where(x => x.cb.Negocio.BolsaId == filtros.BolsaId.Value);
+
+            // FILTROS PRECERTIFICACIÓN
+            if (filtros.FechaCertificacionDesde.HasValue)
+                query = query.Where(x => x.pre != null && x.pre.FechaCertificacion >= filtros.FechaCertificacionDesde.Value);
+
+            if (filtros.FechaCertificacionHasta.HasValue)
+                query = query.Where(x => x.pre != null && x.pre.FechaCertificacion <= filtros.FechaCertificacionHasta.Value);
+
+            if (filtros.FechaVencimientoCertificacionDesde.HasValue)
+                query = query.Where(x => x.pre != null && x.pre.FechaVencimiento >= filtros.FechaVencimientoCertificacionDesde.Value);
+
+            if (filtros.FechaVencimientoCertificacionHasta.HasValue)
+                query = query.Where(x => x.pre != null && x.pre.FechaVencimiento <= filtros.FechaVencimientoCertificacionHasta.Value);
+
+            // FILTROS SEGUIMIENTO
+            if (filtros.FechaRecepBoletoDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaRecepBoleto.HasValue && x.seg.FechaRecepBoleto.Value >= filtros.FechaRecepBoletoDesde.Value);
+
+            if (filtros.FechaRecepBoletoHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaRecepBoleto.HasValue && x.seg.FechaRecepBoleto.Value <= filtros.FechaRecepBoletoHasta.Value);
+
+            if (filtros.FechaEnviadoFirmaDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnviadoFirma.HasValue && x.seg.FechaEnviadoFirma.Value >= filtros.FechaEnviadoFirmaDesde.Value);
+
+            if (filtros.FechaEnviadoFirmaHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnviadoFirma.HasValue && x.seg.FechaEnviadoFirma.Value <= filtros.FechaEnviadoFirmaHasta.Value);
+
+            if (filtros.FechaRecibFirmaDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaRecibFirma.HasValue && x.seg.FechaRecibFirma.Value >= filtros.FechaRecibFirmaDesde.Value);
+
+            if (filtros.FechaRecibFirmaHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaRecibFirma.HasValue && x.seg.FechaRecibFirma.Value <= filtros.FechaRecibFirmaHasta.Value);
+
+            if (filtros.FechaEnvioBolsaDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnvioBolsa.HasValue && x.seg.FechaEnvioBolsa.Value >= filtros.FechaEnvioBolsaDesde.Value);
+
+            if (filtros.FechaEnvioBolsaHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnvioBolsa.HasValue && x.seg.FechaEnvioBolsa.Value <= filtros.FechaEnvioBolsaHasta.Value);
+
+            if (filtros.FechaVueltaBolsaDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaVueltaBolsa.HasValue && x.seg.FechaVueltaBolsa.Value >= filtros.FechaVueltaBolsaDesde.Value);
+
+            if (filtros.FechaVueltaBolsaHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaVueltaBolsa.HasValue && x.seg.FechaVueltaBolsa.Value <= filtros.FechaVueltaBolsaHasta.Value);
+
+            if (filtros.FechaEnvioAfipDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnvioAfip.HasValue && x.seg.FechaEnvioAfip.Value >= filtros.FechaEnvioAfipDesde.Value);
+
+            if (filtros.FechaEnvioAfipHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaEnvioAfip.HasValue && x.seg.FechaEnvioAfip.Value <= filtros.FechaEnvioAfipHasta.Value);
+
+            if (filtros.FechaVueltaAfipDesde.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaVueltaAfip.HasValue && x.seg.FechaVueltaAfip.Value >= filtros.FechaVueltaAfipDesde.Value);
+
+            if (filtros.FechaVueltaAfipHasta.HasValue)
+                query = query.Where(x => x.seg != null && x.seg.FechaVueltaAfip.HasValue && x.seg.FechaVueltaAfip.Value <= filtros.FechaVueltaAfipHasta.Value);
+
+            // PAGINACIÓN Y PROYECCIÓN
+            var data = query
+                .OrderBy(x => x.cb.Id)
+                .Skip(filtros.Skip)
+                .Take(filtros.Take)
+                .Select(x => new ControlDeBoletosReporteSeguimientoConsultaDto
+                {
+                    Id = x.cb.Id,
+                    NegocioId = x.cb.NegocioId,
+                    ControlDeBoletosEstadoId = x.cb.ControlDeBoletosEstadoId,
+                    ControlDeBoletosEstado = x.cb.ControlDeBoletosEstado.Descripcion,
+                    EsConfirma = x.cb.EsConfirma,
+                    AltaIdLoteConfirma = x.cb.AltaIdLoteConfirma.HasValue ? x.cb.AltaIdLoteConfirma.Value.ToString() : null,
+                    IdentificadorConfirma = x.cb.IdentificadorConfirma.HasValue ? x.cb.IdentificadorConfirma.Value.ToString() : null,
+                    FechaCreacion = x.cb.FechaCreacion,
+                    FechaModificacion = x.cb.FechaModificacion,
+                    EstadoConfirmaId = x.cb.EstadoConfirmaId,
+                    FechaControlIniciado = x.cb.FechaControlIniciado,
+                    FechaControlFinalizado = x.cb.FechaControlFinalizado,
+                    FechaCertificacionCompletada = x.cb.FechaCertificacionCompletada,
+                    FechaRegistroDatosOblea = x.cb.FechaRegistroDatosOblea,
+                    MaterialId = x.cb.Negocio.MaterialId,
+                    Material = x.cb.Negocio.Material.Descripcion,
+                    BolsaCompraNetId = x.cb.Negocio.BolsaId ?? 0,
+                    BolsaCompraNet = x.cb.Negocio.Bolsa.Descripcion,
+                    ComercialId = x.cb.Negocio.ComercialId ?? 0,
+                    Comercial = x.cb.Negocio.Comercial.Nombres + " " + x.cb.Negocio.Comercial.Apellido,
+                    TipoBoleto = repositorio.Obtener<BoletoCompraNet>(x.cb.Negocio.BoletoId).Descripcion,
+                    ContratoSAP = x.cb.Negocio.ContratoSAP,
+                    ProveedorId = x.cb.Negocio.ProveedorId ?? 0,
+                    Proveedor = x.cb.Negocio.Proveedor.RazonSocial,
+                    PreCertificacionId = x.pre != null ? (int?)x.pre.Id : null,
+                    SeguimientoBoletoId = x.seg != null ? (int?)x.seg.Id : null,
+                    FechaCertificacion = x.pre != null ? (DateTime?)x.pre.FechaCertificacion : null,
+                    FechaVencimientoCertificacion = x.pre != null ? (DateTime?)x.pre.FechaVencimiento : null,
+                    FechaEnviadoFirma = x.seg != null ? x.seg.FechaEnviadoFirma : null,
+                    FechaEnvio = x.seg != null ? x.seg.FechaEnvio : null,
+                    FechaEnvioAfip = x.seg != null ? x.seg.FechaEnvioAfip : null,
+                    FechaEnvioBolsa = x.seg != null ? x.seg.FechaEnvioBolsa : null,
+                    FechaRecepBoleto = x.seg != null ? x.seg.FechaRecepBoleto : null,
+                    FechaRecibFirma = x.seg != null ? x.seg.FechaRecibFirma : null,
+                    FechaVueltaAfip = x.seg != null ? x.seg.FechaVueltaAfip : null,
+                    FechaVueltaBolsa = x.seg != null ? x.seg.FechaVueltaBolsa : null,
+                    FechaAcopio = x.seg != null ? x.seg.FechaAcopio : null
+                })
+                .ToList();
+
+            return data;
+        }
+
+        #endregion
+
+
         #region Metodo para cargar combos
         public List<BolsaCompraNet> GetBolsaCompraNet()
         {

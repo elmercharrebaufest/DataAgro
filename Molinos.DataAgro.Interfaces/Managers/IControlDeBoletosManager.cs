@@ -34,5 +34,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         Resultado RegistroDatosDeSeguimiento(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento);
         ControlDeBoletosDatosSeguimientoDto ObtenerDatosDeSeguimiento(int datosSeguimientoId);
         List<ControlDeBoletoTrackingDto> ObtenerTrackingBoletos(int controlDeBoletosId);
+        List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros);
     }
 }
