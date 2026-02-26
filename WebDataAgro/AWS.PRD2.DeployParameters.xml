@@ -19,7 +19,8 @@
 	<setParameter name="EmailInformeComercial Key" value="documentacion@molinosagro.com.ar" />
 	<setParameter name="SmtpAnonimo Key" value="S" />
 	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
-
+	<setParameter name="SISA_actualiza_nuevo_campo" value="1" />
+	
 	<setParameter name="SapPass Key" value="Data2015" />
 
 	<setParameter name="SinConexionSap Key" value="0" />
