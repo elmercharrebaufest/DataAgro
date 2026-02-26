@@ -33,7 +33,7 @@ namespace WebDataAgro.Jobs
 
             logger.Info("HANGFIRE - ProcessSisa - Iniciando");
             var str = ConfigurationManager.AppSettings["SISA"];
-            var SisaNewParameter = ConfigurationManager.AppSettings["SISA_actualiza_nuevo_campo"];
+            var SisaNewParameter = ConfigurationManager.AppSettings["SISA_con_campo_adicional"];
 
             var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
 
