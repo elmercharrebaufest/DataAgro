@@ -33,6 +33,7 @@ namespace WebDataAgro.Jobs
 
             logger.Info("HANGFIRE - ProcessSisa - Iniciando");
             var str = ConfigurationManager.AppSettings["SISA"];
+            var SisaNewParameter = ConfigurationManager.AppSettings["SISA_con_campo_adicional"];
 
             var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
 
@@ -69,13 +70,17 @@ namespace WebDataAgro.Jobs
                         sisaList.FechaNotifDFEEstado = !String.IsNullOrEmpty(sisa[4]) ? (DateTime?)DateTime.Parse(sisa[4]) : null;
                         sisaList.CBU = !String.IsNullOrEmpty(sisa[5]) ? sisa[5].Replace("\"", String.Empty) : String.Empty;
                         sisaList.FechaActCBU = !String.IsNullOrEmpty(sisa[6]) ? (DateTime?)DateTime.Parse(sisa[6]) : null;
-                        sisaList.CodCategoria = !String.IsNullOrEmpty(sisa[7]) ? Int32.Parse(sisa[7].Replace("\"", String.Empty)) : 0;
-                        sisaList.Categoria = !String.IsNullOrEmpty(sisa[8]) ? sisa[8].Replace("\"", String.Empty) : String.Empty;
-                        sisaList.SituacionCategoria = !String.IsNullOrEmpty(sisa[9]) ? sisa[9].Replace("\"", String.Empty) : String.Empty;
-                        sisaList.FechaVigenciaCategoria = !String.IsNullOrEmpty(sisa[10]) ? (DateTime?)DateTime.Parse(sisa[10]) : null;
-                        sisaList.FechaNotifDFECategoria = !String.IsNullOrEmpty(sisa[11]) ? (DateTime?)DateTime.Parse(sisa[11]) : null;
-                        sisaList.Observaciones = !String.IsNullOrEmpty(sisa[12]) ? sisa[12].Replace("\"", String.Empty) : String.Empty;
-                        sisaList.FechaGeneracion = !String.IsNullOrEmpty(sisa[13]) ? (DateTime?)DateTime.Parse(sisa[13]) : null;
+
+                        var n = SisaNewParameter == "1" ? 1 : 0;
+
+                        sisaList.CodCategoria = !String.IsNullOrEmpty(sisa[7 + n]) ? Int32.Parse(sisa[7 + n].Replace("\"", String.Empty)) : 0;
+                        sisaList.Categoria = !String.IsNullOrEmpty(sisa[8 + n]) ? sisa[8 + n].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.SituacionCategoria = !String.IsNullOrEmpty(sisa[9 + n]) ? sisa[9 + n].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.FechaVigenciaCategoria = !String.IsNullOrEmpty(sisa[10 + n]) ? (DateTime?)DateTime.Parse(sisa[10 + n]) : null;
+                        sisaList.FechaNotifDFECategoria = !String.IsNullOrEmpty(sisa[11 + n]) ? (DateTime?)DateTime.Parse(sisa[11 + n]) : null;
+                        sisaList.Observaciones = !String.IsNullOrEmpty(sisa[12 + n]) ? sisa[12 + n].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.FechaGeneracion = !String.IsNullOrEmpty(sisa[13 + n]) ? (DateTime?)DateTime.Parse(sisa[13 + n]) : null;
+
 
                         if (sisaList.FechaVigenciaEstado > DateTime.Now.Date || sisaList.FechaVigenciaCategoria > DateTime.Now.Date)
                         {
