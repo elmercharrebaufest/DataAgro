@@ -557,16 +557,18 @@ END;
 --    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
 --END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
-    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
-END;
+---- SE COMENTA POR ERROR: "Lock request time out period exceeded."
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
+--    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
+--END;
+
 -- FIN - Índices provistos por Algeiba
 
 IF NOT EXISTS (
