@@ -38,20 +38,28 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit, bool? corredor);
+
+        [OperationContract]
         ResultadoValidarProveedorComercial ValidarProveedorComercialNuevo(string cuit, bool? corredor, string cuitCorredor);
 
         [OperationContract]
         ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP);
+
         [OperationContract]
         ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP);
+
         [OperationContract]
         ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP);
+
         [OperationContract]
         ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP);
+
         [OperationContract]
         ResultadoSap AnulaFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP);
+
         [OperationContract]
         bool ProveedorApocrifo(string cuit);
+
         [OperationContract]
         decimal TraerTipoDeCambio(DateTime? fecha, string moneda, string typeOfRate = "M");
 
@@ -169,10 +177,10 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         RespuestaArchivoDto FormularioAltaNoGranos(ProveedorAltaDto oParam);
-        
+
         [OperationContract]
         RespuestaArchivoDto CartaDePresentacion(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios);
-        
+
         [OperationContract]
         RespuestaArchivoDto CamposSustentables(DeclaracionCampoSustentable datos);
 
