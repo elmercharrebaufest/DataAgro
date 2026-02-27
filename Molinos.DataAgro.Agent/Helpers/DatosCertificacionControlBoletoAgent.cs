@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string RegistrarDatosCertificacion(RegistroDatosCertificacionControlDeBoletosDto dto)
         {
+            string mensaje = string.Empty;
             // Modo prueba SAP
             if (valorPruebaSap)
             {
@@ -76,12 +77,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     logger.Debug(request.ToXml());
                     logger.Debug(response.ToXml());
                 }
-
+                mensaje = response.ExMensaje?.Trim();
                 return response.ExMensaje?.Trim();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error al registrar datos de certificación en SAP.");
+                logger.Error(ex, "Error al registrar datos de certificación en SAP");
                 throw;
             }
         }

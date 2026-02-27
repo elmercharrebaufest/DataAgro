@@ -37,7 +37,6 @@ var ControlDeBoletosSeguimiento = (function () {
     let controlFechaVueltaAfip = $("#frmSeguimientoControlBoleto #FechaVueltaAfip");
     let controlFechaVueltaBolsa = $("#frmSeguimientoControlBoleto #FechaVueltaBolsa");
     let controlFechaEnviadoFirma = $("#frmSeguimientoControlBoleto #FechaEnviadoFirma");
-    let controlFechaAcopio = $("#frmSeguimientoControlBoleto #FechaAcopio");
     let controlObsCtrlBoleto = $("#frmSeguimientoControlBoleto #ObsCtrlBoleto");
     let controlObsCtrlBoleto2 = $("#frmSeguimientoControlBoleto #ObsCtrlBoleto2");
 
@@ -148,7 +147,6 @@ var ControlDeBoletosSeguimiento = (function () {
             FechaVueltaAfip: controlFechaVueltaAfip.val(),
             FechaVueltaBolsa: controlFechaVueltaBolsa.val(),
             FechaEnviadoFirma: controlFechaEnviadoFirma.val(),
-            FechaAcopio: controlFechaAcopio.val(),
             ObsCtrlBoleto: controlObsCtrlBoleto.val(),
             ObsCtrlBoleto2: controlObsCtrlBoleto2.val()
         };
@@ -191,7 +189,6 @@ var ControlDeBoletosSeguimiento = (function () {
             controlFechaVueltaAfip.val(formatearFecha(response.FechaVueltaAfip));
             controlFechaVueltaBolsa.val(formatearFecha(response.FechaVueltaBolsa));
             controlFechaEnviadoFirma.val(formatearFecha(response.FechaEnviadoFirma));
-            controlFechaAcopio.val(formatearFecha(response.FechaAcopio));
 
             controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
             controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
@@ -218,7 +215,6 @@ var ControlDeBoletosSeguimiento = (function () {
         controlFechaVueltaAfip.val('');
         controlFechaVueltaBolsa.val('');
         controlFechaEnviadoFirma.val('');
-        controlFechaAcopio.val('');
     }
 
     return {
@@ -226,9 +222,8 @@ var ControlDeBoletosSeguimiento = (function () {
         abrir: function (SeguimientoBoletoId, ControlDeBoletosId) {
             state.SeguimientoBoletoId = SeguimientoBoletoId || 0;
             state.ControlDeBoletosId = ControlDeBoletosId;
-            console.log('SeguimientoBoletoId===>>', SeguimientoBoletoId);
-            console.log('ControlDeBoletosId===>>', ControlDeBoletosId);
             limpiarSeguimientoControlBoleto();
+            BlockUi('Cargando...');
 
             cargarDropdown(
                 config.urls.getBoletoCompraNet,
@@ -251,6 +246,7 @@ var ControlDeBoletosSeguimiento = (function () {
 
             $("#txtContrato").val(ControlDeBoletosId || "");
             $(config.modalId).modal("show");
+            setTimeout(function () { $.unblockUI() }, 100);
         },
 
         guardar: function () {
@@ -260,24 +256,30 @@ var ControlDeBoletosSeguimiento = (function () {
             try {
 
                 var errorValidacion = validarFechas();
-
                 if (errorValidacion) {
-                    alert(errorValidacion);
+                    MensAlerta(errorValidacion);
                     state.cargando = false;
                     return;
                 }
+                BlockUi('Guardando...');
                 var request = obtenerRequest();
-
                 var response = MSExecuteOnServer(
                     config.urls.createSeguimiento,
                     request
                 );
+                if (response != null) {
+                    $.unblockUI();
 
-                if (response && response.success) {
-                    alert("Éxito: " + response.message);
-                    this.cerrar();
-                } else {
-                    alert("Error: " + response.message);
+                    if (!response.success) {
+                        MensErr(response.message);
+                        return;
+                    }
+
+                    if (response.success) {
+                        MensInfo(response.message);
+                        this.cerrar();
+                    }
+
                 }
             }
             finally {

@@ -107,6 +107,7 @@
 
         abrir: function (PreCertificacionId, ControlDeBoletosId) {
 
+            BlockUi('Cargando...');
             state.ControlDeBoletosId = ControlDeBoletosId;
             state.PreCertificacionId = PreCertificacionId;
 
@@ -139,6 +140,7 @@
             }
 
             $(config.modalId).modal("show");
+            setTimeout(function () { $.unblockUI() }, 1000);
         },
 
         guardar: function () {
@@ -146,27 +148,32 @@
 
             var errores = validarFormulario();
             if (errores.length > 0) {
-                mostrarMensaje("Validación", errores.join("\n"), "warning");
+                MensAlerta(errores.join("<br>"));
                 return;
             }
 
             state.cargando = true;
 
             try {
+                BlockUi('Guardando...');
                 var request = obtenerRequest();
-
                 var response = MSExecuteOnServer(
                     config.urls.createPreCertificacion,
                     request
                 );
+                if (response != null) {
+                    $.unblockUI();
 
-                if (response && response.success) {
-                    mostrarMensaje("Éxito", response.message, "success");
-                    this.cerrar();
-                } else {
-                    mostrarMensaje("Error", response.message, "danger");
+                    if (!response.success) {
+                        MensErr(response.message);
+                        return;
+                    }
+
+                    if (response.success) {
+                        MensInfo(response.message);
+                        this.cerrar();
+                    }
                 }
-
             } finally {
                 state.cargando = false;
             }

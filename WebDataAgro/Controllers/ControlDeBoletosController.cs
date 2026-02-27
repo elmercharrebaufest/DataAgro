@@ -339,8 +339,9 @@ namespace WebDataAgro.Controllers
             try
             {
                 var resultado = _controlDeBoletosManager.RegistrarDatosPreCertificacion(controlDeBoletosPreCertificacion);
-                string mensaje = "Modificacion los datos de pre certificacion correctamente";
-                return Json(new { success = true, message = mensaje });
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Modificacion los datos de pre certificacion correctamente";
+                return Json(new { success = success, message = mensaje });
             }
             catch (Exception ex)
             {
@@ -375,8 +376,9 @@ namespace WebDataAgro.Controllers
             try
             {
                 var resultado = _controlDeBoletosManager.RegistroDatosDeSeguimiento(seguimientoControlDeBoleto);
-                string mensaje = "Modificacion los datos de seguimiento correctamente";
-                return Json(new { success = true, message = mensaje });
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Modificacion los datos de seguimiento correctamente";
+                return Json(new { success = success, message = mensaje });
             }
             catch (Exception ex)
             {
@@ -458,14 +460,10 @@ namespace WebDataAgro.Controllers
             {
                 controlDeBoletosModificacion.Usuario = PermisosHelper.ObtenerUsuario();
                 var resultado = _controlDeBoletosManager.ModificacionContrato(controlDeBoletosModificacion);
-                string mensaje = "Contrato modificado correctamente";
-                if (resultado.HayError)
-                {
-                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
-                    return Json(new { success = false, message = mensaje });
-                }
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Contrato modificado correctamente";
 
-                return Json(new { success = true, message = mensaje });
+                return Json(new { success = success, message = mensaje });
             }
             catch (Exception ex)
             {

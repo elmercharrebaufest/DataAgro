@@ -66,6 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
                 query = query.Where(x => string.Compare(x.cb.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
 
+
             if (filtros.MaterialId.HasValue)
                 query = query.Where(x => x.cb.Negocio.MaterialId == filtros.MaterialId.Value);
 
@@ -444,16 +445,28 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
 
                 #region Modificar Contrato en SAP
-                var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto();
-                controlDeBoletosModificarContrato.Cosecha = campana.Descripcion;
-                controlDeBoletosModificarContrato.Contrato = negocio.ContratoSAP;
-                controlDeBoletosModificarContrato.Clasificacion = clasificacion.Descripcion;
-                controlDeBoletosModificarContrato.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                controlDeBoletosModificarContrato.Hora = DateTime.Now.ToString("HH:mm:ss");
-                controlDeBoletosModificarContrato.Procedencia = procedencia.CodLocalidad;
-                controlDeBoletosModificarContrato.Provincia = provincia.ProvinciaId.ToString();
-                controlDeBoletosModificarContrato.Usuario = dto.Usuario;
-                modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
+                try
+                {
+                    var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto();
+                    controlDeBoletosModificarContrato.Cosecha = campana.Descripcion;
+                    controlDeBoletosModificarContrato.Contrato = negocio.ContratoSAP;
+                    controlDeBoletosModificarContrato.Clasificacion = clasificacion.Descripcion;
+                    controlDeBoletosModificarContrato.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    controlDeBoletosModificarContrato.Hora = DateTime.Now.ToString("HH:mm:ss");
+                    controlDeBoletosModificarContrato.Procedencia = procedencia.CodLocalidad;
+                    controlDeBoletosModificarContrato.Provincia = provincia.ProvinciaId.ToString();
+                    controlDeBoletosModificarContrato.Usuario = dto.Usuario;
+                    modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
+                }
+                catch (Exception ex)
+                {
+                    resultado.Errores.Add(new ErrorMessage()
+                    {
+                        Message = "Ocurrió un error al modificar el contrato en SAP"
+                    });
+                    logger.Error(ex.Message);
+                    return resultado;
+                }
                 #endregion
 
             }
@@ -483,7 +496,6 @@ namespace Molinos.DataAgro.Business.Managers
                 seguimientoControlDeBoletos.BoletoCompraNetId = controlDeBoletosSeguimiento.BoletoCompraNetId;
                 seguimientoControlDeBoletos.BolsaCompraNetId = controlDeBoletosSeguimiento.BolsaCompraNetId;
                 seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosSeguimiento.BolsaSellado;
-                seguimientoControlDeBoletos.FechaAcopio = controlDeBoletosSeguimiento.FechaAcopio;
                 seguimientoControlDeBoletos.FechaEnviadoFirma = controlDeBoletosSeguimiento.FechaEnviadoFirma;
                 seguimientoControlDeBoletos.FechaEnvio = controlDeBoletosSeguimiento.FechaEnvio;
                 seguimientoControlDeBoletos.FechaEnvioAfip = controlDeBoletosSeguimiento.FechaEnvioAfip;
@@ -508,8 +520,6 @@ namespace Molinos.DataAgro.Business.Managers
                     datosSeguimiento.BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId);
                     datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
                     datosSeguimiento.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
-
-                    datosSeguimiento.FechaAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio;
                     datosSeguimiento.FechaEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma;
                     datosSeguimiento.FechaEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio;
                     datosSeguimiento.FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip;
@@ -531,7 +541,6 @@ namespace Molinos.DataAgro.Business.Managers
                         BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId),
                         BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId),
                         BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
-                        FechaAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio,
                         FechaEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma,
                         FechaEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio,
                         FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip,
@@ -551,26 +560,38 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 #region Registro de Datos para Seguimiento
-                var seguimientoControlDeBoletos = new SeguimientoControlDeBoletosDto();
-                seguimientoControlDeBoletos.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId).CodigoSap;
-                seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
-                seguimientoControlDeBoletos.Contrato = repositorio.Obtener<Negocio>(repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId).NegocioId).ContratoSAP;
-                seguimientoControlDeBoletos.FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepBoleto?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecibFirma?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeVueltaAfip = controlDeBoletosDatosSeguimiento.FechaVueltaAfip?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FeVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaVueltaBolsa?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.FecAcopio = controlDeBoletosDatosSeguimiento.FechaAcopio?.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                seguimientoControlDeBoletos.Hora = DateTime.Now.ToString("HH:mm:ss");
-                seguimientoControlDeBoletos.ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto;
-                seguimientoControlDeBoletos.ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2;
-                seguimientoControlDeBoletos.TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId).Id.ToString("D2");
-                seguimientoControlDeBoletos.Usuario = string.Empty;
-                seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                try
+                {
+                    var seguimientoControlDeBoletos = new SeguimientoControlDeBoletosDto();
+                    seguimientoControlDeBoletos.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId).CodigoSap;
+                    seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
+                    seguimientoControlDeBoletos.Contrato = repositorio.Obtener<Negocio>(repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId).NegocioId).ContratoSAP;
+                    seguimientoControlDeBoletos.FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnviadoFirma?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeEnvio = controlDeBoletosDatosSeguimiento.FechaEnvio?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepBoleto?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecibFirma?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeVueltaAfip = controlDeBoletosDatosSeguimiento.FechaVueltaAfip?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FeVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaVueltaBolsa?.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.FecAcopio = string.Empty;
+                    seguimientoControlDeBoletos.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    seguimientoControlDeBoletos.Hora = DateTime.Now.ToString("HH:mm:ss");
+                    seguimientoControlDeBoletos.ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto;
+                    seguimientoControlDeBoletos.ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2;
+                    seguimientoControlDeBoletos.TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId).Id.ToString("D2");
+                    seguimientoControlDeBoletos.Usuario = string.Empty;
+                    seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                }
+                catch (Exception ex) {
+                    oResultado.Errores.Add(new ErrorMessage()
+                    {
+                        Message = "Error al registrar datos de seguimiento en SAP"
+                    });
+                    logger.Error(ex.Message);
+                    return oResultado;
+                }
+
                 #endregion
 
                 return oResultado;
@@ -641,24 +662,36 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 #region Registro de Datos para Certificación
-                var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
-                var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
-                var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletosPreCertificacion.ControlDeBoletosId);
-                
-                datosCertificacionCabeceraDto.Contrato = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId).ContratoSAP;
-                datosCertificacionCabeceraDto.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                datosCertificacionCabeceraDto.Hora = DateTime.Now.ToString("HH:mm:ss");
-                datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                datosCertificacionCabeceraDto.Usuario = string.Empty;
+                try
+                {
+                    var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+                    var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
+                    var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletosPreCertificacion.ControlDeBoletosId);
 
-                datosCertificacionDetalleDto.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId).CodigoSap;
-                datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
-                datosCertificacionDetalleDto.FeCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion.ToString("yyyy-MM-dd");
-                datosCertificacionDetalleDto.FeVencCerti = controlDeBoletosPreCertificacion.FechaVencimiento.ToString("yyyy-MM-dd");
-                datosCertificacionDetalleDto.Rechazado = string.Empty;
-                datosCertificacionDetalleDto.Tipo = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId).Codigo;
-                datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto>() { datosCertificacionDetalleDto };
-                this.datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                    datosCertificacionCabeceraDto.Contrato = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId).ContratoSAP;
+                    datosCertificacionCabeceraDto.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    datosCertificacionCabeceraDto.Hora = DateTime.Now.ToString("HH:mm:ss");
+                    datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                    datosCertificacionCabeceraDto.Usuario = string.Empty;
+
+                    datosCertificacionDetalleDto.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId).CodigoSap;
+                    datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
+                    datosCertificacionDetalleDto.FeCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion.ToString("yyyy-MM-dd");
+                    datosCertificacionDetalleDto.FeVencCerti = controlDeBoletosPreCertificacion.FechaVencimiento.ToString("yyyy-MM-dd");
+                    datosCertificacionDetalleDto.Rechazado = string.Empty;
+                    datosCertificacionDetalleDto.Tipo = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId).Codigo;
+                    datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto>() { datosCertificacionDetalleDto };
+                    this.datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                }
+                catch (Exception ex) {
+                    oResultado.Errores.Add(new ErrorMessage()
+                    {
+                        Message = "Error al registrar datos de certificación en SAP",
+                    });
+                    logger.Error(ex.Message);
+                    return oResultado;
+                }
+
                 #endregion
 
                 return oResultado;

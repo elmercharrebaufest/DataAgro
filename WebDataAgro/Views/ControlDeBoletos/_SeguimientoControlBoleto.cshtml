@@ -13,9 +13,7 @@
                     </h5>
                 </div>
             </div>
-
             <div class="modal-body">
-
                 <form id="frmSeguimientoControlBoleto">
 
                     <!-- DATOS GENERALES -->
@@ -50,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label>Fecha Envío Firmas</label>
-                            <input type="date" id="FechaEnvio" class="form-control" />
+                            <input type="date" id="FechaEnviadoFirma" class="form-control" />
                         </div>
                         <div class="col-md-4">
                             <label>Fecha Envío Obleado Bolsa</label>
@@ -65,6 +63,10 @@
                     <!-- 3️⃣ RECEPCIONES -->
                     <div class="row">
                         <div class="col-md-4">
+                            <label>Fecha Recepción Firmas</label>
+                            <input type="date" id="FechaRecibFirma" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
                             <label>Fecha Recepción Obleado Bolsa</label>
                             <input type="date" id="FechaVueltaBolsa" class="form-control" />
                         </div>
@@ -72,25 +74,19 @@
                             <label>Fecha Recepción Certificación AFIP</label>
                             <input type="date" id="FechaVueltaAfip" class="form-control" />
                         </div>
-                        <div class="col-md-4">
-                            <label>Fecha Recepción Firmas</label>
-                            <input type="date" id="FechaRecibFirma" class="form-control" />
-                        </div>
                     </div>
 
                     <!-- 4️⃣ CIERRE -->
                     <div class="row">
                         <div class="col-md-4">
                             <label>Fecha Envío Sellado</label>
-                            <input type="date" id="FechaEnviadoFirma" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Fecha Acopio</label>
-                            <input type="date" id="FechaAcopio" class="form-control" />
+                            <input type="date" id="FechaEnvio" class="form-control" />
                         </div>
                         <div class="col-md-4">
                             <label>Rechazado AFIP</label>
-                            <input id="RechazadoAfip" class="form-control" />
+                            <div>
+                                <input id="RechazadoAfip" class="form-control" role="switch" type="checkbox" style="width: 20px;margin-top: 0px !important;margin-left: 0px !important;">
+                            </div>
                         </div>
                     </div>
                     <!-- OBSERVACIONES -->

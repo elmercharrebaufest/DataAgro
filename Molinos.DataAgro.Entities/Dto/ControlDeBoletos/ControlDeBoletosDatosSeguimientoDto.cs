@@ -21,7 +21,6 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public DateTime? FechaRecibFirma { get; set; }
         public DateTime? FechaVueltaAfip { get; set; }
         public DateTime? FechaVueltaBolsa { get; set; }
-        public DateTime? FechaAcopio { get; set; }
         public string ObsCtrlBoleto { get; set; }
         public string ObsCtrlBoleto2 { get; set; }
     }
