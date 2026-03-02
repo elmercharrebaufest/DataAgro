@@ -73,9 +73,9 @@
         var errores = [];
 
         if (!controlCosecha.val()) errores.push("Debe seleccionar una cosecha");
-
-        if (!controlProvincia.val())
-            errores.push("Debe seleccionar una provincia");
+        if (!controlProvincia.val()) errores.push("Debe seleccionar una provincia");
+        if (!controlClasificacion.val()) errores.push("Debe seleccionar una clasificacion");
+        if (!controlProcedencia.val()) errores.push("Debe seleccionar una procedencia");
 
         return errores;
     }
@@ -85,9 +85,11 @@
     // ======================
     return {
         abrir: function (NegocioId) {
+            BlockUi('Cargando...');
             state.negocioId = NegocioId;
             this.cargarContrato(state.negocioId);
             $("#modalModificarBoleto").modal("show");
+            setTimeout(function () { $.unblockUI() }, 1000);
         },
         cargarContrato: function (id) {
             const url = config.urls.getContrato + "?id=" + id;
@@ -137,21 +139,31 @@
 
             var errores = validarFormulario();
             if (errores.length > 0) {
-                mostrarMensaje("Validación", errores.join("<br>"), "warning");
+                MensAlerta(errores.join("<br>"));
                 return;
             }
 
             state.cargando = true;
             //mostrarSpinner(true);
             try {
+                BlockUi('Guardando...');
                 const request = obtenerRequest();
                 const response = MSExecuteOnServer(config.urls.updateContrato, request);
                 state.cargando = false;
-                //mostrarSpinner(false);
-                console.log(response);
                 if (response != null) {
                     $.unblockUI();
+
+                    if (!response.success) {
+                        MensErr(response.message);
+                        return;
+                    }
+
+                    if (response.success) {
+                        MensInfo(response.message);
+                        this.cerrar();
+                    }
                 }
+
                 $.unblockUI();
             } finally {
                 state.cargando = false;

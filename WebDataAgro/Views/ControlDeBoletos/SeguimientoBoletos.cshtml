@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/ControlDeBoletosReporteSeguimiento")
 }
 
-<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmPendienteControl">
+<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmReporteSeguimientoBoletos">
     <!-- Header Section -->
     <div class="row header-section">
         <div class="col-12">
@@ -208,9 +208,11 @@
     <!-- Results Section -->
     <div class="card results-card mt-3 fade-in">
         <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="results-summary">
+                <span class="badge badge-info" id="totalRegistros">0 registros</span>
+            </div>
         </div>
         <div class="card-body p-0">
-
             <!-- Grid Container -->
             <div id="boletos-grid" class="grid-container">
                 <div class="loading-spinner" id="loadingSpinner">

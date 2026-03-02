@@ -1,3 +1,4 @@
+
 // Control de Boletos - JavaScript optimizado para .NET Framework 4.7.2
 var ControlBoletosReporteSeguimiento = (function () {
     "use strict";
@@ -13,40 +14,40 @@ var ControlBoletosReporteSeguimiento = (function () {
         }
     };
 
-    let controlMaterial = $("#frmPendienteControl #materialId");
-    let controlProveedor = $("#frmPendienteControl #proveedorId");
-    let controlBolsaCompraNet = $("#frmPendienteControl #bolsaCompraNetId");
+    let controlMaterial = $("#frmReporteSeguimientoBoletos #materialId");
+    let controlProveedor = $("#frmReporteSeguimientoBoletos #proveedorId");
+    let controlBolsaCompraNet = $("#frmReporteSeguimientoBoletos #bolsaCompraNetId");
 
-    let controlNegocioSAPDesde = $("#frmPendienteControl #NegocioSAP-desde");
-    let controlNegocioSAPHasta = $("#frmPendienteControl #NegocioSAP-hasta");
+    let controlNegocioSAPDesde = $("#frmReporteSeguimientoBoletos #NegocioSAP-desde");
+    let controlNegocioSAPHasta = $("#frmReporteSeguimientoBoletos #NegocioSAP-hasta");
 
-    let controlFechaVueltaAfipHasta = $("#frmPendienteControl #fechaCertificacionDesde");
-    let controlFechaVueltaAfipDesde = $("#frmPendienteControl #fechaCertificacionHasta");
-    let controlFechaEnvioAfipHasta = $("#frmPendienteControl #fechaVencimientoCertificacionDesde");
-    let controlFechaEnvioAfipDesde = $("#frmPendienteControl #fechaVencimientoCertificacionHasta");
-    let controlFechaVueltaBolsaHasta = $("#frmPendienteControl #fechaRecepBoletoDesde");
-    let controlFechaVueltaBolsaDesde = $("#frmPendienteControl #fechaRecepBoletoHasta");
-    let controlFechaEnvioBolsaHasta = $("#frmPendienteControl #fechaEnviadoFirmaDesde");
-    let controlFechaEnvioBolsaDesde = $("#frmPendienteControl #fechaEnviadoFirmaHasta");
-    let controlFechaRecibFirmaHasta = $("#frmPendienteControl #fechaRecibFirmaDesde");
-    let controlFechaRecibFirmaDesde = $("#frmPendienteControl #fechaRecibFirmaHasta");
-    let controlFechaEnviadoFirmaHasta = $("#frmPendienteControl #fechaEnvioBolsaDesde");
-    let controlFechaEnviadoFirmaDesde = $("#frmPendienteControl #fechaEnvioBolsaHasta");
-    let controlFechaRecepBoletoHasta = $("#frmPendienteControl #fechaVueltaBolsaDesde");
-    let controlFechaRecepBoletoDesde = $("#frmPendienteControl #fechaVueltaBolsaHasta");
-    let controlFechaVencimientoCertificacionHasta = $("#frmPendienteControl #fechaEnvioAfipDesde");
-    let controlFechaVencimientoCertificacionDesde = $("#frmPendienteControl #fechaEnvioAfipHasta");
-    let controlFechaCertificacionHasta = $("#frmPendienteControl #fechaVueltaAfipDesde");
-    let controlFechaCertificacionDesde = $("#frmPendienteControl #fechaVueltaAfipHasta");
+    let controlFechaVueltaAfipHasta = $("#frmReporteSeguimientoBoletos #fechaCertificacionDesde");
+    let controlFechaVueltaAfipDesde = $("#frmReporteSeguimientoBoletos #fechaCertificacionHasta");
+    let controlFechaEnvioAfipHasta = $("#frmReporteSeguimientoBoletos #fechaVencimientoCertificacionDesde");
+    let controlFechaEnvioAfipDesde = $("#frmReporteSeguimientoBoletos #fechaVencimientoCertificacionHasta");
+    let controlFechaVueltaBolsaHasta = $("#frmReporteSeguimientoBoletos #fechaRecepBoletoDesde");
+    let controlFechaVueltaBolsaDesde = $("#frmReporteSeguimientoBoletos #fechaRecepBoletoHasta");
+    let controlFechaEnvioBolsaHasta = $("#frmReporteSeguimientoBoletos #fechaEnviadoFirmaDesde");
+    let controlFechaEnvioBolsaDesde = $("#frmReporteSeguimientoBoletos #fechaEnviadoFirmaHasta");
+    let controlFechaRecibFirmaHasta = $("#frmReporteSeguimientoBoletos #fechaRecibFirmaDesde");
+    let controlFechaRecibFirmaDesde = $("#frmReporteSeguimientoBoletos #fechaRecibFirmaHasta");
+    let controlFechaEnviadoFirmaHasta = $("#frmReporteSeguimientoBoletos #fechaEnvioBolsaDesde");
+    let controlFechaEnviadoFirmaDesde = $("#frmReporteSeguimientoBoletos #fechaEnvioBolsaHasta");
+    let controlFechaRecepBoletoHasta = $("#frmReporteSeguimientoBoletos #fechaVueltaBolsaDesde");
+    let controlFechaRecepBoletoDesde = $("#frmReporteSeguimientoBoletos #fechaVueltaBolsaHasta");
+    let controlFechaVencimientoCertificacionHasta = $("#frmReporteSeguimientoBoletos #fechaEnvioAfipDesde");
+    let controlFechaVencimientoCertificacionDesde = $("#frmReporteSeguimientoBoletos #fechaEnvioAfipHasta");
+    let controlFechaCertificacionHasta = $("#frmReporteSeguimientoBoletos #fechaVueltaAfipDesde");
+    let controlFechaCertificacionDesde = $("#frmReporteSeguimientoBoletos #fechaVueltaAfipHasta");
 
-    let controlFiltrarBoletos = $("#frmPendienteControl #filtrarBoletos");
-    let controlLimpiarFiltros = $("#frmPendienteControl #limpiarFiltros");
-    let controlExportarExcel = $("#frmPendienteControl #exportarExcel");
+    let controlFiltrarBoletos = $("#frmReporteSeguimientoBoletos #filtrarBoletos");
+    let controlLimpiarFiltros = $("#frmReporteSeguimientoBoletos #limpiarFiltros");
+    let controlExportarExcel = $("#frmReporteSeguimientoBoletos #exportarExcel");
 
-    let controlSelectAll = $("#frmPendienteControl #selectAll");
+    let controlSelectAll = $("#frmReporteSeguimientoBoletos #selectAll");
 
-    let controlIniciarControlMasivo = $("#frmPendienteControl #iniciarControlMasivo");
-    let controlFinalizarControlMasivo = $("#frmPendienteControl #finalizarControlMasivo");
+    let controlIniciarControlMasivo = $("#frmReporteSeguimientoBoletos #iniciarControlMasivo");
+    let controlFinalizarControlMasivo = $("#frmReporteSeguimientoBoletos #finalizarControlMasivo");
 
     var state = {
         grid: null,
@@ -178,7 +179,7 @@ var ControlBoletosReporteSeguimiento = (function () {
                 .on("click", function () {
                     self.exportarExcel();
                 });
-                         },
+        },
 
         autoFitSelectedColumns: function () {
             if (!state.grid) return;
@@ -227,11 +228,11 @@ var ControlBoletosReporteSeguimiento = (function () {
                                             take: options.take || 50,
                                             sort: options.sort || [],
                                             // Filtros personalizados
+                                            contratoSAPDesde: filtros.contratoSAPDesde,
+                                            contratoSAPHasta: filtros.contratoSAPHasta,
                                             materialId: filtros.materialId,
-                                            fechaCargaDesde: filtros.fechaCargaDesde,
-                                            fechaCargaHasta: filtros.fechaCargaHasta,
-                                            proveedor: filtros.proveedor,
                                             bolsaId: filtros.bolsaId,
+                                            proveedor: filtros.proveedor,
                                             fechaCertificacionDesde: filtros.fechaVueltaAfipHasta,
                                             fechaCertificacionHasta: filtros.fechaVueltaAfipDesde,
                                             fechaVencimientoCertificacionDesde: filtros.fechaEnvioAfipHasta,
@@ -439,6 +440,15 @@ var ControlBoletosReporteSeguimiento = (function () {
                     "danger",
                 );
                 mostrarSpinner(false);
+            }
+        },
+
+        actualizarContadores: function () {
+            if (state.grid) {
+                var total = state.grid.dataSource.total();
+                $("#totalRegistros").text(
+                    total + " registro" + (total !== 1 ? "s" : ""),
+                );
             }
         },
 
