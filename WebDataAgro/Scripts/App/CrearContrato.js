@@ -28,12 +28,14 @@ $(document).ready(function () {
     InicializarDatos();
     AutocompleteProcedencia();
     OcultarCamposAgente();
+    LimpiarCalidades()
     $("#material").data("kendoDropDownList").trigger("change");
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
 });
+
 
 function InicializarBordesRojos() {
     $("select.required-box, input.required-box").on("change", function (e) {
@@ -958,10 +960,7 @@ function InicializarElementos() {
             if ($("#material").val() !== "") {
                 CargarCampaniaPorMaterial($("#material").val());
                 CargarCalidadPorMaterial($("#material").val());
-                var iteraciones = viewModel.Calidades.length;
-                for (var i = 0; i < iteraciones; i++) {
-                    viewModel.Calidades.pop();
-                }
+                LimpiarCalidades();
             }
             if ($("#material").val() == Materiales.SOJA && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
                 $(".sojaSustentable").show();
@@ -3055,6 +3054,9 @@ function InicializarElementos() {
     if (ActivarSojaEUDR == "No") {
         $(".sojaEudr").hide();
     }
+
+
+
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -3298,6 +3300,21 @@ function LimpiarCalidades() {
     for (i = 0; i < iteracionesCalidades; i++) {
         viewModel.Calidades.pop();
     }
+
+    var cal = {
+        Id: 0,
+        CalidadEspecialDesc: "Dañados Predeterminado",
+        CalidadEspecialId: 1,
+        Valor: "0",
+        PorcentajeDesde: "0",
+        PorcentajeHasta: "5",
+        StandardDeCalidadId: 2,
+        Borrar: function () {
+            viewModel.Calidades.remove(this);
+        }
+    };
+    viewModel.Calidades.push(cal);
+
 }
 function LimpiarDescuentos() {
     var iteracionesDescuentos = viewModel.Descuentos.length;
@@ -4042,8 +4059,8 @@ function validarCalidad(calidad) {
         (calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
         errores.push('El Porcentaje es obligatorio');
     }
-    if (calidad.PorcentajeHasta > 50 && calidad.CalidadEspecialId == 1) {
-        errores.push('El Porcentaje Hasta no debe ser mayor a 50% para "Dañados"');
+    if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 1) {
+        errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Dañados"');
     }
     if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 2) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Granos verdes"');
@@ -4505,7 +4522,7 @@ function CargarDatosEditar(contrato, hijo) {
         viewModel.Descuentos.push(descuentoKendo);
     });
 
-    calidadesDto = contrato.Calidades;
+    calidadesDto = contrato.Calidades.filter(p => p.CalidadEspecialDesc == "Dañados Predeterminado");
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
             Id: hijo ? 0 : calidad.Id,
