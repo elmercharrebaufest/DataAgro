@@ -15,7 +15,8 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
         public override ResultadoClausula DevolverClausulas(ClausulaConfirmaUno clausula)
         {
             var res = new ResultadoClausula();
-            res.Texto = $"Destino de la mercadería: {clausula.Basico.DestinoDescripcion}. Origen: {clausula.Basico.Localidad}, {clausula.Basico.Provincia}.";
+            //res.Texto = $"Destino de la mercadería: {clausula.Basico.DestinoDescripcion}. Origen: {clausula.Basico.Localidad}, {clausula.Basico.Provincia}.";
+            res.Texto = $"Destino de la mercadería: {clausula.Basico.DestinoLocalidad}, {clausula.Basico.DestinoProvincia}. Origen: {clausula.Basico.Localidad}, {clausula.Basico.Provincia}.";
             return res;
         }
     }
