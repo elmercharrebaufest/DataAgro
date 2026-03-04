@@ -29,7 +29,7 @@
 	<setParameter name="AmbienteUATMOA Key" value="1" />
 	<setParameter name="AmbienteUATDA Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />
-	<setParameter name="SISA_con_campo_adicional" value="1" />
+	<setParameter name="SISA_con_campo_adicional" value="0" />
 
 	<setParameter name="Rg2300 Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG2300.LST" />
 	<setParameter name="Facacop Key" value="\\sapshareqadev\share\ftproot\transf\matprim\facacop.txt" />

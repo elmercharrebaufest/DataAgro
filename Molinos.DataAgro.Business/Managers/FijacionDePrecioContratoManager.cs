@@ -1889,11 +1889,11 @@ namespace Molinos.DataAgro.Business.Managers
                         var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion, typeOfRate);
                         if (negocio.MonedaId == "ARP  ")
                         {
-                            negocio.ImporteComision = negocio.ImporteComision * cambio;
+                            negocio.ImporteComision *= cambio;
                         }
                         else
                         {
-                            negocio.ImporteComision = negocio.ImporteComision / cambio;
+                            negocio.ImporteComision /= cambio;
                         }
                     }
                 }
@@ -1918,11 +1918,11 @@ namespace Molinos.DataAgro.Business.Managers
                                     var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion, typeOfRate);
                                     if (negocio.MonedaId == "ARP  ")
                                     {
-                                        negocio.ImporteComision = negocio.ImporteComision * cambio;
+                                        negocio.ImporteComision *= cambio;
                                     }
                                     else
                                     {
-                                        negocio.ImporteComision = negocio.ImporteComision / cambio;
+                                        negocio.ImporteComision /= cambio;
                                     }
                                 }
                             }
@@ -2051,7 +2051,7 @@ namespace Molinos.DataAgro.Business.Managers
             double final;
             double d10 = decimal.ToDouble(numero) / 10.00;
             final = Math.Round(d10 * 2, MidpointRounding.AwayFromZero) / 2;
-            final = final * 10;
+            final *= 10;
             return Convert.ToDecimal(final);
         }
 
@@ -2193,7 +2193,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public decimal CalcularImporteSiEsEnDolares(decimal importe, List<DatosFijacionDeContratoDto> afijar, FijacionDePrecioContrato fijacion, decimal cambio)
         {
-            decimal nuevoImporte = 0;
+            decimal nuevoImporte;
             if (afijar[0].MonedaSobrePrecio?.Trim() == fijacion.MonedaId.Trim())
             {
                 nuevoImporte = importe;

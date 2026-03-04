@@ -33,7 +33,7 @@ namespace WebDataAgro.Jobs
 
             logger.Info("HANGFIRE - ProcessSisa - Iniciando");
             var str = ConfigurationManager.AppSettings["SISA"];
-            var SisaNewParameter = ConfigurationManager.AppSettings["SISA_con_campo_adicional"];
+            var sisa_con_campo_adicional = ConfigurationManager.AppSettings["SISA_con_campo_adicional"];
 
             var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
 
@@ -71,7 +71,7 @@ namespace WebDataAgro.Jobs
                         sisaList.CBU = !String.IsNullOrEmpty(sisa[5]) ? sisa[5].Replace("\"", String.Empty) : String.Empty;
                         sisaList.FechaActCBU = !String.IsNullOrEmpty(sisa[6]) ? (DateTime?)DateTime.Parse(sisa[6]) : null;
 
-                        var n = SisaNewParameter == "1" ? 1 : 0;
+                        var n = sisa_con_campo_adicional == "1" ? 1 : 0;
 
                         sisaList.CodCategoria = !String.IsNullOrEmpty(sisa[7 + n]) ? Int32.Parse(sisa[7 + n].Replace("\"", String.Empty)) : 0;
                         sisaList.Categoria = !String.IsNullOrEmpty(sisa[8 + n]) ? sisa[8 + n].Replace("\"", String.Empty) : String.Empty;
