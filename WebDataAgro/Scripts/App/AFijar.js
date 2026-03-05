@@ -2135,13 +2135,13 @@ function CambioCalidades(calidades) {
             $(".calidad-no-grado").hide();
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(0);
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
+            $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }
@@ -2877,7 +2877,7 @@ function AgregarCalidades() {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
             }
             else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-                $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
             }
         }
         return err;
