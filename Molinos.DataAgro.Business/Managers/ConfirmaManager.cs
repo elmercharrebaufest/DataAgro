@@ -237,25 +237,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                         try
                         {
-                            // Enviar a RFC
-                            logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
-                            var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
-                            logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
-
-                            if (respuestaRFC != "Se actualizan correctamente los datos")
-                            {
-                                resultado.confirmasGenerados.Add(DevolverDto(contrato, false, respuestaRFC));
-                                continue;
-                            }
-
-                            // Guardar XML
-                            var xml = GenerarXML(contrato, clausulas);
-                            var rutaArchivo = Path.Combine(pathConfirmas, tempConfirma.Archivo);
-                            File.WriteAllBytes(rutaArchivo, xml);
-
-                            // Guardar en BD
-                            var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
-
                             // Procesar Web Service si está habilitado
                             if (usarWebServiceConfirma && activarConfirmaWS == "1")
                             {
@@ -274,10 +255,30 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     if (tieneItemsWS && confirmaAltaLoteBorradorResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
                                     {
+                                        // Enviar a RFC
+                                        logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
+                                        var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
+                                        logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
+
+                                        if (respuestaRFC != "Se actualizan correctamente los datos")
+                                        {
+                                            resultado.confirmasGenerados.Add(DevolverDto(contrato, false, respuestaRFC));
+                                            continue;
+                                        }
+
+                                        // Guardar XML
+                                        var xml = GenerarXML(contrato, clausulas);
+                                        var rutaArchivo = Path.Combine(pathConfirmas, tempConfirma.Archivo);
+                                        File.WriteAllBytes(rutaArchivo, xml);
+
+                                        // Guardar en BD
+                                        var nuevoConfirma = repositorio.Agregar(ConvertirDtoAEntidad(tempConfirma));
+
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;
                                         //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
                                         controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteBorradorResult.altaIdLote));
+                                                                       
                                     }
                                     else
                                     {
@@ -862,9 +863,9 @@ namespace Molinos.DataAgro.Business.Managers
                                                             "Pago Anticipado" : (
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
-                                                                (contrato.PagoDiferido == true) ?
-                                                                    "Días de diferimiento contra mercadería entregada" :
-                                                                    "72 hs contra mercadería descargada."
+                                                                (contrato.PagoDiferido == true) ? 
+                                                                    $"{contrato.Dias_Pesificado} {(contrato.Dias_Pesificado > 1 ? "Días" : "Dia")} de diferimiento contra mercadería entregada"
+                                                                    : "72 hs contra mercadería descargada."
                                                                 )
                                                             )
                                                         ) : null
