@@ -3134,13 +3134,13 @@ function CambioCalidades(calidades) {
             $(".calidad-no-grado").hide();
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(0);
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
+            $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }
@@ -3300,21 +3300,6 @@ function LimpiarCalidades() {
     for (i = 0; i < iteracionesCalidades; i++) {
         viewModel.Calidades.pop();
     }
-
-    var cal = {
-        Id: 0,
-        CalidadEspecialDesc: "Dañados Predeterminado",
-        CalidadEspecialId: 1,
-        Valor: "0",
-        PorcentajeDesde: "0",
-        PorcentajeHasta: "5",
-        StandardDeCalidadId: 2,
-        Borrar: function () {
-            viewModel.Calidades.remove(this);
-        }
-    };
-    viewModel.Calidades.push(cal);
-
 }
 function LimpiarDescuentos() {
     var iteracionesDescuentos = viewModel.Descuentos.length;
@@ -4030,7 +4015,7 @@ function AgregarCalidades() {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
             }
             else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
-                $("#valorEspecialesId").data("kendoNumericTextBox").value('1');
+                $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
             }
         }
         return err;
