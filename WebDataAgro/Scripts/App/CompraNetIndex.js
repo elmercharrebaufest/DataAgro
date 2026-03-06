@@ -293,7 +293,9 @@ function botonConfirmadoTilde(dataItem, icono, esModalVisualizar) {
             "'" + mensaje + "'" + ',' +
             "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
             "'" + dataItem.ServicioModificado + "'" + ',' +
-            "'" + dataItem.DolarExportador + "'" +
+            "'" + dataItem.DolarExportador + "'" + ',' +
+            "'" + dataItem.KgMaximo + "'" + ',' +
+            "'" + dataItem.Cantidad + "'" +
             ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
     } else {
         return "<div</div>";
@@ -2261,7 +2263,8 @@ function ObtenerDatosModalConError() {
     Finalizar(objFinalizado);
 }
 
-function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId, acuerdoId, agenteId, fasonId, mensaje, posicion, servicioModificado, dolarExportador) {
+function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId, acuerdoId, agenteId, fasonId, mensaje, posicion, servicioModificado, dolarExportador,
+kgmaximos , cantidad ) {
     $(".modal-title-confirmadoTilde").empty();
 
     if (tipoId === '3') {
@@ -2280,7 +2283,16 @@ function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContra
         $("#contratoModalConTilde").val(contratoId);
         $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + contratoId);
     }
+    if (kgmaximos != 0 && kgmaximos != 30 * cantidad / 100 && kgmaximos != 30000) {
+        $(".KGmaximoModificado").show()
+    } else
+    {
+        $(".KGmaximoModificado").hide()
+    }
+
     $("#mensajeModalConTilde").html(mensaje);
+
+    
 
     if (servicioModificado == 'true') {
         $(".calidadModificadaManual").show();
