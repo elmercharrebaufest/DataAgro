@@ -11,12 +11,16 @@
     <meta content="" name="author" />
     <link rel="shortcut icon" href="/favicon.png" />
 
+    <!-- bootstrap.min.css desde CDN -->
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">*@
     @Styles.Render("~/Content/bootstrap/css")
+
     @Styles.Render("~/Content/plugins/css")
     @Styles.Render("~/Content/layouts/css")
     @Styles.Render("~/Content/kendo/css")
     @Styles.Render("~/Content/mastersoft/css")
-
+    <!-- jquery-1.12.4 desde CDN -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/plugins")
     @Scripts.Render("~/bundles/layouts")
@@ -34,7 +38,8 @@
     <link href="~/Content/SiteResponsive.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/jquery.multiselect.css" rel="stylesheet" type="text/css" />
     <link href="~/Scripts/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    @*<link href="~/Content/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" type="text/css" />
 
 
     @RenderSection("styles", required: false)
@@ -42,10 +47,21 @@
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase-messaging.js"></script>
     <script type="text/javascript" src="~/Scripts/App/layout.js?v=@DateTime.Now.Ticks"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.multiselect.js"></script>
+
+    @*<script type="text/javascript" src="~/Scripts/jquery-ui-1.12.1/jquery-ui.js"></script>*@
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.min.js"></script>
+
+    @*<script type="text/javascript" src="~/Scripts/jquery.multiselect.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multiselect-widget/1.13/jquery.multiselect.min.js" integrity="sha512-lmPVXdB9xBDENtXb1mTPQbrch9cWtFekwsRmOLsvUkKY4gU3z25kBUpyGb++PbL6rXkzbBm0tdja1+4k9CxIGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script type="text/javascript" src="~/Scripts/jquery.multiselect.filter.js"></script>
+
+    <!-- bootstrap.min.js desde CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     @Scripts.Render("~/bundles/bootstrap")
+    <!-- jquery.bootstrap.wizard.min.js desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap-wizard/1.0.0/jquery.bootstrap.wizard.min.js" integrity="sha512-k4dyrwcF6SFxjrtCEwmH5tuyPth3jBMOJhrcAH5dCMqhNMH5xy9ocSzP4P6UywieoYWLR8KioquEu3sD+DNt5g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="~/Scripts/App/PCFToken.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125418413-1"></script>*@
@@ -57,10 +73,10 @@
 
         gtag('config', 'UA-125418413-1', { 'user_id' : '@global_asax.GlobalVariables.IdActiveDirectory'});
     </script>
-    
+
     <script type="text/javascript">
         $(document).ajaxError(function (event, jqXHR) {
-            if (jqXHR.status === 401 ) {
+            if (jqXHR.status === 401) {
                 window.location.href = '/';
             }
             if (jqXHR.status === 409) {
