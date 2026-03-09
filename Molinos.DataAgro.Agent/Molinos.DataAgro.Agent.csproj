@@ -366,6 +366,12 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ConfirmaQAConsultaDocumentos\ConsultaDocumentosService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\Molinos.DataAgro.Agent.ConfirmaQAConsultaDocumentos.consultaDocumentosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConfirmaQAConsultaDocumentos\Molinos.DataAgro.Agent.ConfirmaQAConsultaDocumentos.DocumentosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ConfirmaQAConsultaEmpresas\ConsultaEmpresasService.wsdl" />
     <None Include="Service References\ConfirmaQAConsultaLote\ConsultaLoteDocumentosService.wsdl" />
     <None Include="Service References\ConfirmaQAConsultaLote\Molinos.DataAgro.Agent.ConfirmaQAConsultaLote.consultaLoteResponse.datasource">
@@ -375,6 +381,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\ConsultaDocumentoTrackingInteraccionesFechasService.wsdl" />
+    <None Include="Service References\ConfirmaQAConsultaTrackingInteraccionesFecha\Molinos.DataAgro.Agent.ConfirmaQAConsultaTrackingInteraccionesFecha.consultaDocumentosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ConfirmaQALoteBorradorService\LoteBorradorService.wsdl" />
     <None Include="Service References\ConfirmaQALoteBorradorService\Molinos.DataAgro.Agent.ConfirmaQALoteBorradorService.altaLoteResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
