@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -143,7 +143,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -175,7 +175,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSLoteDocumentosSchema")]
     public enum ItemItemInfoWorkflow {
@@ -206,7 +206,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -309,7 +309,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema")]
     public enum altaItemAltaEstadoDocumento {
@@ -340,7 +340,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -456,7 +456,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema")]
     public enum altaLoteResultAltaEstado {
@@ -475,7 +475,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsultaLoteResponseSchema")]
     public enum altaLoteResultAltaEstadoLote {
@@ -498,90 +498,18 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class ProduccionComitente : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
-    public partial class DetalleDocumentoConsignacionPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema")]
+    public partial class DetalleDocumentoFijarPrecioRofex : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Parte[] partesField;
         
-        private DetalleDocumentoConsignacionPrecioHechoDetalleContrato detalleContratoField;
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoFijarPrecioRofexDetalleContrato detalleContratoField;
         
         private Clausula[] clausulasField;
         
@@ -599,8 +527,21 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoConsignacionPrecioHechoDetalleContrato DetalleContrato {
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoFijarPrecioRofexDetalleContrato DetalleContrato {
             get {
                 return this.detalleContratoField;
             }
@@ -611,7 +552,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
         [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
         public Clausula[] Clausulas {
             get {
@@ -634,7 +575,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -722,7 +663,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -769,7 +710,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     
     /// <remarks/>
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(PagoAOrdenDe))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -829,7 +770,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -852,7 +793,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
     public enum codigoParte {
@@ -871,360 +812,66 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
-    public partial class DetalleDocumentoConsignacionPrecioHechoDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class FirmanteVendedor : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private TCaption comisionPorConsignatarioField;
+        private TCaption numeroDocumentoField;
         
-        private Producto productoField;
+        private TCaption nombreField;
         
-        private TCaption descAdicionalField;
+        private TCaption apellidoField;
         
-        private TCaption fechaConcertacionField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCodLista monedaField;
-        
-        private string precioField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private ProduccionComitente produccionComitenteField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
-        
-        private SioGranos sioGranosField;
-        
-        private string captionField;
+        private TCaption emailField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption ComisionPorConsignatario {
+        public TCaption NumeroDocumento {
             get {
-                return this.comisionPorConsignatarioField;
+                return this.numeroDocumentoField;
             }
             set {
-                this.comisionPorConsignatarioField = value;
-                this.RaisePropertyChanged("ComisionPorConsignatario");
+                this.numeroDocumentoField = value;
+                this.RaisePropertyChanged("NumeroDocumento");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public Producto Producto {
+        public TCaption Nombre {
             get {
-                return this.productoField;
+                return this.nombreField;
             }
             set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
+                this.nombreField = value;
+                this.RaisePropertyChanged("Nombre");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption DescAdicional {
+        public TCaption Apellido {
             get {
-                return this.descAdicionalField;
+                return this.apellidoField;
             }
             set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
+                this.apellidoField = value;
+                this.RaisePropertyChanged("Apellido");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption FechaConcertacion {
+        public TCaption Email {
             get {
-                return this.fechaConcertacionField;
+                return this.emailField;
             }
             set {
-                this.fechaConcertacionField = value;
-                this.RaisePropertyChanged("FechaConcertacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public TCodLista Moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string Precio {
-            get {
-                return this.precioField;
-            }
-            set {
-                this.precioField = value;
-                this.RaisePropertyChanged("Precio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public ProduccionComitente ProduccionComitente {
-            get {
-                return this.produccionComitenteField;
-            }
-            set {
-                this.produccionComitenteField = value;
-                this.RaisePropertyChanged("ProduccionComitente");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
-            get {
-                return this.operacionExentaImpSantaFeField;
-            }
-            set {
-                this.operacionExentaImpSantaFeField = value;
-                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
+                this.emailField = value;
+                this.RaisePropertyChanged("Email");
             }
         }
         
@@ -1239,3834 +886,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Producto : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string codConvField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodConv {
-            get {
-                return this.codConvField;
-            }
-            set {
-                this.codConvField = value;
-                this.RaisePropertyChanged("CodConv");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class TCodLista : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Calidad : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCodLista condicionesCalidadField;
-        
-        private TCaption otrasCondicionesCalidadField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public TCodLista CondicionesCalidad {
-            get {
-                return this.condicionesCalidadField;
-            }
-            set {
-                this.condicionesCalidadField = value;
-                this.RaisePropertyChanged("CondicionesCalidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public TCaption OtrasCondicionesCalidad {
-            get {
-                return this.otrasCondicionesCalidadField;
-            }
-            set {
-                this.otrasCondicionesCalidadField = value;
-                this.RaisePropertyChanged("OtrasCondicionesCalidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Entrega : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption entregaDesdeField;
-        
-        private TCaption entregaHastaField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption EntregaDesde {
-            get {
-                return this.entregaDesdeField;
-            }
-            set {
-                this.entregaDesdeField = value;
-                this.RaisePropertyChanged("EntregaDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption EntregaHasta {
-            get {
-                return this.entregaHastaField;
-            }
-            set {
-                this.entregaHastaField = value;
-                this.RaisePropertyChanged("EntregaHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Origen : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private OrigenLocalidadOrigen localidadOrigenField;
-        
-        private TCodCaption provinciaOrigenField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public OrigenLocalidadOrigen LocalidadOrigen {
-            get {
-                return this.localidadOrigenField;
-            }
-            set {
-                this.localidadOrigenField = value;
-                this.RaisePropertyChanged("LocalidadOrigen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCodCaption ProvinciaOrigen {
-            get {
-                return this.provinciaOrigenField;
-            }
-            set {
-                this.provinciaOrigenField = value;
-                this.RaisePropertyChanged("ProvinciaOrigen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class OrigenLocalidadOrigen : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string captionField;
-        
-        private string localidadTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string LocalidadText {
-            get {
-                return this.localidadTextField;
-            }
-            set {
-                this.localidadTextField = value;
-                this.RaisePropertyChanged("LocalidadText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Pagos : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption fechaCondicionPagoField;
-        
-        private TCaption lugarPagoField;
-        
-        private PagoAOrdenDe pagoAOrdenDeField;
-        
-        private TCaption porcPagoField;
-        
-        private TCodCaption provinciaPagoField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption FechaCondicionPago {
-            get {
-                return this.fechaCondicionPagoField;
-            }
-            set {
-                this.fechaCondicionPagoField = value;
-                this.RaisePropertyChanged("FechaCondicionPago");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption LugarPago {
-            get {
-                return this.lugarPagoField;
-            }
-            set {
-                this.lugarPagoField = value;
-                this.RaisePropertyChanged("LugarPago");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public PagoAOrdenDe PagoAOrdenDe {
-            get {
-                return this.pagoAOrdenDeField;
-            }
-            set {
-                this.pagoAOrdenDeField = value;
-                this.RaisePropertyChanged("PagoAOrdenDe");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption PorcPago {
-            get {
-                return this.porcPagoField;
-            }
-            set {
-                this.porcPagoField = value;
-                this.RaisePropertyChanged("PorcPago");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCodCaption ProvinciaPago {
-            get {
-                return this.provinciaPagoField;
-            }
-            set {
-                this.provinciaPagoField = value;
-                this.RaisePropertyChanged("ProvinciaPago");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class OperacionExentaImpSantaFe : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string captionField;
-        
-        private string codListaField;
-        
-        private string operacionExentaImpSantaFeTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string OperacionExentaImpSantaFeText {
-            get {
-                return this.operacionExentaImpSantaFeTextField;
-            }
-            set {
-                this.operacionExentaImpSantaFeTextField = value;
-                this.RaisePropertyChanged("OperacionExentaImpSantaFeText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class SioGranos : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string numeroDeclaracionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string NumeroDeclaracion {
-            get {
-                return this.numeroDeclaracionField;
-            }
-            set {
-                this.numeroDeclaracionField = value;
-                this.RaisePropertyChanged("NumeroDeclaracion");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Clausula : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string ordenField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string Orden {
-            get {
-                return this.ordenField;
-            }
-            set {
-                this.ordenField = value;
-                this.RaisePropertyChanged("Orden");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
-    public partial class DocumentoConsignacionPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoConsignacionPrecioHecho detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoConsignacionPrecioHecho DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class CabeceraDocumento : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCodLista bolsaField;
-        
-        private TCodLista tipoDocumentoField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCodLista Bolsa {
-            get {
-                return this.bolsaField;
-            }
-            set {
-                this.bolsaField = value;
-                this.RaisePropertyChanged("Bolsa");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCodLista TipoDocumento {
-            get {
-                return this.tipoDocumentoField;
-            }
-            set {
-                this.tipoDocumentoField = value;
-                this.RaisePropertyChanged("TipoDocumento");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
-    public partial class DetalleDocumentoOIVPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private ParteOIV[] partesField;
-        
-        private DetalleDocumentoOIVPrecioHechoDocumentoDetalle documentoDetalleField;
-        
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
-        public ParteOIV[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVPrecioHechoDocumentoDetalle DocumentoDetalle {
-            get {
-                return this.documentoDetalleField;
-            }
-            set {
-                this.documentoDetalleField = value;
-                this.RaisePropertyChanged("DocumentoDetalle");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class ParteOIV : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption nroInternoField;
-        
-        private TCodCaption cUITField;
-        
-        private codigoParteOIV codListaField;
-        
-        private bool codListaFieldSpecified;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption NroInterno {
-            get {
-                return this.nroInternoField;
-            }
-            set {
-                this.nroInternoField = value;
-                this.RaisePropertyChanged("NroInterno");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCodCaption CUIT {
-            get {
-                return this.cUITField;
-            }
-            set {
-                this.cUITField = value;
-                this.RaisePropertyChanged("CUIT");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public codigoParteOIV CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CodListaSpecified {
-            get {
-                return this.codListaFieldSpecified;
-            }
-            set {
-                this.codListaFieldSpecified = value;
-                this.RaisePropertyChanged("CodListaSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public enum codigoParteOIV {
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1")]
-        Item1,
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("2")]
-        Item2,
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("3")]
-        Item3,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
-    public partial class DetalleDocumentoOIVPrecioHechoDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption comisionPorDestinatarioField;
-        
-        private Producto productoField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption fechaInicioTramiteField;
-        
-        private TCaption vigenciaField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCodLista monedaField;
-        
-        private string precioField;
-        
-        private TCaption montoImponibleField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente produccionOferenteField;
-        
-        private DecisionPagoVoluntario decisionPagoVoluntarioField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private TCodLista entregadeMercaderiaField;
-        
-        private SioGranos sioGranosField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption ComisionPorDestinatario {
-            get {
-                return this.comisionPorDestinatarioField;
-            }
-            set {
-                this.comisionPorDestinatarioField = value;
-                this.RaisePropertyChanged("ComisionPorDestinatario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public Producto Producto {
-            get {
-                return this.productoField;
-            }
-            set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption FechaInicioTramite {
-            get {
-                return this.fechaInicioTramiteField;
-            }
-            set {
-                this.fechaInicioTramiteField = value;
-                this.RaisePropertyChanged("FechaInicioTramite");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption Vigencia {
-            get {
-                return this.vigenciaField;
-            }
-            set {
-                this.vigenciaField = value;
-                this.RaisePropertyChanged("Vigencia");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCodLista Moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public string Precio {
-            get {
-                return this.precioField;
-            }
-            set {
-                this.precioField = value;
-                this.RaisePropertyChanged("Precio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public TCaption MontoImponible {
-            get {
-                return this.montoImponibleField;
-            }
-            set {
-                this.montoImponibleField = value;
-                this.RaisePropertyChanged("MontoImponible");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente ProduccionOferente {
-            get {
-                return this.produccionOferenteField;
-            }
-            set {
-                this.produccionOferenteField = value;
-                this.RaisePropertyChanged("ProduccionOferente");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public DecisionPagoVoluntario DecisionPagoVoluntario {
-            get {
-                return this.decisionPagoVoluntarioField;
-            }
-            set {
-                this.decisionPagoVoluntarioField = value;
-                this.RaisePropertyChanged("DecisionPagoVoluntario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public TCodLista EntregadeMercaderia {
-            get {
-                return this.entregadeMercaderiaField;
-            }
-            set {
-                this.entregadeMercaderiaField = value;
-                this.RaisePropertyChanged("EntregadeMercaderia");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=26)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
-    public partial class DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class DecisionPagoVoluntario : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string fondoFederalTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string FondoFederalText {
-            get {
-                return this.fondoFederalTextField;
-            }
-            set {
-                this.fondoFederalTextField = value;
-                this.RaisePropertyChanged("FondoFederalText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
-    public partial class DocumentoOIVPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoOIVPrecioHecho detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVPrecioHecho DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
-    public partial class DetalleDocumentoOIVFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private ParteOIV[] partesField;
-        
-        private DetalleDocumentoOIVFijarPrecioDocumentoDetalle documentoDetalleField;
-        
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
-        public ParteOIV[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVFijarPrecioDocumentoDetalle DocumentoDetalle {
-            get {
-                return this.documentoDetalleField;
-            }
-            set {
-                this.documentoDetalleField = value;
-                this.RaisePropertyChanged("DocumentoDetalle");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
-    public partial class DetalleDocumentoOIVFijarPrecioDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Producto productoField;
-        
-        private TCaption fechaInicioTramiteField;
-        
-        private TCaption vigenciaField;
-        
-        private TCodLista monedaField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption montoImponibleField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCaption comisionPorDestinatarioField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private Fijacion fijacionField;
-        
-        private DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente produccionOferenteField;
-        
-        private DecisionPagoVoluntario decisionPagoVoluntarioField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private SioGranos sioGranosField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public Producto Producto {
-            get {
-                return this.productoField;
-            }
-            set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FechaInicioTramite {
-            get {
-                return this.fechaInicioTramiteField;
-            }
-            set {
-                this.fechaInicioTramiteField = value;
-                this.RaisePropertyChanged("FechaInicioTramite");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption Vigencia {
-            get {
-                return this.vigenciaField;
-            }
-            set {
-                this.vigenciaField = value;
-                this.RaisePropertyChanged("Vigencia");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCodLista Moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCaption MontoImponible {
-            get {
-                return this.montoImponibleField;
-            }
-            set {
-                this.montoImponibleField = value;
-                this.RaisePropertyChanged("MontoImponible");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public TCaption ComisionPorDestinatario {
-            get {
-                return this.comisionPorDestinatarioField;
-            }
-            set {
-                this.comisionPorDestinatarioField = value;
-                this.RaisePropertyChanged("ComisionPorDestinatario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public Fijacion Fijacion {
-            get {
-                return this.fijacionField;
-            }
-            set {
-                this.fijacionField = value;
-                this.RaisePropertyChanged("Fijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente ProduccionOferente {
-            get {
-                return this.produccionOferenteField;
-            }
-            set {
-                this.produccionOferenteField = value;
-                this.RaisePropertyChanged("ProduccionOferente");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public DecisionPagoVoluntario DecisionPagoVoluntario {
-            get {
-                return this.decisionPagoVoluntarioField;
-            }
-            set {
-                this.decisionPagoVoluntarioField = value;
-                this.RaisePropertyChanged("DecisionPagoVoluntario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Fijacion : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption fijMinimaField;
-        
-        private TCaption fijMaximaField;
-        
-        private TCodCaption unidadMedidaFijacionField;
-        
-        private TCodCaption fijPeriodoField;
-        
-        private TCaption fijFecDesdeField;
-        
-        private TCaption fijFecHastaField;
-        
-        private TCaption porcMultaIncumplimientoField;
-        
-        private TCodCaption comunicacionFijacionField;
-        
-        private TCodCaption pizarraFijacionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption FijMinima {
-            get {
-                return this.fijMinimaField;
-            }
-            set {
-                this.fijMinimaField = value;
-                this.RaisePropertyChanged("FijMinima");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FijMaxima {
-            get {
-                return this.fijMaximaField;
-            }
-            set {
-                this.fijMaximaField = value;
-                this.RaisePropertyChanged("FijMaxima");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCodCaption UnidadMedidaFijacion {
-            get {
-                return this.unidadMedidaFijacionField;
-            }
-            set {
-                this.unidadMedidaFijacionField = value;
-                this.RaisePropertyChanged("UnidadMedidaFijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCodCaption FijPeriodo {
-            get {
-                return this.fijPeriodoField;
-            }
-            set {
-                this.fijPeriodoField = value;
-                this.RaisePropertyChanged("FijPeriodo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption FijFecDesde {
-            get {
-                return this.fijFecDesdeField;
-            }
-            set {
-                this.fijFecDesdeField = value;
-                this.RaisePropertyChanged("FijFecDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCaption FijFecHasta {
-            get {
-                return this.fijFecHastaField;
-            }
-            set {
-                this.fijFecHastaField = value;
-                this.RaisePropertyChanged("FijFecHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCaption PorcMultaIncumplimiento {
-            get {
-                return this.porcMultaIncumplimientoField;
-            }
-            set {
-                this.porcMultaIncumplimientoField = value;
-                this.RaisePropertyChanged("PorcMultaIncumplimiento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCodCaption ComunicacionFijacion {
-            get {
-                return this.comunicacionFijacionField;
-            }
-            set {
-                this.comunicacionFijacionField = value;
-                this.RaisePropertyChanged("ComunicacionFijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCodCaption PizarraFijacion {
-            get {
-                return this.pizarraFijacionField;
-            }
-            set {
-                this.pizarraFijacionField = value;
-                this.RaisePropertyChanged("PizarraFijacion");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
-    public partial class DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
-    public partial class DocumentoOIVFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoOIVFijarPrecio detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVFijarPrecio DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
-    public partial class DetalleDocumentoFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Parte[] partesField;
-        
-        private DetalleDocumentoFijarPrecioDetalleContrato detalleContratoField;
-        
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Parte[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoFijarPrecioDetalleContrato DetalleContrato {
-            get {
-                return this.detalleContratoField;
-            }
-            set {
-                this.detalleContratoField = value;
-                this.RaisePropertyChanged("DetalleContrato");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
-    public partial class DetalleDocumentoFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Producto productoField;
-        
-        private TCaption fechaConcertacionField;
-        
-        private TCodLista monedaField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption montoImponibleField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCaption comisionPorCompradorField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private Fijacion fijacionField;
-        
-        private DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor produccionVendedorField;
-        
-        private DecisionPagoVoluntario decisionPagoVoluntarioField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
-        
-        private SioGranos sioGranosField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public Producto Producto {
-            get {
-                return this.productoField;
-            }
-            set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FechaConcertacion {
-            get {
-                return this.fechaConcertacionField;
-            }
-            set {
-                this.fechaConcertacionField = value;
-                this.RaisePropertyChanged("FechaConcertacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCodLista Moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption MontoImponible {
-            get {
-                return this.montoImponibleField;
-            }
-            set {
-                this.montoImponibleField = value;
-                this.RaisePropertyChanged("MontoImponible");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCaption ComisionPorComprador {
-            get {
-                return this.comisionPorCompradorField;
-            }
-            set {
-                this.comisionPorCompradorField = value;
-                this.RaisePropertyChanged("ComisionPorComprador");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public Fijacion Fijacion {
-            get {
-                return this.fijacionField;
-            }
-            set {
-                this.fijacionField = value;
-                this.RaisePropertyChanged("Fijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor ProduccionVendedor {
-            get {
-                return this.produccionVendedorField;
-            }
-            set {
-                this.produccionVendedorField = value;
-                this.RaisePropertyChanged("ProduccionVendedor");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public DecisionPagoVoluntario DecisionPagoVoluntario {
-            get {
-                return this.decisionPagoVoluntarioField;
-            }
-            set {
-                this.decisionPagoVoluntarioField = value;
-                this.RaisePropertyChanged("DecisionPagoVoluntario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
-        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
-            get {
-                return this.operacionExentaImpSantaFeField;
-            }
-            set {
-                this.operacionExentaImpSantaFeField = value;
-                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
-    public partial class DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
-    public partial class DocumentoFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoFijarPrecio detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoFijarPrecio DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofex : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private ParteOIV[] partesField;
-        
-        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle documentoDetalleField;
-        
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
-        public ParteOIV[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle DocumentoDetalle {
-            get {
-                return this.documentoDetalleField;
-            }
-            set {
-                this.documentoDetalleField = value;
-                this.RaisePropertyChanged("DocumentoDetalle");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Producto productoField;
-        
-        private TCaption fechaInicioTramiteField;
-        
-        private TCaption vigenciaField;
-        
-        private TCodLista monedaField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption montoImponibleField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCaption comisionPorDestinatarioField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion fijacionField;
-        
-        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente produccionOferenteField;
-        
-        private DecisionPagoVoluntario decisionPagoVoluntarioField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private SioGranos sioGranosField;
-        
-        private string captionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public Producto Producto {
-            get {
-                return this.productoField;
-            }
-            set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FechaInicioTramite {
-            get {
-                return this.fechaInicioTramiteField;
-            }
-            set {
-                this.fechaInicioTramiteField = value;
-                this.RaisePropertyChanged("FechaInicioTramite");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption Vigencia {
-            get {
-                return this.vigenciaField;
-            }
-            set {
-                this.vigenciaField = value;
-                this.RaisePropertyChanged("Vigencia");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCodLista Moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCaption MontoImponible {
-            get {
-                return this.montoImponibleField;
-            }
-            set {
-                this.montoImponibleField = value;
-                this.RaisePropertyChanged("MontoImponible");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public TCaption ComisionPorDestinatario {
-            get {
-                return this.comisionPorDestinatarioField;
-            }
-            set {
-                this.comisionPorDestinatarioField = value;
-                this.RaisePropertyChanged("ComisionPorDestinatario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion Fijacion {
-            get {
-                return this.fijacionField;
-            }
-            set {
-                this.fijacionField = value;
-                this.RaisePropertyChanged("Fijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente ProduccionOferente {
-            get {
-                return this.produccionOferenteField;
-            }
-            set {
-                this.produccionOferenteField = value;
-                this.RaisePropertyChanged("ProduccionOferente");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public DecisionPagoVoluntario DecisionPagoVoluntario {
-            get {
-                return this.decisionPagoVoluntarioField;
-            }
-            set {
-                this.decisionPagoVoluntarioField = value;
-                this.RaisePropertyChanged("DecisionPagoVoluntario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private TCaption fijMinimaField;
-        
-        private TCaption fijMaximaField;
-        
-        private TCodCaption unidadMedidaFijacionField;
-        
-        private TCodCaption fijPeriodoField;
-        
-        private TCaption fijFecDesde1Field;
-        
-        private TCaption fijFecHasta1Field;
-        
-        private TFecha fechaPosicionRofex1Field;
-        
-        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 indiceRofex1Field;
-        
-        private TCaption fijFecDesde2Field;
-        
-        private TCaption fijFecHasta2Field;
-        
-        private TFecha fechaPosicionRofex2Field;
-        
-        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 indiceRofex2Field;
-        
-        private TCaption porcMultaIncumplimientoField;
-        
-        private TCodCaption comunicacionFijacionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public TCaption FijMinima {
-            get {
-                return this.fijMinimaField;
-            }
-            set {
-                this.fijMinimaField = value;
-                this.RaisePropertyChanged("FijMinima");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FijMaxima {
-            get {
-                return this.fijMaximaField;
-            }
-            set {
-                this.fijMaximaField = value;
-                this.RaisePropertyChanged("FijMaxima");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCodCaption UnidadMedidaFijacion {
-            get {
-                return this.unidadMedidaFijacionField;
-            }
-            set {
-                this.unidadMedidaFijacionField = value;
-                this.RaisePropertyChanged("UnidadMedidaFijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCodCaption FijPeriodo {
-            get {
-                return this.fijPeriodoField;
-            }
-            set {
-                this.fijPeriodoField = value;
-                this.RaisePropertyChanged("FijPeriodo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption FijFecDesde1 {
-            get {
-                return this.fijFecDesde1Field;
-            }
-            set {
-                this.fijFecDesde1Field = value;
-                this.RaisePropertyChanged("FijFecDesde1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCaption FijFecHasta1 {
-            get {
-                return this.fijFecHasta1Field;
-            }
-            set {
-                this.fijFecHasta1Field = value;
-                this.RaisePropertyChanged("FijFecHasta1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TFecha FechaPosicionRofex1 {
-            get {
-                return this.fechaPosicionRofex1Field;
-            }
-            set {
-                this.fechaPosicionRofex1Field = value;
-                this.RaisePropertyChanged("FechaPosicionRofex1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 IndiceRofex1 {
-            get {
-                return this.indiceRofex1Field;
-            }
-            set {
-                this.indiceRofex1Field = value;
-                this.RaisePropertyChanged("IndiceRofex1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCaption FijFecDesde2 {
-            get {
-                return this.fijFecDesde2Field;
-            }
-            set {
-                this.fijFecDesde2Field = value;
-                this.RaisePropertyChanged("FijFecDesde2");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public TCaption FijFecHasta2 {
-            get {
-                return this.fijFecHasta2Field;
-            }
-            set {
-                this.fijFecHasta2Field = value;
-                this.RaisePropertyChanged("FijFecHasta2");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public TFecha FechaPosicionRofex2 {
-            get {
-                return this.fechaPosicionRofex2Field;
-            }
-            set {
-                this.fechaPosicionRofex2Field = value;
-                this.RaisePropertyChanged("FechaPosicionRofex2");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 IndiceRofex2 {
-            get {
-                return this.indiceRofex2Field;
-            }
-            set {
-                this.indiceRofex2Field = value;
-                this.RaisePropertyChanged("IndiceRofex2");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCaption PorcMultaIncumplimiento {
-            get {
-                return this.porcMultaIncumplimientoField;
-            }
-            set {
-                this.porcMultaIncumplimientoField = value;
-                this.RaisePropertyChanged("PorcMultaIncumplimiento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public TCodCaption ComunicacionFijacion {
-            get {
-                return this.comunicacionFijacionField;
-            }
-            set {
-                this.comunicacionFijacionField = value;
-                this.RaisePropertyChanged("ComunicacionFijacion");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class TFecha : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string mesField;
-        
-        private string anioField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Mes {
-            get {
-                return this.mesField;
-            }
-            set {
-                this.mesField = value;
-                this.RaisePropertyChanged("Mes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Anio {
-            get {
-                return this.anioField;
-            }
-            set {
-                this.anioField = value;
-                this.RaisePropertyChanged("Anio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codigoField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Codigo {
-            get {
-                return this.codigoField;
-            }
-            set {
-                this.codigoField = value;
-                this.RaisePropertyChanged("Codigo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codigoField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Codigo {
-            get {
-                return this.codigoField;
-            }
-            set {
-                this.codigoField = value;
-                this.RaisePropertyChanged("Codigo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
-    public partial class DocumentoOIVPrecioFijarRofex : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoOIVPrecioFijarRofex detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoOIVPrecioFijarRofex DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioRofexSchema")]
-    public partial class DetalleDocumentoFijarPrecioRofex : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Parte[] partesField;
-        
-        private DetalleDocumentoFijarPrecioRofexDetalleContrato detalleContratoField;
-        
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Parte[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoFijarPrecioRofexDetalleContrato DetalleContrato {
-            get {
-                return this.detalleContratoField;
-            }
-            set {
-                this.detalleContratoField = value;
-                this.RaisePropertyChanged("DetalleContrato");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5462,7 +1282,441 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Producto : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string codConvField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodConv {
+            get {
+                return this.codConvField;
+            }
+            set {
+                this.codConvField = value;
+                this.RaisePropertyChanged("CodConv");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class TCodLista : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Calidad : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCodLista condicionesCalidadField;
+        
+        private TCaption otrasCondicionesCalidadField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public TCodLista CondicionesCalidad {
+            get {
+                return this.condicionesCalidadField;
+            }
+            set {
+                this.condicionesCalidadField = value;
+                this.RaisePropertyChanged("CondicionesCalidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public TCaption OtrasCondicionesCalidad {
+            get {
+                return this.otrasCondicionesCalidadField;
+            }
+            set {
+                this.otrasCondicionesCalidadField = value;
+                this.RaisePropertyChanged("OtrasCondicionesCalidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Entrega : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption entregaDesdeField;
+        
+        private TCaption entregaHastaField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption EntregaDesde {
+            get {
+                return this.entregaDesdeField;
+            }
+            set {
+                this.entregaDesdeField = value;
+                this.RaisePropertyChanged("EntregaDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption EntregaHasta {
+            get {
+                return this.entregaHastaField;
+            }
+            set {
+                this.entregaHastaField = value;
+                this.RaisePropertyChanged("EntregaHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Origen : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private OrigenLocalidadOrigen localidadOrigenField;
+        
+        private TCodCaption provinciaOrigenField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public OrigenLocalidadOrigen LocalidadOrigen {
+            get {
+                return this.localidadOrigenField;
+            }
+            set {
+                this.localidadOrigenField = value;
+                this.RaisePropertyChanged("LocalidadOrigen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCodCaption ProvinciaOrigen {
+            get {
+                return this.provinciaOrigenField;
+            }
+            set {
+                this.provinciaOrigenField = value;
+                this.RaisePropertyChanged("ProvinciaOrigen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class OrigenLocalidadOrigen : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string captionField;
+        
+        private string localidadTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string LocalidadText {
+            get {
+                return this.localidadTextField;
+            }
+            set {
+                this.localidadTextField = value;
+                this.RaisePropertyChanged("LocalidadText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Pagos : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption fechaCondicionPagoField;
+        
+        private TCaption lugarPagoField;
+        
+        private PagoAOrdenDe pagoAOrdenDeField;
+        
+        private TCaption porcPagoField;
+        
+        private TCodCaption provinciaPagoField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption FechaCondicionPago {
+            get {
+                return this.fechaCondicionPagoField;
+            }
+            set {
+                this.fechaCondicionPagoField = value;
+                this.RaisePropertyChanged("FechaCondicionPago");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption LugarPago {
+            get {
+                return this.lugarPagoField;
+            }
+            set {
+                this.lugarPagoField = value;
+                this.RaisePropertyChanged("LugarPago");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public PagoAOrdenDe PagoAOrdenDe {
+            get {
+                return this.pagoAOrdenDeField;
+            }
+            set {
+                this.pagoAOrdenDeField = value;
+                this.RaisePropertyChanged("PagoAOrdenDe");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption PorcPago {
+            get {
+                return this.porcPagoField;
+            }
+            set {
+                this.porcPagoField = value;
+                this.RaisePropertyChanged("PorcPago");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCodCaption ProvinciaPago {
+            get {
+                return this.provinciaPagoField;
+            }
+            set {
+                this.provinciaPagoField = value;
+                this.RaisePropertyChanged("ProvinciaPago");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5690,7 +1944,67 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class TFecha : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string mesField;
+        
+        private string anioField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Mes {
+            get {
+                return this.mesField;
+            }
+            set {
+                this.mesField = value;
+                this.RaisePropertyChanged("Mes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Anio {
+            get {
+                return this.anioField;
+            }
+            set {
+                this.anioField = value;
+                this.RaisePropertyChanged("Anio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5736,7 +2050,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5782,7 +2096,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5856,7 +2170,233 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class DecisionPagoVoluntario : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string fondoFederalTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string FondoFederalText {
+            get {
+                return this.fondoFederalTextField;
+            }
+            set {
+                this.fondoFederalTextField = value;
+                this.RaisePropertyChanged("FondoFederalText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class OperacionExentaImpSantaFe : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string captionField;
+        
+        private string codListaField;
+        
+        private string operacionExentaImpSantaFeTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string OperacionExentaImpSantaFeText {
+            get {
+                return this.operacionExentaImpSantaFeTextField;
+            }
+            set {
+                this.operacionExentaImpSantaFeTextField = value;
+                this.RaisePropertyChanged("OperacionExentaImpSantaFeText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class SioGranos : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string numeroDeclaracionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string NumeroDeclaracion {
+            get {
+                return this.numeroDeclaracionField;
+            }
+            set {
+                this.numeroDeclaracionField = value;
+                this.RaisePropertyChanged("NumeroDeclaracion");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Clausula : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string ordenField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string Orden {
+            get {
+                return this.ordenField;
+            }
+            set {
+                this.ordenField = value;
+                this.RaisePropertyChanged("Orden");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5916,422 +2456,52 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
-    public partial class DetalleDocumentoConsignacionFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class CabeceraDocumento : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private Parte[] partesField;
+        private TCodLista bolsaField;
         
-        private DetalleDocumentoConsignacionFijarPrecioDetalleContrato detalleContratoField;
+        private TCodLista tipoDocumentoField;
         
-        private Clausula[] clausulasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Parte[] Partes {
-            get {
-                return this.partesField;
-            }
-            set {
-                this.partesField = value;
-                this.RaisePropertyChanged("Partes");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoConsignacionFijarPrecioDetalleContrato DetalleContrato {
-            get {
-                return this.detalleContratoField;
-            }
-            set {
-                this.detalleContratoField = value;
-                this.RaisePropertyChanged("DetalleContrato");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Clausula[] Clausulas {
-            get {
-                return this.clausulasField;
-            }
-            set {
-                this.clausulasField = value;
-                this.RaisePropertyChanged("Clausulas");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
-    public partial class DetalleDocumentoConsignacionFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Producto productoField;
-        
-        private TCaption fechaConcertacionField;
-        
-        private TCodLista monedaField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption montoImponibleField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCaption cantidadDesdeField;
-        
-        private TCaption cantidadHastaField;
-        
-        private TCodLista cosechaField;
-        
-        private TCodLista ajusteField;
-        
-        private TCaption cantCamionesField;
-        
-        private TCaption comisionPorConsignatarioField;
-        
-        private Calidad calidadField;
-        
-        private TCodCaption medioTransporteField;
-        
-        private Entrega entregasField;
-        
-        private Origen origenField;
-        
-        private TCodCaption destinoField;
-        
-        private TCodCaption provinciaInstrumentacionField;
-        
-        private Pagos pagosField;
-        
-        private Fijacion fijacionField;
-        
-        private DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente produccionComitenteField;
-        
-        private TCodLista tipoOperacionField;
-        
-        private SioGranos sioGranosField;
-        
-        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
-        
-        private string captionField;
+        private TCodLista modalidadAltaField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public Producto Producto {
+        public TCodLista Bolsa {
             get {
-                return this.productoField;
+                return this.bolsaField;
             }
             set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
+                this.bolsaField = value;
+                this.RaisePropertyChanged("Bolsa");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FechaConcertacion {
+        public TCodLista TipoDocumento {
             get {
-                return this.fechaConcertacionField;
+                return this.tipoDocumentoField;
             }
             set {
-                this.fechaConcertacionField = value;
-                this.RaisePropertyChanged("FechaConcertacion");
+                this.tipoDocumentoField = value;
+                this.RaisePropertyChanged("TipoDocumento");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCodLista Moneda {
+        public TCodLista ModalidadAlta {
             get {
-                return this.monedaField;
+                return this.modalidadAltaField;
             }
             set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption MontoImponible {
-            get {
-                return this.montoImponibleField;
-            }
-            set {
-                this.montoImponibleField = value;
-                this.RaisePropertyChanged("MontoImponible");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCaption CantidadDesde {
-            get {
-                return this.cantidadDesdeField;
-            }
-            set {
-                this.cantidadDesdeField = value;
-                this.RaisePropertyChanged("CantidadDesde");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCaption CantidadHasta {
-            get {
-                return this.cantidadHastaField;
-            }
-            set {
-                this.cantidadHastaField = value;
-                this.RaisePropertyChanged("CantidadHasta");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public TCodLista Cosecha {
-            get {
-                return this.cosechaField;
-            }
-            set {
-                this.cosechaField = value;
-                this.RaisePropertyChanged("Cosecha");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public TCodLista Ajuste {
-            get {
-                return this.ajusteField;
-            }
-            set {
-                this.ajusteField = value;
-                this.RaisePropertyChanged("Ajuste");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public TCaption CantCamiones {
-            get {
-                return this.cantCamionesField;
-            }
-            set {
-                this.cantCamionesField = value;
-                this.RaisePropertyChanged("CantCamiones");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public TCaption ComisionPorConsignatario {
-            get {
-                return this.comisionPorConsignatarioField;
-            }
-            set {
-                this.comisionPorConsignatarioField = value;
-                this.RaisePropertyChanged("ComisionPorConsignatario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public Calidad Calidad {
-            get {
-                return this.calidadField;
-            }
-            set {
-                this.calidadField = value;
-                this.RaisePropertyChanged("Calidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public TCodCaption MedioTransporte {
-            get {
-                return this.medioTransporteField;
-            }
-            set {
-                this.medioTransporteField = value;
-                this.RaisePropertyChanged("MedioTransporte");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public Entrega Entregas {
-            get {
-                return this.entregasField;
-            }
-            set {
-                this.entregasField = value;
-                this.RaisePropertyChanged("Entregas");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public Origen Origen {
-            get {
-                return this.origenField;
-            }
-            set {
-                this.origenField = value;
-                this.RaisePropertyChanged("Origen");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public TCodCaption Destino {
-            get {
-                return this.destinoField;
-            }
-            set {
-                this.destinoField = value;
-                this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public TCodCaption ProvinciaInstrumentacion {
-            get {
-                return this.provinciaInstrumentacionField;
-            }
-            set {
-                this.provinciaInstrumentacionField = value;
-                this.RaisePropertyChanged("ProvinciaInstrumentacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public Pagos Pagos {
-            get {
-                return this.pagosField;
-            }
-            set {
-                this.pagosField = value;
-                this.RaisePropertyChanged("Pagos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public Fijacion Fijacion {
-            get {
-                return this.fijacionField;
-            }
-            set {
-                this.fijacionField = value;
-                this.RaisePropertyChanged("Fijacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente ProduccionComitente {
-            get {
-                return this.produccionComitenteField;
-            }
-            set {
-                this.produccionComitenteField = value;
-                this.RaisePropertyChanged("ProduccionComitente");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public TCodLista TipoOperacion {
-            get {
-                return this.tipoOperacionField;
-            }
-            set {
-                this.tipoOperacionField = value;
-                this.RaisePropertyChanged("TipoOperacion");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public SioGranos SioGranos {
-            get {
-                return this.sioGranosField;
-            }
-            set {
-                this.sioGranosField = value;
-                this.RaisePropertyChanged("SioGranos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
-            get {
-                return this.operacionExentaImpSantaFeField;
-            }
-            set {
-                this.operacionExentaImpSantaFeField = value;
-                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
+                this.modalidadAltaField = value;
+                this.RaisePropertyChanged("ModalidadAlta");
             }
         }
         
@@ -6346,141 +2516,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
-    public partial class DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string captionField;
-        
-        private string clausulaTextField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Caption {
-            get {
-                return this.captionField;
-            }
-            set {
-                this.captionField = value;
-                this.RaisePropertyChanged("Caption");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ClausulaText {
-            get {
-                return this.clausulaTextField;
-            }
-            set {
-                this.clausulaTextField = value;
-                this.RaisePropertyChanged("ClausulaText");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
-    public partial class DocumentoConsignacionFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private CabeceraDocumento cabeceraDocumentoField;
-        
-        private DetalleDocumentoConsignacionFijarPrecio detalleDocumentoField;
-        
-        private string idField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public CabeceraDocumento CabeceraDocumento {
-            get {
-                return this.cabeceraDocumentoField;
-            }
-            set {
-                this.cabeceraDocumentoField = value;
-                this.RaisePropertyChanged("CabeceraDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoConsignacionFijarPrecio DetalleDocumento {
-            get {
-                return this.detalleDocumentoField;
-            }
-            set {
-                this.detalleDocumentoField = value;
-                this.RaisePropertyChanged("DetalleDocumento");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Id {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-                this.RaisePropertyChanged("Id");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -6488,6 +2524,8 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     public partial class DetalleDocumentoContratoPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Parte[] partesField;
+        
+        private FirmanteVendedor[] firmantesVendedorField;
         
         private DetalleDocumentoContratoPrecioHechoDetalleContrato detalleContratoField;
         
@@ -6507,7 +2545,20 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public DetalleDocumentoContratoPrecioHechoDetalleContrato DetalleContrato {
             get {
                 return this.detalleContratoField;
@@ -6519,7 +2570,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
         [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
         public Clausula[] Clausulas {
             get {
@@ -6542,7 +2593,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -6952,7 +3003,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -7012,16 +3063,18 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema")]
-    public partial class DetalleDocumentoPagoEspeciePrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
+    public partial class DetalleDocumentoConsignacionFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Parte[] partesField;
         
-        private DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato detalleContratoField;
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoConsignacionFijarPrecioDetalleContrato detalleContratoField;
         
         private Clausula[] clausulasField;
         
@@ -7039,14 +3092,1314 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato DetalleContrato {
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoConsignacionFijarPrecioDetalleContrato DetalleContrato {
             get {
                 return this.detalleContratoField;
             }
             set {
                 this.detalleContratoField = value;
                 this.RaisePropertyChanged("DetalleContrato");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
+    public partial class DetalleDocumentoConsignacionFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Producto productoField;
+        
+        private TCaption fechaConcertacionField;
+        
+        private TCodLista monedaField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption montoImponibleField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCaption comisionPorConsignatarioField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private Pagos pagosField;
+        
+        private Fijacion fijacionField;
+        
+        private DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente produccionComitenteField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private SioGranos sioGranosField;
+        
+        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FechaConcertacion {
+            get {
+                return this.fechaConcertacionField;
+            }
+            set {
+                this.fechaConcertacionField = value;
+                this.RaisePropertyChanged("FechaConcertacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption MontoImponible {
+            get {
+                return this.montoImponibleField;
+            }
+            set {
+                this.montoImponibleField = value;
+                this.RaisePropertyChanged("MontoImponible");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public TCaption ComisionPorConsignatario {
+            get {
+                return this.comisionPorConsignatarioField;
+            }
+            set {
+                this.comisionPorConsignatarioField = value;
+                this.RaisePropertyChanged("ComisionPorConsignatario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public Pagos Pagos {
+            get {
+                return this.pagosField;
+            }
+            set {
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public Fijacion Fijacion {
+            get {
+                return this.fijacionField;
+            }
+            set {
+                this.fijacionField = value;
+                this.RaisePropertyChanged("Fijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente ProduccionComitente {
+            get {
+                return this.produccionComitenteField;
+            }
+            set {
+                this.produccionComitenteField = value;
+                this.RaisePropertyChanged("ProduccionComitente");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
+            get {
+                return this.operacionExentaImpSantaFeField;
+            }
+            set {
+                this.operacionExentaImpSantaFeField = value;
+                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Fijacion : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption fijMinimaField;
+        
+        private TCaption fijMaximaField;
+        
+        private TCodCaption unidadMedidaFijacionField;
+        
+        private TCodCaption fijPeriodoField;
+        
+        private TCaption fijFecDesdeField;
+        
+        private TCaption fijFecHastaField;
+        
+        private TCaption porcMultaIncumplimientoField;
+        
+        private TCodCaption comunicacionFijacionField;
+        
+        private TCodCaption pizarraFijacionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption FijMinima {
+            get {
+                return this.fijMinimaField;
+            }
+            set {
+                this.fijMinimaField = value;
+                this.RaisePropertyChanged("FijMinima");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FijMaxima {
+            get {
+                return this.fijMaximaField;
+            }
+            set {
+                this.fijMaximaField = value;
+                this.RaisePropertyChanged("FijMaxima");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCodCaption UnidadMedidaFijacion {
+            get {
+                return this.unidadMedidaFijacionField;
+            }
+            set {
+                this.unidadMedidaFijacionField = value;
+                this.RaisePropertyChanged("UnidadMedidaFijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCodCaption FijPeriodo {
+            get {
+                return this.fijPeriodoField;
+            }
+            set {
+                this.fijPeriodoField = value;
+                this.RaisePropertyChanged("FijPeriodo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption FijFecDesde {
+            get {
+                return this.fijFecDesdeField;
+            }
+            set {
+                this.fijFecDesdeField = value;
+                this.RaisePropertyChanged("FijFecDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCaption FijFecHasta {
+            get {
+                return this.fijFecHastaField;
+            }
+            set {
+                this.fijFecHastaField = value;
+                this.RaisePropertyChanged("FijFecHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCaption PorcMultaIncumplimiento {
+            get {
+                return this.porcMultaIncumplimientoField;
+            }
+            set {
+                this.porcMultaIncumplimientoField = value;
+                this.RaisePropertyChanged("PorcMultaIncumplimiento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCodCaption ComunicacionFijacion {
+            get {
+                return this.comunicacionFijacionField;
+            }
+            set {
+                this.comunicacionFijacionField = value;
+                this.RaisePropertyChanged("ComunicacionFijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCodCaption PizarraFijacion {
+            get {
+                return this.pizarraFijacionField;
+            }
+            set {
+                this.pizarraFijacionField = value;
+                this.RaisePropertyChanged("PizarraFijacion");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
+    public partial class DetalleDocumentoConsignacionFijarPrecioDetalleContratoProduccionComitente : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string clausulaTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
+            get {
+                return this.clausulaTextField;
+            }
+            set {
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionFijarPrecioSchema")]
+    public partial class DocumentoConsignacionFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoConsignacionFijarPrecio detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoConsignacionFijarPrecio DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class ProduccionComitente : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string clausulaTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
+            get {
+                return this.clausulaTextField;
+            }
+            set {
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
+    public partial class DetalleDocumentoConsignacionPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Parte[] partesField;
+        
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoConsignacionPrecioHechoDetalleContrato detalleContratoField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Parte[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoConsignacionPrecioHechoDetalleContrato DetalleContrato {
+            get {
+                return this.detalleContratoField;
+            }
+            set {
+                this.detalleContratoField = value;
+                this.RaisePropertyChanged("DetalleContrato");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
+    public partial class DetalleDocumentoConsignacionPrecioHechoDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption comisionPorConsignatarioField;
+        
+        private Producto productoField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption fechaConcertacionField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCodLista monedaField;
+        
+        private string precioField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private Pagos pagosField;
+        
+        private ProduccionComitente produccionComitenteField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
+        
+        private SioGranos sioGranosField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption ComisionPorConsignatario {
+            get {
+                return this.comisionPorConsignatarioField;
+            }
+            set {
+                this.comisionPorConsignatarioField = value;
+                this.RaisePropertyChanged("ComisionPorConsignatario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption FechaConcertacion {
+            get {
+                return this.fechaConcertacionField;
+            }
+            set {
+                this.fechaConcertacionField = value;
+                this.RaisePropertyChanged("FechaConcertacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string Precio {
+            get {
+                return this.precioField;
+            }
+            set {
+                this.precioField = value;
+                this.RaisePropertyChanged("Precio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public Pagos Pagos {
+            get {
+                return this.pagosField;
+            }
+            set {
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public ProduccionComitente ProduccionComitente {
+            get {
+                return this.produccionComitenteField;
+            }
+            set {
+                this.produccionComitenteField = value;
+                this.RaisePropertyChanged("ProduccionComitente");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
+            get {
+                return this.operacionExentaImpSantaFeField;
+            }
+            set {
+                this.operacionExentaImpSantaFeField = value;
+                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSConsignacionPrecioHechoSchema")]
+    public partial class DocumentoConsignacionPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoConsignacionPrecioHecho detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoConsignacionPrecioHecho DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofex : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private ParteOIV[] partesField;
+        
+        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle documentoDetalleField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
+        public ParteOIV[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle DocumentoDetalle {
+            get {
+                return this.documentoDetalleField;
+            }
+            set {
+                this.documentoDetalleField = value;
+                this.RaisePropertyChanged("DocumentoDetalle");
             }
         }
         
@@ -7074,7 +4427,3140 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class ParteOIV : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption nroInternoField;
+        
+        private TCodCaption cUITField;
+        
+        private codigoParteOIV codListaField;
+        
+        private bool codListaFieldSpecified;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption NroInterno {
+            get {
+                return this.nroInternoField;
+            }
+            set {
+                this.nroInternoField = value;
+                this.RaisePropertyChanged("NroInterno");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCodCaption CUIT {
+            get {
+                return this.cUITField;
+            }
+            set {
+                this.cUITField = value;
+                this.RaisePropertyChanged("CUIT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public codigoParteOIV CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool CodListaSpecified {
+            get {
+                return this.codListaFieldSpecified;
+            }
+            set {
+                this.codListaFieldSpecified = value;
+                this.RaisePropertyChanged("CodListaSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public enum codigoParteOIV {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("1")]
+        Item1,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("2")]
+        Item2,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("3")]
+        Item3,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Producto productoField;
+        
+        private TCaption fechaInicioTramiteField;
+        
+        private TCaption vigenciaField;
+        
+        private TCodLista monedaField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption montoImponibleField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCaption comisionPorDestinatarioField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private Pagos pagosField;
+        
+        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion fijacionField;
+        
+        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente produccionOferenteField;
+        
+        private DecisionPagoVoluntario decisionPagoVoluntarioField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private SioGranos sioGranosField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FechaInicioTramite {
+            get {
+                return this.fechaInicioTramiteField;
+            }
+            set {
+                this.fechaInicioTramiteField = value;
+                this.RaisePropertyChanged("FechaInicioTramite");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption Vigencia {
+            get {
+                return this.vigenciaField;
+            }
+            set {
+                this.vigenciaField = value;
+                this.RaisePropertyChanged("Vigencia");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCaption MontoImponible {
+            get {
+                return this.montoImponibleField;
+            }
+            set {
+                this.montoImponibleField = value;
+                this.RaisePropertyChanged("MontoImponible");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public TCaption ComisionPorDestinatario {
+            get {
+                return this.comisionPorDestinatarioField;
+            }
+            set {
+                this.comisionPorDestinatarioField = value;
+                this.RaisePropertyChanged("ComisionPorDestinatario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public Pagos Pagos {
+            get {
+                return this.pagosField;
+            }
+            set {
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion Fijacion {
+            get {
+                return this.fijacionField;
+            }
+            set {
+                this.fijacionField = value;
+                this.RaisePropertyChanged("Fijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente ProduccionOferente {
+            get {
+                return this.produccionOferenteField;
+            }
+            set {
+                this.produccionOferenteField = value;
+                this.RaisePropertyChanged("ProduccionOferente");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public DecisionPagoVoluntario DecisionPagoVoluntario {
+            get {
+                return this.decisionPagoVoluntarioField;
+            }
+            set {
+                this.decisionPagoVoluntarioField = value;
+                this.RaisePropertyChanged("DecisionPagoVoluntario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacion : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption fijMinimaField;
+        
+        private TCaption fijMaximaField;
+        
+        private TCodCaption unidadMedidaFijacionField;
+        
+        private TCodCaption fijPeriodoField;
+        
+        private TCaption fijFecDesde1Field;
+        
+        private TCaption fijFecHasta1Field;
+        
+        private TFecha fechaPosicionRofex1Field;
+        
+        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 indiceRofex1Field;
+        
+        private TCaption fijFecDesde2Field;
+        
+        private TCaption fijFecHasta2Field;
+        
+        private TFecha fechaPosicionRofex2Field;
+        
+        private DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 indiceRofex2Field;
+        
+        private TCaption porcMultaIncumplimientoField;
+        
+        private TCodCaption comunicacionFijacionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption FijMinima {
+            get {
+                return this.fijMinimaField;
+            }
+            set {
+                this.fijMinimaField = value;
+                this.RaisePropertyChanged("FijMinima");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FijMaxima {
+            get {
+                return this.fijMaximaField;
+            }
+            set {
+                this.fijMaximaField = value;
+                this.RaisePropertyChanged("FijMaxima");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCodCaption UnidadMedidaFijacion {
+            get {
+                return this.unidadMedidaFijacionField;
+            }
+            set {
+                this.unidadMedidaFijacionField = value;
+                this.RaisePropertyChanged("UnidadMedidaFijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCodCaption FijPeriodo {
+            get {
+                return this.fijPeriodoField;
+            }
+            set {
+                this.fijPeriodoField = value;
+                this.RaisePropertyChanged("FijPeriodo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption FijFecDesde1 {
+            get {
+                return this.fijFecDesde1Field;
+            }
+            set {
+                this.fijFecDesde1Field = value;
+                this.RaisePropertyChanged("FijFecDesde1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCaption FijFecHasta1 {
+            get {
+                return this.fijFecHasta1Field;
+            }
+            set {
+                this.fijFecHasta1Field = value;
+                this.RaisePropertyChanged("FijFecHasta1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TFecha FechaPosicionRofex1 {
+            get {
+                return this.fechaPosicionRofex1Field;
+            }
+            set {
+                this.fechaPosicionRofex1Field = value;
+                this.RaisePropertyChanged("FechaPosicionRofex1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 IndiceRofex1 {
+            get {
+                return this.indiceRofex1Field;
+            }
+            set {
+                this.indiceRofex1Field = value;
+                this.RaisePropertyChanged("IndiceRofex1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption FijFecDesde2 {
+            get {
+                return this.fijFecDesde2Field;
+            }
+            set {
+                this.fijFecDesde2Field = value;
+                this.RaisePropertyChanged("FijFecDesde2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public TCaption FijFecHasta2 {
+            get {
+                return this.fijFecHasta2Field;
+            }
+            set {
+                this.fijFecHasta2Field = value;
+                this.RaisePropertyChanged("FijFecHasta2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public TFecha FechaPosicionRofex2 {
+            get {
+                return this.fechaPosicionRofex2Field;
+            }
+            set {
+                this.fechaPosicionRofex2Field = value;
+                this.RaisePropertyChanged("FechaPosicionRofex2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 IndiceRofex2 {
+            get {
+                return this.indiceRofex2Field;
+            }
+            set {
+                this.indiceRofex2Field = value;
+                this.RaisePropertyChanged("IndiceRofex2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public TCaption PorcMultaIncumplimiento {
+            get {
+                return this.porcMultaIncumplimientoField;
+            }
+            set {
+                this.porcMultaIncumplimientoField = value;
+                this.RaisePropertyChanged("PorcMultaIncumplimiento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public TCodCaption ComunicacionFijacion {
+            get {
+                return this.comunicacionFijacionField;
+            }
+            set {
+                this.comunicacionFijacionField = value;
+                this.RaisePropertyChanged("ComunicacionFijacion");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex1 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codigoField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Codigo {
+            get {
+                return this.codigoField;
+            }
+            set {
+                this.codigoField = value;
+                this.RaisePropertyChanged("Codigo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleFijacionIndiceRofex2 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codigoField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Codigo {
+            get {
+                return this.codigoField;
+            }
+            set {
+                this.codigoField = value;
+                this.RaisePropertyChanged("Codigo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string clausulaTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
+            get {
+                return this.clausulaTextField;
+            }
+            set {
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarRofexSchema")]
+    public partial class DocumentoOIVPrecioFijarRofex : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoOIVPrecioFijarRofex detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoOIVPrecioFijarRofex DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
+    public partial class DetalleDocumentoFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Parte[] partesField;
+        
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoFijarPrecioDetalleContrato detalleContratoField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Parte[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoFijarPrecioDetalleContrato DetalleContrato {
+            get {
+                return this.detalleContratoField;
+            }
+            set {
+                this.detalleContratoField = value;
+                this.RaisePropertyChanged("DetalleContrato");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
+    public partial class DetalleDocumentoFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Producto productoField;
+        
+        private TCaption fechaConcertacionField;
+        
+        private TCodLista monedaField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption montoImponibleField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCaption comisionPorCompradorField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private Pagos pagosField;
+        
+        private Fijacion fijacionField;
+        
+        private DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor produccionVendedorField;
+        
+        private DecisionPagoVoluntario decisionPagoVoluntarioField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
+        
+        private SioGranos sioGranosField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FechaConcertacion {
+            get {
+                return this.fechaConcertacionField;
+            }
+            set {
+                this.fechaConcertacionField = value;
+                this.RaisePropertyChanged("FechaConcertacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption MontoImponible {
+            get {
+                return this.montoImponibleField;
+            }
+            set {
+                this.montoImponibleField = value;
+                this.RaisePropertyChanged("MontoImponible");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public TCaption ComisionPorComprador {
+            get {
+                return this.comisionPorCompradorField;
+            }
+            set {
+                this.comisionPorCompradorField = value;
+                this.RaisePropertyChanged("ComisionPorComprador");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public Pagos Pagos {
+            get {
+                return this.pagosField;
+            }
+            set {
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public Fijacion Fijacion {
+            get {
+                return this.fijacionField;
+            }
+            set {
+                this.fijacionField = value;
+                this.RaisePropertyChanged("Fijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor ProduccionVendedor {
+            get {
+                return this.produccionVendedorField;
+            }
+            set {
+                this.produccionVendedorField = value;
+                this.RaisePropertyChanged("ProduccionVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public DecisionPagoVoluntario DecisionPagoVoluntario {
+            get {
+                return this.decisionPagoVoluntarioField;
+            }
+            set {
+                this.decisionPagoVoluntarioField = value;
+                this.RaisePropertyChanged("DecisionPagoVoluntario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
+        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
+            get {
+                return this.operacionExentaImpSantaFeField;
+            }
+            set {
+                this.operacionExentaImpSantaFeField = value;
+                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
+    public partial class DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string clausulaTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
+            get {
+                return this.clausulaTextField;
+            }
+            set {
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoFijarPrecioSchema")]
+    public partial class DocumentoFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoFijarPrecio detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoFijarPrecio DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
+    public partial class DetalleDocumentoOIVPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private ParteOIV[] partesField;
+        
+        private DetalleDocumentoOIVPrecioHechoDocumentoDetalle documentoDetalleField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
+        public ParteOIV[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoOIVPrecioHechoDocumentoDetalle DocumentoDetalle {
+            get {
+                return this.documentoDetalleField;
+            }
+            set {
+                this.documentoDetalleField = value;
+                this.RaisePropertyChanged("DocumentoDetalle");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
+    public partial class DetalleDocumentoOIVPrecioHechoDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private TCaption comisionPorDestinatarioField;
+        
+        private Producto productoField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption fechaInicioTramiteField;
+        
+        private TCaption vigenciaField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCodLista monedaField;
+        
+        private string precioField;
+        
+        private TCaption montoImponibleField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private Pagos pagosField;
+        
+        private DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente produccionOferenteField;
+        
+        private DecisionPagoVoluntario decisionPagoVoluntarioField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private TCodLista entregadeMercaderiaField;
+        
+        private SioGranos sioGranosField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TCaption ComisionPorDestinatario {
+            get {
+                return this.comisionPorDestinatarioField;
+            }
+            set {
+                this.comisionPorDestinatarioField = value;
+                this.RaisePropertyChanged("ComisionPorDestinatario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption FechaInicioTramite {
+            get {
+                return this.fechaInicioTramiteField;
+            }
+            set {
+                this.fechaInicioTramiteField = value;
+                this.RaisePropertyChanged("FechaInicioTramite");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption Vigencia {
+            get {
+                return this.vigenciaField;
+            }
+            set {
+                this.vigenciaField = value;
+                this.RaisePropertyChanged("Vigencia");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string Precio {
+            get {
+                return this.precioField;
+            }
+            set {
+                this.precioField = value;
+                this.RaisePropertyChanged("Precio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public TCaption MontoImponible {
+            get {
+                return this.montoImponibleField;
+            }
+            set {
+                this.montoImponibleField = value;
+                this.RaisePropertyChanged("MontoImponible");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public Pagos Pagos {
+            get {
+                return this.pagosField;
+            }
+            set {
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente ProduccionOferente {
+            get {
+                return this.produccionOferenteField;
+            }
+            set {
+                this.produccionOferenteField = value;
+                this.RaisePropertyChanged("ProduccionOferente");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public DecisionPagoVoluntario DecisionPagoVoluntario {
+            get {
+                return this.decisionPagoVoluntarioField;
+            }
+            set {
+                this.decisionPagoVoluntarioField = value;
+                this.RaisePropertyChanged("DecisionPagoVoluntario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
+        public TCodLista EntregadeMercaderia {
+            get {
+                return this.entregadeMercaderiaField;
+            }
+            set {
+                this.entregadeMercaderiaField = value;
+                this.RaisePropertyChanged("EntregadeMercaderia");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=26)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
+    public partial class DetalleDocumentoOIVPrecioHechoDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string captionField;
+        
+        private string clausulaTextField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
+            get {
+                return this.clausulaTextField;
+            }
+            set {
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioHechoSchema")]
+    public partial class DocumentoOIVPrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoOIVPrecioHecho detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoOIVPrecioHecho DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
+    public partial class DetalleDocumentoPagoEspecieFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Parte[] partesField;
+        
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato detalleContratoField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Parte[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato DetalleContrato {
+            get {
+                return this.detalleContratoField;
+            }
+            set {
+                this.detalleContratoField = value;
+                this.RaisePropertyChanged("DetalleContrato");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
+    public partial class DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Producto productoField;
+        
+        private TCaption fechaConcertacionField;
+        
+        private TCodLista monedaField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption montoImponibleField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCaption cantidadDesdeField;
+        
+        private TCaption cantidadHastaField;
+        
+        private TCodLista cosechaField;
+        
+        private TCodLista ajusteField;
+        
+        private TCaption cantCamionesField;
+        
+        private TCaption comisionPorCompradorField;
+        
+        private Calidad calidadField;
+        
+        private TCodCaption medioTransporteField;
+        
+        private Entrega entregasField;
+        
+        private Origen origenField;
+        
+        private TCodCaption destinoField;
+        
+        private DecisionDeclaraPrecioUnit decisionDeclaraPrecioUnitField;
+        
+        private TCodCaption provinciaInstrumentacionField;
+        
+        private DecisionDeclaraCantidad decisionDeclaraCantidadField;
+        
+        private DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos insumosField;
+        
+        private Fijacion fijacionField;
+        
+        private ProduccionVendedor produccionVendedorField;
+        
+        private TCodLista tipoOperacionField;
+        
+        private DecisionPagoVoluntario decisionPagoVoluntarioField;
+        
+        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
+        
+        private SioGranos sioGranosField;
+        
+        private string captionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption FechaConcertacion {
+            get {
+                return this.fechaConcertacionField;
+            }
+            set {
+                this.fechaConcertacionField = value;
+                this.RaisePropertyChanged("FechaConcertacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption MontoImponible {
+            get {
+                return this.montoImponibleField;
+            }
+            set {
+                this.montoImponibleField = value;
+                this.RaisePropertyChanged("MontoImponible");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCaption CantidadDesde {
+            get {
+                return this.cantidadDesdeField;
+            }
+            set {
+                this.cantidadDesdeField = value;
+                this.RaisePropertyChanged("CantidadDesde");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public TCaption CantidadHasta {
+            get {
+                return this.cantidadHastaField;
+            }
+            set {
+                this.cantidadHastaField = value;
+                this.RaisePropertyChanged("CantidadHasta");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public TCodLista Cosecha {
+            get {
+                return this.cosechaField;
+            }
+            set {
+                this.cosechaField = value;
+                this.RaisePropertyChanged("Cosecha");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public TCodLista Ajuste {
+            get {
+                return this.ajusteField;
+            }
+            set {
+                this.ajusteField = value;
+                this.RaisePropertyChanged("Ajuste");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public TCaption CantCamiones {
+            get {
+                return this.cantCamionesField;
+            }
+            set {
+                this.cantCamionesField = value;
+                this.RaisePropertyChanged("CantCamiones");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public TCaption ComisionPorComprador {
+            get {
+                return this.comisionPorCompradorField;
+            }
+            set {
+                this.comisionPorCompradorField = value;
+                this.RaisePropertyChanged("ComisionPorComprador");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public Calidad Calidad {
+            get {
+                return this.calidadField;
+            }
+            set {
+                this.calidadField = value;
+                this.RaisePropertyChanged("Calidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public TCodCaption MedioTransporte {
+            get {
+                return this.medioTransporteField;
+            }
+            set {
+                this.medioTransporteField = value;
+                this.RaisePropertyChanged("MedioTransporte");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public Entrega Entregas {
+            get {
+                return this.entregasField;
+            }
+            set {
+                this.entregasField = value;
+                this.RaisePropertyChanged("Entregas");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public Origen Origen {
+            get {
+                return this.origenField;
+            }
+            set {
+                this.origenField = value;
+                this.RaisePropertyChanged("Origen");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public TCodCaption Destino {
+            get {
+                return this.destinoField;
+            }
+            set {
+                this.destinoField = value;
+                this.RaisePropertyChanged("Destino");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
+        public DecisionDeclaraPrecioUnit DecisionDeclaraPrecioUnit {
+            get {
+                return this.decisionDeclaraPrecioUnitField;
+            }
+            set {
+                this.decisionDeclaraPrecioUnitField = value;
+                this.RaisePropertyChanged("DecisionDeclaraPrecioUnit");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public TCodCaption ProvinciaInstrumentacion {
+            get {
+                return this.provinciaInstrumentacionField;
+            }
+            set {
+                this.provinciaInstrumentacionField = value;
+                this.RaisePropertyChanged("ProvinciaInstrumentacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public DecisionDeclaraCantidad DecisionDeclaraCantidad {
+            get {
+                return this.decisionDeclaraCantidadField;
+            }
+            set {
+                this.decisionDeclaraCantidadField = value;
+                this.RaisePropertyChanged("DecisionDeclaraCantidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
+        public DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos Insumos {
+            get {
+                return this.insumosField;
+            }
+            set {
+                this.insumosField = value;
+                this.RaisePropertyChanged("Insumos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public Fijacion Fijacion {
+            get {
+                return this.fijacionField;
+            }
+            set {
+                this.fijacionField = value;
+                this.RaisePropertyChanged("Fijacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public ProduccionVendedor ProduccionVendedor {
+            get {
+                return this.produccionVendedorField;
+            }
+            set {
+                this.produccionVendedorField = value;
+                this.RaisePropertyChanged("ProduccionVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
+        public TCodLista TipoOperacion {
+            get {
+                return this.tipoOperacionField;
+            }
+            set {
+                this.tipoOperacionField = value;
+                this.RaisePropertyChanged("TipoOperacion");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
+        public DecisionPagoVoluntario DecisionPagoVoluntario {
+            get {
+                return this.decisionPagoVoluntarioField;
+            }
+            set {
+                this.decisionPagoVoluntarioField = value;
+                this.RaisePropertyChanged("DecisionPagoVoluntario");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=26)]
+        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
+            get {
+                return this.operacionExentaImpSantaFeField;
+            }
+            set {
+                this.operacionExentaImpSantaFeField = value;
+                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=27)]
+        public SioGranos SioGranos {
+            get {
+                return this.sioGranosField;
+            }
+            set {
+                this.sioGranosField = value;
+                this.RaisePropertyChanged("SioGranos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
+            get {
+                return this.captionField;
+            }
+            set {
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class DecisionDeclaraPrecioUnit : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class DecisionDeclaraCantidad : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codListaField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string CodLista {
+            get {
+                return this.codListaField;
+            }
+            set {
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
+    public partial class DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Insumo[] productosField;
+        
+        private TCodLista monedaField;
+        
+        private TCaption precioTotalField;
+        
+        private TCaption facturaField;
+        
+        private TCaption porcentajeGastosField;
+        
+        private TCaption tipoCambioPesosField;
+        
+        private TCaption lugarEntregaField;
+        
+        private TCodCaption provinciaEntregaField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Insumo[] Productos {
+            get {
+                return this.productosField;
+            }
+            set {
+                this.productosField = value;
+                this.RaisePropertyChanged("Productos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCodLista Moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+                this.RaisePropertyChanged("Moneda");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption PrecioTotal {
+            get {
+                return this.precioTotalField;
+            }
+            set {
+                this.precioTotalField = value;
+                this.RaisePropertyChanged("PrecioTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption Factura {
+            get {
+                return this.facturaField;
+            }
+            set {
+                this.facturaField = value;
+                this.RaisePropertyChanged("Factura");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCaption PorcentajeGastos {
+            get {
+                return this.porcentajeGastosField;
+            }
+            set {
+                this.porcentajeGastosField = value;
+                this.RaisePropertyChanged("PorcentajeGastos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCaption TipoCambioPesos {
+            get {
+                return this.tipoCambioPesosField;
+            }
+            set {
+                this.tipoCambioPesosField = value;
+                this.RaisePropertyChanged("TipoCambioPesos");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCaption LugarEntrega {
+            get {
+                return this.lugarEntregaField;
+            }
+            set {
+                this.lugarEntregaField = value;
+                this.RaisePropertyChanged("LugarEntrega");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public TCodCaption ProvinciaEntrega {
+            get {
+                return this.provinciaEntregaField;
+            }
+            set {
+                this.provinciaEntregaField = value;
+                this.RaisePropertyChanged("ProvinciaEntrega");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
+    public partial class Insumo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Producto productoField;
+        
+        private TCaption descAdicionalField;
+        
+        private TCaption cantidadField;
+        
+        private TCaption precioField;
+        
+        private TCodCaption unidadMedidaField;
+        
+        private TCodCaption unidadMedidaPrecioField;
+        
+        private TCaption precioTotalField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Producto Producto {
+            get {
+                return this.productoField;
+            }
+            set {
+                this.productoField = value;
+                this.RaisePropertyChanged("Producto");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public TCaption DescAdicional {
+            get {
+                return this.descAdicionalField;
+            }
+            set {
+                this.descAdicionalField = value;
+                this.RaisePropertyChanged("DescAdicional");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption Cantidad {
+            get {
+                return this.cantidadField;
+            }
+            set {
+                this.cantidadField = value;
+                this.RaisePropertyChanged("Cantidad");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public TCaption Precio {
+            get {
+                return this.precioField;
+            }
+            set {
+                this.precioField = value;
+                this.RaisePropertyChanged("Precio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public TCodCaption UnidadMedida {
+            get {
+                return this.unidadMedidaField;
+            }
+            set {
+                this.unidadMedidaField = value;
+                this.RaisePropertyChanged("UnidadMedida");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public TCodCaption UnidadMedidaPrecio {
+            get {
+                return this.unidadMedidaPrecioField;
+            }
+            set {
+                this.unidadMedidaPrecioField = value;
+                this.RaisePropertyChanged("UnidadMedidaPrecio");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public TCaption PrecioTotal {
+            get {
+                return this.precioTotalField;
+            }
+            set {
+                this.precioTotalField = value;
+                this.RaisePropertyChanged("PrecioTotal");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
+    public partial class DocumentoPagoEspecieFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private CabeceraDocumento cabeceraDocumentoField;
+        
+        private DetalleDocumentoPagoEspecieFijarPrecio detalleDocumentoField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public CabeceraDocumento CabeceraDocumento {
+            get {
+                return this.cabeceraDocumentoField;
+            }
+            set {
+                this.cabeceraDocumentoField = value;
+                this.RaisePropertyChanged("CabeceraDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DetalleDocumentoPagoEspecieFijarPrecio DetalleDocumento {
+            get {
+                return this.detalleDocumentoField;
+            }
+            set {
+                this.detalleDocumentoField = value;
+                this.RaisePropertyChanged("DetalleDocumento");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+                this.RaisePropertyChanged("Id");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesPrecioHechoSchema")]
+    public partial class DetalleDocumentoPagoEspeciePrecioHecho : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Parte[] partesField;
+        
+        private FirmanteVendedor[] firmantesVendedorField;
+        
+        private DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato detalleContratoField;
+        
+        private Clausula[] clausulasField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Parte[] Partes {
+            get {
+                return this.partesField;
+            }
+            set {
+                this.partesField = value;
+                this.RaisePropertyChanged("Partes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public FirmanteVendedor[] FirmantesVendedor {
+            get {
+                return this.firmantesVendedorField;
+            }
+            set {
+                this.firmantesVendedorField = value;
+                this.RaisePropertyChanged("FirmantesVendedor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato DetalleContrato {
+            get {
+                return this.detalleContratoField;
+            }
+            set {
+                this.detalleContratoField = value;
+                this.RaisePropertyChanged("DetalleContrato");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Clausula[] Clausulas {
+            get {
+                return this.clausulasField;
+            }
+            set {
+                this.clausulasField = value;
+                this.RaisePropertyChanged("Clausulas");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -7512,99 +7998,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class DecisionDeclaraPrecioUnit : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class DecisionDeclaraCantidad : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string codListaField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string CodLista {
-            get {
-                return this.codListaField;
-            }
-            set {
-                this.codListaField = value;
-                this.RaisePropertyChanged("CodLista");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -7735,123 +8129,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSCommonSchema")]
-    public partial class Insumo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Producto productoField;
-        
-        private TCaption descAdicionalField;
-        
-        private TCaption cantidadField;
-        
-        private TCaption precioField;
-        
-        private TCodCaption unidadMedidaField;
-        
-        private TCodCaption unidadMedidaPrecioField;
-        
-        private TCaption precioTotalField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public Producto Producto {
-            get {
-                return this.productoField;
-            }
-            set {
-                this.productoField = value;
-                this.RaisePropertyChanged("Producto");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption DescAdicional {
-            get {
-                return this.descAdicionalField;
-            }
-            set {
-                this.descAdicionalField = value;
-                this.RaisePropertyChanged("DescAdicional");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption Cantidad {
-            get {
-                return this.cantidadField;
-            }
-            set {
-                this.cantidadField = value;
-                this.RaisePropertyChanged("Cantidad");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption Precio {
-            get {
-                return this.precioField;
-            }
-            set {
-                this.precioField = value;
-                this.RaisePropertyChanged("Precio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCodCaption UnidadMedida {
-            get {
-                return this.unidadMedidaField;
-            }
-            set {
-                this.unidadMedidaField = value;
-                this.RaisePropertyChanged("UnidadMedida");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCodCaption UnidadMedidaPrecio {
-            get {
-                return this.unidadMedidaPrecioField;
-            }
-            set {
-                this.unidadMedidaPrecioField = value;
-                this.RaisePropertyChanged("UnidadMedidaPrecio");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCaption PrecioTotal {
-            get {
-                return this.precioTotalField;
-            }
-            set {
-                this.precioTotalField = value;
-                this.RaisePropertyChanged("PrecioTotal");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -7911,23 +8189,23 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
-    public partial class DetalleDocumentoPagoEspecieFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
+    public partial class DetalleDocumentoOIVFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private Parte[] partesField;
+        private ParteOIV[] partesField;
         
-        private DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato detalleContratoField;
+        private DetalleDocumentoOIVFijarPrecioDocumentoDetalle documentoDetalleField;
         
         private Clausula[] clausulasField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Parte[] Partes {
+        [System.Xml.Serialization.XmlArrayItemAttribute("Parte", IsNullable=false)]
+        public ParteOIV[] Partes {
             get {
                 return this.partesField;
             }
@@ -7939,13 +8217,13 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato DetalleContrato {
+        public DetalleDocumentoOIVFijarPrecioDocumentoDetalle DocumentoDetalle {
             get {
-                return this.detalleContratoField;
+                return this.documentoDetalleField;
             }
             set {
-                this.detalleContratoField = value;
-                this.RaisePropertyChanged("DetalleContrato");
+                this.documentoDetalleField = value;
+                this.RaisePropertyChanged("DocumentoDetalle");
             }
         }
         
@@ -7973,16 +8251,18 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
-    public partial class DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
+    public partial class DetalleDocumentoOIVFijarPrecioDocumentoDetalle : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Producto productoField;
         
-        private TCaption fechaConcertacionField;
+        private TCaption fechaInicioTramiteField;
+        
+        private TCaption vigenciaField;
         
         private TCodLista monedaField;
         
@@ -8004,7 +8284,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         private TCaption cantCamionesField;
         
-        private TCaption comisionPorCompradorField;
+        private TCaption comisionPorDestinatarioField;
         
         private Calidad calidadField;
         
@@ -8016,23 +8296,17 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         private TCodCaption destinoField;
         
-        private DecisionDeclaraPrecioUnit decisionDeclaraPrecioUnitField;
-        
         private TCodCaption provinciaInstrumentacionField;
         
-        private DecisionDeclaraCantidad decisionDeclaraCantidadField;
-        
-        private DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos insumosField;
+        private Pagos pagosField;
         
         private Fijacion fijacionField;
         
-        private ProduccionVendedor produccionVendedorField;
-        
-        private TCodLista tipoOperacionField;
+        private DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente produccionOferenteField;
         
         private DecisionPagoVoluntario decisionPagoVoluntarioField;
         
-        private OperacionExentaImpSantaFe operacionExentaImpSantaFeField;
+        private TCodLista tipoOperacionField;
         
         private SioGranos sioGranosField;
         
@@ -8052,18 +8326,30 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCaption FechaConcertacion {
+        public TCaption FechaInicioTramite {
             get {
-                return this.fechaConcertacionField;
+                return this.fechaInicioTramiteField;
             }
             set {
-                this.fechaConcertacionField = value;
-                this.RaisePropertyChanged("FechaConcertacion");
+                this.fechaInicioTramiteField = value;
+                this.RaisePropertyChanged("FechaInicioTramite");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public TCaption Vigencia {
+            get {
+                return this.vigenciaField;
+            }
+            set {
+                this.vigenciaField = value;
+                this.RaisePropertyChanged("Vigencia");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public TCodLista Moneda {
             get {
                 return this.monedaField;
@@ -8075,7 +8361,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public TCaption DescAdicional {
             get {
                 return this.descAdicionalField;
@@ -8087,7 +8373,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
         public TCaption MontoImponible {
             get {
                 return this.montoImponibleField;
@@ -8099,7 +8385,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
         public TCodCaption UnidadMedidaPrecio {
             get {
                 return this.unidadMedidaPrecioField;
@@ -8111,7 +8397,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
         public TCodCaption UnidadMedida {
             get {
                 return this.unidadMedidaField;
@@ -8123,7 +8409,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
         public TCaption CantidadDesde {
             get {
                 return this.cantidadDesdeField;
@@ -8135,7 +8421,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
         public TCaption CantidadHasta {
             get {
                 return this.cantidadHastaField;
@@ -8147,7 +8433,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
         public TCodLista Cosecha {
             get {
                 return this.cosechaField;
@@ -8159,7 +8445,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
         public TCodLista Ajuste {
             get {
                 return this.ajusteField;
@@ -8171,7 +8457,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
         public TCaption CantCamiones {
             get {
                 return this.cantCamionesField;
@@ -8183,19 +8469,19 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public TCaption ComisionPorComprador {
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public TCaption ComisionPorDestinatario {
             get {
-                return this.comisionPorCompradorField;
+                return this.comisionPorDestinatarioField;
             }
             set {
-                this.comisionPorCompradorField = value;
-                this.RaisePropertyChanged("ComisionPorComprador");
+                this.comisionPorDestinatarioField = value;
+                this.RaisePropertyChanged("ComisionPorDestinatario");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
         public Calidad Calidad {
             get {
                 return this.calidadField;
@@ -8207,7 +8493,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
         public TCodCaption MedioTransporte {
             get {
                 return this.medioTransporteField;
@@ -8219,7 +8505,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
         public Entrega Entregas {
             get {
                 return this.entregasField;
@@ -8231,7 +8517,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
         public Origen Origen {
             get {
                 return this.origenField;
@@ -8243,7 +8529,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
         public TCodCaption Destino {
             get {
                 return this.destinoField;
@@ -8251,18 +8537,6 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
             set {
                 this.destinoField = value;
                 this.RaisePropertyChanged("Destino");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public DecisionDeclaraPrecioUnit DecisionDeclaraPrecioUnit {
-            get {
-                return this.decisionDeclaraPrecioUnitField;
-            }
-            set {
-                this.decisionDeclaraPrecioUnitField = value;
-                this.RaisePropertyChanged("DecisionDeclaraPrecioUnit");
             }
         }
         
@@ -8280,30 +8554,18 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public DecisionDeclaraCantidad DecisionDeclaraCantidad {
+        public Pagos Pagos {
             get {
-                return this.decisionDeclaraCantidadField;
+                return this.pagosField;
             }
             set {
-                this.decisionDeclaraCantidadField = value;
-                this.RaisePropertyChanged("DecisionDeclaraCantidad");
+                this.pagosField = value;
+                this.RaisePropertyChanged("Pagos");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos Insumos {
-            get {
-                return this.insumosField;
-            }
-            set {
-                this.insumosField = value;
-                this.RaisePropertyChanged("Insumos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
         public Fijacion Fijacion {
             get {
                 return this.fijacionField;
@@ -8315,14 +8577,26 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public ProduccionVendedor ProduccionVendedor {
+        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
+        public DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente ProduccionOferente {
             get {
-                return this.produccionVendedorField;
+                return this.produccionOferenteField;
             }
             set {
-                this.produccionVendedorField = value;
-                this.RaisePropertyChanged("ProduccionVendedor");
+                this.produccionOferenteField = value;
+                this.RaisePropertyChanged("ProduccionOferente");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
+        public DecisionPagoVoluntario DecisionPagoVoluntario {
+            get {
+                return this.decisionPagoVoluntarioField;
+            }
+            set {
+                this.decisionPagoVoluntarioField = value;
+                this.RaisePropertyChanged("DecisionPagoVoluntario");
             }
         }
         
@@ -8340,30 +8614,6 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public DecisionPagoVoluntario DecisionPagoVoluntario {
-            get {
-                return this.decisionPagoVoluntarioField;
-            }
-            set {
-                this.decisionPagoVoluntarioField = value;
-                this.RaisePropertyChanged("DecisionPagoVoluntario");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=26)]
-        public OperacionExentaImpSantaFe OperacionExentaImpSantaFe {
-            get {
-                return this.operacionExentaImpSantaFeField;
-            }
-            set {
-                this.operacionExentaImpSantaFeField = value;
-                this.RaisePropertyChanged("OperacionExentaImpSantaFe");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=27)]
         public SioGranos SioGranos {
             get {
                 return this.sioGranosField;
@@ -8397,123 +8647,66 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
-    public partial class DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
+    public partial class DetalleDocumentoOIVFijarPrecioDocumentoDetalleProduccionOferente : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private Insumo[] productosField;
+        private string codListaField;
         
-        private TCodLista monedaField;
+        private string captionField;
         
-        private TCaption precioTotalField;
+        private string clausulaTextField;
         
-        private TCaption facturaField;
-        
-        private TCaption porcentajeGastosField;
-        
-        private TCaption tipoCambioPesosField;
-        
-        private TCaption lugarEntregaField;
-        
-        private TCodCaption provinciaEntregaField;
+        private string valueField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Insumo[] Productos {
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
+        public string CodLista {
             get {
-                return this.productosField;
+                return this.codListaField;
             }
             set {
-                this.productosField = value;
-                this.RaisePropertyChanged("Productos");
+                this.codListaField = value;
+                this.RaisePropertyChanged("CodLista");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public TCodLista Moneda {
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Caption {
             get {
-                return this.monedaField;
+                return this.captionField;
             }
             set {
-                this.monedaField = value;
-                this.RaisePropertyChanged("Moneda");
+                this.captionField = value;
+                this.RaisePropertyChanged("Caption");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public TCaption PrecioTotal {
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ClausulaText {
             get {
-                return this.precioTotalField;
+                return this.clausulaTextField;
             }
             set {
-                this.precioTotalField = value;
-                this.RaisePropertyChanged("PrecioTotal");
+                this.clausulaTextField = value;
+                this.RaisePropertyChanged("ClausulaText");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public TCaption Factura {
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
             get {
-                return this.facturaField;
+                return this.valueField;
             }
             set {
-                this.facturaField = value;
-                this.RaisePropertyChanged("Factura");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public TCaption PorcentajeGastos {
-            get {
-                return this.porcentajeGastosField;
-            }
-            set {
-                this.porcentajeGastosField = value;
-                this.RaisePropertyChanged("PorcentajeGastos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public TCaption TipoCambioPesos {
-            get {
-                return this.tipoCambioPesosField;
-            }
-            set {
-                this.tipoCambioPesosField = value;
-                this.RaisePropertyChanged("TipoCambioPesos");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public TCaption LugarEntrega {
-            get {
-                return this.lugarEntregaField;
-            }
-            set {
-                this.lugarEntregaField = value;
-                this.RaisePropertyChanged("LugarEntrega");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public TCodCaption ProvinciaEntrega {
-            get {
-                return this.provinciaEntregaField;
-            }
-            set {
-                this.provinciaEntregaField = value;
-                this.RaisePropertyChanged("ProvinciaEntrega");
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
             }
         }
         
@@ -8528,16 +8721,16 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9221.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSContratoPagoEspeciesFijarPrecioSchema")]
-    public partial class DocumentoPagoEspecieFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://confirma.com.ar/gd/2012/05/WSOIVPrecioFijarSchema")]
+    public partial class DocumentoOIVFijarPrecio : object, System.ComponentModel.INotifyPropertyChanged {
         
         private CabeceraDocumento cabeceraDocumentoField;
         
-        private DetalleDocumentoPagoEspecieFijarPrecio detalleDocumentoField;
+        private DetalleDocumentoOIVFijarPrecio detalleDocumentoField;
         
         private string idField;
         
@@ -8555,7 +8748,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DetalleDocumentoPagoEspecieFijarPrecio DetalleDocumento {
+        public DetalleDocumentoOIVFijarPrecio DetalleDocumento {
             get {
                 return this.detalleDocumentoField;
             }

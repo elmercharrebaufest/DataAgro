@@ -69,10 +69,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     // Deshabilita temporalmente la validación del certificado SSL. Aplicar sólo para UAT/Staging. No para PRD.
                     if (ambientePruebas == "1") ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-                    LoteDocumentosServiceClient agent = new LoteDocumentosServiceClient();
-                    agent.ClientCredentials.UserName.UserName = userConfirma;
-                    agent.ClientCredentials.UserName.Password = passConfirma;
-
                     logger.Info($"Datos del Negocio de Confirma Precargados; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, " +
                         $"FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, " +
                         $"CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, " +
@@ -154,7 +150,29 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
 
-                    altaLoteResult devolucion = agent.AltaDefinitiva(lote);
+                    //altaLoteResult devolucion = agent.AltaDefinitiva(lote);
+                    altaLoteResult devolucion;
+                    using (LoteDocumentosServiceClient agent = new LoteDocumentosServiceClient("Default"))
+                    {
+                        try
+                        {
+                            agent.ClientCredentials.UserName.UserName = userConfirma;
+                            agent.ClientCredentials.UserName.Password = passConfirma;
+
+                            devolucion = agent.AltaDefinitiva(lote);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Error al llamar al servicio AltaDefinitiva de Confirma");
+                            // Si el canal está en estado Faulted, hay que abortarlo
+                            if (agent.State == System.ServiceModel.CommunicationState.Faulted)
+                            {
+                                agent.Abort();
+                            }
+                            throw;
+                        }
+                    }
+
                     logger.Debug(devolucion.ToXml());
 
                     log = repositorio.Obtener<Log>(logId.Id);
@@ -778,8 +796,8 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.Origen = new Origen()
             {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma },
-                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma }
+                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma, LocalidadText = "" },
+                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
             };
 
             TCodCaption destino = new TCodCaption();
@@ -820,7 +838,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
                     FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                     UnidadMedidaFijacion = new TCodCaption() { CodLista = "K", Caption = "K" },
-                    FijPeriodo = new TCodCaption() { Value = "1" },
+                    FijPeriodo = new TCodCaption() { CodLista = "1", Value = "1" },
                     FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
                     FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                     PorcMultaIncumplimiento = new TCaption() { Value = "010" },
@@ -837,11 +855,12 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal;
 
-            // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            //DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            //decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            //decisionPagoVoluntario.FondoFederalText = "";
-            //detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
+            //GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado 
+            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
+            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
+            decisionPagoVoluntario.FondoFederalText = "";
+            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
+
 
             //OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
             //operacionExentaImpSantaFe.CodLista = "";
@@ -1311,11 +1330,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
 
             // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario()
-            //{
-            //    CodLista = "2",
-            //    FondoFederalText = "",
-            //};
+            detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario()
+            {
+                CodLista = "2",
+                FondoFederalText = "",
+            };
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
 
@@ -1648,7 +1667,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.Origen = new Origen()
             {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma },
+                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma, LocalidadText = "" },
                 ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
             };
 
@@ -1687,6 +1706,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             // GSIAN: qué va acá?
             //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario();
+            //GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado 
+            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
+            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
+            decisionPagoVoluntario.FondoFederalText = "";
+            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
 
             detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
 
