@@ -7,14 +7,15 @@
 @section Scripts{
     @Scripts.Render("~/bundles/Log")
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <!-- Kendo desde CDN -->
-    <script src="https://kendo.cdn.telerik.com/2019.3.1023/js/kendo.all.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Kendo/kendo.all.min.js"></script>
     <script type="text/javascript" src="~/Scripts/Chart.js"></script>
     <script type="text/javascript" src="~/Scripts/log.js"></script>
 }
 
 <div class="Titulo">
 
+    @*@using (Ajax.BeginForm("ListaLogPartial", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Log" }, null))
+    {*@
         <div class="container-log">
             <div id="fecha-buscador-log" class="row">
                 <div class="col-sm-1 noRightPadding">
@@ -29,8 +30,10 @@
             </div>
 
         </div>
+    @*}*@
 
     <div id="Log" class="container-log">
+        @*@Html.Action("ListaLogPartial", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy")})*@
         <div id="gridLog"></div>
     </div>
     <script id="templateLog" type="text/x-kendo-template">

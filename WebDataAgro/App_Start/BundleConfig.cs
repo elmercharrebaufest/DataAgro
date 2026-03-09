@@ -44,7 +44,7 @@ namespace WebDataAgro
             // -------------------------------------------------
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        //"~/Scripts/jquery.min.js",
+                        "~/Scripts/jquery.min.js",
                         "~/Scripts/App/firebase-messaging-sw.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -56,10 +56,9 @@ namespace WebDataAgro
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        //"~/Scripts/bootstrap.min.js",
-                        "~/Scripts/bootstrap-dialog.min.js" //,
-                        //"~/Scripts/jquery.bootstrap.wizard.min.js"
-                        ));
+                        "~/Scripts/bootstrap.min.js",
+                        "~/Scripts/bootstrap-dialog.min.js",
+                        "~/Scripts/jquery.bootstrap.wizard.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/plugins").Include(
                        "~/Content/assets/global/plugins/js.cookie.min.js",
