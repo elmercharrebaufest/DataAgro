@@ -63,3 +63,35 @@
     CONSTRAINT [FK_Cupo_AdministracionCupo] FOREIGN KEY (AdministracionCupoId) REFERENCES [AdministracionCupo]([Id]),
     
 )
+
+GO
+CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
+ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
+
+GO
+CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
+ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
+
+GO
+CREATE NONCLUSTERED INDEX NDX_EstadoCupoId 
+ON [dbo].[Cupo] ([EstadoCupoId]) 
+INCLUDE ([CentroId],[FechaIngreso])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_CentroId 
+ON [dbo].[Cupo] ([CentroId]) 
+INCLUDE ([FechaIngreso],[EstadoCupoId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_MaterialId_FechaIngreso 
+ON [dbo].[Cupo] ([MaterialId],[FechaIngreso]) 
+INCLUDE ([ComercialId],[UsuarioCreador])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_FechaIngreso 
+ON [dbo].[Cupo] ([FechaIngreso]) 
+INCLUDE ([ComercialId],[UsuarioCreador])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_CupoSap 
+ON [dbo].[Cupo] ([CupoSap])
