@@ -545,7 +545,6 @@ BEGIN
     INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
 END;
 
----- SE COMENTA POR ERROR: "Lock request time out period exceeded."
 --IF NOT EXISTS (
 --    SELECT 1 
 --    FROM sys.indexes 
@@ -557,7 +556,6 @@ END;
 --    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
 --END;
 
----- SE COMENTA POR ERROR: "Lock request time out period exceeded."
 --IF NOT EXISTS (
 --    SELECT 1 
 --    FROM sys.indexes 
@@ -629,29 +627,29 @@ BEGIN
     INCLUDE ([ConfirmadoSAP],[FechaConfirmadoSAP])
 END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'NDX_EstadoCupoId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX NDX_EstadoCupoId
-    ON [dbo].[Cupo] ([EstadoCupoId])
-    INCLUDE ([CentroId],[FechaIngreso])
-END;
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'NDX_EstadoCupoId'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX NDX_EstadoCupoId
+--    ON [dbo].[Cupo] ([EstadoCupoId])
+--    INCLUDE ([CentroId],[FechaIngreso])
+--END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'NDX_CentroId'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX NDX_CentroId
-    ON [dbo].[Cupo] ([CentroId])
-    INCLUDE ([FechaIngreso],[EstadoCupoId])
-END;
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'NDX_CentroId'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX NDX_CentroId
+--    ON [dbo].[Cupo] ([CentroId])
+--    INCLUDE ([FechaIngreso],[EstadoCupoId])
+--END;
 
 IF NOT EXISTS (
     SELECT 1 
@@ -899,40 +897,40 @@ BEGIN
     INCLUDE ([LimiteCupo],[CierreCupera],[LimiteAlgoritmo],[LiberarCupera],[LimiteAnterior],[LimiteDescarga])
 END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'NDX_MaterialId_FechaIngreso'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX NDX_MaterialId_FechaIngreso
-    ON [dbo].[Cupo] ([MaterialId],[FechaIngreso])
-    INCLUDE ([ComercialId],[UsuarioCreador])
-END;
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'NDX_MaterialId_FechaIngreso'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX NDX_MaterialId_FechaIngreso
+--    ON [dbo].[Cupo] ([MaterialId],[FechaIngreso])
+--    INCLUDE ([ComercialId],[UsuarioCreador])
+--END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'NDX_FechaIngreso'
-    AND object_id = OBJECT_ID('[dbo].[Cupo]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX NDX_FechaIngreso
-    ON [dbo].[Cupo] ([FechaIngreso])
-    INCLUDE ([ComercialId],[UsuarioCreador])
-END;
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'NDX_FechaIngreso'
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX NDX_FechaIngreso
+--    ON [dbo].[Cupo] ([FechaIngreso])
+--    INCLUDE ([ComercialId],[UsuarioCreador])
+--END;
 
-IF NOT EXISTS (
-    SELECT 1 
-    FROM sys.indexes 
-    WHERE name = 'NDX_CupoSap'
-    AND object_id = OBJECT_ID('[dbo].[CupoSap]')
-)
-BEGIN
-    CREATE NONCLUSTERED INDEX NDX_CupoSap
-    ON [dbo].[Cupo] ([CupoSap])
-END;
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'NDX_CupoSap'
+--    AND object_id = OBJECT_ID('[dbo].[CupoSap]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX NDX_CupoSap
+--    ON [dbo].[Cupo] ([CupoSap])
+--END;
 
 IF NOT EXISTS (
     SELECT 1 

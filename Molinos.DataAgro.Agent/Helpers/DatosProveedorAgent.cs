@@ -97,6 +97,7 @@ namespace Molinos.DataAgro.Agent
 
         public List<DatosProveedorAgentDto> ObtenerDatosDeProveedorEstado(List<string> CUIT, List<string> usuarios)
         {
+            ZMprfcDatosProveedor rqToError = null;
             try
             {
                 var valor = new List<Zmpes5150>();
@@ -118,6 +119,7 @@ namespace Molinos.DataAgro.Agent
                     ImCuit = CUIT.ToArray(),
                     ImUsuario = valor.ToArray()
                 };
+                rqToError = rq;
                 //logger.Debug(rq.ToXml());
                 var valor1 = agent.ZMprfcDatosProveedor(rq);
 
@@ -138,6 +140,7 @@ namespace Molinos.DataAgro.Agent
             catch (Exception ex)
             {
                 logger.Error(ex, "Error en método ObtenerDatosDeProveedorEstado al consultar RFC ZMprfcDatosProveedor.");
+                logger.Error("Error con REQUEST: " + rqToError.ToXml());
                 throw;
             }
         }

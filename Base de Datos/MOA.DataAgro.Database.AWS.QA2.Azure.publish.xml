@@ -16,5 +16,11 @@
 		<ProfileVersionNumber>1</ProfileVersionNumber>
 		<ScriptDatabaseOptions>True</ScriptDatabaseOptions>
 		<BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
+		<!--Aumentar el timeout del deploy (20 min)-->
+		<CommandTimeout>1200</CommandTimeout>
+		<!--Permitir reintentos en bloqueos-->
+		<DatabaseLockTimeout>120</DatabaseLockTimeout>
+		<!--Evitar que SSDT dropee objetos automáticamente-->
+		<DropIndexesNotInSource>False</DropIndexesNotInSource>
 	</PropertyGroup>
 </Project>

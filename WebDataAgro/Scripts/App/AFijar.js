@@ -876,13 +876,7 @@ function InicializarElementos() {
                     ValidarCapacidadProductiva();
             }
 
-            if ($("#material").val() == Materiales.MAIZ) {
-                $("#maximaId").data("kendoNumericTextBox").enable(true);
-            }
-            else {
-                $("#maximaId").data("kendoNumericTextBox").enable(false);
-                CalcularMaximo();
-            }
+            $("#maximaId").data("kendoNumericTextBox").enable(true);
 
             CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();

@@ -28,7 +28,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
+                //var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
+                /*
+                 * Se consultan todos aquellos IdActiveDirectory que tengan menos de 13 caracteres porque sino 
+                 * la RFC "ZMprfcDatosProveedor" rompe, al igual que "ZMprfcDatosComercial".
+                 */
+                var comerciales = repositorio
+                    .Listar<Comercial>()
+                    .Where(x => !string.IsNullOrWhiteSpace(x.IdActiveDirectory) && 
+                                x.IdActiveDirectory.Trim().Length <= 12)
+                    .ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
+
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.Trim()).ToDictionary(x => x.Key); //puede haber más de un registro con el mismo CUIT
                 var proveedorEstados = repositorio.Listar<ProveedorEstado>().ToDictionary(x => new Tuple<int, int>(x.ComercialId, x.ProveedorId));
