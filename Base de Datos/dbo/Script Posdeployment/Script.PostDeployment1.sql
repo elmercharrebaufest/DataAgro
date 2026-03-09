@@ -545,29 +545,27 @@ BEGIN
     INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
 END;
 
----- SE COMENTA POR ERROR: "Lock request time out period exceeded."
---IF NOT EXISTS (
---    SELECT 1 
---    FROM sys.indexes 
---    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
---    AND object_id = OBJECT_ID('[dbo].[Cupo]')
---)
---BEGIN
---    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
---    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
---END;
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_ConDescarga_NegocioId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, ConDescarga, NegocioId, EstadoCupoId )
+END;
 
----- SE COMENTA POR ERROR: "Lock request time out period exceeded."
---IF NOT EXISTS (
---    SELECT 1 
---    FROM sys.indexes 
---    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
---    AND object_id = OBJECT_ID('[dbo].[Cupo]')
---)
---BEGIN
---    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
---    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
---END;
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.indexes 
+    WHERE name = 'IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId'
+    AND object_id = OBJECT_ID('[dbo].[Cupo]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_FechaIngreso_CentroId_MaterialId_EstadoCupoId 
+    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
+END;
 
 -- FIN - Índices provistos por Algeiba
 
