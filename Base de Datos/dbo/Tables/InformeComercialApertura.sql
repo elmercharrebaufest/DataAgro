@@ -5,3 +5,10 @@
     [FechaApertura] DATETIME NOT NULL,
     CONSTRAINT [PK_InformeComercialApertura] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+GO
+CREATE NONCLUSTERED INDEX [NDX_ComercialId] 
+ON [dbo].[InformeComercialApertura] ([ComercialId]) 
+INCLUDE ([Id],[FechaApertura])
+
+GO

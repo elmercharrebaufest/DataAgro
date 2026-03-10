@@ -5,7 +5,7 @@
 	[FechaSugerida] [datetime] NOT NULL,
 	[CantidadDeCupos] [int] NOT NULL,
 	[TipoNegocioId] [int] NOT NULL,
- [Puntuacion] DECIMAL(12, 2) NOT NULL, 
+    [Puntuacion] DECIMAL(12, 2) NOT NULL, 
     [MonedaId] CHAR(5) NULL, 
     [Precio] DECIMAL(12, 2) NULL, 
     [ProveedorId] INT NOT NULL, 
@@ -26,8 +26,7 @@
     CONSTRAINT [PK_SugerenciaCupo] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] ADD CONSTRAINT [FK_SugerenciaCupo_Negocio] FOREIGN KEY([NegocioId])
@@ -84,4 +83,10 @@ REFERENCES [dbo].[ConfiguracionEspacioDinamico] ([Id])
 GO
 
 ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_ConfiguracionEspacioDinamico]
+GO
+
+CREATE NONCLUSTERED INDEX NDX_MaterialId_Aceptado_ComercialId_FechaSugerida 
+ON [dbo].[SugerenciaCupo] ([MaterialId],[Aceptado],[ComercialId],[FechaSugerida]) 
+INCLUDE ([CentroId],[CantidadDeCupos],[TipoNegocioId],[Puntuacion],[MonedaId],[Precio],[ProveedorId],[ZonaCupoId],[Puntuaciones],[ContratoSAP],[NegocioId],[KgNegocio],[KgPendienteAplicar])
+
 GO

@@ -13,3 +13,9 @@
 	CONSTRAINT [FK_Servicio_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),
 	CONSTRAINT [FK_Servicio_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [Negocio]([Id]),
 )
+
+GO
+CREATE NONCLUSTERED INDEX NDX_NegocioId 
+ON [dbo].[Servicio] ([NegocioId])
+
+GO

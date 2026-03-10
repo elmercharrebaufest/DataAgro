@@ -66,3 +66,9 @@
     CONSTRAINT [FK_Comisionista_Proveedor] FOREIGN KEY ([ComisionistaId]) REFERENCES [dbo].[Proveedor] ([ProveedorId])
 );
 
+GO
+CREATE NONCLUSTERED INDEX NDX_FechaAlta 
+ON [dbo].[Proveedor] ([FechaAlta]) 
+INCLUDE ([CUIT])
+
+GO

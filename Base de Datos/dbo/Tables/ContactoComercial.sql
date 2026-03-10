@@ -31,3 +31,9 @@
     CONSTRAINT [FK_ContactoComercial_PuestoApoderado] FOREIGN KEY ([PuestoApoderadoId]) REFERENCES [dbo].[PuestoApoderado] ([Id])
 );
 
+GO
+CREATE NONCLUSTERED INDEX ndx_ProveedorId_EsPrincipal 
+ON [dbo].[ContactoComercial] ([ProveedorId],[EsPrincipal]) 
+INCLUDE ([Telefono1],[Telefono2],[Telefono3],[Email1],[Email2],[Email3]);
+
+GO

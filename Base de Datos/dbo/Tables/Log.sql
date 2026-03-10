@@ -1,8 +1,12 @@
 ﻿CREATE TABLE [dbo].[Log] (
-    [Id]    INT           IDENTITY (1, 1) NOT NULL,
-    [Fecha] DATETIME          NULL,
-    [Xml]     NVARCHAR (mAX)         NOT NULL,
+    [Id]    INT IDENTITY (1, 1) NOT NULL,
+    [Fecha] DATETIME NULL,
+    [Xml]   NVARCHAR (MAX) NOT NULL,
     CONSTRAINT [PK_Log] PRIMARY KEY CLUSTERED ([Id] ASC),
-
 );
 
+GO
+CREATE NONCLUSTERED INDEX NDX_fecha 
+ON [dbo].[log] ([fecha])
+
+GO

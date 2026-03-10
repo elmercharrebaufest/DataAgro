@@ -215,4 +215,81 @@ INCLUDE ([ContratoId],[Cantidad],[Precio],[ProveedorId],[MonedaId],[ComercialCre
 GO
 CREATE NONCLUSTERED INDEX IX_ContratoSAP
 ON [dbo].[Negocio] ([ContratoSAP])
+
+GO
+CREATE NONCLUSTERED INDEX ndx_ID_FechaOperacion_AnulaYReemplazaContratoId 
+ON [dbo].[Negocio] ([Id],[FechaOperacion],[AnulaYReemplazaContratoId],[DestinoId],[EstadoId],[TipoNegocioId],[Discriminator],[MaterialId],[OcultarEnTablero],[Pizarra],[PrestamoDevolucion],[TipoPosicionCBOTId],[TipoAgenteCompraId],[Venta]) 
+INCLUDE ([Cantidad], [Precio], [MonedaId], [PrecioNeto], [PrecioNetoPonderado], [Condicional])
+WITH (SORT_IN_TEMPDB = ON, ONLINE = OFF, FILLFACTOR = 90) ON [PRIMARY];
+
+GO
+CREATE NONCLUSTERED INDEX ndx_TipoAgenteCompraId_OcultarEnTablero 
+ON [dbo].[Negocio] ([TipoAgenteCompraId],[OcultarEnTablero],[AnulaYReemplazaContratoId],[MaterialId],[EstadoId]) 
+INCLUDE ([TipoNegocioId],[Cantidad],[Precio],[MonedaId],[DestinoId],[ContratoAcuerdoId],[Pizarra],[PrecioNeto],[Discriminator],[FechaOperacion],[PrestamoDevolucion],[Venta],[TipoPosicionCBOTId],[PrecioNetoPonderado],[Condicional]);
+
+GO
+CREATE NONCLUSTERED INDEX NDX_OcultarEnTablero_EstadoId 
+ON [dbo].[Negocio] ([OcultarEnTablero],[EstadoId]) 
+INCLUDE ([MaterialId],[TipoNegocioId],[Cantidad],[Precio],[MonedaId],[Fecha],[ComercialId],[ComercialCreadorId],[ContratoAcuerdoId],[Pizarra],[PrecioNeto],[TipoAgenteCompraId],[Discriminator],[FechaOperacion],[Canje],[TipoPosicionCBOTId],[AnulaYReemplazaContratoId],[PrecioNetoPonderado],[Condicional]);
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Discriminator_EstadoId_ContratoSAP 
+ON [dbo].[Negocio] ([Discriminator],[EstadoId],[ContratoSAP]) 
+INCLUDE ([ConfirmadoSAP],[FechaConfirmadoSAP])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Pizarra_Discriminator_OcultarEnTablero_MaterialId_EstadoId_FechaOperacion 
+ON [dbo].[Negocio] ([Pizarra],[Discriminator],[OcultarEnTablero],[MaterialId],[EstadoId],[FechaOperacion]) 
+INCLUDE ([Canje])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Discriminator 
+ON [dbo].[Negocio] ([Discriminator]) 
+INCLUDE ([Fecha],[ComercialId],[ComercialCreadorId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_MaterialId_EstadoId_DestinoId_Discriminator_EPA_EUDR 
+ON [dbo].[Negocio] ([MaterialId],[EstadoId],[DestinoId],[Discriminator],[EPA],[EUDR]) 
+INCLUDE ([TipoNegocioId],[Cantidad],[Precio],[FechaDesde],[FechaHasta],[ProveedorId],[MonedaId],[ComercialId],[ContratoSAP],[CD],[Warrant],[MercsDeposito],[CorredorId],[StandardDeCalidadId],[Sustentable],[TipoAgenteCompraId],[EsFason],[CaratulaMAT],[Canje],[FechaHastaOriginal],[ConDescarga])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Discriminator_AnulaYReemplazaContratoId 
+ON [dbo].[Negocio] ([Discriminator],[AnulaYReemplazaContratoId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_MaterialId_Discriminator_OcultarEnTablero_EstadoId_FechaOperacion 
+ON [dbo].[Negocio] ([MaterialId],[Discriminator],[OcultarEnTablero],[EstadoId],[FechaOperacion]) 
+INCLUDE ([Cantidad],[CampanaId],[Posicion])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_TipoAgenteCompraId_OcultarEnTablero_TipoNegocioId_EstadoId_Discriminator 
+ON [dbo].[Negocio] ([TipoAgenteCompraId],[OcultarEnTablero],[TipoNegocioId],[EstadoId],[Discriminator]) 
+INCLUDE ([ContratoId],[MaterialId],[Cantidad],[Precio],[CampanaId],[FechaDesde],[FechaHasta],[MonedaId],[Fecha],[TrigoEspecial],[ContratoSAP],[DestinoId],[ContratoAcuerdoId],[Pizarra],[StandardDeCalidadId],[Posicion],[EsFason],[FechaOperacion],[Canje],[PrestamoDevolucion],[Virtual],[TipoPosicionCBOTId],[AnulaYReemplazaContratoId],[PrecioNetoPonderado],[CantidadDeposito])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Job_GrabarDatosReporteCompraNet_01 
+ON [dbo].[Negocio] ([ContratoAcuerdoId],[TipoAgenteCompraId],[Discriminator],[OcultarEnTablero],[AnulaYReemplazaContratoId],[MaterialId],[EstadoId],[FechaOperacion]) 
+INCLUDE ([TipoNegocioId],[Cantidad],[CampanaId],[DestinoId],[TipoPosicionCBOTId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_TipoAgenteCompraId_Discriminator_OcultarEnTablero_AnulaYReemplazaContratoId_MaterialId_EstadoId_FechaOperacion 
+ON [dbo].[Negocio] ([TipoAgenteCompraId],[Discriminator],[OcultarEnTablero],[AnulaYReemplazaContratoId],[MaterialId],[EstadoId],[FechaOperacion]) 
+INCLUDE ([TipoNegocioId],[Cantidad],[Precio],[MonedaId],[DestinoId],[ContratoAcuerdoId],[Pizarra],[PrecioNeto],[PrestamoDevolucion],[Venta],[TipoPosicionCBOTId],[PrecioNetoPonderado],[Condicional])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_MaterialId_ProveedorId_TipoNegocioId_Cantidad_Discriminator 
+ON [dbo].[Negocio] ([MaterialId],[ProveedorId],[TipoNegocioId],[Cantidad],[Discriminator]) 
+INCLUDE ([FechaHasta],[EstadoId],[ContratoSAP],[Sustentable],[FechaHastaOriginal],[EPA],[EUDR])
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Negocio_Discriminator_Ocultar_Estado]
+ON [dbo].[Negocio] ([Discriminator], [OcultarEnTablero], [EstadoId])
+INCLUDE (
+    [MaterialId], [TipoNegocioId], [Cantidad], [Precio], [ProveedorId],
+    [MonedaId], [Fecha], [ComercialId], [ComercialCreadorId], [ContratoAcuerdoId],
+    [Pizarra], [PrecioNeto], [OperadorId], [TipoAgenteCompraId], [FechaOperacion],
+    [Canje], [TipoPosicionCBOTId], [AnulaYReemplazaContratoId], [PrecioNetoPonderado],
+    [Condicional]
+)
+
 GO

@@ -35,3 +35,33 @@
     CONSTRAINT [FK_AdministracionCupo_Sugerencia] FOREIGN KEY ([SugerenciaCupoId]) REFERENCES [dbo].[SugerenciaCupo] ([Id]),
     CONSTRAINT [FK_AdministracionCupo_Negocio] FOREIGN KEY (NegocioId) REFERENCES [Negocio]([Id]),
 );
+
+GO
+CREATE NONCLUSTERED INDEX NDX_SugerenciaCupoId 
+ON [dbo].[AdministracionCupo] ([SugerenciaCupoId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Excedente 
+ON [dbo].[AdministracionCupo] ([Excedente]) 
+INCLUDE ([ComercialId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Excedente_ComercialId_FechaCreacion 
+ON [dbo].[AdministracionCupo] ([Excedente]) 
+INCLUDE ([ComercialId],[FechaCreacion])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_ProveedorId_EstadoId_MaterialId_NegocioId 
+ON [dbo].[AdministracionCupo] ([ProveedorId],[EstadoId],[MaterialId],[NegocioId])
+
+GO
+CREATE NONCLUSTERED INDEX NDX_Excedente_Fecha 
+ON [dbo].[AdministracionCupo] ([Excedente],[Fecha]) 
+INCLUDE ([ComercialId])
+
+GO
+CREATE NONCLUSTERED INDEX [IX_AdministracionCupo_Excedente_FechaCreacion]
+ON [dbo].[AdministracionCupo] ([Excedente], [FechaCreacion])
+INCLUDE ([ComercialId])
+
+GO

@@ -32,3 +32,9 @@
     CONSTRAINT [FK_CampanaMaterialDetallePorMes_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId])
 );
 
+GO
+CREATE NONCLUSTERED INDEX ProveedorId_CampanaId_MaterialId 
+ON [dbo].[CampanaMaterialDetallePorMes] ([ProveedorId],[CampanaId],[MaterialId]) 
+WITH (SORT_IN_TEMPDB = ON, ONLINE = OFF, FILLFACTOR = 90) ON [PRIMARY];
+
+GO
