@@ -2863,6 +2863,12 @@ function AgregarCalidades() {
             }
         };
 
+
+        var alertas = validadarCalidadesAlertas(calidades);
+        if (ExistsErrorMessages(alertas)) {
+            MensAlerta(alertas[0])
+        }
+
         var err = validarCalidad(calidades);
         if (ExistsErrorMessages(err)) {
             MensErr(err[0]);
@@ -2884,6 +2890,13 @@ function AgregarCalidades() {
     }
 }
 
+function validadarCalidadesAlertas(calidad) {
+    var alertas = [];
+    if (calidad.PorcentajeHasta > 50 && calidad.CalidadEspecialId == 1) {
+        alertas.push('El Porcentaje Hasta no debe ser mayor a 50% para "Dañados"');
+    }
+    return alertas;
+}
 function validarCalidad(calidad) {
     var errores = [];
     var porcDesde = parseFloat(calidad.PorcentajeDesde);
@@ -2906,9 +2919,7 @@ function validarCalidad(calidad) {
         (calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
         errores.push('El Porcentaje es obligatorio');
     }
-    if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 1) {
-        errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Dañados"');
-    }
+
     if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 2) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Granos verdes"');
     }

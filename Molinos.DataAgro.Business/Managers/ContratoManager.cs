@@ -303,11 +303,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oParam.Calidad != null && !oParam.Calidad.Any(i => i.PorcentajeHasta == 100))
-            {
-                oErrorMessages.Error("Calidad", "La calidad de dañados debe ser del 100%." );
-                return oErrorMessages;
-            }
 
             if (oParam.ClasificacionId == 0)
             {

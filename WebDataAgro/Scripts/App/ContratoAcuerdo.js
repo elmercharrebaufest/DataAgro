@@ -3840,6 +3840,11 @@ function AgregarCalidades() {
             }
         };
 
+        var alertas = validadarCalidadesAlertas(calidades);
+        if (ExistsErrorMessages(alertas)) {
+            MensAlerta(alertas[0])
+        }
+
         var err = validarCalidad(calidades);
         if (ExistsErrorMessages(err)) {
             MensErr(err[0]);
@@ -3859,6 +3864,14 @@ function AgregarCalidades() {
         }
         return err;
     }
+}
+
+function validadarCalidadesAlertas(calidad) {
+    var alertas = [];
+    if (calidad.PorcentajeHasta > 50 && calidad.CalidadEspecialId == 1) {
+        alertas.push('El Porcentaje Hasta no debe ser mayor a 50% para "Dañados"');
+    }
+    return alertas;
 }
 
 function validarCalidad(calidad) {
