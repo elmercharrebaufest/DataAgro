@@ -14,10 +14,6 @@ namespace WebDataAgro
             Styles.DefaultTagFormat = "<link href='{0}?v=" + assemblyVersion + "' rel='stylesheet'/>";
             Scripts.DefaultTagFormat = "<script src='{0}?v=" + assemblyVersion + "'></script>";
 
-            bundles.Add(new StyleBundle("~/Content/awesome/css").Include(
-                        "~/Content/assets/global/plugins/font-awesome/css/font-awesome.min.css",
-                        "~/Content/assets/global/plugins/simple-line-icons/simple-line-icons.min.css"));
-
             bundles.Add(new StyleBundle("~/Content/bootstrap/css").Include(
                         "~/Content/bootstrap.min.css",
                         "~/Content/bootstrap-switch.min.css",
@@ -44,7 +40,6 @@ namespace WebDataAgro
             // -------------------------------------------------
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery.min.js",
                         "~/Scripts/App/firebase-messaging-sw.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -56,7 +51,6 @@ namespace WebDataAgro
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap.min.js",
                         "~/Scripts/bootstrap-dialog.min.js",
                         "~/Scripts/jquery.bootstrap.wizard.min.js"));
 
@@ -74,7 +68,6 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/kendo").Include(
                         "~/Scripts/kendo/jszip.min.js",
-                        "~/Scripts/kendo/kendo.all.min.js",
                         // "~/Scripts/kendo/kendo.timezones.min.js", // uncomment if using the Scheduler
                         "~/Scripts/kendo/cultures/kendo.culture.es-AR.min.js"));
 

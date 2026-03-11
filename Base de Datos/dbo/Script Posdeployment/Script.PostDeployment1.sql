@@ -477,9 +477,6 @@ IF NOT EXISTS (select 1 from PuestoApoderado where Descripcion = 'Otros') BEGIN 
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BNA') BEGIN insert into TipoDeCambio (Descripcion) values ('BNA'); END
 IF NOT EXISTS (select 1 from TipoDeCambio where Descripcion = 'BLEND') BEGIN insert into TipoDeCambio (Descripcion) values ('BLEND'); END
 
---TipoDeCambio
-insert into Log (Fecha, Xml) values (CURRENT_TIMESTAMP, 'Prueba deploy');
-
 -- CREACION DE NUEVO ROL Y PERMISO POR ROL DE VISUALIZAR CONTRATO FASON
 IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Visualizar Contratos Fason')
    BEGIN

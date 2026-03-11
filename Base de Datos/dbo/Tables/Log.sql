@@ -7,6 +7,6 @@
 
 GO
 CREATE NONCLUSTERED INDEX NDX_fecha 
-ON [dbo].[log] ([fecha])
+ON [dbo].[Log] ([Fecha])
 
 GO
