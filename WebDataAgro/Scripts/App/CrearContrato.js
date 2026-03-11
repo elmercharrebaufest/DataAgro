@@ -4521,7 +4521,7 @@ function CargarDatosEditar(contrato, hijo) {
         viewModel.Descuentos.push(descuentoKendo);
     });
 
-    calidadesDto = contrato.Calidades.filter(p => p.CalidadEspecialDesc == "Dañados Predeterminado");
+    calidadesDto = contrato.Calidades;
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
             Id: hijo ? 0 : calidad.Id,
