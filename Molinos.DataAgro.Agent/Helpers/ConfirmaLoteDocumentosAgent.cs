@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         itemInfo = itemInfo,
                         Item1 = item1,
-                        codigo = "",
+                        codigo = nroContratoInterno + "V01",
                     });
                     #endregion Item[]
 
