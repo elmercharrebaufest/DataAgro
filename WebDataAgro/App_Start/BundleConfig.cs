@@ -1,4 +1,4 @@
-﻿using System.Web.Optimization;
+using System.Web.Optimization;
 
 namespace WebDataAgro
 {
@@ -10,9 +10,10 @@ namespace WebDataAgro
             // -------------------------------------------------
             //   Estilos generales
             // -------------------------------------------------
-            var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Styles.DefaultTagFormat = "<link href='{0}?v=" + assemblyVersion + "' rel='stylesheet'/>";
-            Scripts.DefaultTagFormat = "<script src='{0}?v=" + assemblyVersion + "'></script>";
+            //var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //Styles.DefaultTagFormat = "<link href='{0}?v=" + assemblyVersion + "' rel='stylesheet'/>";
+            //Scripts.DefaultTagFormat = "<script src='{0}?v=" + assemblyVersion + "'></script>";
+            BundleTable.EnableOptimizations = true;
 
             bundles.Add(new StyleBundle("~/Content/bootstrap/css").Include(
                         "~/Content/bootstrap.min.css",
