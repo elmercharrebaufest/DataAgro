@@ -1,0 +1,48 @@
+# Auto detect text files and normalize line endings to LF
+* text=auto
+
+# C# files
+*.cs text eol=crlf encoding=UTF-8
+*.csx text eol=crlf encoding=UTF-8
+
+# XML and config files
+*.xml text eol=crlf encoding=UTF-8
+*.config text eol=crlf encoding=UTF-8
+*.xaml text eol=crlf encoding=UTF-8
+
+# Markdown files
+*.md text eol=lf encoding=UTF-8
+
+# JSON files
+*.json text eol=lf encoding=UTF-8
+*.jsonc text eol=lf encoding=UTF-8
+
+# PowerShell files
+*.ps1 text eol=crlf encoding=UTF-8
+*.ps1xml text eol=crlf encoding=UTF-8
+
+# Shell script files
+*.sh text eol=lf encoding=UTF-8
+*.bash text eol=lf encoding=UTF-8
+
+# Batch files
+*.bat text eol=crlf encoding=UTF-8
+*.cmd text eol=crlf encoding=UTF-8
+
+# Visual Studio files
+*.sln text eol=crlf
+*.csproj text eol=crlf
+*.vbproj text eol=crlf
+*.proj text eol=crlf
+*.projitems text eol=crlf
+
+# Binary files
+*.dll binary
+*.exe binary
+*.pdb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary

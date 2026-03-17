@@ -1,0 +1,40 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# Code files
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+
+# C# files
+[*.cs]
+charset = utf-8
+end_of_line = crlf
+indent_size = 4
+
+# XML files
+[*.{xml,config,xaml}]
+indent_size = 2
+charset = utf-8
+
+# JSON files
+[*.json]
+indent_size = 2
+charset = utf-8
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+charset = utf-8
+
+# PowerShell files
+[*.ps1]
+charset = utf-8

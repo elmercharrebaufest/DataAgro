@@ -370,6 +370,7 @@
     <Compile Include="App_Start\Startup.MvcAutofac.cs" />
     <Content Include="Content\control-boletos.css" />
     <Content Include="Content\control-boletos-contrato.css" />
+    <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
@@ -378,6 +379,7 @@
     <Content Include="Scripts\App\ControlDeBoletosSeguimiento.js" />
     <Content Include="Scripts\App\ControlDeBoletosTracking.js" />
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
+    <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
     <Content Include="Views\ControlDeBoletos\Index.cshtml" />
@@ -388,6 +390,7 @@
     <Content Include="Views\ControlDeBoletos\_SeguimientoControlBoleto.cshtml" />
     <Content Include="Views\ControlDeBoletos\SeguimientoBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
+    <Content Include="MEJORAS_HOMECONTROLLER.md" />
     <None Include="whitelist.json" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />

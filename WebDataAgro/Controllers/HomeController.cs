@@ -48,6 +48,17 @@ namespace WebDataAgro.Controllers
             this.logger = logger;
         }
 
+        private List<int> ObtenerEquipoSegunPermisos()
+        {
+            if (PermisosHelper.Is(PermisosDataAgro.VerTodos))
+                return GlobalVariables.EquipoReal;
+
+            if (PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia))
+                return mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId);
+
+            return GlobalVariables.Equipo;
+        }
+
         public async Task<ActionResult> Index(string code, string error)
         {
             try
@@ -249,14 +260,15 @@ namespace WebDataAgro.Controllers
             };
             var verTodos = PermisosHelper.Is(PermisosDataAgro.VerTodos);
             var proveedorZonaPropia = PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia);
-            var comercialesConMismaZona = mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId);
+            var comercialesConMismaZona = proveedorZonaPropia ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : null;
 
             logger.Debug($"Inicializar GlobalVariables.ComercialId: {GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.VerTodos): {verTodos}");
             logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal.ToJson()}");
             logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo.ToJson()}");
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {proveedorZonaPropia}");
-            logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona.ToJson()}");
+            if (comercialesConMismaZona != null)
+                logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona.ToJson()}");
 
             var equipo = verTodos ? GlobalVariables.EquipoReal :
                 proveedorZonaPropia ? comercialesConMismaZona :
@@ -277,7 +289,8 @@ namespace WebDataAgro.Controllers
 
             if (model.Detalle != null)
             {
-                foreach (var item in model.Detalle.GroupBy(a => a.Material))
+                var groupedMaterials = model.Detalle.GroupBy(a => a.Material).ToList();
+                foreach (var item in groupedMaterials)
                 {
                     model.Campaña.Materiales.Add(
                         new MaterialCampaña
@@ -299,7 +312,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
         public ActionResult BusquedaHome(string filtro)
         {
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            var equipo = ObtenerEquipoSegunPermisos();
             return new JsonResult()
             {
                 Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, equipo, GlobalVariables.CorredoresComercial),
@@ -313,7 +326,9 @@ namespace WebDataAgro.Controllers
             var model = new ResultIniContactoModel();
 
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ?
+                GlobalVariables.CorredoresComercial :
+                ObtenerEquipoSegunPermisos();
 
             ResultIniContacto result;
             if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
@@ -361,7 +376,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            filtro.Equipo = ObtenerEquipoSegunPermisos();
 
             var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
@@ -379,7 +394,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            filtro.Equipo = ObtenerEquipoSegunPermisos();
 
             var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
@@ -399,7 +414,7 @@ namespace WebDataAgro.Controllers
             var model = new ReportesModel();
 
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            filtro.Equipo = ObtenerEquipoSegunPermisos();
             filtro.Estado = null;
             try
             {
@@ -534,7 +549,8 @@ namespace WebDataAgro.Controllers
             model.Campaña = new CampañaHome();
             if (model.Detalle != null)
             {
-                foreach (var item in model.Detalle.GroupBy(a => a.Material))
+                var groupedMaterials = model.Detalle.GroupBy(a => a.Material).ToList();
+                foreach (var item in groupedMaterials)
                 {
                     model.Campaña.Materiales.Add(
                         new MaterialCampaña

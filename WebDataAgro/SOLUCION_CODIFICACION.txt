@@ -1,0 +1,257 @@
+================================================================================
+SOLUCIÓN DE PROBLEMAS DE CODIFICACIÓN UTF-8
+================================================================================
+
+PROBLEMA IDENTIFICADO
+======================
+
+Los archivos generados mostraban caracteres acentuados como caracteres extraños.
+Ejemplo: "método" aparecía como "m?todo" o "función" como "función".
+
+Esto afectaba especialmente a:
+- Archivos Markdown (.md)
+- Logs del sistema
+- Contenido en múltiples idiomas
+- Documentación en español
+
+El problema era causado por inconsistencia en la codificación de caracteres
+entre diferentes herramientas y la falta de configuración estandarizada.
+
+================================================================================
+SOLUCIONES IMPLEMENTADAS
+================================================================================
+
+1. ARCHIVO .editorconfig (Raíz del repositorio)
+   ============================================
+  
+   Propósito:
+   - Estandarizar la codificación en UTF-8 para todos los desarrolladores
+   - Asegurar que Visual Studio y otros editores usen UTF-8 consistentemente
+   - Aplicar automáticamente a todos los proyectos
+   - Mantener consistencia en saltos de línea (CRLF para Windows)
+   
+   Configuración clave:
+   - [*] charset = utf-8 (todos los archivos)
+   - [*.cs] charset = utf-8 (específico para C#)
+   - [*.md] charset = utf-8 (específico para Markdown)
+   
+   Beneficios:
+   ✓ Uniformidad en todo el equipo de desarrollo
+   ✓ Sin dependencia de configuraciones locales
+   ✓ Compatible con múltiples IDEs (VS Code, Visual Studio, Rider, etc.)
+   ✓ Aplicado automáticamente a nuevos archivos
+
+2. CONFIGURACIÓN EN Web.config
+   ==========================
+   
+   Ubicación: WebDataAgro\Web.config
+   
+   Cambios realizados:
+   - Agregado elemento <system.web><globalization/></system.web>
+   - Codificación UTF-8 para requests y responses HTTP
+   - Idioma regional configurado a es-AR (Español Argentina)
+   
+   Código agregado:
+   ```xml
+   <system.web>
+       <globalization 
+           requestEncoding="utf-8" 
+           responseEncoding="utf-8" 
+           culture="es-AR" 
+           uiCulture="es-AR" />
+   </system.web>
+   ```
+   
+   Propósito:
+   - Asegurar que la aplicación web sirva contenido UTF-8
+   - Garantizar procesamiento correcto de caracteres acentuados
+   - Validez en toda la pila de aplicación ASP.NET
+   - Configurar correctamente el comportamiento regional
+   
+   Beneficios:
+   ✓ Consistencia en la salida web
+   ✓ Soporte completo para caracteres especiales (á, é, í, ó, ú, ñ, ü)
+   ✓ Evita problemas de rendering en navegadores
+   ✓ Mejora la experiencia de usuarios hispanohablantes
+
+3. ARCHIVO .gitattributes (Raíz del repositorio)
+   =============================================
+   
+   Ubicación: C:\Users\gsian\Repos_Baufest\DataAgro\.gitattributes
+   
+   Propósito:
+   - Controlar cómo Git/Azure DevOps maneja line endings y codificación
+   - Evitar problemas de conversión de caracteres durante commits
+   - Garantizar consistencia en el repositorio
+   - Prevenir cambios no deseados al sincronizar entre plataformas
+   
+   Configuración:
+   - Archivos C# y XML: CRLF + UTF-8 (Windows-compatible)
+   - Archivos Markdown y JSON: LF + UTF-8 (Unix-compatible)
+   - Archivos binarios: Sin conversión
+   
+   Beneficios:
+   ✓ Compatibilidad multiplataforma (Windows, Mac, Linux)
+   ✓ Evita problemas "CRLF vs LF" en commits
+   ✓ Preserva codificación en el repositorio
+   ✓ Previene cambios accidentales de line endings
+   ✓ Facilita colaboración entre desarrolladores
+
+4. REGENERACIÓN DE ARCHIVOS
+   ========================
+   
+   Archivos regenerados con codificación UTF-8 completa:
+   - WebDataAgro\MEJORAS_HOMECONTROLLER.md (tildes y caracteres acentuados completos)
+   - SOLUCION_CODIFICACION.txt (este archivo)
+   
+   Estado: Regenerado con UTF-8 nativo
+
+================================================================================
+ACCIONES PARA EL EQUIPO DE DESARROLLO
+================================================================================
+
+1. SINCRONIZAR EL REPOSITORIO
+   ---------------------------
+   
+   Ejecutar los siguientes comandos:
+   
+   git fetch origin
+   git pull origin dev
+   
+   Esto descargará los nuevos archivos de configuración:
+   - .editorconfig
+   - .gitattributes
+   - MEJORAS_HOMECONTROLLER.md
+   - SOLUCION_CODIFICACION.txt
+
+2. ACTUALIZAR VISUAL STUDIO (Obligatorio)
+   --------------------------------------
+   
+   Paso 1: Ir a Herramientas > Opciones
+   Paso 2: Editor de Texto > C# > Avanzadas
+   Paso 3: Buscar "Guardar archivos" y establecer:
+   - "Detectar automáticamente la codificación de caracteres" = Desactivado
+   - "Codificación" = "UTF-8 sin BOM (65001)"
+   
+   Paso 4: Editor de Texto > Todos los idiomas
+   Paso 5: Establecer "Codificación" = "UTF-8 sin BOM (65001)"
+   
+   Paso 6: Hacer clic en OK y reiniciar Visual Studio
+
+3. REINICIAR VISUAL STUDIO
+   -----------------------
+   
+   Cerrar completamente Visual Studio y reabrirlo para que:
+   - Cargue el archivo .editorconfig
+   - Aplique automáticamente las configuraciones de codificación
+
+4. REGENERAR ARCHIVOS AFECTADOS
+   ----------------------------
+   
+   Para archivos existentes creados antes de esta solución:
+   
+   - Abrir archivo en Visual Studio
+   - Archivo > Opciones Avanzadas
+   - Verificar que Codificación = "UTF-8 sin BOM (65001)"
+   - Si es diferente, cambiar y guardar
+   - El archivo se regenerará con la codificación correcta
+   
+   Archivos recomendados a revisar:
+   - Cualquier archivo .md existente
+   - Archivos de logs personalizados
+   - Comentarios en código con caracteres acentuados
+
+5. VERIFICACIÓN DESPUÉS DE ACTUALIZAR
+   ---------------------------------
+   
+   Abrir WebDataAgro\MEJORAS_HOMECONTROLLER.md
+   Verificar que se muestren correctamente:
+   - Tildes (á, é, í, ó, ú)
+   - Eñe (ñ)
+   - Diéresis (ü)
+   - Acentos graves y otros diacríticos
+
+================================================================================
+CÓMO VERIFICAR QUE LA CODIFICACIÓN ES CORRECTA
+================================================================================
+
+OPCIÓN 1: En Visual Studio
+--------------------------
+
+1. Abrir archivo en Visual Studio
+2. Ir a Archivo > Opciones Avanzadas
+3. Verificar que "Codificación" sea "UTF-8 sin Marca de orden de byte (65001)"
+4. Si muestra tildes correctamente, está OK
+
+OPCIÓN 2: En Git (Línea de comandos)
+------------------------------------
+
+1. Abrir PowerShell o CMD en la raíz del repositorio
+2. Ejecutar: git ls-files --eol
+3. Buscar los archivos en cuestión
+4. Verificar que la segunda columna muestre "utf8" o similar
+
+OPCIÓN 3: Visual Check
+---------------------
+
+1. Abrir MEJORAS_HOMECONTROLLER.md en navegador o editor
+2. Buscar las palabras con tildes como "método", "función", "Descripción"
+3. Si se muestran correctamente, la codificación es correcta
+4. Si aparecen como "m?todo", "función", hay un problema
+
+OPCIÓN 4: En VS Code
+-------------------
+
+1. Abrir archivo en VS Code
+2. Inferior derecha: verificar que diga "UTF-8"
+3. Si dice "UTF-8 with BOM", cambiar a "UTF-8 sin BOM"
+4. Guardar archivo
+
+================================================================================
+IMPACTO DE LAS MEJORAS
+================================================================================
+
+Antes de esta solución:
+- Problemas de codificación en documentación
+- Caracteres corruptos en logs
+- Inconsistencia entre desarrolladores
+- Dificultad para documentar en español
+- Problemas potenciales en producción
+
+Después de esta solución:
+✓ Codificación estandarizada a nivel de proyecto
+✓ Soporte completo para caracteres acentuados
+✓ Consistencia en todo el equipo
+✓ Facilidad para documentar en español
+✓ Sin problemas de conversión en repositorio
+✓ Compatible con múltiples plataformas
+
+================================================================================
+REFERENCIAS TÉCNICAS
+================================================================================
+
+- EditorConfig: https://editorconfig.org
+- GitHub Line Endings: https://docs.github.com/es/github/using-git/configuring-git-to-handle-line-endings
+- .NET Framework UTF-8: https://docs.microsoft.com/es-es/dotnet/api/system.text.encoding.utf8
+- Visual Studio Encoding: https://docs.microsoft.com/es-es/visualstudio/ide/understanding-file-encodings
+- W3C UTF-8: https://www.w3.org/International/questions/qa-what-is-encoding
+
+================================================================================
+INFORMACIÓN DEL CAMBIO
+================================================================================
+
+Fecha de implementación: Marzo 2025
+Rama afectada: dev
+Repositorio: https://dev.azure.com/molinosagro/DataAgro/_git/DataAgro
+Framework: .NET Framework 4.7.2
+
+Archivos creados/modificados:
+✓ .editorconfig (nuevo)
+✓ .gitattributes (nuevo)
+✓ WebDataAgro\Web.config (modificado)
+✓ WebDataAgro\MEJORAS_HOMECONTROLLER.md (regenerado con UTF-8)
+✓ SOLUCION_CODIFICACION.txt (regenerado con UTF-8)
+
+Estado actual: COMPLETADO
+
+================================================================================
