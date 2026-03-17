@@ -19,7 +19,7 @@ namespace WebDataAgro.JobRegistration
             //RecurringJob.AddOrUpdate<IBorradoContratosHangfireJob>("BorradoContratosHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<ICerrarDiaHangfireJob>("CerrarDiaHangfireJob", s => s.Execute(), "15 18 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IConfirmacionAutomaticaPizarra13HrsHangfireJob>("ConfirmacionAutomaticaPizarra13HrsHangfireJob", s => s.Execute(), "0 13 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
-            RecurringJob.AddOrUpdate<IConsultarCuposDiariosHangfireJob>("ConsultarCuposDiariosHangfireJob", s => s.Execute(), "*/5 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
+            RecurringJob.AddOrUpdate<IConsultarCuposDiariosHangfireJob>("ConsultarCuposDiariosHangfireJob", s => s.Execute(), "*/10 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IConsultarMisturnosActivosHangfireJob>("ConsultarMisturnosActivosHangfireJob", s => s.Execute(), "10 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<ICrearSugerenciaCupoHangfireJob>("CrearSugerenciaCupoHangfireJob", s => s.Execute(), "0 6 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             //RecurringJob.AddOrUpdate<IEnviarMailConfirmaHangfireJob>("EnviarMailConfirmaHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });

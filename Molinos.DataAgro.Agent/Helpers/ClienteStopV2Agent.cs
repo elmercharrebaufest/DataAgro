@@ -299,8 +299,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                              x.EstadoCupoId != (int)EnumEstadoCupo.Disponible &&
                              !x.Centro.Acopio);
 
-                    DateTime tresDiasAtras = DateTime.Now.AddDays(-3).Date;
-                    fechas = fechas.Where(x => x >= tresDiasAtras).ToList();
+                    DateTime UnDiasAtras = DateTime.Now.AddDays(-1).Date;
+                    fechas = fechas.Where(x => x >= UnDiasAtras).ToList();
 
                     ConsultaCuposStop listaCuposStop;
 
