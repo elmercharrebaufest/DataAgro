@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos;
+using Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -413,9 +413,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             TCodLista tipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
             detalleContrato.TipoOperacion = tipoOperacion;
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
 
             // GSIAN: qué va acá?
             OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
@@ -650,9 +650,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             TCodLista tipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
             detalleContrato.TipoOperacion = tipoOperacion;
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
 
             // GSIAN: qué va acá?
             OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
@@ -813,11 +813,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? EliminarAcentos("4 días hábiles de fecha de fijación"):
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación"):
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? EliminarAcentos("Días de diferimiento contra mercadería entregada") :
-                EliminarAcentos("72 hs contra mercadería descargada.")))) : null);
+                (contrato.PagoDiferido == true ? ("Días de diferimiento contra mercadería entregada") :
+                ("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
@@ -869,9 +869,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             //operacionExentaImpSantaFe.OperacionExentaImpSantaFeText = "";
             ////operacionExentaImpSantaFe.Value = "";
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoFijarPrecioDetalleContrato
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -880,7 +880,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = EliminarAcentos(item.Texto);
+                clausula.Value = (item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1141,9 +1141,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
             detalleContrato.OperacionExentaImpSantaFe = operacionExentaImpSantaFe;
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoFijarPrecioRofexDetalleContrato
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -1342,9 +1342,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             // GSIAN: Cómo se completa??
             //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -1353,7 +1353,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = EliminarAcentos(item.Texto);
+                clausula.Value = (item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1543,9 +1543,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             // GSIAN: Cómo se completa??
             detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -1554,7 +1554,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = EliminarAcentos(item.Texto);
+                clausula.Value = (item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1685,11 +1685,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? EliminarAcentos("4 días hábiles de fecha de fijación") :
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación") :
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? EliminarAcentos("Días de diferimiento contra mercadería entregada") :
-                EliminarAcentos("72 hs contra mercadería descargada.")))) : null);
+                (contrato.PagoDiferido == true ? ("Días de diferimiento contra mercadería entregada") :
+                ("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
@@ -1718,10 +1718,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
                 detalleContrato.APrecio = new TCodLista() { CodLista = "1" };
 
-            detalleContrato.SioGranos = new SioGranos()
-            {
-                NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null,
-            };
+            //detalleContrato.SioGranos = new SioGranos()
+            //{
+            //    NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null,
+            //};
 
             // GSIAN: qué va acá?
             //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
@@ -1734,7 +1734,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = EliminarAcentos(item.Texto);
+                clausula.Value = (item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1993,9 +1993,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             TCodLista tipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
             detalleContrato.TipoOperacion = tipoOperacion;
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoOIVPrecioFijarRofexDocumentoDetalle
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -2262,9 +2262,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             TCodLista tipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
             detalleContrato.TipoOperacion = tipoOperacion;
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoOIVFijarPrecioDocumentoDetalle
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -2514,9 +2514,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             // GSIAN: Qué va acá??
             detalleContrato.EntregadeMercaderia = new TCodLista();
 
-            SioGranos sioGranos = new SioGranos();
-            sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            detalleContrato.SioGranos = sioGranos;
+            //SioGranos sioGranos = new SioGranos();
+            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
+            //detalleContrato.SioGranos = sioGranos;
             #endregion DetalleDocumentoOIVPrecioHechoDocumentoDetalle
 
             List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
@@ -2592,6 +2592,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             return confirmaAltaLoteResult;
         }
+        /*
         public string EliminarAcentos(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -2624,5 +2625,6 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
+        */
     }
 }
