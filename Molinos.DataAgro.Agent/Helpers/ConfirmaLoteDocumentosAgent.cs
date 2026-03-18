@@ -1,17 +1,18 @@
-﻿using NLog;
-using Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos;
+﻿using Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -812,11 +813,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación" :
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? EliminarAcentos("4 días hábiles de fecha de fijación"):
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? "Días de diferimiento contra mercadería entregada" :
-                "72 hs contra mercadería descargada."))) : null);
+                (contrato.PagoDiferido == true ? EliminarAcentos("Días de diferimiento contra mercadería entregada") :
+                EliminarAcentos("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
@@ -879,7 +880,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = item.Texto;
+                clausula.Value = EliminarAcentos(item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1352,7 +1353,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = item.Texto;
+                clausula.Value = EliminarAcentos(item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1553,7 +1554,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = item.Texto;
+                clausula.Value = EliminarAcentos(item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -1684,11 +1685,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación" :
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? EliminarAcentos("4 días hábiles de fecha de fijación") :
                 (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? "Días de diferimiento contra mercadería entregada" :
-                "72 hs contra mercadería descargada."))) : null);
+                (contrato.PagoDiferido == true ? EliminarAcentos("Días de diferimiento contra mercadería entregada") :
+                EliminarAcentos("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
@@ -1733,7 +1734,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
                 clausula.Orden = string.Empty;
-                clausula.Value = item.Texto;
+                clausula.Value = EliminarAcentos(item.Texto);
 
                 clausulas_detalle.Add(clausula);
             }
@@ -2590,6 +2591,38 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
 
             return confirmaAltaLoteResult;
+        }
+        public string EliminarAcentos(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            // Check rápido: si no hay chars > 127, no hay acentos
+            bool needsNormalization = false;
+            foreach (var c in text)
+            {
+                if (c > 127)
+                {
+                    needsNormalization = true;
+                    break;
+                }
+            }
+
+            if (!needsNormalization)
+                return text;
+
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(normalized.Length);
+
+            foreach (var c in normalized)
+            {
+                if (Char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
