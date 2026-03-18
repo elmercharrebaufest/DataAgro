@@ -279,7 +279,9 @@ namespace Molinos.DataAgro.Business.Managers
                                         tempConfirma.IsWebService = true;
                                         //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
                                         var altaItem = confirmaAltaLoteDocumentosResult.altaItem[0];
-                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteDocumentosResult.altaIdLote), Convert.ToInt32(altaItem.altaIdDocumento));
+                                        int? altaIdDocumento = altaItem.altaIdDocumento == null || altaItem.altaIdDocumento == "" ? (int?)null : Convert.ToInt32(altaItem.altaIdDocumento);
+                                        int? altaIdLote = confirmaAltaLoteDocumentosResult.altaIdLote == null || confirmaAltaLoteDocumentosResult.altaIdLote == "" ? (int?)null : Convert.ToInt32(confirmaAltaLoteDocumentosResult.altaIdLote);
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, altaIdLote, altaIdDocumento);
                                     }
                                     else
                                     {

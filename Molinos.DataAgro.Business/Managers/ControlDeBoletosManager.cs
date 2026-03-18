@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
