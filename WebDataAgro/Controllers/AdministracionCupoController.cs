@@ -1,4 +1,4 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -24,43 +24,59 @@ namespace WebDataAgro.Controllers
             this.cupoManager = cupoManager;
             this.centroManager = centroManager;
         }
+
+        private JsonResult CreateJsonResult(object data)
+        {
+            return new JsonResult
+            {
+                Data = data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        private void InitializeAdministrationViewBags()
+        {
+            ViewBag.Panel = cupoManager.Panel();
+            ViewBag.Fechas = cupoManager.FechasComprendidas(null);
+            ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
+            ViewBag.comercialId = GlobalVariables.ComercialId;
+        }
+
         [Autorizacion(PermisosDataAgro.AdministracionCupos)]
         public ActionResult Index()
         {
-            ViewBag.Panel = cupoManager.Panel();
-            ViewBag.Fechas = cupoManager.FechasComprendidas(null);
-            ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
-            ViewBag.comercialId = GlobalVariables.ComercialId;
-            ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
+            InitializeAdministrationViewBags();
+            ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro
+                .Where(x => x.CargaCupos)
+                .Select(x => x.Descripcion)
+                .OrderByDescending(x => x)
+                .ToList();
             return View();
         }
+
         public ActionResult DatosAdministracion(KendoGridMvcRequest request)
         {
-            //ViewBag.Panel = cupoManager.Panel();
-            //ViewBag.Fechas = cupoManager.FechasComprendidas(null);
-            //ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
             var model = administracionCupoManager.TraerTodaAdministracionCupo(request, null);
-            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+            return CreateJsonResult(model);
         }
+
         public ActionResult PartialPanel()
         {
-            ViewBag.Panel = cupoManager.Panel();
-            ViewBag.Fechas = cupoManager.FechasComprendidas(null);
-            ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
-            ViewBag.comercialId = GlobalVariables.ComercialId;
+            InitializeAdministrationViewBags();
             return PartialView("PartialPanel");
         }
+
         public JsonResult Aceptar(int administracionId, int cantidadCupo, int cantidadFleteProcedencia, int cantidadOriginal, int cantidadFleteOriginal, string motivo)
         {
-            CupoResult resultado = new CupoResult();
-            if (administracionId != 0)
+            if (administracionId <= 0)
             {
-                resultado = administracionCupoManager.AceptarCupoExcedente(administracionId, cantidadCupo, cantidadFleteProcedencia, cantidadOriginal, cantidadFleteOriginal, GlobalVariables.IdActiveDirectory, motivo);
+                var errorResult = new CupoResult();
+                errorResult.Errores.Add(new ErrorMessage(400, "No se seleccionó ninguna sugerencia"));
+                return Json(errorResult);
             }
-            else
-            {
-                resultado.Errores.Add(new ErrorMessage(400, "No se seleccionó ninguna sugerencia"));
-            }
+
+            var resultado = administracionCupoManager.AceptarCupoExcedente(administracionId, cantidadCupo, cantidadFleteProcedencia, cantidadOriginal, cantidadFleteOriginal, GlobalVariables.IdActiveDirectory, motivo);
             return Json(resultado);
         }
 
@@ -72,46 +88,51 @@ namespace WebDataAgro.Controllers
 
         public JsonResult AceptarMasivo(List<AdministracionCupoDto> solicitudes, string motivo)
         {
-            CupoResult resultados = new CupoResult();
-            if (solicitudes.Count > 0)
+            if (solicitudes == null || solicitudes.Count == 0)
             {
-                resultados = administracionCupoManager.AceptarCupoExcedenteMasivo(solicitudes, motivo, GlobalVariables.IdActiveDirectory);
+                return Json(new CupoResult
+                {
+                    Errores = new List<ErrorMessage>
+                    {
+                        new ErrorMessage(400, "No se seleccionó ninguna solicitud")
+                    }
+                });
             }
-            else
-            {
-                resultados = new CupoResult { Errores = new List<ErrorMessage> { new ErrorMessage(400, "No se seleccionó ninguna solicitud") } };
-            }
+
+            var resultados = administracionCupoManager.AceptarCupoExcedenteMasivo(solicitudes, motivo, GlobalVariables.IdActiveDirectory);
             return Json(resultados);
         }
 
         public JsonResult RechazarMasivo(List<AdministracionCupoDto> solicitudes, string motivo)
         {
-            var resultado = new Resultado();
-            if (solicitudes.Count > 0)
+            if (solicitudes == null || solicitudes.Count == 0)
             {
-                foreach (var adm in solicitudes)
-                {
-                    resultado = administracionCupoManager.CambiarEstadoRechazado(adm.Id, motivo, GlobalVariables.IdActiveDirectory);
-                }
+                var errorResult = new Resultado();
+                errorResult.Errores.Add(new ErrorMessage(400, "No se seleccionó ninguna solicitud"));
+                return Json(errorResult);
             }
-            else
+
+            var resultados = new List<Resultado>();
+            foreach (var adm in solicitudes)
             {
-                resultado.Errores.Add(new ErrorMessage(400, "No se seleccionó ninguna solicitud"));
+                var resultado = administracionCupoManager.CambiarEstadoRechazado(adm.Id, motivo, GlobalVariables.IdActiveDirectory);
+                resultados.Add(resultado);
             }
-            return Json(resultado);
+
+            return Json(resultados);
         }
 
         public ActionResult BuscarDatosSolicitudCupo(KendoGridMvcRequest request, int? ComercialId)
         {
             ComercialId = ComercialId ?? GlobalVariables.ComercialId;
             var model = administracionCupoManager.TraerTodaAdministracionCupo(request, ComercialId);
-            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+            return CreateJsonResult(model);
         }
 
         public ActionResult ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete, bool estado)
         {
             var model = administracionCupoManager.ActualizarSolicitud(id, cantidadCupo, cantidadFlete, estado);
-            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+            return CreateJsonResult(model);
         }
     }
 }

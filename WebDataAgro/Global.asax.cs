@@ -1,4 +1,4 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Newtonsoft.Json;
 using System;

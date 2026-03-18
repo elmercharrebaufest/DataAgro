@@ -1,4 +1,4 @@
-﻿var externo;
+var externo;
 $(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
@@ -81,6 +81,7 @@ function CargarGrillaConfig() {
             }
             return options;
         },
+        autoBind: false, // ← AGREGAR ESTA LÍNEA
         dataBound: function () {
             $("td:has(div.statuspendiente)").attr('id', 'border-orange');
             $("td:has(div.statusconfirmado)").attr('id', 'border-green');
@@ -387,8 +388,15 @@ function CargarGrillaConfig() {
 
     var fecha = new Date(); // Fecha actual
     fecha.setDate(fecha.getDate() - 7);
+    
+    // Agregar el filtro a la datasource ANTES de inicializar la grilla
+    ds.filter = [{ field: "Fecha", operator: "gte", value: fecha }];
+    
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
-    addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
+    if (grilla) {
+        addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
+    }
+    
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
