@@ -15,7 +15,13 @@ public class ControlDeBoletos
     public bool EsConfirma { get; set; }
 
     public int? AltaIdLoteConfirma { get; set; }
+    public int? AltaIdDocumentoConfirma { get; set; }
     public int? IdentificadorConfirma { get; set; }
+
+
+    public int? AltaIdLoteConfirmaAnterior { get; set; }
+    public int? AltaIdDocumentoConfirmaAnterior { get; set; }
+    public DateTime? FechaAnulacionConfirma { get; set; }
 
     public DateTime FechaCreacion { get; set; }
     public DateTime? FechaModificacion { get; set; }

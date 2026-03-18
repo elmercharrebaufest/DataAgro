@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<Localidad> GetProcedencias(int provinciaId);
         List<TipoOblea> GetTipoOblea();
         List<BoletoCompraNet> GetBoletoCompraNet();
-        Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null);
+        Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null);
         Resultado AsociarConfirma(int negocioId);
         List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);

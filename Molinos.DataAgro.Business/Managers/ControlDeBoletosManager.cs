@@ -184,7 +184,6 @@ namespace Molinos.DataAgro.Business.Managers
 
         #endregion
 
-
         #region Metodo para cargar combos
         public List<BolsaCompraNet> GetBolsaCompraNet()
         {
@@ -318,21 +317,23 @@ namespace Molinos.DataAgro.Business.Managers
 
             return result;
         }
-        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null)
+        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null)
         {
             var oResultado = new Resultado();
             var negocio = repositorio.Obtener<Negocio>(negocioId);
             if (negocio != null)
             {
-                var existe = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocioId);
-                if (existe == null)
+                var controlDeBoletosExiste = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocioId);
+                if (controlDeBoletosExiste == null)
                 {
+
                     var controlDeBoletos = new ControlDeBoletos()
                     {
                         NegocioId = negocioId,
                         FechaCreacion = DateTime.Now,
                         EsConfirma = negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA,
                         AltaIdLoteConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdLoteConfirma : (int?)null,
+                        AltaIdDocumentoConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdDocumentoConfirma : (int?)null,
                         ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
                         EstadoConfirmaId = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? (int)EnumEstadoConfirma.PENDIENTE : (int?)null,
                         ControlIniciado = false,
@@ -341,6 +342,32 @@ namespace Molinos.DataAgro.Business.Managers
                         RegistroDatosOblea = false
                     };
                     repositorio.Agregar(controlDeBoletos);
+                    repositorio.GuardarCambios();
+                }
+                else
+                {
+                    controlDeBoletosExiste.FechaAnulacionConfirma = DateTime.Now;
+                    controlDeBoletosExiste.EstadoConfirmaId = (int)EnumEstadoConfirma.ANULADO;
+                    controlDeBoletosExiste.ControlDeBoletosEstadoId = (int) EnumControlDeBoletosEstado.ANULADO;
+                    repositorio.GuardarCambios();
+
+                    var controlDeBoletosSustitutorio = new ControlDeBoletos()
+                    {
+                        NegocioId = negocioId,
+                        FechaCreacion = DateTime.Now,
+                        EsConfirma = negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA,
+                        AltaIdLoteConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdLoteConfirma : (int?)null,
+                        AltaIdDocumentoConfirma = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? altaIdDocumentoConfirma : (int?)null,
+                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                        EstadoConfirmaId = (negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? (int)EnumEstadoConfirma.PENDIENTE : (int?)null,
+                        ControlIniciado = false,
+                        ControlFinalizado = false,
+                        CertificacionCompletada = false,
+                        RegistroDatosOblea = false,
+                        AltaIdLoteConfirmaAnterior = controlDeBoletosExiste.AltaIdLoteConfirma,
+                        AltaIdDocumentoConfirmaAnterior = controlDeBoletosExiste.AltaIdDocumentoConfirma,
+                    };
+                    repositorio.Agregar(controlDeBoletosSustitutorio);
                     repositorio.GuardarCambios();
                 }
             }

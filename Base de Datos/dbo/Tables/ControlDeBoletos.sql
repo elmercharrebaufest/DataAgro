@@ -5,6 +5,7 @@
     EstadoConfirmaId INT NULL,
     EsConfirma BIT NOT NULL DEFAULT 0,
     AltaIdLoteConfirma INT NULL,
+    AltaIdDocumentoConfirma INT NULL,
     IdentificadorConfirma INT NULL,
     FechaCreacion DATETIME NOT NULL DEFAULT SYSDATETIME(),
     FechaModificacion DATETIME NULL,
@@ -16,7 +17,9 @@
     FechaControlFinalizado DATETIME NULL,
     FechaCertificacionCompletada DATETIME NULL,
     FechaRegistroDatosOblea DATETIME NULL,
-
+    AltaIdLoteConfirmaAnterior INT NULL,
+    AltaIdDocumentoConfirmaAnterior INT NULL,
+    FechaAnulacionConfirma DATETIME NULL,
     CONSTRAINT FK_ControlDeBoletos_Negocio 
         FOREIGN KEY (NegocioId) REFERENCES [dbo].[Negocio](Id),
 

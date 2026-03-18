@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -278,7 +278,8 @@ namespace Molinos.DataAgro.Business.Managers
                                         nuevoConfirma.IsWebService = true;
                                         tempConfirma.IsWebService = true;
                                         //SE GUARDA RELACION DE CONFIRMA CON EL BOLETO EN DATA AGRO
-                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteDocumentosResult.altaIdLote));
+                                        var altaItem = confirmaAltaLoteDocumentosResult.altaItem[0];
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, Convert.ToInt32(confirmaAltaLoteDocumentosResult.altaIdLote), Convert.ToInt32(altaItem.altaIdDocumento));
                                     }
                                     else
                                     {
