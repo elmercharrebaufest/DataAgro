@@ -777,9 +777,12 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.;
 
             // GSIAN: Comentado por el caso de QA 2687753
-            //TCaption comisionPorComprador = new TCaption();
-            //comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-            //detalleContrato.ComisionPorComprador = comisionPorComprador;
+            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
+            {
+                TCaption comisionPorComprador = new TCaption();
+                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
+                detalleContrato.ComisionPorComprador = comisionPorComprador;
+            }
 
             detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
             {
@@ -1240,9 +1243,12 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.MontoImponible = new TCaption() { Value = string.Empty };
             detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.
 
-            //TCaption comisionPorComprador = new TCaption();
-            //comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-            //detalleContrato.ComisionPorComprador = comisionPorComprador;
+            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
+            {
+                TCaption comisionPorComprador = new TCaption();
+                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
+                detalleContrato.ComisionPorComprador = comisionPorComprador;
+            }
 
             detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
             {
@@ -1460,9 +1466,13 @@ namespace Molinos.DataAgro.Agent.Helpers
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
             detalleContrato.CantCamiones = new TCaption();
 
-            TCaption comisionPorComprador = new TCaption();
-            comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-            detalleContrato.ComisionPorComprador = comisionPorComprador;
+            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
+            {
+                TCaption comisionPorComprador = new TCaption();
+                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
+                detalleContrato.ComisionPorComprador = comisionPorComprador;
+            }
+
 
             // GSIAN: Cómo se completa??
             detalleContrato.Precio = "";
@@ -1649,8 +1659,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
             //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
             detalleContrato.CantCamiones = new TCaption();
-
-            detalleContrato.ComisionPorComprador = new TCaption() { Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null };
+            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
+            {
+                detalleContrato.ComisionPorComprador = new TCaption() { Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null };
+            }
 
             detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
             {
