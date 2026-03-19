@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------
+//--------------------------------------------------
 //  Variables Globales
 //--------------------------------------------------
 
@@ -658,11 +658,11 @@ function MSExecuteGetOnServer(url, datos, onCallBack) {
     var respuesta = null;
 
     $.ajax({
-        async: false, 
+        async: false,
         url: MSGetUrl(url),
         type: 'GET',
         cache: false,
-        data: datos, 
+        data: datos,
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
@@ -682,7 +682,10 @@ function MSExecuteGetOnServer(url, datos, onCallBack) {
     return respuesta;
 }
 
-function MSExecuteGetOnServerAsync(url, datos = null) {
+function MSExecuteGetOnServerAsync(url, datos) {
+
+    datos = datos !== undefined ? datos : null;
+
     return new Promise(function (resolve, reject) {
 
         $.ajax({
@@ -698,7 +701,7 @@ function MSExecuteGetOnServerAsync(url, datos = null) {
             },
 
             error: function (xhr, status, error) {
-                const errObj = {
+                var errObj = {
                     xhr: xhr,
                     status: status,
                     error: error
