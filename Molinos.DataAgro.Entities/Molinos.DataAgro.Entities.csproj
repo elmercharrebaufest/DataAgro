@@ -326,6 +326,7 @@
     <Compile Include="Dto\BuscarCentroDto.cs" />
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
+    <Compile Include="Dto\ContactoComercialAuditoriaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />
@@ -734,6 +735,7 @@
     <Compile Include="Entities\ConfirmaAltaEstado.cs" />
     <Compile Include="Entities\ConfirmaAltaEstadoDocumento.cs" />
     <Compile Include="Entities\ConfirmaAltaEstadoLote.cs" />
+    <Compile Include="Entities\ContactoComercialAuditoria.cs" />
     <Compile Include="Entities\ControlDeBoletos.cs" />
     <Compile Include="Entities\ControlDeBoletosEstado.cs" />
     <Compile Include="Entities\ControlDeBoletosPreCertificacion.cs" />

@@ -1,0 +1,204 @@
+@{
+    ViewBag.Title = "Auditor&iacute;a de Contacto Comercial";
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/ContactoComercialAuditoria")
+}
+
+<div class="container">
+    <div class="form-horizontal">
+        <h2>Auditor&iacute;a de Contacto Comercial</h2>
+        <hr />
+
+        <!-- Secci&oacute;n de Filtros Generales -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Filtros Generales</h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">ID Contacto Comercial</label>
+                            <div class="col-md-8">
+                                <input type="text" id="ContactoComercialId" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Usuario</label>
+                            <div class="col-md-8">
+                                <input type="text" id="UsuarioBusqueda" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">D&iacute;as (Cambios Recientes)</label>
+                            <div class="col-md-8">
+                                <input type="text" id="DiasBusqueda" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Fecha</label>
+                            <div class="col-md-8">
+                                <input type="text" id="FechaBusqueda" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-8">
+                                <button type="button" class="btn btn-default" onclick="limpiarTodos()">Limpiar Todo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1: Historial de Contacto -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="buscarHistorial()">
+                        <span class="glyphicon glyphicon-search"></span> Buscar Historial
+                    </button>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    <small>
+                        Visualiza el historial completo de cambios para un Contacto Comercial espec&iacute;fico,
+                        incluyendo valores anteriores y nuevos.
+                    </small>
+                </p>
+                <div id="gridHistorial" style="min-height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Cambios Recientes -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="buscarCambiosRecientes()">
+                        <span class="glyphicon glyphicon-search"></span> Buscar Cambios Recientes
+                    </button>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    <small>
+                        Muestra todos los cambios realizados en los &uacute;ltimos N d&iacute;as en cualquier Contacto Comercial.
+                    </small>
+                </p>
+                <div id="gridCambiosRecientes" style="min-height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Cambios por Usuario -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="buscarCambiosPorUsuario()">
+                        <span class="glyphicon glyphicon-search"></span> Buscar Cambios por Usuario
+                    </button>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    <small>
+                        Filtra todos los cambios realizados por un usuario espec&iacute;fico.
+                    </small>
+                </p>
+                <div id="gridCambiosPorUsuario" style="min-height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: &Uacute;ltimo Cambio -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="buscarUltimoCambio()">
+                        <span class="glyphicon glyphicon-search"></span> Buscar &Uacute;ltimo Cambio
+                    </button>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    <small>
+                        Obtiene el cambio m&aacute;s reciente realizado en un Contacto Comercial espec&iacute;fico.
+                    </small>
+                </p>
+                <div id="gridUltimoCambio" style="min-height: 300px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 5: Resumen por Tipo de Operaci&oacute;n -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="buscarResumenOperacion()">
+                        <span class="glyphicon glyphicon-search"></span> Buscar Resumen
+                    </button>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    <small>
+                        Muestra un resumen de cambios agrupados por tipo de operaci&oacute;n (INSERT, UPDATE, DELETE).
+                    </small>
+                </p>
+                <div id="gridResumenOperacion" style="min-height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .panel {
+        margin-bottom: 20px;
+    }
+
+    .panel-heading {
+        padding: 10px 15px;
+    }
+
+    .btn-sm {
+        margin-bottom: 10px;
+    }
+
+    .text-info {
+        margin: 10px 0;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .k-grid-header {
+        overflow-x: auto;
+    }
+
+    .k-grid tbody tr {
+        cursor: pointer;
+    }
+
+    /* Estilos para mejorar legibilidad */
+    .k-grid table {
+        width: 100%;
+    }
+
+    .k-grid td {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+</style>

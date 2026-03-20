@@ -372,6 +372,7 @@
     <Content Include="Content\control-boletos-contrato.css" />
     <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
+    <Content Include="Scripts\App\ContactoComercialAuditoria.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
     <Content Include="Scripts\App\ControlDeBoletosModificarContrato.js" />
@@ -391,7 +392,9 @@
     <Content Include="Views\ControlDeBoletos\SeguimientoBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
     <Content Include="MEJORAS_HOMECONTROLLER.md" />
+    <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <None Include="whitelist.json" />
+    <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />
     <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />

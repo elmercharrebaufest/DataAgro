@@ -324,6 +324,11 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/CambioDePerfil").Include(
                                       "~/Scripts/App/CambioDePerfil.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/ContactoComercialAuditoria").Include(
+                                        "~/Scripts/App/Filtros.js",
+                                        "~/Scripts/KendoExtensions.js",
+                                        "~/Scripts/App/ContactoComercialAuditoria.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletos").Include(
                                        "~/Scripts/App/Filtros.js",
                                        "~/Scripts/App/ControlDeBoletos.js",

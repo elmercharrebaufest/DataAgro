@@ -285,6 +285,7 @@
     <Compile Include="Managers\IConfirmaManager.cs" />
     <Compile Include="Managers\IBoletoManager.cs" />
     <Compile Include="Managers\ICapacidadProductivaManager.cs" />
+    <Compile Include="Managers\IContactoComercialAuditoriaManager.cs" />
     <Compile Include="Managers\IControlDeBoletosEstadoManager.cs" />
     <Compile Include="Managers\IControlDeBoletosManager.cs" />
     <Compile Include="Managers\ICupoNoPropioManager.cs" />
