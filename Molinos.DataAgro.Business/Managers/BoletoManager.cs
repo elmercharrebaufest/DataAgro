@@ -1,4 +1,4 @@
-﻿using iTextSharp.text;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.css;
@@ -312,7 +312,7 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoDto.Generado = true;
                             var guardarBoleto = repositorio.Agregar(ConvertirBoletoDtoAEntidad(boletoDto));
                             boletoResult.BoletosGenerados.Add(guardarBoleto);
-                            List<ResultadoClausula> clausulas = new List<ResultadoClausula>();                            
+                            List<ResultadoClausula> clausulas = new List<ResultadoClausula>();
                             if (boletoContrato.Clausulas.Count() == 0)
                             {
                                 clausulas = ObtenerClausulas(negocio);
@@ -330,7 +330,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     });
                                 }
                             }
-                            
+
                             var pdf = GenerarPDF(negocio, clausulas, boletoDto);
                             if (boletoContrato.Mail)
                             {
@@ -1082,11 +1082,10 @@ namespace Molinos.DataAgro.Business.Managers
             return clausulas;
         }
 
-        public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo)
+        public List<BasicoBoleto> TraerContratosFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo)
         {
-            var filter = CorregirFiltro(filtro);
-            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filter, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
-            var data = result.Data as IEnumerable<BasicoBoleto>;
+            var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var data = result as List<BasicoBoleto> ?? result.ToList();
 
             // Iterar sobre los datos y modificar atributos
             foreach (var boleto in data)
@@ -1101,7 +1100,11 @@ namespace Molinos.DataAgro.Business.Managers
                     boleto.UsuarioAnulacion = null;
                 }
             }
-            return result;
+            if (filtro.EsSoloPendientes)
+            {
+                data = data.Where(b => b.Estado_Version == "Pendiente").ToList();
+            }
+            return data;
         }
 
         private DataSourceRequest CorregirFiltro(DataSourceRequest request)
@@ -1261,7 +1264,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private string CompletarNegocioSAP(string negocioSAP) => int.Parse(negocioSAP).ToString("D10");
 
-        public string ValidarContratoTipoBoleto(string numeroSap, int tipoNegocio, List<int> equipo)
+        public string ValidarContratoTipoBoleto(string numeroSap, List<int> equipo)
         {
             string mensajeValidacionContratoSAP = string.Empty;
             List<string> listaContratoSAP = new List<string>();
@@ -1275,7 +1278,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var contrato = contratos.FirstOrDefault();
 
-            if ( (contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)) 
+            if ((contrato.BoletoId != (int)EnumBoletoCompraNet.FISICO && contrato.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA))
             {
                 mensajeValidacionContratoSAP = $"El contrato {contrato.ContratoSAP} no es un boleto tipo boleto fisico/carta oferta.";
                 return mensajeValidacionContratoSAP;
@@ -1337,6 +1340,28 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return mensajeValidacionVersionBoleto;
         }
+
+        #region cargar combos
+        public List<BolsaCompraNet> GetBolsaCompraNet()
+        {
+            return this.repositorio.Listar<BolsaCompraNet>();
+        }
+        public List<ComercialCombo> GetComercial()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetAbmComercialCombo();
+        }
+        public List<MaterialCombo> GetMaterial()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetAbmMaterialCombo();
+        }
+        public List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo)
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return qry.GetProveedorPorComercialCombo(equipo);
+        }
+        #endregion
 
     }
 }

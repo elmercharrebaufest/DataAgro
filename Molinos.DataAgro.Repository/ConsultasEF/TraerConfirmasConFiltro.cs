@@ -13,18 +13,18 @@ using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    public class TraerConfirmasConFiltro : IConsultaEscalar<DataSourceResult>
+    public class TraerConfirmasConFiltro : IConsultaEscalar<List<BasicoConfirma>>
     {
-        private readonly DataSourceRequest request;
+        private readonly ConfirmaFiltroBusquedaDto filtros;
         private readonly List<int> equipo;
 
-        public TraerConfirmasConFiltro(DataSourceRequest request, List<int> equipo)
+        public TraerConfirmasConFiltro(ConfirmaFiltroBusquedaDto filtros, List<int> equipo)
         {
-            this.request = request;
+            this.filtros = filtros;
             this.equipo = equipo;
         }
 
-        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
+        private static List<BasicoConfirma> Query(DbContext contexto, ConfirmaFiltroBusquedaDto filtros, List<int> equipo)
         {
             // Configuración del timeout de la consulta
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
@@ -144,6 +144,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                // Proveedor (Corredor y Vendedor)
                                                Corredor = negocio.Corredor.RazonSocial ?? "",
                                                Vendedor = negocio.Proveedor.RazonSocial ?? "",
+                                               ProveedorId = negocio.ProveedorId,
 
                                                // Material
                                                MaterialId = negocio.MaterialId,
@@ -155,10 +156,66 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                                                // Comercial
                                                Comercial = negocio.Comercial.Apellido + ", " + negocio.Comercial.Nombres,
+                                               ComercialId = negocio.ComercialId,
                                                FechaConfirmadoSAP = negocio.FechaConfirmadoSAP,
                                            };
-                GridHelper.TruncateTime(request.Filter, ref queryBasicoConfirmas);
-                return queryBasicoConfirmas.ToDataSourceResult(request);
+
+                // Aplicar filtros personalizados
+                if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
+                {
+                    var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .ToList();
+
+                    if (negociosSAPList.Count > 0)
+                    {
+                        queryBasicoConfirmas = queryBasicoConfirmas.Where(b => negociosSAPList.Contains(b.NegocioSAP));
+                    }
+                }
+
+                if (filtros.FechaConfirmacionDesde.HasValue)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
+                }
+
+                if (filtros.FechaConfirmacionHasta.HasValue)
+                {
+                    var fechaHasta = filtros.FechaConfirmacionHasta.Value.Date.AddDays(1).AddTicks(-1);
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaConfirmacion <= fechaHasta);
+                }
+
+                if (filtros.FechaEnvioDesde.HasValue)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaGeneracion >= filtros.FechaEnvioDesde.Value);
+                }
+
+                if (filtros.FechaEnvioHasta.HasValue)
+                {
+                    var fechaHasta = filtros.FechaEnvioHasta.Value.Date.AddDays(1).AddTicks(-1);
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaGeneracion <= fechaHasta);
+                }
+
+                if (filtros.ProveedorId.HasValue && filtros.ProveedorId.Value > 0)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.ProveedorId == filtros.ProveedorId.Value);
+                }
+
+                if (filtros.ComercialId.HasValue && filtros.ComercialId.Value > 0)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.ComercialId == filtros.ComercialId.Value);
+                }
+
+                if (filtros.BolsaCompraNetId.HasValue && filtros.BolsaCompraNetId.Value > 0)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.BolsaId == filtros.BolsaCompraNetId.Value);
+                }
+
+                if (filtros.MaterialId.HasValue && filtros.MaterialId.Value > 0)
+                {
+                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.MaterialId == filtros.MaterialId.Value);
+                }
+
+                return queryBasicoConfirmas.ToList();
             }
             catch (Exception ex)
             {
@@ -167,11 +224,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
         }
 
-        public virtual DataSourceResult Ejecutar(DbContext contexto)
+        public virtual List<BasicoConfirma> Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, equipo);
+                return Query(contexto, filtros, equipo);
             }
         }
     }

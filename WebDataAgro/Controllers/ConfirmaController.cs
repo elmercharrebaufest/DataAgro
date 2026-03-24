@@ -1,12 +1,15 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -22,14 +25,23 @@ namespace WebDataAgro.Controllers
         private readonly IReportesManager reportesManager;
         private readonly IMaterialManager _materialManager;
         private readonly IContratoManager _contratoManager;
+        private readonly IControlDeBoletosManager _controlDeBoletosManager;
 
-        public ConfirmaController(IConfirmaManager confirmaManager, IReportesManager reportesManager, IMaterialManager materialManager, IContratoManager contratoManager)
+        // Cache configuration
+        private static readonly object _cacheLock = new object();
+        private const string CONFIRMA_MATERIALES_CACHE_KEY = "Confirma_Materiales_Cache";
+        private const string CONFIRMA_BOLSAS_CACHE_KEY = "Confirma_Bolsas_Cache";
+        private const string CONFIRMA_COMERCIALES_CACHE_KEY = "Confirma_Comerciales_Cache";
+        private const string CONFIRMA_PROVEEDORES_CACHE_KEY = "Confirma_Proveedores_Cache_{0}"; // {0} = Equipo
+        private const int CACHE_DURATION_MINUTES = 5;
+
+        public ConfirmaController(IConfirmaManager confirmaManager, IReportesManager reportesManager, IMaterialManager materialManager, IContratoManager contratoManager, IControlDeBoletosManager controlDeBoletosManager)
         {
             this.confirmaManager = confirmaManager;
             this.reportesManager = reportesManager;
             _materialManager = materialManager;
             _contratoManager = contratoManager;
-
+            this._controlDeBoletosManager = controlDeBoletosManager;
         }
 
         public ActionResult DescargarConfirma()
@@ -51,7 +63,7 @@ namespace WebDataAgro.Controllers
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
             var clausulas = confirma.Clausulas;
 
-            var result = confirmaManager.GrabarConfirmas(confirma.ClaseNegocioId, GlobalVariables.ComercialId, contratos, confirma.IsWebService, clausulas, GlobalVariables.EquipoReal);
+            var result = confirmaManager.GrabarConfirmas(GlobalVariables.ComercialId, contratos, confirma.IsWebService, clausulas, GlobalVariables.EquipoReal);
             return new JsonResult()
             {
                 Data = result,
@@ -145,44 +157,64 @@ namespace WebDataAgro.Controllers
             return Json(Util.GetDownloadKey(identif));
         }
 
-        public ActionResult BuscaDatosTabla(ConsultaConfirmaDto consultaConfirma)
+        [HttpPost]
+        public JsonResult BuscaDatosTabla(ConfirmaFiltroBusquedaDto filtrosBusqueda)
         {
-            var filters = consultaConfirma.Filtros.Filter.Filters.ToList();
-            var claseNegocioId = filters.FirstOrDefault(x => x.Field == "ClaseNegocioId");
-            if (claseNegocioId != null)
+            try
             {
-                var negociosSAP = filters.FirstOrDefault(x => x.Field == "NegocioSAP");
-                var negocioSAP = filters.FirstOrDefault(x => x.Field == null);
+                // Obtener todos las confirmas con los filtros aplicados
+                var todasConfirmas = confirmaManager.TraerNegociosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
 
-                if (negociosSAP != null)
-                    consultaConfirma.Filtros.Filter.Filters = filters.Where(x => x.Field == "ClaseNegocioId" || x.Field == "NegocioSAP").ToList();
+                // Aplicar paginación
+                var confirmasQuery = todasConfirmas.AsQueryable();
+                var totalRegistros = confirmasQuery.Count();
 
-                if (negocioSAP != null)
-                    consultaConfirma.Filtros.Filter.Filters = filters.Where(x => x.Field == "ClaseNegocioId" || x.Field == null).ToList();
+                // Aplicar ordenamiento si existe
+                if (filtrosBusqueda.Sort != null && filtrosBusqueda.Sort.Any())
+                {
+                    var sortDescriptor = filtrosBusqueda.Sort.First();
+                    var orderBy = sortDescriptor.Field + (sortDescriptor.Dir == "desc" ? " descending" : " ascending");
+                    confirmasQuery = confirmasQuery.OrderBy(orderBy);
+                }
+
+                // Aplicar skip y take para paginación
+                var confirmas = confirmasQuery
+                    .Skip(filtrosBusqueda.Skip)
+                    .Take(filtrosBusqueda.Take)
+                    .ToList();
+
+                var result = new
+                {
+                    Data = confirmas,
+                    Total = totalRegistros
+                };
+
+                return Json(result);
             }
-
-            var model = confirmaManager.TraerNegociosFiltrados(consultaConfirma.Filtros, GlobalVariables.EquipoReal, consultaConfirma.EsSoloPendientes);
-
-
-
-            return new JsonResult()
+            catch (Exception ex)
             {
-                Data = model,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                MaxJsonLength = Int32.MaxValue
-            };
+                // Log del error para debugging
+                System.Diagnostics.Debug.WriteLine($"Error en BuscaDatosTabla: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
         }
 
         [HttpGet]
-        public ActionResult GestionarClausulas(string numeroSap, int tipoNegocio)
+        public ActionResult GestionarClausulas(string numeroSap)
         {
-            ViewBag.ValidacionContrato = confirmaManager.ValidarContratoConfirma(numeroSap, tipoNegocio, GlobalVariables.EquipoReal);
+            ViewBag.ValidacionContrato = confirmaManager.ValidarContratoConfirma(numeroSap, GlobalVariables.EquipoReal);
             string mensajeValidacion = (string)ViewBag.ValidacionContrato;
             if (mensajeValidacion.Length == 0)
             {
                 ViewBag.Clausulas = confirmaManager.ObtenerClausulasPorNegocio(numeroSap, GlobalVariables.EquipoReal);
                 ViewBag.NegocioSAP = numeroSap;
-                ViewBag.TipoNegocio = tipoNegocio;
             }
             return View();
         }
@@ -242,5 +274,189 @@ namespace WebDataAgro.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
         }
+
+        #region Cargar Combos
+        [HttpGet]
+        public JsonResult GetMateriales()
+        {
+            try
+            {
+                var cachedData = HttpContext.Cache[CONFIRMA_MATERIALES_CACHE_KEY] as List<SelectListItem>;
+
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
+                    {
+                        cachedData = HttpContext.Cache[CONFIRMA_MATERIALES_CACHE_KEY] as List<SelectListItem>;
+
+                        if (cachedData == null)
+                        {
+                            var material = _controlDeBoletosManager.GetMaterial();
+                            cachedData = material.Select(x => new SelectListItem
+                            {
+                                Text = x.Descripcion,
+                                Value = x.MaterialId.ToString(),
+                                Selected = false
+                            })
+                            .OrderBy(x => x.Text)
+                            .ToList();
+
+                            HttpContext.Cache.Insert(
+                                CONFIRMA_MATERIALES_CACHE_KEY,
+                                cachedData,
+                                null,
+                                DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES),
+                                System.Web.Caching.Cache.NoSlidingExpiration
+                            );
+                        }
+                    }
+                }
+
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetMateriales: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetBolsaCompraNet()
+        {
+            try
+            {
+                var cachedData = HttpContext.Cache[CONFIRMA_BOLSAS_CACHE_KEY] as List<SelectListItem>;
+
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
+                    {
+                        cachedData = HttpContext.Cache[CONFIRMA_BOLSAS_CACHE_KEY] as List<SelectListItem>;
+
+                        if (cachedData == null)
+                        {
+                            var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                            cachedData = listaEstados.Select(x => new SelectListItem
+                            {
+                                Text = x.Descripcion,
+                                Value = x.Id.ToString(),
+                                Selected = false
+                            })
+                            .OrderBy(x => x.Text)
+                            .ToList();
+
+                            HttpContext.Cache.Insert(
+                                CONFIRMA_BOLSAS_CACHE_KEY,
+                                cachedData,
+                                null,
+                                DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES),
+                                System.Web.Caching.Cache.NoSlidingExpiration
+                            );
+                        }
+                    }
+                }
+
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetBolsaCompraNet: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetComerciales()
+        {
+            try
+            {
+                var cachedData = HttpContext.Cache[CONFIRMA_COMERCIALES_CACHE_KEY] as List<SelectListItem>;
+
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
+                    {
+                        cachedData = HttpContext.Cache[CONFIRMA_COMERCIALES_CACHE_KEY] as List<SelectListItem>;
+
+                        if (cachedData == null)
+                        {
+                            var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
+                            cachedData = comercial.Select(x => new SelectListItem
+                            {
+                                Text = x.Apellido,
+                                Value = x.ComercialId.ToString(),
+                                Selected = false
+                            })
+                            .OrderBy(x => x.Text)
+                            .ToList();
+
+                            HttpContext.Cache.Insert(
+                                CONFIRMA_COMERCIALES_CACHE_KEY,
+                                cachedData,
+                                null,
+                                DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES),
+                                System.Web.Caching.Cache.NoSlidingExpiration
+                            );
+                        }
+                    }
+                }
+
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetComerciales: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetProveedores()
+        {
+            try
+            {
+                // Cache key varies by Equipo (user-specific)
+                string cacheKey = string.Format(CONFIRMA_PROVEEDORES_CACHE_KEY, GlobalVariables.Equipo);
+                var cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
+                    {
+                        cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+
+                        if (cachedData == null)
+                        {
+                            var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
+                            cachedData = proveedores.Select(comercial => new SelectListItem
+                            {
+                                Text = comercial.RazonSocial,
+                                Value = comercial.ProveedorId.ToString(),
+                                Selected = false
+                            })
+                            .OrderBy(x => x.Text)
+                            .ToList();
+
+                            HttpContext.Cache.Insert(
+                                cacheKey,
+                                cachedData,
+                                null,
+                                DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES),
+                                System.Web.Caching.Cache.NoSlidingExpiration
+                            );
+                        }
+                    }
+                }
+
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetProveedores: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
     }
 }

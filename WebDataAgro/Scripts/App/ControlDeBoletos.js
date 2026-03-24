@@ -312,6 +312,7 @@ var ControlBoletos = (function () {
                             },
                         },
                         height: 550,
+                        scrollable: true,
                         sortable: {
                             mode: "single",
                             allowUnsort: false,

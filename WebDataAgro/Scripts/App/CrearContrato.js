@@ -1,4 +1,4 @@
-﻿var viewModel;
+var viewModel;
 var datosIniCrearContrato;
 var contratoEdit;
 var Id;
@@ -210,14 +210,27 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
 }
 
+function InitializeFeriados_Optimized() {
+    ApiCacheManager.getFeriados(function (data) {
+        feriados = data || [];
+        for (var i = 0; i < feriados.length; i++) {
+            feriados[i] = new Date(parseInt(feriados[i].substr(6)));
+        }
+        // PRE-PROCESAR: Formatear los feriados para el datepicker
+        var fechasFormateadas = [];
+        for (var j = 0; j < data.length; j++) {
+            var src = data[j];
+            src = src.replace(/[^0-9 +]/g, '');
+            fechasFormateadas.push(kendo.toString(new Date(parseInt(src)), "dd-MM-yyyy"));
+        }
+        // GUARDAR en caché
+        ApiCacheManager._setFeriadosFormateados(fechasFormateadas);
+    });
+}
+
 function InicializarElementos() {
-    feriados = MSExecuteOnServer('/CompraNet/FechaFeriados');
-    if (feriados == null) {
-        feriados = [];
-    }
-    for (var i = 0; i < feriados.length; i++) {
-        feriados[i] = new Date(parseInt(feriados[i].substr(6)));
-    }
+    InitializeFeriados_Optimized();
+
     kendo.culture("es-AR");
 
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
@@ -3237,13 +3250,30 @@ function LimpiarBoleto() {
 }
 
 function CargarCampaniaPorMaterial(value) {
-    var resultGrano = MSExecuteOnServer('/CompraNet/TraerCampanaPorMaterial', { MaterialId: value });
+    var requestsComplete = 0;
+    var totalRequests = 2;
+    var resultGrano = null;
+    var campanaActualId = null;
 
-    var campanaActualId = MSExecuteOnServer('/CompraNet/TraerCampanaActualMaterial', { MaterialId: value });
+    function updateIfReady() {
+        requestsComplete++;
+        if (requestsComplete === totalRequests) {
+            viewModel.set("CampanaCombo", resultGrano);
+            if (campanaActualId) {
+                $("#campanaId").data("kendoDropDownList").value(campanaActualId);
+            }
+        }
+    }
 
-    viewModel.set("CampanaCombo", resultGrano);
+    ApiCacheManager.getCampana(value, function (data) {
+        resultGrano = data;
+        updateIfReady();
+    });
 
-    $("#campanaId").data("kendoDropDownList").value(campanaActualId);
+    ApiCacheManager.getCampanaActual(value, function (data) {
+        campanaActualId = data;
+        updateIfReady();
+    });
 }
 
 function CerrarDatosPendientes() {
@@ -3270,29 +3300,31 @@ function windowsResize() {
         $("#proveedorLabelId").removeClass("noLeftPadding");
     }
 }
+
 function CargarCalidadPorMaterial(value) {
-    var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
-    if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == Materiales.SOJA) {
-        for (var i = 0; i < calidadGrano.length; i++) {
-            if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
-                calidadGrano.splice(i);
+    ApiCacheManager.getCalidades(value, function (calidadGrano) {
+        if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
+            $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == Materiales.SOJA) {
+            for (var i = 0; i < calidadGrano.length; i++) {
+                if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
+                    calidadGrano.splice(i);
+                }
             }
         }
-    }
-    viewModel.set("EspecialesCombo", calidadGrano);
+        viewModel.set("EspecialesCombo", calidadGrano);
 
-    if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
-    } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
-    } else {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
-    }
-    if ($("#material").val() == Materiales.TRIGO) {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
-    }
-    CambioCalidades();
+        if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
+        } else {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+        }
+        if ($("#material").val() == Materiales.TRIGO) {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
+        }
+        CambioCalidades();
+    });
 }
 
 function LimpiarCalidades() {
@@ -5691,16 +5723,19 @@ function HayChequeElectronicoOtros() {
         $("#pagoCbuInput").val("");
     }
 }
-function FechaFeriado() {
-    var fechaFeriado = MSExecuteOnServer('/CompraNet/FechaFeriados');
-    var fechas = [];
 
-    for (var i = 0; i < fechaFeriado.length; i++) {
-        var src = fechaFeriado[i];
-        src = src.replace(/[^0-9 +]/g, '');
-        fechas.push(kendo.toString(new Date(parseInt(src)), "dd-MM-yyyy"));
+function FechaFeriado() {
+    // ✅ OPTIMIZADO: Usar caché en lugar de llamar al servidor
+    var fechasSync = null;
+    ApiCacheManager.getFeriadosFormateados(function (data) {
+        fechasSync = data;
+    });
+
+    if (fechasSync !== null) {
+        return fechasSync;  // Devuelve desde caché
     }
-    return fechas;
+
+    return [];  // Fallback
 }
 
 function formatDate(date) {

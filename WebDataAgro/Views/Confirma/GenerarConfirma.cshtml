@@ -1,194 +1,172 @@
-@{
+锘緻{
     ViewBag.Title = "Generar Confirma";
+}
+
+@section styles{
+    <link href="~/Content/css/control-boletos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/generarboleto.css" />
 }
 
 @section Scripts{
     @Scripts.Render("~/bundles/GenerarConfirma")
 }
-<div class="container-fluid" style="margin-left: 4em !important; margin-right: 4em !important;">
-    <div class="row" style="padding: 10px 10px 0px 10px !important;">
-        <div class="col"><h3>Generaci髇 de Confirma</h3></div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-md-2">
-            <label>Tipo de Negocio</label>
-        </div>
-        <div class="col-sm-2" style="margin-bottom:0.5em;">
-            @Html.DropDownList("ClaseNegocioId", new SelectList(ViewBag.ClaseNegocio, "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "ClaseNegocio" })
-        </div>
-        <div class="col-md-2 noRightPadding">
-            @Html.TextBox("NegocioSAP", "", new { placeholder = "N鷐ero/s SAP", @class = "form-control filtroBusquedaNumeroRangoDesde", style = "width:100%", @id = "NegocioSAP-desde" })
-        </div>
-        <div class="col-md-2">
-            @Html.TextBox("NegocioSAP", "", new { placeholder = "N鷐ero/s SAP Hasta", @type = "number", @class = "form-control filtroBusquedaNumeroRangoHasta", style = "width:100%", @id = "NegocioSAP-hasta" })
-        </div>
-        <div class="col-md-1 noLeftPadding" hidden>
-            <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
-        </div>
-        <div hidden class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
-        </div>
-    
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-md-2">
-            <label>Contrato</label>
-        </div>
-        <div class="col-md-2">
-            @Html.DropDownList("TipoNegocio", new SelectList(
-                                         new List<SelectListItem>
-                                         {
-                    new SelectListItem{ Value = "A FIJAR", Text = "A FIJAR"},
-                    new SelectListItem{ Value = "A PRECIO", Text = "A PRECIO"}
-                                         }, "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaTextBox", @id = "TipoNegocio" })
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <label>Fecha de Confirmaci髇 desde</label>
-            </div>
-            <div class="col-sm-2">
-                <input id="FechaConfirmacionDesde" class="filtroFecha" name="FechaConfirmacion-desde" style="width: 100%" type="date" style="width:unset" />
-            </div>
-            <div class="col-md-1">
-                <label>Hasta</label>
-            </div>
-            <div class="col-sm-2">
-                <input id="FechaConfirmacionHasta" class="filtroFecha" name="FechaConfirmacion-hasta" style="width: 100%" type="date" style="width:unset" />
-            </div>
-            <div class="col"></div>
+
+@* Codificaci贸n UTF-8 para caracteres especiales *@
+<meta charset="utf-8" />
+
+<div class="container-fluid" style="margin-left:2em; margin-right:2em;">
+
+    <!-- Header -->
+    <div class="row header-section">
+        <div class="col-12">
+            <h2 class="page-title">
+                <i class="fa fa-file-text-o"></i>
+                Generaci贸n de Confirma
+            </h2>
         </div>
     </div>
-    <br />
-    <div class="row">
-        <div class="col-md-2">
-            <label>Material</label>
+
+    <!-- Filtros -->
+    <div class="card filter-card fade-in">
+        <div class="card-header">
+            <h6 class="card-title mb-0">
+                Gesti贸n y generaci贸n de confirmas de contratos
+            </h6>
         </div>
-        <div class="col-md-2">
-            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
-        </div>
-        <div class="col-md-2">
-            <label>Fecha de Carga desde</label>
-        </div>
-        <div class="col-md-2">
-            <input id="fechaCargaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
-        </div>
-        <div class="col-sm-2 col-md-1">
-            <label>Hasta</label>
-        </div>
-        <div class="col-md-2">
-            <input id="fechaCargaHastaId" class="filtroFecha" name="FechaCarga-desde" type="date" style="width: 100%" />
+
+        <div class="card-body">
+
+            <!-- fila 1 -->
+            <div class="row form-row">
+                <div class="col-md-6 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Contratos SAP</label>
+                        <input type="text"
+                               id="NegocioSAP"
+                               class="form-control"
+                               placeholder="Contratos SAP" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Material</label>
+                        <select id="materialId" class="form-control">
+                            <option value="">Seleccione Material</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Proveedor</label>
+                        <select id="proveedorId" class="form-control">
+                            <option value="">Seleccione Proveedor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fila 2 -->
+            <div class="row form-row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Comercial</label>
+                        <select id="comercialId" class="form-control">
+                            <option value="">Seleccione Comercial</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Bolsa</label>
+                        <select id="bolsaCompraNetId" class="form-control">
+                            <option value="">Seleccione Bolsa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <label class="form-label">Fecha Confirmaci贸n SAP Desde</label>
+                    <div class="form-group">
+                        <input id="fechaConfirmacionDesde" class="form-control" type="date" style="width: stretch" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <label class="form-label">Fecha Confirmaci贸n SAP Hasta</label>
+                    <div class="form-group">
+                        <input id="fechaConfirmacionHasta" class="form-control" type="date" style="width: stretch" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <!-- fila 3 -->
+            <div class="row form-row">
+
+                <div class="col-md-4">
+                    <div class="custom-control custom-checkbox mt-3">
+                        <input type="checkbox" class="custom-control-input" id="ContratosPendientesCheck">
+                        <label class="custom-control-label" for="ContratosPendientesCheck">
+                            Solo contratos pendientes
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-8 text-right">
+
+                    <button type="button" id="filtrarConfirmas" class="btn btn-primary">
+                        <i class="fa fa-search"></i>
+                        Filtrar Confirmas
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
-    <br />
-    <div class="row">
-        <div class="col-md-4">
-            <div style="display: flex;align-items: baseline;">
-                <input id="ContratosPendientesCheck" class="campo-input-input" data-bind="" type="checkbox" />
-                <label style="width:auto;padding-left:10px">Solo contratos pendientes</label>
+
+    <!-- Resultados -->
+    <div class="card results-card mt-3 fade-in">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="results-summary">
+                <span class="badge badge-info">
+                    Contratos encontrados
+                </span>
             </div>
         </div>
-        <div class="col-md-5"></div>
-        <div class="col-md-2" style="text-align: start">
-            <button type="button" id="filtrarConfirmas" class="k-button k-button-icontext" style="height:34px; width:218px">Filtrar Confirmas</button>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 text-right">
+                    <input type="checkbox" id="checkDescargar" checked>
+                    <label for="checkDescargar">Descargar Archivo</label>
+                    <input type="checkbox" id="servicioConfirmaId" checked style="margin-left:10px">
+                    <label for="servicioConfirmaId">Web Services</label>
+                    <button type="button"
+                            id="generarConfirma"
+                            class="btn btn-success"
+                            onclick="GenerarConfirmas()">
+
+                        <i class="fa fa-play"></i>
+                        Generar Confirma
+                    </button>
+                </div>
+            </div>
+			<div class="row form-row">
+				<div id="contratos-grid"></div>
+			</div>
         </div>
     </div>
-    <br />
-    <div class="row" style="border-top: 2px solid #017940; position:relative; padding-top:20px;">
-        <div class="col-sm-12" style="display: flex; justify-content: flex-end; align-items: center;">
-            <div style="display: flex; align-items: center;">
-                <input class="form-check-input" type="checkbox" id="checkDescargar" checked>
-                <label class="form-check-label" for="checkDescargar" style="margin-bottom: 0px !important; margin-right: 1em !important ">
-                    Descargar Archivo
-                </label>
-            </div>
-            <div style="display: flex; align-items: center;">
-                <input class="form-check-input" type="checkbox" id="servicioConfirmaId" checked>
-                <label class="form-check-label" for="servicioConfirmaId" style="margin: 0px !important">
-                    Web Services
-                </label>
-            </div>
-            <button type="button" id="generar" class="k-button k-button-icontext" style="height:34px; margin-left: 20px; width: auto;" onclick="GenerarConfirmas()">
-                Generar Confirma
-            </button>
-        </div>
-    </div>
-    <section>
-        <div class="row">
-            <div class="col-xs-12">
-                <div id="contratos-grid"></div>
-            </div>
-        </div>
-    </section>
+
 </div>
-
-
 <style>
-
-    .modal .confirmado-modal div {
-        background: #008e61 !important;
-        color: white;
+    .k-grid-header-wrap {
+        overflow: hidden !important;
     }
 
-    #generar {
-        height: 37px;
-        BACKGROUND: green;
-        background: #017940 !important;
-        color: white;
-        color: #fff;
-        padding: 4px;
-        border-radius: 5px !important;
-        margin-bottom: 10px;
-        padding-left: 0.8em;
-        padding-right: 0.8em;
-        width: auto;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-    }
-
-    #filtrarConfirmas {
-        height: 37px;
-        BACKGROUND: green;
-        background: #017940 !important;
-        color: white;
-        color: #fff;
-        padding: 4px;
-        border-radius: 5px !important;
-        margin-bottom: 10px;
-        padding-left: 0.8em;
-        padding-right: 0.8em;
-        width: auto;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-    }
-
-    .modal .confirmado-modal div {
-        background: #008e61 !important;
-        color: white;
-    }
-
-    .k-grid .row-checkbox {
-        cursor: pointer;
-    }
-
-    .k-header {
-        font-size: 12px;
-        font-family: "G-Open Sans-n4", Arial;
-    }
-
-    #contratos-grid .k-grid-content td {
-        font-family: "G-Open Sans-n4", Arial;
-        font-size: 12px;
-    }
-
-    .k-filter-row > th:first-child, .k-grid tbody td:first-child, .k-grid tfoot td:first-child, .k-grid-header th.k-header:first-child {
-        padding-left: 6px !important;
-        padding-right: 6px !important;
+    .k-grid-content {
+        overflow-x: auto !important;
+        overflow-y: auto !important;
     }
 </style>
-
 @Html.Partial("ModalConfirmaGenerado")
