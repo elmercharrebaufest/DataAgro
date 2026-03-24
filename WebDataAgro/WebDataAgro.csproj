@@ -380,6 +380,7 @@
     <Content Include="Scripts\App\ControlDeBoletosSeguimiento.js" />
     <Content Include="Scripts\App\ControlDeBoletosTracking.js" />
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
+    <Content Include="Scripts\App\OptimizationCache.js" />
     <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
@@ -393,7 +394,6 @@
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
     <Content Include="MEJORAS_HOMECONTROLLER.md" />
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
-    <None Include="whitelist.json" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />
@@ -1530,7 +1530,6 @@
     <Content Include="libman.json" />
     <Content Include="ModalAperturaPrecio.cshtml" />
     <Compile Include="App_Start\Startup.Hangfire.cs" />
-    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="firebase-messaging-sw.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
@@ -1547,7 +1546,6 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\AUTHORS.txt" />
     <Content Include="Scripts\jquery-ui-1.12.1\external\jquery\jquery.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_444444_256x240.png" />
@@ -3129,7 +3127,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Molinos.DataAgro.Agent\Molinos.DataAgro.Agent.csproj">
