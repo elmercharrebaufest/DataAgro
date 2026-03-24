@@ -50,7 +50,27 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros)
         {
-            var query = from cb in repositorio.Listar<ControlDeBoletos>()
+            // Optimización: Pre-cargar ControlDeBoletos con filtros básicos antes de los joins
+            var controlBoletosQuery = repositorio.Listar<ControlDeBoletos>().AsQueryable();
+
+            // FILTROS GENERALES - Aplicar temprano para reducir dataset
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
+                controlBoletosQuery = controlBoletosQuery.Where(cb => string.Compare(cb.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
+
+            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
+                controlBoletosQuery = controlBoletosQuery.Where(cb => string.Compare(cb.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
+
+            if (filtros.MaterialId.HasValue)
+                controlBoletosQuery = controlBoletosQuery.Where(cb => cb.Negocio.MaterialId == filtros.MaterialId.Value);
+
+            if (filtros.Proveedor.HasValue)
+                controlBoletosQuery = controlBoletosQuery.Where(cb => cb.Negocio.ProveedorId == filtros.Proveedor.Value);
+
+            if (filtros.BolsaId.HasValue)
+                controlBoletosQuery = controlBoletosQuery.Where(cb => cb.Negocio.BolsaId == filtros.BolsaId.Value);
+
+            // Query principal con LEFT JOINs
+            var query = from cb in controlBoletosQuery
                         join pre in repositorio.Listar<ControlDeBoletosPreCertificacion>()
                             on cb.Id equals pre.ControlDeBoletosId into preJoin
                         from pre in preJoin.DefaultIfEmpty()
@@ -58,23 +78,6 @@ namespace Molinos.DataAgro.Business.Managers
                             on cb.Id equals seg.ControlDeBoletosId into segJoin
                         from seg in segJoin.DefaultIfEmpty()
                         select new { cb, pre, seg };
-
-            // FILTROS GENERALES
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
-                query = query.Where(x => string.Compare(x.cb.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
-
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
-                query = query.Where(x => string.Compare(x.cb.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
-
-
-            if (filtros.MaterialId.HasValue)
-                query = query.Where(x => x.cb.Negocio.MaterialId == filtros.MaterialId.Value);
-
-            if (filtros.Proveedor.HasValue)
-                query = query.Where(x => x.cb.Negocio.ProveedorId == filtros.Proveedor.Value);
-
-            if (filtros.BolsaId.HasValue)
-                query = query.Where(x => x.cb.Negocio.BolsaId == filtros.BolsaId.Value);
 
             // FILTROS PRECERTIFICACIÓN
             if (filtros.FechaCertificacionDesde.HasValue)
@@ -159,7 +162,7 @@ namespace Molinos.DataAgro.Business.Managers
                     BolsaCompraNet = x.cb.Negocio.Bolsa.Descripcion,
                     ComercialId = x.cb.Negocio.ComercialId ?? 0,
                     Comercial = x.cb.Negocio.Comercial.Nombres + " " + x.cb.Negocio.Comercial.Apellido,
-                    TipoBoleto = repositorio.Obtener<BoletoCompraNet>(x.cb.Negocio.BoletoId).Descripcion,
+                    TipoBoleto = x.cb.Negocio.Boleto.Descripcion,
                     ContratoSAP = x.cb.Negocio.ContratoSAP,
                     ProveedorId = x.cb.Negocio.ProveedorId ?? 0,
                     Proveedor = x.cb.Negocio.Proveedor.RazonSocial,
@@ -269,51 +272,48 @@ namespace Molinos.DataAgro.Business.Managers
             if (filtros.ComercialId.HasValue)
                 query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
 
-            // 🚀 PROYECCIÓN FINAL
-            var list = query.ToList();
-            var result = new List<ControlDeBoletosConsultaDto>();
-
-            foreach (var controlBoleto in list)
-            {
-                // Buscar PreCertificacion y Seguimiento por ControlDeBoletosId
-                var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlBoleto.Id);
-                var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlBoleto.Id);
-
-                result.Add(new ControlDeBoletosConsultaDto
-                {
-                    Id = controlBoleto.Id,
-                    NegocioId = controlBoleto.NegocioId,
-                    ControlDeBoletosEstadoId = controlBoleto.ControlDeBoletosEstadoId,
-                    ControlDeBoletosEstado = controlBoleto.ControlDeBoletosEstado.Descripcion,
-                    EsConfirma = controlBoleto.EsConfirma,
-                    AltaIdLoteConfirma = controlBoleto.AltaIdLoteConfirma,
-                    IdentificadorConfirma = controlBoleto.IdentificadorConfirma,
-                    FechaCreacion = controlBoleto.FechaCreacion,
-                    FechaModificacion = controlBoleto.FechaModificacion,
-                    EstadoConfirmaId = controlBoleto.EstadoConfirmaId,
-                    EstadoConfirma = controlBoleto.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(controlBoleto.EstadoConfirmaId.Value)?.Descripcion : null,
-                    TipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlBoleto.Negocio.BoletoId).Descripcion,
-                    ControlIniciado = controlBoleto.ControlIniciado,
-                    ControlFinalizado = controlBoleto.ControlFinalizado,
-                    CertificacionCompletada = controlBoleto.CertificacionCompletada,
-                    RegistroDatosOblea = controlBoleto.RegistroDatosOblea,
-                    FechaControlIniciado = controlBoleto.FechaControlIniciado,
-                    FechaControlFinalizado = controlBoleto.FechaControlFinalizado,
-                    FechaCertificacionCompletada = controlBoleto.FechaCertificacionCompletada,
-                    FechaRegistroDatosOblea = controlBoleto.FechaRegistroDatosOblea,
-                    MaterialId = controlBoleto.Negocio.MaterialId,
-                    Material = controlBoleto.Negocio.Material.Descripcion,
-                    BolsaCompraNetId = controlBoleto.Negocio.BolsaId,
-                    BolsaCompraNet = controlBoleto.Negocio.Bolsa.Descripcion,
-                    ComercialId = controlBoleto.Negocio.ComercialId,
-                    Comercial = controlBoleto.Negocio.Comercial.Nombres + " " + controlBoleto.Negocio.Comercial.Apellido,
-                    ContratoSAP = controlBoleto.Negocio.ContratoSAP,
-                    ProveedorId = controlBoleto.Negocio.ProveedorId,
-                    Proveedor = controlBoleto.Negocio.Proveedor.RazonSocial,
-                    PreCertificacionId = preCertificacion != null ? (int?)preCertificacion.Id : null,
-                    SeguimientoBoletoId = seguimiento != null ? (int?)seguimiento.Id : null
-                });
-            }
+            // Optimización: Usar query LINQ con LEFT JOIN en lugar de N+1 queries
+            var result = (from cb in query
+                          join pre in repositorio.Listar<ControlDeBoletosPreCertificacion>()
+                              on cb.Id equals pre.ControlDeBoletosId into preJoin
+                          from pre in preJoin.DefaultIfEmpty()
+                          join seg in repositorio.Listar<ControlDeBoletosSeguimiento>()
+                              on cb.Id equals seg.ControlDeBoletosId into segJoin
+                          from seg in segJoin.DefaultIfEmpty()
+                          select new ControlDeBoletosConsultaDto
+                          {
+                              Id = cb.Id,
+                              NegocioId = cb.NegocioId,
+                              ControlDeBoletosEstadoId = cb.ControlDeBoletosEstadoId,
+                              ControlDeBoletosEstado = cb.ControlDeBoletosEstado.Descripcion,
+                              EsConfirma = cb.EsConfirma,
+                              AltaIdLoteConfirma = cb.AltaIdLoteConfirma,
+                              IdentificadorConfirma = cb.IdentificadorConfirma,
+                              FechaCreacion = cb.FechaCreacion,
+                              FechaModificacion = cb.FechaModificacion,
+                              EstadoConfirmaId = cb.EstadoConfirmaId,
+                              EstadoConfirma = cb.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(cb.EstadoConfirmaId.Value).Descripcion : null,
+                              TipoBoleto = cb.Negocio.Boleto.Descripcion,
+                              ControlIniciado = cb.ControlIniciado,
+                              ControlFinalizado = cb.ControlFinalizado,
+                              CertificacionCompletada = cb.CertificacionCompletada,
+                              RegistroDatosOblea = cb.RegistroDatosOblea,
+                              FechaControlIniciado = cb.FechaControlIniciado,
+                              FechaControlFinalizado = cb.FechaControlFinalizado,
+                              FechaCertificacionCompletada = cb.FechaCertificacionCompletada,
+                              FechaRegistroDatosOblea = cb.FechaRegistroDatosOblea,
+                              MaterialId = cb.Negocio.MaterialId,
+                              Material = cb.Negocio.Material.Descripcion,
+                              BolsaCompraNetId = cb.Negocio.BolsaId,
+                              BolsaCompraNet = cb.Negocio.Bolsa.Descripcion,
+                              ComercialId = cb.Negocio.ComercialId,
+                              Comercial = cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido,
+                              ContratoSAP = cb.Negocio.ContratoSAP,
+                              ProveedorId = cb.Negocio.ProveedorId,
+                              Proveedor = cb.Negocio.Proveedor.RazonSocial,
+                              PreCertificacionId = pre != null ? (int?)pre.Id : null,
+                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null
+                          }).ToList();
 
             return result;
         }

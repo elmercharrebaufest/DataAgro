@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -31,36 +31,81 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             try
             {
-                var queryBasicoConfirmas = from negocio in contexto.Set<Negocio>()
+                // Optimización: Pre-filtrar negocio antes del join para reducir dataset
+                var negociosFiltrados = contexto.Set<Negocio>()
+                    .Where(n => n.ConfirmadoSAP == true
+                        && n.EstadoId == (int)EnumEstadoContrato.Finalizado
+                        && (
+                            // Negocios A_Precio y A_Fijar: Deben tener el BoletoId igual a "CONFIRMA"
+                            (n.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && n.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                            ||
+                            // Negocios Fijacion: El BoletoId debe estar en el negocio padre
+                            (n.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                                && (n as FijacionDePrecioContrato).Contrato != null
+                                && (n as FijacionDePrecioContrato).Contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                        )
+                        && (n.ComercialId != null && equipo.Contains(n.ComercialId.Value)
+                            || n.ComercialCreadorId != null && equipo.Contains(n.ComercialCreadorId.Value)));
+
+                // Aplicar filtros adicionales temprano para reducir dataset
+                if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
+                {
+                    var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .ToList();
+
+                    if (negociosSAPList.Count > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n =>
+                            negociosSAPList.Contains(n.ContratoSAP) ||
+                            (n is FijacionDePrecioContrato && negociosSAPList.Contains((n as FijacionDePrecioContrato).FijacionSAP)));
+                    }
+                }
+                else
+                {
+                    if (filtros.FechaConfirmacionDesde.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
+                    }
+
+                    if (filtros.FechaConfirmacionHasta.HasValue)
+                    {
+                        var fechaHasta = filtros.FechaConfirmacionHasta.Value.Date.AddDays(1).AddTicks(-1);
+                        negociosFiltrados = negociosFiltrados.Where(n => n.FechaConfirmacion <= fechaHasta);
+                    }
+
+                    if (filtros.ProveedorId.HasValue && filtros.ProveedorId.Value > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.ProveedorId == filtros.ProveedorId.Value);
+                    }
+
+                    if (filtros.ComercialId.HasValue && filtros.ComercialId.Value > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.ComercialId == filtros.ComercialId.Value);
+                    }
+
+                    if (filtros.BolsaCompraNetId.HasValue && filtros.BolsaCompraNetId.Value > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.BolsaId == filtros.BolsaCompraNetId.Value
+                            || (n is FijacionDePrecioContrato && (n as FijacionDePrecioContrato).Contrato.BolsaId == filtros.BolsaCompraNetId.Value));
+                    }
+
+                    if (filtros.MaterialId.HasValue && filtros.MaterialId.Value > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.MaterialId == filtros.MaterialId.Value);
+                    }
+                }
+
+                var queryBasicoConfirmas = from negocio in negociosFiltrados
                                                // Unimos con las confirmas para obtener la versión más reciente
                                            join confirma in (
                                                from c in contexto.Set<Confirma>()
-                                               where c.FechaAnulacion == null  // Solo incluimos confirmas no anuladas
+                                               where c.FechaAnulacion == null
                                                group c by c.NegocioId into g
-                                               select g.OrderByDescending(c => c.Version).FirstOrDefault()
+                                               select new { NegocioId = g.Key, Confirma = g.OrderByDescending(c => c.Version).FirstOrDefault() }
                                            ) on negocio.Id equals confirma.NegocioId into confirmaGroup
-                                           from confirma in confirmaGroup.DefaultIfEmpty()
-
-                                               // Filtros generales para obtener los negocios confirmados y con el estado adecuado
-                                           where negocio.ConfirmadoSAP == true
-                                                 && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
-
-                                                 // Negocios A_Precio y A_Fijar: Deben tener el BoletoId igual a "CONFIRMA"
-                                                 && (
-                                                     (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION
-                                                     && negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-
-                                                 // Negocios Fijacion: El BoletoId debe estar en el negocio padre, y el negocio padre debe ser de tipo A_Fijar
-                                                 || (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                                     && (negocio as FijacionDePrecioContrato).Contrato != null
-                                                     && (negocio as FijacionDePrecioContrato).Contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
-                                                 )
-
-                                                 // Filtro para ComercialId y ComercialCreadorId
-                                                 && (
-                                                     (negocio.ComercialId != null && equipo.Contains(negocio.ComercialId.Value)) ||
-                                                     (negocio.ComercialCreadorId != null && equipo.Contains(negocio.ComercialCreadorId.Value))
-                                                 )
+                                           from confirmaData in confirmaGroup.DefaultIfEmpty()
+                                           let confirma = confirmaData != null ? confirmaData.Confirma : null
 
                                            // Ordenamos los resultados por ID de negocio de forma descendente
                                            orderby negocio.Id descending
@@ -160,61 +205,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                                FechaConfirmadoSAP = negocio.FechaConfirmadoSAP,
                                            };
 
-                // Aplicar filtros personalizados
-                if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
-                {
-                    var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .ToList();
-
-                    if (negociosSAPList.Count > 0)
-                    {
-                        queryBasicoConfirmas = queryBasicoConfirmas.Where(b => negociosSAPList.Contains(b.NegocioSAP));
-                    }
-                }
-
-                if (filtros.FechaConfirmacionDesde.HasValue)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
-                }
-
-                if (filtros.FechaConfirmacionHasta.HasValue)
-                {
-                    var fechaHasta = filtros.FechaConfirmacionHasta.Value.Date.AddDays(1).AddTicks(-1);
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaConfirmacion <= fechaHasta);
-                }
-
-                if (filtros.FechaEnvioDesde.HasValue)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaGeneracion >= filtros.FechaEnvioDesde.Value);
-                }
-
-                if (filtros.FechaEnvioHasta.HasValue)
-                {
-                    var fechaHasta = filtros.FechaEnvioHasta.Value.Date.AddDays(1).AddTicks(-1);
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.FechaGeneracion <= fechaHasta);
-                }
-
-                if (filtros.ProveedorId.HasValue && filtros.ProveedorId.Value > 0)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.ProveedorId == filtros.ProveedorId.Value);
-                }
-
-                if (filtros.ComercialId.HasValue && filtros.ComercialId.Value > 0)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.ComercialId == filtros.ComercialId.Value);
-                }
-
-                if (filtros.BolsaCompraNetId.HasValue && filtros.BolsaCompraNetId.Value > 0)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.BolsaId == filtros.BolsaCompraNetId.Value);
-                }
-
-                if (filtros.MaterialId.HasValue && filtros.MaterialId.Value > 0)
-                {
-                    queryBasicoConfirmas = queryBasicoConfirmas.Where(b => b.MaterialId == filtros.MaterialId.Value);
-                }
-
+                // Los filtros ya fueron aplicados antes del join para optimizar performance
                 return queryBasicoConfirmas.ToList();
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -29,25 +29,78 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             try
             {
-                var queryBasicoBoletos = from negocio in contexto.Set<Negocio>()
-                                             // Unimos con las boletos para obtener la versión más reciente
+                // Optimización: Pre-filtrar negocio antes del join para reducir dataset
+                var negociosFiltrados = contexto.Set<Negocio>()
+                    .Where(n => n.ConfirmadoSAP == true
+                        && n.EstadoId == (int)EnumEstadoContrato.Finalizado
+                        && (n.BoletoId == (int)EnumBoletoCompraNet.FISICO || n.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA));
+
+                // Aplicar filtros adicionales temprano para reducir dataset
+                if (!string.IsNullOrEmpty(filtros.NegocioSAP))
+                {
+                    var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .ToList();
+
+                    if (negociosSAPList.Count > 0)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n =>
+                            negociosSAPList.Contains(n.ContratoSAP) ||
+                            (n is FijacionDePrecioContrato && negociosSAPList.Contains((n as FijacionDePrecioContrato).FijacionSAP)));
+                    }
+                }
+                else
+                {
+                    if (filtros.MaterialId.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.MaterialId == filtros.MaterialId.Value);
+                    }
+
+                    if (filtros.ProveedorId.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.ProveedorId == filtros.ProveedorId.Value);
+                    }
+
+                    if (filtros.ComercialId.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.ComercialId == filtros.ComercialId.Value);
+                    }
+
+                    if (filtros.BolsaCompraNetId.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.BolsaId == filtros.BolsaCompraNetId.Value
+                            || (n is FijacionDePrecioContrato && (n as FijacionDePrecioContrato).Contrato.BolsaId == filtros.BolsaCompraNetId.Value));
+                    }
+
+                    if (filtros.FechaConfirmacionDesde.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
+                    }
+
+                    if (filtros.FechaConfirmacionHasta.HasValue)
+                    {
+                        negociosFiltrados = negociosFiltrados.Where(n => n.FechaConfirmacion <= filtros.FechaConfirmacionHasta.Value);
+                    }
+                }
+
+                // Aplicar filtro de equipo (siempre se aplica)
+                if (equipo != null && equipo.Count > 0)
+                {
+                    negociosFiltrados = negociosFiltrados.Where(n =>
+                        (n.ComercialId != null && equipo.Contains(n.ComercialId.Value))
+                        || (n.ComercialCreadorId != null && equipo.Contains(n.ComercialCreadorId.Value)));
+                }
+
+                var queryBasicoBoletos = from negocio in negociosFiltrados
+                                             // Unimos con los boletos para obtener la versión más reciente
                                          join boleto in (
                                              from c in contexto.Set<Boleto>()
-                                             where c.FechaAnulacion == null  // Solo incluimos boletos no anuladas
+                                             where c.FechaAnulacion == null
                                              group c by c.NegocioId into g
-                                             select g.OrderByDescending(c => c.Version).FirstOrDefault()
+                                             select new { NegocioId = g.Key, Boleto = g.OrderByDescending(c => c.Version).FirstOrDefault() }
                                          ) on negocio.Id equals boleto.NegocioId into boletoGroup
-                                         from boleto in boletoGroup.DefaultIfEmpty()
-
-                                             // Filtros generales para obtener los negocios confirmados y con el estado adecuado
-                                         where negocio.ConfirmadoSAP == true
-                                               && negocio.EstadoId == (int)EnumEstadoContrato.Finalizado
-                                               &&
-                                              (
-                                                  (negocio.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && (negocio.BoletoId == (int)EnumBoletoCompraNet.FISICO || negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
-                                                  ||
-                                                  (negocio.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && (negocio.BoletoId == (int)EnumBoletoCompraNet.FISICO || negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA))
-                                              )
+                                         from boletoData in boletoGroup.DefaultIfEmpty()
+                                         let boleto = boletoData != null ? boletoData.Boleto : null
 
                                          // Selección final para la entidad BasicoConfirma
                                          select new BasicoBoleto
@@ -144,52 +197,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                              ProveedorId = negocio.ProveedorId,
                                          };
 
-                // Aplicar filtros personalizados
-                if (!string.IsNullOrEmpty(filtros.NegocioSAP))
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.NegocioSAP.Contains(filtros.NegocioSAP));
-                }
-
-                if (filtros.MaterialId.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.MaterialId == filtros.MaterialId.Value);
-                }
-
-                if (filtros.ProveedorId.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.ProveedorId == filtros.ProveedorId.Value);
-                }
-
-                if (filtros.ComercialId.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.ComercialId == filtros.ComercialId.Value);
-                }
-
-                if (filtros.BolsaCompraNetId.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.BolsaId == filtros.BolsaCompraNetId.Value);
-                }
-
-                if (filtros.FechaConfirmacionDesde.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
-                }
-
-                if (filtros.FechaConfirmacionHasta.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.FechaConfirmacion <= filtros.FechaConfirmacionHasta.Value);
-                }
-
-                if (filtros.FechaEnvioDesde.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.FechaGeneracion >= filtros.FechaEnvioDesde.Value);
-                }
-
-                if (filtros.FechaEnvioHasta.HasValue)
-                {
-                    queryBasicoBoletos = queryBasicoBoletos.Where(x => x.FechaGeneracion <= filtros.FechaEnvioHasta.Value);
-                }
-
+                // Los filtros ya fueron aplicados antes del join para optimizar performance
                 // Ordenar por ID descendente
                 queryBasicoBoletos = queryBasicoBoletos.OrderByDescending(x => x.Id);
 
