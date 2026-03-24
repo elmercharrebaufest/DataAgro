@@ -81,38 +81,49 @@ function MSExecuteOnServer(url, datos, onCallBack) {
 
 function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
 
-    //alert(MSGetUrl(url));
-
     if (iswait) {
         $('#myPleaseWait').modal('show');
     }
 
-    $.ajax({
-        timeout: 600000,
-        async: true,
-        url: MSGetUrl(url),
-        type: 'POST',
-        data: kendo.stringify(datos),
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            var owait = $('#myPleaseWait');
-            if (owait != null) {
-                owait.modal('hide');
-            }
-            if (fncallback) {
-                fncallback(data);
-            }
-        },
-        error: function (error) {
-            var owait = $('#myPleaseWait');
-            if (owait != null) {
-                owait.modal('hide');
-            }
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            timeout: 600000,
+            async: true,
+            url: MSGetUrl(url),
+            type: 'POST',
+            data: kendo.stringify(datos),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var owait = $('#myPleaseWait');
+                if (owait != null) {
+                    owait.modal('hide');
+                }
+                if (fncallback) {
+                    fncallback(data);
+                }
+                resolve(data);
+            },
+            error: function (xhr, status, error) {
+                var owait = $('#myPleaseWait');
+                if (owait != null) {
+                    owait.modal('hide');
+                }
 
-            //alert(kendo.stringify(error));
-        }
+                const errObj = {
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                };
+
+                MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
+
+                if (fncallback) {
+                    fncallback(null);
+                }
+                reject(errObj);
+            }
+        });
     });
 }
 
@@ -694,12 +705,9 @@ function MSExecuteGetOnServerAsync(url, datos) {
             cache: false,
             data: datos,
             dataType: "json",
-            contentType: "application/json; charset=utf-8",
-
             success: function (data) {
-                resolve(data); // ← devuelve datos al await
+                resolve(data);
             },
-
             error: function (xhr, status, error) {
                 var errObj = {
                     xhr: xhr,
@@ -708,12 +716,15 @@ function MSExecuteGetOnServerAsync(url, datos) {
                 };
 
                 console.error("Error AJAX GET:", errObj);
-                reject(errObj); // ← dispara el catch
+                MensErr("No se pudieron obtener los datos del servidor \n URL: " + url +
+                    "\n Información técnica: " + JSON.stringify(errObj));
+                reject(errObj);
             }
         });
 
     });
 }
+
 
 
 

@@ -36,5 +36,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public int? BoletoId { get; set; }
         public DateTime? FechaConfirmadoSAP { get; set; }
+        public int? ComercialId { get; set; }
+        public int? ProveedorId { get; set; }
     }
 }

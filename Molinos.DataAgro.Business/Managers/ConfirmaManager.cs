@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        public ConfirmaResult GrabarConfirmas(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
+        public ConfirmaResult GrabarConfirmas(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var resultado = new ConfirmaResult();
 
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 // Preparación inicial
                 var codigos = CompletarCodigoLista(codigosSap);
-                var contratos = ObtenerContratos(codigos, claseNegocio, equipo);
+                var contratos = ObtenerContratos(codigos, equipo);
 
                 // Leer configuración una sola vez
                 var activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
@@ -339,11 +339,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultado;
         }
-        
-        public ConfirmaResult GrabarConfirmasOriginal(int claseNegocio, int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
+
+        public ConfirmaResult GrabarConfirmasOriginal(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var codigos = CompletarCodigoLista(codigosSap);
-            var contratos = ObtenerContratos(codigos, claseNegocio, equipo);
+            var contratos = ObtenerContratos(codigos, equipo);
             var resultado = new ConfirmaResult();
             string activarConfirmaWS = ConfigurationManager.AppSettings["ActivarConfirmaWS"];
             string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
@@ -537,32 +537,30 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public DataSourceResult TraerNegociosFiltrados(DataSourceRequest filtro, List<int> equipo, bool EsSoloPendientes)
+        public List<BasicoConfirma> TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
-            var data = result.Data as IEnumerable<BasicoConfirma>;
-            IQueryable<BasicoConfirma> queryableData = data.AsQueryable();
-            foreach (var boleto in queryableData)
+            var data = result as List<BasicoConfirma> ?? result.ToList();
+
+            foreach (var confirma in data)
             {
-                boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
-                if (boleto.Estado_Version == "Anulado")
+                confirma.Estado_Version = ObtenerEstadoBoleto(confirma);
+                if (confirma.Estado_Version == "Anulado")
                 {
-                    boleto.Estado_Version = "Pendiente";
-                    boleto.Version++;
-                    boleto.FechaAnulacion = null;
-                    boleto.FechaGeneracion = null;
-                    boleto.UsuarioAnulacion = null;
+                    confirma.Estado_Version = "Pendiente";
+                    confirma.Version++;
+                    confirma.FechaAnulacion = null;
+                    confirma.FechaGeneracion = null;
+                    confirma.UsuarioAnulacion = null;
                 }
             }
-            if (EsSoloPendientes)
+
+            if (filtro.EsSoloPendientes)
             {
-                queryableData = queryableData.Where(b => b.Estado_Version == "Pendiente");
+                data = data.Where(b => b.Estado_Version == "Pendiente").ToList();
             }
-            return new DataSourceResult
-            {
-                Data = queryableData.ToList(),
-                Total = queryableData.Count()
-            };
+
+            return data;
         }
 
         private string ValidarContrato(BasicoContrato contrato)
@@ -616,8 +614,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 { //CONTRATO
-                    //Validar estado del contrato
-                    
+                  //Validar estado del contrato
+
                     var res = status.ValidarEstado(contrato.ContratoSAP);
                     if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                     {
@@ -640,7 +638,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug($"No se puede generar el confirma para el negocio {contrato.ContratoSAP} por no tener tilde de confirma.");
                         return mensaje;
                     }
-                    
+
                 }
             }
             else
@@ -743,13 +741,13 @@ namespace Molinos.DataAgro.Business.Managers
                 //Fin de carga de datos
 
                 // obtener valores CodPrv para el tag Origen
-                string codigoPrvFormat = string.Format("0000{0}",contrato.ProvinciaId.ToString().Trim());
-                string codigoPrvOrigen = codigoPrvFormat.Length > 4 ?codigoPrvFormat.Substring(codigoPrvFormat.Length - 4) : "0000";
+                string codigoPrvFormat = string.Format("0000{0}", contrato.ProvinciaId.ToString().Trim());
+                string codigoPrvOrigen = codigoPrvFormat.Length > 4 ? codigoPrvFormat.Substring(codigoPrvFormat.Length - 4) : "0000";
 
                 // obteber comision PorcentajeComision
 
                 string porcentajeComision = "0.0";
-                if (contrato.CorredorId > 0 || 
+                if (contrato.CorredorId > 0 ||
                     contrato.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
                     contrato.ClasificacionDescripcion?.ToString().ToUpper() == "PRODUCTOR" ||
                     contrato.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
@@ -865,7 +863,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                             "Pago Anticipado" : (
                                                             (contrato.Warrant == true) ?
                                                                 "Pago contra Warrant" : (
-                                                                (contrato.PagoDiferido == true) ? 
+                                                                (contrato.PagoDiferido == true) ?
                                                                     $"{contrato.Dias_Pesificado} {(contrato.Dias_Pesificado > 1 ? "Días" : "Dia")} de diferimiento contra mercadería entregada"
                                                                     : "72 hs contra mercadería descargada."
                                                                 )
@@ -1030,7 +1028,7 @@ namespace Molinos.DataAgro.Business.Managers
             return confirma.Archivo;
         }
 
-        private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios, List<int> tipoNegocios)
+        private List<BasicoContrato> FiltrarNegocios(IQueryable<BasicoContrato> negocios)
         {
             string tipoContratoVenta = "VENTA";
             List<TipoNegocioDetalle> tipoNegocioDetalles = repositorio.Listar<TipoNegocioDetalle>();
@@ -1046,7 +1044,8 @@ namespace Molinos.DataAgro.Business.Managers
                         negociosFiltrados.Add(negocio);
                     }
                 }
-                else {
+                else
+                {
                     foreach (var tipo in tipoNegocioDetalles)
                     {
                         if (tipo.Descripcion == negocio.TipoNegocio)
@@ -1304,7 +1303,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<string> clausulas = new List<string>();
             var contratos = new List<string> { contratoSap };
             var basicoContrato = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(contratos, equipo)).FirstOrDefault();
-            basicoContrato.AperturaPrecios = repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(x=> new AperturaPrecioDto()
+            basicoContrato.AperturaPrecios = repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(x => new AperturaPrecioDto()
             {
 
                 Id = x.Id,
@@ -1314,18 +1313,18 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
                 Moneda = x.Moneda.Descripcion
-            }  , x => x.NegocioId == basicoContrato.Id).ToList();
+            }, x => x.NegocioId == basicoContrato.Id).ToList();
             clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
             return clausulas;
         }
 
-        public string ValidarContratoConfirma(string numeroSap, int tipoNegocio, List<int> equipo)
+        public string ValidarContratoConfirma(string numeroSap, List<int> equipo)
         {
             string mensajeValidacionContratoSAP = string.Empty;
             List<string> listaContratoSAP = new List<string>();
             listaContratoSAP.Add(numeroSap);
             var codigos = CompletarCodigoLista(listaContratoSAP);
-            var contratos = ObtenerContratos(codigos, tipoNegocio, equipo);
+            var contratos = ObtenerContratos(codigos, equipo);
             if (contratos == null || contratos.Count == 0)
             {
                 mensajeValidacionContratoSAP = $"No se ha encontrado un contrato confirma para numero de contrato: {String.Join(",", codigos)}.";
@@ -1406,12 +1405,12 @@ namespace Molinos.DataAgro.Business.Managers
             return mensaje;
         }
 
-        public List<BasicoContrato> ObtenerContratos(List<string> codigos, int claseNegocio, List<int> equipo)
+        public List<BasicoContrato> ObtenerContratos(List<string> codigos, List<int> equipo)
         {
             var consulta = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(codigos, equipo));
             if (consulta == null) logger.Info($"Generacion Confirma: El resultado de la consulta es nulo");
             else logger.Info($"Generacion Confirma: Del resultado de la consulta, la longitud es {consulta.Count()}");
-            return FiltrarNegocios(consulta, ConvertirClaseNegocioATiposNegocios(claseNegocio));
+            return FiltrarNegocios(consulta);
         }
 
         private string ObtenerEstadoBoleto(BasicoConfirma boleto)

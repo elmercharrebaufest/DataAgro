@@ -1,5 +1,6 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -13,8 +14,14 @@ namespace Molinos.DataAgro.Interfaces
         void ReenviarBoletos(List<string> listaContratos, List<string> archivos, string pathArchivos);
         BoletoDto ValidarNegocioParaGenerarBoleto(BasicoContrato negocio);
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
-        DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo);
+        List<BasicoBoleto> TraerContratosFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
-        string ValidarContratoTipoBoleto(string numeroSap, int tipoNegocio, List<int> equipo);
+        string ValidarContratoTipoBoleto(string numeroSap, List<int> equipo);
+
+        List<BolsaCompraNet> GetBolsaCompraNet();
+        List<ComercialCombo> GetComercial();
+        List<MaterialCombo> GetMaterial();
+        List<ProveedorCombo> GetProveedorPorComercial(List<int> equipo);
+
     }
 }
