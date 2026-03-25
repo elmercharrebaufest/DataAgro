@@ -23,11 +23,11 @@
 	
 	<setParameter name="SapPass Key" value="Data2015" />
 
-  <add key="UrlResearch Key" value="https://molinosagro.sharepoint.com/sites/ResearchMOA" />
-  <add key="LibraryNameResearch Key" value="Datos research" />
-  <add key="AttachmentsResearch Key" value="Documentos" />
-  <add key="UserNameResearch Key" value="dataagro@molinosagro.com.ar" />
-  <add key="PasswordResearch Key" value="D4taAgr017" />
+  <setParameter name="UrlResearch Key" value="https://molinosagro.sharepoint.com/sites/ResearchMOA" />
+  <setParameter name="LibraryNameResearch Key" value="Datos research Dev" />
+  <setParameter name="AttachmentsResearch Key" value="Documentos" />
+  <setParameter name="UserNameResearch Key" value="dataagro@molinosagro.com.ar" />
+  <setParameter name="PasswordResearch Key" value="D4taAgr017" />
 
 
   <setParameter name="SinConexionSap Key" value="0" />
