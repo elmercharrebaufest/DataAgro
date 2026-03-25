@@ -84,7 +84,19 @@ const GenerarBoleto = (() => {
         const hasta = getDatePicker(el.fechaConfirmacionHasta());
         return !(desde && hasta && desde > hasta);
     }
-
+    function validarRangoFechas(desde, hasta, maxMeses = 3) {
+        if (!desde || !hasta) return true;
+        const limite = new Date(desde);
+        limite.setMonth(limite.getMonth() + maxMeses);
+        return hasta <= limite;
+    }
+    function validarFechasConfirmacion() {
+        if (trimEnd(el.negocioSAP().val()) !== '') return true;
+        const desde = getDatePicker(el.fechaConfirmacionDesde());
+        const hasta = getDatePicker(el.fechaConfirmacionHasta());
+        if (!validarRangoFechas(desde, hasta)) return false;
+        return true;
+    }
     function cargarDropdown(url, $selector, textoDefault) {
         $.ajax({
             url,
@@ -493,7 +505,11 @@ const GenerarBoleto = (() => {
                     spinner(false);
                     return;
                 }
-
+                if (!validarFechasConfirmacion()) {
+                    MensErr("El rango de fechas de confirmación no puede superar los 3 meses.");
+                    spinner(false);
+                    return;
+                }
                 if (state.grid) {
                     state.grid.dataSource.page(1);
                     state.grid.dataSource.read();
