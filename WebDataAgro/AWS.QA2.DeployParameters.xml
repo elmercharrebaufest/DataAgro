@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
 	<setParameter name="IIS Web Application Name" value="QA2" />
 
@@ -31,6 +31,15 @@
 	<setParameter name="AmbienteUATDA Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />
 
+  <add key="UrlResearch Key" value="https://molinosagro.sharepoint.com/sites/ResearchMOA" />
+  <add key="LibraryNameResearch Key" value="Datos research Dev" />
+  <add key="AttachmentsResearch Key" value="Documentos" />
+  <add key="UserNameResearch Key" value="dataagro@molinosagro.com.ar" />
+  <add key="PasswordResearch Key" value="D4taAgr017" />
+
+<add key="UrlResearch" value="https://molinosagro.sharepoint.com/sites/ResearchMOA" /> <add key="LibraryNameResearch" value="Datos research Dev" /> <add key="AttachmentsResearch" value="Documentos" /> <add key="UserNameResearch" value="dataagro@molinosagro.com.ar" /> <add key="PasswordResearch" value="D4taAgr017" />
+
+  
 	<setParameter name="Rg2300 Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG2300.LST" />
 	<setParameter name="Facacop Key" value="\\sapshareqadev\share\ftproot\transf\matprim\facacop.txt" />
 	<setParameter name="SISA Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG_4310.txt" />
