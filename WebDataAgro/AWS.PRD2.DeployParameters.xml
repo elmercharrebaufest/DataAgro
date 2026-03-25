@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
 	<setParameter name="IIS Web Application Name" value="DataAgro" />
 
@@ -23,7 +23,14 @@
 	
 	<setParameter name="SapPass Key" value="Data2015" />
 
-	<setParameter name="SinConexionSap Key" value="0" />
+  <setParameter name="UrlResearch Key" value="https://molinosagro.sharepoint.com/sites/ResearchMOA" />
+  <setParameter name="LibraryNameResearch Key" value="Datos research" />
+  <setParameter name="AttachmentsResearch Key" value="Documentos" />
+  <setParameter name="UserNameResearch Key" value="dataagro@molinosagro.com.ar" />
+  <setParameter name="PasswordResearch Key" value="D4taAgr017" />
+
+
+  <setParameter name="SinConexionSap Key" value="0" />
 	<setParameter name="ValorPruebaSap Key" value="0" />
 	<setParameter name="AmbientePruebas Key" value="0" />
 	<setParameter name="AmbienteLocal Key" value="0" />

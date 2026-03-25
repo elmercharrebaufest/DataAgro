@@ -1,4 +1,4 @@
-﻿<parameters>
+<parameters>
 	<parameter name="SmtpServer Key">
 		<parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='SmtpServer']
@@ -68,6 +68,35 @@
 						match="/configuration/appSettings/add[@key='SinConexionSap']
                            /@value" />
 	</parameter>
+
+
+  <parameter name="UrlResearch Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+      match="/configuration/appSettings/add[@key='UrlResearch']/@value" />
+  </parameter>
+
+  <parameter name="LibraryNameResearch Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+      match="/configuration/appSettings/add[@key='LibraryNameResearch']/@value" />
+  </parameter>
+
+  <parameter name="AttachmentsResearch Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+      match="/configuration/appSettings/add[@key='AttachmentsResearch']/@value" />
+  </parameter>
+
+  <parameter name="UserNameResearch Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+      match="/configuration/appSettings/add[@key='UserNameResearch']/@value" />
+  </parameter>
+
+  <parameter name="PasswordResearch Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+      match="/configuration/appSettings/add[@key='PasswordResearch']/@value" />
+  </parameter>
+
+
+  
 	<parameter name="AmbientePruebas Key">
 		<parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='AmbientePruebas']
