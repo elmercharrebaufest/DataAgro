@@ -51,6 +51,19 @@ const GenerarConfirma = (() => {
         const val = el.negocioSAP().val()?.trim();
         return !val || /^[0-9;]+$/.test(val);
     }
+    function validarRangoFechas(desde, hasta, maxMeses = 3) {
+        if (!desde || !hasta) return true;
+        const limite = new Date(desde);
+        limite.setMonth(limite.getMonth() + maxMeses);
+        return hasta <= limite;
+    }
+    function validarFechasConfirmacion() {
+        if (trimEnd(el.negocioSAP().val()) !== '') return true;
+        const desde = getDatePicker(el.fechaConfirmacionDesde());
+        const hasta = getDatePicker(el.fechaConfirmacionHasta());
+        if (!validarRangoFechas(desde, hasta)) return false;
+        return true;
+    }
     function validarFiltros() {
 
         const filtros = {
@@ -483,6 +496,11 @@ const GenerarConfirma = (() => {
                 }
                 if (!validarFechas()) {
                     MensErr("El Rango de Negocios o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
+                    spinner(false);
+                    return;
+                }
+                if (!validarFechasConfirmacion()) {
+                    MensErr("El rango de fechas de confirmación no puede superar los 3 meses.");
                     spinner(false);
                     return;
                 }
