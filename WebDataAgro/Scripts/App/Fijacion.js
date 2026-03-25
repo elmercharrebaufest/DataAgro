@@ -1,4 +1,4 @@
-﻿var viewModel;
+var viewModel;
 var datosIniCrearContrato;
 var contratoEdit;
 var Id;
@@ -2881,13 +2881,30 @@ function LimpiarBoleto() {
 }
 
 function CargarCampaniaPorMaterial(value) {
-    var resultGrano = MSExecuteOnServer('/CompraNet/TraerCampanaPorMaterial', { MaterialId: value });
+    var requestsComplete = 0;
+    var totalRequests = 2;
+    var resultGrano = null;
+    var campanaActualId = null;
 
-    var campanaActualId = MSExecuteOnServer('/CompraNet/TraerCampanaActualMaterial', { MaterialId: value });
+    function updateIfReady() {
+        requestsComplete++;
+        if (requestsComplete === totalRequests) {
+            viewModel.set("CampanaCombo", resultGrano);
+            if (campanaActualId) {
+                $("#campanaId").data("kendoDropDownList").value(campanaActualId);
+            }
+        }
+    }
 
-    viewModel.set("CampanaCombo", resultGrano);
+    ApiCacheManager.getCampana(value, function (data) {
+        resultGrano = data;
+        updateIfReady();
+    });
 
-    $("#campanaId").data("kendoDropDownList").value(campanaActualId);
+    ApiCacheManager.getCampanaActual(value, function (data) {
+        campanaActualId = data;
+        updateIfReady();
+    });
 }
 
 function CerrarDatosPendientes() {
@@ -2913,21 +2930,23 @@ function windowsResize() {
         $("#proveedorLabelId").removeClass("noLeftPadding");
     }
 }
-function CargarCalidadPorMaterial(value) {
-    var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
-    viewModel.set("EspecialesCombo", calidadGrano);
 
-    if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
-    } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
-    } else {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
-    }
-    if ($("#material").val() == 2) {
-        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
-    }
-    CambioCalidades();
+function CargarCalidadPorMaterial(value) {
+    ApiCacheManager.getCalidades(value, function (calidadGrano) {
+        viewModel.set("EspecialesCombo", calidadGrano);
+
+        if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
+        } else {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+        }
+        if ($("#material").val() == 2) {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
+        }
+        CambioCalidades();
+    });
 }
 
 function LimpiarCalidades() {
