@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -2260,6 +2260,8 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             repositorio.Remover(actividad);
                         }
+                        logger.Info($"Eliminando Contacto Comercial {can.Nombres} {can.Apellido} del ProveedorId: {oParam.ProveedorId} " +
+                            $", el {DateTime.Now} ");
                         repositorio.Remover(can);
                     }
                 }

@@ -1,4 +1,4 @@
-﻿var cantGrano = 0;
+var cantGrano = 0;
 var capProdCant = 0;
 var capProdCantEstablecimiento = 0;
 var aGuardar = [];
@@ -886,8 +886,8 @@ function armarFuncionalidades() {
         $("#concom-cuit").val("");
         $("#concom-esapoderado").prop("checked", false);
         $('#concom-puestoapoderado').val('null');
-        $("#concom-desde").val('null');
-        $("#concom-hasta").val('null');
+        $("#concom-desde").val(''); // Cambiar de 'null' a ''
+        $("#concom-hasta").val(''); // Cambiar de 'null' a ''
         //ocultar campos porque esapoderado es false
         $(".concom-puestoapoderadoDiv").hide();
         $(".concom-cuitDiv").hide();
@@ -1281,6 +1281,8 @@ function armarSelects(result) {
         })(ii);
     }
     htmlSegmentacion += '</select>';
+
+
 
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
@@ -2760,14 +2762,23 @@ function editarContactoComercial(id) {
         $(".concom-desdeDiv").show();
         $(".concom-hastaDiv").show();
         //Setear fechas
-        let fechaDesde = new Date(parseInt(obj.desde.replace("/Date(", "").replace(")/", ""), 10));
-        $('#concom-desde').val(
-            fechaDesde.getFullYear() + '-' +
-            ('0' + (fechaDesde.getMonth() + 1)).slice(-2) + '-' +
-            ('0' + fechaDesde.getDate()).slice(-2)
-        );
-        let fechaHasta = new Date(parseInt(obj.hasta.replace("/Date(", "").replace(")/", ""), 10));
-        $("#concom-hasta").val(fechaHasta.toISOString().split('T')[0]);
+        if (obj.desde && obj.desde !== 'null') { // Agregar validación
+            let fechaDesde = new Date(parseInt(obj.desde.replace("/Date(", "").replace(")/", ""), 10));
+            $('#concom-desde').val(
+                fechaDesde.getFullYear() + '-' +
+                ('0' + (fechaDesde.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + fechaDesde.getDate()).slice(-2)
+            );
+        } else {
+            $('#concom-desde').val(''); // Limpiar si no hay fecha
+        }
+
+        if (obj.hasta && obj.hasta !== 'null') { // Agregar validación
+            let fechaHasta = new Date(parseInt(obj.hasta.replace("/Date(", "").replace(")/", ""), 10));
+            $("#concom-hasta").val(fechaHasta.toISOString().split('T')[0]);
+        } else {
+            $("#concom-hasta").val(''); // Limpiar si no hay fecha
+        }
         //Setear Puesto
         $('#concom-puestoapoderado').val(obj.puestoApoderadoId);
         //Setear Cuit
