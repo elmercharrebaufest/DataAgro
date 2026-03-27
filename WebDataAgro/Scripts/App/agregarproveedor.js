@@ -807,10 +807,14 @@ function armarFuncionalidades() {
         obj.Boleto = $("#concom-boleto").is(":checked") ? 1 : 0;
         obj.item = cantContactoComercial;
 
-        if (obj.principal) {
+        // Solo actualizar otros contactos si se marca explícitamente como principal Y no es apoderado
+        if (obj.principal && !obj.esApoderado) {
             for (var ii in aGuardarContactoComercial) {
                 (function (i) {
-                    aGuardarContactoComercial[i].principal = 0;
+                    // Solo desmarcar otros contactos que NO sean apoderados
+                    if (!aGuardarContactoComercial[i].esApoderado) {
+                        aGuardarContactoComercial[i].principal = 0;
+                    }
                 })(ii);
             }
         }
