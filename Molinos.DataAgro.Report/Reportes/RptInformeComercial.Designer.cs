@@ -1,4 +1,4 @@
-﻿namespace Molinos.DataAgro.Report
+namespace Molinos.DataAgro.Report
 {
     /// <summary>
     /// Summary description for RptContacto.
@@ -1525,27 +1525,6 @@
             // 
             // label8
             // 
-            this.label8.Height = 0.826F;
-            this.label8.HyperLink = null;
-            this.label8.Left = 0.7F;
-            this.label8.Name = "label8";
-            this.label8.Style = "font-size: 9.75pt; font-weight: normal; white-space: nowrap; ddo-char-set: 0; ddo" +
-    "-font-vertical: none";
-            this.label8.Text = "             VENDEDOR\r\n\r\nFirma:__________________\r\n\r\nAclaración:______________";
-            this.label8.Top = 7.374001F;
-            this.label8.Width = 2.293F;
-            // 
-            // label17
-            // 
-            this.label17.Height = 0.826F;
-            this.label17.HyperLink = null;
-            this.label17.Left = 4.615014F;
-            this.label17.Name = "label17";
-            this.label17.Style = "color: Black; font-size: 9.75pt; font-weight: normal; white-space: nowrap; ddo-ch" +
-    "ar-set: 0";
-            this.label17.Text = "             COMPRADOR\r\n\r\nFirma:__________________\r\n\r\nAclaración:______________";
-            this.label17.Top = 7.374001F;
-            this.label17.Width = 2.293F;
             // 
             // textBox19
             // 
