@@ -34,7 +34,7 @@ namespace WebDataAgro.JobRegistration
             RecurringJob.AddOrUpdate<IPesificadosHangfireJob>("PesificadosHangfireJob", s => s.Execute(), "0 */2 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IRechazarSolicitudesVencidasHangfireJob>("RechazarSolicitudesVencidasHangfireJob", s => s.Execute(), "30 12 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             //RecurringJob.AddOrUpdate<IReportePagosDiferidosHangfireJob>("ReportePagosDiferidosHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
-            //RecurringJob.AddOrUpdate<ISincronizarResearchHangfireJob>("SincronizarResearchHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
+            RecurringJob.AddOrUpdate<ISincronizarResearchHangfireJob>("SincronizarResearchHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             //RecurringJob.AddOrUpdate<ITransmitirCupoStopHangfireJob>("TransmitirCupoStopHangfireJob", s => s.Execute(), Cron.Daily, new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IVerificarSolicitudesExtraordinariasPendientesHangfireJob>("VerificarSolicitudesExtraordinariasPendientesHangfireJob", s => s.Execute(), "10 18 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
 
