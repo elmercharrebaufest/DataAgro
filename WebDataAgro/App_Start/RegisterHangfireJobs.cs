@@ -9,7 +9,7 @@ namespace WebDataAgro.JobRegistration
         public static void Register()
         {
             RecurringJob.AddOrUpdate<IActualizarCumplimientoCuposHangfireJob>("ActualizarCumplimientoCuposHangfireJob", s => s.Execute(), "0 5 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
-            RecurringJob.AddOrUpdate<IActualizarEstadoDeContratosHangfireJob>("ActualizarEstadoDeContratosHangfireJob", s => s.Execute(), "0 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
+            RecurringJob.AddOrUpdate<IActualizarEstadoDeContratosHangfireJob>("ActualizarEstadoDeContratosHangfireJob", s => s.Execute(), "*/2 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IActualizarFechaUltimaActualizacionManualesFAQHangfireJob>("ActualizarFechaUltimaActualizacionManualesFAQHangfireJob", s => s.Execute(), "30 9 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IActualizarMailProveedorHangfireJob>("ActualizarMailProveedorHangfireJob", s => s.Execute(), "0 6 * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
             RecurringJob.AddOrUpdate<IActualizarPrecioPizarraHangfireJob>("ActualizarPrecioPizarraHangfireJob", s => s.Execute(), "*/10 * * * *", new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
