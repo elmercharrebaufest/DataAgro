@@ -220,6 +220,18 @@ namespace WebDataAgro.Controllers
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(filtrosBusqueda.NegocioSAP))
+                {
+                    List<string> listaContratosFormateados = filtrosBusqueda.NegocioSAP
+                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .Select(x => x.PadLeft(10, '0'))
+                        .ToList();
+
+                    string contratoSAP = string.Join(";", listaContratosFormateados) + ";";
+                    filtrosBusqueda.NegocioSAP = contratoSAP;
+                }
+
                 // Obtener todos los boletos con los filtros aplicados
                 var todosBoletos = boletoManager.TraerContratosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
 

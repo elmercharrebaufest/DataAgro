@@ -94,18 +94,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                     bool esCanje = contrato.Canje == true;
                     string nroContratoInterno = numeroSAP.TrimStart('0');
-
+                    string nroContratoInternoVendedor = contrato.ContratoVendedor != null ? contrato.ContratoVendedor : string.Empty;
                     //bool existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == contrato.ContratoSAP) : x.Negocio.ContratoSAP == contrato.ContratoSAP);
                     //if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
                     //logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
 
                     List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
-                        new ConfirmaParteDto { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit1 : contrato.Cuit, Sucursal = string.Empty },
+                        new ConfirmaParteDto { CodLista = "1", NroContratoInterno = nroContratoInternoVendedor, CUIT = ambienteLocal == "1" ? cuit1 : contrato.Cuit, Sucursal = string.Empty },
                         new ConfirmaParteDto { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = cuitMOA, Sucursal = string.Empty }
                     };
                     if (contrato.CorredorId > 0)
-                        Partes.Add(new ConfirmaParteDto { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = ambienteLocal == "1" ? cuit2 : contrato.CUITCorredor, Sucursal = string.Empty });
-
+                    {
+                        string nroContratoInternoCorredor = contrato.ContratoCorredor;
+                        Partes.Add(new ConfirmaParteDto { CodLista = "2", NroContratoInterno = nroContratoInternoCorredor, CUIT = ambienteLocal == "1" ? cuit2 : contrato.CUITCorredor, Sucursal = string.Empty });
+                    }
                     logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{numeroSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
                     if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {numeroSAP}.");
 
@@ -272,8 +274,8 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
             detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
+            detalleContrato.CantidadDesde = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
+            detalleContrato.CantidadHasta = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
@@ -324,9 +326,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
                 fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación"):
-                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
+                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? (!string.IsNullOrEmpty(contrato.FechaCiertaFormateado) ? contrato.FechaCiertaFormateado : "Pago Anticipado") :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? ("Días de diferimiento contra mercadería entregada") :
+                (contrato.PagoDiferido == true ? (contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada") :
                 ("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
@@ -467,8 +469,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             detalleContrato.FechaConcertacion = new TCaption() { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null, };
             detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
             detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
+            detalleContrato.CantidadDesde = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
+            detalleContrato.CantidadHasta = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
             detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
 
             // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
@@ -955,9 +957,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
                 fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación") :
-                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? "Pago Anticipado" :
+                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? (!string.IsNullOrEmpty(contrato.FechaCiertaFormateado) ? contrato.FechaCiertaFormateado : "Pago Anticipado") :
                 (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? ("Días de diferimiento contra mercadería entregada") :
+                (contrato.PagoDiferido == true ? (contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada") :
                 ("72 hs contra mercadería descargada.")))) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;

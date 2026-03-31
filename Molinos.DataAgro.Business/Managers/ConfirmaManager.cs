@@ -254,7 +254,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     var tieneItemsWS = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
 
-                                    if (tieneItemsWS && confirmaAltaLoteDocumentosResult.altaItem[0].confirmaAltaEstadoDocumento?.CodigoConfirmaAltaEstadoDocumento == (int)EnumConfirmaAltaEstadoDocumento.RECEPCION_CON_EXITO)
+                                    if (tieneItemsWS && confirmaAltaLoteDocumentosResult.altaEstadoLote == (int)EnumConfirmaAltaEstadoLote.PROCESADO)
                                     {
                                         // Enviar a RFC
                                         logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
