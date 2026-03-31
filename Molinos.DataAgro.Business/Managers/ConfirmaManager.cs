@@ -253,8 +253,9 @@ namespace Molinos.DataAgro.Business.Managers
                                         clausulasConfirmaWS, equipo, contrato, estadosConfirmaDtoProduccion);
 
                                     var tieneItemsWS = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
+                                    bool tieneErrores = confirmaAltaLoteDocumentosResult.altaItem?.Any(item => item.altaErrores != null && item.altaErrores.Any()) ?? false;
 
-                                    if (tieneItemsWS && confirmaAltaLoteDocumentosResult.altaEstadoLote == (int)EnumConfirmaAltaEstadoLote.PROCESADO)
+                                    if (tieneItemsWS && confirmaAltaLoteDocumentosResult.altaEstadoLote == (int)EnumConfirmaAltaEstadoLote.PROCESADO && !tieneErrores)
                                     {
                                         // Enviar a RFC
                                         logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
