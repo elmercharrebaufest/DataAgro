@@ -94,7 +94,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
                     bool esCanje = contrato.Canje == true;
                     string nroContratoInterno = numeroSAP.TrimStart('0');
-                    string nroContratoInternoVendedor = contrato.ContratoVendedor != null ? contrato.ContratoVendedor : string.Empty;
+                    string nroContratoInternoVendedor = contrato.ContratoVendedor != null ? contrato.ContratoVendedor : nroContratoInterno;
                     //bool existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == contrato.ContratoSAP) : x.Negocio.ContratoSAP == contrato.ContratoSAP);
                     //if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
                     //logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
