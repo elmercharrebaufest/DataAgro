@@ -1,92 +1,92 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
-	<setParameter name="IIS Web Application Name" value="dataagroPreProd" />
+  <setParameter name="IIS Web Application Name" value="dataagroPreProd" />
 
-	<setParameter name="DataAgro-Web.config Connection String" value="Data Source=ArBAVSPWSQL01.molinosagro.ad,1433; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroPRE" />
-	<setParameter name="HfContexto-Web.config Connection String" value="Data Source=ArBAVSPWSQL01.molinosagro.ad,1433; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroHangFirePRE" />
+  <setParameter name="DataAgro-Web.config Connection String" value="Data Source=ArBAVSPWSQL01.molinosagro.ad,1433; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroPRE" />
+  <setParameter name="HfContexto-Web.config Connection String" value="Data Source=ArBAVSPWSQL01.molinosagro.ad,1433; User ID=DATAAGROPREUSR; Password=Z327wce$5OC5; Initial Catalog=DataAgroHangFirePRE" />
 
-	<setParameter name="SmtpServer Key" value="smtpnuevo.molinosagro.com.ar" />
-	<setParameter name="SmtpServerPort Key" value="25" />
-	<setParameter name="ImapServer Key" value="outlook.office365.com" />
-	<setParameter name="ImapServerPort Key" value="993" />
-	<setParameter name="EnableSSL Key" value="N" />
-	<setParameter name="UseDefaultCredentials Key" value="N" />
-	<setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />
-	<setParameter name="CredentialPassword Key" value="D4taAgr017" />
-	<setParameter name="CredentialUserNamePesificados Key" value="materias.primas@molinosagro.com.ar" />
-	<setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
-	<setParameter name="EmailAgenda Key" value="0" />
-	<setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
-	<setParameter name="SmtpAnonimo Key" value="S" />
-	<setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
-	<setParameter name="SISA_con_campo_adicional" value="0" />
+  <setParameter name="SmtpServer Key" value="smtpsap.molinosagro.com.ar" />
+  <setParameter name="SmtpServerPort Key" value="25" />
+  <setParameter name="ImapServer Key" value="outlook.office365.com" />
+  <setParameter name="ImapServerPort Key" value="993" />
+  <setParameter name="EnableSSL Key" value="N" />
+  <setParameter name="UseDefaultCredentials Key" value="N" />
+  <setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />
+  <setParameter name="CredentialPassword Key" value="D4taAgr017" />
+  <setParameter name="CredentialUserNamePesificados Key" value="materias.primas@molinosagro.com.ar" />
+  <setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
+  <setParameter name="EmailAgenda Key" value="0" />
+  <setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
+  <setParameter name="SmtpAnonimo Key" value="S" />
+  <setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
+  <setParameter name="SISA_con_campo_adicional" value="0" />
 
-	<setParameter name="SapPass Key" value="Inicio2025!" />
+  <setParameter name="SapPass Key" value="Inicio2025!" />
 
-	<setParameter name="SinConexionSap Key" value="0" />
-	<setParameter name="ValorPruebaSap Key" value="0" />
-	<setParameter name="AmbientePruebas Key" value="1" />
-	<setParameter name="AmbienteStaging Key" value="1" />
-	<setParameter name="AmbienteUATMOA Key" value="0" />
-	<setParameter name="AmbienteUATDA Key" value="0" />
-	<setParameter name="AmbienteLocal Key" value="0" />
+  <setParameter name="SinConexionSap Key" value="0" />
+  <setParameter name="ValorPruebaSap Key" value="0" />
+  <setParameter name="AmbientePruebas Key" value="1" />
+  <setParameter name="AmbienteStaging Key" value="1" />
+  <setParameter name="AmbienteUATMOA Key" value="0" />
+  <setParameter name="AmbienteUATDA Key" value="0" />
+  <setParameter name="AmbienteLocal Key" value="0" />
 
-	<setParameter name="Rg2300 Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG2300.LST" />
-	<setParameter name="Facacop Key" value="\\sapshareqadev\share\ftproot\transf\matprim\facacop.txt" />
-	<setParameter name="SISA Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG_4310.txt" />
+  <setParameter name="Rg2300 Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG2300.LST" />
+  <setParameter name="Facacop Key" value="\\sapshareqadev\share\ftproot\transf\matprim\facacop.txt" />
+  <setParameter name="SISA Key" value="\\sapshareqadev\share\ftproot\transf\matprim\RG_4310.txt" />
 
-	<setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
-	<setParameter name="ServicePass Key" value="MOA.Test" />
+  <setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
+  <setParameter name="ServicePass Key" value="MOA.Test" />
 
-	<setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
-	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
-	<setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
-	<setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
+  <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
+  <setParameter name="VersionClienteSTOP Key" value="2.0.0" />
+  <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
+  <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
-	<!-- Primary Producción -->
-	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
-	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
-	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
-	<!-- Primary Prueba -->
-	<!--<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
+  <!-- Primary Producción -->
+  <setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
+  <setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
+  <setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
+  <!-- Primary Prueba -->
+  <!--<setParameter name="UrlBasePrimary Key" value="https://demoapi.anywhereportfolio.com.ar/" />
 	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
 	<setParameter name="PassPrimary Key" value="Demo2024" />-->
 
-	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
-	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />
+  <setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
+  <setParameter name="CupoMaizPorSugerencias Key" value="Si" />
 
-	<setParameter name="ActivarBLEND Key" value="No" />
+  <setParameter name="ActivarBLEND Key" value="No" />
 
-	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
-	<setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMAS\" />
+  <setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
+  <setParameter name="PathConfirmas Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\CONFIRMAS\" />
 
-	<setParameter name="ConfirmaUser Key" value="molinosagro" />
-	<setParameter name="ConfirmaPass Key" value="molinosagro" />
-	<setParameter name="ValorPruebaConfirma Key" value="0" />
-	<setParameter name="ActivarConfirmaWS Key" value="1" />
-	<setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
-	<setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
-	<setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
+  <setParameter name="ConfirmaUser Key" value="molinosagro" />
+  <setParameter name="ConfirmaPass Key" value="molinosagro" />
+  <setParameter name="ValorPruebaConfirma Key" value="0" />
+  <setParameter name="ActivarConfirmaWS Key" value="1" />
+  <setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
+  <setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
+  <setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
 
-	<!--Parametro para nueva version de boletos-->
-	<setParameter name="BoletosNuevaVersion Key" value="1" />
-	<setParameter name="ActivarSojaEUDR Key" value="No" />
+  <!--Parametro para nueva version de boletos-->
+  <setParameter name="BoletosNuevaVersion Key" value="1" />
+  <setParameter name="ActivarSojaEUDR Key" value="No" />
 
-	<setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
+  <setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 
-	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://vhmgkgaqci.sap.molinosagro.ad:44300/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
-	<setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />
+  <setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://vhmgkgaqci.sap.molinosagro.ad:44300/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
+  <setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />
 
-	<setParameter name="Default Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
-	<setParameter name="Default1 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
-	<setParameter name="Default2 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
-	<setParameter name="Default3 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
-	<setParameter name="Default4 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
-	<setParameter name="Default5 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
-	<setParameter name="Default6 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
-	<setParameter name="Default7 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
-	<setParameter name="Default8 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
-	<setParameter name="Default9 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
-	<setParameter name="Default10 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
-	<setParameter name="Default11 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
+  <setParameter name="Default Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
+  <setParameter name="Default1 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
+  <setParameter name="Default2 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
+  <setParameter name="Default3 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
+  <setParameter name="Default4 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
+  <setParameter name="Default5 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
+  <setParameter name="Default6 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
+  <setParameter name="Default7 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
+  <setParameter name="Default8 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
+  <setParameter name="Default9 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
+  <setParameter name="Default10 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
+  <setParameter name="Default11 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
 </parameters>

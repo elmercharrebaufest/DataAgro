@@ -1,73 +1,73 @@
 <parameters>
-	<parameter name="SmtpServer Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="SmtpServer Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='SmtpServer']
                            /@value" />
-	</parameter>
-	<parameter name="SmtpServerPort Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="SmtpServerPort Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='SmtpServerPort']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="ImapServer Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="ImapServer Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ImapServer']
                            /@value" />
-	</parameter>
-	<parameter name="ImapServerPort Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="ImapServerPort Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ImapServerPort']
                            /@value" />
-	</parameter>
+  </parameter>
 
 
-	<parameter name="EnableSSL Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="EnableSSL Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='EnableSSL']
                            /@value" />
-	</parameter>
-	<parameter name="UseDefaultCredentials Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="UseDefaultCredentials Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='UseDefaultCredentials']
                            /@value" />
-	</parameter>
-	<parameter name="CredentialUserName Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CredentialUserName Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='CredentialUserName']
                            /@value" />
-	</parameter>
-	<parameter name="CredentialPassword Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CredentialPassword Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='CredentialPassword']
                            /@value" />
-	</parameter>
-	<parameter name="CredentialUserNamePesificados Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CredentialUserNamePesificados Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='CredentialUserNamePesificados']
                            /@value" />
-	</parameter>
-	<parameter name="CredentialPasswordPesificados Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CredentialPasswordPesificados Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='CredentialPasswordPesificados']
                            /@value" />
-	</parameter>
-	<parameter name="maildeUsuarios Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="maildeUsuarios Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='maildeUsuarios']
                            /@value" />
-	</parameter>
-	<parameter name="SapPass Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="SapPass Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='SapPass']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="SinConexionSap Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="SinConexionSap Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='SinConexionSap']
                            /@value" />
-	</parameter>
+  </parameter>
 
 
   <parameter name="UrlResearch Key">
@@ -96,554 +96,554 @@
   </parameter>
 
 
-  
-	<parameter name="AmbientePruebas Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+
+  <parameter name="AmbientePruebas Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='AmbientePruebas']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="ValorPruebaSap Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="ValorPruebaSap Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ValorPruebaSap']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="Rg2300 Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="Rg2300 Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='Rg2300']
                            /@value" />
-	</parameter>
-	<parameter name="PathBoletos Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="PathBoletos Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 					    match="/configuration/appSettings/add[@key='PathBoletos']
                             /@value" />
-	</parameter>
-	<parameter name="PathConfirmas Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="PathConfirmas Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 					    match="/configuration/appSettings/add[@key='PathConfirmas']
                             /@value" />
-	</parameter>
-	<parameter name="SISA Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="SISA Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='SISA']
                            /@value" />
-	</parameter>
-	<parameter name="Facacop Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Facacop Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='Facacop']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="EmailAgenda Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="EmailAgenda Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='EmailAgenda']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="SmtpAnonimo Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="SmtpAnonimo Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='SmtpAnonimo']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="CupoSojaNoSustPorSugerencias Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="CupoSojaNoSustPorSugerencias Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='CupoSojaNoSustPorSugerencias']
                            /@value" />
-	</parameter>
-	<parameter name="CupoMaizPorSugerencias Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CupoMaizPorSugerencias Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='CupoMaizPorSugerencias']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="EmailInformeComercial Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="EmailInformeComercial Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='EmailInformeComercial']
                            /@value" />
-	</parameter>
-	<parameter name="AmbienteLocal Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="AmbienteLocal Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 							match="/configuration/appSettings/add[@key='AmbienteLocal']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="ActivarBLEND Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="ActivarBLEND Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ActivarBLEND']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="AmbienteStaging Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="AmbienteStaging Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='AmbienteStaging']
 					   /@value" />
-	</parameter>
-	<parameter name="AmbienteUATMOA Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="AmbienteUATMOA Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='AmbienteUATMOA']
 					   /@value" />
-	</parameter>
-	<parameter name="AmbienteUATDA Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="AmbienteUATDA Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='AmbienteUATDA']
 					   /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="ValorPruebaConfirma Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="ValorPruebaConfirma Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ValorPruebaConfirma']
 					   /@value" />
-	</parameter>
-	<parameter name="ActivarConfirmaWS Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="ActivarConfirmaWS Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ActivarConfirmaWS']
 					   /@value" />
-	</parameter>
-	<parameter name="PruebaRapidaDeConfirma Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="PruebaRapidaDeConfirma Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='PruebaRapidaDeConfirma']
 					   /@value" />
-	</parameter>
-	<parameter name="CantidadDeProveedoresAProcesarPesificados Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CantidadDeProveedoresAProcesarPesificados Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='CantidadDeProveedoresAProcesarPesificados']
 					   /@value" />
-	</parameter>
-	<parameter name="CantidadDeProveedoresParaActualizarEstado Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="CantidadDeProveedoresParaActualizarEstado Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='CantidadDeProveedoresParaActualizarEstado']
 					   /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port1 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port1 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port1']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port2 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port2 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port2']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port3 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port3 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port3']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port4 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port4 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port4']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port5 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port5 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port5']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port6 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port6 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port6']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port7 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port7 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port7']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port8 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port8 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port8']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port9 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port9 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port9']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port10 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port10 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port10']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port11 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port11 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port11']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port12 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port12 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port12']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port13 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port13 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port13']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port14 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port14 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port14']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port15 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port15 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port15']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port16 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port16 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port16']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port17 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port17 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port17']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port18 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port18 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port18']
                            /@address" />
-	</parameter>
-	<parameter name="ServiceUser Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="ServiceUser Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ServiceUser']
                            /@value" />
-	</parameter>
-	<parameter name="ServicePass Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="ServicePass Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ServicePass']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="UrlBaseSTOP Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="UrlBaseSTOP Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='UrlBaseSTOP']
                            /@value" />
-	</parameter>
-	<parameter name="VersionClienteSTOP Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="VersionClienteSTOP Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='VersionClienteSTOP']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="UrlBaseDataAgro Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="UrlBaseDataAgro Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='UrlBaseDataAgro']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="UrlBasePrimary Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="UrlBasePrimary Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='UrlBasePrimary']
                            /@value" />
-	</parameter>
-	<parameter name="UserPrimary Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="UserPrimary Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='UserPrimary']
                            /@value" />
-	</parameter>
-	<parameter name="PassPrimary Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="PassPrimary Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='PassPrimary']
                            /@value" />
-	</parameter>
-	<parameter name="UrlScoringCupos Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="UrlScoringCupos Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='UrlScoringCupos']
                            /@value" />
-	</parameter>
-	<parameter name="BoletosNuevaVersion Key">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="BoletosNuevaVersion Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='BoletosNuevaVersion']
                            /@value" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port19 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port19 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port19']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port20 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port20 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port20']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port21 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port21 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port21']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port22 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port22 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port22']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port23 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port23 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port23']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port24 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port24 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port24']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port25 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port25 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port25']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port26 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port26 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port26']
                            /@address" />
-	</parameter>
-	<parameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='BasicHttpBinding_IServicioRepositorio']
                            /@address" />
-	</parameter>
-	<parameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 					    match="/configuration/system.serviceModel/client
                             /endpoint[@name='Z_MP_WS_DATAAGRO_DIRECTO']
                             /@address" />
-	</parameter>
-	<parameter name="HTTP_Port27 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port27 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port27']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port28 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port28 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port28']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port29 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port29 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port29']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port30 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port30 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port30']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port34 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port34 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port34']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port35 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port35 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port35']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port36 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port36 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port36']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port37 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port37 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port37']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port38 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port38 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port38']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port39 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port39 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port39']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port41 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port41 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 							match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port41']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port43 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port43 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 							match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port43']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port49 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port49 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 							match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port49']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="HTTP_Port44 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="HTTP_Port44 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port44']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port45 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port45 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port45']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port46 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port46 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port46']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port47 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port47 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port47']
                            /@address" />
-	</parameter>
-	<parameter name="HTTP_Port50 Service Endpoint Address">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="HTTP_Port50 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port50']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="Default Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="Default Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default']
                            /@address" />
-	</parameter>
-	<parameter name="Default1 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default1 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default1']
                            /@address" />
-	</parameter>
-	<parameter name="Default2 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default2 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default2']
                            /@address" />
-	</parameter>
-	<parameter name="Default3 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default3 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default3']
                            /@address" />
-	</parameter>
-	<parameter name="Default4 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default4 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default4']
                            /@address" />
-	</parameter>
-	<parameter name="Default5 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default5 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default5']
                            /@address" />
-	</parameter>
-	<parameter name="Default6 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default6 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default6']
                            /@address" />
-	</parameter>
-	<parameter name="Default7 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default7 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default7']
                            /@address" />
-	</parameter>
-	<parameter name="Default8 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default8 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default8']
                            /@address" />
-	</parameter>
-	<parameter name="Default9 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default9 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default9']
                            /@address" />
-	</parameter>
-	<parameter name="Default10 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default10 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default10']
                            /@address" />
-	</parameter>
-	<parameter name="Default11 Endpoint Confirma">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  </parameter>
+  <parameter name="Default11 Endpoint Confirma">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/system.serviceModel/client
                            /endpoint[@name='Default11']
                            /@address" />
-	</parameter>
+  </parameter>
 
-	<parameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration">
-		<parameterEntry kind="XmlFile" scope="Web.config"
+  <parameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration">
+    <parameterEntry kind="XmlFile" scope="Web.config"
 							match="/configuration/system.serviceModel/client
                            /endpoint[@name='Z_MP_WS_DATAAGRO_DIRECTO']
                            /@bindingConfiguration" />
-	</parameter>
+  </parameter>
   <parameter name="ActivarSojaEUDR Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='ActivarSojaEUDR']
