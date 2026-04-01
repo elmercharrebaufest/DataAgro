@@ -17,6 +17,7 @@ var boletoId;
 var cantidadEditar, fechaHastaEditar;
 var porcentajeDePago = null;
 var materialSeleccionado = null;
+var guardandoContrato = false; // Variable de control global
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -3751,7 +3752,13 @@ function GrabarContrato(nuevoContrato) {
 
                     Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
                         function (dialogItself) {
-                            grabarContrato(objeto);
+                            // Prevenir múltiples ejecuciones
+                            if (guardandoContrato) {
+                                return;
+                            }
+                            guardandoContrato = true;
+
+                            result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                         });
                 }
                 else {
