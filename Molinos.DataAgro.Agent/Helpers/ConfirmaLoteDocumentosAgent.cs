@@ -325,11 +325,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación"):
-                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? (contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") : "Pago Anticipado") :
-                (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? (contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada") :
-                ("72 hs contra mercadería descargada.")))) : null);
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación":
+                    (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO?
+                        (
+                          (contrato.CD != true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy"):
+                          (contrato.CD == true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado":
+                          (contrato.CD == true && !contrato.FechaCierta.HasValue) ? "Pago Anticipado" :
+                          (contrato.Warrant == true ? "Pago contra Warrant":
+                          (contrato.PagoDiferido == true ? contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada" : "72 hs contra mercadería descargada."))
+                        ) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
@@ -956,11 +960,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Pagos pagos = new Pagos();
                 #region Pagos
                 TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? ("4 días hábiles de fecha de fijación") :
-                (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? (contrato.CD == true ? (contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") : "Pago Anticipado") :
-                (contrato.Warrant == true ? "Pago contra Warrant" :
-                (contrato.PagoDiferido == true ? (contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada") :
-                ("72 hs contra mercadería descargada.")))) : null);
+                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación" :
+                    (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ?
+                        (
+                          (contrato.CD != true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") :
+                          (contrato.CD == true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado" :
+                          (contrato.CD == true && !contrato.FechaCierta.HasValue) ? "Pago Anticipado" :
+                          (contrato.Warrant == true ? "Pago contra Warrant" :
+                          (contrato.PagoDiferido == true ? contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada" : "72 hs contra mercadería descargada."))
+                        ) : null);
 
                 pagos.FechaCondicionPago = fechaCondicionPago;
                 pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
