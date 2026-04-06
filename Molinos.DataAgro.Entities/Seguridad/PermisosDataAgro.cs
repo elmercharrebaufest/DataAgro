@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Resources;
+using Molinos.DataAgro.Entities.Resources;
 using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Seguridad
@@ -394,5 +394,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Ver_Todos_Contactos_x_Proveedor
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Contactos_Por_Proveedor")]
         Ver_Todos_Contactos_x_Proveedor = 921,
+
+        [Display(ResourceType = typeof(Text), Name = "Control_de_Boletos")]
+        Control_de_Boletos = 922,
+
     }
 }

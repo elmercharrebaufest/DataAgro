@@ -1,4 +1,4 @@
-﻿--BolsaCompraNet
+--BolsaCompraNet
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Buenos Aires') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Buenos Aires','01'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Rosario') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Rosario','02'); END
 IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Santa Fe') BEGIN insert into BolsaCompraNet (Descripcion,CodigoSap) values ('Santa Fe','03'); END
@@ -1301,3 +1301,18 @@ BEGIN
     INSERT INTO TipoOblea (Codigo, Descripcion) 
     VALUES ('P', 'Oblea Provisoria')
 END
+
+-- creacion Rol Control de Boletos
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Control de Boletos')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Control de Boletos')
+   END
+
+DECLARE @RolControlDeboletos int
+ SELECT @RolControlDeboletos = Id from Rol 
+  WHERE Descripcion = 'Control de Boletos'
+
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolControlDeboletos and Permiso = 922)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolControlDeboletos, 922)
+   END
