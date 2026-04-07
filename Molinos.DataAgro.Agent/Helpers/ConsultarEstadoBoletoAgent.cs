@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;

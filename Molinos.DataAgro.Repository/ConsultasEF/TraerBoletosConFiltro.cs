@@ -51,6 +51,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }
                 else
                 {
+                    negociosFiltrados = negociosFiltrados.Where(n => n.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
+
                     if (filtros.MaterialId.HasValue)
                     {
                         negociosFiltrados = negociosFiltrados.Where(n => n.MaterialId == filtros.MaterialId.Value);

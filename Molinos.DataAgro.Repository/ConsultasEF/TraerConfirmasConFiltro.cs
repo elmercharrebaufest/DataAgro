@@ -59,10 +59,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         negociosFiltrados = negociosFiltrados.Where(n =>
                             negociosSAPList.Contains(n.ContratoSAP) ||
                             (n is FijacionDePrecioContrato && negociosSAPList.Contains((n as FijacionDePrecioContrato).FijacionSAP)));
+
                     }
                 }
                 else
                 {
+                    negociosFiltrados = negociosFiltrados.Where(n => n.TipoNegocioId != (int)EnumTipoNegocio.FIJACION);
+
                     if (filtros.FechaConfirmacionDesde.HasValue)
                     {
                         negociosFiltrados = negociosFiltrados.Where(n => n.FechaConfirmacion >= filtros.FechaConfirmacionDesde.Value);
