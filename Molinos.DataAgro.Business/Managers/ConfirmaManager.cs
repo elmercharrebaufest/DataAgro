@@ -1419,12 +1419,12 @@ namespace Molinos.DataAgro.Business.Managers
             var mensaje = boleto.Estado_Version;
             try
             {
-                if (boleto.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || boleto.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-                    boleto.FijacionSAP = "1";
-                else
-                    boleto.FijacionSAP = "2";
-                
-                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                //if (boleto.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || boleto.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+                //    boleto.FijacionSAP = "1";
+                //else
+                //    boleto.FijacionSAP = "2";
+                boleto.FijacionSAP = " ";
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP);
                 var version = Int32.Parse(consultaBoleto.Version);
                 if (version > boleto.Version)
                 {
