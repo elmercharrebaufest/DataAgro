@@ -967,7 +967,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     boletoDto.Mensaje = $"No se pudo generar el boleto porque el contrato está en slip.";
                 }
-                else if (res.Status != "X")
+                else if (res.Status == "B")
                 {
                     string motivoStatus = StatusNegocioEnGeneracionBoleto(res);
                     boletoDto.Mensaje = $"No se pudo generar el boleto por el estado del contrato: {res.Status} - {motivoStatus}";

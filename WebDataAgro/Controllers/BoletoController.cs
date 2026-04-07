@@ -71,15 +71,11 @@ namespace WebDataAgro.Controllers
             List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
             boleto.ComercialId = GlobalVariables.ComercialId;
-            if (boleto.TipoNegocioId == 1) // Contrato
-            {
-                tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
-                tipoNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
-            }
-            else // Fijación
-            {
-                tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
-            }
+
+            tipoNegocios.Add((int)EnumTipoNegocio.A_FIJAR);
+            tipoNegocios.Add((int)EnumTipoNegocio.A_PRECIO);
+            tipoNegocios.Add((int)EnumTipoNegocio.FIJACION);
+
 
             boleto.ContratoSAP = Regex.Replace(boleto.ContratoSAP, @"\s+", ";");
 

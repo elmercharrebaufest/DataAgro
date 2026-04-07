@@ -618,7 +618,7 @@ namespace Molinos.DataAgro.Business.Managers
                   //Validar estado del contrato
 
                     var res = status.ValidarEstado(contrato.ContratoSAP);
-                    if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
+                    if (!string.IsNullOrEmpty(res.Status) && res.Status == "B")
                     {
                         string motivoStatus = StatusNegocioConfirma(res);
                         mensaje = $"No se puede generar el confirma con negocio {contrato.ContratoSAP} para el contrato por su estado: {motivoStatus}";

@@ -63,7 +63,7 @@
   <setParameter name="ConfirmaUser Key" value="molinosagro" />
   <setParameter name="ConfirmaPass Key" value="molinosagro" />
   <setParameter name="ValorPruebaConfirma Key" value="0" />
-  <setParameter name="ActivarConfirmaWS Key" value="0" />
+  <setParameter name="ActivarConfirmaWS Key" value="1" />
   <setParameter name="CantidadDeProveedoresAProcesarPesificados Key" value="10" />
   <setParameter name="CantidadDeProveedoresParaActualizarEstado Key" value="15" />
   <setParameter name="UrlScoringCupos Key" value="https://1tfd915dza.execute-api.us-east-1.amazonaws.com/prod/classified" />
