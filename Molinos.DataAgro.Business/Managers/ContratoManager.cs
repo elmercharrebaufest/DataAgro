@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -5070,7 +5070,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oContrato.StandardDeCalidadId == 7)
+            if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2)
             {
                 htmlBody += "CALIDAD GRADO 2<br />";
             }
@@ -5078,15 +5078,17 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            else if (oContrato.StandardDeCalidadId == 1 || oContrato.StandardDeCalidadId == 4 || oContrato.StandardDeCalidadId == 5)
+            else if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA ||
+                oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA_1 ||
+                oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA_2)
             {
                 htmlBody += "CALIDAD CÁMARA ";
             }
-            else if (oContrato.StandardDeCalidadId == 3)
+            else if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA)
             {
                 htmlBody += "CALIDAD FÁBRICA ";
             }
-            if (oContrato.Calidad != null && oContrato.StandardDeCalidadId != 7)
+            if (oContrato.Calidad != null && oContrato.StandardDeCalidadId != (int)EnumStandarCalidad.GRADO_2)
             {
                 foreach (var cal in oContrato.Calidad)
                 {
@@ -6769,15 +6771,15 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oContrato.StandardDeCalidadId == 1)
+            if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA)
             {
                 htmlBody += "CÁMARA<br />";
             }
-            else if (oContrato.StandardDeCalidadId == 3)
+            else if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA)
             {
                 htmlBody += "FÁBRICA<br />";
             }
-            else if (oContrato.StandardDeCalidadId == 7)
+            else if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2)
             {
                 htmlBody += "CALIDAD GRADO 2<br />";
             }
@@ -6785,7 +6787,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
+            if (objCalidad != null && oContrato.StandardDeCalidadId != (int)EnumStandarCalidad.GRADO_2)
             {
                 foreach (var cal in objCalidad)
                 {

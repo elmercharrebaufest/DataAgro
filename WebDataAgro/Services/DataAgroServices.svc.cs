@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -206,6 +206,7 @@ namespace WebDataAgro.Services
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
+
         public ResultadoSap ActualizarContratoSAP(ContratoSAPDto contratoSAP)
         {
             contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
@@ -217,9 +218,14 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
-                var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP && x.EstadoId != 8);
+
+                var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP && x.EstadoId != (int)EnumEstadoContrato.Eliminado);
                 if (contratoOriginal != null)
+                {
                     contrato.TipoNegocioId = contratoOriginal.TipoNegocioId;
+                    logger.Info($"VALIDAR valores en ActualizarContratoSAP - Contrato original - ContratoSAP: {contratoOriginal.ContratoSAP} - StandardDeCalidadId: {contratoOriginal.StandardDeCalidadId}");
+                }
+
                 CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors, contratoSAP);
@@ -358,7 +364,7 @@ namespace WebDataAgro.Services
             foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
             {
                 var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-                if (!((contratoSAP.EPA == "X" || contratoSAP.EUDR == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == 4))
+                if (!((contratoSAP.EPA == "X" || contratoSAP.EUDR == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones))
                 {
                     aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Importe = aper.Importe;
                     aperturas.Find(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).MonedaId = aper.Moneda;
@@ -376,7 +382,14 @@ namespace WebDataAgro.Services
             logger.Debug("CrearProyeccionContrato - Alta del contrato");
 
             contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
-            contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : contratoSAP.SinBoleto == "X" ? 5 : 3;
+
+            contrato.BoletoId =
+                contratoSAP.Confirma == "X" ? (int)EnumBoletoCompraNet.CONFIRMA :
+                contratoSAP.BolFisico == "X" ? (int)EnumBoletoCompraNet.FISICO :
+                contratoSAP.CartaOferta == "X" ? (int)EnumBoletoCompraNet.CARTA_OFERTA :
+                contratoSAP.SinBoleto == "X" ? (int)EnumBoletoCompraNet.SIN_BOLETO :
+                (int)EnumBoletoCompraNet.NINGUNO;
+
             contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
             contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
             contrato.Cantidad = (double)contratoSAP.Cantidad;
@@ -456,12 +469,32 @@ namespace WebDataAgro.Services
             contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
             contrato.Precio = contratoSAP.Precio;
             contrato.PrecioNeto = contratoSAP.PrecioNeto;
-            contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
+
+            contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x =>
+            x.CUIT == contratoSAP.Proveedor &&
+            x.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios &&
+            x.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales, x => x.ProveedorId);
+
             contrato.ProvinciaId = contratoSAP.Provincia;
             contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
             contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
+
             contrato.StandardDeCalidadId = string.IsNullOrEmpty(contratoSAP.Especial) ? (int?)null : repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
-            contrato.EstadoId = 5;
+
+            logger.Info($"VALIDAR valores en ActualizarContratoSAP - Contrato a guardar - ContratoSAP: {contrato.ContratoSAP} - StandardDeCalidadId: {contrato.StandardDeCalidadId}");
+
+            if (contratoSAP.Especial == "03" && contrato.MaterialId == (int)EnumMateriales.SOJA)
+            {
+                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.FABRICA;
+                logger.Info($"VALIDAR valores en ActualizarContratoSAP - Contrato a guardar - ContratoSAP: {contrato.ContratoSAP} - Especial 03 y Material SOJA - StandardDeCalidadId: {contrato.StandardDeCalidadId}");
+            }
+            if (contratoSAP.Especial == "04" && contrato.MaterialId == (int)EnumMateriales.MAIZ)
+            {
+                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.GRADO_2;
+                logger.Info($"VALIDAR valores en ActualizarContratoSAP - Contrato a guardar - ContratoSAP: {contrato.ContratoSAP} - Especial 04 y Material MAIZ - StandardDeCalidadId: {contrato.StandardDeCalidadId}");
+            }
+
+            contrato.EstadoId = (int)EnumEstadoContrato.Finalizado;
             contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;
             contrato.CaratulaMAT = contratoSAP.CaratulaMAT;
             contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
@@ -476,9 +509,14 @@ namespace WebDataAgro.Services
                 contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION";
                 contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
                 contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
-                contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
-                    contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 : contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? 1 :
-                    contratoSAP.TipoNegocio == "VENTA" ? 1 : repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
+
+                contrato.TipoNegocioId =
+                    contratoSAP.TipoNegocio == "HIJO" ? (int)EnumTipoNegocio.A_PRECIO :
+                    contratoSAP.TipoNegocio == "MADRE" ? (int)EnumTipoNegocio.A_FIJAR :
+                    contratoSAP.TipoNegocio == "FASON" ? (int)EnumTipoNegocio.A_FIJAR :
+                    contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? (int)EnumTipoNegocio.A_FIJAR :
+                    contratoSAP.TipoNegocio == "VENTA" ? (int)EnumTipoNegocio.A_FIJAR :
+                    repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
             }
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
@@ -486,18 +524,11 @@ namespace WebDataAgro.Services
             contrato.Venta = contratoSAP.TipoNegocio == "VENTA" || contratoSAP.TipoNegocio == "VENTAS";
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
 
-            if (contrato.Venta == true && contrato.TipoNegocioId == 2)
+            if (contrato.Venta == true && contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
                 contrato.Cantidad = Math.Abs(contrato.Cantidad) * -1;
             }
-            if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
-            {
-                contrato.StandardDeCalidadId = 3;
-            }
-            if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
-            {
-                contrato.StandardDeCalidadId = 7;
-            }
+
             contrato.Sustentable = contratoSAP.Sustentable == "X" && contratoSAP.EPA != "X" && contratoSAP.EUDR != "X";
             contrato.EPA = contratoSAP.EPA == "X";
             contrato.EUDR = contratoSAP.EUDR == "X";
@@ -529,7 +560,6 @@ namespace WebDataAgro.Services
 
             contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (contrato.MaterialId == (int)EnumMateriales.TRIGO ? (decimal)95.0 : (decimal)97.5);
 
-
             logger.Debug("Alta Contrato calidades");
 
             foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
@@ -538,14 +568,16 @@ namespace WebDataAgro.Services
                 {
                     NegocioId = esActualizar ? contratoOriginal.Id : 0,
                     CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
-                    StandardDeCalidadId = contrato.StandardDeCalidadId ?? 1,
+                    StandardDeCalidadId = contrato.StandardDeCalidadId ?? (int)EnumStandarCalidad.CAMARA,
                     Valor = cal.Valor,
                     PorcentajeDesde = cal.PorcentajeDesde,
                     PorcentajeHasta = cal.PorcentajeHasta
                 };
-                if (calidad.StandardDeCalidadId == 2)
+                if (calidad.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL)
                 {
-                    if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 && (calidad.CalidadEspecialId == 4 || calidad.CalidadEspecialId == 5)) || calidad.CalidadEspecialId == 10)
+                    if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 &&
+                        (calidad.CalidadEspecialId == (int)EnumCalidadEspecial.GRADO ||
+                        calidad.CalidadEspecialId == (int)EnumCalidadEspecial.GRADO_2)) || calidad.CalidadEspecialId == (int)EnumCalidadEspecial.ESPECIAL)
                     {
                         if (esActualizar)
                         {
@@ -566,13 +598,13 @@ namespace WebDataAgro.Services
                     }
                     else
                     {
-                        if (calidad.CalidadEspecialId == 1 && calidad.PorcentajeHasta == 51)
+                        if (calidad.CalidadEspecialId == (int)EnumCalidadEspecial.DAÑADOS && calidad.PorcentajeHasta == 51)
                         {
                             calidad.PorcentajeHasta = 40;
                         }
                     }
                 }
-                else if (calidad.StandardDeCalidadId == 7)
+                else if (calidad.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2)
                 {
                     if (esActualizar)
                     {
@@ -621,8 +653,7 @@ namespace WebDataAgro.Services
             contrato.CondicionalMonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.CondicionalMonedaId, x => x.MonedaId);
             contrato.CondicionalFecha = !string.IsNullOrEmpty(contratoSAP.CondicionalFecha) ? DateTime.ParseExact(contratoSAP.CondicionalFecha, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             contrato.CondicionalPosicion = contratoSAP.CondicionalPosicion;
-            //contrato.KgMaximo = contratoSAP.KGMaximo;
-            //contrato.KgMinimo = contratoSAP.KGMinimo;
+
             if (!string.IsNullOrEmpty(contratoSAP.CondicionalContratoSAP))
             {
                 string num = contratoSAP.CondicionalContratoSAP.PadLeft(10, '0');
@@ -1208,7 +1239,7 @@ namespace WebDataAgro.Services
                 resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? (existeEnSISA.SituacionCategoria ?? "") : "";
                 resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
 
-                if (proveedor != null) 
+                if (proveedor != null)
                 {
                     resultado.ProveedorId = proveedor.ProveedorId;
                     resultado.ProveedorRazonSocial = proveedor.RazonSocial;

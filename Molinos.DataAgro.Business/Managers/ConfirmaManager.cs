@@ -1423,8 +1423,10 @@ namespace Molinos.DataAgro.Business.Managers
                 //    boleto.FijacionSAP = "1";
                 //else
                 //    boleto.FijacionSAP = "2";
+
                 boleto.FijacionSAP = " ";
-                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP);
+
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
                 var version = Int32.Parse(consultaBoleto.Version);
                 if (version > boleto.Version)
                 {
