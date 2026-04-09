@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.ClausulasBoleto.CartaOferta;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -15,7 +15,12 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
         public override ResultadoClausula DevolverClausulas(ClausulaCartaOfertaSeis clausula)
         {
             var res = new ResultadoClausula();
-            if (clausula.Basico.Moneda == "USD")
+            if(clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+            {
+                // CLAUSULA SIEMPRE PARA NEGOCIOS A FIJAR
+                res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
+            }
+            else if (clausula.Basico.TipoNegocioId != (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Moneda == "USD")
             {
                 // NEGOCIOS FIJOS EN DOLARES
                 res.Texto += "Las Partes acuerdan que la obligación será pagadera en pesos argentinos al tipo de cambio comprador publicado por el Banco de la Nación Argentina.";
