@@ -936,7 +936,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (!string.IsNullOrEmpty(basico.ContratoVendedor))
                     contratoSAP += " - " + basico.ContratoVendedor.TrimStart('0'); ;
 
-                if (basico.CorredorId > 0 && string.IsNullOrEmpty(basico.ContratoCorredor))
+                if (basico.CorredorId > 0 && !string.IsNullOrEmpty(basico.ContratoCorredor))
                     contratoSAP += " - " + basico.ContratoCorredor.TrimStart('0'); ;
 
                 xHtml = String.Format(xHtml, stylesHtml, basico.FechaOperacion?.ToString("dd.MM.yyyy"), contratoSAP, basico.Proveedor, FormatoCuit(basico.Cuit), basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
