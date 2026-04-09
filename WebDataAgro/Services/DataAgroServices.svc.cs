@@ -490,7 +490,7 @@ namespace WebDataAgro.Services
             }
             if (contratoSAP.Especial == "04" && contrato.MaterialId == (int)EnumMateriales.MAIZ)
             {
-                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.GRADO_2;
+                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.ESPECIAL;
                 logger.Info($"VALIDAR valores en ActualizarContratoSAP - Contrato a guardar - ContratoSAP: {contrato.ContratoSAP} - Especial 04 y Material MAIZ - StandardDeCalidadId: {contrato.StandardDeCalidadId}");
             }
 
