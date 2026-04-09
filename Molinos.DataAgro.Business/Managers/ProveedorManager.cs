@@ -933,7 +933,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oContrato.StandardDeCalidadId == 7)
+            if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2)
             {
                 htmlBody += "CALIDAD GRADO 2<br />";
             }
@@ -941,7 +941,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
+            if (objCalidad != null && oContrato.StandardDeCalidadId != (int)EnumStandarCalidad.GRADO_2)
             {
                 foreach (var cal in objCalidad)
                 {
@@ -4077,7 +4077,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oContrato.StandardDeCalidadId == 7)
+            if (oContrato.StandardDeCalidadId == (int)EnumStandarCalidad.GRADO_2)
             {
                 htmlBody += "CALIDAD GRADO 2<br />";
             }
@@ -4085,7 +4085,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
+            if (objCalidad != null && oContrato.StandardDeCalidadId != (int)EnumStandarCalidad.GRADO_2)
             {
                 foreach (var cal in objCalidad)
                 {
