@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.ClausulasBoleto.Confirma;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -18,14 +18,14 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Confirma
             var res = new ResultadoClausula();
             if (
                 (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR &&
-                 clausula.Basico.Moneda == "USD" &&
+                 //clausula.Basico.Moneda == "USD" &&
                  clausula.Basico.CorredorId > 0 &&
                     (clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
                      clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "PRODUCTOR" ||
                      clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
                     ) ||
                 (clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR &&
-                 clausula.Basico.Moneda == "USD" &&
+                 //clausula.Basico.Moneda == "USD" &&
                     (clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "ACOPIADOR" ||
                     clausula.Basico.ClasificacionDescripcion?.ToString().ToUpper() == "OTROS")
                 )

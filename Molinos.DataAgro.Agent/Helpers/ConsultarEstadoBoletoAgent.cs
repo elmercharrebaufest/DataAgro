@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var rq = new ZMprfcConsultarEstadoBolet()
                 {
                     ImContrato = ContratoSAP,
-                    ImFijacion = FijacionSAP
+                    ImFijacion = " ",
                 };
                 logger.Debug(rq.ToXml());
 
