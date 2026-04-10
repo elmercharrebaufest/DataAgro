@@ -5093,10 +5093,10 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var cal in oContrato.Calidad)
                 {
                     htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
-                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
-                    {
-                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
-                    }
+                    //if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    //{
+                    //    htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    //}
                 }
             }
             if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
@@ -5699,8 +5699,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private AlternateView CuerpoMailRechazo(string filePath, Contrato fijacion)
         {
-            LinkedResource res = new LinkedResource(filePath);
-            res.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(filePath)
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
             var mail = "";
             try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD " + e.Message); }
 
@@ -5735,7 +5737,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             bc.Id = negocio.Id;
-            bc.ContratoId = negocio is Contrato ? negocio.Id : negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).ContratoId.HasValue ? (negocio as FijacionDePrecioContrato).ContratoId.Value : 0 : 0;
+            bc.ContratoId = negocio is Contrato ? negocio.Id : negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).ContratoId ?? 0 : 0;
             bc.ProveedorId = negocio.ProveedorId ?? 0;
             bc.CorredorId = negocio.CorredorId != null ? negocio.CorredorId.Value : 0;
             bc.ComercialId = negocio.ComercialId;
@@ -5942,8 +5944,8 @@ namespace Molinos.DataAgro.Business.Managers
             bc.MonedaAjusteComisionId = (negocio is Contrato) ? (negocio as Contrato).MonedaAjusteComisionId : "";
             bc.CaratulaMAT = (negocio is Contrato) ? (negocio as Contrato).CaratulaMAT : "";
             bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : null;
-            bc.PrestamoDevolucion = negocio.PrestamoDevolucion.HasValue ? negocio.PrestamoDevolucion.Value : false;
-            bc.PlantaDestinoId = negocio.PlantaDestinoId.HasValue ? negocio.PlantaDestinoId.Value : 0;
+            bc.PrestamoDevolucion = negocio.PrestamoDevolucion ?? false;
+            bc.PlantaDestinoId = negocio.PlantaDestinoId ?? 0;
             bc.FechaHasta_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable != null ?
                 (negocio as Contrato).FechaHastaSustentable.Value.ToString("dd-MM-yyyy") : "";
             bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaDesdeSustentable != null ?
@@ -6792,10 +6794,10 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var cal in objCalidad)
                 {
                     htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
-                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
-                    {
-                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
-                    }
+                    //if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    //{
+                    //    htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    //}
                 }
             }
             if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
@@ -7495,29 +7497,30 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (!rowsOk.Contains(ii))
                             continue;
-                        var contrato = new BasicoContrato();
-                        contrato.ContratoAcuerdoId = acuerdo.Id;
-                        contrato.CorredorId = acuerdo.CorredorId;
-
-                        contrato.ContratoCorredor = rows.ElementAt(ii)[0].ToString().Trim();
-                        contrato.ContratoVendedor = rows.ElementAt(ii)[1].ToString().Trim();
-                        contrato.MaterialId = materiales.Material.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[2].ToString().Trim().ToLower()).Single().MaterialId;
-                        contrato.CampanaId = campanias.Where(a => a.Descripcion.Replace("-", "").ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().CampañaId;
-                        //contrato.Fecha = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
-                        contrato.FechaOperacion = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
-                        contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim());
-                        contrato.FechaHasta = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
-                        contrato.FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
-                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim());
-                        contrato.Cuit = rows.ElementAt(ii)[8].ToString().Trim();
-                        contrato.ClasificacionId = rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
-                        contrato.PlanCanje = rows.ElementAt(ii)[10].ToString().Trim().ToUpper() == "X";
-                        contrato.Consignatario = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X";
-                        contrato.DestinoId = centros.Centro.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[12].ToString().Trim().ToLower()).Single().Id;
-                        contrato.LocalidadId = int.Parse(rows.ElementAt(ii)[13].ToString().Trim());
-                        contrato.ProvinciaId = int.Parse(rows.ElementAt(ii)[14].ToString().Trim());
-                        contrato.Observacion = ii.ToString().Trim();
-                        contrato.ComercialCreadorId = ComercialId;
+                        var contrato = new BasicoContrato
+                        {
+                            ContratoAcuerdoId = acuerdo.Id,
+                            CorredorId = acuerdo.CorredorId,
+                            ContratoCorredor = rows.ElementAt(ii)[0].ToString().Trim(),
+                            ContratoVendedor = rows.ElementAt(ii)[1].ToString().Trim(),
+                            MaterialId = materiales.Material.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[2].ToString().Trim().ToLower()).Single().MaterialId,
+                            CampanaId = campanias.Where(a => a.Descripcion.Replace("-", "").ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().CampañaId,
+                            //contrato.Fecha = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
+                            FechaOperacion = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()),
+                            FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim()),
+                            FechaHasta = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim()),
+                            FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim()),
+                            Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim()),
+                            Cuit = rows.ElementAt(ii)[8].ToString().Trim(),
+                            ClasificacionId = rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "acopiador" ? 2 : 3,
+                            PlanCanje = rows.ElementAt(ii)[10].ToString().Trim().ToUpper() == "X",
+                            Consignatario = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X",
+                            DestinoId = centros.Centro.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[12].ToString().Trim().ToLower()).Single().Id,
+                            LocalidadId = int.Parse(rows.ElementAt(ii)[13].ToString().Trim()),
+                            ProvinciaId = int.Parse(rows.ElementAt(ii)[14].ToString().Trim()),
+                            Observacion = ii.ToString().Trim(),
+                            ComercialCreadorId = ComercialId
+                        };
 
                         if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Today)
                         {
@@ -7632,7 +7635,7 @@ namespace Molinos.DataAgro.Business.Managers
                         if (!rowsOk.Contains(ii))
                             continue;
                         var contrato = new Contrato();
-                        contrato.TipoNegocioId = 1;
+                        contrato.TipoNegocioId = (int)EnumTipoNegocio.A_FIJAR;
                         contrato.ContratoCorredor = rows.ElementAt(ii)[1].ToString().Trim();
                         contrato.ContratoVendedor = rows.ElementAt(ii)[1].ToString().Trim();
                         contrato.MaterialId = materiales.Material.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[2].ToString().Trim().ToLower()).Single().MaterialId;
@@ -7650,7 +7653,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             contrato.ProveedorId = proveedor.ProveedorId;
                         }
-                        var corredor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7));
+                        var corredor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios || x.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales));
                         if (!string.IsNullOrEmpty(cuitCorredor) && corredor != null)
                         {
                             //contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
@@ -7695,7 +7698,7 @@ namespace Molinos.DataAgro.Business.Managers
                             contrato.Descuentos = new List<DescuentoBonificacion> { new DescuentoBonificacion {
                                 TipoDBId = tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id,
                                 Porcentaje = int.Parse(rows.ElementAt(ii)[23].ToString().Trim()),
-                                TipoPeriodoDBId = 1,
+                                TipoPeriodoDBId = (int)EnumTipoPeriodoDB.GENERALES,
                                 MonedaId = "USDM "
                             }};
                         }
@@ -7725,26 +7728,26 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.Calidad = new List<Calidad>();
                         switch (contrato.MaterialId)
                         {
-                            case 1:
-                                contrato.StandardDeCalidadId = 2;
-                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = 2, CalidadEspecialId = 4, Valor = 2 });
+                            case (int)EnumMateriales.MAIZ:
+                                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.ESPECIAL;
+                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = (int)EnumStandarCalidad.ESPECIAL, CalidadEspecialId = (int)EnumCalidadEspecial.GRADO, Valor = 2 });
                                 break;
 
-                            case 2:
-                                contrato.StandardDeCalidadId = 7;
-                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = 7, CalidadEspecialId = 5, Valor = 2 });
+                            case (int)EnumMateriales.TRIGO:
+                                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.GRADO_2;
+                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = (int)EnumStandarCalidad.GRADO_2, CalidadEspecialId = (int)EnumCalidadEspecial.GRADO_2, Valor = 2 });
                                 break;
 
-                            case 3:
-                                contrato.StandardDeCalidadId = 3;
+                            case (int)EnumMateriales.SOJA:
+                                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.FABRICA;
                                 break;
 
-                            case 4:
-                                contrato.StandardDeCalidadId = 5;
+                            case (int)EnumMateriales.GIRASOL:
+                                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.CAMARA_2;
                                 break;
 
-                            case 5:
-                                contrato.StandardDeCalidadId = 5;
+                            case (int)EnumMateriales.GIRASOL_AO:
+                                contrato.StandardDeCalidadId = (int)EnumStandarCalidad.CAMARA_2;
                                 break;
 
                             default:
@@ -9222,13 +9225,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var disponibilidadGeneralCupos = limiteCupo - cuposCreados;
 
-                ConfiguracionCupoDto cc = new ConfiguracionCupoDto();
-
-                cc.CentroId = x.CentroId;
-                cc.Fecha = x.Fecha;
-                cc.LimiteDescarga = x.LimiteDescarga;
-                cc.MaterialId = x.MaterialId;
-                cc.CuposConsumidos = cantidadCuposConsumidos;
+                ConfiguracionCupoDto cc = new ConfiguracionCupoDto
+                {
+                    CentroId = x.CentroId,
+                    Fecha = x.Fecha,
+                    LimiteDescarga = x.LimiteDescarga,
+                    MaterialId = x.MaterialId,
+                    CuposConsumidos = cantidadCuposConsumidos
+                };
 
                 if (disponibilidadGeneralCupos <= 0)
                 {
