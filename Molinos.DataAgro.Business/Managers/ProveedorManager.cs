@@ -946,10 +946,10 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var cal in objCalidad)
                 {
                     htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
-                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
-                    {
-                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
-                    }
+                    //if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    //{
+                    //    htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    //}
                 }
             }
             if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
@@ -3370,7 +3370,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             CUIT = proveedor.basicos.cuit,
                             RazonSocial = proveedor.basicos.RazonSocial,
-                            SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : 2,
+                            SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : (int)EnumSegmentacion.Productor_Grande,
                             ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet,
                             LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet,
                             ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet,
@@ -3381,7 +3381,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Direccion = proveedor.contacto.direccion,
                             LocalidadId = proveedor.contacto.localidad,
                             ProvinciaId = proveedor.contacto.provincia,
-                            EstadoId = 1,
+                            EstadoId = (int)EnumEstado.CLIENTE_POTENCIAL,
                             FechaAlta = DateTime.Now,
                             Alias = proveedor.basicos.Alias
                         };
@@ -4090,10 +4090,10 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var cal in objCalidad)
                 {
                     htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
-                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
-                    {
-                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
-                    }
+                    //if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    //{
+                    //    htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    //}
                 }
             }
             if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
@@ -4671,15 +4671,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
+            if (objCalidad != null && oContrato.StandardDeCalidadId != (int)EnumStandarCalidad.GRADO_2)
             {
                 foreach (var cal in objCalidad)
                 {
                     htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
-                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
-                    {
-                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
-                    }
+                    //if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    //{
+                    //    htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    //}
                 }
             }
             if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
