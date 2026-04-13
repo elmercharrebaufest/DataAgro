@@ -489,6 +489,12 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add("dataagro@molinosagro.com.ar");
                 logger.Debug("Enviando mail Boleto a " + comercialRegistrado);
             }
+
+            // casilla por defecto solo para boleto fisico y carta oferta
+
+            var emailCasillaBoletos = ConfigurationManager.AppSettings["emailCasillaBoletos"];
+            lista.Add(emailCasillaBoletos);
+
             var subject = boletoDescripcion == "Físico" ? "Boleto Físico" : boletoDescripcion;
             subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + contrato;
 
