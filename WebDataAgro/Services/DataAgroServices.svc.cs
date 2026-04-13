@@ -581,12 +581,15 @@ namespace WebDataAgro.Services
                     {
                         if (esActualizar)
                         {
-                            Calidad quality = contratoOriginal.Calidad.FirstOrDefault(a => a.CalidadEspecialId == calidad.CalidadEspecialId);
-                            if (contratoOriginal.Calidad != null && quality != null)
+                            if (contratoOriginal.Calidad != null && contratoOriginal.Calidad.FirstOrDefault(a => a.CalidadEspecialId == calidad.CalidadEspecialId) != null)
                             {
-                                calidad.PorcentajeDesde = quality.PorcentajeDesde;
-                                calidad.PorcentajeHasta = quality.PorcentajeHasta;
-                                calidad.Valor = quality.Valor;
+                                Calidad quality = contratoOriginal.Calidad.FirstOrDefault(a => a.CalidadEspecialId == calidad.CalidadEspecialId);
+                                if (contratoOriginal.Calidad != null && quality != null)
+                                {
+                                    calidad.PorcentajeDesde = quality.PorcentajeDesde;
+                                    calidad.PorcentajeHasta = quality.PorcentajeHasta;
+                                    calidad.Valor = quality.Valor;
+                                }
                             }
                         }
                         else
