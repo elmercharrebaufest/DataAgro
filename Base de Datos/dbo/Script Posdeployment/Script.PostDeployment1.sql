@@ -169,13 +169,13 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN 
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Rechazado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Rechazado', 9); END
 
 --CondicionFijacion
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '3 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('3 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '03'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '4 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('4 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '04'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '5 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('5 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '05'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '6 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('6 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '06'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '10'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DIAS CORRIDOS DE FIJACION', '1T'); END 
-IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '15 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('15 DIAS CORRIDOS DE FIJACION', '2T'); END 
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '3 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('3 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '03'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '4 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('4 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '04'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '5 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('5 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '05'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '6 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('6 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '06'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '10'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DIAS CORRIDOS DE FIJACION', '1T'); END
+IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '15 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('15 DIAS CORRIDOS DE FIJACION', '2T'); END
 
 --MotivoAnterior
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Otro') BEGIN insert into MotivoAnterior(Descripcion) values ('Otro'); END
