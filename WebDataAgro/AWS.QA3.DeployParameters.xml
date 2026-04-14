@@ -45,6 +45,7 @@
 
   <!--Parametro para nueva version de boletos-->
   <setParameter name="BoletosNuevaVersion Key" value="1" />
+  <setParameter name="EmailCasillaBoletos" value="dataagro@molinosagro.com.ar"/>
 
   <!-- Primary Producción -->
   <setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />

@@ -491,9 +491,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             // casilla por defecto solo para boleto fisico y carta oferta
-
-            var emailCasillaBoletos = ConfigurationManager.AppSettings["emailCasillaBoletos"];
+            var emailCasillaBoletos = ConfigurationManager.AppSettings["EmailCasillaBoletos"];
             lista.Add(emailCasillaBoletos);
+
+
 
             var subject = boletoDescripcion == "Físico" ? "Boleto Físico" : boletoDescripcion;
             subject += " Molinos Agro S.A. – " + razonSocial + " - Contrato Nro. " + contrato;

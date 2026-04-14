@@ -649,4 +649,10 @@
 						match="/configuration/appSettings/add[@key='ActivarSojaEUDR']
                            /@value" />
   </parameter>
+
+  <parameter name="EmailCasillaBoletos Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='EmailCasillaBoletos']
+                           /@value" />
+  </parameter>  
 </parameters>

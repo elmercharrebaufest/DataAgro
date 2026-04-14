@@ -40,4 +40,7 @@
 
   <setParameter name="ActivarBLEND Key" value="No" />
 
+  <!--Parametro para nueva version de boletos-->
+  <setParameter name="EmailCasillaBoletos" value="dataagro@molinosagro.com.ar"/>
+
 </parameters>
