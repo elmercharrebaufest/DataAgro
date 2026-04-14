@@ -18,7 +18,7 @@
   <setParameter name="AmbienteStaging Key" value="0" />
   <setParameter name="AmbienteUATMOA Key" value="0" />
   <setParameter name="AmbienteUATDA Key" value="0" />
-  <setParameter name="SISA_con_campo_adicional" value="0" />
+  <setParameter name="SISA_con_campo_adicional" value="1" />
 
   <setParameter name="SISA Key" value="C:\Img\RG_4310.txt" />
   <setParameter name="Rg2300 Key" value="C:\Img\RG2300.LST" />
@@ -39,5 +39,8 @@
 	<setParameter name="PassPrimary Key" value="Demo2024" />-->
 
   <setParameter name="ActivarBLEND Key" value="No" />
+
+  <!--Parametro para nueva version de boletos-->
+  <setParameter name="EmailCasillaBoletos" value="dataagro@molinosagro.com.ar"/>
 
 </parameters>

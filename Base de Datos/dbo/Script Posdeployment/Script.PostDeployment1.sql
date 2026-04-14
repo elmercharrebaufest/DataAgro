@@ -492,7 +492,7 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permi
 		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolVisCtoFasonId, 312)
    END
 
--- INICIO - Índices provistos por Algeiba
+---- INICIO - Índices provistos por Algeiba
 --IF NOT EXISTS (
 --    SELECT 1 
 --    FROM sys.indexes 
@@ -564,7 +564,49 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permi
 --    ON Cupo ( FechaIngreso, CentroId, MaterialId, EstadoCupoId )
 --END;
 
--- FIN - Índices provistos por Algeiba
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'IX_AperturaPrecio_NegocioId_Concepto'
+--    AND object_id = OBJECT_ID('[dbo].[AperturaPrecio]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX [IX_AperturaPrecio_NegocioId_Concepto]
+--    ON [dbo].[AperturaPrecio] ([NegocioId], [ConceptoAperturaPrecioId], [Porcentaje])
+--    INCLUDE ([Importe])
+--END;
+
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'IX_AdministracionCupo_Excedente_FechaCreacion'
+--    AND object_id = OBJECT_ID('[dbo].[AdministracionCupo]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX [IX_AdministracionCupo_Excedente_FechaCreacion]
+--    ON [dbo].[AdministracionCupo] ([Excedente], [FechaCreacion])
+--    INCLUDE ([ComercialId])
+--END;
+
+--IF NOT EXISTS (
+--    SELECT 1 
+--    FROM sys.indexes 
+--    WHERE name = 'IX_Negocio_Discriminator_Ocultar_Estado'
+--    AND object_id = OBJECT_ID('[dbo].[Negocio]')
+--)
+--BEGIN
+--    CREATE NONCLUSTERED INDEX [IX_Negocio_Discriminator_Ocultar_Estado]
+--    ON [dbo].[Negocio] ([Discriminator], [OcultarEnTablero], [EstadoId])
+--    INCLUDE (
+--        [MaterialId], [TipoNegocioId], [Cantidad], [Precio], [ProveedorId],
+--        [MonedaId], [Fecha], [ComercialId], [ComercialCreadorId], [ContratoAcuerdoId],
+--        [Pizarra], [PrecioNeto], [OperadorId], [TipoAgenteCompraId], [FechaOperacion],
+--        [Canje], [TipoPosicionCBOTId], [AnulaYReemplazaContratoId], [PrecioNetoPonderado],
+--        [Condicional]
+--    )
+--END;
+
+-- --FIN - Índices provistos por Algeiba
 
 --IF NOT EXISTS (
 --    SELECT 1 
@@ -816,7 +858,7 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permi
 --    SELECT 1 
 --    FROM sys.indexes 
 --    WHERE name = 'NDX_Excedente'
---    AND object_id = OBJECT_ID('[dbo].[ComercialId]')
+--    AND object_id = OBJECT_ID('[dbo].[AdministracionCupo]')
 --)
 --BEGIN
 --    CREATE NONCLUSTERED INDEX NDX_Excedente
@@ -922,7 +964,7 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolVisCtoFasonId and Permi
 --    SELECT 1 
 --    FROM sys.indexes 
 --    WHERE name = 'NDX_CupoSap'
---    AND object_id = OBJECT_ID('[dbo].[CupoSap]')
+--    AND object_id = OBJECT_ID('[dbo].[Cupo]')
 --)
 --BEGIN
 --    CREATE NONCLUSTERED INDEX NDX_CupoSap
