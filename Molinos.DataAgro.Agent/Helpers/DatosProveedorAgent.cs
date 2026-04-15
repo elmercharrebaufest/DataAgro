@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -97,51 +97,74 @@ namespace Molinos.DataAgro.Agent
 
         public List<DatosProveedorAgentDto> ObtenerDatosDeProveedorEstado(List<string> CUIT, List<string> usuarios)
         {
-            ZMprfcDatosProveedor rqToError = null;
-            try
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var valor = new List<Zmpes5150>();
-
-                foreach (var item in usuarios)
+                return new List<DatosProveedorAgentDto>()
                 {
-                    valor.Add(new Zmpes5150
+                    new DatosProveedorAgentDto()
                     {
-                        Usuario = item
-                    });
-                }
-
-                Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
-                agent.ClientCredentials.UserName.UserName = UserSap;
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new ZMprfcDatosProveedor()
-                {
-                    ImCuit = CUIT.ToArray(),
-                    ImUsuario = valor.ToArray()
-                };
-                rqToError = rq;
-                //logger.Debug(rq.ToXml());
-                var valor1 = agent.ZMprfcDatosProveedor(rq);
-
-                var respuesta = new List<DatosProveedorAgentDto>();
-                if (valor1.ExDatos != null)
-                {
-                    respuesta = valor1.ExDatos.Select(x => new DatosProveedorAgentDto
+                        CLIENTE_MOA = "",
+                        CUIT = "20029626643",
+                        STATUS = "Baja",
+                        USUARIO = "LOPEZA"
+                    },
+                    new DatosProveedorAgentDto()
                     {
-                        CLIENTE_MOA = x.ClienteMoa,
-                        CUIT = x.Cuit,
-                        STATUS = x.Status,
-                        USUARIO = x.Usuario
-                    }).ToList();
-                }
-                return respuesta;
-
+                        CLIENTE_MOA = "X",
+                        CUIT = "20221005741",
+                        STATUS = "No operando",
+                        USUARIO = "BADIOLAJ"
+                    }
+                }.ToList();
             }
-            catch (Exception ex)
+            else
             {
-                logger.Error(ex, "Error en método ObtenerDatosDeProveedorEstado al consultar RFC ZMprfcDatosProveedor.");
-                logger.Error("Error con REQUEST: " + rqToError.ToXml());
-                throw;
+                ZMprfcDatosProveedor rqToError = null;
+                try
+                {
+                    var valor = new List<Zmpes5150>();
+
+                    foreach (var item in usuarios)
+                    {
+                        valor.Add(new Zmpes5150
+                        {
+                            Usuario = item
+                        });
+                    }
+
+                    Z_MP_WS_DATAAGRO_DIRECTOClient agent = new Z_MP_WS_DATAAGRO_DIRECTOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new ZMprfcDatosProveedor()
+                    {
+                        ImCuit = CUIT.ToArray(),
+                        ImUsuario = valor.ToArray()
+                    };
+                    rqToError = rq;
+                    //logger.Debug(rq.ToXml());
+                    var valor1 = agent.ZMprfcDatosProveedor(rq);
+
+                    var respuesta = new List<DatosProveedorAgentDto>();
+                    if (valor1.ExDatos != null)
+                    {
+                        respuesta = valor1.ExDatos.Select(x => new DatosProveedorAgentDto
+                        {
+                            CLIENTE_MOA = x.ClienteMoa,
+                            CUIT = x.Cuit,
+                            STATUS = x.Status,
+                            USUARIO = x.Usuario
+                        }).ToList();
+                    }
+                    return respuesta;
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Error en método ObtenerDatosDeProveedorEstado al consultar RFC ZMprfcDatosProveedor.");
+                    logger.Error("Error con REQUEST: " + rqToError.ToXml());
+                    throw;
+                }
             }
         }
     }
