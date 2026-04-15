@@ -59,6 +59,7 @@ namespace WebDataAgro.Controllers
         public ActionResult GenerarConfirma(ConfirmaGeneradoDto confirma)
         {
             CargarSeleccionables();
+
             if (string.IsNullOrEmpty(confirma.ContratoSAP)) return new JsonResult() { MaxJsonLength = Int32.MaxValue, Data = new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = "No se ha ingresado ningun valor", ErrorCode = 04 } } } };
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
             var clausulas = confirma.Clausulas;
