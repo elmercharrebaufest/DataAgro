@@ -59,6 +59,7 @@ namespace WebDataAgro.Controllers
         public ActionResult GenerarConfirma(ConfirmaGeneradoDto confirma)
         {
             CargarSeleccionables();
+
             if (string.IsNullOrEmpty(confirma.ContratoSAP)) return new JsonResult() { MaxJsonLength = Int32.MaxValue, Data = new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = "No se ha ingresado ningun valor", ErrorCode = 04 } } } };
             List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
             var clausulas = confirma.Clausulas;
@@ -70,7 +71,21 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        [HttpPost]
+        public ActionResult GenerarConfirmaAltaBorrador(ConfirmaGeneradoDto confirma)
+        {
+            CargarSeleccionables();
+            if (string.IsNullOrEmpty(confirma.ContratoSAP)) return new JsonResult() { MaxJsonLength = Int32.MaxValue, Data = new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = "No se ha ingresado ningun valor", ErrorCode = 04 } } } };
+            List<string> contratos = confirma.ContratoSAP.TrimEnd(';').Split(';').ToList();
+            var clausulas = confirma.Clausulas;
 
+            var result = confirmaManager.GrabarConfirmasAltaBorrador(GlobalVariables.ComercialId, contratos, confirma.IsWebService, clausulas, GlobalVariables.EquipoReal);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult DescargarArchivoConfirma(string nombreArchivo)
         {
             try
