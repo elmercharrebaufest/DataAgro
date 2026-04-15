@@ -10,6 +10,7 @@ const GenerarConfirma = (() => {
             getBolsaCompraNet: "/Confirma/GetBolsaCompraNet",
             buscaDatosTabla: "/Confirma/BuscaDatosTabla",
             generarConfirma: "/Confirma/GenerarConfirma",
+            generarConfirmaAltaBorrador: "/Confirma/GenerarConfirmaAltaBorrador",
             validarNegocio: "/Confirma/ValidarNegocio",
             descargarArchivo: "/Confirma/DescargarArchivoConfirma",
             gestionarClausulas: "/Confirma/GestionarClausulas"
@@ -392,14 +393,17 @@ const GenerarConfirma = (() => {
                     title: "",
                     template: ({ NegocioSAP }) =>
                         `<div style="display:flex;flex-direction:column;gap:4px;">
-                            <a onclick="GenerarConfirmaIndividual('${NegocioSAP}')" title="Generar Confirma">
-                                Generar Confirma <img style="width:16px;height:16px;vertical-align:middle;" src="/Content/Images/agregar-tel-mail.png">
+                            <a onclick="GenerarConfirmaIndividual('${NegocioSAP}')" title="Generar Confirma Alta Definitiva">
+                                Generar Alta Definitiva <i class="fa fa-play" style="color: darkblue;"></i>
+                            </a>
+                            <a onclick="GenerarConfirmaIndividualAltaBorrador('${NegocioSAP}')" title="Generar Confirma Alta Borrador">
+                                Generar Alta Borrador <i class="fa fa-eraser" style="color: darkblue;"></i>
                             </a>
                             <a onclick="GestionarClausulasConfirma('${NegocioSAP}')" title="Editar Clausulas">
                                 Editar Clausulas <img style="width:16px;height:16px;vertical-align:middle;" src="/Content/Images/contacto-edit.png">
                             </a>
                         </div>`,
-                    width: 160, sortable: false, filterable: false
+                    width: 180, sortable: false, filterable: false
                 },
                 { field: "NegocioSAP", title: "Contrato", type: "string", headerAttributes: { title: "Contrato" } },
                 { field: "Material", title: "Material", type: "string", headerAttributes: { title: "Material" }, editable: false },
@@ -547,6 +551,33 @@ const GenerarConfirma = (() => {
                 });
         }, 200);
     }
+    function generarConfirmaIndividualAltaBorrador(negocioSAP) {
+        BlockUi('Cargando...');
+        setTimeout(() => {
+            MSExecuteOnServerAsync(config.urls.generarConfirmaAltaBorrador, {
+                ContratoSAP: negocioSAP,
+                IsWebService: el.servicioConfirmaId().is(":checked")
+            })
+                .then(function (result) {
+                    $.unblockUI();
+                    if (!result.confirmasGenerados?.length) {
+                        if (result.HayError) {
+                            result.ListaErrores.forEach(err => MensErr(err.Message));
+                        } else {
+                            MensErr("No se generó ningún Confirma.");
+                        }
+                    } else {
+                        cargarTablaModal(result.confirmasGenerados);
+                        el.modalConfirma().modal("show");
+                    }
+                })
+                .catch(function (e) {
+                    $.unblockUI();
+                    console.error("Error al Generar Confirma:", e);
+                    MensErr("Ocurrió un error inesperado. Inténtelo nuevamente.");
+                });
+        }, 200);
+    }
 
     function generarConfirmasSeleccionados() {
         const negocioSAPList = [];
@@ -560,11 +591,24 @@ const GenerarConfirma = (() => {
             MensErr("No hay ningún negocio seleccionado.");
         }
     }
+    function generarConfirmasSeleccionadosAltaBorrador() {
+        const negocioSAPList = [];
+        el.grid().find("tbody input.row-checkbox:checked").each(function () {
+            negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
+        });
 
+        if (negocioSAPList.length) {
+            generarConfirmaIndividualAltaBorrador(negocioSAPList.join(';'));
+        } else {
+            MensErr("No hay ningún negocio seleccionado.");
+        }
+    }
+    
     function cargarTablaModal(contratos) {
         const descargaHabilitada = el.checkDescargar().is(":checked");
 
         const filas = contratos.map(c => {
+            console.log('c---->>>', c);
             const iconCheck = '<i class="fa fa-check generado" aria-hidden="true" style="color:green;text-align:center"></i>';
             const iconTimes = '<i class="fa fa-times generado" aria-hidden="true" style="color:red;text-align:center"></i>';
             const btnDescarga = c.Generado && descargaHabilitada
@@ -590,6 +634,8 @@ const GenerarConfirma = (() => {
     }
 
     function gestionarClausulas(negocioSAP) {
+        window.location.href = `${config.urls.gestionarClausulas}?numeroSap=${encodeURIComponent(negocioSAP)}`;
+        return;
         MSExecuteOnServerAsync(config.urls.validarNegocio, { NegocioSAP: negocioSAP })
             .then(function (response) {
                 if (response?.Mensaje) {
@@ -622,7 +668,9 @@ const GenerarConfirma = (() => {
         },
         filtrarNegocios,
         generarConfirmaIndividual,
+        generarConfirmaIndividualAltaBorrador,
         generarConfirmasSeleccionados,
+        generarConfirmasSeleccionadosAltaBorrador,
         gestionarClausulas
     };
 })();
@@ -632,5 +680,9 @@ $(document).ready(() => GenerarConfirma.init());
 // Funciones globales para compatibilidad con HTML
 function FiltrarNegocios() { GenerarConfirma.filtrarNegocios(); }
 function GenerarConfirmaIndividual(negocioSAP) { GenerarConfirma.generarConfirmaIndividual(negocioSAP); }
+function GenerarConfirmaIndividualAltaBorrador(negocioSAP) { GenerarConfirma.generarConfirmaIndividualAltaBorrador(negocioSAP); }
+
 function GenerarConfirmas() { GenerarConfirma.generarConfirmasSeleccionados(); }
+function GenerarConfirmasAltaBorrador() { GenerarConfirma.generarConfirmasSeleccionadosAltaBorrador(); }
+
 function GestionarClausulasConfirma(negocioSAP) { GenerarConfirma.gestionarClausulas(negocioSAP); }

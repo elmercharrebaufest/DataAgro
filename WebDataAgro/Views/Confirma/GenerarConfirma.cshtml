@@ -136,8 +136,8 @@
 
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-md-8"></div>
-                <div class="col-md-4 text-right">
+                <div class="col-md-4"></div>
+                <div class="col-md-8 text-right">
                     <input type="checkbox" id="checkDescargar" checked>
                     <label for="checkDescargar">Descargar Archivo</label>
                     <input type="checkbox" id="servicioConfirmaId" checked style="margin-left:10px">
@@ -148,8 +148,18 @@
                             onclick="GenerarConfirmas()">
 
                         <i class="fa fa-play"></i>
-                        Generar Confirma
+                        Generar Alta Definitiva
                     </button>
+                    <button type="button"
+                            id="generarConfirma"
+                            class="btn btn-primary"
+                            style="margin-left:5px"
+                            onclick="GenerarConfirmasAltaBorrador()">
+
+                        <i class="fa fa-eraser"></i>
+                        Generar Alta Borrador
+                    </button>
+
                 </div>
             </div>
 			<div class="row form-row">
