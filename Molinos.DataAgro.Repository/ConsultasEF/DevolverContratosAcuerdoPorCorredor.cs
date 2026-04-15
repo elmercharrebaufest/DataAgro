@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var resultado = (from c in contexto.Set<ContratoAcuerdo>()
                              where c.CorredorId == filtro
-                             && c.EstadoId.Equals(2)
+                             && c.EstadoId.Equals((int)EnumEstadoContrato.Confirmado)
                              && c.Fecha >= dia
                              select new ContratoCopiar
                              {
