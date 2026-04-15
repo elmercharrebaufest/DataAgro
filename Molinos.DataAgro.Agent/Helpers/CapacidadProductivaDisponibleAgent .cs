@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -31,7 +31,13 @@ namespace Molinos.DataAgro.Agent
             {
                 return new List<CapacidadProductivaPendienteDto> {
                     new CapacidadProductivaPendienteDto{
-                        CAP_PROD= 2123,CAP_PROD_PORC= 100,COMPRAS_ACT= 12312312,COMPRAS_ANT= 23132,CUIT=cuit,MATERIAL="Soja",UNIDAD= "KG"
+                        CAP_PROD = 2123,
+                        CAP_PROD_PORC = 100,
+                        COMPRAS_ACT = 12312312,
+                        COMPRAS_ANT = 23132,
+                        CUIT = cuit,
+                        MATERIAL = "Soja",
+                        UNIDAD = "KG"
                     }
                 };
             }
