@@ -9,6 +9,8 @@ namespace Molinos.DataAgro.Interfaces
     {
         DatosIniContrato TraerDatosCombos();
         ConfirmaResult GrabarConfirmas(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo);
+        ConfirmaResult GrabarConfirmasAltaBorrador(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo);
+
         string ObtenerNombreArchivoConfirma(string codigoSAP);
         byte[] ObtenerArchivoXML(string nombreArchivo);
         void EnviarMailConfirma(DateTime fecha);
