@@ -405,9 +405,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             AgregarAtributo(xmlDoc, det, "Cosecha", "CodLista", contrato.CampanaConfirma);
             AgregarAtributo(xmlDoc, det, "UnidadMedida", "CodLista", "K");
             AgregarElemento(xmlDoc, det, "CantidadDesde",
-                (contrato.KgMinimo > 0 ? contrato.KgMinimo : (int)contrato.Cantidad).ToString());
+                (contrato.Cantidad).ToString());
             AgregarElemento(xmlDoc, det, "CantidadHasta",
-                (contrato.KgMaximo > 0 ? contrato.KgMaximo : (int)contrato.Cantidad).ToString());
+                (contrato.Cantidad).ToString());
             AgregarAtributo(xmlDoc, det, "Ajuste", "CodLista", string.Empty);
             AgregarElemento(xmlDoc, det, "CantCamiones", contrato.CantidadCamiones.ToString());
 
@@ -417,17 +417,24 @@ namespace Molinos.DataAgro.Agent.Helpers
             AgregarAtributo(xmlDoc, det, "Moneda", "CodLista",
                 contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty);
 
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+
+            decimal? precioNetoSustentable = null;
+            if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId.HasValue)
             {
-                AgregarElemento(xmlDoc, det, "Precio", contrato.Precio.ToString());
-                AgregarAtributo(xmlDoc, det, "UnidadMedidaPrecio", "CodLista", "T");
+                if (contrato.TipoNegocioId == 2 && contrato.SustentableTipoDBId == 1) //a precio y sobre precio
+                {
+                    precioNetoSustentable = PrecioNetoSustentableSobrePrecio(contrato, precioNetoSustentable);
+                }
             }
 
-            if (tipoDocumento != "17")
-                AgregarElemento(xmlDoc, det, "PorcComisionComprador",
-                    contrato.PorcentajeComision.HasValue
-                        ? contrato.PorcentajeDePago.Value.ToString("F2", CultureInfo.InvariantCulture)
-                        : string.Empty);
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+            {
+                var precioContrato = Convert.ToString((contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
+                AgregarElemento(xmlDoc, det, "Precio", precioContrato);
+                AgregarAtributo(xmlDoc, det, "UnidadMedidaPrecio", "CodLista", "T");
+            }
+            if (contrato.CorredorId > 0)
+                AgregarElemento(xmlDoc, det, "PorcComisionComprador", "1");
 
             AgregarCalidad(xmlDoc, det, contrato);
             AgregarAtributo(xmlDoc, det, "MedioTransporte", "CodLista", "C");
@@ -453,7 +460,25 @@ namespace Molinos.DataAgro.Agent.Helpers
         // ════════════════════════════════════════════════════════════════════════
         // SUB-SECCIONES DE DETALLE CONTRATO
         // ════════════════════════════════════════════════════════════════════════
-
+        private decimal? PrecioNetoSustentableSobrePrecio(BasicoContrato contrato, decimal? precioNetoSustentable)
+        {
+            if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.Count > 0)
+            {
+                decimal porcentajeComision = contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
+                decimal precioOriginal = contrato.Precio;
+                decimal precioTarifaFlete = contrato.TarifaFlete ?? 0;
+                precioOriginal += contrato.Importe_Sustentable ?? 0;
+                precioOriginal += contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 1).FirstOrDefault()?.Importe ?? 0;
+                precioOriginal += contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 2).FirstOrDefault()?.Importe ?? 0;
+                precioOriginal += contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Importe ?? 0;
+                precioOriginal += (contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Porcentaje ?? 0) * contrato.Precio / 100;
+                porcentajeComision /= 100;
+                precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
+                precioOriginal += contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Importe ?? 0;
+                precioNetoSustentable = Math.Round(precioOriginal, 2);
+            }
+            return precioNetoSustentable;
+        }
         private void AgregarProducto(XmlDocument xmlDoc, XmlElement det, BasicoContrato contrato)
         {
             string codLista =
