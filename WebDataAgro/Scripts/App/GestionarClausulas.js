@@ -1,8 +1,70 @@
-﻿var indexClausulaAEliminar = null;
+// Gestionar Cláusulas Boleto
+const GestionarClausulasModule = (() => {
+    "use strict";
 
-$(document).ready(function () {
+    const config = {
+        urls: {
+            generarBoleto: "/Boleto/GenerarBoletos",
+            volver: "/Boleto/GenerarBoletos"
+        }
+    };
 
-    if (validacionContrato > '') {
+    const state = {
+        indexClausulaAEliminar: null
+    };
+
+    const el = {
+        clausulasBody: () => $("#clausulas-body"),
+        numeroContrato: () => $("#numero-contrato"),
+        clausulaInput: () => $("#clausula-input"),
+        modalEliminar: () => $("#confirmarEliminarClausula"),
+        confirmarEliminacionBtn: () => $("#confirmarEliminacionBtn"),
+        numeroClausulaModal: () => $("#numeroClausulaModal"),
+        guardarClausula: () => $("#guardar-clausula"),
+        cancelarClausula: () => $("#cancelar-clausula"),
+        generarBoletoBtn: () => $("#generar-boleto"),
+        checkMail: () => $("#enviarMailBoleto"),
+        volver: () => $("#volver")
+    };
+
+    // ── Renderizado ──────────────────────────────────────────────────────────────
+
+    function renderizarClausulas() {
+        el.clausulasBody().empty();
+        clausulas.forEach(function (clausula, index) {
+            const fila = $("<tr></tr>");
+            const columnaNumero = $("<td></td>").addClass("numero-clausula").text(index + 1);
+            const columnaTexto = $("<td></td>").addClass("texto-clausula").text(clausula);
+            const columnaAcciones = $("<td></td>").addClass("acciones");
+            const botonEditar = $("<button></button>").addClass("btn btn-default btn-editar").html('<i class="fa fa-pencil"></i> Editar').data("index", index);
+            const botonEliminar = $("<button></button>").addClass("btn btn-danger btn-eliminar").html('<i class="fa fa-trash"></i> Eliminar').data("index", index);
+            columnaAcciones.append(botonEditar).append(botonEliminar);
+            fila.append(columnaNumero).append(columnaTexto).append(columnaAcciones);
+            el.clausulasBody().append(fila);
+        });
+    }
+
+    // ── Resultado ────────────────────────────────────────────────────────────────
+
+    function mostrarResultado(result) {
+        BootstrapDialog.show({
+            title: 'Generar boleto',
+            message: "\n" + result[0].Mensaje,
+            draggable: true,
+            buttons: [{
+                label: 'Cerrar y volver',
+                cssClass: 'k-button',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                    window.history.back();
+                }
+            }]
+        });
+    }
+
+    // ── Inicialización ───────────────────────────────────────────────────────────
+
+    function mostrarValidacion() {
         BootstrapDialog.show({
             type: BootstrapDialog.TYPE_DANGER,
             title: "Generación Contrato Boleto Fisico/Carta Oferta",
@@ -10,122 +72,103 @@ $(document).ready(function () {
             message: validacionContrato,
             buttons: [{
                 label: 'Cerrar',
-                action: function (dialogItself) {
-                    window.location.href = '/Boleto/GenerarBoletos';
+                action: function () {
+                    window.location.href = config.urls.volver;
                 }
             }]
         });
-
-    } else {
-        renderizarClausulas();
-
-        if (tipoNegocio == 2)
-            $("#numero-contrato").text("Cláusulas para la fijación N° " + negocioSAP);
-        else
-            $("#numero-contrato").text("Cláusulas para el contrato N° " + negocioSAP);
-    }
-});
-
-function renderizarClausulas() {
-    $("#clausulas-body").empty();
-    clausulas.forEach(function (clausula, index) {
-        var fila = $("<tr></tr>");
-
-        var columnaNumero = $("<td></td>").addClass("numero-clausula").text(index + 1);
-        var columnaTexto = $("<td></td>").addClass("texto-clausula").text(clausula);
-        var columnaAcciones = $("<td></td>").addClass("acciones");
-
-        var botonEditar = $("<button></button>").addClass("btn btn-default btn-editar").html('<i class="fa fa-pencil"></i> Editar').data("index", index);
-        var botonEliminar = $("<button></button>").addClass("btn btn-danger btn-eliminar").html('<i class="fa fa-trash"></i> Eliminar').data("index", index);
-
-        columnaAcciones.append(botonEditar).append(botonEliminar);
-
-        fila.append(columnaNumero).append(columnaTexto).append(columnaAcciones);
-        $("#clausulas-body").append(fila);
-    });
-}
-
-// Evento para editar
-$(document).on("click", ".btn-editar", function () {
-    var index = $(this).data("index");
-    $("#clausula-input").val(clausulas[index]).data("editIndex", index);
-    // Ir hasta el final de la página
-    $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-});
-
-// Evento para eliminar
-$(document).on("click", ".btn-eliminar", function () {
-    indexClausulaAEliminar = $(this).data("index");
-    var numeroClausula = indexClausulaAEliminar + 1;
-    $("#numeroClausulaModal").text(numeroClausula);
-    $("#confirmarEliminarClausula").modal("show");
-});
-
-$("#confirmarEliminacionBtn").on("click", function () {
-    if (indexClausulaAEliminar !== null) {
-        clausulas.splice(indexClausulaAEliminar, 1);
-        renderizarClausulas();
-        $("#confirmarEliminarClausula").modal("hide");
-        indexClausulaAEliminar = null;
-    }
-});
-
-// Evento para guardar cláusula
-$("#guardar-clausula").click(function () {
-    var nuevoTexto = $("#clausula-input").val();
-    var editIndex = $("#clausula-input").data("editIndex");
-
-    if (nuevoTexto != "") {
-        if (editIndex !== undefined) { //Editar existente
-            clausulas[editIndex] = nuevoTexto;
-            $("#clausula-input").removeData("editIndex");
-        } else { // Agregar nueva
-            clausulas.push(nuevoTexto);
-        }
-    } else {
-        MensAlerta("No se puede guardar una cláusula sin texto");
     }
 
-    $("#clausula-input").val("");
-    renderizarClausulas();
-});
+    function inicializarEncabezado() {
+        const texto = `Cláusulas para el contrato N° ${negocioSAP}`;
+        el.numeroContrato().text(texto);
+    }
 
-$("#cancelar-clausula").click(function () {
-    $("#clausula-input").val("").removeData("editIndex");
-});
+    function inicializarEventos() {
+        // Editar cláusula
+        $(document).on("click", ".btn-editar", function () {
+            const index = $(this).data("index");
+            el.clausulaInput().val(clausulas[index]).data("editIndex", index);
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+        });
 
-// Evento para generar boleto
-$("#generar-boleto").click(function () {
-    BlockUi('Generando...');
-    setTimeout(function () {
-        var data = {
-            ContratoSAP: negocioSAP,
-            TipoNegocioId: tipoNegocio,
-            Mail: $("#enviarMailBoleto").is(":checked"),
-            Clausulas: clausulas
-        };
-        var result = MSExecuteOnServer('/Boleto/GenerarBoletos', data);
-        $.unblockUI();
-        if (result.length == 0) {
-            MensErr("No se generó ningún boleto.");
+        // Solicitar eliminación
+        $(document).on("click", ".btn-eliminar", function () {
+            state.indexClausulaAEliminar = $(this).data("index");
+            el.numeroClausulaModal().text(state.indexClausulaAEliminar + 1);
+            el.modalEliminar().modal("show");
+        });
+
+        // Confirmar eliminación
+        el.confirmarEliminacionBtn().on("click", function () {
+            if (state.indexClausulaAEliminar !== null) {
+                clausulas.splice(state.indexClausulaAEliminar, 1);
+                renderizarClausulas();
+                el.modalEliminar().modal("hide");
+                state.indexClausulaAEliminar = null;
+            }
+        });
+
+        // Guardar cláusula
+        el.guardarClausula().on("click", function () {
+            const nuevoTexto = el.clausulaInput().val();
+            const editIndex = el.clausulaInput().data("editIndex");
+            if (nuevoTexto !== "") {
+                if (editIndex !== undefined) {
+                    clausulas[editIndex] = nuevoTexto;
+                    el.clausulaInput().removeData("editIndex");
+                } else {
+                    clausulas.push(nuevoTexto);
+                }
+            } else {
+                MensAlerta("No se puede guardar una cláusula sin texto");
+            }
+            el.clausulaInput().val("");
+            renderizarClausulas();
+        });
+
+        // Cancelar edición
+        el.cancelarClausula().on("click", function () {
+            el.clausulaInput().val("").removeData("editIndex");
+        });
+
+        // Generar boleto
+        el.generarBoletoBtn().on("click", function () {
+            BlockUi('Generando...');
+            setTimeout(function () {
+                const result = MSExecuteOnServer(config.urls.generarBoleto, {
+                    ContratoSAP: negocioSAP,
+                    Mail: el.checkMail().is(":checked"),
+                    Clausulas: clausulas
+                });
+                $.unblockUI();
+                if (!result || result.length === 0) {
+                    MensErr("No se generó ningún boleto.");
+                } else {
+                    mostrarResultado(result);
+                }
+            }, 100);
+        });
+
+        // Volver
+        el.volver().on("click", function () {
+            window.history.back();
+        });
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────────
+
+    function init() {
+        if (validacionContrato > '') {
+            mostrarValidacion();
         } else {
-            BootstrapDialog.show({
-                title: 'Generar boleto',
-                message: "\n" + result[0].Mensaje,
-                draggable: true,
-                buttons: [{
-                    label: 'Cerrar y volver',
-                    cssClass: 'k-button',
-                    action: function (dialogItself) {
-                        dialogItself.close();
-                        window.history.back();
-                    }
-                }]
-            });
+            inicializarEncabezado();
+            renderizarClausulas();
+            inicializarEventos();
         }
-    }, 100);
-});
+    }
 
-$("#volver").click(function () {
-    window.history.back();
-});
+    return { init };
+})();
+
+$(document).ready(() => GestionarClausulasModule.init());

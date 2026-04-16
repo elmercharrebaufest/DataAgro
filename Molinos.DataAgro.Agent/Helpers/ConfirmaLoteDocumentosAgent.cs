@@ -12,25 +12,34 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class ConfirmaLoteDocumentosAgent : IConfirmaLoteDocumentosAgent
     {
+        // ── Dependencias ─────────────────────────────────────────────────────────
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IStatusContratoAgent status;
         private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
+
+        // ── Configuración ────────────────────────────────────────────────────────
         private readonly string userConfirma = ConfigurationManager.AppSettings["ConfirmaUser"];
         private readonly string passConfirma = ConfigurationManager.AppSettings["ConfirmaPass"];
         private readonly string ambientePruebas = ConfigurationManager.AppSettings["AmbientePruebas"];
         private readonly string ambienteLocal = ConfigurationManager.AppSettings["AmbienteLocal"];
         private readonly string cuitMOA = ConfigurationManager.AppSettings["Cuit"];
+
+        // CUITs de prueba recomendados por Confirma para Staging
         private readonly string cuit1 = "30646328450";
         private readonly string cuit2 = "30500120882";
 
-        public ConfirmaLoteDocumentosAgent(ILogger logger, IRepositorio repositorio, IStatusContratoAgent status, IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
+        // ── Constructor ──────────────────────────────────────────────────────────
+        public ConfirmaLoteDocumentosAgent(
+            ILogger logger,
+            IRepositorio repositorio,
+            IStatusContratoAgent status,
+            IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -38,1051 +47,839 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.oConsultarEstadoBoletoAgent = oConsultarEstadoBoletoAgent;
         }
 
-        public ConfirmaAltaLoteResultDto ConfirmaLoteDocumentos(List<ResultadoClausula> clausulas, List<int> equipo, BasicoContrato contrato, EstadosConfirmaDto estadosConfirmaDto)
+        // ════════════════════════════════════════════════════════════════════════
+        // PUNTO DE ENTRADA
+        // ════════════════════════════════════════════════════════════════════════
+
+        public ConfirmaAltaLoteResultDto ConfirmaLoteDocumentos(
+            List<ResultadoClausula> clausulas,
+            List<int> equipo,
+            BasicoContrato contrato,
+            EstadosConfirmaDto estadosConfirmaDto)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaConfirma"] == "1")
+                return DevolverResultadoPrueba();
+
+            try
             {
-                ConfirmaAltaLoteResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteResultDto()
-                {
-                    altaIdLote = "18443050",
-                    altaEstado = 1,
-                    altaEstadoLote = 4,
-                    altaItem = new List<altaItemDto>(){
-                        new altaItemDto()
-                        {
-                            altaIdDocumento = "",
-                            altaEstadoDocumento = 6,
-                            altaErrores = new List<string>(){ "Documento existente" },
-                            altaIdDocumentoExistente = "18390504",
-                            altaIdDocumentoExistenteLote = "25007245",
-                            confirmaAltaEstadoDocumento = new ConfirmaAltaEstadoDocumentoDto(){ Id = 6, Descripcion = "Documento existente", CodigoConfirmaAltaEstadoDocumento = 6 }
-                        }
-                    },
-                    confirmaAltaEstado = new ConfirmaAltaEstadoDto() { Id = 1, Descripcion = "Correcta", CodigoConfirmaAltaEstado = 1 },
-                    confirmaAltaEstadoLote = new ConfirmaAltaEstadoLoteDto() { Id = 4, Descripcion = "Procesado", CodigoConfirmaAltaEstadoLote = 4 }
-                };
-                return confirmaAltaLoteResult;
+                HabilitarSSLSiAmbientePruebas();
+
+                string numeroSAP = ObtenerNumeroSAP(contrato);
+
+                EstadoSAPDto estadoSAP = ValidarEstadoSAP(contrato, numeroSAP);
+
+                DatosEstadoBoletoDto datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(
+                    contrato.ContratoSAP,
+                    contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
+
+                CondicionFijacionEstadoBoletoDto condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
+                ValidarCondicionesFijacion(contrato, datosConfirma, condiciones, numeroSAP);
+
+                bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
+                bool esCanje = contrato.Canje == true;
+                string nroContratoInterno = numeroSAP.TrimStart('0');
+                string nroContratoInternoVendedor = contrato.ContratoVendedor ?? nroContratoInterno;
+                List<ConfirmaParteDto> partes = ArmarPartes(contrato, nroContratoInterno, nroContratoInternoVendedor);
+
+                logger.Info(
+                    $"Datos Precalculados del Negocio de Confirma; Codigo:{numeroSAP}, " +
+                    $"esCanje:{esCanje}, esConvenio:{esConvenio}, " +
+                    $"Partes: {string.Join(" - ", partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
+
+                if (clausulas == null || clausulas.Count == 0)
+                    throw new ArgumentNullException("Clausulas",
+                        $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {numeroSAP}.");
+
+                Lote lote = ConstruirLote(
+                    contrato, clausulas, partes, condiciones,
+                    estadoSAP, nroContratoInterno, esCanje, esConvenio);
+
+                logger.Debug(lote.ToXml());
+
+                int logId = GuardarLogXml(lote.ToXml());
+
+                altaLoteResult devolucion = LlamarServicioConfirma(lote);
+
+                logger.Debug(devolucion.ToXml());
+
+                ActualizarLogXml(logId, devolucion.ToXml());
+
+                return ResultadoAltaDefinitiva(devolucion, estadosConfirmaDto);
             }
+            catch (Exception e)
+            {
+                logger.Error(e, "Error: No se pudo procesar XML en WS Confirma");
+                throw;
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // VALIDACIONES Y RESOLUCIONES
+        // ════════════════════════════════════════════════════════════════════════
+
+        private void HabilitarSSLSiAmbientePruebas()
+        {
+            if (ambientePruebas == "1")
+                ServicePointManager.ServerCertificateValidationCallback +=
+                    (sender, certificate, chain, sslPolicyErrors) => true;
+        }
+
+        private string ObtenerNumeroSAP(BasicoContrato contrato)
+        {
+            return contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                ? contrato.FijacionSAP
+                : contrato.ContratoSAP;
+        }
+
+        private EstadoSAPDto ValidarEstadoSAP(BasicoContrato contrato, string numeroSAP)
+        {
+            EstadoSAPDto estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
+
+            if (estadoSAP is null)
+                throw new ArgumentNullException("EstadoSAP",
+                    $"WS Confirma - Error al consultar el estadoSAP asociado al contrato: {numeroSAP}");
+
+            logger.Info(
+                $"WS Confirma - Se Consulta el status del contrato SAP {numeroSAP} " +
+                $"resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
+
+            return estadoSAP;
+        }
+
+        private void ValidarCondicionesFijacion(
+            BasicoContrato contrato,
+            DatosEstadoBoletoDto datosConfirma,
+            CondicionFijacionEstadoBoletoDto condiciones,
+            string numeroSAP)
+        {
+            bool esAFijarOFijacion = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR
+                                  || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION;
+            if (!esAFijarOFijacion) return;
+
+            bool sinCondiciones = datosConfirma is null
+                               || (condiciones is null
+                                   && contrato.EsFason != true
+                                   && contrato.PrestamoDevolucion != true);
+
+            if (sinCondiciones)
+                throw new ArgumentNullException("Error CondicionFijacion",
+                    $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} " +
+                    $"y no tiene condiciones de fijacion asociadas.");
+
+            if (datosConfirma != null && condiciones != null)
+                logger.Info(
+                    $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. " +
+                    $"Resultando las condiciones fijacion: " +
+                    $"CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
+        }
+
+        private string ResolverTipoDocumento(BasicoContrato contrato, bool esCanje, bool esConvenio)
+        {
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO) return "1";
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) return "3";
+            if (esCanje) return "17";
+            return string.Empty;
+        }
+
+        private string ResolverCondicionPago(BasicoContrato contrato, bool esConvenio)
+        {
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio)
+                return "4 días hábiles de fecha de fijación";
+
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+            {
+                if (contrato.CD != true && contrato.FechaCierta.HasValue)
+                    return contrato.FechaCierta.Value.ToString("dd/MM/yyyy");
+                if (contrato.CD == true && contrato.FechaCierta.HasValue)
+                    return contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado";
+                if (contrato.CD == true && !contrato.FechaCierta.HasValue)
+                    return "Pago Anticipado";
+                if (contrato.Warrant == true)
+                    return "Pago contra Warrant";
+                if (contrato.PagoDiferido == true)
+                    return $"{contrato.Dias_Pesificado} Días de diferimiento contra mercadería entregada";
+                return "72 hs contra mercadería descargada.";
+            }
+
+            return null;
+        }
+
+        private string ResolverCodListaMaterial(BasicoContrato contrato)
+        {
+            switch (contrato.MaterialId)
+            {
+                case (int)EnumMateriales.TRIGO:   return "1";
+                case (int)EnumMateriales.MAIZ:    return "2";
+                case (int)EnumMateriales.SORGO:   return "3";
+                case (int)EnumMateriales.GIRASOL: return "20";
+                case (int)EnumMateriales.SOJA:    return "21";
+                default:                          return string.Empty;
+            }
+        }
+
+        private string ResolverCodListaCalidad(BasicoContrato contrato)
+        {
+            if (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA ||
+                contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) return "1";
+            if (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA) return "4";
+            return string.Empty;
+        }
+
+        private string ResolverCodListaProduccionVendedor(BasicoContrato contrato)
+        {
+            if (contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor)
+                return contrato.CorredorId > 0 ? "4" : "1";
+            return contrato.Consignatario == true ? "5" : "2";
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // PARTES
+        // ════════════════════════════════════════════════════════════════════════
+
+        private List<ConfirmaParteDto> ArmarPartes(
+            BasicoContrato contrato,
+            string nroContratoInterno,
+            string nroContratoInternoVendedor)
+        {
+            bool esAmbienteLocal = ambienteLocal == "1";
+
+            var partes = new List<ConfirmaParteDto>
+            {
+                new ConfirmaParteDto
+                {
+                    CodLista           = "1",
+                    NroContratoInterno = nroContratoInternoVendedor,
+                    CUIT               = esAmbienteLocal ? cuit1 : contrato.Cuit,
+                    Sucursal           = string.Empty
+                },
+                new ConfirmaParteDto
+                {
+                    CodLista           = "3",
+                    NroContratoInterno = nroContratoInterno + "V01",
+                    CUIT               = cuitMOA,
+                    Sucursal           = string.Empty
+                }
+            };
+
+            if (contrato.CorredorId > 0)
+                partes.Add(new ConfirmaParteDto
+                {
+                    CodLista           = "2",
+                    NroContratoInterno = contrato.ContratoCorredor,
+                    CUIT               = esAmbienteLocal ? cuit2 : contrato.CUITCorredor,
+                    Sucursal           = string.Empty
+                });
+
+            return partes;
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // CONSTRUCCIÓN DEL LOTE
+        // ════════════════════════════════════════════════════════════════════════
+
+        private Lote ConstruirLote(
+            BasicoContrato contrato,
+            List<ResultadoClausula> clausulas,
+            List<ConfirmaParteDto> partes,
+            CondicionFijacionEstadoBoletoDto condiciones,
+            EstadoSAPDto estadoSAP,
+            string nroContratoInterno,
+            bool esCanje,
+            bool esConvenio)
+        {
+            bool esFijar = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
+                        || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR;
+
+            object item1;
+            if (esFijar && !esCanje)
+                item1 = ConstruirDocumentoFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones);
+            else if (esFijar && esCanje)
+                item1 = ConstruirDocumentoPagoEspecieFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones);
+            else if (!esFijar && esCanje)
+                item1 = ConstruirDocumentoPagoEspeciePrecioHecho(contrato, clausulas, partes, esCanje, esConvenio);
             else
+                item1 = ConstruirDocumentoContratoPrecioHecho(contrato, clausulas, partes, esCanje, esConvenio);
+
+            return new Lote
+            {
+                EmpresaPresentante = cuitMOA,
+                Items = new[]
+                {
+                    new Item
+                    {
+                        itemInfo = new ItemItemInfo
+                        {
+                            Workflow = contrato.CorredorId > 0
+                                ? ItemItemInfoWorkflow.Item1
+                                : ItemItemInfoWorkflow.Item7
+                        },
+                        Item1  = item1,
+                        codigo = nroContratoInterno
+                    }
+                }
+            };
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // DOCUMENTOS TYPED
+        // ════════════════════════════════════════════════════════════════════════
+
+        private DocumentoFijarPrecio ConstruirDocumentoFijarPrecio(
+            BasicoContrato contrato,
+            List<ResultadoClausula> clausulas,
+            List<ConfirmaParteDto> partes,
+            bool esCanje,
+            bool esConvenio,
+            CondicionFijacionEstadoBoletoDto condiciones)
+        {
+            logger.Info("WS Confirma - Método ConstruirDocumentoFijarPrecio()");
+
+            var det = new DetalleDocumentoFijarPrecioDetalleContrato
+            {
+                Producto                 = ConstruirProducto(contrato),
+                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida             = new TCodCaption { CodLista = "K" },
+                CantidadDesde            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                CantidadHasta            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                Ajuste                   = new TCodLista { CodLista = string.Empty },
+                CantCamiones             = new TCaption(),
+                MontoImponible           = new TCaption { Value = string.Empty },
+                Moneda                   = new TCodLista { CodLista = "2" },
+                Calidad                  = ConstruirCalidad(contrato),
+                MedioTransporte          = new TCodCaption { CodLista = "C" },
+                Entregas                 = ConstruirEntregas(contrato),
+                Origen                   = ConstruirOrigen(contrato),
+                Destino                  = ConstruirDestino(contrato),
+                ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
+                ProduccionVendedor       = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion            = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+            };
+
+            if (contrato.CorredorId > 0)
+                det.ComisionPorComprador = new TCaption { Value = "1" };
+
+            if (!esCanje)
+                det.Pagos = ConstruirPagos(contrato, esConvenio);
+
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ||
+                contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                det.Fijacion = ConstruirFijacion(contrato, condiciones);
+
+            return new DocumentoFijarPrecio
+            {
+                CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
+                DetalleDocumento  = new DetalleDocumentoFijarPrecio
+                {
+                    Partes          = ConstruirPartes(partes),
+                    DetalleContrato = det,
+                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                }
+            };
+        }
+
+        private DocumentoPagoEspecieFijarPrecio ConstruirDocumentoPagoEspecieFijarPrecio(
+            BasicoContrato contrato,
+            List<ResultadoClausula> clausulas,
+            List<ConfirmaParteDto> partes,
+            bool esCanje,
+            bool esConvenio,
+            CondicionFijacionEstadoBoletoDto condiciones)
+        {
+            logger.Info("WS Confirma - Método ConstruirDocumentoPagoEspecieFijarPrecio()");
+
+            var det = new DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato
+            {
+                Producto                 = ConstruirProducto(contrato),
+                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida             = new TCodCaption { CodLista = "K" },
+                CantidadDesde            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                CantidadHasta            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                Ajuste                   = new TCodLista { CodLista = string.Empty },
+                CantCamiones             = new TCaption(),
+                MontoImponible           = new TCaption { Value = string.Empty },
+                Moneda                   = new TCodLista { CodLista = "2" },
+                Calidad                  = ConstruirCalidad(contrato),
+                MedioTransporte          = new TCodCaption { CodLista = "C" },
+                Entregas                 = ConstruirEntregas(contrato),
+                Origen                   = ConstruirOrigen(contrato),
+                Destino                  = ConstruirDestino(contrato),
+                ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
+                ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion            = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+            };
+
+            if (contrato.CorredorId > 0)
+                det.ComisionPorComprador = new TCaption { Value = "1" };
+
+            if (esCanje)
+            {
+                det.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit { CodLista = "0" };
+                det.DecisionDeclaraCantidad   = new DecisionDeclaraCantidad { CodLista = "0" };
+            }
+
+            det.Insumos = ConstruirInsumosFijarPrecio(contrato);
+
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ||
+                contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                det.Fijacion = ConstruirFijacion(contrato, condiciones);
+
+            return new DocumentoPagoEspecieFijarPrecio
+            {
+                CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
+                DetalleDocumento  = new DetalleDocumentoPagoEspecieFijarPrecio
+                {
+                    Partes          = ConstruirPartes(partes),
+                    DetalleContrato = det,
+                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                }
+            };
+        }
+
+        private DocumentoPagoEspeciePrecioHecho ConstruirDocumentoPagoEspeciePrecioHecho(
+            BasicoContrato contrato,
+            List<ResultadoClausula> clausulas,
+            List<ConfirmaParteDto> partes,
+            bool esCanje,
+            bool esConvenio)
+        {
+            logger.Info("WS Confirma - Método ConstruirDocumentoPagoEspeciePrecioHecho()");
+
+            decimal? precioNetoSustentable = ResolverPrecioNetoSustentable(contrato);
+            string moneda = contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty;
+
+            var det = new DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato
+            {
+                Producto                  = ConstruirProducto(contrato),
+                DescAdicional             = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion         = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha                   = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida              = new TCodCaption { CodLista = "K" },
+                UnidadMedidaPrecio        = new TCodCaption { CodLista = "T" },
+                CantidadDesde             = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
+                CantidadHasta             = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
+                Ajuste                    = new TCodLista { CodLista = string.Empty },
+                CantCamiones              = new TCaption(),
+                MontoImponible            = string.Empty,
+                Moneda                    = new TCodLista { CodLista = moneda },
+                Precio                    = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio),
+                Calidad                   = ConstruirCalidad(contrato),
+                MedioTransporte           = new TCodCaption { CodLista = "C" },
+                Entregas                  = ConstruirEntregas(contrato),
+                Origen                    = ConstruirOrigen(contrato),
+                Destino                   = ConstruirDestino(contrato),
+                ProvinciaInstrumentacion  = new TCodCaption { CodLista = "B" },
+                ProduccionVendedor        = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion             = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario    = ConstruirDecisionPagoVoluntario(),
+                OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe()
+            };
+
+            if (contrato.CorredorId > 0)
+                det.ComisionPorComprador = new TCaption { Value = "1" };
+
+            if (esCanje)
+            {
+                det.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit { CodLista = "0" };
+                det.DecisionDeclaraCantidad   = new DecisionDeclaraCantidad { CodLista = "0" };
+            }
+
+            det.Insumos = ConstruirInsumosPrecioHecho(contrato);
+
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+                det.APrecio = new TCodLista { CodLista = "1" };
+
+            return new DocumentoPagoEspeciePrecioHecho
+            {
+                CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
+                DetalleDocumento  = new DetalleDocumentoPagoEspeciePrecioHecho
+                {
+                    Partes          = ConstruirPartes(partes),
+                    DetalleContrato = det,
+                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                }
+            };
+        }
+
+        private DocumentoContratoPrecioHecho ConstruirDocumentoContratoPrecioHecho(
+            BasicoContrato contrato,
+            List<ResultadoClausula> clausulas,
+            List<ConfirmaParteDto> partes,
+            bool esCanje,
+            bool esConvenio)
+        {
+            logger.Info("WS Confirma - Método ConstruirDocumentoContratoPrecioHecho()");
+
+            decimal? precioNetoSustentable = ResolverPrecioNetoSustentable(contrato);
+
+            var det = new DetalleDocumentoContratoPrecioHechoDetalleContrato
+            {
+                Producto                 = ConstruirProducto(contrato),
+                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida             = new TCodCaption { CodLista = "K" },
+                CantidadDesde            = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
+                CantidadHasta            = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
+                Ajuste                   = new TCodLista { CodLista = string.Empty },
+                CantCamiones             = new TCaption(),
+                Moneda                   = new TCodLista { CodLista = contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty },
+                Calidad                  = ConstruirCalidad(contrato),
+                MedioTransporte          = new TCodCaption { CodLista = "C" },
+                Entregas                 = ConstruirEntregas(contrato),
+                Origen                   = ConstruirOrigen(contrato),
+                Destino                  = ConstruirDestino(contrato),
+                ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
+                ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion            = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+            };
+
+            if (contrato.CorredorId > 0)
+                det.ComisionPorComprador = new TCaption { Value = "1" };
+
+            if (esCanje || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
+                det.MontoImponible = new TCaption { Value = string.Empty };
+
+            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
+            {
+                det.Precio             = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
+                det.UnidadMedidaPrecio = new TCodCaption { CodLista = "T" };
+                det.APrecio            = new TCodLista { CodLista = "1" };
+            }
+
+            if (!esCanje)
+                det.Pagos = ConstruirPagos(contrato, esConvenio);
+
+            return new DocumentoContratoPrecioHecho
+            {
+                CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
+                DetalleDocumento  = new DetalleDocumentoContratoPrecioHecho
+                {
+                    Partes          = ConstruirPartes(partes),
+                    DetalleContrato = det,
+                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                }
+            };
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // BUILDERS COMPARTIDOS
+        // ════════════════════════════════════════════════════════════════════════
+
+        private CabeceraDocumento ConstruirCabeceraDocumento(BasicoContrato contrato, bool esCanje, bool esConvenio)
+        {
+            return new CabeceraDocumento
+            {
+                Bolsa         = new TCodLista { CodLista = contrato.BolsaConfirma },
+                TipoDocumento = new TCodLista { CodLista = ResolverTipoDocumento(contrato, esCanje, esConvenio) }
+            };
+        }
+
+        private Parte[] ConstruirPartes(List<ConfirmaParteDto> partes)
+        {
+            return partes.Select(p => new Parte
+            {
+                NroContratoInterno = new TCaption { Value = p.NroContratoInterno },
+                CUIT               = new TCodCaption { Value = p.CUIT },
+                CodLista           = p.CodLista == "1" ? codigoParte.Item1 : p.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
+                CodListaSpecified  = true
+            }).ToArray();
+        }
+
+        private ConfirmaQALoteDocumentos.Clausula[] ConstruirClausulasDetalle(List<ResultadoClausula> clausulas)
+        {
+            return clausulas.Select(c => new ConfirmaQALoteDocumentos.Clausula
+            {
+                Orden = string.Empty,
+                Value = c.Texto
+            }).ToArray();
+        }
+
+        private Producto ConstruirProducto(BasicoContrato contrato)
+        {
+            return new Producto { CodLista = ResolverCodListaMaterial(contrato) };
+        }
+
+        private ConfirmaQALoteDocumentos.Calidad ConstruirCalidad(BasicoContrato contrato)
+        {
+            return new ConfirmaQALoteDocumentos.Calidad
+            {
+                CondicionesCalidad      = new TCodLista { CodLista = ResolverCodListaCalidad(contrato) },
+                OtrasCondicionesCalidad = new TCaption { Value = string.Empty }
+            };
+        }
+
+        private Entrega ConstruirEntregas(BasicoContrato contrato)
+        {
+            return new Entrega
+            {
+                EntregaDesde = new TCaption { Value = contrato.FechaDesde.HasValue ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : null },
+                EntregaHasta = new TCaption { Value = contrato.FechaHasta.HasValue ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : null }
+            };
+        }
+
+        private Origen ConstruirOrigen(BasicoContrato contrato)
+        {
+            return new Origen
+            {
+                LocalidadOrigen = new OrigenLocalidadOrigen { Value = contrato.LocalidadConfirma, LocalidadText = "" },
+                ProvinciaOrigen = new TCodCaption { CodLista = contrato.ProvinciaConfirma }
+            };
+        }
+
+        private TCodCaption ConstruirDestino(BasicoContrato contrato)
+        {
+            return new TCodCaption { CodLista = contrato.DestinoConfirma };
+        }
+
+        private Fijacion ConstruirFijacion(BasicoContrato contrato, CondicionFijacionEstadoBoletoDto condiciones)
+        {
+            bool noTieneCondiciones = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
+
+            var fij = new Fijacion
+            {
+                FijMinima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                FijMaxima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                UnidadMedidaFijacion    = new TCodCaption { Caption = "K", CodLista = "K" },
+                FijPeriodo              = new TCodCaption { Value = "1" },
+                FijFecDesde             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                FijFecHasta             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
+                PorcMultaIncumplimiento = new TCaption { Value = "010" },
+                ComunicacionFijacion    = new TCodCaption { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" }
+            };
+
+            if (contrato.Pizarra == true)
+                fij.PizarraFijacion = new TCodCaption { CodLista = "1" };
+
+            return fij;
+        }
+
+        private Pagos ConstruirPagos(BasicoContrato contrato, bool esConvenio)
+        {
+            return new Pagos
+            {
+                ProvinciaPago      = new TCodCaption { CodLista = "B" },
+                FechaCondicionPago = new TCaption { Value = ResolverCondicionPago(contrato, esConvenio) },
+                LugarPago          = new TCaption { Value = "BUENOS AIRES" },
+                PagoAOrdenDe       = new PagoAOrdenDe { CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1" },
+                PorcPago           = new TCaption { Value = contrato.PorcentajeDePago.Value.ToString() }
+            };
+        }
+
+        private DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos ConstruirInsumosFijarPrecio(BasicoContrato contrato)
+        {
+            return new DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos
+            {
+                Productos        = new[] { ConstruirInsumo() },
+                Moneda           = new TCodLista { CodLista = string.Empty },
+                PrecioTotal      = new TCaption { Value = contrato.Monto.ToString() },
+                Factura          = new TCaption(),
+                PorcentajeGastos = new TCaption(),
+                TipoCambioPesos  = new TCaption(),
+                LugarEntrega     = new TCaption(),
+                ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma }
+            };
+        }
+
+        private DetalleDocumentoPagoEspeciePrecioHechoDetalleContratoInsumos ConstruirInsumosPrecioHecho(BasicoContrato contrato)
+        {
+            return new DetalleDocumentoPagoEspeciePrecioHechoDetalleContratoInsumos
+            {
+                Productos        = new[] { ConstruirInsumo() },
+                Moneda           = new TCodLista { CodLista = string.Empty },
+                PrecioTotal      = new TCaption { Value = contrato.Monto.ToString() },
+                Factura          = new TCaption(),
+                PorcentajeGastos = new TCaption(),
+                TipoCambioPesos  = new TCaption(),
+                LugarEntrega     = new TCaption(),
+                ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma }
+            };
+        }
+
+        private Insumo ConstruirInsumo()
+        {
+            return new Insumo
+            {
+                Producto           = new Producto { CodLista = "1" },
+                DescAdicional      = new TCaption { Value = "insumos" },
+                Cantidad           = new TCaption(),
+                Precio             = new TCaption(),
+                UnidadMedida       = new TCodCaption { CodLista = string.Empty },
+                UnidadMedidaPrecio = new TCodCaption { CodLista = string.Empty }
+            };
+        }
+
+        private DecisionPagoVoluntario ConstruirDecisionPagoVoluntario()
+        {
+            return new DecisionPagoVoluntario { CodLista = "2", FondoFederalText = "" };
+        }
+
+        private decimal? ResolverPrecioNetoSustentable(BasicoContrato contrato)
+        {
+            if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) &&
+                contrato.SustentableTipoDBId.HasValue &&
+                contrato.TipoNegocioId == 2 &&
+                contrato.SustentableTipoDBId == 1)
+                return PrecioNetoSustentableSobrePrecio(contrato, null);
+            return null;
+        }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // SERVICIO CONFIRMA
+        // ════════════════════════════════════════════════════════════════════════
+
+        private altaLoteResult LlamarServicioConfirma(Lote lote)
+        {
+            using (var agent = new LoteDocumentosServiceClient("Default"))
             {
                 try
                 {
-                    // Deshabilita temporalmente la validación del certificado SSL. Aplicar sólo para UAT/Staging. No para PRD.
-                    if (ambientePruebas == "1") ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
-                    logger.Info($"Datos del Negocio de Confirma Precargados; BolsaConfirma:{contrato.BolsaConfirma}, CorredorId:{contrato.CorredorId}, TipoNegocioId:{contrato.TipoNegocioId}, MaterialId:{contrato.MaterialId}, " +
-                        $"FechaOperacion:{contrato.FechaOperacion}, CampañaConfirma: {contrato.CampanaConfirma}, KgMaximo:{contrato.KgMaximo}, KgMinimo:{contrato.KgMinimo}, Cantidad:{contrato.Cantidad}, " +
-                        $"CantidadCamiones:{contrato.CantidadCamiones}, Moneda:{contrato.Moneda}, Precio:{contrato.Precio}, PorcentajeComision:{contrato.PorcentajeComision}, StandardDeCalidadId:{contrato.StandardDeCalidadId}, " +
-                        $"FechaDesde:{contrato.FechaDesde}, FechaHasta:{contrato.FechaHasta}, LocalidadConfirma:{contrato.LocalidadConfirma}, ProvinciaConfirma:{contrato.ProvinciaConfirma}, DestinoConfirma:{contrato.DestinoConfirma}, " +
-                        $"CD:{contrato.CD}, Warrant:{contrato.Warrant}, PagoDiferido:{contrato.PagoDiferido}, PagoDirectoVendedor:{contrato.PagoDirectoVendedor}, PorcentajeDePago:{contrato.PorcentajeDePago}, Monto:{contrato.Monto}, " +
-                        $"Pizarra:{contrato.Pizarra}, ClasificacionId:{contrato.ClasificacionId}");
-
-                    string numeroSAP = contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP;
-
-                    EstadoSAPDto estadoSAP = status.ValidarEstado(contrato.ContratoSAP);
-                    if (estadoSAP is null) throw new ArgumentNullException("EstadoSAP", $"WS Confirma - Error al consultar el estadoSAP asociado al contrato: {numeroSAP}");
-                    else logger.Info($"WS Confirma - Se Consulta el status del contrato SAP {numeroSAP} resultando STATUS: {estadoSAP.Status} y Mensaje: {estadoSAP.Mensaje}");
-
-                    DatosEstadoBoletoDto datosConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(contrato.ContratoSAP, contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
-                    CondicionFijacionEstadoBoletoDto condiciones = datosConfirma.CondicionFijacion.FirstOrDefault();
-                    if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION)
-                    {
-                        if (datosConfirma is null || (condiciones is null && contrato.EsFason != true && contrato.PrestamoDevolucion != true)) throw new ArgumentNullException("Error CondicionFijacion", $"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP} y no tiene condiciones de fijacion asociadas.");
-                        else if (datosConfirma != null && condiciones != null) logger.Info($"WS Confirma - Se consultó el Estado del Boleto SAP del contrato {numeroSAP}. Resultando las condiciones fijacion: CantidadMaxima: {condiciones.CantidadMaxima} y CantidadMinima: {condiciones.CantidadMinima}.");
-                    }
-
-                    bool esConvenio = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && contrato.Madre == true;
-                    bool esCanje = contrato.Canje == true;
-                    string nroContratoInterno = numeroSAP.TrimStart('0');
-                    string nroContratoInternoVendedor = contrato.ContratoVendedor != null ? contrato.ContratoVendedor : nroContratoInterno;
-                    //bool existeConfirma = repositorio.Existe<Confirma>(x => contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? ((x.Negocio as FijacionDePrecioContrato).FijacionSAP == contrato.ContratoSAP) : x.Negocio.ContratoSAP == contrato.ContratoSAP);
-                    //if (existeConfirma is false) throw new ArgumentNullException("Confirma", "No existe el confirma");
-                    //logger.Info($"Se Consulta el status del Negocio SAP {contrato.FijacionSAP ?? contrato.ContratoSAP}");
-
-                    List<ConfirmaParteDto> Partes = new List<ConfirmaParteDto> {
-                        new ConfirmaParteDto { CodLista = "1", NroContratoInterno = nroContratoInternoVendedor, CUIT = ambienteLocal == "1" ? cuit1 : contrato.Cuit, Sucursal = string.Empty },
-                        new ConfirmaParteDto { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = cuitMOA, Sucursal = string.Empty }
-                    };
-                    if (contrato.CorredorId > 0)
-                    {
-                        string nroContratoInternoCorredor = contrato.ContratoCorredor;
-                        Partes.Add(new ConfirmaParteDto { CodLista = "2", NroContratoInterno = nroContratoInternoCorredor, CUIT = ambienteLocal == "1" ? cuit2 : contrato.CUITCorredor, Sucursal = string.Empty });
-                    }
-                    logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{numeroSAP}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
-                    if (clausulas is null || clausulas.Count == 0) throw new ArgumentNullException("Clausulas", $"WS Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {numeroSAP}.");
-
-                    Lote lote = new Lote();
-                    #region Lote
-                    lote.EmpresaPresentante = cuitMOA;
-
-                    List<Item> items = new List<Item>();
-                    #region Item[]
-                    ItemItemInfo itemInfo = new ItemItemInfo() { Workflow = contrato.CorredorId > 0 ? ItemItemInfoWorkflow.Item1 : ItemItemInfoWorkflow.Item7 };
-
-                    object item1 = null;
-                    if ((contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !esCanje)
-                        item1 = DevolverItemDocumentoFijarPrecio(contrato, clausulas, Partes, esCanje, esConvenio, condiciones, estadoSAP);
-                    else if ((contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && esCanje)
-                        /* tiene Insumos */
-                        item1 = DevolverItemDocumentoPagoEspecieFijarPrecio(contrato, clausulas, Partes, esCanje, esConvenio, condiciones, estadoSAP);
-                    else if (!(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && esCanje)
-                        /* tiene Insumos */
-                        item1 = DevolverItemDocumentoPagoEspeciePrecioHecho(contrato, clausulas, Partes, esCanje, esConvenio, condiciones, estadoSAP);
-                    else if (!(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR) && !esCanje)
-                        item1 = DevolverItemDocumentoContratoPrecioHecho(contrato, clausulas, Partes, esCanje, esConvenio, condiciones, estadoSAP);
-
-                    items.Add(new Item
-                    {
-                        itemInfo = itemInfo,
-                        Item1 = item1,
-                        codigo = nroContratoInterno,
-                    });
-                    #endregion Item[]
-
-                    lote.Items = items.ToArray();
-                    #endregion Lote
-
-                    logger.Debug(lote.ToXml());
-
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = lote.ToXml()
-                    };
-
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-
-                    //altaLoteResult devolucion = agent.AltaDefinitiva(lote);
-                    altaLoteResult devolucion;
-                    using (LoteDocumentosServiceClient agent = new LoteDocumentosServiceClient("Default"))
-                    {
-                        try
-                        {
-                            agent.ClientCredentials.UserName.UserName = userConfirma;
-                            agent.ClientCredentials.UserName.Password = passConfirma;
-
-                            devolucion = agent.AltaDefinitiva(lote);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error(ex, "Error al llamar al servicio AltaDefinitiva de Confirma");
-                            // Si el canal está en estado Faulted, hay que abortarlo
-                            if (agent.State == System.ServiceModel.CommunicationState.Faulted)
-                            {
-                                agent.Abort();
-                            }
-                            throw;
-                        }
-                    }
-
-                    logger.Debug(devolucion.ToXml());
-
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += devolucion.ToXml();
-                    repositorio.GuardarCambios();
-
-                    ConfirmaAltaLoteResultDto confirmaAltaLoteResult = ResultadoAltaDefinitiva(devolucion, estadosConfirmaDto);
-
-                    return confirmaAltaLoteResult;
+                    agent.ClientCredentials.UserName.UserName = userConfirma;
+                    agent.ClientCredentials.UserName.Password = passConfirma;
+                    return agent.AltaDefinitiva(lote);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    logger.Error(e, "Error: No se pudo procesar XML en WS Confirma");
+                    logger.Error(ex, "Error al llamar al servicio AltaDefinitiva de Confirma");
+                    if (agent.State == System.ServiceModel.CommunicationState.Faulted)
+                        agent.Abort();
                     throw;
                 }
             }
         }
 
-        // EN USO
-        DocumentoFijarPrecio DevolverItemDocumentoFijarPrecio(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
+        // ════════════════════════════════════════════════════════════════════════
+        // LOG
+        // ════════════════════════════════════════════════════════════════════════
+
+        private int GuardarLogXml(string xml)
         {
-            logger.Info("WS Confirma - Método DevolverItemDocumentoFijarPrecio()");
-            DocumentoFijarPrecio item1 = new DocumentoFijarPrecio();
-            #region DocumentoFijarPrecio
-            #region CabeceraDocumento
-            CabeceraDocumento cabeceraDocumento = new CabeceraDocumento()
-            {
-                Bolsa = new TCodLista()
-                {
-                    CodLista = contrato.BolsaConfirma,
-                },
-                TipoDocumento = new TCodLista()
-                {
-                    //CodLista = esCanje ? "17" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
-                    CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "",
-                }
-            };
-            #endregion CabeceraDocumento
-
-            DetalleDocumentoFijarPrecio detalleDocumento = new DetalleDocumentoFijarPrecio();
-            #region DetalleDocumentoFijarPrecio
-            List<Parte> partes_detalle = new List<Parte>();
-            #region Parte
-            foreach (var item in Partes)
-            {
-                Parte parte1 = new Parte()
-                {
-                    NroContratoInterno = new TCaption()
-                    {
-                        Value = item.NroContratoInterno,
-                    },
-                    CUIT = new TCodCaption()
-                    {
-                        Value = item.CUIT,
-                    },
-                    CodLista = item.CodLista == "1" ? codigoParte.Item1 : item.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
-                    CodListaSpecified = true,
-                    // falta sucursal?,
-                };
-
-                partes_detalle.Add(parte1);
-            }
-            #endregion Parte
-
-            DetalleDocumentoFijarPrecioDetalleContrato detalleContrato = new DetalleDocumentoFijarPrecioDetalleContrato();
-            #region DetalleDocumentoFijarPrecioDetalleContrato
-
-            detalleContrato.Producto = new Producto()
-            {
-                CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-            };
-
-            detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
-            detalleContrato.FechaConcertacion = new TCaption() { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null, };
-
-            //// GSIAN: Tomé la desición que si el A FIJAR no tiene moneda, la buscamos en sus FIJACIONES.
-            //string monedaAFijar = "";
-            //if (contrato.Moneda == "ARP" || contrato.Moneda == "USD")
-            //{
-            //    monedaAFijar = contrato.Moneda;
-            //}
-            //else
-            //{
-            //    string monedaIdAFijar = repositorio.Listar<Negocio>(x =>
-            //    x.ContratoSAP == contrato.ContratoSAP &&
-            //    x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-            //    x.EstadoId == (int)EnumEstadoContrato.Finalizado &&
-            //    x.ConfirmadoSAP == true).Find(x => x.MonedaId != null).MonedaId;
-            //    monedaAFijar = repositorio.Obtener<Moneda>(x => x.MonedaId == monedaIdAFijar)?.Descripcion;
-            //}
-
-            //TCodLista moneda = new TCodLista() { CodLista = monedaAFijar == "ARP" ? "1" : monedaAFijar == "USD" ? "2" : string.Empty };
-
-            // GSIAN: Comentado por el caso de QA 2687753
-            //detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
-
-            detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
-            detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
-            detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
-
-            // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
-            //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            detalleContrato.CantCamiones = new TCaption();
-
-            detalleContrato.MontoImponible = new TCaption() { Value = string.Empty };
-            detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.;
-
-            // GSIAN: Comentado por el caso de QA 2687753
-            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
-            {
-                TCaption comisionPorComprador = new TCaption();
-                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-                detalleContrato.ComisionPorComprador = comisionPorComprador;
-            }
-
-            detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
-            {
-                CondicionesCalidad = new TCodLista() { CodLista = (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : "") },
-                OtrasCondicionesCalidad = new TCaption() { Value = string.Empty }
-            };
-
-            detalleContrato.MedioTransporte = new TCodCaption() { CodLista = "C" }; // Camión
-
-            detalleContrato.Entregas = new Entrega()
-            {
-                EntregaDesde = new TCaption() { Value = contrato.FechaDesde.HasValue ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : null },
-                EntregaHasta = new TCaption() { Value = contrato.FechaHasta.HasValue ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : null }
-            };
-
-            detalleContrato.Origen = new Origen()
-            {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma, LocalidadText = "" },
-                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
-            };
-
-            TCodCaption destino = new TCodCaption();
-            destino.CodLista = contrato.DestinoConfirma;
-            //destino.CodPrv = "0000"; // no está en Staging?
-            detalleContrato.Destino = destino;
-
-            detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-
-            if (esCanje != true)
-            {
-                Pagos pagos = new Pagos();
-                #region Pagos
-                TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación":
-                    (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO?
-                        (
-                          (contrato.CD != true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy"):
-                          (contrato.CD == true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado":
-                          (contrato.CD == true && !contrato.FechaCierta.HasValue) ? "Pago Anticipado" :
-                          (contrato.Warrant == true ? "Pago contra Warrant":
-                          (contrato.PagoDiferido == true ? contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada" : "72 hs contra mercadería descargada."))
-                        ) : null);
-
-                pagos.FechaCondicionPago = fechaCondicionPago;
-                pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
-                pagos.PagoAOrdenDe = new PagoAOrdenDe()
-                {
-                    CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
-                };
-                pagos.PorcPago = new TCaption() { Value = contrato.PorcentajeDePago.Value.ToString() };
-                pagos.ProvinciaPago = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-                #endregion Pagos
-                detalleContrato.Pagos = pagos;
-            }
-
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
-            {
-                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
-                detalleContrato.Fijacion = new Fijacion()
-                {
-                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
-                    UnidadMedidaFijacion = new TCodCaption() { CodLista = "K", Caption = "K" },
-                    FijPeriodo = new TCodCaption() { CodLista = "1", Value = "1" },
-                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
-                    PorcMultaIncumplimiento = new TCaption() { Value = "010" },
-                    ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
-                };
-
-                if (contrato.Pizarra == true)
-                    detalleContrato.Fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
-            }
-
-            // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            detalleContrato.ProduccionVendedor = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
-
-            detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal;
-
-            //GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado 
-            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            decisionPagoVoluntario.FondoFederalText = "";
-            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
-
-
-            //OperacionExentaImpSantaFe operacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
-            //operacionExentaImpSantaFe.CodLista = "";
-            ////operacionExentaImpSantaFe.Caption = "";
-            //operacionExentaImpSantaFe.OperacionExentaImpSantaFeText = "";
-            ////operacionExentaImpSantaFe.Value = "";
-
-            //SioGranos sioGranos = new SioGranos();
-            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            //detalleContrato.SioGranos = sioGranos;
-            #endregion DetalleDocumentoFijarPrecioDetalleContrato
-
-            List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
-            #region Cláusulas
-            foreach (var item in clausulas)
-            {
-                ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
-                clausula.Orden = string.Empty;
-                clausula.Value = (item.Texto);
-
-                clausulas_detalle.Add(clausula);
-            }
-            #endregion Cláusulas
-
-            detalleDocumento.Partes = partes_detalle.ToArray();
-            detalleDocumento.DetalleContrato = detalleContrato;
-            detalleDocumento.Clausulas = clausulas_detalle.ToArray();
-            #endregion DetalleDocumentoFijarPrecio
-
-            item1.CabeceraDocumento = cabeceraDocumento;
-            item1.DetalleDocumento = detalleDocumento;
-            //item1.Id = "";
-            #endregion DocumentoFijarPrecio
-
-            return item1;
+            var log = new Log { Fecha = DateTime.Now, Xml = xml };
+            var logId = repositorio.Agregar(log);
+            repositorio.GuardarCambios();
+            return logId.Id;
         }
 
-        // EN USO - tiene INSUMOS
-        DocumentoPagoEspecieFijarPrecio DevolverItemDocumentoPagoEspecieFijarPrecio(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
+        private void ActualizarLogXml(int logId, string xmlAdicional)
         {
-            logger.Info("WS Confirma - Método DevolverItemDocumentoPagoEspecieFijarPrecio()");
-            DocumentoPagoEspecieFijarPrecio item1 = new DocumentoPagoEspecieFijarPrecio();
-            #region DocumentoPagoEspecieFijarPrecio
-            #region CabeceraDocumento
-            CabeceraDocumento cabeceraDocumento = new CabeceraDocumento()
-            {
-                Bolsa = new TCodLista()
-                {
-                    CodLista = contrato.BolsaConfirma,
-                },
-                TipoDocumento = new TCodLista()
-                {
-                    //CodLista = esCanje ? "17" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
-                    CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "",
-                }
-            };
-            #endregion CabeceraDocumento
-
-            DetalleDocumentoPagoEspecieFijarPrecio detalleDocumento = new DetalleDocumentoPagoEspecieFijarPrecio();
-            #region DetalleDocumentoPagoEspecieFijarPrecio
-            List<Parte> partes_detalle = new List<Parte>();
-            #region Parte
-            foreach (var item in Partes)
-            {
-                Parte parte1 = new Parte()
-                {
-                    NroContratoInterno = new TCaption()
-                    {
-                        Value = item.NroContratoInterno,
-                    },
-                    CUIT = new TCodCaption()
-                    {
-                        Value = item.CUIT,
-                    },
-                    CodLista = item.CodLista == "1" ? codigoParte.Item1 : item.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
-                    CodListaSpecified = true,
-                    // falta sucursal?,
-                };
-
-                partes_detalle.Add(parte1);
-            }
-            #endregion Parte
-
-            DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato detalleContrato = new DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato();
-            #region DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato
-
-            detalleContrato.Producto = new Producto()
-            {
-                CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-            };
-
-            detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
-            detalleContrato.FechaConcertacion = new TCaption() { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null, };
-            detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
-            detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = ((int)contrato.Cantidad).ToString() };
-            detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
-
-            // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
-            //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            detalleContrato.CantCamiones = new TCaption();
-
-            detalleContrato.MontoImponible = new TCaption() { Value = string.Empty };
-            detalleContrato.Moneda = new TCodLista() { CodLista = "2" }; // Para los A FIJAR le pasamos USD, como hace SAP.
-
-            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
-            {
-                TCaption comisionPorComprador = new TCaption();
-                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-                detalleContrato.ComisionPorComprador = comisionPorComprador;
-            }
-
-            detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
-            {
-                CondicionesCalidad = new TCodLista() { CodLista = (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : "") },
-                OtrasCondicionesCalidad = new TCaption() { Value = string.Empty }
-            };
-
-            detalleContrato.MedioTransporte = new TCodCaption() { CodLista = "C" }; // Camión
-
-            detalleContrato.Entregas = new Entrega()
-            {
-                EntregaDesde = new TCaption() { Value = contrato.FechaDesde.HasValue ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : null },
-                EntregaHasta = new TCaption() { Value = contrato.FechaHasta.HasValue ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : null }
-            };
-
-            detalleContrato.Origen = new Origen()
-            {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { LocalidadText = "", Value = contrato.LocalidadConfirma },
-                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
-            };
-
-            detalleContrato.Destino = new TCodCaption()
-            {
-                CodLista = contrato.DestinoConfirma,
-                //CodPrv = "0000", // no está en Staging?
-            };
-
-            detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-            //detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
-
-            if (esCanje)
-            {
-                detalleContrato.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit() { CodLista = "0" };
-                detalleContrato.DecisionDeclaraCantidad = new DecisionDeclaraCantidad() { CodLista = "0" };
-            }
-
-            #region Insumos
-            DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos insumos = new DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos();
-            List<Insumo> productos = new List<Insumo>();
-            Insumo insumo = new Insumo()
-            {
-                Producto = new Producto { CodLista = "1" },
-                DescAdicional = new TCaption { Value = "insumos" },
-                Cantidad = new TCaption(),
-                Precio = new TCaption(),
-                UnidadMedida = new TCodCaption { CodLista = string.Empty },
-                UnidadMedidaPrecio = new TCodCaption { CodLista = string.Empty },
-                //PrecioTotal = new TCaption { Caption = "", Value = "" },
-            };
-            productos.Add(insumo);
-            insumos.Productos = productos.ToArray();
-            insumos.Moneda = new TCodLista { CodLista = string.Empty };
-            insumos.PrecioTotal = new TCaption { Value = contrato.Monto.ToString() };
-            insumos.Factura = new TCaption();
-            insumos.PorcentajeGastos = new TCaption();
-            insumos.TipoCambioPesos = new TCaption();
-            insumos.LugarEntrega = new TCaption();
-            insumos.ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma };
-            detalleContrato.Insumos = insumos;
-            #endregion Insumos
-
-            #region Fijacion
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
-            {
-                bool noTieneCondicionesDeFijacion = contrato.EsFason == true || contrato.PrestamoDevolucion == true;
-
-                detalleContrato.Fijacion = new Fijacion()
-                {
-                    FijMinima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                    FijMaxima = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
-                    UnidadMedidaFijacion = new TCodCaption() { Caption = "K", CodLista = "K" },
-                    FijPeriodo = new TCodCaption() { /*CodLista = "1",*/ Value = "1" },
-                    FijFecDesde = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
-                    FijFecHasta = new TCaption() { Value = noTieneCondicionesDeFijacion ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
-                    PorcMultaIncumplimiento = new TCaption() { Value = "010" },
-                    ComunicacionFijacion = new TCodCaption() { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" },
-                    //PizarraFijacion = new TCodCaption() { CodLista = contrato.Pizarra == true ? "1" : "" },
-                };
-
-                if (contrato.Pizarra == true)
-                    detalleContrato.Fijacion.PizarraFijacion = new TCodCaption() { CodLista = "1" };
-            }
-            #endregion Fijacion
-
-            // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
-
-            // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario()
-            {
-                CodLista = "2",
-                FondoFederalText = "",
-            };
-
-            detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
-
-            // GSIAN: Cómo se completa??
-            //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
-
-            //SioGranos sioGranos = new SioGranos();
-            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            //detalleContrato.SioGranos = sioGranos;
-            #endregion DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato
-
-            List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
-            #region Cláusulas
-            foreach (var item in clausulas)
-            {
-                ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
-                clausula.Orden = string.Empty;
-                clausula.Value = (item.Texto);
-
-                clausulas_detalle.Add(clausula);
-            }
-            #endregion Cláusulas
-
-            detalleDocumento.Partes = partes_detalle.ToArray();
-            detalleDocumento.DetalleContrato = detalleContrato;
-            detalleDocumento.Clausulas = clausulas_detalle.ToArray();
-            #endregion DetalleDocumentoPagoEspecieFijarPrecio
-
-            item1.CabeceraDocumento = cabeceraDocumento;
-            item1.DetalleDocumento = detalleDocumento;
-            //item1.Id = "";
-            #endregion DocumentoPagoEspecieFijarPrecio
-
-            return item1;
+            var log = repositorio.Obtener<Log>(logId);
+            log.Xml += xmlAdicional;
+            repositorio.GuardarCambios();
         }
 
-        // EN USO - tiene INSUMOS
-        DocumentoPagoEspeciePrecioHecho DevolverItemDocumentoPagoEspeciePrecioHecho(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
+        // ════════════════════════════════════════════════════════════════════════
+        // RESULTADO DE PRUEBA
+        // ════════════════════════════════════════════════════════════════════════
+
+        private static ConfirmaAltaLoteResultDto DevolverResultadoPrueba()
         {
-            logger.Info("WS Confirma - Método DevolverItemDocumentoPagoEspeciePrecioHecho()");
-            DocumentoPagoEspeciePrecioHecho item1 = new DocumentoPagoEspeciePrecioHecho();
-            #region DocumentoPagoEspecieFijarPrecio
-            #region CabeceraDocumento
-            CabeceraDocumento cabeceraDocumento = new CabeceraDocumento()
+            return new ConfirmaAltaLoteResultDto
             {
-                Bolsa = new TCodLista()
+                altaIdLote     = "18443050",
+                altaEstado     = 1,
+                altaEstadoLote = 4,
+                altaItem       = new List<altaItemDto>
                 {
-                    CodLista = contrato.BolsaConfirma,
+                    new altaItemDto
+                    {
+                        altaIdDocumento              = "",
+                        altaEstadoDocumento          = 6,
+                        altaErrores                  = new List<string> { "Documento existente" },
+                        altaIdDocumentoExistente     = "18390504",
+                        altaIdDocumentoExistenteLote = "25007245",
+                        confirmaAltaEstadoDocumento  = new ConfirmaAltaEstadoDocumentoDto
+                        {
+                            Id = 6,
+                            Descripcion = "Documento existente",
+                            CodigoConfirmaAltaEstadoDocumento = 6
+                        }
+                    }
                 },
-                TipoDocumento = new TCodLista()
+                confirmaAltaEstado = new ConfirmaAltaEstadoDto
                 {
-                    //CodLista = esCanje ? "17" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
-                    CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "",
+                    Id = 1,
+                    Descripcion = "Correcta",
+                    CodigoConfirmaAltaEstado = 1
+                },
+                confirmaAltaEstadoLote = new ConfirmaAltaEstadoLoteDto
+                {
+                    Id = 4,
+                    Descripcion = "Procesado",
+                    CodigoConfirmaAltaEstadoLote = 4
                 }
             };
-            #endregion CabeceraDocumento
-
-            DetalleDocumentoPagoEspeciePrecioHecho detalleDocumento = new DetalleDocumentoPagoEspeciePrecioHecho();
-            #region DetalleDocumentoPagoEspeciePrecioHecho
-            List<Parte> partes_detalle = new List<Parte>();
-            #region Parte
-            foreach (var item in Partes)
-            {
-                Parte parte1 = new Parte()
-                {
-                    NroContratoInterno = new TCaption()
-                    {
-                        Value = item.NroContratoInterno,
-                    },
-                    CUIT = new TCodCaption()
-                    {
-                        Value = item.CUIT,
-                    },
-                    CodLista = item.CodLista == "1" ? codigoParte.Item1 : item.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
-                    CodListaSpecified = true,
-                    // falta sucursal?,
-                };
-
-                partes_detalle.Add(parte1);
-            }
-            #endregion Parte
-
-            DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato detalleContrato = new DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato();
-            #region DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato
-
-            detalleContrato.Producto = new Producto()
-            {
-                CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-            };
-
-            detalleContrato.FechaConcertacion = new TCaption()
-            {
-                Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null,
-            };
-
-            // GSIAN: Tomé la desición que si el A FIJAR no tiene moneda, la buscamos en sus FIJACIONES.
-            string monedaAFijar = "";
-            if (contrato.Moneda == "ARP" || contrato.Moneda == "USD")
-            {
-                monedaAFijar = contrato.Moneda;
-            }
-            //else
-            //{
-            //    string monedaIdAFijar = repositorio.Listar<Negocio>(x =>
-            //    x.ContratoSAP == contrato.ContratoSAP &&
-            //    x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
-            //    x.EstadoId == (int)EnumEstadoContrato.Finalizado &&
-            //    x.ConfirmadoSAP == true).Find(x => x.MonedaId != null).MonedaId;
-            //    monedaAFijar = repositorio.Obtener<Moneda>(x => x.MonedaId == monedaIdAFijar)?.Descripcion;
-            //}
-
-            detalleContrato.Moneda = new TCodLista() { CodLista = monedaAFijar == "ARP" ? "1" : monedaAFijar == "USD" ? "2" : string.Empty };
-            detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
-            detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
-            detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
-            detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
-
-            // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
-            //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            detalleContrato.CantCamiones = new TCaption();
-
-            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
-            {
-                TCaption comisionPorComprador = new TCaption();
-                comisionPorComprador.Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null; // será PorcComisionComprador ???
-                detalleContrato.ComisionPorComprador = comisionPorComprador;
-            }
-
-            decimal? precioNetoSustentable = null;
-            if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId.HasValue)
-            {
-                if (contrato.TipoNegocioId == 2 && contrato.SustentableTipoDBId == 1) //a precio y sobre precio
-                {
-                    precioNetoSustentable = PrecioNetoSustentableSobrePrecio(contrato, precioNetoSustentable);
-                }
-            }
-
-            // GSIAN: Cómo se completa??
-            //detalleContrato.Precio = "";
-            var precioContrato = Convert.ToString((contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
-            detalleContrato.Precio = precioContrato;
-            detalleContrato.MontoImponible = "";
-
-            detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
-            {
-                CondicionesCalidad = new TCodLista() { CodLista = (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : "") },
-                OtrasCondicionesCalidad = new TCaption() { Value = string.Empty }
-            };
-
-            detalleContrato.MedioTransporte = new TCodCaption() { CodLista = "C" }; // Camión
-
-            detalleContrato.Entregas = new Entrega()
-            {
-                EntregaDesde = new TCaption() { Value = contrato.FechaDesde.HasValue ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : null },
-                EntregaHasta = new TCaption() { Value = contrato.FechaHasta.HasValue ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : null }
-            };
-
-            detalleContrato.Origen = new Origen()
-            {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { LocalidadText = "", Value = contrato.LocalidadConfirma },
-                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
-            };
-
-            TCodCaption destino = new TCodCaption();
-            destino.CodLista = contrato.DestinoConfirma;
-            //destino.CodPrv = "0000"; // no está en Staging?
-            detalleContrato.Destino = destino;
-
-            if (esCanje)
-            {
-                detalleContrato.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit() { CodLista = "0" };
-                detalleContrato.DecisionDeclaraCantidad = new DecisionDeclaraCantidad() { CodLista = "0" };
-            }
-
-            detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-
-            #region Insumos
-            DetalleDocumentoPagoEspeciePrecioHechoDetalleContratoInsumos insumos = new DetalleDocumentoPagoEspeciePrecioHechoDetalleContratoInsumos();
-            List<Insumo> productos = new List<Insumo>();
-            Insumo insumo = new Insumo()
-            {
-                Producto = new Producto { CodLista = "1" },
-                DescAdicional = new TCaption { Value = "insumos" },
-                Cantidad = new TCaption(),
-                Precio = new TCaption(),
-                UnidadMedida = new TCodCaption { CodLista = string.Empty },
-                UnidadMedidaPrecio = new TCodCaption { CodLista = string.Empty },
-                //PrecioTotal = new TCaption { Caption = "", Value = "" },
-            };
-            productos.Add(insumo);
-            insumos.Productos = productos.ToArray();
-            insumos.Moneda = new TCodLista { CodLista = string.Empty };
-            insumos.PrecioTotal = new TCaption { Value = contrato.Monto.ToString() };
-            insumos.Factura = new TCaption();
-            insumos.PorcentajeGastos = new TCaption();
-            insumos.TipoCambioPesos = new TCaption();
-            insumos.LugarEntrega = new TCaption();
-            insumos.ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma };
-            detalleContrato.Insumos = insumos;
-            #endregion Insumos
-
-            // GSIAN: Tuve que forzar a "2" porque con "4" me dice "El campo Producción Vendedor no es válido."
-            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
-
-            // GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado para prueba momentanea.
-            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            decisionPagoVoluntario.FondoFederalText = "";
-            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
-
-            detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
-
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-                detalleContrato.APrecio = new TCodLista() { CodLista = "1" };
-
-            // GSIAN: Cómo se completa??
-            detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
-
-            //SioGranos sioGranos = new SioGranos();
-            //sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null;
-            //detalleContrato.SioGranos = sioGranos;
-            #endregion DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato
-
-            List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
-            #region Cláusulas
-            foreach (var item in clausulas)
-            {
-                ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
-                clausula.Orden = string.Empty;
-                clausula.Value = (item.Texto);
-
-                clausulas_detalle.Add(clausula);
-            }
-            #endregion Cláusulas
-
-            detalleDocumento.Partes = partes_detalle.ToArray();
-            detalleDocumento.DetalleContrato = detalleContrato;
-            detalleDocumento.Clausulas = clausulas_detalle.ToArray();
-            #endregion DetalleDocumentoPagoEspeciePrecioHecho
-
-            item1.CabeceraDocumento = cabeceraDocumento;
-            item1.DetalleDocumento = detalleDocumento;
-            //item1.Id = "";
-            #endregion DocumentoPagoEspeciePrecioHecho
-
-            return item1;
         }
 
-        // EN USO
-        DocumentoContratoPrecioHecho DevolverItemDocumentoContratoPrecioHecho(BasicoContrato contrato, List<ResultadoClausula> clausulas, List<ConfirmaParteDto> Partes, bool esCanje, bool esConvenio, CondicionFijacionEstadoBoletoDto condiciones, EstadoSAPDto estadoSAP)
+        // ════════════════════════════════════════════════════════════════════════
+        // RESULTADO ALTA DEFINITIVA
+        // ════════════════════════════════════════════════════════════════════════
+
+        public ConfirmaAltaLoteResultDto ResultadoAltaDefinitiva(
+            altaLoteResult devolucion,
+            EstadosConfirmaDto estadosConfirmaDto)
         {
-            logger.Info("WS Confirma - Método DevolverItemDocumentoContratoPrecioHecho()");
-            DocumentoContratoPrecioHecho item1 = new DocumentoContratoPrecioHecho();
-            #region DocumentoConsignacionPrecioHecho
-            #region CabeceraDocumento
-            CabeceraDocumento cabeceraDocumento = new CabeceraDocumento()
+            var result = new ConfirmaAltaLoteResultDto
             {
-                Bolsa = new TCodLista()
-                {
-                    CodLista = contrato.BolsaConfirma,
-                },
-                TipoDocumento = new TCodLista()
-                {
-                    //CodLista = esCanje ? "17" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : "")),
-                    CodLista = contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ? "1" : contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio ? "3" : esCanje ? "17" : "",
-                }
+                altaIdLote              = devolucion.altaIdLote,
+                altaEstado              = SoloDigitos(devolucion.altaEstado.ToString()),
+                altaEstadoSpecified     = devolucion.altaEstadoSpecified,
+                altaEstadoDetalleError  = devolucion.altaEstadoDetalleError,
+                altaEstadoLote          = SoloDigitos(devolucion.altaEstadoLote.ToString()),
+                altaEstadoLoteSpecified = devolucion.altaEstadoLoteSpecified,
+                altaItem                = new List<altaItemDto>()
             };
-            #endregion CabeceraDocumento
 
-            DetalleDocumentoContratoPrecioHecho detalleDocumento = new DetalleDocumentoContratoPrecioHecho();
-            #region DetalleDocumentoContratoPrecioHecho
-            List<Parte> partes_detalle = new List<Parte>();
-            #region Parte
-            foreach (var item in Partes)
+            result.confirmaAltaEstado = estadosConfirmaDto.ConfirmaAltaEstadoDto
+                .Find(x => x.CodigoConfirmaAltaEstado == result.altaEstado);
+            result.confirmaAltaEstadoLote = estadosConfirmaDto.ConfirmaAltaEstadoLoteDto
+                .Find(x => x.CodigoConfirmaAltaEstadoLote == result.altaEstadoLote);
+
+            if (devolucion.altaItem == null) return result;
+
+            foreach (var item in devolucion.altaItem)
             {
-                Parte parte1 = new Parte()
+                var altaItem = new altaItemDto
                 {
-                    NroContratoInterno = new TCaption()
-                    {
-                        Value = item.NroContratoInterno,
-                    },
-                    CUIT = new TCodCaption()
-                    {
-                        Value = item.CUIT,
-                    },
-                    CodLista = item.CodLista == "1" ? codigoParte.Item1 : item.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
-                    CodListaSpecified = true,
-                    // falta sucursal?,
+                    altaIdDocumento              = item.altaIdDocumento,
+                    altaEstadoDocumento          = SoloDigitos(item.altaEstadoDocumento.ToString()),
+                    altaErrores                  = item.altaErrores != null ? new List<string>(item.altaErrores) : new List<string>(),
+                    altaIdDocumentoExistenteLote = item.altaIdDocumentoExistenteLote,
+                    altaIdDocumentoExistente     = item.altaIdDocumentoExistente,
+                    codigo                       = item.codigo
                 };
 
-                partes_detalle.Add(parte1);
-            }
-            #endregion Parte
+                altaItem.confirmaAltaEstadoDocumento = estadosConfirmaDto.ConfirmaAltaEstadoDocumentoDto
+                    .Find(x => x.CodigoConfirmaAltaEstadoDocumento == altaItem.altaEstadoDocumento);
 
-            DetalleDocumentoContratoPrecioHechoDetalleContrato detalleContrato = new DetalleDocumentoContratoPrecioHechoDetalleContrato();
-
-            decimal? precioNetoSustentable = null;
-            if ((contrato.EPA || contrato.EUDR || contrato.Sustentable) && contrato.SustentableTipoDBId.HasValue)
-            {
-                if (contrato.TipoNegocioId == 2 && contrato.SustentableTipoDBId == 1) //a precio y sobre precio
-                {
-                    precioNetoSustentable = PrecioNetoSustentableSobrePrecio(contrato, precioNetoSustentable);
-                }
+                result.altaItem.Add(altaItem);
             }
 
-
-            #region DetalleDocumentoContratoPrecioHechoDetalleContrato
-            detalleContrato.Producto = new Producto()
-            {
-                CodLista = contrato.MaterialId == (int)EnumMateriales.TRIGO ? "1" : contrato.MaterialId == (int)EnumMateriales.MAIZ ? "2" : contrato.MaterialId == (int)EnumMateriales.SORGO ? "3" : contrato.MaterialId == (int)EnumMateriales.GIRASOL ? "20" : contrato.MaterialId == (int)EnumMateriales.SOJA ? "21" : string.Empty,
-            };
-
-            detalleContrato.FechaConcertacion = new TCaption() { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null };
-            detalleContrato.Moneda = new TCodLista() { CodLista = contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty };
-
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-            {
-                //detalleContrato.Precio = contrato.Precio.ToString();
-                var precioContrato = Convert.ToString((contrato.EPA || contrato.EUDR || contrato.Sustentable) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
-                detalleContrato.Precio = precioContrato;
-                detalleContrato.UnidadMedidaPrecio = new TCodCaption() { CodLista = "T" }; // Tonelada
-            }
-
-            if (esCanje || contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR)
-                detalleContrato.MontoImponible = new TCaption() { Value = "" };
-
-            detalleContrato.DescAdicional = new TCaption() { Value = esCanje ? "INSUMO" : string.Empty };
-            detalleContrato.UnidadMedida = new TCodCaption() { CodLista = "K" }; // Kilo
-            detalleContrato.CantidadDesde = new TCaption() { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.CantidadHasta = new TCaption() { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() };
-            detalleContrato.Cosecha = new TCodLista() { CodLista = contrato.CampanaConfirma };
-            detalleContrato.Ajuste = new TCodLista() { CodLista = string.Empty };
-
-            // GSIAN: Tomé la desición de agregar el cálculo porque Confirma me exige los camiones. Pero cuando le paso el valor, dice no ser correcto. Le mando sólo el caption. SAP sólo pasa etiqueta.
-            //cantCamiones.Value = contrato.CantidadCamiones > 0 ? contrato.CantidadCamiones.ToString() : (Convert.ToInt32(Math.Ceiling((decimal)contrato.Cantidad / 30000))).ToString();
-            detalleContrato.CantCamiones = new TCaption();
-            if (contrato.CorredorId > 0 && contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision.Value > 0)
-            {
-                detalleContrato.ComisionPorComprador = new TCaption() { Value = contrato.PorcentajeComision > 0 ? contrato.PorcentajeComision.ToString() : null };
-            }
-
-            detalleContrato.Calidad = new ConfirmaQALoteDocumentos.Calidad()
-            {
-                CondicionesCalidad = new TCodLista() { CodLista = (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.CAMARA || contrato.StandardDeCalidadId == (int)EnumStandarCalidad.ESPECIAL) ? "1" : (contrato.StandardDeCalidadId == (int)EnumStandarCalidad.FABRICA ? "4" : "") },
-                OtrasCondicionesCalidad = new TCaption() { Value = string.Empty }
-            };
-
-            detalleContrato.MedioTransporte = new TCodCaption() { CodLista = "C" }; // Camión
-
-            detalleContrato.Entregas = new Entrega()
-            {
-                EntregaDesde = new TCaption() { Value = contrato.FechaDesde.HasValue ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : null },
-                EntregaHasta = new TCaption() { Value = contrato.FechaHasta.HasValue ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : null }
-            };
-
-            detalleContrato.Origen = new Origen()
-            {
-                LocalidadOrigen = new OrigenLocalidadOrigen() { Value = contrato.LocalidadConfirma, LocalidadText = "" },
-                ProvinciaOrigen = new TCodCaption() { CodLista = contrato.ProvinciaConfirma },
-            };
-
-            detalleContrato.Destino = new TCodCaption()
-            {
-                CodLista = contrato.DestinoConfirma,
-                //CodPrv = "0000", // no está en Staging?
-            };
-
-            detalleContrato.ProvinciaInstrumentacion = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-
-            if (esCanje != true)
-            {
-                Pagos pagos = new Pagos();
-                #region Pagos
-                TCaption fechaCondicionPago = new TCaption();
-                fechaCondicionPago.Value = (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio) ? "4 días hábiles de fecha de fijación" :
-                    (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO ?
-                        (
-                          (contrato.CD != true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") :
-                          (contrato.CD == true && contrato.FechaCierta.HasValue) ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado" :
-                          (contrato.CD == true && !contrato.FechaCierta.HasValue) ? "Pago Anticipado" :
-                          (contrato.Warrant == true ? "Pago contra Warrant" :
-                          (contrato.PagoDiferido == true ? contrato.Dias_Pesificado.ToString() + " Días de diferimiento contra mercadería entregada" : "72 hs contra mercadería descargada."))
-                        ) : null);
-
-                pagos.FechaCondicionPago = fechaCondicionPago;
-                pagos.LugarPago = new TCaption() { Value = "BUENOS AIRES" };
-                pagos.PagoAOrdenDe = new PagoAOrdenDe()
-                {
-                    CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1",
-                };
-                pagos.PorcPago = new TCaption() { Value = contrato.PorcentajeDePago.Value.ToString() };
-                pagos.ProvinciaPago = new TCodCaption() { CodLista = "B" }; // BUENOS AIRES
-                #endregion Pagos
-                detalleContrato.Pagos = pagos;
-            }
-
-            detalleContrato.ProduccionVendedor = new ProduccionVendedor() { CodLista = contrato.ClasificacionId == (int)EnumClasificacionCompraNet.Productor ? (contrato.CorredorId > 0 ? "4" : "1") : (contrato.Consignatario == true ? "5" : "2") };
-
-            // GSIAN: qué va acá?
-            //detalleContrato.DecisionPagoVoluntario = new DecisionPagoVoluntario();
-            //GSIAN: está en proyecto SOAP, pero no se usa en ConfirmaManager. Se deja descomentado 
-            DecisionPagoVoluntario decisionPagoVoluntario = new DecisionPagoVoluntario();
-            decisionPagoVoluntario.CodLista = "2"; // NO. Se completa porque me lo solicita Staging.
-            decisionPagoVoluntario.FondoFederalText = "";
-            detalleContrato.DecisionPagoVoluntario = decisionPagoVoluntario;
-
-            detalleContrato.TipoOperacion = new TCodLista() { CodLista = "1" }; // Cereal
-
-            if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-                detalleContrato.APrecio = new TCodLista() { CodLista = "1" };
-
-            //detalleContrato.SioGranos = new SioGranos()
-            //{
-            //    NumeroDeclaracion = estadoSAP.NumeroSio > 0 ? estadoSAP.NumeroSio.ToString() : null,
-            //};
-
-            // GSIAN: qué va acá?
-            //detalleContrato.OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe();
-
-            #endregion DetalleDocumentoContratoPrecioHechoDetalleContrato
-
-            List<ConfirmaQALoteDocumentos.Clausula> clausulas_detalle = new List<ConfirmaQALoteDocumentos.Clausula>();
-            #region Cláusulas
-            foreach (var item in clausulas)
-            {
-                ConfirmaQALoteDocumentos.Clausula clausula = new ConfirmaQALoteDocumentos.Clausula();
-                clausula.Orden = string.Empty;
-                clausula.Value = (item.Texto);
-
-                clausulas_detalle.Add(clausula);
-            }
-            #endregion Cláusulas
-
-            detalleDocumento.Partes = partes_detalle.ToArray();
-            detalleDocumento.DetalleContrato = detalleContrato;
-            detalleDocumento.Clausulas = clausulas_detalle.ToArray();
-            #endregion DetalleDocumentoContratoPrecioHecho
-
-            item1.CabeceraDocumento = cabeceraDocumento;
-            item1.DetalleDocumento = detalleDocumento;
-            //item1.Id = "";
-            #endregion DocumentoConsignacionPrecioHecho
-
-            return item1;
+            return result;
         }
+
+        // ════════════════════════════════════════════════════════════════════════
+        // HELPERS GENERALES
+        // ════════════════════════════════════════════════════════════════════════
 
         public string CorregirFormatoFecha(string cadena)
         {
-            var date = DateTime.Parse(cadena);
-            return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return DateTime.Parse(cadena).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
 
-        public ConfirmaAltaLoteResultDto ResultadoAltaDefinitiva(altaLoteResult devolucion, EstadosConfirmaDto estadosConfirmaDto)
+        private static int SoloDigitos(string valor)
         {
-            ConfirmaAltaLoteResultDto confirmaAltaLoteResult = new ConfirmaAltaLoteResultDto();
-
-            confirmaAltaLoteResult.altaIdLote = devolucion.altaIdLote;
-            confirmaAltaLoteResult.altaEstado = int.Parse(new string(devolucion.altaEstado.ToString().Where(char.IsDigit).ToArray()));
-            confirmaAltaLoteResult.confirmaAltaEstado = estadosConfirmaDto.ConfirmaAltaEstadoDto.Find(x => x.CodigoConfirmaAltaEstado == confirmaAltaLoteResult.altaEstado);
-            confirmaAltaLoteResult.altaEstadoSpecified = devolucion.altaEstadoSpecified;
-            confirmaAltaLoteResult.altaEstadoDetalleError = devolucion.altaEstadoDetalleError;
-            confirmaAltaLoteResult.altaEstadoLote = int.Parse(new string(devolucion.altaEstadoLote.ToString().Where(char.IsDigit).ToArray()));
-            confirmaAltaLoteResult.confirmaAltaEstadoLote = estadosConfirmaDto.ConfirmaAltaEstadoLoteDto.Find(x => x.CodigoConfirmaAltaEstadoLote == confirmaAltaLoteResult.altaEstadoLote);
-            confirmaAltaLoteResult.altaEstadoLoteSpecified = devolucion.altaEstadoLoteSpecified;
-            confirmaAltaLoteResult.altaItem = new List<altaItemDto>();
-
-            if (devolucion.altaItem != null)
-            {
-                foreach (var item in devolucion.altaItem)
-                {
-                    altaItemDto altaItem = new altaItemDto();
-                    altaItem.altaIdDocumento = item.altaIdDocumento;
-                    altaItem.altaEstadoDocumento = int.Parse(new string(item.altaEstadoDocumento.ToString().Where(char.IsDigit).ToArray()));
-                    altaItem.confirmaAltaEstadoDocumento = estadosConfirmaDto.ConfirmaAltaEstadoDocumentoDto.Find(x => x.CodigoConfirmaAltaEstadoDocumento == altaItem.altaEstadoDocumento);
-                    altaItem.altaErrores = new List<string>();
-
-                    if (item.altaErrores != null)
-                    {
-                        foreach (var item2 in item.altaErrores)
-                        {
-                            altaItem.altaErrores.Add(item2);
-                        }
-                    }
-
-                    altaItem.altaIdDocumentoExistenteLote = item.altaIdDocumentoExistenteLote;
-                    altaItem.altaIdDocumentoExistente = item.altaIdDocumentoExistente;
-                    altaItem.codigo = item.codigo;
-
-                    confirmaAltaLoteResult.altaItem.Add(altaItem);
-                }
-            }
-
-            return confirmaAltaLoteResult;
+            return int.Parse(new string(valor.Where(char.IsDigit).ToArray()));
         }
+
         private decimal? PrecioNetoSustentableSobrePrecio(BasicoContrato contrato, decimal? precioNetoSustentable)
         {
-            if (contrato.AperturaPrecios!=null && contrato.AperturaPrecios.Count > 0)
+            if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.Count > 0)
             {
                 decimal porcentajeComision = contrato.AperturaPrecios.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
                 decimal precioOriginal = contrato.Precio;
@@ -1099,6 +896,5 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return precioNetoSustentable;
         }
-
     }
 }
