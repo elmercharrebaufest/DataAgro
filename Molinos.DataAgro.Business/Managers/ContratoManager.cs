@@ -6128,7 +6128,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.ContratoAcuerdoId = item.ContratoAcuerdoId;
                 contrato.UsuarioTercero = item.UsuarioTercero;
 
-                contrato.EstadoId = 9;
+                contrato.EstadoId = (int)EnumEstadoContrato.PreAprobacion;
                 contrato.AperturaPrecio = new List<AperturaPrecio>();
                 foreach (var ap in acuerdo.AperturaPrecios)
                 {
@@ -6186,8 +6186,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.NivelTarifaId = acuerdo.NivelTarifaId;
                 contrato.TarifaFlete = acuerdo.TarifaFlete;
                 contrato.Observacion = acuerdo.Observacion;
-                contrato.TipoNegocioId = acuerdo.Precio > 0 ? 2 : 1;
-                item.TipoNegocioId = acuerdo.Precio > 0 ? 2 : 1;
+                contrato.TipoNegocioId = acuerdo.Precio > 0 ? (int)EnumTipoNegocio.A_PRECIO : (int)EnumTipoNegocio.A_FIJAR;
+                item.TipoNegocioId = acuerdo.Precio > 0 ? (int)EnumTipoNegocio.A_PRECIO : (int)EnumTipoNegocio.A_FIJAR;
                 item.TipoNegocio = acuerdo.Precio > 0 ? "A Precio" : "A Fijar";
                 contrato.Precio = acuerdo.Precio;
                 contrato.PrecioNeto = acuerdo.PrecioNeto;
@@ -6239,7 +6239,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.UsuarioId = proveedor.RazonSocial;
                 contrato.ComercialId = acuerdo.ComercialId;
                 contrato.ProveedorId = proveedorid;
-                contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? 3;
+                contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? (int)EnumBoletoCompraNet.NINGUNO;
                 contrato.BolsaId = boletobolsa.BolsaCompraNetId;
                 contrato.PorcentajeComision = 1;
                 contrato.CondicionFijacionId = acuerdo.CondicionFijacion;
@@ -7485,7 +7485,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     List<BasicoContrato> contratos = new List<BasicoContrato>();
-                    int tiponegocioid = acuerdo.Precio > 0 ? 2 : 1;
+                    int tiponegocioid = acuerdo.Precio > 0 ? (int)EnumTipoNegocio.A_PRECIO : (int)EnumTipoNegocio.A_FIJAR;
                     List<int> rowsOk = resultValidation.RowsResult.Where(a => !a.HasError).Select(a => a.Row).ToList();
                     if (rowsOk.Count == 0)
                     {
@@ -7512,7 +7512,12 @@ namespace Molinos.DataAgro.Business.Managers
                             FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim()),
                             Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim()),
                             Cuit = rows.ElementAt(ii)[8].ToString().Trim(),
-                            ClasificacionId = rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "acopiador" ? 2 : 3,
+
+                            ClasificacionId =
+                            rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? (int)EnumClasificacionCompraNet.Productor :
+                            rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "acopiador" ? (int)EnumClasificacionCompraNet.Acopiador :
+                            (int)EnumClasificacionCompraNet.Otros,
+
                             PlanCanje = rows.ElementAt(ii)[10].ToString().Trim().ToUpper() == "X",
                             Consignatario = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X",
                             DestinoId = centros.Centro.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[12].ToString().Trim().ToLower()).Single().Id,
