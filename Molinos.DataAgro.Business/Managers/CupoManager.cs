@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                     {
                         cupo.UsuarioCreador = PermisosHelper.ObtenerUsuario();
-                        cupo.EstadoCupoId = 6;
+                        cupo.EstadoCupoId = (int)EnumEstadoCupo.SinSTOP;
                     }
 
                     if (cupo.Id == 0)
@@ -1571,11 +1571,11 @@ namespace Molinos.DataAgro.Business.Managers
             var formulas = new List<FormulaDto>();
             foreach (var MaterialId in materiales)
             {
-                var dto = ObtenerFormulaDto(MaterialId);
-                if (dto != null)
+                var formulaDto = ObtenerFormulaDto(MaterialId);
+                if (formulaDto != null)
                 {
-                    sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, dto, null));
-                    formulas.Add(dto);
+                    sugerencias.AddRange(CrearSugerenciaCupo(MaterialId, formulaDto, null));
+                    formulas.Add(formulaDto);
                 }
             }
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
@@ -1743,6 +1743,7 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
         }
+
         private List<SugerenciaCupoDto> ValidarHabilitaciones(List<SugerenciaCupoDto> negocios)
         {
             var negocioInhabilitados = new List<SugerenciaCupoDto>();
@@ -1759,6 +1760,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            logger.Debug("CrearSugerenciaCupo - ValidarHabilitaciones() - Negocios inhabilitados: " + negocioInhabilitados.ToJson());
             return negocioInhabilitados;
         }
 
@@ -1766,24 +1768,34 @@ namespace Molinos.DataAgro.Business.Managers
         {
             //cupos no rechazados en rango de fecha creados por el algoritmo
             List<Cupo> cupos = repositorio.Listar<Cupo>(x =>
-                x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
-                x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                x.FechaIngreso >= formula.CuposDesde &&
+                x.FechaIngreso <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
                 (x.NegocioId != null || x.ConfiguracionEspacioDinamicoId != null)
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos creados de sugerencias.");
 
             //solicitudes pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
-                x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta &&
-                x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
+                x.Fecha >= formula.CuposDesde &&
+                x.Fecha <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId &&
                 x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo &&
                 x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
                 && x.SugerenciaCupoId != null
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + solicitudesPendientes.Count + " solicitudes pendientes.");
 
-            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => (x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta) && x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId);
+            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x =>
+                x.Fecha >= formula.CuposDesde &&
+                x.Fecha <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId
+            );
 
             List<ConfiguracionCupoDto> disponibilidadEnPlantas = configuracionCupo.Select(x => new ConfiguracionCupoDto { CentroId = x.CentroId, LimiteCupo = x.LimiteCupo, LimiteAlgoritmo = x.LimiteAlgoritmo, MaterialId = x.MaterialId, Fecha = x.Fecha }).ToList();
             foreach (var cupo in cupos)
@@ -1805,16 +1817,20 @@ namespace Molinos.DataAgro.Business.Managers
 
             //cupos no rechazados en rango de fecha 
             List<Cupo> cuposTotales = repositorio.Listar<Cupo>(x =>
-                x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
-                x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado);
+                x.FechaIngreso >= formula.CuposDesde &&
+                x.FechaIngreso <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado
+            );
 
             foreach (var config in disponibilidadEnPlantas)
             {
                 var cuposTomados = cuposTotales.Count(a => a.FechaIngreso == config.Fecha && a.CentroId == config.CentroId && a.MaterialId == config.MaterialId);
                 if (config.LimiteAlgoritmo > config.LimiteCupo - cuposTomados)
                 {
-                    logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo:" + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad:" + config.LimiteAlgoritmo + ", materialid:" + config.MaterialId + ", disponibles: " + (config.LimiteCupo - cuposTomados));
+                    logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo: " + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad: " + config.LimiteAlgoritmo + ", materialId: " + config.MaterialId + ", disponibles: " + (config.LimiteCupo - cuposTomados));
                     config.LimiteAlgoritmo = config.LimiteCupo - cuposTomados;
                 }
             }
@@ -1826,7 +1842,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in disponibilidadEnPlantas)
             {
-                logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta:" + item.Fecha.ToString("dd/MM/yyyy") + ",cantidad:" + item.LimiteAlgoritmo + "materialid:" + item.MaterialId);
+                logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta: " + item.Fecha.ToString("dd/MM/yyyy") + ", cantidad: " + item.LimiteAlgoritmo + ", materialid: " + item.MaterialId);
             }
             return disponibilidadEnPlantas;
         }
@@ -2180,8 +2196,8 @@ namespace Molinos.DataAgro.Business.Managers
             negociosSinSugerencia.AddRange(contratos.Where(a => a.CantidadDeCupos <= 0).ToList());
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
-            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
-            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
+            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (cantidad): " + contratos.Count());
+            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (ContratoSAP): " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
             var warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)

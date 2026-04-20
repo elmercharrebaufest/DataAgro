@@ -3706,6 +3706,10 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
+    if (guardandoContrato) {
+        return;
+    }
+
     if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
@@ -3747,25 +3751,22 @@ function GrabarContrato(nuevoContrato) {
 
                 var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d.Id == objeto.oParam.DestinoId).ProvinciaId).Inscripto;
                 var procedenciaInscriptaObj = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == objeto.oParam.ProvinciaId);
-
+                guardandoContrato = true;
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
 
                     Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
                         function (dialogItself) {
-                            // Prevenir múltiples ejecuciones
-                            if (guardandoContrato) {
-                                return;
-                            }
-                            guardandoContrato = true;
-
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                         });
                 }
                 else {
                     if (nuevoContrato.TipoNegocioId == 6) {
+                        
                         result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
-                    } else
+                    } else {
+                        
                         result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                    }
                 }
             }
         }
