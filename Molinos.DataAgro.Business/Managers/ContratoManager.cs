@@ -6160,7 +6160,7 @@ namespace Molinos.DataAgro.Business.Managers
                         CalidadEspecialId = c.CalidadEspecialId,
                         PorcentajeDesde = c.PorcentajeDesde,
                         PorcentajeHasta = c.PorcentajeHasta,
-                        StandardDeCalidadId = 2,
+                        StandardDeCalidadId = (int)EnumStandarCalidad.ESPECIAL,
                         Valor = c.Valor,
                     });
                 }
