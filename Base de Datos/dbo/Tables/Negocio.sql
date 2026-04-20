@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Negocio]
+CREATE TABLE [dbo].[Negocio]
 (
 [Id] INT  IDENTITY (1, 1) NOT NULL,
 [ContratoId] INT  NULL ,
@@ -292,4 +292,36 @@ INCLUDE (
     [Condicional]
 )
 
+GO
+CREATE NONCLUSTERED INDEX IX_Negocio_Base_Boleto
+ON dbo.Negocio (ConfirmadoSAP, EstadoId, BoletoId, TipoNegocioId)
+INCLUDE (
+    ComercialId,
+    ComercialCreadorId,
+    MaterialId,
+    ProveedorId,
+    BolsaId,
+    FechaConfirmacion,
+    ContratoSAP,
+    MonedaId,
+    Precio,
+    FechaOperacion,
+    Fecha,
+    FechaConfirmadoSAP,
+    ContratoVendedor,
+    ContratoCorredor
+)
+WHERE ConfirmadoSAP = 1;
+GO
+
+CREATE NONCLUSTERED INDEX IX_Negocio_ComercialId
+ON dbo.Negocio (ComercialId)
+INCLUDE (EstadoId, BoletoId, ConfirmadoSAP, TipoNegocioId)
+WHERE ComercialId IS NOT NULL;
+GO
+
+CREATE NONCLUSTERED INDEX IX_Negocio_ComercialCreadorId
+ON dbo.Negocio (ComercialCreadorId)
+INCLUDE (EstadoId, BoletoId, ConfirmadoSAP, TipoNegocioId)
+WHERE ComercialCreadorId IS NOT NULL;
 GO

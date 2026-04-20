@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Boleto]
+CREATE TABLE [dbo].[Boleto]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY (1, 1), 
 	[NegocioId] INT NOT NULL, 
@@ -7,6 +7,12 @@
     [ComercialId] INT NOT NULL, 
     [FechaAnulacion] DATETIME NULL,
     CONSTRAINT [FK_Boleto_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [Negocio]([Id]),
-	CONSTRAINT [FK_Boleto_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
-
+	CONSTRAINT [FK_Boleto_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),
 )
+GO
+
+CREATE NONCLUSTERED INDEX IX_Boleto_NegocioId_Version
+ON dbo.Boleto (NegocioId, Version DESC)
+INCLUDE (FechaGeneracion, FechaAnulacion)
+WHERE FechaAnulacion IS NULL
+GO
