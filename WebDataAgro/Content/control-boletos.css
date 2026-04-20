@@ -1,7 +1,7 @@
-﻿/* Estilos específicos para Control de Boletos */
+/* Estilos específicos para Control de Boletos */
 .page-title {
-    color: steelblue;
-    font-weight: 600;
+    color: #333;
+    font-weight: 400;
     margin-bottom: 5px;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .header-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    /*background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);*/
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 20px;

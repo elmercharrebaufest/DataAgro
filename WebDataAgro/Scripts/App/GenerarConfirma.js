@@ -198,6 +198,13 @@ const GenerarConfirma = (() => {
             #contratos-grid .k-grid-content table {
                 table-layout: fixed;
             }
+            #contratos-grid .k-grid-content tr:hover td,
+            #contratos-grid .k-grid-content tr.k-state-hover td {
+                color: #333 !important;
+            }
+            #contratos-grid .k-grid-content tr.k-state-selected td {
+                color: #333 !important;
+            }
         `).appendTo("head");
     }
 
