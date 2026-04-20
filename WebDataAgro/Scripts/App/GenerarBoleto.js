@@ -201,6 +201,7 @@ const GenerarBoleto = (() => {
             #contratos-grid .k-grid-content tr.k-state-selected td {
                 color: #333 !important;
             }
+
         `).appendTo("head");
     }
 
