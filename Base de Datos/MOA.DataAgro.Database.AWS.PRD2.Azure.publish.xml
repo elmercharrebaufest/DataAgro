@@ -5,7 +5,7 @@
     <TargetDatabaseName>DataAgro</TargetDatabaseName>
     <DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
     <TargetConnectionString>
-      Data Source=dataagroprd.ccxg08k6g5g0.us-east-1.rds.amazonaws.com,1433;
+      Data Source=dataagroprdee2.ccxg08k6g5g0.us-east-1.rds.amazonaws.com;
       Integrated Security=False;
       User Id=DATAAGROPRDUSR;
       Password=9U=S10:mAqky;

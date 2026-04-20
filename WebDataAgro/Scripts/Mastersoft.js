@@ -725,10 +725,6 @@ function MSExecuteGetOnServerAsync(url, datos) {
     });
 }
 
-
-
-
-
 const Materiales = {
     MAIZ: 1,
     TRIGO: 2,
@@ -779,6 +775,16 @@ const BOLETO_COMPRANET = {
     NINGUNO: 3,
     CARTA_OFERTA: 4,
     SIN_BOLETO: 5
+}
+
+const STANDARD_DE_CALIDAD = {
+    CAMARA_COD_SAP_3: 1,
+    ESPECIAL: 2,
+    FABRICA: 3,
+    CAMARA_COD_SAP_1: 4,
+    CAMARA_COD_SAP_2: 5,
+    MATERIA_EXTRANA: 6,
+    GRADO_2: 7
 }
 
 const PORCENTAJE_PAGO = 97.5;

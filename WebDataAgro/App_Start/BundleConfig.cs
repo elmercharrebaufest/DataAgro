@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Web.Optimization;
 
 namespace WebDataAgro
@@ -13,7 +14,15 @@ namespace WebDataAgro
             //var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //Styles.DefaultTagFormat = "<link href='{0}?v=" + assemblyVersion + "' rel='stylesheet'/>";
             //Scripts.DefaultTagFormat = "<script src='{0}?v=" + assemblyVersion + "'></script>";
-            BundleTable.EnableOptimizations = true;
+
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+            {
+                BundleTable.EnableOptimizations = false;
+            }
+            else
+            {
+                BundleTable.EnableOptimizations = true;
+            }
 
             bundles.Add(new StyleBundle("~/Content/bootstrap/css").Include(
                         "~/Content/bootstrap.min.css",
