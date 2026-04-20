@@ -3751,24 +3751,24 @@ function GrabarContrato(nuevoContrato) {
 
                 var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d.Id == objeto.oParam.DestinoId).ProvinciaId).Inscripto;
                 var procedenciaInscriptaObj = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == objeto.oParam.ProvinciaId);
-
+                guardandoContrato = true;
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
 
                     Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
                         function (dialogItself) {
                             // Prevenir múltiples ejecuciones
               
-                            guardandoContrato = true;
+                            
 
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                         });
                 }
                 else {
                     if (nuevoContrato.TipoNegocioId == 6) {
-                        guardandoContrato = true;
+                        
                         result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
                     } else {
-                        guardandoContrato = true;
+                        
                         result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                     }
                 }
