@@ -3706,6 +3706,10 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
+    if (guardandoContrato) {
+        return;
+    }
+
     if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
@@ -3753,9 +3757,7 @@ function GrabarContrato(nuevoContrato) {
                     Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
                         function (dialogItself) {
                             // Prevenir múltiples ejecuciones
-                            if (guardandoContrato) {
-                                return;
-                            }
+              
                             guardandoContrato = true;
 
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
@@ -3763,9 +3765,12 @@ function GrabarContrato(nuevoContrato) {
                 }
                 else {
                     if (nuevoContrato.TipoNegocioId == 6) {
+                        guardandoContrato = true;
                         result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
-                    } else
+                    } else {
+                        guardandoContrato = true;
                         result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+                    }
                 }
             }
         }
