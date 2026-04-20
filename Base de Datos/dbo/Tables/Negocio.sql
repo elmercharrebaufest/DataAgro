@@ -313,13 +313,11 @@ INCLUDE (
 )
 WHERE ConfirmadoSAP = 1;
 GO
-
 CREATE NONCLUSTERED INDEX IX_Negocio_ComercialId
 ON dbo.Negocio (ComercialId)
 INCLUDE (EstadoId, BoletoId, ConfirmadoSAP, TipoNegocioId)
 WHERE ComercialId IS NOT NULL;
 GO
-
 CREATE NONCLUSTERED INDEX IX_Negocio_ComercialCreadorId
 ON dbo.Negocio (ComercialCreadorId)
 INCLUDE (EstadoId, BoletoId, ConfirmadoSAP, TipoNegocioId)
