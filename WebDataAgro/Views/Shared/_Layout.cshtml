@@ -635,7 +635,7 @@
                                 }
 
 
-                            </ul>
+                                </ul>
                         </li>
                     }
                     @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos) || PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos) || PermisosHelper.Is(PermisosDataAgro.Cupos_Acopios_SolicitudExtraordinaria))
@@ -675,6 +675,7 @@
                                         </a>
                                     </li>
                                 }
+
                                 @if (PermisosHelper.Is(PermisosDataAgro.Visualizar_CupoNoPropio))
                                 {
                                     <li>
@@ -683,6 +684,13 @@
                                         </a>
                                     </li>
                                 }
+
+                                <li>
+                                    <a href="~/Cupo/AltaMasivaCupos" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Alta Masiva de Cupos
+                                    </a>
+                                </li>
+
                             </ul>
                         </li>
                     }
