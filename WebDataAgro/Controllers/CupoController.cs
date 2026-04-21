@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -579,6 +579,13 @@ namespace WebDataAgro.Controllers
 
         [Autorizacion(PermisosDataAgro.DisponibilidadDeCupos)]
         public ActionResult Disponibilidad()
+        {
+            FillViewBag();
+            return View();
+        }
+
+
+        public ActionResult AltaMasivaCupos()
         {
             FillViewBag();
             return View();
