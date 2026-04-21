@@ -19,7 +19,7 @@
   <setParameter name="EmailInformeComercial Key" value="documentacion@molinosagro.com.ar" />
   <setParameter name="SmtpAnonimo Key" value="S" />
   <setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
-  <setParameter name="SISA_con_campo_adicional" value="1" />
+  <setParameter name="SISA_con_campo_adicional Key" value="1" />
 
   <setParameter name="SapPass Key" value="Data2015" />
 
@@ -64,7 +64,7 @@
   <!--Parametro para nueva version de boletos-->
   <setParameter name="BoletosNuevaVersion Key" value="1" />
   <setParameter name="ActivarSojaEUDR Key" value="No" />
-  <setParameter name="EmailCasillaBoletos" value="documentacion@molinosagro.com.ar"/>
+  <setParameter name="EmailCasillaBoletos Key" value="documentacion@molinosagro.com.ar"/>
 
   <setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scato.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
 

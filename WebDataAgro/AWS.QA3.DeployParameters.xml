@@ -19,7 +19,7 @@
   <setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
   <setParameter name="SmtpAnonimo Key" value="S" />
   <setParameter name="maildeUsuarios Key" value="dataagro@baufest.com" />
-  <setParameter name="SISA_con_campo_adicional" value="1" />
+  <setParameter name="SISA_con_campo_adicional Key" value="1" />
 
   <setParameter name="SapPass Key" value="Inicio2025!" />
 
@@ -45,7 +45,7 @@
 
   <!--Parametro para nueva version de boletos-->
   <setParameter name="BoletosNuevaVersion Key" value="1" />
-  <setParameter name="EmailCasillaBoletos" value="dataagro@molinosagro.com.ar"/>
+  <setParameter name="EmailCasillaBoletos Key" value="dataagro@molinosagro.com.ar"/>
 
   <!-- Primary Producción -->
   <setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
