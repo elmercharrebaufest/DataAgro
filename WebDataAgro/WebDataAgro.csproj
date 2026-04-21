@@ -368,9 +368,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.Dependencias.cs" />
     <Compile Include="App_Start\Startup.MvcAutofac.cs" />
+    <Content Include="Content\altaMasivaCupos.css" />
     <Content Include="Content\control-boletos.css" />
     <Content Include="Content\control-boletos-contrato.css" />
     <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
+    <Content Include="Scripts\App\AltaMasivaCupos.js" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
     <Content Include="Scripts\App\ContactoComercialAuditoria.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
@@ -3165,6 +3167,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Cupo\AltaMasivaCupos.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\AltaMasivaCupos.xlsx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

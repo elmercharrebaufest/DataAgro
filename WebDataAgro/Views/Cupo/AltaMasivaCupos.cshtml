@@ -3,9 +3,9 @@
     ViewBag.Title = "Alta masiva de Cupos";
 }
 
-<script src="~/Scripts/App/AltaMasivaContratos.js"></script>
+<script src="~/Scripts/App/AltaMasivaCupos.js"></script>
 @section Styles {
-    <link href="~/Content/altaMasivaContratos.css" rel="stylesheet" />
+    <link href="~/Content/altaMasivaCupos.css" rel="stylesheet" />
     <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
 }
 <h3>@ViewBag.Title</h3>
@@ -21,20 +21,10 @@
                 <div class="col-md-5"></div>
 
                 <div id="divDescargarPlantillaAcuerdo" hidden class="col-md-3" style="text-align: end; margin-left: 75px;">
-                    <form id="downloadAltaMasiva" action="~/Templates/AltaMasiva.xlsx" target="_blank">
+                    <form id="downloadAltaMasiva" action="~/Templates/AltaMasivaCupos.xlsx" target="_blank">
                         <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo Acuerdo</button>
                     </form>
 
-                </div>
-                <div id="divDescargarPlantillaConvenio" hidden class="col-md-3" style="text-align: end; margin-left: 75px;">
-                    <form id="downloadAltaMasivaConvenio" action="~/Templates/AltaMasivaConvenio.xlsx" target="_blank">
-                        <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo Convenio</button>
-                    </form>
-                </div>
-                <div id="divDescargarPlantillaMATBA" hidden class="col-md-3" style="text-align: end; margin-left: 75px;">
-                    <form id="downloadAltaMasivaMATBA" action="~/Templates/AltaMasivaMATBA.xlsx" target="_blank">
-                        <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo MATBA</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -50,7 +40,7 @@
                         <label>Archivo Modelo</label>
                     </div>
                     <div class="col-sm-8" style="padding-top: 7px;">
-                        <form id="downloadAltaMasivaMATBA" action="~/Templates/AltaMasivaMATBA.xlsx" target="_blank">
+                        <form id="downloadAltaMasivaMATBA" action="~/Templates/AltaMasivaCupos.xlsx" target="_blank">
                             <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo</button>
                         </form>
                     </div>
