@@ -1,0 +1,107 @@
+﻿.form-control {
+    margin-bottom: 6px;
+    display: inline-block;
+    color: #787878;
+    font-size: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    text-indent: .8em;
+}
+
+textarea.k-textbox {
+    resize: none;
+    height: auto;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
+}
+
+
+.modal .modal-header {
+    padding: 6px;
+    border-bottom: none;
+}
+
+.modal .modal-body {
+    padding: 0 15px 0px 15px;
+}
+
+.modal .modal-footer {
+    border: none;
+    padding: 0 15px 0px 15px;
+    margin: 0;
+}
+
+.containerNew h1, .modal h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+.modal-content {
+    border-radius: 0 !important;
+    padding: 10px 15px 15px 15px;
+}
+
+.modal .confirmado-modal div {
+    background: #008e61 !important;
+}
+
+table, th, td {
+    padding: 6px;
+    border: #95A5A6 1px solid;
+}
+
+thead {
+    text-align: center;
+    background: #76D7C4;
+}
+
+
+#tableRespuesta {
+    /*font-family: Arial, Helvetica, sans-serif;*/
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #tableRespuesta td, #tableRespuesta th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #tableRespuesta tr:nth-child(even) {
+        background-color: #f2f2f2;
+        text-align:center;
+    }
+
+    #tableRespuesta tr:hover {
+        background-color: #ddd;
+    }
+
+    #tableRespuesta th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+#volverBtn{
+    margin-top: 30px;
+}
+
+.linea {
+    border-top: 1px solid #387941;
+    margin-left: 33px;
+    height: 9px;
+    padding: 0;
+    width: 96.6%;
+}
+.botonFiltrar {
+    padding: 0;
+    position: relative;
+    top: -24px;
+    left: 13px;
+    background-color: transparent;
+}
