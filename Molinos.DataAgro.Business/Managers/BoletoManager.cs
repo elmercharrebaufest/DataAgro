@@ -1168,7 +1168,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 boleto.FijacionSAP = " ";
 
-                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP);
                 var version = Int32.Parse(consultaBoleto.Version);
                 if (version > boleto.Version)
                 {
