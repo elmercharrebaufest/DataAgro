@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Xml;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -292,13 +293,13 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             object item1;
             if (esFijar && !esCanje)
-                item1 = ConstruirDocumentoFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones);
+                item1 = ConstruirDocumentoFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones, estadoSAP);
             else if (esFijar && esCanje)
-                item1 = ConstruirDocumentoPagoEspecieFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones);
+                item1 = ConstruirDocumentoPagoEspecieFijarPrecio(contrato, clausulas, partes, esCanje, esConvenio, condiciones, estadoSAP);
             else if (!esFijar && esCanje)
-                item1 = ConstruirDocumentoPagoEspeciePrecioHecho(contrato, clausulas, partes, esCanje, esConvenio);
+                item1 = ConstruirDocumentoPagoEspeciePrecioHecho(contrato, clausulas, partes, esCanje, esConvenio, estadoSAP);
             else
-                item1 = ConstruirDocumentoContratoPrecioHecho(contrato, clausulas, partes, esCanje, esConvenio);
+                item1 = ConstruirDocumentoContratoPrecioHecho(contrato, clausulas, partes, esCanje, esConvenio, estadoSAP);
 
             return new Lote
             {
@@ -330,7 +331,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             List<ConfirmaParteDto> partes,
             bool esCanje,
             bool esConvenio,
-            CondicionFijacionEstadoBoletoDto condiciones)
+            CondicionFijacionEstadoBoletoDto condiciones,
+            EstadoSAPDto estadoSAP)
         {
             logger.Info("WS Confirma - Método ConstruirDocumentoFijarPrecio()");
 
@@ -355,7 +357,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
                 ProduccionVendedor       = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
+                SioGranos = ConstruirSioGranos(estadoSAP)
             };
 
             if (contrato.CorredorId > 0)
@@ -386,7 +389,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             List<ConfirmaParteDto> partes,
             bool esCanje,
             bool esConvenio,
-            CondicionFijacionEstadoBoletoDto condiciones)
+            CondicionFijacionEstadoBoletoDto condiciones,
+            EstadoSAPDto estadoSAP)
         {
             logger.Info("WS Confirma - Método ConstruirDocumentoPagoEspecieFijarPrecio()");
 
@@ -411,7 +415,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
                 ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
+                SioGranos = ConstruirSioGranos(estadoSAP)
             };
 
             if (contrato.CorredorId > 0)
@@ -446,7 +451,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             List<ResultadoClausula> clausulas,
             List<ConfirmaParteDto> partes,
             bool esCanje,
-            bool esConvenio)
+            bool esConvenio,
+            EstadoSAPDto estadoSAP)
         {
             logger.Info("WS Confirma - Método ConstruirDocumentoPagoEspeciePrecioHecho()");
 
@@ -477,7 +483,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProduccionVendedor        = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion             = new TCodLista { CodLista = "1" },
                 DecisionPagoVoluntario    = ConstruirDecisionPagoVoluntario(),
-                OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe()
+                OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe(),
+                SioGranos = ConstruirSioGranos(estadoSAP)
             };
 
             if (contrato.CorredorId > 0)
@@ -511,7 +518,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             List<ResultadoClausula> clausulas,
             List<ConfirmaParteDto> partes,
             bool esCanje,
-            bool esConvenio)
+            bool esConvenio,
+            EstadoSAPDto estadoSAP)
         {
             logger.Info("WS Confirma - Método ConstruirDocumentoContratoPrecioHecho()");
 
@@ -537,7 +545,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
                 ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario()
+                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
+                SioGranos                = ConstruirSioGranos(estadoSAP)
             };
 
             if (contrato.CorredorId > 0)
@@ -580,7 +589,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 TipoDocumento = new TCodLista { CodLista = ResolverTipoDocumento(contrato, esCanje, esConvenio) }
             };
         }
+        private SioGranos ConstruirSioGranos(EstadoSAPDto estadoSAP)
+        {
+            SioGranos sioGranos = new SioGranos();
 
+            if (estadoSAP.NumeroSio > 0)
+            {
+                sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio.ToString();
+            }
+
+            return sioGranos;
+        }
         private Parte[] ConstruirPartes(List<ConfirmaParteDto> partes)
         {
             return partes.Select(p => new Parte
@@ -647,7 +666,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 FijMinima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
                 FijMaxima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
                 UnidadMedidaFijacion    = new TCodCaption { Caption = "K", CodLista = "K" },
-                FijPeriodo              = new TCodCaption { Value = "1" },
+                FijPeriodo              = new TCodCaption { CodLista = "1", Value = "1" },
                 FijFecDesde             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
                 FijFecHasta             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                 PorcMultaIncumplimiento = new TCaption { Value = "010" },
