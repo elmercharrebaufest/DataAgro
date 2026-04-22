@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
 
     InicializarAutocompletar();
 
@@ -573,7 +573,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
             ContratoId: calidad.ContratoId,
             PorcentajeDesde: calidad.PorcentajeDesde,
             PorcentajeHasta: calidad.PorcentajeHasta,
-            StandardDeCalidadId: 2,
+            StandardDeCalidadId: STANDARD_DE_CALIDAD.ESPECIAL,
             Borrar: function () {
                 viewModel.Calidades.remove(this);
             }
@@ -811,17 +811,33 @@ function ObtenerDatos(error) {
         }
     }
 
+    var material_id = Number(obj.MaterialId);
+
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
-        if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
-        else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
-        else if (obj.MaterialId == 1 || obj.MaterialId == 2 || obj.MaterialId == 6) obj.StandardDeCalidadId = 1;
+        if (material_id == Materiales.SOJA)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.CAMARA_COD_SAP_1;
+        else if (material_id == Materiales.GIRASOL || material_id == Materiales.GIRASOL_AO)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.CAMARA_COD_SAP_2;
+        else if (material_id == Materiales.MAIZ || material_id == Materiales.TRIGO || material_id == Materiales.SORGO)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.CAMARA_COD_SAP_3;
     } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
-        obj.StandardDeCalidadId = 3;
+        obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.FABRICA;
     } else if (viewModel.Calidades.length > 0) {
         obj.StandardDeCalidadId = viewModel.Calidades[0].StandardDeCalidadId;
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" && obj.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
+        if (material_id == Materiales.TRIGO)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.GRADO_2;
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" && obj.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
+        if (material_id == Materiales.TRIGO)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.ESPECIAL;
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" && obj.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
+        if (material_id == Materiales.MAIZ)
+            obj.StandardDeCalidadId = STANDARD_DE_CALIDAD.ESPECIAL;
     }
 
-    if (obj.TipoNegocioId == 3 || obj.TipoNegocioId == 4) obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
+    if (obj.TipoNegocioId == TIPO_NEGOCIO.FIJACION || obj.TipoNegocioId == TIPO_NEGOCIO.FASON)
+        obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
+
     obj.Compensacion = $("#compensacionId").is(":checked") ? true : false;
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
