@@ -673,25 +673,29 @@ namespace Molinos.DataAgro.Agent.Helpers
             EstadoSAPDto estadoSAP,
             bool esCanje)
         {
-            XmlElement sio = xmlDoc.CreateElement("SioGranos");
-
-            XmlElement nroDecl = xmlDoc.CreateElement("NumeroDeclaracion");
             if (estadoSAP.NumeroSio > 0)
-                nroDecl.InnerText = estadoSAP.NumeroSio.ToString();
-            sio.AppendChild(nroDecl);
+            {
 
-            XmlElement detalleDec = xmlDoc.CreateElement("DetalleDeclaracion");
-            AgregarAtributo(xmlDoc, detalleDec, "ModalidadOperacion", "CodLista", esCanje ? "2" : "1");
-            detalleDec.AppendChild(xmlDoc.CreateElement("EsCompradorFinal"));
-            AgregarAtributo(xmlDoc, detalleDec, "ProvinciaDestino", "CodLista", string.Empty);
-            detalleDec.AppendChild(xmlDoc.CreateElement("LocalidadDestino"));
-            AgregarAtributo(xmlDoc, detalleDec, "LugarEntregaSIO", "CodLista", string.Empty);
-            AgregarAtributo(xmlDoc, detalleDec, "CondicionPago", "CodLista", string.Empty);
-            AgregarAtributo(xmlDoc, detalleDec, "OpcionFijacion", "CodLista", string.Empty);
-            detalleDec.AppendChild(xmlDoc.CreateElement("Observaciones"));
+                XmlElement sio = xmlDoc.CreateElement("SioGranos");
 
-            sio.AppendChild(detalleDec);
-            det.AppendChild(sio);
+                XmlElement nroDecl = xmlDoc.CreateElement("NumeroDeclaracion");
+                if (estadoSAP.NumeroSio > 0)
+                    nroDecl.InnerText = estadoSAP.NumeroSio.ToString("D11");
+                sio.AppendChild(nroDecl);
+
+                XmlElement detalleDec = xmlDoc.CreateElement("DetalleDeclaracion");
+                AgregarAtributo(xmlDoc, detalleDec, "ModalidadOperacion", "CodLista", esCanje ? "2" : "1");
+                detalleDec.AppendChild(xmlDoc.CreateElement("EsCompradorFinal"));
+                AgregarAtributo(xmlDoc, detalleDec, "ProvinciaDestino", "CodLista", string.Empty);
+                detalleDec.AppendChild(xmlDoc.CreateElement("LocalidadDestino"));
+                AgregarAtributo(xmlDoc, detalleDec, "LugarEntregaSIO", "CodLista", string.Empty);
+                AgregarAtributo(xmlDoc, detalleDec, "CondicionPago", "CodLista", string.Empty);
+                AgregarAtributo(xmlDoc, detalleDec, "OpcionFijacion", "CodLista", string.Empty);
+                detalleDec.AppendChild(xmlDoc.CreateElement("Observaciones"));
+
+                sio.AppendChild(detalleDec);
+                det.AppendChild(sio);
+            }
         }
 
         // ════════════════════════════════════════════════════════════════════════
