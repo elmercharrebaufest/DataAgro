@@ -358,8 +358,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProduccionVendedor       = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
                 DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
-                SioGranos = ConstruirSioGranos(estadoSAP)
+                
             };
+            if (estadoSAP.NumeroSio > 0)
+                det.SioGranos = ConstruirSioGranos(estadoSAP);
 
             if (contrato.CorredorId > 0)
                 det.ComisionPorComprador = new TCaption { Value = "1" };
@@ -416,8 +418,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
                 DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
-                SioGranos = ConstruirSioGranos(estadoSAP)
+                
             };
+            if (estadoSAP.NumeroSio > 0)
+                det.SioGranos = ConstruirSioGranos(estadoSAP);
 
             if (contrato.CorredorId > 0)
                 det.ComisionPorComprador = new TCaption { Value = "1" };
@@ -484,8 +488,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 TipoOperacion             = new TCodLista { CodLista = "1" },
                 DecisionPagoVoluntario    = ConstruirDecisionPagoVoluntario(),
                 OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe(),
-                SioGranos = ConstruirSioGranos(estadoSAP)
+                
             };
+            if (estadoSAP.NumeroSio > 0)
+                det.SioGranos = ConstruirSioGranos(estadoSAP);
 
             if (contrato.CorredorId > 0)
                 det.ComisionPorComprador = new TCaption { Value = "1" };
@@ -546,8 +552,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
                 TipoOperacion            = new TCodLista { CodLista = "1" },
                 DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
-                SioGranos                = ConstruirSioGranos(estadoSAP)
             };
+            if (estadoSAP.NumeroSio > 0)
+                det.SioGranos = ConstruirSioGranos(estadoSAP);
 
             if (contrato.CorredorId > 0)
                 det.ComisionPorComprador = new TCaption { Value = "1" };
@@ -595,7 +602,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (estadoSAP.NumeroSio > 0)
             {
-                sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio.ToString();
+                sioGranos.NumeroDeclaracion = estadoSAP.NumeroSio.ToString("D11");
             }
 
             return sioGranos;
@@ -677,6 +684,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 fij.PizarraFijacion = new TCodCaption { CodLista = "1" };
 
             return fij;
+
         }
 
         private Pagos ConstruirPagos(BasicoContrato contrato, bool esConvenio)
