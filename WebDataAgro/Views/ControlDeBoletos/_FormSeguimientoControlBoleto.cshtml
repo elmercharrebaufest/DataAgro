@@ -1,0 +1,92 @@
+﻿<form id="frmSeguimientoControlBoleto">
+
+    <!-- DATOS GENERALES -->
+    <div class="row">
+        <div class="col-md-4">
+            <label>Tipo Boleto</label>
+            <select id="Boleto" class="form-control">
+                <option value="">Cargando Boleto...</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label>Bolsa</label>
+            <select id="Bolsa" class="form-control">
+                <option value="">Cargando Bolsa...</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label>Bolsa Sellado</label>
+            <input id="BolsaSellado" class="form-control" disabled />
+        </div>
+    </div>
+
+    <!-- FECHA BASE -->
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <label>Fecha Recepción Boleto</label>
+            <input type="text" id="FechaRecepBoleto" class="form-control" style="width: stretch"/>
+        </div>
+    </div>
+
+    <!-- ENVÍOS -->
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <label>Fecha Envío Firmas</label>
+            <input type="text" id="FechaEnviadoFirma" class="form-control" style="width: stretch"/>
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Envío Obleado Bolsa</label>
+            <input type="text" id="FechaEnvioBolsa" class="form-control" style="width: stretch"/>
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Envío Certificación AFIP</label>
+            <input type="text" id="FechaEnvioAfip" class="form-control" style="width: stretch"/>
+        </div>
+    </div>
+
+    <!-- RECEPCIONES -->
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <label>Fecha Recepción Firmas</label>
+            <input type="text" id="FechaRecibFirma" class="form-control" style="width: stretch"/>
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Recepción Obleado Bolsa</label>
+            <input type="text" id="FechaVueltaBolsa" class="form-control" style="width: stretch"/>
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Recepción Certificación AFIP</label>
+            <input type="text" id="FechaVueltaAfip" class="form-control" style="width: stretch"/>
+        </div>
+    </div>
+
+    <!-- CIERRE -->
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <label>Fecha Envío Sellado</label>
+            <input type="text" id="FechaEnvio" class="form-control" style="width: stretch"/>
+        </div>
+        <div class="col-md-4">
+            <label>Rechazado AFIP</label>
+            <div>
+                <input id="RechazadoAfip" class="form-control" role="switch" type="checkbox"
+                       style="width:20px; margin-top:0 !important; margin-left:0 !important;" />
+            </div>
+        </div>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <label>Observación</label>
+            <textarea id="ObsCtrlBoleto" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <label>Observación 2</label>
+            <textarea id="ObsCtrlBoleto2" class="form-control"></textarea>
+        </div>
+    </div>
+
+</form>

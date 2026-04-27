@@ -1,0 +1,161 @@
+﻿@section Scripts{
+    @Scripts.Render("~/bundles/ControlDeBoletosGestion")
+}
+@section styles{
+    <link href="~/Content/control-boletos.css" rel="stylesheet" />
+    <link href="~/Content/control-boletos-contrato.css" rel="stylesheet" />
+}
+<div id="modalGestionControlBoleto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="modal-close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Cerrar</span>
+                </button>
+                <div class="header-top">
+                    <h5 class="titulo-modal modal-titulo-contrato">
+                        <i class="fa fa-clipboard-check" aria-hidden="true"></i>
+                        Gestión Control de Boleto &mdash;
+                        Contrato: <strong id="txtContratoGestion"></strong>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div id="accordionGestionBoleto">
+
+                    <!-- ═══════════════════════════════════════════════════
+                         1. SEGUIMIENTO CONTROL BOLETO
+                    ════════════════════════════════════════════════════ -->
+                    <div class="panel panel-default" style="margin-bottom:10px;">
+                        <div class="panel-heading" id="headingSeguimiento">
+                            <h5 style="margin-bottom:0;">
+                                <button class="btn btn-link" data-toggle="collapse"
+                                        data-target="#collapseSeguimiento"
+                                        aria-expanded="true"
+                                        aria-controls="collapseSeguimiento">
+                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                    Seguimiento Control Boleto
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseSeguimiento" class="panel-collapse collapse in"
+                             data-parent="#accordionGestionBoleto">
+                            <div class="panel-body">
+                                @Html.Partial("_FormSeguimientoControlBoleto")
+                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                    <button class="btn btn-primary"
+                                            onclick="ControlDeBoletosSeguimiento.guardar()">
+                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         2. DATOS DE CERTIFICACIÓN
+                    ════════════════════════════════════════════════════ -->
+                    <div class="panel panel-default" style="margin-bottom:10px;">
+                        <div class="panel-heading" id="headingCertificacion">
+                            <h5 style="margin-bottom:0;">
+                                <button class="btn btn-link" data-toggle="collapse"
+                                        data-target="#collapseCertificacion"
+                                        aria-expanded="false"
+                                        aria-controls="collapseCertificacion">
+                                    <i class="fa fa-certificate" aria-hidden="true"></i>
+                                    Datos de Certificación
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseCertificacion" class="panel-collapse collapse"
+                             data-parent="#accordionGestionBoleto">
+                            <div class="panel-body">
+                                @Html.Partial("_FormDatosCertificacion")
+                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                    <button class="btn btn-primary"
+                                            onclick="ControlDeBoletosDatosCertificacion.guardar()">
+                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         3. MODIFICAR DATOS DEL CONTRATO
+                    ════════════════════════════════════════════════════ -->
+                    <div class="panel panel-default" style="margin-bottom:10px;">
+                        <div class="panel-heading" id="headingModificar">
+                            <h5 style="margin-bottom:0;">
+                                <button class="btn btn-link" data-toggle="collapse"
+                                        data-target="#collapseModificar"
+                                        aria-expanded="false"
+                                        aria-controls="collapseModificar">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                    Modificar Datos del Contrato
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseModificar" class="panel-collapse collapse"
+                             data-parent="#accordionGestionBoleto">
+                            <div class="panel-body">
+                                @Html.Partial("_FormModificarDatosDelContrato")
+                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                    <button class="btn btn-primary"
+                                            onclick="ControlDeBoletosModificarContrato.guardar()">
+                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /accordionGestionBoleto -->
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    #modalGestionControlBoleto .modal-content {
+        background-color: #fff;
+    }
+
+    #modalGestionControlBoleto .modal-close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .2;
+        background: none !important;
+        text-indent: 0;
+        border-color: transparent !important;
+        cursor: pointer;
+    }
+
+    #accordionGestionBoleto .panel-heading {
+        background-color: #26337B;
+        border-bottom: 0px;
+    }
+
+    #accordionGestionBoleto .panel-heading .btn-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    #accordionGestionBoleto .panel-heading .btn-link:hover {
+        color: #fff;
+    }
+</style>

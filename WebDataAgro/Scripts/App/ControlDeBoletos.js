@@ -1,4 +1,4 @@
-﻿// Control de Boletos - JavaScript optimizado para .NET Framework 4.7.2
+// Control de Boletos - JavaScript optimizado para .NET Framework 4.7.2
 var ControlBoletos = (function () {
     "use strict";
 
@@ -10,7 +10,6 @@ var ControlBoletos = (function () {
             getProveedores: "/ControlDeBoletos/GetProveedores",
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
             getBoletos: "/ControlDeBoletos/GetBoletos",
-            getContadores: "/ControlDeBoletos/GetContadores",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
             processControlMasivo: "/ControlDeBoletos/ControlMasivo",
             exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel"
@@ -23,8 +22,7 @@ var ControlBoletos = (function () {
     let controlProveedor = $("#frmPendienteControl #proveedorId");
     let controlBolsaCompraNet = $("#frmPendienteControl #bolsaCompraNetId");
 
-    let controlNegocioSAPDesde = $("#frmPendienteControl #NegocioSAP-desde");
-    let controlNegocioSAPHasta = $("#frmPendienteControl #NegocioSAP-hasta");
+    let controlNegocioSAP = $("#frmPendienteControl #NegocioSAP");
     let controlFechaCargaDesde = $("#frmPendienteControl #fechaCargaDesde");
     let controlFechaCargaHasta = $("#frmPendienteControl #fechaCargaHasta");
     let controlEsConfirma = $("#frmPendienteControl #esConfirma");
@@ -102,15 +100,98 @@ var ControlBoletos = (function () {
         }
     }
 
+    // ── Estilos globales del grid ────────────────────────────────────────────
+
+    function inyectarEstilosGrid() {
+        if ($("#grid-boletos-styles").length) return;
+        $("<style id='grid-boletos-styles'>").text(`
+            #boletos-grid .k-grid-header th {
+                font-weight: bold !important;
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
+                white-space: nowrap;
+                background-color: #f5f5f5;
+            }
+            #boletos-grid .k-grid-content td {
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
+            }
+            #boletos-grid .k-grid-header-wrap {
+                overflow: hidden !important;
+            }
+            #boletos-grid .k-grid-content {
+                overflow-x: auto !important;
+                overflow-y: auto !important;
+            }
+            #boletos-grid .k-grid-header-wrap table,
+            #boletos-grid .k-grid-content table {
+                table-layout: fixed;
+            }
+            #boletos-grid .k-grid-content tr:hover td,
+            #boletos-grid .k-grid-content tr.k-state-hover td {
+                color: #333 !important;
+            }
+            #boletos-grid .k-grid-content tr.k-state-selected td {
+                color: #333 !important;
+            }
+        `).appendTo("head");
+    }
+
+    // ── Auto-ajuste de columnas ──────────────────────────────────────────────
+
+    var _canvas = document.createElement("canvas");
+    function medirTexto(texto, fuente) {
+        var ctx = _canvas.getContext("2d");
+        ctx.font = fuente;
+        return Math.ceil(ctx.measureText(texto).width);
+    }
+
+    function autoFitColumnas(grid) {
+        var $wrapper = grid.element;
+        var $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
+        var $contentCols = $wrapper.find(".k-grid-content   colgroup col");
+        var $headerCells = $wrapper.find(".k-grid-header-wrap tr:first th");
+        var $rows = $wrapper.find(".k-grid-content tbody tr");
+        var columns = grid.columns;
+
+        $headerCells.each(function (colIdx) {
+            var colDef = columns[colIdx];
+            var hasField = colDef && colDef.field && colDef.field !== "Selected";
+
+            if (!hasField) {
+                var fixedW = (colDef && colDef.width) ? colDef.width : 50;
+                $headerCols.eq(colIdx).css("width", fixedW + "px");
+                $contentCols.eq(colIdx).css("width", fixedW + "px");
+                return;
+            }
+
+            var headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
+            var maxPx = medirTexto(headerText, "bold 13px Arial") + 32;
+
+            $rows.each(function () {
+                var cellPx = medirTexto($(this).find("td").eq(colIdx).text().trim(), "13px Arial") + 24;
+                if (cellPx > maxPx) maxPx = cellPx;
+            });
+
+            maxPx = Math.max(maxPx, 60);
+            $headerCols.eq(colIdx).css("width", maxPx + "px");
+            $contentCols.eq(colIdx).css("width", maxPx + "px");
+        });
+
+        var totalWidth = Array.from($headerCols).reduce(function (sum, col) {
+            return sum + (parseInt($(col).css("width")) || 0);
+        }, 0);
+        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
+    }
+
     // Funciones públicas
     return {
         init: function () {
             if (state.datosInicializados) return;
-
+            this.inicializarFechas();
             this.cargarDatosIniciales();
             this.configurarEventos();
             this.inicializarGrid();
-            this.cargarContadores();
 
             state.datosInicializados = true;
         },
@@ -211,24 +292,10 @@ var ControlBoletos = (function () {
                 });
         },
 
-        autoFitSelectedColumns: function () {
-            if (!state.grid) return;
-            var colsToFit = ["EstadoConfirma", "Proveedor", "Comercial"];
-            var columns = state.grid.columns;
-            for (var i = 0; i < columns.length; i++) {
-                var field = columns[i].field;
-                if (field && colsToFit.indexOf(field) !== -1) {
-                    try {
-                        state.grid.autoFitColumn(i);
-                    } catch (e) {
-                        // autoFitColumn puede no estar disponible en algunas versiones; ignorar errores
-                    }
-                }
-            }
-        },
-
         inicializarGrid: function () {
             var self = this;
+
+            inyectarEstilosGrid();
 
             try {
                 state.grid = $("#boletos-grid")
@@ -258,8 +325,7 @@ var ControlBoletos = (function () {
                                             take: options.take || 50,
                                             sort: options.sort || [],
                                             // Filtros personalizados
-                                            contratoSAPDesde: filtros.contratoSAPDesde,
-                                            contratoSAPHasta: filtros.contratoSAPHasta,
+                                            negocioSAP: filtros.negocioSAP,
                                             materialId: filtros.materialId,
                                             estadoControlId: filtros.estadoControlId,
                                             esConfirma: filtros.esConfirma,
@@ -312,7 +378,7 @@ var ControlBoletos = (function () {
                             },
                         },
                         height: 550,
-                        scrollable: true,
+                        scrollable: { virtual: false },
                         sortable: {
                             mode: "single",
                             allowUnsort: false,
@@ -335,11 +401,7 @@ var ControlBoletos = (function () {
                                 refresh: "Actualizar",
                             },
                         },
-                        navigatable: true,
-                        selectable: {
-                            mode: "multiple",
-                            type: "row",
-                        },
+                        navigatable: false,
                         columns: [
                             {
                                 field: "Selected",
@@ -401,7 +463,6 @@ var ControlBoletos = (function () {
                                 width: 150,
                             },
                             {
-                                field: "Acciones",
                                 title: "Acciones",
                                 width: 100,
                                 template: function (dataItem) {
@@ -412,11 +473,9 @@ var ControlBoletos = (function () {
                             },
                         ],
                         dataBound: function (e) {
+                            autoFitColumnas(e.sender);
                             self.configurarEventosGrid();
-                            self.actualizarContadores();
                             self.actualizarSeleccion();
-                            // Ajustar automáticamente solo las columnas solicitadas
-                            //self.autoFitSelectedColumns();
                         },
                         change: function (e) {
                             self.actualizarBotonesControlMasivo();
@@ -442,12 +501,6 @@ var ControlBoletos = (function () {
         configurarEventosGrid: function () {
             var self = this;
 
-            // Checkbox del header
-            // Poner headers en negrita
-            $("#boletos-grid")
-                .closest(".k-grid")
-                .find(".k-grid-header .k-header, .k-grid-header th")
-                .css("font-weight", "700");
             $("#gridSelectAll")
                 .off("change")
                 .on("change", function () {
@@ -473,8 +526,7 @@ var ControlBoletos = (function () {
 
         obtenerFiltros: function () {
             return {
-                contratoSAPDesde: controlNegocioSAPDesde.val().trim() || null,
-                contratoSAPHasta: controlNegocioSAPHasta.val().trim() || null,
+                negocioSAP: controlNegocioSAP.val().trim() || null,
                 materialId: controlMaterial.val() || null,
                 estadoControlId: controlEstadoControl.val() || null,
                 esConfirma: controlEsConfirma.is(":checked"),
@@ -490,36 +542,19 @@ var ControlBoletos = (function () {
             var filtros = this.obtenerFiltros();
             var errores = [];
 
-            if (
-                filtros.contratoSAPDesde &&
-                !validarNumero(filtros.contratoSAPDesde)
-            ) {
-                errores.push("El número SAP desde debe ser un número válido");
-            }
+            const sinFiltrosPrincipales =
+                !filtros.negocioSAP &&
+                !filtros.fechaCargaDesde &&
+                !filtros.fechaCargaHasta;
 
-            if (
-                filtros.contratoSAPHasta &&
-                !validarNumero(filtros.contratoSAPHasta)
-            ) {
-                errores.push("El número SAP hasta debe ser un número válido");
-            }
+            const sinFiltrosSecundarios =
+                !filtros.proveedorId &&
+                !filtros.comercialId &&
+                !filtros.materialId &&
+                !filtros.bolsaId;
 
-            if (
-                filtros.contratoSAPDesde &&
-                filtros.contratoSAPHasta &&
-                parseInt(filtros.contratoSAPDesde) > parseInt(filtros.contratoSAPHasta)
-            ) {
-                errores.push(
-                    "El número SAP desde debe ser menor o igual al número SAP hasta",
-                );
-            }
-
-            if (
-                filtros.fechaCargaDesde &&
-                filtros.fechaCargaHasta &&
-                new Date(filtros.fechaCargaDesde) > new Date(filtros.fechaCargaHasta)
-            ) {
-                errores.push("La fecha desde debe ser anterior a la fecha hasta");
+            if (sinFiltrosPrincipales && sinFiltrosSecundarios) {
+                return false;
             }
 
             return errores;
@@ -632,7 +667,26 @@ var ControlBoletos = (function () {
             var total = $(".row-checkbox").length;
             $("#selectAll").prop("checked", seleccionados === total && total > 0);
         },
+        inicializarFechas: function () {
+            const hoy = new Date();
+            const desde = new Date(hoy);
+            desde.setDate(hoy.getDate() - 30);
 
+            [
+                { $el: controlFechaCargaDesde, value: desde },
+                { $el: controlFechaCargaHasta, value: hoy }
+            ].forEach(function ({ $el, value }) {
+                if ($el.data("kendoDatePicker")) {
+                    $el.data("kendoDatePicker").destroy();
+                }
+
+                $el.kendoDatePicker({
+                    weekNumber: true,
+                    format: "dd/MM/yyyy",
+                    value: value
+                });
+            });
+        },
         iniciarControlMasivo: function () {
             var ids = this.obtenerSeleccionados();
             if (ids.length === 0) {
@@ -732,35 +786,6 @@ var ControlBoletos = (function () {
             }
         },
 
-        cargarContadores: function () {
-            $.ajax({
-                url: config.urls.getContadores,
-                type: "GET",
-                timeout: 10000,
-                success: function (data) {
-                    if (data) {
-                        $("#countPendientes").text(data.Pendientes || 0);
-                        $("#countEnProceso").text(data.EnProceso || 0);
-                        $("#countCompletados").text(data.Completados || 0);
-                        $("#countCertificados").text(data.Certificados || 0);
-                    }
-                },
-                error: function () {
-                    console.warn("Error cargando contadores");
-                },
-            });
-        },
-
-        actualizarContadores: function () {
-            this.cargarContadores();
-            if (state.grid) {
-                var total = state.grid.dataSource.total();
-                $("#totalRegistros").text(
-                    total + " registro" + (total !== 1 ? "s" : ""),
-                );
-            }
-        },
-
         generarBotonesAccion: function (data) {
             var botones = [];
             botones.push(
@@ -770,9 +795,11 @@ var ControlBoletos = (function () {
             );
             if (data.ControlIniciado) {
                 botones.push(
-                    '<button class="btn btn-sm btn-outline-warning btn-acciones tooltip-custom" onclick="ControlDeBoletosModificarContrato.abrir(' +
-                    data.NegocioId +
-                    ')" title="Modificar Contrato"><i class="fa fa-edit"></i><span class="tooltiptext"></span></button>',
+                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlDeBoletosGestion.abrir({ControlDeBoletosId:' +
+                    data.Id + ',SeguimientoBoletoId:' + (data.SeguimientoBoletoId || 0) +
+                    ',PreCertificacionId:' + (data.PreCertificacionId || 0) +
+                    ',NegocioId:' + data.NegocioId +
+                    '})" title="Gestión Control"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
                 );
 
                 botones.push(
@@ -786,26 +813,6 @@ var ControlBoletos = (function () {
                     '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.iniciarControl(' +
                     data.Id +
                     ')" title="Iniciar Control"><i class="fa fa-play"></i><span class="tooltiptext"></span></button>',
-                );
-            }
-
-            if (data.ControlIniciado) {
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosDatosCertificacion.abrir(' +
-                    data.PreCertificacionId + ',' + data.Id +
-                    ')" title="Registro de Obleado"><i class="fa fa-list-alt"></i><span class="tooltiptext"></span></button>',
-                );
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlDeBoletosSeguimiento.abrir(' +
-                    data.SeguimientoBoletoId + ',' + data.Id +
-                    ')" title="Registro de Certificación"><i class="fa fa-certificate"></i><span class="tooltiptext"></span></button>',
-                );
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-success btn-acciones tooltip-custom" onclick="ControlBoletos.finalizarControl(' +
-                    data.Id +
-                    ')" title="Finalizar Control"><i class="fa fa-check"></i><span class="tooltiptext"></span></button>',
                 );
             }
 

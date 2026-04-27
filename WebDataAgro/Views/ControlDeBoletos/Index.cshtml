@@ -10,8 +10,10 @@
 @section Scripts{
     @Scripts.Render("~/bundles/ControlDeBoletos")
 }
+@* Codificación UTF-8 para caracteres especiales *@
+<meta charset="utf-8" />
 
-<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmPendienteControl">
+<div class="container-fluid" style="margin-left:2em; margin-right:2em;" id="frmPendienteControl">
     <!-- Header Section -->
     <div class="row header-section">
         <div class="col-12">
@@ -19,27 +21,19 @@
                 <i class="fa fa-clipboard-check" aria-hidden="true"></i>
                 Control de Boletos
             </h2>
-            <p class="page-subtitle">Gestión y seguimiento de boletos pendientes de control</p>
         </div>
     </div>
 
     <!-- Filters Section -->
     <div class="card filter-card fade-in">
-        <div class="card-header">
-            <h5 class="card-title mb-0">
-                <i class="fa fa-filter" aria-hidden="true"></i>
-                Filtros de Búsqueda
-            </h5>
-        </div>
         <div class="card-body">
             <!-- First Row -->
             <div class="row form-row">
-                <div class="col-md-3 col-sm-4">
+                <div class="col-md-6 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Contrato SAP</label>
+                        <label class="form-label">Contratos SAP</label>
                         <div class="filter-espacio-input">
-                            <input type="number" id="NegocioSAP-desde" class="form-control" placeholder="SAP desde" min="0" />
-                            <input type="number" id="NegocioSAP-hasta" class="form-control" placeholder="SAP hasta" min="0" />
+                            <input type="text" id="NegocioSAP" class="form-control" placeholder="Contratos SAP" />
                         </div>
                     </div>
                 </div>
@@ -59,15 +53,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="form-group">
-                        <label class="form-label">Tipo de Boleto</label>
-                        <div class="custom-control custom-checkbox mt-2">
-                            <input type="checkbox" class="custom-control-input" id="esConfirma">
-                            <label class="custom-control-label" for="esConfirma">Solo Confirmas</label>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Second Row -->
@@ -75,13 +61,13 @@
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha de Envío Desde</label>
-                        <input id="fechaCargaDesde" class="form-control" type="date" />
+                        <input id="fechaCargaDesde" class="form-control" type="date" style="width: stretch"/>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha de Envío Hasta</label>
-                        <input id="fechaCargaHasta" class="form-control" type="date" />
+                        <input id="fechaCargaHasta" class="form-control" type="date" style="width: stretch"/>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
@@ -106,6 +92,15 @@
                         <select id="comercialId" class="form-control">
                             <option value="">Cargando comerciales...</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Boleto</label>
+                        <div class="custom-control custom-checkbox mt-2">
+                            <input type="checkbox" class="custom-control-input" id="esConfirma">
+                            <label class="custom-control-label" for="esConfirma">Solo Confirmas</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -171,56 +166,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Progress Indicators -->
-    <div class="progress-indicators mt-3 fade-in">
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="progress-card pending" role="button" data-filter="pendiente">
-                    <div class="progress-icon">
-                        <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    </div>
-                    <div class="progress-info">
-                        <h6>Pendientes</h6>
-                        <span id="countPendientes">-</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="progress-card in-progress" role="button" data-filter="proceso">
-                    <div class="progress-icon">
-                        <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
-                    </div>
-                    <div class="progress-info">
-                        <h6>En Proceso</h6>
-                        <span id="countEnProceso">-</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="progress-card completed" role="button" data-filter="completado">
-                    <div class="progress-icon">
-                        <i class="fa fa-check-circle" aria-hidden="true"></i>
-                    </div>
-                    <div class="progress-info">
-                        <h6>Completados</h6>
-                        <span id="countCompletados">-</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="progress-card certified" role="button" data-filter="certificado">
-                    <div class="progress-icon">
-                        <i class="fa fa-certificate" aria-hidden="true"></i>
-                    </div>
-                    <div class="progress-info">
-                        <h6>Certificados</h6>
-                        <span id="countCertificados">-</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Modal para mensajes -->
@@ -245,10 +190,8 @@
 
 @* Renderizar vistas parciales de modales *@
 @Html.Partial("_VisualizarContrato")
-@Html.Partial("_DatosCertificacion")
-@Html.Partial("_SeguimientoControlBoleto")
 @Html.Partial("_TrackingControlDeBoletos")
-@Html.Partial("_ModificarDatosDelContrato")
+@Html.Partial("_GestionControlBoleto")
 
 <script>
     function cargarModalDinamico(url, modalId, callback) {

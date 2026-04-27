@@ -242,35 +242,43 @@ namespace Molinos.DataAgro.Business.Managers
             var query = repositorio.Listar<ControlDeBoletos>()
                 .Where(x => (filtros.EstadoControlId == null ||  (x.ControlDeBoletosEstadoId == (int)filtros.EstadoControlId)));
 
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
-                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
+            if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
+            {
+                var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .ToList();
 
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
-                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
+                if (negociosSAPList.Count > 0)
+                    query = query.Where(n => negociosSAPList.Contains(n.Negocio.ContratoSAP));
+            }
+            else
+            {
+                if (filtros.MaterialId.HasValue)
+                    query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
 
-            if (filtros.MaterialId.HasValue)
-                query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
+                if (filtros.EstadoControlId.HasValue)
+                    query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
 
-            if (filtros.EstadoControlId.HasValue)
-                query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
+                if (filtros.EsConfirma)
+                    query = query.Where(x => x.EsConfirma == true);
 
-            if (filtros.EsConfirma)
-                query = query.Where(x => x.EsConfirma == true);
+                if (filtros.FechaCargaDesde.HasValue)
+                    query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
 
-            if (filtros.FechaCargaDesde.HasValue)
-                query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
+                if (filtros.FechaCargaHasta.HasValue)
+                    query = query.Where(x => x.FechaCreacion <= filtros.FechaCargaHasta.Value);
 
-            if (filtros.FechaCargaHasta.HasValue)
-                query = query.Where(x => x.FechaCreacion <= filtros.FechaCargaHasta.Value);
+                if (filtros.Proveedor.HasValue)
+                    query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
 
-            if (filtros.Proveedor.HasValue)
-                query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
+                if (filtros.BolsaId.HasValue)
+                    query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
 
-            if (filtros.BolsaId.HasValue)
-                query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
+                if (filtros.ComercialId.HasValue)
+                    query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
+            }
 
-            if (filtros.ComercialId.HasValue)
-                query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
+
 
             // Optimización: Usar query LINQ con LEFT JOIN en lugar de N+1 queries
             var result = (from cb in query
