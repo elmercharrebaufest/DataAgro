@@ -555,7 +555,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         var altaItem = confirmaAltaLoteDocumentosResult.altaItem[0];
                                         int? altaIdDocumento = 0;
                                         int? altaIdLote = confirmaAltaLoteDocumentosResult.altaIdLote == null || confirmaAltaLoteDocumentosResult.altaIdLote == "" ? (int?)null : Convert.ToInt32(confirmaAltaLoteDocumentosResult.altaIdLote);
-                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, altaIdLote, altaIdDocumento);
+                                        controlDeBoletosManager.RegistroContratoPendienteDeControl(contrato.Id, altaIdLote, altaIdDocumento, true);
                                     }
                                     else
                                     {

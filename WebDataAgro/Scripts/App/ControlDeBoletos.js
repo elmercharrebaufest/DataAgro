@@ -419,6 +419,11 @@ var ControlBoletos = (function () {
                                 width: 80,
                             },
                             {
+                                field: "TipoAltaConfirma",
+                                title: "Tipo Alta Confirma",
+                                width: 80
+                            },
+                            {
                                 field: "BolsaCompraNet",
                                 title: "Bolsa",
                                 width: 100

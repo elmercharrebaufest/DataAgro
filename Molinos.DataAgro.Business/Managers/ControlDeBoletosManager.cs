@@ -320,12 +320,13 @@ namespace Molinos.DataAgro.Business.Managers
                               ProveedorId = cb.Negocio.ProveedorId,
                               Proveedor = cb.Negocio.Proveedor.RazonSocial,
                               PreCertificacionId = pre != null ? (int?)pre.Id : null,
-                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null
+                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null,
+                              TipoAltaConfirma = cb.EsConfirma? (cb.EsConfirmaAltaBorrador? "Alta Borrador" : "Alta Definitiva") : string.Empty,
                           }).ToList();
 
             return result;
         }
-        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null)
+        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false)
         {
             var oResultado = new Resultado();
             var negocio = repositorio.Obtener<Negocio>(negocioId);
@@ -347,7 +348,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ControlIniciado = false,
                         ControlFinalizado = false,
                         CertificacionCompletada = false,
-                        RegistroDatosOblea = false
+                        RegistroDatosOblea = false,
+                        EsConfirmaAltaBorrador = (bool)((negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? esConfirmaAltaBorrador : false)
                     };
                     repositorio.Agregar(controlDeBoletos);
                     repositorio.GuardarCambios();
@@ -374,6 +376,7 @@ namespace Molinos.DataAgro.Business.Managers
                         RegistroDatosOblea = false,
                         AltaIdLoteConfirmaAnterior = controlDeBoletosExiste.AltaIdLoteConfirma,
                         AltaIdDocumentoConfirmaAnterior = controlDeBoletosExiste.AltaIdDocumentoConfirma,
+                        EsConfirmaAltaBorrador = (bool)((negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? esConfirmaAltaBorrador : false)
                     };
                     repositorio.Agregar(controlDeBoletosSustitutorio);
                     repositorio.GuardarCambios();
