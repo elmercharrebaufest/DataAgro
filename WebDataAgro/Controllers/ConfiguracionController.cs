@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -45,6 +45,7 @@ namespace WebDataAgro.Controllers
                 ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
                 ImporteSustentableEspecial = conf.ImporteSustentableEspecial,
                 AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
+                AlgoritmoProcMaxSugerenciasProveedorDia = conf != null ? conf.AlgoritmoProcMaxSugerenciasProveedorDia : 0,
                 Actualizacion = conf != null ? conf.Actualizacion : 1,
                 ApiKeyBolsaRosario = conf.ApiKeyBolsaRosario,
                 SecretBolsaRosario = conf.SecretBolsaRosario,
