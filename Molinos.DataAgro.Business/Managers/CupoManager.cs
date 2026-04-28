@@ -1778,7 +1778,7 @@ namespace Molinos.DataAgro.Business.Managers
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos creados de sugerencias.");
 
-            //solicitudes pendientes
+            //solicitudes extraordinarias pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
                 x.Fecha >= formula.CuposDesde &&
                 x.Fecha <= formula.CuposHasta &&
@@ -1788,7 +1788,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
                 && x.SugerenciaCupoId != null
             );
-            logger.Debug("CrearSugerenciaCupo - se obtuvieron " + solicitudesPendientes.Count + " solicitudes pendientes.");
+            logger.Debug("CrearSugerenciaCupo - se obtuvieron " + solicitudesPendientes.Count + " Sol.Ext. pendientes provenientes de las Sugerencias del Algoritmo.");
 
             List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x =>
                 x.Fecha >= formula.CuposDesde &&
@@ -1988,77 +1988,8 @@ namespace Molinos.DataAgro.Business.Managers
         private List<SugerenciaCupoDto> ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)
         {
             List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
-            //negocios disponibles
-
-            var pizarraLista = repositorio.Listar<PrecioPizarra>(x => formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta);
-
-
-            //if (formula.CentroId == 1)//centro 1 = san lorenso
-            //{
-            //    Dictionary<int, int> agenteCompraUsados = cupos.Where(x => x.AgenteCompraId != null).GroupBy(x => x.AgenteCompraId.Value).ToDictionary(a => a.Key, a => a.Count());
-            //    var agentes = repositorio.Listar<AgenteCompra, SugerenciaCupoDto>(x => new SugerenciaCupoDto { ComercialId=x.ComercialId, Destinatario = "", ProveedorId = null, ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion, CantidadCupos = (int)Math.Ceiling(x.Cantidad / 30000), DestinoId = 1, AgenteCompraId = x.Id, MaterialId = x.MaterialId, TipoNegocioId = 5, MonedaId = x.MonedaId, Precio = x.Precio, FechaDesde = x.Fecha, FechaHasta = x.Fecha, FechaDesdeString = x.Fecha.ToString(), FechaHastaString = x.Fecha.ToString() }, x => x.Fecha >= formula.NegociosDesde && x.Fecha <= formula.NegociosHasta && x.EstadoId == 5);
-            //    foreach (var item in agentes)
-            //    {
-            //        if (agenteCompraUsados.Any(a => a.Key == item.AgenteCompraId))
-            //        {
-            //            item.CantidadCupos -= agenteCompraUsados.Where(a => a.Key == item.AgenteCompraId).Single().Value;
-            //        }
-            //    }
-            //    agentes = agentes.Where(a => a.CantidadCupos > 0).ToList();
-            //    negocios.AddRange(agentes);
-
-            //    Dictionary<int, int> fasonUsados = cupos.Where(x => x.FasonId != null).GroupBy(x => x.FasonId.Value).ToDictionary(a => a.Key, a => a.Count());
-            //    var fasones = repositorio.Listar<Fason, SugerenciaCupoDto>(x => new SugerenciaCupoDto { ComercialId = x.ComercialId, Destinatario = x.Fasonero.CUIT, ProveedorId = x.FasoneroId, ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion, CantidadCupos = (int)Math.Ceiling(x.Cantidad / 30000), DestinoId = 1, FasonId = x.Id, MaterialId = x.MaterialId, TipoNegocioId = 4, MonedaId = x.MonedaId, Precio = x.Precio, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, FechaDesdeString = x.FechaDesde.ToString(), FechaHastaString = x.FechaHasta.ToString() }, x => ((x.FechaDesde >= formula.NegociosDesde && x.FechaDesde <= formula.NegociosHasta) || (x.FechaHasta >= formula.NegociosDesde && x.FechaHasta <= formula.NegociosHasta)) && x.EstadoId == 5);
-            //    foreach (var item in fasones)
-            //    {
-            //        if (fasonUsados.Any(a => a.Key == item.FasonId))
-            //        {
-            //            item.CantidadCupos -= fasonUsados.Where(a => a.Key == item.FasonId).Single().Value;
-            //        }
-            //    }
-            //    fasones = fasones.Where(a => a.CantidadCupos > 0).ToList();
-            //    negocios.AddRange(fasones);
-            //    List<ZonaCupo> zonaCupos = repositorio.Listar<ZonaCupo>();
-            //    foreach (var item in negocios)
-            //    {
-            //        var zona = zonaCupos.Where(a => a.Descripcion == item.ZonaDescrip).SingleOrDefault();
-            //        if (zona != null)
-            //        {
-            //            item.ZonaCupoId = zona.Id;
-            //        }
-            //    }
-            //}
-
-            //Dictionary<int, int> fijacionDePrecioContratoUsados = cupos.Where(x => x.FijacionDePrecioContratoId != null).GroupBy(x => x.FijacionDePrecioContratoId.Value).ToDictionary(a => a.Key, a => a.Count());
-            //var fijaciones = repositorio.Listar<FijacionDePrecioContrato, SugerenciaCupoDto>(x => new SugerenciaCupoDto { ComercialId = x.ComercialId, Destinatario = x.Proveedor.CUIT, ProveedorId = x.ProveedorId, ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion, CantidadCupos = (int)Math.Ceiling(x.Cantidad / 30000), DestinoId = x.DestinoId.Value, FijacionDePrecioContratoId = x.FijacionDePrecioContratoId, MaterialId = x.MaterialId.Value, TipoNegocioId = 3, MonedaId = x.MonedaId, Precio = x.Precio, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, FechaDesdeString = x.FechaDesde.ToString(), FechaHastaString = x.FechaHasta.ToString() }, x => x.MaterialId != null && ((x.FechaDesde >= formula.NegociosDesde && x.FechaDesde <= formula.NegociosHasta) || (x.FechaHasta >= formula.NegociosDesde && x.FechaHasta <= formula.NegociosHasta)) && x.EstadoId == 5 && x.DestinoId == formula.CentroId);
-            //foreach (var item in fijaciones)
-            //{
-            //    if (fijacionDePrecioContratoUsados.Any(a => a.Key == item.FijacionDePrecioContratoId))
-            //    {
-            //        item.CantidadCupos -= fijacionDePrecioContratoUsados.Where(a => a.Key == item.FijacionDePrecioContratoId).Single().Value;
-            //    }
-            //}
-            //fijaciones = fijaciones.Where(a => a.CantidadCupos > 0).ToList();
-            //negocios.AddRange(fijaciones);
-            //logger.Debug("CrearSugerenciaCupo - fijaciones obtenidos: " + fijaciones.Count());
-
-
-            //foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3 && a.Precio == 0).ToList())
-            //{
-            //    var pizarra = pizarraLista.Where(a => a.MaterialId == fijacion.MaterialId).SingleOrDefault();
-            //    if (pizarra == null)
-            //    {
-            //        pizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == fijacion.MaterialId ).OrderByDescending(a => a.FechaDesde).Take(1).Single();
-            //        pizarraLista.Add(pizarra);
-            //    }
-            //    fijacion.MonedaId = pizarra.MonedaId;
-            //    fijacion.Precio = pizarra.Precio;
-
-            //}
-            //logger.Debug("CrearSugerenciaCupo - pongo precio pizarra a FijacionDePrecioContrato que no tienen precio");
-
             List<int> idsTiposNegociosExcluidos = repositorio.Listar<FormulaTipoNegocioExcluido, int>(x => x.TipoNegocioId, x => x.FormulaId == formula.Id);
-            var tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(x => (int)x.AnulaYReemplazaContratoId, x => x.AnulaYReemplazaContratoId != null);
+            List<int> tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(x => (int)x.AnulaYReemplazaContratoId, x => x.AnulaYReemplazaContratoId != null);
 
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
                 new SugerenciaCupoDto
@@ -2102,26 +2033,34 @@ namespace Molinos.DataAgro.Business.Managers
                     ConDescarga = x.ConDescarga ?? false
                 },
                     x =>
-                    //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
-                    //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
                     //x.Sustentable != true &&
-                    !x.EPA && !x.EUDR &&
+                    !x.EPA &&
+                    !x.EUDR &&
                     x.EsFason != true &&
                     !tienenAnulaYReemplaza.Any(a => a == x.Id) &&
                     !idsTiposNegociosExcluidos.Any(a => a == x.TipoNegocioId) &&
-                    formula.NegociosDesde <= (x.FechaHastaOriginal ?? x.FechaHasta) && formula.NegociosHasta >= (x.FechaHastaOriginal ?? x.FechaHasta) //solo compara fechaHasta ¡!
-                    && x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.DestinoId == formula.CentroId && x.MaterialId == formula.MaterialId);
+                    (x.FechaHastaOriginal ?? x.FechaHasta) >= formula.NegociosDesde &&
+                    (x.FechaHastaOriginal ?? x.FechaHasta) <= formula.NegociosHasta &&
+                    x.EstadoId == (int)EnumEstadoContrato.Finalizado &&
+                    x.DestinoId == formula.CentroId &&
+                    x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
             var zonas = repositorio.Listar<ZonaCupo>();
 
-            var kilosMinimosParaSugerencia = repositorio.Obtener<Configuracion>(1).AlgoritmoKilosMinimosParaSugerencia * 1000;
-            var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, a => a.SugerenciaCupoId != null);
+            int kilosMinimosParaSugerencia = repositorio.Obtener<Configuracion>(1).AlgoritmoKilosMinimosParaSugerencia * 1000;
+
+            #region Revisar
+            //List<int> solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, a => a.SugerenciaCupoId != null);
+            //contratos = contratos.Where(x => !solicitudesSugerenciasId.Contains(x.NegocioId.Value)).ToList();
+            List<int> solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.NegocioId.Value, a => a.NegocioId != null);
             contratos = contratos.Where(x => !solicitudesSugerenciasId.Contains(x.NegocioId.Value)).ToList();
+            #endregion Revisar
+
             var negociosId = contratos.Where(x => x.ContratoSAP != null && x.ContratoSAP != "").Select(a => a.NegocioId).ToList();
-            var antesDeAyer = DateTime.Now.Date.AddDays(-2);
-            var ayer = DateTime.Now.Date.AddDays(-1);
+            DateTime antesDeAyer = DateTime.Now.Date.AddDays(-2);
+            DateTime ayer = DateTime.Now.Date.AddDays(-1);
 
             var cuposPendientes = repositorio.Listar<Cupo, CupoDto>(
                 x => new CupoDto
@@ -2133,24 +2072,31 @@ namespace Molinos.DataAgro.Business.Managers
                 },
                 x => x.Cumplimiento != true &&
                      x.NegocioId != null &&
-                     negociosId.Contains(x.NegocioId ?? 0)
-                     && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado
-                     && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado
-                     && x.FechaIngreso >= ayer
+                     negociosId.Contains(x.NegocioId ?? 0) &&
+                     x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                     x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                     x.FechaIngreso >= ayer
             ).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
 
             //solicitudes pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
-                x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta &&
-                x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
+                x.Fecha >= formula.CuposDesde &&
+                x.Fecha <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId &&
                 x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo &&
-                x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
-                && x.SugerenciaCupoId != null
+                x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente &&
+                x.SugerenciaCupoId != null
             );
 
-            List<ContratoKgPendiente> contratosKgPendiente = contratos.Select(a => new ContratoKgPendiente { ContratoId = a.Id, ContratoSAP = a.ContratoSAP }).ToList();
+            List<ContratoKgPendiente> contratosKgPendiente = contratos.Select(a => new ContratoKgPendiente
+            {
+                ContratoId = a.Id,
+                ContratoSAP = a.ContratoSAP
+            }).ToList();
             contratosKgPendiente = contratoKgPendienteAgent.Consultar(contratosKgPendiente);
             logger.Debug("CrearSugerenciaCupo - Contratos KgPendiente: " + contratosKgPendiente.ToJson());
+
             var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
             foreach (var item in contratos)
             {
@@ -2199,7 +2145,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (cantidad): " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (ContratoSAP): " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
-            var warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
+            List<BasicoContrato> warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
             {
                 var item = warrant.Where(x => x.ContratoSAP == c.ContratoSAP).FirstOrDefault();
@@ -2212,16 +2158,22 @@ namespace Molinos.DataAgro.Business.Managers
             //validar CCPP Pendientes de aplicar
             var contratosPorProveedorCorredor = contratos.Where(x => x.CantidadDeCupos > 0).GroupBy(x => new { x.CUITProveedor, x.CUITCorredor }).ToList();
 
-            List<RestarCuposProvCorrDto> restarCuposProvCorr = new List<RestarCuposProvCorrDto>();
-            restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto { CUITProveedor = x.Key.CUITProveedor, CUITCorredor = x.Key.CUITCorredor, CantidadCupos = 0 }).ToList();
-            var centros = repositorio.Listar<Centro>().ToList();
-            var materiales = repositorio.Listar<Material>().ToList();
+            List<RestarCuposProvCorrDto> restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto
+            {
+                CUITProveedor = x.Key.CUITProveedor,
+                CUITCorredor = x.Key.CUITCorredor,
+                CantidadCupos = 0
+            }).ToList();
+
+            List<Centro> centros = repositorio.Listar<Centro>().ToList();
+            List<Material> materiales = repositorio.Listar<Material>().ToList();
+
             foreach (var contratoPorProvCorr in contratosPorProveedorCorredor)
             {
                 var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
                 var materialCodigo = materiales.Where(x => x.MaterialId == contratoPorProvCorr.First().MaterialId).Single().Codigo;
 
-                var pendienteDto = new CcPpPendienteAplicarDto()
+                CcPpPendienteAplicarDto pendienteDto = new CcPpPendienteAplicarDto()
                 {
                     Centro = centroCodigo,
                     Material = materialCodigo,
@@ -2230,7 +2182,7 @@ namespace Molinos.DataAgro.Business.Managers
                     AgenteCompra = "",
                 };
 
-                var pendientes = cartasDePortePendienteAplicarAgent.ListarCartasDePortePendienteAplicar(pendienteDto);
+                List<CcPpPendienteAplicarDto> pendientes = cartasDePortePendienteAplicarAgent.ListarCartasDePortePendienteAplicar(pendienteDto);
 
                 if (pendientes != null && pendientes.Count > 0)
                 {
@@ -2260,7 +2212,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.CantidadCupos > 0).ToJson());
             }
 
-            var contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
+            List<SugerenciaCupoDto> contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
                 .OrderByDescending(x => x.Canje)
                 .ThenByDescending(x => x.CDWarrant)
                 .ThenByDescending(x => x.MercsDeposito)
@@ -2299,12 +2251,30 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             //traer stock para cupos SUSTENTABLES por proveedor
-            var stockSustentable = contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
+            List<EstablecimientoStockDto> stockSustentable = contratos
+                .Where(x => x.CantidadDeCupos > 0 && x.Sustentable)
+                .Select(a => a.ProveedorCUIT)
+                .Distinct()
+                .Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
             var cuposPendientesSustentables = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId, Sustentable = x.Sustentable, Proveedor = x.Proveedor.CUIT },
-                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != (int)EnumEstadoCupo.Anulado && x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado && x.FechaIngreso >= ayer && x.Sustentable)
-                .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
+                x => new CupoDto
+                {
+                    Id = x.Id,
+                    Cumplimiento = x.Cumplimiento,
+                    FechaIngreso = x.FechaIngreso,
+                    NegocioId = x.NegocioId,
+                    Sustentable = x.Sustentable,
+                    Proveedor = x.Proveedor.CUIT
+                }, x =>
+                x.Cumplimiento != true &&
+                x.NegocioId != null &&
+                negociosId.Contains(x.NegocioId ?? 0) &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                x.FechaIngreso >= ayer &&
+                x.Sustentable
+            ).GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
             foreach (var item in stockSustentable)
             {
@@ -2312,6 +2282,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var sustentablesPendientes = cuposPendientesSustentables.Where(x => x.Key == item.Proveedor).FirstOrDefault();
                 item.Cantidad -= sustentablesPendientes.Value;
             }
+
             //limitar la cantidad de sugerencias de SUSTENTABLE al stock disponible 
             foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).GroupBy(a => a.ProveedorCUIT).ToList())
             {
@@ -2339,28 +2310,30 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             // Traer stock para cupos EPA y EUDR (mientras se use solo soja twin) por proveedor
-            var stockEPAyEUDR = contratos.Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR))
+            List<EstablecimientoStockDto> stockEPAyEUDR = contratos
+                .Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR))
                 .Select(a => a.ProveedorCUIT).Distinct()
                 .Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
-            var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(x =>
-            new CupoDto
-            {
-                Id = x.Id,
-                Cumplimiento = x.Cumplimiento,
-                FechaIngreso = x.FechaIngreso,
-                NegocioId = x.NegocioId,
-                EPA = x.EPA,
-                EUDR = x.EUDR,
-                Proveedor = x.Proveedor.CUIT
-            }, x => x.Cumplimiento != true &&
+            var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(
+                x => new CupoDto
+                {
+                    Id = x.Id,
+                    Cumplimiento = x.Cumplimiento,
+                    FechaIngreso = x.FechaIngreso,
+                    NegocioId = x.NegocioId,
+                    EPA = x.EPA,
+                    EUDR = x.EUDR,
+                    Proveedor = x.Proveedor.CUIT
+                }, x =>
+                x.Cumplimiento != true &&
                 x.NegocioId != null &&
                 negociosId.Contains(x.NegocioId ?? 0) &&
                 x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
                 x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
                 x.FechaIngreso >= ayer &&
-                (x.EPA || x.EUDR))
-                .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
+                (x.EPA || x.EUDR)
+            ).GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
             foreach (var item in stockEPAyEUDR)
             {
@@ -2368,6 +2341,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var epaPendientes = cuposPendientesEPA.Where(x => x.Key == item.Proveedor).FirstOrDefault();
                 item.Cantidad -= epaPendientes.Value;
             }
+
             // Limitar la cantidad de sugerencias de EPA y EUDR al stock disponible 
             foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR)).GroupBy(a => a.ProveedorCUIT).ToList())
             {
@@ -2394,48 +2368,53 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
-            var espacioDinamicoLista = repositorio.Listar<ConfiguracionEspacioDinamico, SugerenciaCupoDto>(x =>
-            new SugerenciaCupoDto
-            {
-                StandardDeCalidad = x.Calidad,
-                ComercialId = x.ComercialId,
-                Destinatario = "30715118773",
-                ProveedorCUIT = x.Proveedor.CUIT,
-                ProveedorId = x.ProveedorId,
-                ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
-                ZonaCupoId = null,
-                CantidadDeCupos = x.CantidadDeCupo,
-                DestinoId = x.CentroId,
-                ConfiguracionEspacioDinamicoId = x.Id,
-                MaterialId = x.MaterialId,
-                MonedaId = "",
-                Precio = null,
-                FechaDesde = x.Fecha,
-                FechaHasta = x.Fecha,
-                TipoNegocioId = tipoNegocioEspacioDinamico.TipoNegocioId,
-                ContratoSAP = null,
-                KgPendienteAplicar = x.CantidadDeCupo * 30000,
-                KgNegocio = x.CantidadDeCupo * 30000,
-                MaterialDesc = x.Material.Descripcion,
-                ProveedorDesc = x.Proveedor.RazonSocial,
-                ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                TipoNegocioDesc = "Espacio Dinamico"
-            }, x => formula.CuposDesde <= x.Fecha && formula.CuposHasta >= x.Fecha && x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId);
 
-            var espacioDinamicoIds = espacioDinamicoLista.Select(a => a.Id).ToList();
+            List<SugerenciaCupoDto> espacioDinamicoLista = repositorio.Listar<ConfiguracionEspacioDinamico, SugerenciaCupoDto>(
+                x => new SugerenciaCupoDto
+                {
+                    StandardDeCalidad = x.Calidad,
+                    ComercialId = x.ComercialId,
+                    Destinatario = "30715118773",
+                    ProveedorCUIT = x.Proveedor.CUIT,
+                    ProveedorId = x.ProveedorId,
+                    ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
+                    ZonaCupoId = null,
+                    CantidadDeCupos = x.CantidadDeCupo,
+                    DestinoId = x.CentroId,
+                    ConfiguracionEspacioDinamicoId = x.Id,
+                    MaterialId = x.MaterialId,
+                    MonedaId = "",
+                    Precio = null,
+                    FechaDesde = x.Fecha,
+                    FechaHasta = x.Fecha,
+                    TipoNegocioId = tipoNegocioEspacioDinamico.TipoNegocioId,
+                    ContratoSAP = null,
+                    KgPendienteAplicar = x.CantidadDeCupo * 30000,
+                    KgNegocio = x.CantidadDeCupo * 30000,
+                    MaterialDesc = x.Material.Descripcion,
+                    ProveedorDesc = x.Proveedor.RazonSocial,
+                    ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    TipoNegocioDesc = "Espacio Dinamico"
+                }, x =>
+                x.Fecha >= formula.CuposDesde &&
+                x.Fecha <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId &&
+                x.MaterialId == formula.MaterialId
+            );
 
-            Dictionary<int, int> espacioDinamicoUsados = repositorio.Listar<Cupo>(x =>
-                 x.ConfiguracionEspacioDinamicoId != null &&
-                 espacioDinamicoIds.Contains(x.NegocioId ?? 0) &&
-                 x.EstadoCupoId != (int)EnumEstadoCupo.SinCTG &&
-                 x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
-                 x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
-                 x.Cumplimiento != false &&
-                 x.ComercialId != null)
-                .GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value)
-                .ToDictionary(a => a.Key, a => a.Count());
+            List<int> espacioDinamicoIds = espacioDinamicoLista.Select(a => a.Id).ToList();
+
+            Dictionary<int, int> espacioDinamicoUsados = repositorio.Listar<Cupo>(
+                x =>
+                x.ConfiguracionEspacioDinamicoId != null &&
+                espacioDinamicoIds.Contains(x.NegocioId ?? 0) &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.SinCTG &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
+                x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
+                x.Cumplimiento != false &&
+                x.ComercialId != null
+            ).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
 
             //cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
             //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.ConfiguracionEspacioDinamicoId, },
