@@ -6,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -242,6 +243,41 @@ namespace Molinos.DataAgro.Business.Managers
             var query = repositorio.Listar<ControlDeBoletos>()
                 .Where(x => (filtros.EstadoControlId == null ||  (x.ControlDeBoletosEstadoId == (int)filtros.EstadoControlId)));
 
+            // Limitar a negocios confirmados en SAP en los últimos 2 meses (consulta optimizada con ReadUncommitted)
+            var negociosIds = repositorio.ObtenerConsultaEscalar(new TraerNegociosPendientesControlBoleto());
+
+            if (negociosIds != null && negociosIds.Count > 0)
+            {
+                var negociosIdsEnQuery = query
+                    .Select(cb => cb.NegocioId)
+                    .Distinct()
+                    .ToList();
+                var negociosNoEnQuery = negociosIds
+                    .Where(id => !negociosIdsEnQuery.Contains(id))
+                    .ToList();
+
+                if (negociosNoEnQuery != null && negociosNoEnQuery.Count > 0)
+                {
+                    var controlBoletosNuevos = negociosNoEnQuery.Select(id => new ControlDeBoletos
+                    {
+                        NegocioId = id,
+                        FechaCreacion = DateTime.Now,
+                        EsConfirma = false,
+                        AltaIdLoteConfirma = null,
+                        AltaIdDocumentoConfirma = null,
+                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                        EstadoConfirmaId = (int?)null,
+                        ControlIniciado = false,
+                        ControlFinalizado = false,
+                        CertificacionCompletada = false,
+                        RegistroDatosOblea = false,
+                        EsConfirmaAltaBorrador = false
+                    }).ToList();
+                    repositorio.AgregarTodos(controlBoletosNuevos);
+                    repositorio.GuardarCambios();
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
             {
                 var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
@@ -312,8 +348,8 @@ namespace Molinos.DataAgro.Business.Managers
                               FechaRegistroDatosOblea = cb.FechaRegistroDatosOblea,
                               MaterialId = cb.Negocio.MaterialId,
                               Material = cb.Negocio.Material.Descripcion,
-                              BolsaCompraNetId = cb.Negocio.BolsaId,
-                              BolsaCompraNet = cb.Negocio.Bolsa.Descripcion,
+                              BolsaCompraNetId = cb.Negocio.BolsaId != null ? (int?)cb.Negocio.BolsaId : null,
+                              BolsaCompraNet = cb.Negocio.Bolsa != null ? cb.Negocio.Bolsa.Descripcion : null,
                               ComercialId = cb.Negocio.ComercialId,
                               Comercial = cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido,
                               ContratoSAP = cb.Negocio.ContratoSAP,

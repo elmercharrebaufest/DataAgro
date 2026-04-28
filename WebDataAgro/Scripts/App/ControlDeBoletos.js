@@ -469,7 +469,7 @@ var ControlBoletos = (function () {
                             },
                             {
                                 title: "Acciones",
-                                width: 100,
+                                width: 150,
                                 template: function (dataItem) {
                                     return self.generarBotonesAccion(dataItem);
                                 },
@@ -806,12 +806,14 @@ var ControlBoletos = (function () {
                     ',NegocioId:' + data.NegocioId +
                     '})" title="Gestión Control"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
                 );
+                if (data.EsConfirma) {
 
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-info btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
-                    data.Id +
-                    ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
-                );
+                    botones.push(
+                        '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
+                        data.Id +
+                        ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
+                    );
+                }
             }
             if (!data.ControlIniciado) {
                 botones.push(
