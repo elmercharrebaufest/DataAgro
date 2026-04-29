@@ -1717,8 +1717,6 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("CrearSugerenciaCupo - sugerencias: " + sugerencias.ToJson());
                 }
 
-
-
                 var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
 
                 var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado);
@@ -1726,7 +1724,6 @@ namespace Molinos.DataAgro.Business.Managers
                 var sugerenciasPendientes = repositorio.Listar<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && solicitudesRechazadas.Contains(a.Id));
                 sugerenciasPendientes.ForEach(a => a.Aceptado = false);
 
-                //repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
                 repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado == null && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
                 repositorio.AgregarTodos(sugerencias);
                 CargarDatosSugerenciasPorComercial(sugerencias, formulaDto);
@@ -1985,83 +1982,164 @@ namespace Molinos.DataAgro.Business.Managers
                 disponibleProvYPlantaPorFecha;
         }
 
+        // ============================================================================
+        // MÉTODO CON COMENTARIOS: ObtenerNegocios
+        // ============================================================================
+        // PROPÓSITO: Recupera y procesa contratos finalizados para generar sugerencias 
+        // automáticas de cupos, aplicando múltiples validaciones y descuentos.
+        // 
+        // ENTRADA: 
+        //   - hoy: Fecha actual (DateTime)
+        //   - formula: Configuración actual con rangos de fechas y filtros (FormulaDto)
+        //   - negocios: Lista acumulativa de sugerencias (se modifica por referencia)
+        //
+        // RETORNO: Negocios que quedaron sin cantidad de cupos sugerible (inhabilitados)
+        // ============================================================================
         private List<SugerenciaCupoDto> ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)
         {
+            // Colección que almacena contratos que no pudieron tener cupos sugeridos
             List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
-            List<int> idsTiposNegociosExcluidos = repositorio.Listar<FormulaTipoNegocioExcluido, int>(x => x.TipoNegocioId, x => x.FormulaId == formula.Id);
-            List<int> tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(x => (int)x.AnulaYReemplazaContratoId, x => x.AnulaYReemplazaContratoId != null);
 
+            // ========================================================================
+            // FASE 1: OBTENER EXCLUSIONES Y FILTRADO INICIAL
+            // ========================================================================
+
+            // Obtiene los tipos de negocio que están marcados como excluidos para esta fórmula
+            List<int> idsTiposNegociosExcluidos = repositorio.Listar<FormulaTipoNegocioExcluido, int>(
+                x => x.TipoNegocioId,
+                x => x.FormulaId == formula.Id
+            );
+
+            // Obtiene IDs de contratos que tienen un sustituto (AnulaYReemplaza)
+            // Se utiliza para no procesar contratos obsoletos
+            List<int> tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(
+                x => (int)x.AnulaYReemplazaContratoId,
+                x => x.AnulaYReemplazaContratoId != null
+            );
+
+            // ========================================================================
+            // FASE 2: CONSULTA PRINCIPAL - TRAER CONTRATOS CANDIDATOS
+            // ========================================================================
+
+            // Consulta todos los contratos que cumplen criterios básicos:
+            // - Estado = Finalizado
+            // - No son EPA, EUDR ni Fason (estos se procesan por separado)
+            // - No tienen contrato sustituto
+            // - No están en lista de exclusión por tipo
+            // - Están dentro del rango de fechas de negocio
+            // - Pertenecen al centro y material de la fórmula actual
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
                 new SugerenciaCupoDto
                 {
-                    StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
+                    // Información del Comercial
                     ComercialId = x.ComercialId.Value,
+                    ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
+
+                    // Datos del destinatario (CUIT de Molinos)
                     Destinatario = "30715118773",
+
                     CUITProveedor = x.Proveedor.CUIT == "" ? "NULL" : x.Proveedor.CUIT,
                     CUITCorredor = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : null,
-                    ProveedorCUIT = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : x.Proveedor.CUIT,
+
+                    // CUIT y Razón social que será utilizado como proveedor en el cupo
                     ProveedorId = x.CorredorId > 0 && x.Corredor != null ? x.CorredorId : x.ProveedorId,
-                    ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
+                    ProveedorCUIT = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : x.Proveedor.CUIT,
+                    ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
+
+                    // Cantidad inicial de cupos basada en cantidad total del contrato
                     CantidadDeCupos = (int)Math.Ceiling(x.Cantidad / 30000),
+
+                    // Información de destino y material
                     DestinoId = x.DestinoId.Value,
-                    NegocioId = x.Id,
+                    CentroDesc = x.Destino.Descripcion,
                     MaterialId = x.MaterialId,
+                    MaterialDesc = x.Material.Descripcion,
+
+                    NegocioId = x.Id,
+                    TipoNegocioId = x.TipoNegocioId,
+                    TipoNegocioDesc = x.TipoNegocio.Descripcion,
+                    ContratoSAP = x.ContratoSAP,
                     MonedaId = x.MonedaId,
                     Precio = x.Precio,
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
                     FechaHastaOriginal = x.FechaHastaOriginal,
-                    TipoNegocioId = x.TipoNegocioId,
-                    ContratoSAP = x.ContratoSAP,
+                    StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
+                    TipoAgenteCompraId = x.TipoAgenteCompraId,
+
+                    // Cantidad total de kilos del contrato (se usa como referencia)
                     KgNegocio = x.Cantidad,
+                    // Kilos pendientes de aplicar (se calculará más adelante con SAP)
                     KgPendienteAplicar = 0,
-                    MaterialDesc = x.Material.Descripcion,
-                    ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
-                    ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                    TipoNegocioDesc = x.TipoNegocio.Descripcion,
+
+                    // Flags de características especiales del contrato
                     CDWarrant = x.Warrant == true || x.CD == true,
                     Fason = x.EsFason,
-                    CentroDesc = x.Destino.Descripcion,
                     Canje = x.Canje == true,
                     MercsDeposito = x.MercsDeposito == true,
                     CaratulaMAT = x.CaratulaMAT != null,
                     Sustentable = x.Sustentable,
-                    Inhabilitado = "",
                     EPA = x.EPA,
                     EUDR = x.EUDR,
-                    TipoAgenteCompraId = x.TipoAgenteCompraId,
-                    ConDescarga = x.ConDescarga ?? false
+                    ConDescarga = x.ConDescarga ?? false,
+
+                    // Campo para acumular motivos de inhabilitación
+                    Inhabilitado = ""
                 },
-                    x =>
+                x =>
+                    // Excluir contratos EPA y EUDR (se procesan por separado)
                     //x.Sustentable != true &&
                     !x.EPA &&
                     !x.EUDR &&
+                    // Excluir Fason (no aplica a sugerencias automáticas)
                     x.EsFason != true &&
+                    // Excluir contratos que tienen sustituto
                     !tienenAnulaYReemplaza.Any(a => a == x.Id) &&
+                    // Excluir tipos de negocio configurados como excluidos
                     !idsTiposNegociosExcluidos.Any(a => a == x.TipoNegocioId) &&
+                    // Validar que el contrato esté dentro del rango de fechas de negocio
+                    // (usa FechaHastaOriginal si existe, sino usa FechaHasta)
                     (x.FechaHastaOriginal ?? x.FechaHasta) >= formula.NegociosDesde &&
                     (x.FechaHastaOriginal ?? x.FechaHasta) <= formula.NegociosHasta &&
                     x.EstadoId == (int)EnumEstadoContrato.Finalizado &&
                     x.DestinoId == formula.CentroId &&
-                    x.MaterialId == formula.MaterialId);
+                    x.MaterialId == formula.MaterialId
+            );
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
-            var zonas = repositorio.Listar<ZonaCupo>();
+            // ========================================================================
+            // FASE 3: OBTENER CONFIGURACIONES Y DATOS AUXILIARES
+            // ========================================================================
 
+            List<ZonaCupo> zonas = repositorio.Listar<ZonaCupo>();
+            List<Centro> centros = repositorio.Listar<Centro>().ToList();
+            List<Material> materiales = repositorio.Listar<Material>().ToList();
+
+            // Actualmente, AlgoritmoKilosMinimosParaSugerencia = 20.
+            // Se multiplica por 1000 para convertir de toneladas a kilos.
             int kilosMinimosParaSugerencia = repositorio.Obtener<Configuracion>(1).AlgoritmoKilosMinimosParaSugerencia * 1000;
 
-            #region Revisar
-            //List<int> solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, a => a.SugerenciaCupoId != null);
-            //contratos = contratos.Where(x => !solicitudesSugerenciasId.Contains(x.NegocioId.Value)).ToList();
-            List<int> solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.NegocioId.Value, a => a.NegocioId != null);
+            // TODO: Acá hay algo raro. Revisar.
+            List<int> solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, a => a.SugerenciaCupoId != null);
             contratos = contratos.Where(x => !solicitudesSugerenciasId.Contains(x.NegocioId.Value)).ToList();
-            #endregion Revisar
+            
+            // ========================================================================
+            // FASE 4: OBTENER CUPOS YA GENERADOS Y SOLICITUDES PENDIENTES
+            // ========================================================================
 
+            // Obtiene IDs de negocios que tienen ContratoSAP válido
             var negociosId = contratos.Where(x => x.ContratoSAP != null && x.ContratoSAP != "").Select(a => a.NegocioId).ToList();
+
+            // Fechas de referencia para buscar cupos recientes
             DateTime antesDeAyer = DateTime.Now.Date.AddDays(-2);
             DateTime ayer = DateTime.Now.Date.AddDays(-1);
 
+            // CUPOS PENDIENTES: Cuenta cupos generados recientemente que aún no se
+            // han completado (cumplimiento = false) y que no han sido anulados/rechazados.
+            // Estos cupos ya "ocupan espacio" del negocio, por lo que deben restarse
+            // de la nueva sugerencia.
             var cuposPendientes = repositorio.Listar<Cupo, CupoDto>(
                 x => new CupoDto
                 {
@@ -2070,15 +2148,17 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaIngreso = x.FechaIngreso,
                     NegocioId = x.NegocioId
                 },
-                x => x.Cumplimiento != true &&
-                     x.NegocioId != null &&
-                     negociosId.Contains(x.NegocioId ?? 0) &&
-                     x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
-                     x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
-                     x.FechaIngreso >= ayer
-            ).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
+                x => x.Cumplimiento != true &&                          // Aún no completado
+                     x.NegocioId != null &&                             // Tiene negocio asociado
+                     negociosId.Contains(x.NegocioId ?? 0) &&           // Pertenece a nuestros contratos
+                     x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&   // No anulado
+                     x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado && // No rechazado
+                     x.FechaIngreso >= ayer                             // Generado recientemente
+            ).GroupBy(x => x.NegocioId.Value)
+            .ToDictionary(a => a.Key, a => a.Count());                  // Agrupar y cuenta por negocio
 
-            //solicitudes pendientes
+            // SOLICITUDES PENDIENTES: Obtiene solicitudes de administración de cupos (Sol.Ext.)
+            // (generadas por el algoritmo) que están pendientes. Estas también ocupan cupos del negocio.
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
                 x.Fecha >= formula.CuposDesde &&
                 x.Fecha <= formula.CuposHasta &&
@@ -2089,27 +2169,50 @@ namespace Molinos.DataAgro.Business.Managers
                 x.SugerenciaCupoId != null
             );
 
+            // ========================================================================
+            // FASE 5: CONSULTAR KILOS PENDIENTES EN SAP
+            // ========================================================================
+
+            // Consulta el servicio SAP para obtener los kilos reales que quedan
+            // pendientes de aplicar en cada contrato.
             List<ContratoKgPendiente> contratosKgPendiente = contratos.Select(a => new ContratoKgPendiente
             {
                 ContratoId = a.Id,
                 ContratoSAP = a.ContratoSAP
             }).ToList();
+            // Llamada a agente SAP para obtener kilos pendientes
             contratosKgPendiente = contratoKgPendienteAgent.Consultar(contratosKgPendiente);
             logger.Debug("CrearSugerenciaCupo - Contratos KgPendiente: " + contratosKgPendiente.ToJson());
+
+            // ========================================================================
+            // FASE 6: CALCULAR CANTIDAD DE CUPOS POR CONTRATO
+            // ========================================================================
+            // Para cada contrato:
+            // 1. Asignar la zona según descripción
+            // 2. Obtener kilos pendientes desde SAP
+            // 3. Calcular cupos basado en kilos (30,000 kg = 1 cupo)
+            // 4. Manejar excedentes (si hay >= mínimo, sumar 1 cupo extra)
+            // 5. Descontar cupos pendientes del ciclo anterior de este mismo algoritmo
+            // 6. Descontar Solicitudes Extraordinarias pendientes vinculadas a sugerencias anteriores
+            // ========================================================================
 
             var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
             foreach (var item in contratos)
             {
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
 
+                // Obtener kilos pendientes del contrato desde la consulta SAP
                 var KgPendiente = contratosKgPendiente.Where(a => a.ContratoSAP == item.ContratoSAP).FirstOrDefault().KgPendiente;
-
                 item.KgPendienteAplicar = KgPendiente;
 
+                // Calcular cantidad de cupos basado en kilos pendientes
                 if (KgPendiente >= kilosMinimosParaSugerencia)
                 {
+                    // Cálculo base: kilos / 30,000 kg por cupo
                     var cantidadcupos = Convert.ToSingle(KgPendiente) / 30000;
                     item.CantidadDeCupos = KgPendiente / 30000;
+
+                    // Manejar excedentes: si el resto representa >= mínimo, sumar 1 cupo
                     var excedente = (cantidadcupos - Math.Truncate(cantidadcupos)) * 100;
                     if (Convert.ToInt32(excedente) >= Convert.ToInt32(minimo))
                     {
@@ -2118,8 +2221,15 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
+                    // No hay suficientes kilos para sugerir ni un cupo
                     item.CantidadDeCupos = 0;
                 }
+
+                // ====================================================================
+                // DESCUENTO 1: CUPOS PENDIENTES del ciclo anterior
+                // ====================================================================
+                // Si hay cupos pendientes (generados pero aún no completados),
+                // se restan de la nueva sugerencia
                 if (cuposPendientes.Any(a => a.Key == item.NegocioId))
                 {
                     item.CantidadDeCupos -= cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
@@ -2127,6 +2237,11 @@ namespace Molinos.DataAgro.Business.Managers
                     item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes del negocio " + item.ContratoSAP;
                 }
 
+                // ====================================================================
+                // DESCUENTO 2: SOLICITUDES PENDIENTES
+                // ====================================================================
+                // Si hay solicitudes de administración pendientes, se restan los cupos
+                // solicitados (cupo normal + flete de procedencia)
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes
@@ -2139,11 +2254,24 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            // ========================================================================
+            // FASE 7: SEPARAR CONTRATOS VIABLES DE NO VIABLES
+            // ========================================================================
+            // Los contratos que quedan sin cupos disponibles se guardan en lista separada
+            // Los que sí tienen cupos se agregan a la lista principal
+
             negociosSinSugerencia.AddRange(contratos.Where(a => a.CantidadDeCupos <= 0).ToList());
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
+
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (cantidad): " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos (ContratoSAP): " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
+
+            // ========================================================================
+            // FASE 8: CONSULTAR Y VALIDAR CONTRATOS WARRANT/CD
+            // ========================================================================
+            // Consulta los contratos que tienen características de Warranty o CD
+            // y marca los que coinciden
 
             List<BasicoContrato> warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
@@ -2155,9 +2283,18 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            //validar CCPP Pendientes de aplicar
+            // ========================================================================
+            // FASE 9: VALIDAR CARTAS DE PORTE PENDIENTES (CCPP)
+            // ========================================================================
+            // Las Cartas de Porte (CCPP) que aún no se han aplicado a un contrato
+            // representan mercadería que podría eventualmente usarse. El algoritmo
+            // reserva cupos para estas CCPP pendientes (si superan el mínimo),
+            // reduciéndolos del total disponible para el negocio.
+
+            // Agrupa contratos por combinación de Proveedor y Corredor
             var contratosPorProveedorCorredor = contratos.Where(x => x.CantidadDeCupos > 0).GroupBy(x => new { x.CUITProveedor, x.CUITCorredor }).ToList();
 
+            // Inicializa lista de cupos a restar por proveedor/corredor basado en CCPP pendientes
             List<RestarCuposProvCorrDto> restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto
             {
                 CUITProveedor = x.Key.CUITProveedor,
@@ -2165,15 +2302,15 @@ namespace Molinos.DataAgro.Business.Managers
                 CantidadCupos = 0
             }).ToList();
 
-            List<Centro> centros = repositorio.Listar<Centro>().ToList();
-            List<Material> materiales = repositorio.Listar<Material>().ToList();
-
+            // Para cada grupo de contratos del mismo proveedor/corredor
             foreach (var contratoPorProvCorr in contratosPorProveedorCorredor)
             {
+                // Obtiene códigos SAP necesarios para consulta
                 var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
                 var materialCodigo = materiales.Where(x => x.MaterialId == contratoPorProvCorr.First().MaterialId).Single().Codigo;
 
-                CcPpPendienteAplicarDto pendienteDto = new CcPpPendienteAplicarDto()
+                // Arma request para consultar CCPP pendientes
+                CcPpPendienteAplicarDto requestCCPPPendienteDto = new CcPpPendienteAplicarDto()
                 {
                     Centro = centroCodigo,
                     Material = materialCodigo,
@@ -2182,15 +2319,26 @@ namespace Molinos.DataAgro.Business.Managers
                     AgenteCompra = "",
                 };
 
-                List<CcPpPendienteAplicarDto> pendientes = cartasDePortePendienteAplicarAgent.ListarCartasDePortePendienteAplicar(pendienteDto);
+                // Consulta SAP para obtener CCPP pendientes
+                List<CcPpPendienteAplicarDto> CCPPPendientes = cartasDePortePendienteAplicarAgent.ListarCartasDePortePendienteAplicar(requestCCPPPendienteDto);
 
-                if (pendientes != null && pendientes.Count > 0)
+                if (CCPPPendientes != null && CCPPPendientes.Count > 0)
                 {
-                    var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).Sum(x => x.Cantidad);
+                    // Obtiene cantidad total de CCPP que no tienen contrato asociado
+                    // (estos están "flotantes" y podrían aplicarse)
+                    var cantidadCartaDePorte = CCPPPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).Sum(x => x.Cantidad);
 
+                    // Si CCPP pendientes superan el mínimo configurado (20.000 Kg)
                     if (cantidadCartaDePorte >= kilosMinimosParaSugerencia)
                     {
-                        restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().CantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+                        // Calcula cupos equivalentes a CCPP pendientes
+                        restarCuposProvCorr
+                            .Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor &&
+                                        contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor)
+                            .Single()
+                            .CantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+
+                        // Maneja excedentes
                         var cantidadcuposCCPP = Convert.ToSingle(cantidadCartaDePorte) / 30000;
                         var excedente = (cantidadcuposCCPP - Math.Truncate(cantidadcuposCCPP)) * 100;
                         if (Convert.ToInt32(excedente) >= Convert.ToInt32(minimo))
@@ -2201,8 +2349,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (cantidadCartaDePorte > 0)
                     {
-                        logger.Debug("CcPpPerndienteAplicarDto para obtener CCPP: " + pendienteDto.ToJson());
-                        logger.Debug("ListarCartasDePortePendienteAplicar - CCPP obtenidos: " + pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).ToList().ToJson());
+                        logger.Debug("CcPpPerndienteAplicarDto para obtener CCPP: " + requestCCPPPendienteDto.ToJson());
+                        logger.Debug("ListarCartasDePortePendienteAplicar - CCPP obtenidos: " + CCPPPendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).ToList().ToJson());
                     }
                 }
             }
@@ -2212,6 +2360,11 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.CantidadCupos > 0).ToJson());
             }
 
+            // ========================================================================
+            // FASE 10: APLICAR DESCUENTOS DE CCPP A CONTRATOS
+            // ========================================================================
+
+            // Ordena contratos por prioridad (Canje > CDWarrant > MercsDeposito > ...) y aplica los descuentos de CCPP proporcionalmente
             List<SugerenciaCupoDto> contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
                 .OrderByDescending(x => x.Canje)
                 .ThenByDescending(x => x.CDWarrant)
@@ -2223,40 +2376,75 @@ namespace Molinos.DataAgro.Business.Managers
                 .ThenBy(x => x.ContratoSAP)
                 .ToList();
 
+            // Para cada contrato ordenado, aplica descuentos de CCPP pendientes
             foreach (var contratoOrdenado in contratosOrdenados)
             {
-                var cantidadCuposARestar = restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos;
+                // Obtiene cantidad de cupos a restar para este proveedor/corredor
+                var cantidadCuposARestar = restarCuposProvCorr
+                    .Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor &&
+                                contratoOrdenado.CUITCorredor == x.CUITCorredor)
+                    .Single()
+                    .CantidadCupos;
 
                 if (cantidadCuposARestar > 0)
                 {
                     var msje = "";
+                    // Si el contrato tiene suficientes cupos para cubrir el descuento
                     if (contratoOrdenado.CantidadDeCupos >= cantidadCuposARestar)
                     {
                         msje = "Por CP pendiente a aplicar, se restan " + cantidadCuposARestar + " cupos al negocio " + contratoOrdenado.ContratoSAP;
-                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos = 0;
+
+                        // Descuenta del proveedor/corredor y del contrato
+                        restarCuposProvCorr
+                            .Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor &&
+                                        contratoOrdenado.CUITCorredor == x.CUITCorredor)
+                            .Single()
+                            .CantidadCupos = 0;
+
                         contratoOrdenado.CantidadDeCupos -= cantidadCuposARestar;
                     }
                     else
                     {
+                        // El contrato no tiene suficientes cupos, descuenta todo lo que tiene
                         msje = "Por CP pendiente a aplicar, se restan " + contratoOrdenado.CantidadDeCupos + " cupos al negocio " + contratoOrdenado.ContratoSAP;
-                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos -= contratoOrdenado.CantidadDeCupos;
+
+                        restarCuposProvCorr
+                            .Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor &&
+                                        contratoOrdenado.CUITCorredor == x.CUITCorredor)
+                            .Single()
+                            .CantidadCupos -= contratoOrdenado.CantidadDeCupos;
+
                         contratoOrdenado.CantidadDeCupos = 0;
                     }
-                    contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().CantidadDeCupos = contratoOrdenado.CantidadDeCupos;
 
+                    // Actualiza cantidad en lista principal
+                    contratos
+                        .Where(x => x.NegocioId == contratoOrdenado.NegocioId)
+                        .Single()
+                        .CantidadDeCupos = contratoOrdenado.CantidadDeCupos;
+
+                    // Registra motivo de descuento
                     var lInhabilitado = contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().Inhabilitado;
                     contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().Inhabilitado += (lInhabilitado == "" ? "" : ". ") + msje;
                 }
             }
 
+            // ========================================================================
+            // FASE 11: GESTIÓN DE STOCK SUSTENTABLE
+            // ========================================================================
+            // Los productos marcados como Sustentable tienen restricción adicional:
+            // no pueden exceder el stock disponible en los establecimientos del proveedor.
+            // Este paso valida y limita la cantidad de cupos sustentables.
 
             //traer stock para cupos SUSTENTABLES por proveedor
+            // Lista unique de proveedores con contratos sustentables
             List<EstablecimientoStockDto> stockSustentable = contratos
                 .Where(x => x.CantidadDeCupos > 0 && x.Sustentable)
                 .Select(a => a.ProveedorCUIT)
                 .Distinct()
                 .Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
+            // Obtiene cupos sustentables que ya están pendientes (generados pero no completados)
             var cuposPendientesSustentables = repositorio.Listar<Cupo, CupoDto>(
                 x => new CupoDto
                 {
@@ -2276,45 +2464,70 @@ namespace Molinos.DataAgro.Business.Managers
                 x.Sustentable
             ).GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
+            // Para cada proveedor con cupos sustentables
             foreach (var item in stockSustentable)
             {
+                // Obtiene stock disponible en establecimientos
                 item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor, false);
+                // Descuenta cupos sustentables ya generados
                 var sustentablesPendientes = cuposPendientesSustentables.Where(x => x.Key == item.Proveedor).FirstOrDefault();
                 item.Cantidad -= sustentablesPendientes.Value;
             }
 
-            //limitar la cantidad de sugerencias de SUSTENTABLE al stock disponible 
+            // Limita la cantidad de sugerencias de SUSTENTABLE al stock disponible 
             foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).GroupBy(a => a.ProveedorCUIT).ToList())
             {
                 foreach (var contrato in contratosPorProveedor.ToList())
                 {
-                    if (contrato.CantidadDeCupos <= stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad)
+                    var stockDisponible = stockSustentable
+                        .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                        .First()
+                        .Cantidad;
+
+                    if (contrato.CantidadDeCupos <= stockDisponible)
                     {
-                        stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad -= contrato.CantidadDeCupos;
+                        // Hay suficiente stock, descuenta del disponible
+                        stockSustentable
+                            .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                            .First()
+                            .Cantidad -= contrato.CantidadDeCupos;
                     }
                     else
                     {
-                        contrato.CantidadDeCupos = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
-                        contrato.CuposPendientes = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+                        // No hay suficiente stock, limita a lo disponible
+                        contrato.CantidadDeCupos = Decimal.ToInt32(stockDisponible);
+                        contrato.CuposPendientes = Decimal.ToInt32(stockDisponible);
 
                         if (contrato.CuposPendientes > 0)
                         {
-                            contrato.Inhabilitado += (contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
-                                Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos SUST pendientes para el negocio " +
-                                contrato.ContratoSAP;
+                            contrato.Inhabilitado += (contrato.Inhabilitado == "" ? "" : ". ") +
+                                "Tiene " + Decimal.ToInt32(stockDisponible) +
+                                " cupos SUST pendientes para el negocio " + contrato.ContratoSAP;
                         }
 
-                        stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad = 0;
+                        // Agota el stock disponible para este proveedor
+                        stockSustentable
+                            .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                            .First()
+                            .Cantidad = 0;
                     }
                 }
             }
 
+            // ========================================================================
+            // FASE 12: GESTIÓN DE STOCK EPA/EUDR
+            // ========================================================================
+            // Similar a la gestión de Sustentable, pero aplicada a productos EPA/EUDR.
+            // Estos también tienen restricción de stock en establecimientos.
+
             // Traer stock para cupos EPA y EUDR (mientras se use solo soja twin) por proveedor
+            // Lista unique de proveedores con contratos EPA/EUDR
             List<EstablecimientoStockDto> stockEPAyEUDR = contratos
                 .Where(x => x.CantidadDeCupos > 0 && (x.EPA || x.EUDR))
                 .Select(a => a.ProveedorCUIT).Distinct()
                 .Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
+            // Obtiene cupos EPA/EUDR que ya están pendientes
             var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(
                 x => new CupoDto
                 {
@@ -2335,9 +2548,13 @@ namespace Molinos.DataAgro.Business.Managers
                 (x.EPA || x.EUDR)
             ).GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
+            // Para cada proveedor con cupos EPA/EUDR
             foreach (var item in stockEPAyEUDR)
             {
+                // Obtiene stock disponible en establecimientos (esEPAoEUDR = true)
                 item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor, true);
+
+                // Descuenta cupos EPA/EUDR ya generados
                 var epaPendientes = cuposPendientesEPA.Where(x => x.Key == item.Proveedor).FirstOrDefault();
                 item.Cantidad -= epaPendientes.Value;
             }
@@ -2347,29 +2564,51 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var contrato in contratosPorProveedor.ToList())
                 {
-                    if (contrato.CantidadDeCupos <= stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad)
+                    var stockDisponible = stockEPAyEUDR
+                        .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                        .First()
+                        .Cantidad;
+
+                    if (contrato.CantidadDeCupos <= stockDisponible)
                     {
-                        stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad -= contrato.CantidadDeCupos;
+                        // Hay suficiente stock, descuenta del disponible
+                        stockEPAyEUDR
+                            .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                            .First()
+                            .Cantidad -= contrato.CantidadDeCupos;
                     }
                     else
                     {
-                        contrato.CantidadDeCupos = Decimal.ToInt32(stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
-                        contrato.CuposPendientes = Decimal.ToInt32(stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+                        // No hay suficiente stock, limita a lo disponible
+                        contrato.CantidadDeCupos = Decimal.ToInt32(stockDisponible);
+                        contrato.CuposPendientes = Decimal.ToInt32(stockDisponible);
 
                         if (contrato.CuposPendientes > 0)
                         {
-                            contrato.Inhabilitado += (contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
-                                Decimal.ToInt32(stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos EPA/EUDR pendientes para el negocio " +
-                                contrato.ContratoSAP;
+                            contrato.Inhabilitado += (contrato.Inhabilitado == "" ? "" : ". ") +
+                                "Tiene " + Decimal.ToInt32(stockDisponible) +
+                                " cupos EPA/EUDR pendientes para el negocio " + contrato.ContratoSAP;
                         }
 
-                        stockEPAyEUDR.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad = 0;
+                        // Agota el stock disponible para este proveedor
+                        stockEPAyEUDR
+                            .Where(a => a.Proveedor == contratosPorProveedor.Key)
+                            .First()
+                            .Cantidad = 0;
                     }
                 }
             }
 
+            // ========================================================================
+            // FASE 13: PROCESAMIENTO DE ESPACIO DINÁMICO
+            // ========================================================================
+            // El "Espacio Dinámico" es una configuración alternativa que permite sugerencias
+            // sin estar ligadas a un contrato específico. Se procesa de forma similar a los contratos regulares.
+
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
 
+            // Obtiene todas las configuraciones de espacio dinámico que coinciden con
+            // la fecha, centro y material de la fórmula
             List<SugerenciaCupoDto> espacioDinamicoLista = repositorio.Listar<ConfiguracionEspacioDinamico, SugerenciaCupoDto>(
                 x => new SugerenciaCupoDto
                 {
@@ -2405,10 +2644,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<int> espacioDinamicoIds = espacioDinamicoLista.Select(a => a.Id).ToList();
 
+            // Obtiene cupos ya generados para estas configuraciones de espacio dinámico
             Dictionary<int, int> espacioDinamicoUsados = repositorio.Listar<Cupo>(
                 x =>
                 x.ConfiguracionEspacioDinamicoId != null &&
-                espacioDinamicoIds.Contains(x.NegocioId ?? 0) &&
+                espacioDinamicoIds.Contains(x.NegocioId ?? 0) && // TODO: Acá hay algo raro. Revisar "espacioDinamicoLista"
                 x.EstadoCupoId != (int)EnumEstadoCupo.SinCTG &&
                 x.EstadoCupoId != (int)EnumEstadoCupo.Anulado &&
                 x.EstadoCupoId != (int)EnumEstadoCupo.Rechazado &&
@@ -2416,40 +2656,46 @@ namespace Molinos.DataAgro.Business.Managers
                 x.ComercialId != null
             ).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
 
-            //cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
-            //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.ConfiguracionEspacioDinamicoId, },
-            //    x => x.Cumplimiento == false && x.ConfiguracionEspacioDinamicoId != null && espacioDinamicoIds.Contains(x.ConfiguracionEspacioDinamicoId ?? 0) && x.FechaIngreso <= antesDeAyer);
-
+            // Procesa cada configuración de espacio dinámico
             foreach (var item in espacioDinamicoLista)
             {
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
+
+                // Descuenta cupos ya generados
                 if (espacioDinamicoUsados.Any(a => a.Key == item.ConfiguracionEspacioDinamicoId))
                 {
                     item.CantidadDeCupos -= espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
                     item.CuposPendientes = espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
                 }
 
-                //if (cuposNoCumplidos.Any(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId))
-                //{
-                //    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId);
-                //}
-
+                // Descuenta solicitudes de administración pendientes
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes
-                        .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
+                        .Where(a => a.SugerenciaCupo != null &&
+                                    a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
+
                     item.SolicitudesPendientes = solicitudesPendientes
-                        .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
+                        .Where(a => a.SugerenciaCupo != null &&
+                                    a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
                 }
             }
 
+            // ========================================================================
+            // FASE 14: AGREGAR ESPACIO DINÁMICO A LISTA FINAL
+            // ========================================================================
+
+            // Separa configuraciones de espacio dinámico viables de no viables
             negociosSinSugerencia.AddRange(espacioDinamicoLista.Where(a => a.CantidadDeCupos <= 0).ToList());
             espacioDinamicoLista = espacioDinamicoLista.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(espacioDinamicoLista);
 
             logger.Debug("CrearSugerenciaCupo - Espacio Dinamico obtenidos: " + espacioDinamicoLista.Count());
+
+            // Devuelve la lista de negociocios que no pudieron tener cupos sugeridos
+            // (por cualquier restricción: mínimo de kilos, cupos pendientes, etc.)
             return negociosSinSugerencia;
         }
 
