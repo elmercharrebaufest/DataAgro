@@ -377,6 +377,7 @@
     <Content Include="Scripts\App\ContactoComercialAuditoria.js" />
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
+    <Content Include="Scripts\App\ControlDeBoletosGestion.js" />
     <Content Include="Scripts\App\ControlDeBoletosModificarContrato.js" />
     <Content Include="Scripts\App\ControlDeBoletosReporteSeguimiento.js" />
     <Content Include="Scripts\App\ControlDeBoletosSeguimiento.js" />
@@ -3170,6 +3171,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Templates\AltaMasivaCupos.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ControlDeBoletos\_FormSeguimientoControlBoleto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ControlDeBoletos\_FormDatosCertificacion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ControlDeBoletos\_FormModificarDatosDelContrato.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ControlDeBoletos\_GestionControlBoleto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\00_COMIENZA_AQUI.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ANALISIS_OBTENER_NEGOCIOS.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ENTREGA_FINAL.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ESQUEMA_VISUAL_FLUJO.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\INDICE_RAPIDO.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\MAPA_DE_NAVEGACION.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\README_DOCUMENTACION.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RECOMENDACIONES_METODO_MANUAL.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\REFERENCIA_RAPIDA.md" />
+    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

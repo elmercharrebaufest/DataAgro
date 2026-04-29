@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int? EstadoConfirmaId { get; set; }
         public string EstadoConfirma { get; set; }
         public bool EsConfirma { get; set; }
+        public string TipoAltaConfirma{ get; set; }
         public int? AltaIdLoteConfirma { get; set; }
         public int? IdentificadorConfirma { get; set; }
         public DateTime FechaCreacion { get; set; }

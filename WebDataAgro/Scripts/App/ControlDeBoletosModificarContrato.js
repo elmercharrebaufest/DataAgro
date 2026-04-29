@@ -1,4 +1,4 @@
-﻿var ControlDeBoletosModificarContrato = (function () {
+var ControlDeBoletosModificarContrato = (function () {
     "use strict";
     var config = {
         urls: {
@@ -19,10 +19,19 @@
         cargando: false,
     };
 
-    let controlProvincia = $("#frmModificarContrato #Provincia");
-    let controlClasificacion = $("#frmModificarContrato #Clasificacion");
-    let controlCosecha = $("#frmModificarContrato #Cosecha");
-    let controlProcedencia = $("#frmModificarContrato #Procedencia");
+    let controlProvincia;
+    let controlClasificacion;
+    let controlCosecha;
+    let controlProcedencia;
+
+    function bindControls() {
+        var $form = $("#accordionGestionBoleto #frmModificarContrato");
+        if (!$form.length) $form = $("#frmModificarContrato").first();
+        controlProvincia     = $form.find("#Provincia");
+        controlClasificacion = $form.find("#Clasificacion");
+        controlCosecha       = $form.find("#Cosecha");
+        controlProcedencia   = $form.find("#Procedencia");
+    }
 
     // ======================
     // Funciones privadas
@@ -84,7 +93,13 @@
     // API pública
     // ======================
     return {
+        inicializar: function (NegocioId) {
+            bindControls();
+            state.negocioId = NegocioId;
+            this.cargarContrato(state.negocioId);
+        },
         abrir: function (NegocioId) {
+            bindControls();
             BlockUi('Cargando...');
             state.negocioId = NegocioId;
             this.cargarContrato(state.negocioId);

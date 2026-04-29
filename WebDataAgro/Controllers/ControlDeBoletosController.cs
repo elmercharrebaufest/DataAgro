@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -838,6 +838,23 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.ControlDeBoletosId = id;
             return PartialView("_SeguimientoControlBoleto");
+        }
+        [HttpGet]
+        public ActionResult _GestionControlBoleto(int? controlDeBoletosId, int? seguimientoBoletoId, int? preCertificacionId, int? negocioId)
+        {
+            try
+            {
+                ViewBag.ControlDeBoletosId = controlDeBoletosId ?? 0;
+                ViewBag.SeguimientoBoletoId = seguimientoBoletoId ?? 0;
+                ViewBag.PreCertificacionId = preCertificacionId ?? 0;
+                ViewBag.NegocioId = negocioId ?? 0;
+                return PartialView("_GestionControlBoleto");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar la página: " + ex.Message;
+                return View("Error");
+            }
         }
         #endregion
 

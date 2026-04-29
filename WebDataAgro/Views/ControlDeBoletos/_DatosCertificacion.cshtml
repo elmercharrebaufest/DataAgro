@@ -15,47 +15,7 @@
                 </div>
             </div>
             <div class="modal-body">
-                <form id="frmCertificacion">
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>Bolsa</label>
-                            <select id="Bolsa" class="form-control">
-                                <option value="">Cargando Bolsas...</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label>Fecha Certificación</label>
-                            <input type="date" id="FechaCertificacion" class="form-control" />
-                        </div>
-
-                        <div class="col-md-4">
-                            <label>Fecha Vencimiento</label>
-                            <input type="date" id="FechaVencimientoCertificacion" class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-md-4">
-                            <label>Oblea</label>
-                            <input type="text" id="Oblea" class="form-control" maxlength="10" />
-                        </div>
-
-                        <div class="col-md-4">
-                            <label>Tipo Oblea</label>
-                            <select id="TipoOblea" class="form-control">
-                                <option value="">Cargando Tipo Oblea...</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Rechazado</label>
-                            <div>
-                                <input id="Rechazado" class="form-control" role="switch" type="checkbox" style="width: 20px; margin-top: 0px !important; margin-left: 0px !important;">
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                @Html.Partial("_FormDatosCertificacion")
             </div>
 
             <div class="modal-footer">

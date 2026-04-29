@@ -184,8 +184,14 @@ const GenerarConfirma = (() => {
         $("<style id='grid-confirma-styles'>").text(`
             #contratos-grid .k-grid-header th {
                 font-weight: bold !important;
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
                 white-space: nowrap;
                 background-color: #f5f5f5;
+            }
+            #contratos-grid .k-grid-content td {
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
             }
             #contratos-grid .k-grid-header-wrap {
                 overflow: hidden !important;
