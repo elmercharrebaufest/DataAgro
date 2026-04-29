@@ -1,9 +1,11 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
@@ -52,6 +54,7 @@ namespace Molinos.DataAgro.Interfaces
         Task AnulacionMasiva2(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
+        List<ExcelValidatorResumeItem> AltaMasivaSugerenciaCupos(DataSet dsExcel);
         void EnviarMailSugerenciasPendientesPorComercial();
         CupoResult GenerarSolicitudExtraordinaria(AdministracionCupoDto solicitud);
         void EliminarSugerenciaDeCupos(ConfiguracionCupo configuracion);

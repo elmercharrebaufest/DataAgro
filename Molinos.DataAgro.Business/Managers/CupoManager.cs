@@ -1,3 +1,4 @@
+using AutoMapper.Configuration;
 using Kendo.DynamicLinq;
 using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
@@ -17,6 +18,7 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -104,7 +106,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (!error.HayError)
                 {
-                    cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
+                    cupo.Material = repositorio.Obtener<Entities.Entities.Material>(cupo.MaterialId);
                     cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                     cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
                     cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
@@ -1566,7 +1568,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void CrearSugerenciaCupo()
         {
-            var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
+            var materiales = repositorio.Listar<Entities.Entities.Material, int>(x => x.MaterialId);
             var sugerencias = new List<SugerenciaCupoDto>();
             var formulas = new List<FormulaDto>();
             foreach (var MaterialId in materiales)
@@ -1580,6 +1582,67 @@ namespace Molinos.DataAgro.Business.Managers
             }
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
             EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas));
+        }
+
+
+
+        // CLASE GENERADA , DESPUES MOVER A CARPETA CORRESPONDIENTE
+        internal class AltaMasivaCupoDto
+        {
+            public string ContratoSAP { get; set; }
+            public DateTime FechaSugerida { get; set; }
+            public int CantidadDeCupos { get; set; }
+            public int Material { get; set; }
+        }
+
+
+
+        public List<ExcelValidatorResumeItem> AltaMasivaSugerenciaCupos(DataSet dsExcel)
+        {
+
+            var ExcelData = dsExcel.Tables[0].AsEnumerable()
+                  .Select(row => new AltaMasivaCupoDto
+                  {
+                      ContratoSAP = row["ContratoSAP"]?.ToString().PadLeft(10,'0'),
+                      FechaSugerida = DateTime.FromOADate(double.Parse(row["FechaSugerida"]?.ToString())),
+                      CantidadDeCupos = int.Parse(row["CantidadDeCupos"]?.ToString()),
+                      Material = 0, 
+                  })
+                  .Where(x => !string.IsNullOrEmpty(x.ContratoSAP))
+                  .ToList();
+
+
+            // CHEQUEAR QUE LOS CONTRATOS SAP EXISTAN Y OBTENER LOS NEGOCIOS CORRESPONDIENTES
+            var listaNegocios = new List<Negocio>();
+            foreach (var negocioId in ExcelData)
+            {
+                var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == negocioId.ContratoSAP);
+                if (negocio != null)
+                {
+                    negocioId.Material = negocio.MaterialId;
+                    listaNegocios.Add(negocio);
+                }
+            }
+
+            // OBTENER TODOS LOS MATERIALES 
+            var materiales = listaNegocios.Select(x => x.MaterialId).Distinct();
+            foreach (var materialId in materiales)
+            {
+                var formulaDto = new FormulaDto();
+                // aca se crea la formula por cada material
+                // TENGO DUDAS ???????????????????????????  <----------------------------
+                // Negocio desde y hasta , ver si se usa
+                // si se usa , ver si se usa asi o la fecha desde hasta del negocio 
+                formulaDto.MaterialId = materialId;
+                formulaDto.NegociosDesde = ExcelData.Where(x => x.Material == materialId).Min(x => x.FechaSugerida);
+                formulaDto.NegociosHasta = ExcelData.Where(x => x.Material == materialId).Max(x => x.FechaSugerida);
+                formulaDto.CuposDesde = ExcelData.Where(x => x.Material == materialId).Max(x => x.FechaSugerida);
+                formulaDto.CuposHasta = ExcelData.Where(x => x.Material == materialId).Max(x => x.FechaSugerida);
+                formulaDto.CentroId = 1; // SEGUN LO QUE HABLAMOS CON GONZA ESTO ES 1 SIEMPRE
+
+                CrearSugerenciaCupoMasiva(materialId, formulaDto);
+            }
+            return new List<ExcelValidatorResumeItem>();
         }
 
         public FormulaDto ObtenerFormulaDto(int material)
@@ -1744,6 +1807,127 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+
+
+        public List<SugerenciaCupoDto> CrearSugerenciaCupoMasiva(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion = null)
+        {
+            try
+            {
+                DateTime hoy = DateTime.Now.Date;
+                var formulaDto = formula;
+                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula para material: " + MaterialId);
+                var formulaSave = repositorio.Obtener<Formula>(formulaDto.Id);
+
+                //if (configuracion != null)
+                //{
+                //    //logger.Debug("CrearSugerenciaCupo - configuracion: " + (configuracion == null ? "null" : configuracion.ToJson()));
+                //    logger.Debug("desde" + formulaDto.CuposDesde + " hasta " + formulaDto.CuposHasta + "- Configuracion: " + configuracion.Fecha);
+                //    if (!(formulaDto.CuposDesde <= configuracion.Fecha && formulaDto.CuposHasta >= configuracion.Fecha))
+                //    {
+                //        return new List<SugerenciaCupoDto>();
+                //    }
+                //}
+                logger.Debug("Inicio Algoritmo");
+
+                //formulaSave.CuposDesde = formulaDto.CuposDesde;
+                //formulaSave.CuposHasta = formulaDto.CuposHasta;
+                //formulaSave.NegociosDesde = formulaDto.NegociosDesde;
+                //formulaSave.NegociosHasta = formulaDto.NegociosHasta;
+                //formulaSave.CriterioId = formulaDto.CriterioId;
+                //formulaSave.CentroId = formulaDto.CentroId;
+                //formulaSave.MaterialId = formulaDto.MaterialId;
+                //formulaSave.Fecha = formulaDto.Fecha;
+                //formulaSave.Usada = true;
+
+                //formulaDto.CuposDesde = formulaDto.CuposDesde < hoy ? hoy : formulaDto.CuposDesde;
+
+                logger.Debug("CrearSugerenciaCupo - inicio de disponibilidad en planta.");
+                List<ConfiguracionCupoDto> disponibilidadEnPlantas = ObtenerDisponibilidadEnPlantas(formulaDto);
+                logger.Debug("CrearSugerenciaCupo - fin de disponibilidad en planta.");
+
+                List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
+
+                logger.Debug("CrearSugerenciaCupo - inicio de obtener negocios.");
+                var sinSugerencia = ObtenerNegocios(hoy, formulaDto, negocios);
+                logger.Debug("CrearSugerenciaCupo - fin de obtener negocios.");
+
+                logger.Debug("CrearSugerenciaCupo - inicio de ValidarHabilitaciones.");
+                var inhabilitados = ValidarHabilitaciones(negocios);
+                logger.Debug("CrearSugerenciaCupo - fin de ValidarHabilitaciones.");
+
+                //logger.Debug("CrearSugerenciaCupo - inicio de ObtenerPuntajes.");
+                //ObtenerPuntajes(formulaDto, negocios);
+                //logger.Debug("CrearSugerenciaCupo - fin de ObtenerPuntajes.");
+
+                //logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
+                //PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
+                //logger.Debug("CrearSugerenciaCupo - negocios priorizados: " + negocios.Where(a => a.Priorizado).Count());
+                //logger.Debug("CrearSugerenciaCupo - fin de PriorizarSegunDisponibilidad.");
+
+                //negocios.ForEach(a => a.PuntuacionesString = JsonConvert.SerializeObject(a.Puntuaciones));
+
+                List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
+                {
+                    //AgenteCompraId = a.AgenteCompraId,
+                    ZonaCupoId = a.ZonaCupoId ?? 0,
+                    CantidadDeCupos = a.CantidadDeCupos,
+                    CantidadCupoOriginal = a.CantidadDeCupos,
+                    CentroId = a.DestinoId,
+                    NegocioId = a.NegocioId,
+                    //ContratoId = a.ContratoId,
+                    //FasonId = a.FasonId,
+                    FechaSugerida = a.FechaSugerida,
+                    //FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
+                    ConfiguracionEspacioDinamicoId = a.ConfiguracionEspacioDinamicoId,
+                    MaterialId = a.MaterialId,
+                    MonedaId = a.MonedaId,
+                    Precio = a.Precio,
+                    TipoNegocioId = a.TipoNegocioId,
+                    Puntuacion = a.PuntuacionTotal,
+                    ProveedorId = a.ProveedorId,
+                    Destinatario = a.Destinatario,
+                    ComercialId = a.ComercialId,
+                    StandardDeCalidad = a.MaterialId == (int)EnumMateriales.SOJA ? a.StandardDeCalidad == "Camara" ? a.StandardDeCalidad : "Fabrica" : "",
+                    Aceptado = null,
+                    Puntuaciones = a.PuntuacionesString,
+                    ContratoSAP = a.ContratoSAP,
+                    CDWarrant = a.CDWarrant,
+                    KgNegocio = a.KgNegocio,
+                    KgPendienteAplicar = a.KgPendienteAplicar,
+
+                }).ToList();
+                if (activarLogDebug)
+                {
+                    logger.Debug("CrearSugerenciaCupo - sugerencias: " + sugerencias.ToJson());
+                }
+
+
+
+                var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
+
+                var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado);
+
+                var sugerenciasPendientes = repositorio.Listar<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && solicitudesRechazadas.Contains(a.Id));
+                sugerenciasPendientes.ForEach(a => a.Aceptado = false);
+
+                //repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
+                repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado == null && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
+                repositorio.AgregarTodos(sugerencias);
+                CargarDatosSugerenciasPorComercial(sugerencias, formulaDto);
+                repositorio.GuardarCambios();
+
+                logger.Debug("CrearSugerenciaCupo - GuardarCambios. material: " + MaterialId);
+                negocios.AddRange(inhabilitados);
+                negocios.AddRange(sinSugerencia);
+                return negocios;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                throw;
+            }
+
+        }
         private List<SugerenciaCupoDto> ValidarHabilitaciones(List<SugerenciaCupoDto> negocios)
         {
             var negocioInhabilitados = new List<SugerenciaCupoDto>();
@@ -2215,7 +2399,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<RestarCuposProvCorrDto> restarCuposProvCorr = new List<RestarCuposProvCorrDto>();
             restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto { CUITProveedor = x.Key.CUITProveedor, CUITCorredor = x.Key.CUITCorredor, CantidadCupos = 0 }).ToList();
             var centros = repositorio.Listar<Centro>().ToList();
-            var materiales = repositorio.Listar<Material>().ToList();
+            var materiales = repositorio.Listar<Entities.Entities.Material>().ToList();
             foreach (var contratoPorProvCorr in contratosPorProveedorCorredor)
             {
                 var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
@@ -2778,7 +2962,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var fechas = new List<DateTime>();
 
-            var materiales = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId == materialId || materialId == null);
+            var materiales = repositorio.Listar<Entities.Entities.Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId == materialId || materialId == null);
             foreach (var material in materiales)
             {
                 Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(material.MaterialId));
@@ -7186,4 +7370,6 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
     }
+
+
 }
