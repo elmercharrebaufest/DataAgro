@@ -332,6 +332,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ConfirmaQALoteDocumentos\ClausulaExtension.cs" />
     <Compile Include="Service References\ConfirmaQALoteDocumentos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -375,8 +375,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 XmlElement clausulaEl = xmlDoc.CreateElement("Clausula");
                 clausulaEl.SetAttribute("Orden", string.Empty);
-                AgregarElemento(xmlDoc, clausulaEl, "TextoClausula", clausula.Texto);
-                AgregarElemento(xmlDoc, clausulaEl, "TextoAdicionalClausula", string.Empty);
+                AgregarElementoCData(xmlDoc, clausulaEl, "TextoClausula", clausula.Texto);
+                AgregarElementoCData(xmlDoc, clausulaEl, "TextoAdicionalClausula", string.Empty);
                 clausulasEl.AppendChild(clausulaEl);
             }
 
@@ -519,7 +519,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private void AgregarOrigen(XmlDocument xmlDoc, XmlElement det, BasicoContrato contrato)
         {
             XmlElement origen = xmlDoc.CreateElement("Origen");
-            AgregarElemento(xmlDoc, origen, "LocalidadOrigen", contrato.LocalidadConfirma);
+            AgregarElementoCData(xmlDoc, origen, "LocalidadOrigen", contrato.LocalidadConfirma);
             AgregarAtributo(xmlDoc, origen, "ProvinciaOrigen", "CodLista", contrato.ProvinciaConfirma);
             det.AppendChild(origen);
         }
@@ -553,7 +553,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             string condPago = ResolverCondicionPago(contrato, esConvenio);
             if (condPago != null)
-                AgregarElemento(xmlDoc, pagos, "FechaCondicionPago", condPago);
+                AgregarElementoCData(xmlDoc, pagos, "FechaCondicionPago", condPago);
 
             AgregarElemento(xmlDoc, pagos, "LugarPago", "BUENOS AIRES");
             AgregarAtributo(xmlDoc, pagos, "PagoAOrdenDe", "CodLista",
@@ -844,12 +844,28 @@ namespace Molinos.DataAgro.Agent.Helpers
         // HELPERS XML
         // ════════════════════════════════════════════════════════════════════════
 
-        /// <summary>Agrega un elemento hijo con InnerText al padre.</summary>
+        /// <summary>Agrega un elemento hijo con InnerText al padre. Usar para códigos, fechas y números.</summary>
         private static void AgregarElemento(
             XmlDocument xmlDoc, XmlElement padre, string nombre, string valor)
         {
             XmlElement el = xmlDoc.CreateElement(nombre);
             if (valor != null) el.InnerText = valor;
+            padre.AppendChild(el);
+        }
+
+        /// <summary>
+        /// Agrega un elemento hijo envuelto en CDATA al padre.
+        /// Usar para texto libre que pueda contener caracteres especiales XML: comillas, ampersands, corchetes angulares.
+        /// </summary>
+        private static void AgregarElementoCData(
+            XmlDocument xmlDoc, XmlElement padre, string nombre, string valor)
+        {
+            XmlElement el = xmlDoc.CreateElement(nombre);
+            if (valor != null)
+            {
+                XmlCDataSection cdata = xmlDoc.CreateCDataSection(valor);
+                el.AppendChild(cdata);
+            }
             padre.AppendChild(el);
         }
 
