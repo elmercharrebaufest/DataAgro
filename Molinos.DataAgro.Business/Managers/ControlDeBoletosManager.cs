@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.UI;
 
@@ -790,15 +791,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.Id,
                 ControlDeBoletosId = x.ControlDeBoletosId,
-                Accion = x.Accion,
-                Resultado = x.Resultado,
-                ValorAnterior = x.ValorAnterior,
-                ValorNuevo = x.ValorNuevo,
-                Cargo = x.Cargo,
-                Nombre = x.Nombre,
-                Apellido = x.Apellido,
-                FechaHora = x.FechaHora,
-                UsuarioModificacion = x.UsuarioModificacion
+                EstadoDocumentoId = x.EstadoDocumentoId,
+                CUIT = x.CUIT,
+                RazonSocial = x.RazonSocial,
+                Acciones = x.Acciones,
             }).ToList();
         }
         #endregion
@@ -809,7 +805,10 @@ namespace Molinos.DataAgro.Business.Managers
             var oResultado = new Resultado();
             try
             {
-                var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => x.EstadoConfirmaId == (int)EnumEstadoConfirma.PENDIENTE);
+                var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => (x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTRATO_PENDIENTE_DE_CONTROL ||
+                                                                                   x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTROLADO ||
+                                                                                   x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.EN_FIRMA
+                                                                                  ));
                 if (boletosPendientes.Count > 0)
                 {
                     foreach(var boleto in boletosPendientes)
@@ -820,31 +819,32 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             foreach (var documento in respuestaConsultaDocumentos)
                             {
-                                foreach(var accion in documento.Acciones)
+
+                                var existe = this.repositorio.Obtener<ControlDeBoletoTracking>(x => x.ControlDeBoletosId == boleto.Id);
+                                if (existe == null)
                                 {
-
-                                    var existe = this.repositorio.Obtener<ControlDeBoletoTracking>(x=> x.ControlDeBoletosId == boleto.Id && x.Accion == accion.Accion && x.Resultado == x.Resultado && x.FechaHora == x.FechaHora);
-                                    if (existe == null)
+                                    var controlDeBoletoTracking = new ControlDeBoletoTracking()
                                     {
-                                        var controlDeBoletoTracking = new ControlDeBoletoTracking()
-                                        {
-                                            ControlDeBoletosId = boleto.Id,
-                                            Accion = accion.Accion,
-                                            Resultado = accion.Resultado,
-                                            ValorAnterior = string.Empty,
-                                            ValorNuevo = string.Empty,
-                                            Cargo = accion.Cargo,
-                                            Nombre = accion.Nombre,
-                                            Apellido = accion.Apellido,
-                                            FechaHora = DateTime.Now,
-                                            UsuarioModificacion = string.Format("{0} {1}", accion.Nombre, accion.Apellido)
-                                        };
-                                        this.repositorio.Agregar(controlDeBoletoTracking);
-                                    }
-
+                                        ControlDeBoletosId = boleto.Id,
+                                        CUIT = documento.EnPoderDe.CUIT,
+                                        RazonSocial = documento.EnPoderDe.RazonSocial,
+                                        EstadoDocumentoId = documento.ConsultaEstadoDocumento,
+                                        Acciones = JsonSerializer.Serialize(documento.Acciones)
+                                    };
+                                    this.repositorio.Agregar(controlDeBoletoTracking);
                                 }
+                                else
+                                {
+                                    existe.CUIT = documento.EnPoderDe.CUIT;
+                                    existe.RazonSocial = documento.EnPoderDe.RazonSocial;
+                                    existe.EstadoDocumentoId = documento.EstadoDocumento;
+                                    existe.Acciones = JsonSerializer.Serialize(documento.Acciones);
+                                }
+
+                                var controlDeBoletos = this.repositorio.Obtener<ControlDeBoletos>(boleto.Id);
+                                controlDeBoletos.EstadoConfirmaId = documento.ConsultaEstadoDocumento;
+                                this.repositorio.GuardarCambios();
                             }
-                            this.repositorio.GuardarCambios();
                         }
                     }
                 }

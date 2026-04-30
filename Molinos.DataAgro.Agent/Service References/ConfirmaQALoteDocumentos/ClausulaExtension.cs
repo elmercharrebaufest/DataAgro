@@ -34,34 +34,4 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos
         }
     }
 
-    /// <summary>
-    /// Extiende OrigenLocalidadOrigen para serializar la localidad como CDATA.
-    /// </summary>
-    public partial class OrigenLocalidadOrigen : IXmlSerializable
-    {
-        public XmlSchema GetSchema() => null;
-
-        public void WriteXml(XmlWriter writer)
-        {
-            if (Caption != null)
-                writer.WriteAttributeString("Caption", Caption);
-            if (LocalidadText != null)
-                writer.WriteAttributeString("LocalidadText", LocalidadText);
-            if (Value != null)
-                writer.WriteCData(Value);
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            Caption = reader.GetAttribute("Caption");
-            LocalidadText = reader.GetAttribute("LocalidadText");
-            bool isEmpty = reader.IsEmptyElement;
-            reader.ReadStartElement();
-            if (!isEmpty)
-            {
-                Value = reader.ReadString();
-                reader.ReadEndElement();
-            }
-        }
     }
-}

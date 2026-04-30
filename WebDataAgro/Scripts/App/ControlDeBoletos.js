@@ -358,7 +358,6 @@ var ControlBoletos = (function () {
                                 },
                             },
                             error: function (e) {
-                                console.error("Error cargando datos del grid:", e);
                                 mostrarMensaje(
                                     "Error",
                                     "Error al cargar los datos: " +
@@ -493,7 +492,6 @@ var ControlBoletos = (function () {
                     mostrarSpinner(false);
                 }, 1000);
             } catch (error) {
-                console.error("Error inicializando grid:", error);
                 mostrarMensaje(
                     "Error",
                     "Error al inicializar la tabla de datos",
@@ -838,10 +836,8 @@ var ControlBoletos = (function () {
 
         visualizarContrato: function (id) {
             // Mostrar loader o indicador de carga
-            console.log("visualizarContrato - ID recibido:", id);
 
             if (!id || id <= 0) {
-                console.error("ID inválido para visualizar contrato:", id);
                 alert("Error: ID de contrato inválido");
                 return;
             }
@@ -860,14 +856,12 @@ var ControlBoletos = (function () {
                 contentType: "application/json; charset=utf-8",
                 cache: false,
                 success: function (response) {
-                    console.log("Respuesta recibida:", response);
 
                     if (typeof hideLoading === "function") {
                         hideLoading();
                     }
 
                     if (!response) {
-                        console.error("Respuesta vacía al solicitar contrato");
                         alert("Error al obtener los datos del contrato: respuesta vacía");
                         return;
                     }
@@ -890,8 +884,6 @@ var ControlBoletos = (function () {
                         // La respuesta directamente es el contrato
                         contrato = response;
                     }
-
-                    console.log("Contrato extraído para modal:", contrato);
 
                     if (contrato && typeof contrato === "object") {
                         // Verificar que ModalVisualizar esté disponible
