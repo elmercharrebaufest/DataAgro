@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<Localidad> GetProcedencias(int provinciaId);
         List<TipoOblea> GetTipoOblea();
         List<BoletoCompraNet> GetBoletoCompraNet();
-        Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null);
+        Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false);
         Resultado AsociarConfirma(int negocioId);
         List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);

@@ -15,32 +15,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="frmModificarContrato">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Cosecha</label>
-                            <select id="Cosecha" class="form-control"></select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label>Clasificación</label>
-                            <select id="Clasificacion" class="form-control"></select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Provincia</label>
-                            <select id="Provincia" class="form-control"></select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label>Procedencia</label>
-                            <select id="Procedencia" class="form-control"></select>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                @Html.Partial("_FormModificarDatosDelContrato")
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

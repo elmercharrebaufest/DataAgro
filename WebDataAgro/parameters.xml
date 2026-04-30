@@ -654,5 +654,10 @@
     <parameterEntry kind="XmlFile" scope="Web.config"
 						match="/configuration/appSettings/add[@key='EmailCasillaBoletos']
                            /@value" />
-  </parameter>  
+  </parameter>
+  <parameter name="SISA_con_campo_adicional Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='SISA_con_campo_adicional']
+                           /@value" />
+  </parameter>
 </parameters>

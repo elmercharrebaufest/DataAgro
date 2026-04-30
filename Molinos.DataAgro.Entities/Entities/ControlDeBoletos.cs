@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +13,7 @@ public class ControlDeBoletos
 
     public int? EstadoConfirmaId { get; set; }
     public bool EsConfirma { get; set; }
-
+    public bool EsConfirmaAltaBorrador { get; set; }
     public int? AltaIdLoteConfirma { get; set; }
     public int? AltaIdDocumentoConfirma { get; set; }
     public int? IdentificadorConfirma { get; set; }

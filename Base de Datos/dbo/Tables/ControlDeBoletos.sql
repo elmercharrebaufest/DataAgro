@@ -1,9 +1,10 @@
-﻿CREATE TABLE [dbo].[ControlDeBoletos] (
+CREATE TABLE [dbo].[ControlDeBoletos] (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     NegocioId INT NOT NULL,
     ControlDeBoletosEstadoId INT NOT NULL,
     EstadoConfirmaId INT NULL,
     EsConfirma BIT NOT NULL DEFAULT 0,
+    EsConfirmaAltaBorrador BIT NULL DEFAULT 0,
     AltaIdLoteConfirma INT NULL,
     AltaIdDocumentoConfirma INT NULL,
     IdentificadorConfirma INT NULL,

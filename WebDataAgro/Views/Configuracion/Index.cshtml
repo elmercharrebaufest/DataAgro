@@ -1,4 +1,4 @@
-﻿@model WebDataAgro.Models.ConfiguracionModel
+@model WebDataAgro.Models.ConfiguracionModel
 @{
     ViewBag.Title = "Configuracion";
 }
@@ -168,14 +168,14 @@
 
             <div class="row-botones-material row padding">
                 <div class="col-md-2">
-                    <label>Kilos Minimos Para Sugerencia (Tn)</label>
+                    <label>Kilos M&iacute;nimos Para Sugerencia (Tn)</label>
                 </div>
                 <div class="col-md-1">
                     @Html.TextBoxFor(m => m.AlgoritmoKilosMinimosParaSugerencia, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
 
                 <div class="col-md-2">
-                    <label>Procentaje Maximo de Sugerencias por Proveedor por Dia (%)</label>
+                    <label>Porcentaje M&aacute;ximo de Sugerencias por Proveedor por Dia (%)</label>
                 </div>
                 <div class="col-md-1">
                     @Html.TextBoxFor(m => m.AlgoritmoProcMaxSugerenciasProveedorDia, new { @class = "CantidadDeDias number-input form-control" })
@@ -281,5 +281,5 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 }

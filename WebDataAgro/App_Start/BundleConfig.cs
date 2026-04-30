@@ -350,9 +350,20 @@ namespace WebDataAgro
                                        "~/Scripts/App/ControlDeBoletosVisualizarContrato.js",
                                        "~/Scripts/App/ControlDeBoletosDatosCertificacion.js",
                                        "~/Scripts/App/ControlDeBoletosSeguimiento.js",
+                                       "~/Scripts/App/ControlDeBoletosGestion.js",
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/moment.js"
                                        ));
+
+            bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosGestion").Include(
+                           "~/Scripts/App/Filtros.js",
+                           "~/Scripts/App/ControlDeBoletosModificarContrato.js",
+                           "~/Scripts/App/ControlDeBoletosDatosCertificacion.js",
+                           "~/Scripts/App/ControlDeBoletosSeguimiento.js",
+                           "~/Scripts/App/ControlDeBoletosGestion.js",
+                           "~/Scripts/KendoExtensions.js",
+                           "~/Scripts/moment.js"
+                           ));
 
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosReporteSeguimiento").Include(
                            "~/Scripts/App/Filtros.js",

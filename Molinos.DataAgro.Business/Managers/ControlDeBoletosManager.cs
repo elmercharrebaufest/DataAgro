@@ -6,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -242,35 +243,78 @@ namespace Molinos.DataAgro.Business.Managers
             var query = repositorio.Listar<ControlDeBoletos>()
                 .Where(x => (filtros.EstadoControlId == null ||  (x.ControlDeBoletosEstadoId == (int)filtros.EstadoControlId)));
 
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPDesde))
-                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPDesde) >= 0);
+            // Limitar a negocios confirmados en SAP en los últimos 2 meses (consulta optimizada con ReadUncommitted)
+            var negociosIds = repositorio.ObtenerConsultaEscalar(new TraerNegociosPendientesControlBoleto());
 
-            if (!string.IsNullOrEmpty(filtros.ContratoSAPHasta))
-                query = query.Where(x => string.Compare(x.Negocio.ContratoSAP, filtros.ContratoSAPHasta) <= 0);
+            if (negociosIds != null && negociosIds.Count > 0)
+            {
+                var negociosIdsEnQuery = query
+                    .Select(cb => cb.NegocioId)
+                    .Distinct()
+                    .ToList();
+                var negociosNoEnQuery = negociosIds
+                    .Where(id => !negociosIdsEnQuery.Contains(id))
+                    .ToList();
 
-            if (filtros.MaterialId.HasValue)
-                query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
+                if (negociosNoEnQuery != null && negociosNoEnQuery.Count > 0)
+                {
+                    var controlBoletosNuevos = negociosNoEnQuery.Select(id => new ControlDeBoletos
+                    {
+                        NegocioId = id,
+                        FechaCreacion = DateTime.Now,
+                        EsConfirma = false,
+                        AltaIdLoteConfirma = null,
+                        AltaIdDocumentoConfirma = null,
+                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                        EstadoConfirmaId = (int?)null,
+                        ControlIniciado = false,
+                        ControlFinalizado = false,
+                        CertificacionCompletada = false,
+                        RegistroDatosOblea = false,
+                        EsConfirmaAltaBorrador = false
+                    }).ToList();
+                    repositorio.AgregarTodos(controlBoletosNuevos);
+                    repositorio.GuardarCambios();
+                }
+            }
 
-            if (filtros.EstadoControlId.HasValue)
-                query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
+            if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
+            {
+                var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .ToList();
 
-            if (filtros.EsConfirma)
-                query = query.Where(x => x.EsConfirma == true);
+                if (negociosSAPList.Count > 0)
+                    query = query.Where(n => negociosSAPList.Contains(n.Negocio.ContratoSAP));
+            }
+            else
+            {
+                if (filtros.MaterialId.HasValue)
+                    query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
 
-            if (filtros.FechaCargaDesde.HasValue)
-                query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
+                if (filtros.EstadoControlId.HasValue)
+                    query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
 
-            if (filtros.FechaCargaHasta.HasValue)
-                query = query.Where(x => x.FechaCreacion <= filtros.FechaCargaHasta.Value);
+                if (filtros.EsConfirma)
+                    query = query.Where(x => x.EsConfirma == true);
 
-            if (filtros.Proveedor.HasValue)
-                query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
+                if (filtros.FechaCargaDesde.HasValue)
+                    query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
 
-            if (filtros.BolsaId.HasValue)
-                query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
+                if (filtros.FechaCargaHasta.HasValue)
+                    query = query.Where(x => x.FechaCreacion <= filtros.FechaCargaHasta.Value);
 
-            if (filtros.ComercialId.HasValue)
-                query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
+                if (filtros.Proveedor.HasValue)
+                    query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
+
+                if (filtros.BolsaId.HasValue)
+                    query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
+
+                if (filtros.ComercialId.HasValue)
+                    query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
+            }
+
+
 
             // Optimización: Usar query LINQ con LEFT JOIN en lugar de N+1 queries
             var result = (from cb in query
@@ -304,20 +348,21 @@ namespace Molinos.DataAgro.Business.Managers
                               FechaRegistroDatosOblea = cb.FechaRegistroDatosOblea,
                               MaterialId = cb.Negocio.MaterialId,
                               Material = cb.Negocio.Material.Descripcion,
-                              BolsaCompraNetId = cb.Negocio.BolsaId,
-                              BolsaCompraNet = cb.Negocio.Bolsa.Descripcion,
+                              BolsaCompraNetId = cb.Negocio.BolsaId != null ? (int?)cb.Negocio.BolsaId : null,
+                              BolsaCompraNet = cb.Negocio.Bolsa != null ? cb.Negocio.Bolsa.Descripcion : null,
                               ComercialId = cb.Negocio.ComercialId,
                               Comercial = cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido,
                               ContratoSAP = cb.Negocio.ContratoSAP,
                               ProveedorId = cb.Negocio.ProveedorId,
                               Proveedor = cb.Negocio.Proveedor.RazonSocial,
                               PreCertificacionId = pre != null ? (int?)pre.Id : null,
-                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null
+                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null,
+                              TipoAltaConfirma = cb.EsConfirma? (cb.EsConfirmaAltaBorrador? "Alta Borrador" : "Alta Definitiva") : string.Empty,
                           }).ToList();
 
             return result;
         }
-        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null)
+        public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false)
         {
             var oResultado = new Resultado();
             var negocio = repositorio.Obtener<Negocio>(negocioId);
@@ -339,7 +384,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ControlIniciado = false,
                         ControlFinalizado = false,
                         CertificacionCompletada = false,
-                        RegistroDatosOblea = false
+                        RegistroDatosOblea = false,
+                        EsConfirmaAltaBorrador = (bool)((negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? esConfirmaAltaBorrador : false)
                     };
                     repositorio.Agregar(controlDeBoletos);
                     repositorio.GuardarCambios();
@@ -366,6 +412,7 @@ namespace Molinos.DataAgro.Business.Managers
                         RegistroDatosOblea = false,
                         AltaIdLoteConfirmaAnterior = controlDeBoletosExiste.AltaIdLoteConfirma,
                         AltaIdDocumentoConfirmaAnterior = controlDeBoletosExiste.AltaIdDocumentoConfirma,
+                        EsConfirmaAltaBorrador = (bool)((negocio.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ? esConfirmaAltaBorrador : false)
                     };
                     repositorio.Agregar(controlDeBoletosSustitutorio);
                     repositorio.GuardarCambios();

@@ -3853,11 +3853,14 @@ function AgregarCalidades() {
             PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
             PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
             StandardDeCalidadId:
-                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ? 7 :
-                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto" ? 6 :
-                        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
-                            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? 2 : 0,
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ? STANDARD_DE_CALIDAD.GRADO_2 :
+                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto" ? STANDARD_DE_CALIDAD.MATERIA_EXTRANA :
+                        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? STANDARD_DE_CALIDAD.FABRICA :
+                            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" ||
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? STANDARD_DE_CALIDAD.ESPECIAL :
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? STANDARD_DE_CALIDAD.MATERIA_EXTRANA : 0,
 
             Borrar: function () {
                 viewModel.Calidades.remove(this);
