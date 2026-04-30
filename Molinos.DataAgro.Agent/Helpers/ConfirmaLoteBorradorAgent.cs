@@ -519,7 +519,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         private void AgregarOrigen(XmlDocument xmlDoc, XmlElement det, BasicoContrato contrato)
         {
             XmlElement origen = xmlDoc.CreateElement("Origen");
-            AgregarElementoCData(xmlDoc, origen, "LocalidadOrigen", contrato.LocalidadConfirma);
+            AgregarElemento(xmlDoc, origen, "LocalidadOrigen", contrato.LocalidadConfirma);
             AgregarAtributo(xmlDoc, origen, "ProvinciaOrigen", "CodLista", contrato.ProvinciaConfirma);
             det.AppendChild(origen);
         }
@@ -553,7 +553,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             string condPago = ResolverCondicionPago(contrato, esConvenio);
             if (condPago != null)
-                AgregarElementoCData(xmlDoc, pagos, "FechaCondicionPago", condPago);
+                AgregarElemento(xmlDoc, pagos, "FechaCondicionPago", condPago);
 
             AgregarElemento(xmlDoc, pagos, "LugarPago", "BUENOS AIRES");
             AgregarAtributo(xmlDoc, pagos, "PagoAOrdenDe", "CodLista",

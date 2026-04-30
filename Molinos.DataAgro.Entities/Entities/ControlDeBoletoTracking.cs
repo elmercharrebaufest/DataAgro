@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +10,11 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         public int Id { get; set; }
         public int ControlDeBoletosId { get; set; }
-        public string Accion { get; set; }
-        public string Resultado { get; set; }
-        public string ValorAnterior { get; set; }
-        public string ValorNuevo { get; set; }
-        public string Cargo { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public DateTime FechaHora { get; set; }
-        public DateTime FechaModificacion { get; set; }
-        public string UsuarioModificacion { get; set; }
+        public int? EstadoDocumentoId { get; set; }
+        public int? CUIT { get; set; }
+        public string RazonSocial { get; set; }
+        public string Acciones { get; set; }
+        public DateTime FechaCreacion { get; set; }
         public virtual ControlDeBoletos ControlDeBoletos { get; set; }
     }
 }
