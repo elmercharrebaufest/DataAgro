@@ -1,4 +1,4 @@
-﻿var dataFile;
+var dataFile;
 var timeExcel = new Date().getTime();
 
 $(document).ready(function () {
@@ -97,13 +97,6 @@ $(document).ready(function () {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
         }
     });
-
-    var formAltaMasiva = document.getElementById("downloadAltaMasiva");
-    var formAltaMasivaConvenio = document.getElementById("downloadAltaMasivaConvenio");
-    var formAltaMasivaMATBA = document.getElementById("divDescargarPlantillaMATBA");
-    formAltaMasiva.action += "?v=" + timeExcel;
-    formAltaMasivaConvenio.action += "?v=" + timeExcel;
-    formAltaMasivaMATBA.action += "?v=" + timeExcel;
 });
 
 
@@ -119,7 +112,7 @@ function cargarContratos() {
                     data.append("file" + x, files[x]);
                 }
                 $.ajax({
-                    url: '/Compranet/AltaMasivaContratosExcel?tipoAlta=' + $("#tipoAlta").val() +'&contratoacuerdo=' + $("#contratoId").val(),
+                    url: '/Cupo/AltaMasivaCuposExcel?',
                     type: "POST",
                     contentType: false, // Not to set any content header  
                     processData: false, // Not to process data  

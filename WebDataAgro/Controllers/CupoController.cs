@@ -1,7 +1,9 @@
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
@@ -9,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -281,6 +284,66 @@ namespace WebDataAgro.Controllers
                 return RedirectToAction("CrearCupo", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
             }
             return RedirectToAction("Index");
+        }
+
+
+        [HttpPost]
+        public ActionResult AltaMasivaCuposExcel()
+        {
+            List<string> errores = new List<string>();
+            try
+            {
+
+                if (Request.Files.Count == 0)
+                {
+                    errores.Add(string.Concat("Debe seleccionar el archivo."));
+                    return Json(new { Resume = errores, Resultado = false });
+                }
+                if (Request.Files.Count > 1)
+                {
+                    errores.Add(string.Concat("Debe seleccionar un solo archivo."));
+                    return Json(new { Resume = errores, Resultado = false });
+                }
+
+                var fileSubido = Request.Files[0];
+                var extension = Path.GetExtension(fileSubido.FileName).ToUpper();
+                if (extension != ".XLSX")
+                {
+                    errores.Add(string.Concat("Archivo no soportado. Debe subir un Excel en formato xlsx."));
+                    return Json(new { Resume = errores, Resultado = false });
+                }
+
+                if (fileSubido.ContentLength > 0)
+                {
+                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
+                    // ACA ES DONDE IRIA LA LOGICA DE CUPOS
+
+                    if (dsExcel != null)
+                    {
+                        var resultado = cupoManager.AltaMasivaSugerenciaCupos(dsExcel);
+
+                        return Json(new { Resume = resultado, Resultado = true });
+                    }
+                }
+                else
+                {
+                    errores.Add(string.Concat("El archivo ", fileSubido.FileName, " está vacío."));
+                }
+
+
+                if (errores.Count > 0)
+                {
+                    return Json(new { Resume = errores, Resultado = false });
+                }
+
+                return Json(new { data = "" });
+
+            }
+            catch (Exception e)
+            {
+                errores.Add(e.Message);
+                return Json(new { Resume = errores, Resultado = false }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public JsonResult GuardarCupo(CupoModel cupo)
