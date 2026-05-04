@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado EliminarVarios(List<int> cupos, string comercial);
         string ObtenerCodigoSap(int id);
         List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion);
+        List<SugerenciaCupoDto> CrearSugerenciaCupoMasiva(int MaterialId, FormulaDto formula, List<Negocio> NegociosAUsar, List<AltaMasivaCupoDto> ExcelData);
         FormulaDto ObtenerFormulaDto(int material);
         List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId, int? materialId);
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
