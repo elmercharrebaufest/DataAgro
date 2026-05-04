@@ -623,7 +623,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             return clausulas.Select(c => new ConfirmaQALoteDocumentos.Clausula
             {
                 Orden = string.Empty,
-                Value = c.Texto
+                Value = LimpiarTexto(c.Texto)
             }).ToArray();
         }
 
@@ -769,7 +769,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     agent.ClientCredentials.UserName.UserName = userConfirma;
                     agent.ClientCredentials.UserName.Password = passConfirma;
-                    agent.Endpoint.Behaviors.Add(new CDataClausulaInspector());
                     return agent.AltaDefinitiva(lote);
                 }
                 catch (Exception ex)
@@ -780,6 +779,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                     throw;
                 }
             }
+        }
+
+        private string LimpiarTexto(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            return texto
+                .Replace("“", "\"")
+                .Replace("”", "\"")
+                .Replace("’", "'")
+                .Replace("\u00A0", " ")
+                .Trim();
         }
 
         // ════════════════════════════════════════════════════════════════════════
