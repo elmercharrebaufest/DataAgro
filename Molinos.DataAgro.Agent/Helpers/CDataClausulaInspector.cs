@@ -35,8 +35,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     el.AppendChild(doc.CreateCDataSection(texto));
             }
 
-            using (var reader = XmlReader.Create(new StringReader(doc.OuterXml)))
-                request = Message.CreateMessage(reader, int.MaxValue, request.Version);
+            var reader = XmlReader.Create(new StringReader(doc.OuterXml));
+            request = Message.CreateMessage(reader, int.MaxValue, request.Version);
 
             return null;
         }
