@@ -9,9 +9,14 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos
     /// evitando el escape de caracteres especiales (comillas, ampersand, etc.).
     /// No modifica Reference.cs.
     /// </summary>
-    [XmlSchemaProvider(null, IsAny = true)]
+    [XmlSchemaProvider("GetClausulaSchema")]
     public partial class Clausula : IXmlSerializable
     {
+        public static XmlQualifiedName GetClausulaSchema(XmlSchemaSet xs)
+        {
+            return new XmlQualifiedName("anyType", "http://www.w3.org/2001/XMLSchema");
+        }
+
         public XmlSchema GetSchema() => null;
 
         public void WriteXml(XmlWriter writer)
