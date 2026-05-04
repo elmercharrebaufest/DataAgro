@@ -844,7 +844,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         // HELPERS XML
         // ════════════════════════════════════════════════════════════════════════
 
-        /// <summary>Agrega un elemento hijo con InnerText al padre. Usar para códigos, fechas y números.</summary>
+        /// <summary>Agrega un elemento hijo con InnerText al padre.</summary>
         private static void AgregarElemento(
             XmlDocument xmlDoc, XmlElement padre, string nombre, string valor)
         {
@@ -852,7 +852,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (valor != null) el.InnerText = valor;
             padre.AppendChild(el);
         }
-
         /// <summary>
         /// Agrega un elemento hijo envuelto en CDATA al padre.
         /// Usar para texto libre que pueda contener caracteres especiales XML: comillas, ampersands, corchetes angulares.
@@ -868,7 +867,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             padre.AppendChild(el);
         }
-
         /// <summary>Agrega un elemento hijo con un único atributo CodLista (o similar) al padre.</summary>
         private static void AgregarAtributo(
             XmlDocument xmlDoc, XmlElement padre,
