@@ -35,9 +35,9 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.Genericos
                 string materialContrato = clausula.Basico.Material;
                 string provinciaContrato = clausula.Basico.Provincia;
                 string localidadContrato = clausula.Basico.Localidad;
-                res.Texto += $"El Comprador abonará de manera anticipada al Vendedor, conforme lo previsto en este contrato el precio correspondiente a {cantidadContrato} KG de {materialContrato} (la “Mercadería Adquirida”). ";
+                res.Texto += $"El Comprador abonará de manera anticipada al Vendedor, conforme lo previsto en este contrato el precio correspondiente a {cantidadContrato} KG de {materialContrato} (la Mercadería Adquirida). ";
                 res.Texto += $"El Vendedor transfiere la Mercadería Adquirida al Comprador y se constituye en depositario de la Mercadería Adquirida, obligándose a guardarla en calidad de depósito en su planta ubicada en {localidadContrato}-{provinciaContrato}, ";
-                res.Texto += "(el “Depósito”). El Vendedor reconoce al Comprador su exclusiva propiedad sobre la Mercadería Adquirida y se compromete a mantenerla en todo momento a su total y permanente disponibilidad en el Depósito sin que le corresponda ";
+                res.Texto += "(el Depósito). El Vendedor reconoce al Comprador su exclusiva propiedad sobre la Mercadería Adquirida y se compromete a mantenerla en todo momento a su total y permanente disponibilidad en el Depósito sin que le corresponda ";
                 res.Texto += "a esta última abonar precio alguno por este concepto, por cuanto el costo total del Depósito se encuentra incluido en el precio de venta de la Mercadería Adquirida ya percibido y acordado en este contrato. ";
                 res.Texto += "El Vendedor entregará la totalidad de la Mercadería Adquirida al solo y simple requerimiento del Comprador, sin necesidad de intimación previa y contra la sola presentación del presente contrato, en las instalaciones ";
                 res.Texto += "que el Comprador posee en San Lorenzo, Provincia de Santa Fe. El Vendedor asume ante el Comprador con respecto a la Mercadería Adquirida, la responsabilidad que como depositario legalmente le corresponde, incluyendo, ";
