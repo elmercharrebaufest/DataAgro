@@ -1588,6 +1588,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var sugerencias = new List<SugerenciaCupoDto>();
             var formulas = new List<FormulaDto>();
+            List<Material> materialesDB = repositorio.Listar<Material>();
 
             var ExcelData = dsExcel.Tables[0].AsEnumerable()
                   .Select(row => new AltaMasivaCupoDto
@@ -1624,7 +1625,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            // OBTENER TODOS LOS MATERIALES 
+            // OBTENER TODOS LOS MATERIALES
             var materiales = ExcelData.Select(x => x.MaterialId).Distinct();
             foreach (var materialId in materiales)
             {
@@ -1645,7 +1646,9 @@ namespace Molinos.DataAgro.Business.Managers
                     NegociosHasta = todasLasFechas.Max(),
                     CuposDesde = ExcelData.Where(x => x.MaterialId == materialId).Min(x => x.FechaSugerida),
                     CuposHasta = ExcelData.Where(x => x.MaterialId == materialId).Max(x => x.FechaSugerida),
-                    CentroId = 1
+                    CentroId = 1,
+                    Material = materialesDB.Find(x => x.MaterialId == materialId).Descripcion,
+                    Fecha = DateTime.Now
                 };
 
                 sugerencias.AddRange(CrearSugerenciaCupoMasiva(materialId, formulaDto, listaNegocios, ExcelData));
@@ -1902,7 +1905,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ComercialId = a.ComercialId,
                     StandardDeCalidad = a.MaterialId == (int)EnumMateriales.SOJA ? a.StandardDeCalidad == "Camara" ? a.StandardDeCalidad : "Fabrica" : "",
                     Aceptado = null,
-                    Puntuaciones = a.PuntuacionesString,
+                    Puntuaciones = "Puntuaciones no disponibles",
                     ContratoSAP = a.ContratoSAP,
                     CDWarrant = a.CDWarrant,
                     KgNegocio = a.KgNegocio,
