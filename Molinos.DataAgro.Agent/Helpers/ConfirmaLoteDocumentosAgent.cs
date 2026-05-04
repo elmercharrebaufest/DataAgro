@@ -623,7 +623,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             return clausulas.Select(c => new ConfirmaQALoteDocumentos.Clausula
             {
                 Orden = string.Empty,
-                Value = LimpiarTexto(c.Texto)
+                Value = c.Texto
             }).ToArray();
         }
 
