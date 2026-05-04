@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos
     /// evitando el escape de caracteres especiales (comillas, ampersand, etc.).
     /// No modifica Reference.cs.
     /// </summary>
+    [XmlSchemaProvider(null, IsAny = true)]
     public partial class Clausula : IXmlSerializable
     {
         public XmlSchema GetSchema() => null;
@@ -33,5 +34,4 @@ namespace Molinos.DataAgro.Agent.ConfirmaQALoteDocumentos
             }
         }
     }
-
-    }
+}
