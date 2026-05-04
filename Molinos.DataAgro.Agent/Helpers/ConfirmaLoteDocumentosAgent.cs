@@ -209,12 +209,12 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             switch (contrato.MaterialId)
             {
-                case (int)EnumMateriales.TRIGO:   return "1";
-                case (int)EnumMateriales.MAIZ:    return "2";
-                case (int)EnumMateriales.SORGO:   return "3";
+                case (int)EnumMateriales.TRIGO: return "1";
+                case (int)EnumMateriales.MAIZ: return "2";
+                case (int)EnumMateriales.SORGO: return "3";
                 case (int)EnumMateriales.GIRASOL: return "20";
-                case (int)EnumMateriales.SOJA:    return "21";
-                default:                          return string.Empty;
+                case (int)EnumMateriales.SOJA: return "21";
+                default: return string.Empty;
             }
         }
 
@@ -265,10 +265,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (contrato.CorredorId > 0)
                 partes.Add(new ConfirmaParteDto
                 {
-                    CodLista           = "2",
+                    CodLista = "2",
                     NroContratoInterno = contrato.ContratoCorredor,
-                    CUIT               = esAmbienteLocal ? cuit2 : contrato.CUITCorredor,
-                    Sucursal           = string.Empty
+                    CUIT = esAmbienteLocal ? cuit2 : contrato.CUITCorredor,
+                    Sucursal = string.Empty
                 });
 
             return partes;
@@ -338,27 +338,27 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             var det = new DetalleDocumentoFijarPrecioDetalleContrato
             {
-                Producto                 = ConstruirProducto(contrato),
-                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
-                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
-                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
-                UnidadMedida             = new TCodCaption { CodLista = "K" },
-                CantidadDesde            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
-                CantidadHasta            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
-                Ajuste                   = new TCodLista { CodLista = string.Empty },
-                CantCamiones             = new TCaption(),
-                MontoImponible           = new TCaption { Value = string.Empty },
-                Moneda                   = new TCodLista { CodLista = "2" },
-                Calidad                  = ConstruirCalidad(contrato),
-                MedioTransporte          = new TCodCaption { CodLista = "C" },
-                Entregas                 = ConstruirEntregas(contrato),
-                Origen                   = ConstruirOrigen(contrato),
-                Destino                  = ConstruirDestino(contrato),
+                Producto = ConstruirProducto(contrato),
+                DescAdicional = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida = new TCodCaption { CodLista = "K" },
+                CantidadDesde = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                CantidadHasta = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                Ajuste = new TCodLista { CodLista = string.Empty },
+                CantCamiones = new TCaption(),
+                MontoImponible = new TCaption { Value = string.Empty },
+                Moneda = new TCodLista { CodLista = "2" },
+                Calidad = ConstruirCalidad(contrato),
+                MedioTransporte = new TCodCaption { CodLista = "C" },
+                Entregas = ConstruirEntregas(contrato),
+                Origen = ConstruirOrigen(contrato),
+                Destino = ConstruirDestino(contrato),
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
-                ProduccionVendedor       = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
-                TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
-                
+                ProduccionVendedor = new DetalleDocumentoFijarPrecioDetalleContratoProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario = ConstruirDecisionPagoVoluntario(),
+
             };
             if (estadoSAP.NumeroSio > 0)
                 det.SioGranos = ConstruirSioGranos(estadoSAP);
@@ -376,11 +376,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             return new DocumentoFijarPrecio
             {
                 CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
-                DetalleDocumento  = new DetalleDocumentoFijarPrecio
+                DetalleDocumento = new DetalleDocumentoFijarPrecio
                 {
-                    Partes          = ConstruirPartes(partes),
+                    Partes = ConstruirPartes(partes),
                     DetalleContrato = det,
-                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                    Clausulas = ConstruirClausulasDetalle(clausulas)
                 }
             };
         }
@@ -398,27 +398,27 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             var det = new DetalleDocumentoPagoEspecieFijarPrecioDetalleContrato
             {
-                Producto                 = ConstruirProducto(contrato),
-                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
-                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
-                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
-                UnidadMedida             = new TCodCaption { CodLista = "K" },
-                CantidadDesde            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
-                CantidadHasta            = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
-                Ajuste                   = new TCodLista { CodLista = string.Empty },
-                CantCamiones             = new TCaption(),
-                MontoImponible           = new TCaption { Value = string.Empty },
-                Moneda                   = new TCodLista { CodLista = "2" },
-                Calidad                  = ConstruirCalidad(contrato),
-                MedioTransporte          = new TCodCaption { CodLista = "C" },
-                Entregas                 = ConstruirEntregas(contrato),
-                Origen                   = ConstruirOrigen(contrato),
-                Destino                  = ConstruirDestino(contrato),
+                Producto = ConstruirProducto(contrato),
+                DescAdicional = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida = new TCodCaption { CodLista = "K" },
+                CantidadDesde = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                CantidadHasta = new TCaption { Value = ((int)contrato.Cantidad).ToString() },
+                Ajuste = new TCodLista { CodLista = string.Empty },
+                CantCamiones = new TCaption(),
+                MontoImponible = new TCaption { Value = string.Empty },
+                Moneda = new TCodLista { CodLista = "2" },
+                Calidad = ConstruirCalidad(contrato),
+                MedioTransporte = new TCodCaption { CodLista = "C" },
+                Entregas = ConstruirEntregas(contrato),
+                Origen = ConstruirOrigen(contrato),
+                Destino = ConstruirDestino(contrato),
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
-                ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
-                TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
-                
+                ProduccionVendedor = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario = ConstruirDecisionPagoVoluntario(),
+
             };
             if (estadoSAP.NumeroSio > 0)
                 det.SioGranos = ConstruirSioGranos(estadoSAP);
@@ -429,7 +429,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (esCanje)
             {
                 det.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit { CodLista = "0" };
-                det.DecisionDeclaraCantidad   = new DecisionDeclaraCantidad { CodLista = "0" };
+                det.DecisionDeclaraCantidad = new DecisionDeclaraCantidad { CodLista = "0" };
             }
 
             det.Insumos = ConstruirInsumosFijarPrecio(contrato);
@@ -441,11 +441,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             return new DocumentoPagoEspecieFijarPrecio
             {
                 CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
-                DetalleDocumento  = new DetalleDocumentoPagoEspecieFijarPrecio
+                DetalleDocumento = new DetalleDocumentoPagoEspecieFijarPrecio
                 {
-                    Partes          = ConstruirPartes(partes),
+                    Partes = ConstruirPartes(partes),
                     DetalleContrato = det,
-                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                    Clausulas = ConstruirClausulasDetalle(clausulas)
                 }
             };
         }
@@ -465,30 +465,30 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             var det = new DetalleDocumentoPagoEspeciePrecioHechoDetalleContrato
             {
-                Producto                  = ConstruirProducto(contrato),
-                DescAdicional             = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
-                FechaConcertacion         = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
-                Cosecha                   = new TCodLista { CodLista = contrato.CampanaConfirma },
-                UnidadMedida              = new TCodCaption { CodLista = "K" },
-                UnidadMedidaPrecio        = new TCodCaption { CodLista = "T" },
-                CantidadDesde             = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
-                CantidadHasta             = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
-                Ajuste                    = new TCodLista { CodLista = string.Empty },
-                CantCamiones              = new TCaption(),
-                MontoImponible            = string.Empty,
-                Moneda                    = new TCodLista { CodLista = moneda },
-                Precio                    = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio),
-                Calidad                   = ConstruirCalidad(contrato),
-                MedioTransporte           = new TCodCaption { CodLista = "C" },
-                Entregas                  = ConstruirEntregas(contrato),
-                Origen                    = ConstruirOrigen(contrato),
-                Destino                   = ConstruirDestino(contrato),
-                ProvinciaInstrumentacion  = new TCodCaption { CodLista = "B" },
-                ProduccionVendedor        = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
-                TipoOperacion             = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario    = ConstruirDecisionPagoVoluntario(),
+                Producto = ConstruirProducto(contrato),
+                DescAdicional = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida = new TCodCaption { CodLista = "K" },
+                UnidadMedidaPrecio = new TCodCaption { CodLista = "T" },
+                CantidadDesde = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
+                CantidadHasta = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
+                Ajuste = new TCodLista { CodLista = string.Empty },
+                CantCamiones = new TCaption(),
+                MontoImponible = string.Empty,
+                Moneda = new TCodLista { CodLista = moneda },
+                Precio = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio),
+                Calidad = ConstruirCalidad(contrato),
+                MedioTransporte = new TCodCaption { CodLista = "C" },
+                Entregas = ConstruirEntregas(contrato),
+                Origen = ConstruirOrigen(contrato),
+                Destino = ConstruirDestino(contrato),
+                ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
+                ProduccionVendedor = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario = ConstruirDecisionPagoVoluntario(),
                 OperacionExentaImpSantaFe = new OperacionExentaImpSantaFe(),
-                
+
             };
             if (estadoSAP.NumeroSio > 0)
                 det.SioGranos = ConstruirSioGranos(estadoSAP);
@@ -499,7 +499,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (esCanje)
             {
                 det.DecisionDeclaraPrecioUnit = new DecisionDeclaraPrecioUnit { CodLista = "0" };
-                det.DecisionDeclaraCantidad   = new DecisionDeclaraCantidad { CodLista = "0" };
+                det.DecisionDeclaraCantidad = new DecisionDeclaraCantidad { CodLista = "0" };
             }
 
             det.Insumos = ConstruirInsumosPrecioHecho(contrato);
@@ -510,11 +510,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             return new DocumentoPagoEspeciePrecioHecho
             {
                 CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
-                DetalleDocumento  = new DetalleDocumentoPagoEspeciePrecioHecho
+                DetalleDocumento = new DetalleDocumentoPagoEspeciePrecioHecho
                 {
-                    Partes          = ConstruirPartes(partes),
+                    Partes = ConstruirPartes(partes),
                     DetalleContrato = det,
-                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                    Clausulas = ConstruirClausulasDetalle(clausulas)
                 }
             };
         }
@@ -533,25 +533,25 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             var det = new DetalleDocumentoContratoPrecioHechoDetalleContrato
             {
-                Producto                 = ConstruirProducto(contrato),
-                DescAdicional            = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
-                FechaConcertacion        = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
-                Cosecha                  = new TCodLista { CodLista = contrato.CampanaConfirma },
-                UnidadMedida             = new TCodCaption { CodLista = "K" },
-                CantidadDesde            = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
-                CantidadHasta            = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
-                Ajuste                   = new TCodLista { CodLista = string.Empty },
-                CantCamiones             = new TCaption(),
-                Moneda                   = new TCodLista { CodLista = contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty },
-                Calidad                  = ConstruirCalidad(contrato),
-                MedioTransporte          = new TCodCaption { CodLista = "C" },
-                Entregas                 = ConstruirEntregas(contrato),
-                Origen                   = ConstruirOrigen(contrato),
-                Destino                  = ConstruirDestino(contrato),
+                Producto = ConstruirProducto(contrato),
+                DescAdicional = new TCaption { Value = esCanje ? "INSUMO" : string.Empty },
+                FechaConcertacion = new TCaption { Value = contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : null },
+                Cosecha = new TCodLista { CodLista = contrato.CampanaConfirma },
+                UnidadMedida = new TCodCaption { CodLista = "K" },
+                CantidadDesde = new TCaption { Value = contrato.KgMinimo > 0 ? contrato.KgMinimo.ToString() : ((int)contrato.Cantidad).ToString() },
+                CantidadHasta = new TCaption { Value = contrato.KgMaximo > 0 ? contrato.KgMaximo.ToString() : ((int)contrato.Cantidad).ToString() },
+                Ajuste = new TCodLista { CodLista = string.Empty },
+                CantCamiones = new TCaption(),
+                Moneda = new TCodLista { CodLista = contrato.Moneda == "ARP" ? "1" : contrato.Moneda == "USD" ? "2" : string.Empty },
+                Calidad = ConstruirCalidad(contrato),
+                MedioTransporte = new TCodCaption { CodLista = "C" },
+                Entregas = ConstruirEntregas(contrato),
+                Origen = ConstruirOrigen(contrato),
+                Destino = ConstruirDestino(contrato),
                 ProvinciaInstrumentacion = new TCodCaption { CodLista = "B" },
-                ProduccionVendedor       = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
-                TipoOperacion            = new TCodLista { CodLista = "1" },
-                DecisionPagoVoluntario   = ConstruirDecisionPagoVoluntario(),
+                ProduccionVendedor = new ProduccionVendedor { CodLista = ResolverCodListaProduccionVendedor(contrato) },
+                TipoOperacion = new TCodLista { CodLista = "1" },
+                DecisionPagoVoluntario = ConstruirDecisionPagoVoluntario(),
             };
             if (estadoSAP.NumeroSio > 0)
                 det.SioGranos = ConstruirSioGranos(estadoSAP);
@@ -564,9 +564,9 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
             {
-                det.Precio             = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
+                det.Precio = Convert.ToString(precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio);
                 det.UnidadMedidaPrecio = new TCodCaption { CodLista = "T" };
-                det.APrecio            = new TCodLista { CodLista = "1" };
+                det.APrecio = new TCodLista { CodLista = "1" };
             }
 
             if (!esCanje)
@@ -575,11 +575,11 @@ namespace Molinos.DataAgro.Agent.Helpers
             return new DocumentoContratoPrecioHecho
             {
                 CabeceraDocumento = ConstruirCabeceraDocumento(contrato, esCanje, esConvenio),
-                DetalleDocumento  = new DetalleDocumentoContratoPrecioHecho
+                DetalleDocumento = new DetalleDocumentoContratoPrecioHecho
                 {
-                    Partes          = ConstruirPartes(partes),
+                    Partes = ConstruirPartes(partes),
                     DetalleContrato = det,
-                    Clausulas       = ConstruirClausulasDetalle(clausulas)
+                    Clausulas = ConstruirClausulasDetalle(clausulas)
                 }
             };
         }
@@ -592,7 +592,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new CabeceraDocumento
             {
-                Bolsa         = new TCodLista { CodLista = contrato.BolsaConfirma },
+                Bolsa = new TCodLista { CodLista = contrato.BolsaConfirma },
                 TipoDocumento = new TCodLista { CodLista = ResolverTipoDocumento(contrato, esCanje, esConvenio) }
             };
         }
@@ -612,9 +612,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             return partes.Select(p => new Parte
             {
                 NroContratoInterno = new TCaption { Value = p.NroContratoInterno },
-                CUIT               = new TCodCaption { Value = p.CUIT },
-                CodLista           = p.CodLista == "1" ? codigoParte.Item1 : p.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
-                CodListaSpecified  = true
+                CUIT = new TCodCaption { Value = p.CUIT },
+                CodLista = p.CodLista == "1" ? codigoParte.Item1 : p.CodLista == "2" ? codigoParte.Item2 : codigoParte.Item3,
+                CodListaSpecified = true
             }).ToArray();
         }
 
@@ -636,7 +636,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new ConfirmaQALoteDocumentos.Calidad
             {
-                CondicionesCalidad      = new TCodLista { CodLista = ResolverCodListaCalidad(contrato) },
+                CondicionesCalidad = new TCodLista { CodLista = ResolverCodListaCalidad(contrato) },
                 OtrasCondicionesCalidad = new TCaption { Value = string.Empty }
             };
         }
@@ -670,14 +670,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             var fij = new Fijacion
             {
-                FijMinima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
-                FijMaxima               = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
-                UnidadMedidaFijacion    = new TCodCaption { Caption = "K", CodLista = "K" },
-                FijPeriodo              = new TCodCaption { CodLista = "1", Value = "1" },
-                FijFecDesde             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
-                FijFecHasta             = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
+                FijMinima = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMinima).ToString() },
+                FijMaxima = new TCaption { Value = noTieneCondiciones ? "" : Convert.ToInt32(condiciones.CantidadMaxima).ToString() },
+                UnidadMedidaFijacion = new TCodCaption { Caption = "K", CodLista = "K" },
+                FijPeriodo = new TCodCaption { CodLista = "1", Value = "1" },
+                FijFecDesde = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaDesde) },
+                FijFecHasta = new TCaption { Value = noTieneCondiciones ? "" : CorregirFormatoFecha(condiciones.FechaHasta) },
                 PorcMultaIncumplimiento = new TCaption { Value = "010" },
-                ComunicacionFijacion    = new TCodCaption { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" }
+                ComunicacionFijacion = new TCodCaption { CodLista = contrato.PagoDirectoVendedor == true ? "2" : "1" }
             };
 
             if (contrato.Pizarra == true)
@@ -691,11 +691,11 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new Pagos
             {
-                ProvinciaPago      = new TCodCaption { CodLista = "B" },
+                ProvinciaPago = new TCodCaption { CodLista = "B" },
                 FechaCondicionPago = new TCaption { Value = ResolverCondicionPago(contrato, esConvenio) },
-                LugarPago          = new TCaption { Value = "BUENOS AIRES" },
-                PagoAOrdenDe       = new PagoAOrdenDe { CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1" },
-                PorcPago           = new TCaption { Value = contrato.PorcentajeDePago.Value.ToString() }
+                LugarPago = new TCaption { Value = "BUENOS AIRES" },
+                PagoAOrdenDe = new PagoAOrdenDe { CodLista = contrato.CorredorId > 0 ? (contrato.PagoDirectoVendedor == true ? "1" : "2") : "1" },
+                PorcPago = new TCaption { Value = contrato.PorcentajeDePago.Value.ToString() }
             };
         }
 
@@ -703,13 +703,13 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new DetalleDocumentoPagoEspecieFijarPrecioDetalleContratoInsumos
             {
-                Productos        = new[] { ConstruirInsumo() },
-                Moneda           = new TCodLista { CodLista = string.Empty },
-                PrecioTotal      = new TCaption { Value = contrato.Monto.ToString() },
-                Factura          = new TCaption(),
+                Productos = new[] { ConstruirInsumo() },
+                Moneda = new TCodLista { CodLista = string.Empty },
+                PrecioTotal = new TCaption { Value = contrato.Monto.ToString() },
+                Factura = new TCaption(),
                 PorcentajeGastos = new TCaption(),
-                TipoCambioPesos  = new TCaption(),
-                LugarEntrega     = new TCaption(),
+                TipoCambioPesos = new TCaption(),
+                LugarEntrega = new TCaption(),
                 ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma }
             };
         }
@@ -718,13 +718,13 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new DetalleDocumentoPagoEspeciePrecioHechoDetalleContratoInsumos
             {
-                Productos        = new[] { ConstruirInsumo() },
-                Moneda           = new TCodLista { CodLista = string.Empty },
-                PrecioTotal      = new TCaption { Value = contrato.Monto.ToString() },
-                Factura          = new TCaption(),
+                Productos = new[] { ConstruirInsumo() },
+                Moneda = new TCodLista { CodLista = string.Empty },
+                PrecioTotal = new TCaption { Value = contrato.Monto.ToString() },
+                Factura = new TCaption(),
                 PorcentajeGastos = new TCaption(),
-                TipoCambioPesos  = new TCaption(),
-                LugarEntrega     = new TCaption(),
+                TipoCambioPesos = new TCaption(),
+                LugarEntrega = new TCaption(),
                 ProvinciaEntrega = new TCodCaption { Value = contrato.ProvinciaConfirma }
             };
         }
@@ -733,11 +733,11 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new Insumo
             {
-                Producto           = new Producto { CodLista = "1" },
-                DescAdicional      = new TCaption { Value = "insumos" },
-                Cantidad           = new TCaption(),
-                Precio             = new TCaption(),
-                UnidadMedida       = new TCodCaption { CodLista = string.Empty },
+                Producto = new Producto { CodLista = "1" },
+                DescAdicional = new TCaption { Value = "insumos" },
+                Cantidad = new TCaption(),
+                Precio = new TCaption(),
+                UnidadMedida = new TCodCaption { CodLista = string.Empty },
                 UnidadMedidaPrecio = new TCodCaption { CodLista = string.Empty }
             };
         }
@@ -769,6 +769,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     agent.ClientCredentials.UserName.UserName = userConfirma;
                     agent.ClientCredentials.UserName.Password = passConfirma;
+                    agent.Endpoint.Behaviors.Add(new CDataClausulaInspector());
                     return agent.AltaDefinitiva(lote);
                 }
                 catch (Exception ex)
@@ -808,10 +809,10 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             return new ConfirmaAltaLoteResultDto
             {
-                altaIdLote     = "18443050",
-                altaEstado     = 1,
+                altaIdLote = "18443050",
+                altaEstado = 1,
                 altaEstadoLote = 4,
-                altaItem       = new List<altaItemDto>
+                altaItem = new List<altaItemDto>
                 {
                     new altaItemDto
                     {
@@ -853,13 +854,13 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             var result = new ConfirmaAltaLoteResultDto
             {
-                altaIdLote              = devolucion.altaIdLote,
-                altaEstado              = SoloDigitos(devolucion.altaEstado.ToString()),
-                altaEstadoSpecified     = devolucion.altaEstadoSpecified,
-                altaEstadoDetalleError  = devolucion.altaEstadoDetalleError,
-                altaEstadoLote          = SoloDigitos(devolucion.altaEstadoLote.ToString()),
+                altaIdLote = devolucion.altaIdLote,
+                altaEstado = SoloDigitos(devolucion.altaEstado.ToString()),
+                altaEstadoSpecified = devolucion.altaEstadoSpecified,
+                altaEstadoDetalleError = devolucion.altaEstadoDetalleError,
+                altaEstadoLote = SoloDigitos(devolucion.altaEstadoLote.ToString()),
                 altaEstadoLoteSpecified = devolucion.altaEstadoLoteSpecified,
-                altaItem                = new List<altaItemDto>()
+                altaItem = new List<altaItemDto>()
             };
 
             result.confirmaAltaEstado = estadosConfirmaDto.ConfirmaAltaEstadoDto
@@ -873,12 +874,12 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 var altaItem = new altaItemDto
                 {
-                    altaIdDocumento              = item.altaIdDocumento,
-                    altaEstadoDocumento          = SoloDigitos(item.altaEstadoDocumento.ToString()),
-                    altaErrores                  = item.altaErrores != null ? new List<string>(item.altaErrores) : new List<string>(),
+                    altaIdDocumento = item.altaIdDocumento,
+                    altaEstadoDocumento = SoloDigitos(item.altaEstadoDocumento.ToString()),
+                    altaErrores = item.altaErrores != null ? new List<string>(item.altaErrores) : new List<string>(),
                     altaIdDocumentoExistenteLote = item.altaIdDocumentoExistenteLote,
-                    altaIdDocumentoExistente     = item.altaIdDocumentoExistente,
-                    codigo                       = item.codigo
+                    altaIdDocumentoExistente = item.altaIdDocumentoExistente,
+                    codigo = item.codigo
                 };
 
                 altaItem.confirmaAltaEstadoDocumento = estadosConfirmaDto.ConfirmaAltaEstadoDocumentoDto
