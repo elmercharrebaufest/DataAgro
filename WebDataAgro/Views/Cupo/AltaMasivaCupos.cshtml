@@ -1,6 +1,6 @@
 
 @{
-    ViewBag.Title = "Alta masiva de Cupos";
+    ViewBag.Title = "Alta Masiva de Sugerencias de Cupos";
 }
 
 <script src="~/Scripts/App/AltaMasivaCupos.js"></script>
@@ -10,8 +10,6 @@
 }
 <h3>@ViewBag.Title</h3>
 
-@*@using (Html.BeginForm("AltaMasivaContratosExcel", "CompraNet", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {*@
 @Html.Hidden("contratoId")
 <div class="container">
     <div id="divFormulario">
@@ -19,13 +17,6 @@
             <div class="row">
                 <span class="col-md-1 historial" style="padding-top: 15px; margin-left: -4px;">Alta</span>
                 <div class="col-md-5"></div>
-
-                <div id="divDescargarPlantillaAcuerdo" hidden class="col-md-3" style="text-align: end; margin-left: 75px;">
-                    <form id="downloadAltaMasiva" action="~/Templates/AltaMasivaCupos.xlsx" target="_blank">
-                        <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo Acuerdo</button>
-                    </form>
-
-                </div>
             </div>
         </div>
         <br />
@@ -40,7 +31,7 @@
                         <label>Archivo Modelo</label>
                     </div>
                     <div class="col-sm-8" style="padding-top: 7px;">
-                        <form id="downloadAltaMasivaMATBA" action="~/Templates/AltaMasivaCupos.xlsx" target="_blank">
+                        <form id="downloadAltaMasivaMATBA" action="~/Templates/AltaMasivaSugerenciasDeCupos.xlsx" target="_blank">
                             <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo</button>
                         </form>
                     </div>
@@ -51,7 +42,6 @@
                     <button style="" class="k-button k-button-icontext" onclick="document.getElementById('file').click()"><i class="fa fa-paperclip" style="font-size:18px; width: 25px" aria-hidden="true"></i>  Adjuntar Archivo</button>
                     <label id="fileLb" style="padding-top:12px; padding-left:5px"></label>
                     <input type='file' id="file" style="display:none" oninput="setFileName()">
-                    @*@Html.TextBox("file", "Cargar Archivo", new { type = "file", value = "Adjuntar" }) <br />*@
                 </div>
                 <div class=" col-md-5" style="padding-left: 0px; margin-left: -27px;">
                     <input id="guardarBtn" style="background:#017940 !important; color:#fff" onclick="cargarContratos()" class="k-button k-button-icontext" value="Grabar" />
@@ -74,7 +64,6 @@
 
     </div>
 </div>
-@*}*@
 
 <div class="modal fade" id="resultadoCarga" tabindex="-1" role="dialog" aria-labelledby="resultadoCargaLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -85,7 +74,7 @@
                 </button>
                 <h1 class="modal-title" id="resultadoCupo"></h1>
                 <div class="status confirmado-modal">
-                    <div>Contratos Cargados</div>
+                    <div>Sugerencias de Cupos Cargadas</div>
                 </div>
             </div>
             <div class="modal-body">

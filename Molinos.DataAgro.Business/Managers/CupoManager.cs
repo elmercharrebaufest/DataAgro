@@ -1600,20 +1600,9 @@ namespace Molinos.DataAgro.Business.Managers
                   .Where(x => !string.IsNullOrEmpty(x.ContratoSAP))
                   .ToList();
 
-            // CHEQUEAR QUE LOS CONTRATOS SAP EXISTAN Y OBTENER LOS NEGOCIOS CORRESPONDIENTES
-            //var listaNegocios = new List<Negocio>();
-            //foreach (var negocioExcel in ExcelData)
-            //{
-            //    var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == negocioExcel.ContratoSAP);
-            //    if (negocio != null)
-            //    {
-            //        negocioExcel.MaterialId = negocio.MaterialId;
-            //        listaNegocios.Add(negocio);
-            //    }
-            //}
-
             List<string> contratosSAPdelExcel = ExcelData.Select(x => x.ContratoSAP).Distinct().ToList();
             List<Negocio> listaNegocios = repositorio.Listar<Negocio>(x => contratosSAPdelExcel.Contains(x.ContratoSAP)).ToList();
+
             foreach (var negocioExcel in ExcelData)
             {
                 var negocio = listaNegocios.FirstOrDefault(x => x.ContratoSAP == negocioExcel.ContratoSAP);
@@ -1625,8 +1614,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            // OBTENER TODOS LOS MATERIALES
             var materiales = ExcelData.Select(x => x.MaterialId).Distinct();
+
             foreach (var materialId in materiales)
             {
                 var grupoMaterial = ExcelData.Where(x => x.MaterialId == materialId).ToList();
@@ -1635,10 +1624,6 @@ namespace Molinos.DataAgro.Business.Managers
                     .SelectMany(x => new[] { x.FechaHasta, x.FechaHastaOriginal ?? x.FechaHasta })
                     .ToList();
 
-                // aca se crea la formula por cada material
-                // TENGO DUDAS ???????????????????????????  <----------------------------
-                // Negocio desde y hasta , ver si se usa
-                // si se usa , ver si se usa asi o la fecha desde hasta del negocio 
                 var formulaDto = new FormulaDto
                 {
                     MaterialId = materialId,
@@ -1828,16 +1813,6 @@ namespace Molinos.DataAgro.Business.Managers
                 DateTime hoy = DateTime.Now.Date;
                 var formulaDto = formula;
                 logger.Debug("CrearSugerenciaCupo - se obtuvo la formula para material: " + MaterialId);
-
-                //if (configuracion != null)
-                //{
-                //    //logger.Debug("CrearSugerenciaCupo - configuracion: " + (configuracion == null ? "null" : configuracion.ToJson()));
-                //    logger.Debug("desde" + formulaDto.CuposDesde + " hasta " + formulaDto.CuposHasta + "- Configuracion: " + configuracion.Fecha);
-                //    if (!(formulaDto.CuposDesde <= configuracion.Fecha && formulaDto.CuposHasta >= configuracion.Fecha))
-                //    {
-                //        return new List<SugerenciaCupoDto>();
-                //    }
-                //}
                 logger.Debug("Inicio Algoritmo");
 
                 //formulaSave.CuposDesde = formulaDto.CuposDesde;
@@ -1875,13 +1850,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("CrearSugerenciaCupo - negocios priorizados: " + negocios.Where(a => a.Priorizado).Count());
                 logger.Debug("CrearSugerenciaCupo - fin de PriorizarSegunDisponibilidad.");
 
-                //negocios.ForEach(a => a.PuntuacionesString = JsonConvert.SerializeObject(a.Puntuaciones));
-
-
-
-                // ACA BORRE .Where(a => a.Priorizado) , POR QUE SEGUN LO QUE TENGO ENTENDIDO
-                // NOS ESTAN PIDIENDO QUE HAGAMOS SUGERENCIAS DE LOS NEGOCIOS QUE NOS MANDAN
-
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
                     //AgenteCompraId = a.AgenteCompraId,
@@ -1917,8 +1885,6 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("CrearSugerenciaCupo - sugerencias: " + sugerencias.ToJson());
                 }
 
-
-
                 var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
 
                 var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado);
@@ -1941,7 +1907,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 throw;
             }
-
         }
 
         private List<SugerenciaCupoDto> ValidarHabilitaciones(List<SugerenciaCupoDto> negocios)
@@ -3133,7 +3098,6 @@ namespace Molinos.DataAgro.Business.Managers
                     Inhabilitado = "",
                 }).ToList();
 
-
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
@@ -3262,7 +3226,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.CantidadDeCupos -= cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                     item.CuposPendientes = cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
-                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes del negocio " + item.ContratoSAP;
+                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes, del ciclo anterior, del negocio " + item.ContratoSAP;
                 }
 
                 // ====================================================================
@@ -3278,7 +3242,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.SolicitudesPendientes = solicitudesPendientes
                         .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
-                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.SolicitudesPendientes + " solicitudes pendientes del negocio " + item.ContratoSAP;
+                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.SolicitudesPendientes + " solicitudes extraordinarias pendientes del negocio " + item.ContratoSAP;
                 }
             }
 
@@ -3298,17 +3262,9 @@ namespace Molinos.DataAgro.Business.Managers
             // ========================================================================
             // FASE 8: CONSULTAR Y VALIDAR CONTRATOS WARRANT/CD
             // ========================================================================
+
             // Consulta los contratos que tienen características de Warranty o CD
             // y marca los que coinciden
-
-
-            // IMPORTANTE ------> BUSCAR LAS FECHAS HASTA/DESDE DE LOS NEGOCIOS , BUSCAR LA FECHA USANDO MIN Y MAX
-            // USAR EL FECHA HASTA ORIGINAL MIN Y EL FECHA HASTA MAXMIMO , (NO EL ORIGINAL)
-
-
-
-
-
             List<BasicoContrato> warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
             {
@@ -3393,7 +3349,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (restarCuposProvCorr.Count() > 0)
             {
-                logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.CantidadCupos > 0).ToJson());
+                logger.Debug("Cupos a restar por Prov. y Corr., según las CCPP: " + restarCuposProvCorr.Where(x => x.CantidadCupos > 0).ToJson());
             }
 
             // ========================================================================
@@ -3734,9 +3690,6 @@ namespace Molinos.DataAgro.Business.Managers
             // (por cualquier restricción: mínimo de kilos, cupos pendientes, etc.)
             return negociosSinSugerencia;
         }
-
-
-
 
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
         {

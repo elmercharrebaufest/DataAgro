@@ -79,16 +79,16 @@
   <setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Service Endpoint Address" value="https://vhmgkgaqci.sap.molinosagro.ad:44300/sap/bc/srt/rfc/sap/z_mp_ws_dataagro_directo/400/z_mp_ws_dataagro_directo/z_mp_ws_dataagro_directo" />
   <setParameter name="Z_MP_WS_DATAAGRO_DIRECTO Binding Configuration" value="Z_MP_WS_DATAAGRO_DIRECTO_HTTPS" />
 
-  <setParameter name="Default Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosService.svc" />
-  <setParameter name="Default1 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteDocumentosAsyncService.svc" />
-  <setParameter name="Default2 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaLoteService.svc" />
-  <setParameter name="Default3 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosRegistradosService.svc" />
-  <setParameter name="Default4 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentoRegistradoPdfService.svc" />
-  <setParameter name="Default5 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosControlFirmaXmlService.svc" />
-  <setParameter name="Default6 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosService.svc" />
-  <setParameter name="Default7 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosItemClienteService.svc" />
-  <setParameter name="Default8 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaEmpresasService.svc" />
-  <setParameter name="Default9 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaTrackingInteraccionesFechaService.svc" />
-  <setParameter name="Default10 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/ConsultaDocumentosBorradorService.svc" />
-  <setParameter name="Default11 Endpoint Confirma" value="https://services.staging.confirma.com.ar:88/LoteBorradorService.svc" />
+  <setParameter name="Default Endpoint Confirma"   value="https://services.staging.confirma.com.ar/LoteDocumentosService.svc" />
+  <setParameter name="Default1 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/LoteDocumentosAsyncService.svc" />
+  <setParameter name="Default2 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaLoteService.svc" />
+  <setParameter name="Default3 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaDocumentosRegistradosService.svc" />
+  <setParameter name="Default4 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaDocumentoRegistradoPdfService.svc" />
+  <setParameter name="Default5 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaDocumentosControlFirmaXmlService.svc" />
+  <setParameter name="Default6 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaDocumentosService.svc" />
+  <setParameter name="Default7 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaDocumentosItemClienteService.svc" />
+  <setParameter name="Default8 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaEmpresasService.svc" />
+  <setParameter name="Default9 Endpoint Confirma"  value="https://services.staging.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
+  <setParameter name="Default10 Endpoint Confirma" value="https://services.staging.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
+  <setParameter name="Default11 Endpoint Confirma" value="https://services.staging.confirma.com.ar/LoteBorradorService.svc" />
 </parameters>
