@@ -286,14 +286,12 @@ namespace WebDataAgro.Controllers
             return RedirectToAction("Index");
         }
 
-
         [HttpPost]
         public ActionResult AltaMasivaCuposExcel()
         {
             List<string> errores = new List<string>();
             try
             {
-
                 if (Request.Files.Count == 0)
                 {
                     errores.Add(string.Concat("Debe seleccionar el archivo."));
@@ -316,7 +314,6 @@ namespace WebDataAgro.Controllers
                 if (fileSubido.ContentLength > 0)
                 {
                     var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
-                    // ACA ES DONDE IRIA LA LOGICA DE CUPOS
 
                     if (dsExcel != null)
                     {
@@ -330,14 +327,12 @@ namespace WebDataAgro.Controllers
                     errores.Add(string.Concat("El archivo ", fileSubido.FileName, " está vacío."));
                 }
 
-
                 if (errores.Count > 0)
                 {
                     return Json(new { Resume = errores, Resultado = false });
                 }
 
                 return Json(new { data = "" });
-
             }
             catch (Exception e)
             {
