@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -99,7 +99,7 @@ namespace Molinos.DataAgro.Business
             var lista = new List<string>();
             var recibirSugerenciaFAQ = this.mobjComercial.ListarComercialesRecibirSugerenciaFAQ();
             if (recibirSugerenciaFAQ == null) return lista;
-            
+
             recibirSugerenciaFAQ.Remove(comercial);
 
             logger.Debug("Enviando mail Sugerencia FAQ a " + string.Join(", ", recibirSugerenciaFAQ));
@@ -134,7 +134,7 @@ namespace Molinos.DataAgro.Business
 
                 Comercial comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == IdActiveDirectory);
 
-                Entities.Entities.ManualesLogVisitas manualesLogVisitas = new Entities.Entities.ManualesLogVisitas()
+                ManualesLogVisitas manualesLogVisitas = new ManualesLogVisitas()
                 {
                     ManualId = idManual,
                     ComercialId = comercial.ComercialId,

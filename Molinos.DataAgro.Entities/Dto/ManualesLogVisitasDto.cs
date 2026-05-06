@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public partial class ManualesLogVisitas
+    public partial class ManualesLogVisitasDto
     {
         public int Id { get; set; }
         public int ManualId { get; set; }
