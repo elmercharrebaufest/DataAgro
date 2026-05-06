@@ -1,4 +1,3 @@
-using AutoMapper.Configuration;
 using Kendo.DynamicLinq;
 using KendoGridBinder.Extensions;
 using Molinos.DataAgro.Agent.Helpers;
@@ -1709,7 +1708,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Destinatario = "30715118773",//
                         CUITProveedor = negocio.Proveedor.CUIT == "" ? "NULL" : negocio.Proveedor.CUIT,//dto
                         CUITCorredor = negocio.CorredorId > 0 && negocio.Corredor != null ? negocio.Corredor.CUIT : null,//dto
-                        //Puntuaciones = "Pendiente de cálculo",
+                        Puntuaciones = new Dictionary<string, decimal>(),
                         ContratoSAP = negocio.ContratoSAP,//
                         //MotivoRechazo = null,
                         ConfiguracionEspacioDinamicoId = null,
@@ -2043,6 +2042,8 @@ namespace Molinos.DataAgro.Business.Managers
                 List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
                 negocios = sugerenciasDtoExcelList.Where(a => a.MaterialId == MaterialId).ToList();
 
+                negocios.ForEach(a => a.PuntuacionesString = JsonConvert.SerializeObject(a.Puntuaciones));
+
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
                     //AgenteCompraId = a.AgenteCompraId,
@@ -2066,7 +2067,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ComercialId = a.ComercialId,
                     StandardDeCalidad = a.MaterialId == (int)EnumMateriales.SOJA ? a.StandardDeCalidad == "Camara" ? a.StandardDeCalidad : "Fabrica" : "",
                     Aceptado = null,
-                    Puntuaciones = "Puntuaciones no disponibles",
+                    Puntuaciones = a.PuntuacionesString,
                     ContratoSAP = a.ContratoSAP,
                     CDWarrant = a.CDWarrant,
                     KgNegocio = a.KgNegocio,
