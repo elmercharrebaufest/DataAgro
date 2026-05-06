@@ -805,7 +805,10 @@ namespace Molinos.DataAgro.Business.Managers
             var oResultado = new Resultado();
             try
             {
-                var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => (x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTRATO_PENDIENTE_DE_CONTROL ||
+                var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => x.EsConfirma == true &&
+                                                                                  x.EsConfirmaAltaBorrador == false &&
+                                                                                  x.AltaIdDocumentoConfirma > 0 &&
+                                                                                  (x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTRATO_PENDIENTE_DE_CONTROL ||
                                                                                    x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTROLADO ||
                                                                                    x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.EN_FIRMA
                                                                                   ));
@@ -814,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
                     foreach(var boleto in boletosPendientes)
                     {
                         var bolsaConfirma = Convert.ToInt32(boleto.Negocio.Bolsa.CodigoConfirma);
-                        var respuestaConsultaDocumentos = confirmaConsultaDocumentosAgent.ConsultaDocumentos(bolsaConfirma, boleto.Negocio.ContratoSAP);
+                        var respuestaConsultaDocumentos = confirmaConsultaDocumentosAgent.ConsultaDocumentos(bolsaConfirma, boleto.AltaIdDocumentoConfirma.ToString());
                         if (respuestaConsultaDocumentos!=null && respuestaConsultaDocumentos.Count > 0)
                         {
                             foreach (var documento in respuestaConsultaDocumentos)
