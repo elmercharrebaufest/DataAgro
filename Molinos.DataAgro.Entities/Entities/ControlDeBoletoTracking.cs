@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         public int ControlDeBoletosId { get; set; }
         public int? EstadoDocumentoId { get; set; }
-        public int? CUIT { get; set; }
+        public long? CUIT { get; set; }
         public string RazonSocial { get; set; }
         public string Acciones { get; set; }
         public DateTime FechaCreacion { get; set; }

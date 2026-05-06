@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ConsultaEstadoDocumento = (int)item.consultaEstadoDocumento,
                     EnPoderDe = new EmpresaConfirmaDto
                     {
-                        CUIT       = Convert.ToInt32(item.EnPoderDe.CUIT.ToString()),
+                        CUIT       = long.TryParse(item.EnPoderDe?.CUIT?.Value, out long cuit) ? cuit : 0L,
                         RazonSocial = item.EnPoderDe.RazonSocial
                     },
                     Acciones = item.Acciones != null

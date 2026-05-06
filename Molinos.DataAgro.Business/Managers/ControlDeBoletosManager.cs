@@ -832,7 +832,8 @@ namespace Molinos.DataAgro.Business.Managers
                                         CUIT = documento.EnPoderDe.CUIT,
                                         RazonSocial = documento.EnPoderDe.RazonSocial,
                                         EstadoDocumentoId = documento.ConsultaEstadoDocumento,
-                                        Acciones = JsonSerializer.Serialize(documento.Acciones)
+                                        Acciones = JsonSerializer.Serialize(documento.Acciones),
+                                        FechaCreacion = DateTime.Now
                                     };
                                     this.repositorio.Agregar(controlDeBoletoTracking);
                                 }
@@ -840,7 +841,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     existe.CUIT = documento.EnPoderDe.CUIT;
                                     existe.RazonSocial = documento.EnPoderDe.RazonSocial;
-                                    existe.EstadoDocumentoId = documento.EstadoDocumento;
+                                    existe.EstadoDocumentoId = documento.ConsultaEstadoDocumento;
                                     existe.Acciones = JsonSerializer.Serialize(documento.Acciones);
                                 }
 
