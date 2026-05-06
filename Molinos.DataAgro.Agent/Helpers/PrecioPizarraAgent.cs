@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.repositorio = repositorio;
         }
 
-        public string Crear(Entities.Entities.PrecioPizarra precioPizarra)
+        public string Crear(PrecioPizarra precioPizarra)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public string Anular(Molinos.DataAgro.Entities.Entities.PrecioPizarra precioPizarra)
+        public string Anular(PrecioPizarra precioPizarra)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {

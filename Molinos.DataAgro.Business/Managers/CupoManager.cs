@@ -106,7 +106,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (!error.HayError)
                 {
-                    cupo.Material = repositorio.Obtener<Entities.Entities.Material>(cupo.MaterialId);
+                    cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
                     cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                     cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
                     cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
@@ -1568,7 +1568,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void CrearSugerenciaCupo()
         {
-            var materiales = repositorio.Listar<Entities.Entities.Material, int>(x => x.MaterialId);
+            var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
             var sugerencias = new List<SugerenciaCupoDto>();
             var formulas = new List<FormulaDto>();
             foreach (var MaterialId in materiales)
@@ -1641,7 +1641,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
-            EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas, true));
+            EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas, true), true);
 
             return new List<ExcelValidatorResumeItem>();
         }
@@ -1834,7 +1834,7 @@ namespace Molinos.DataAgro.Business.Managers
                 List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
 
                 logger.Debug("CrearSugerenciaCupo - inicio de obtener negocios.");
-                var sinSugerencia = ObtenerNegociosAltaMasiva(formulaDto, negocios, NegociosAUsar, ExcelData);
+                var sinSugerencia = ObtenerNegociosAltaMasiva(formulaDto, negocios, NegociosAUsar);
                 logger.Debug("CrearSugerenciaCupo - fin de obtener negocios.");
 
                 logger.Debug("CrearSugerenciaCupo - inicio de ValidarHabilitaciones.");
@@ -2997,8 +2997,7 @@ namespace Molinos.DataAgro.Business.Managers
         private List<SugerenciaCupoDto> ObtenerNegociosAltaMasiva(
             FormulaDto formula,
             List<SugerenciaCupoDto> negocios,
-            List<Negocio> NegociosAUsar,
-            List<AltaMasivaCupoDto> ExcelData
+            List<Negocio> NegociosAUsar
         )
         {
             // Colección que almacena contratos que no pudieron tener cupos sugeridos
@@ -3995,7 +3994,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var fechas = new List<DateTime>();
 
-            var materiales = repositorio.Listar<Entities.Entities.Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId == materialId || materialId == null);
+            var materiales = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId == materialId || materialId == null);
             foreach (var material in materiales)
             {
                 Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(material.MaterialId));
@@ -7911,7 +7910,7 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
         }
 
-        private void EnviarMailNegociosDeAlgoritmo(byte[] excel)
+        private void EnviarMailNegociosDeAlgoritmo(byte[] excel, bool cargaMasivaSugerencias = false)
         {
             try
             {
@@ -7924,8 +7923,21 @@ namespace Molinos.DataAgro.Business.Managers
                     mail.AddRange(comerciales.Select(x => x.IdActiveDirectory).ToList());
                 }
                 mail.Add("dataagro@baufest.com");
-                var asunto = "Resultado Algoritmo de Cupos";
-                mailManager.EnviarMail(mail, asunto, "", null, alterView, excel, "Reporte Algoritmo.xlsx");
+
+                string asunto;
+                string nombreAdjunto;
+                if (cargaMasivaSugerencias)
+                {
+                    asunto = "Resultado Algoritmo de Cupos - Alta Masiva de Sugerencias";
+                    nombreAdjunto = "Reporte Algoritmo - Alta Masiva Sugerencias.xlsx";
+                }
+                else
+                {
+                    asunto = "Resultado Algoritmo de Cupos";
+                    nombreAdjunto = "Reporte Algoritmo.xlsx";
+                }                
+
+                mailManager.EnviarMail(mail, asunto, "", null, alterView, excel, nombreAdjunto);
 
             }
             catch (Exception e)

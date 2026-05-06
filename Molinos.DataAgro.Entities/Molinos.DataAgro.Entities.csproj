@@ -472,7 +472,7 @@
     <Compile Include="Dto\InformeComercialAperturaDto.cs" />
     <Compile Include="Dto\LogAnulacionContratoDto.cs" />
     <Compile Include="Dto\ManualesDto.cs" />
-    <Compile Include="Dto\ManualesLogVisitas.cs" />
+    <Compile Include="Dto\ManualesLogVisitasDto.cs" />
     <Compile Include="Dto\NegocioParaSolicitarCupo.cs" />
     <Compile Include="Dto\PantallaEnUsoDto.cs" />
     <Compile Include="Dto\PartidoDto.cs" />
