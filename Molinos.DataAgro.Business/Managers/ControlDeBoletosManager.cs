@@ -814,35 +814,39 @@ namespace Molinos.DataAgro.Business.Managers
                                                                                   ));
                 if (boletosPendientes.Count > 0)
                 {
-                    foreach(var boleto in boletosPendientes)
+                    foreach (var boleto in boletosPendientes)
                     {
-                        var bolsaConfirma = Convert.ToInt32(boleto.Negocio.Bolsa.CodigoConfirma);
-                        var respuestaConsultaDocumentos = confirmaConsultaDocumentosAgent.ConsultaDocumentos(bolsaConfirma, boleto.AltaIdDocumentoConfirma.ToString());
-                        if (respuestaConsultaDocumentos!=null && respuestaConsultaDocumentos.Count > 0)
+                        try
                         {
+                            var bolsaConfirma = Convert.ToInt32(boleto.Negocio.Bolsa.CodigoConfirma);
+                            var respuestaConsultaDocumentos = confirmaConsultaDocumentosAgent.ConsultaDocumentos(bolsaConfirma, boleto.AltaIdDocumentoConfirma.ToString());
+                            if (respuestaConsultaDocumentos == null || respuestaConsultaDocumentos.Count == 0)
+                                continue;
+
                             foreach (var documento in respuestaConsultaDocumentos)
                             {
-
                                 var existe = this.repositorio.Obtener<ControlDeBoletoTracking>(x => x.ControlDeBoletosId == boleto.Id);
                                 if (existe == null)
                                 {
                                     var controlDeBoletoTracking = new ControlDeBoletoTracking()
                                     {
                                         ControlDeBoletosId = boleto.Id,
-                                        CUIT = documento.EnPoderDe.CUIT,
-                                        RazonSocial = documento.EnPoderDe.RazonSocial,
+                                        CUIT              = documento.EnPoderDe?.CUIT,
+                                        RazonSocial       = documento.EnPoderDe?.RazonSocial,
                                         EstadoDocumentoId = documento.ConsultaEstadoDocumento,
-                                        Acciones = JsonSerializer.Serialize(documento.Acciones),
-                                        FechaCreacion = DateTime.Now
+                                        Acciones          = JsonSerializer.Serialize(documento.Acciones),
+                                        FechaCreacion     = DateTime.Now
                                     };
                                     this.repositorio.Agregar(controlDeBoletoTracking);
+                                    this.repositorio.GuardarCambios();
                                 }
                                 else
                                 {
-                                    existe.CUIT = documento.EnPoderDe.CUIT;
-                                    existe.RazonSocial = documento.EnPoderDe.RazonSocial;
+                                    existe.CUIT              = documento.EnPoderDe?.CUIT;
+                                    existe.RazonSocial       = documento.EnPoderDe?.RazonSocial;
                                     existe.EstadoDocumentoId = documento.ConsultaEstadoDocumento;
-                                    existe.Acciones = JsonSerializer.Serialize(documento.Acciones);
+                                    existe.Acciones          = JsonSerializer.Serialize(documento.Acciones);
+                                    this.repositorio.GuardarCambios();
                                 }
 
                                 var controlDeBoletos = this.repositorio.Obtener<ControlDeBoletos>(boleto.Id);
@@ -850,17 +854,19 @@ namespace Molinos.DataAgro.Business.Managers
                                 this.repositorio.GuardarCambios();
                             }
                         }
+                        catch (Exception exBoleto)
+                        {
+                            logger.Error(exBoleto, $"Error procesando boleto Id={boleto.Id}, Documento={boleto.AltaIdDocumentoConfirma}");
+                            oResultado.Errores.Add(new ErrorMessage { Message = exBoleto.Message });
+                        }
                     }
                 }
                 return oResultado;
             }
             catch (Exception ex)
             {
-                oResultado.Errores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message,
-                });
-                logger.Error(ex.Message);
+                oResultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                logger.Error(ex, "Error en ProcesarBoletosPendientesControl");
                 return oResultado;
             }
         }
