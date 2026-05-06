@@ -75,6 +75,7 @@ namespace WebDataAgro.Controllers
         }
         #endregion
 
+        #region Pendiente de control
         [HttpPost]
         public JsonResult GetBoletos(ControlDeBoletoFiltroBusquedaDto filtrosBusqueda)
         {
@@ -173,6 +174,54 @@ namespace WebDataAgro.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult ControlMasivo(ControlDeBoletosRegistrarAccionesDto controlDeBoletosRegistrarAcciones)
+        {
+            try
+            {
+                var accion = (EnumControlDeBoletosAcciones)controlDeBoletosRegistrarAcciones.AccionControlDeBoletos;
+                var resultado = _controlDeBoletosManager.RegistrarAcciones(controlDeBoletosRegistrarAcciones.ControlDeBoletoIds, accion);
+                string mensaje = "Se modifico la accion en el control de boletos";
+                if (resultado.HayError)
+                {
+                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
+                    return Json(new { success = false, message = mensaje });
+                }
+
+                return Json(new { success = true, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al registrar la accion en el control de boletos: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetTrackingBoleto(int controlDeBoletosId)
+        {
+            try
+            {
+                var tracking = _controlDeBoletosManager.ObtenerTrackingBoletos(controlDeBoletosId);
+                var result = new
+                {
+                    Data = tracking,
+                    Total = tracking.Count
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+        #endregion
+
+        #region Seguimiento de Boleto
         [HttpPost]
         public JsonResult GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtrosBusqueda)
         {
@@ -282,35 +331,7 @@ namespace WebDataAgro.Controllers
                 return RedirectToAction("Index");
             }
         }
-
-        [HttpGet]
-        public JsonResult GetContadores()
-        {
-            try
-            {
-                // TODO: Implementar lógica real de contadores
-                var contadores = new
-                {
-                    Pendientes = 25,
-                    EnProceso = 12,
-                    Completados = 68,
-                    Certificados = 34
-                };
-
-                return Json(contadores, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    Pendientes = 0,
-                    EnProceso = 0,
-                    Completados = 0,
-                    Certificados = 0
-                }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
+        #endregion
 
         #region Datos de PreCertificacion
         [HttpGet]
@@ -386,71 +407,6 @@ namespace WebDataAgro.Controllers
             }
         }
         #endregion
-
-        [HttpPost]
-        public JsonResult ControlMasivo(ControlDeBoletosRegistrarAccionesDto controlDeBoletosRegistrarAcciones)
-        {
-            try
-            {
-                var accion = (EnumControlDeBoletosAcciones)controlDeBoletosRegistrarAcciones.AccionControlDeBoletos;
-                var resultado = _controlDeBoletosManager.RegistrarAcciones(controlDeBoletosRegistrarAcciones.ControlDeBoletoIds, accion);
-                string mensaje = "Se modifico la accion en el control de boletos";
-                if (resultado.HayError)
-                {
-                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
-                    return Json(new { success = false, message = mensaje });
-                }
-
-                return Json(new { success = true, message = mensaje });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al registrar la accion en el control de boletos: " + ex.Message });
-            }
-        }
-
-        [HttpGet]
-        public ActionResult ExportarExcel(FiltrosBoletoModel filtros)
-        {
-            try
-            {
-                // TODO: Implementar exportación real a Excel
-                // var datos = _boletoService.GetBoletosParaExport(filtros);
-                // return new ExcelResult(datos, "ControlBoletos_" + DateTime.Now.ToString("yyyyMMdd") + ".xlsx");
-
-                TempData["Success"] = "Exportación en desarrollo";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Error al exportar: " + ex.Message;
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpGet]
-        public JsonResult GetTrackingBoleto(int controlDeBoletosId)
-        {
-            try
-            {
-                var tracking = _controlDeBoletosManager.ObtenerTrackingBoletos(controlDeBoletosId);
-                var result = new
-                {
-                    Data = tracking,
-                    Total = tracking.Count
-                };
-                return Json(result, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    Data = new List<object>(),
-                    Total = 0,
-                    Errors = "Error al cargar datos: " + ex.Message
-                });
-            }
-        }
 
         #region Modificacion de Contrato
         [HttpPost]
@@ -857,6 +813,31 @@ namespace WebDataAgro.Controllers
             }
         }
         #endregion
+
+        [HttpGet]
+        public JsonResult ProcesarBoletosPendientesControl()
+        {
+            try
+            {
+                var tracking = _controlDeBoletosManager.ProcesarBoletosPendientesControl();
+                var result = new
+                {
+                    Data = tracking
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+
+
 
     }
 
