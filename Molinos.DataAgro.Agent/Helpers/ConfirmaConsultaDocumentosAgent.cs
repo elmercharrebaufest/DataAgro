@@ -140,6 +140,8 @@ namespace Molinos.DataAgro.Agent.Helpers
         private List<ConfirmaConsultaDocumentosDto> MapearRespuesta(consultaDocumentosResponse response)
         {
             var resultado = new List<ConfirmaConsultaDocumentosDto>();
+            if (response == null || response.consultaDocumentoResponse == null)
+                return resultado;
 
             foreach (var item in response.consultaDocumentoResponse)
             {
@@ -151,20 +153,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ConsultaEstadoDocumento = (int)item.consultaEstadoDocumento,
                     EnPoderDe = new EmpresaConfirmaDto
                     {
-                        CUIT       = long.TryParse(item.EnPoderDe?.CUIT?.Value, out long cuit) ? cuit : 0L,
-                        RazonSocial = item.EnPoderDe.RazonSocial
+                        CUIT        = long.TryParse(item.EnPoderDe?.CUIT?.Value, out long cuit) ? cuit : 0L,
+                        RazonSocial = item.EnPoderDe?.RazonSocial
                     },
                     Acciones = item.Acciones != null
-                        ? item.Acciones.Select(t => new Acciones
+                        ? item.Acciones.Where(t => t != null).Select(t => new Acciones
                         {
-                            Accion        = t.Accion.Value,
-                            Apellido      = t.Usuario.Apellido,
-                            Cargo         = t.Usuario.Cargo,
+                            Accion        = t.Accion?.Value,
+                            Apellido      = t.Usuario?.Apellido,
+                            Cargo         = t.Usuario?.Cargo,
                             FechaHora     = t.FechaHora,
-                            Nombre        = t.Usuario.Nombre,
-                            NroDocumento  = t.Usuario.NroDocumento,
-                            Resultado     = t.Resultado.Value,
-                            TipoDocumento = t.Usuario.TipoDocumento
+                            Nombre        = t.Usuario?.Nombre,
+                            NroDocumento  = t.Usuario?.NroDocumento,
+                            Resultado     = t.Resultado?.Value,
+                            TipoDocumento = t.Usuario?.TipoDocumento
                         }).ToList()
                         : new List<Acciones>()
                 });
