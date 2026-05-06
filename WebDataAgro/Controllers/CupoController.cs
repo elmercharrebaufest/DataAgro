@@ -317,7 +317,7 @@ namespace WebDataAgro.Controllers
 
                     if (dsExcel != null)
                     {
-                        var resultado = cupoManager.AltaMasivaSugerenciaCupos(dsExcel);
+                        var resultado = cupoManager.AltaMasivaSugerenciaCuposV2(dsExcel);
 
                         return Json(new { Resume = resultado, Resultado = true });
                     }

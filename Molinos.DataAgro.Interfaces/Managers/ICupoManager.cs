@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Interfaces
         string ObtenerCodigoSap(int id);
         List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion);
         List<SugerenciaCupoDto> CrearSugerenciaCupoMasiva(int MaterialId, FormulaDto formula, List<Negocio> NegociosAUsar, List<AltaMasivaCupoDto> ExcelData);
+        List<SugerenciaCupoDto> CrearSugerenciaCupoMasivaV2(int MaterialId, FormulaDto formula, List<Negocio> NegociosAUsar, List<SugerenciaCupoDto> sugerenciasDtoExcelList);
         FormulaDto ObtenerFormulaDto(int material);
         List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId, int? materialId);
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
@@ -56,6 +57,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
         List<ExcelValidatorResumeItem> AltaMasivaSugerenciaCupos(DataSet dsExcel);
+        List<ExcelValidatorResumeItem> AltaMasivaSugerenciaCuposV2(DataSet dsExcel);
         void EnviarMailSugerenciasPendientesPorComercial();
         CupoResult GenerarSolicitudExtraordinaria(AdministracionCupoDto solicitud);
         void EliminarSugerenciaDeCupos(ConfiguracionCupo configuracion);
