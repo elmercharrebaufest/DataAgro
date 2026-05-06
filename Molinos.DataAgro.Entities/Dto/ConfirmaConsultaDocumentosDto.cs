@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class EmpresaConfirmaDto
     {
-        public int CUIT;
+        public long CUIT;
         public string RazonSocial;
     }
 
