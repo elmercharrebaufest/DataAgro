@@ -1,4 +1,4 @@
-﻿var listaCantidad = new Array();
+var listaCantidad = new Array();
 var sugerenciasADevolver = [];
 var sustentable = false;
 var epa = false;
@@ -368,7 +368,7 @@ function CargarEventos() {
             var resultados = MSExecuteOnServer(url, data);
             $.unblockUI();
             mostrarResultados(resultados);
-            if (resultados.ListaErrores.length == 0) {
+            if (resultados.ListaErrores == undefined || (resultados.ListaErrores != undefined && resultados.ListaErrores.length == 0)) {
                 cuposCreados(["La devolución se realizó correctamente."], null);
             }
         }, 250);
