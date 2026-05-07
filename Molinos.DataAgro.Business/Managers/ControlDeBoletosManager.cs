@@ -10,7 +10,9 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -800,6 +802,15 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Metodo Tareas Programadas
+        private string ToJson<T>(T obj)
+        {
+            var serializer = new DataContractJsonSerializer(typeof(T));
+            using (var ms = new MemoryStream())
+            {
+                serializer.WriteObject(ms, obj);
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
+        }
         public Resultado ProcesarBoletosPendientesControl()
         {
             var oResultado = new Resultado();
@@ -811,7 +822,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                                                   (x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTRATO_PENDIENTE_DE_CONTROL ||
                                                                                    x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTROLADO ||
                                                                                    x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.EN_FIRMA
-                                                                                  ));
+                                                                                  )
+                                                                                  );
                 if (boletosPendientes.Count > 0)
                 {
                     foreach (var boleto in boletosPendientes)
@@ -831,10 +843,10 @@ namespace Molinos.DataAgro.Business.Managers
                                     var controlDeBoletoTracking = new ControlDeBoletoTracking()
                                     {
                                         ControlDeBoletosId = boleto.Id,
-                                        CUIT              = documento.EnPoderDe?.CUIT,
+                                        CUIT              = documento.EnPoderDe?.CUIT.ToString(),
                                         RazonSocial       = documento.EnPoderDe?.RazonSocial,
                                         EstadoDocumentoId = documento.ConsultaEstadoDocumento,
-                                        Acciones          = JsonSerializer.Serialize(documento.Acciones),
+                                        Acciones          = ToJson(documento.Acciones),
                                         FechaCreacion     = DateTime.Now
                                     };
                                     this.repositorio.Agregar(controlDeBoletoTracking);
@@ -842,10 +854,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 else
                                 {
-                                    existe.CUIT              = documento.EnPoderDe?.CUIT;
+                                    existe.CUIT              = documento.EnPoderDe?.CUIT.ToString();
                                     existe.RazonSocial       = documento.EnPoderDe?.RazonSocial;
                                     existe.EstadoDocumentoId = documento.ConsultaEstadoDocumento;
-                                    existe.Acciones          = JsonSerializer.Serialize(documento.Acciones);
+                                    existe.Acciones          = ToJson(documento.Acciones);
                                     this.repositorio.GuardarCambios();
                                 }
 

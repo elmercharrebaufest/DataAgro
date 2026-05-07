@@ -38,9 +38,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public List<ConfirmaConsultaDocumentosDto> ConsultaDocumentos(int bolsaId, string documentoId)
         {
+            
             if (ConfigurationManager.AppSettings["ValorPruebaConfirma"] == "1")
                 return DevolverResultadoPrueba();
-
+            
             try
             {
                 HabilitarSSLSiAmbientePruebas();
@@ -81,7 +82,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             Accion        = "1",
                             Apellido      = "Perez",
                             Cargo         = "Gerente",
-                            FechaHora     = "2025-08-01",
+                            FechaHora     = new DateTime(2025, 8, 1).ToString("dd/MM/yyyy HH:mm"),
                             Nombre        = "Juan",
                             NroDocumento  = "12345678",
                             Resultado     = "1",
@@ -136,7 +137,17 @@ namespace Molinos.DataAgro.Agent.Helpers
             client.ClientCredentials.UserName.Password = passConfirma;
             return client.ConsultaEstadoDocumentos(rq);
         }
-
+        private int GetEstado(consultaEstadoDocumento estado)
+        {
+            switch (estado)
+            {
+                case consultaEstadoDocumento.Item1: return 1;
+                case consultaEstadoDocumento.Item2: return 2;
+                case consultaEstadoDocumento.Item3: return 3;
+                case consultaEstadoDocumento.Item4: return 4;
+                default: return 0;
+            }
+        }
         private List<ConfirmaConsultaDocumentosDto> MapearRespuesta(consultaDocumentosResponse response)
         {
             var resultado = new List<ConfirmaConsultaDocumentosDto>();
@@ -150,7 +161,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IdDocumento            = item.IdDocumento,
                     IdBolsa                = item.IdBolsa,
                     EstadoDocumento        = item.EstadoDocumento,
-                    ConsultaEstadoDocumento = (int)item.consultaEstadoDocumento,
+                    ConsultaEstadoDocumento = GetEstado(item.consultaEstadoDocumento),
                     EnPoderDe = new EmpresaConfirmaDto
                     {
                         CUIT        = long.TryParse(item.EnPoderDe?.CUIT?.Value, out long cuit) ? cuit : 0L,
