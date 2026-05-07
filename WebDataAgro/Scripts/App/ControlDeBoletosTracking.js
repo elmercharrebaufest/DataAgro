@@ -1,4 +1,4 @@
-﻿var ControlBoletosTracking = (function () {
+var ControlBoletosTracking = (function () {
     "use strict";
 
     // ======================
@@ -18,20 +18,98 @@
     // ======================
     var state = {
         controlDeBoletosId: null,
-        gridInicializado: false
+        grid: null
     };
 
     // ======================
-    // Funciones privadas
+    // Estilos del grid
     // ======================
+    function inyectarEstilosGrid() {
+        if ($("#grid-tracking-styles").length) return;
+        $("<style id='grid-tracking-styles'>").text(`
+            #gridTrackingBoleto .k-grid-header th {
+                font-weight: bold !important;
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
+                white-space: nowrap;
+                background-color: #f5f5f5;
+            }
+            #gridTrackingBoleto .k-grid-content td {
+                font-size: 13px !important;
+                font-family: Arial, sans-serif !important;
+            }
+            #gridTrackingBoleto .k-grid-header-wrap {
+                overflow: hidden !important;
+            }
+            #gridTrackingBoleto .k-grid-content {
+                overflow-x: auto !important;
+                overflow-y: auto !important;
+            }
+            #gridTrackingBoleto .k-grid-header-wrap table,
+            #gridTrackingBoleto .k-grid-content table {
+                table-layout: fixed;
+            }
+            #gridTrackingBoleto .k-grid-content tr:hover td,
+            #gridTrackingBoleto .k-grid-content tr.k-state-hover td {
+                color: #333 !important;
+            }
+        `).appendTo("head");
+    }
 
+    // ======================
+    // Auto-ajuste de columnas
+    // ======================
+    var _canvas = document.createElement("canvas");
+
+    function medirTexto(texto, fuente) {
+        var ctx = _canvas.getContext("2d");
+        ctx.font = fuente;
+        return Math.ceil(ctx.measureText(texto).width);
+    }
+
+    function autoFitColumnas(grid) {
+        var $wrapper = grid.element;
+        var $headerCols  = $wrapper.find(".k-grid-header-wrap colgroup col");
+        var $contentCols = $wrapper.find(".k-grid-content   colgroup col");
+        var $headerCells = $wrapper.find(".k-grid-header-wrap tr:first th");
+        var $rows        = $wrapper.find(".k-grid-content tbody tr");
+        var columns      = grid.columns;
+
+        $headerCells.each(function (colIdx) {
+            var colDef     = columns[colIdx];
+            var headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
+            var maxPx      = medirTexto(headerText, "bold 13px Arial") + 32;
+
+            $rows.each(function () {
+                var cellPx = medirTexto($(this).find("td").eq(colIdx).text().trim(), "13px Arial") + 24;
+                if (cellPx > maxPx) maxPx = cellPx;
+            });
+
+            maxPx = Math.max(maxPx, colDef && colDef.width ? colDef.width : 80);
+            $headerCols.eq(colIdx).css("width", maxPx + "px");
+            $contentCols.eq(colIdx).css("width", maxPx + "px");
+        });
+
+        var totalWidth = Array.from($headerCols).reduce(function (sum, col) {
+            return sum + (parseInt($(col).css("width")) || 0);
+        }, 0);
+        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
+    }
+
+    // ======================
+    // Inicialización del grid
+    // ======================
     function inicializarGrid() {
         if ($(config.gridId).data("kendoGrid")) {
             $(config.gridId).data("kendoGrid").destroy();
             $(config.gridId).empty();
         }
-        const url = `${config.urls.getTracking}?controlDeBoletosId=${encodeURIComponent(state.controlDeBoletosId)}`;
-        $(config.gridId).kendoGrid({
+
+        inyectarEstilosGrid();
+
+        var url = config.urls.getTracking + "?controlDeBoletosId=" + encodeURIComponent(state.controlDeBoletosId);
+
+        state.grid = $(config.gridId).kendoGrid({
             dataSource: {
                 transport: {
                     read: {
@@ -39,40 +117,39 @@
                         dataType: "json"
                     }
                 },
-                pageSize: 10,
                 schema: {
                     data: "Data",
                     total: "Total"
                 }
             },
-            pageable: true,
-            sortable: true,
-            filterable: true,
+            height: 300,
+            scrollable: true,
+            sortable: {
+                mode: "single",
+                allowUnsort: false
+            },
+            filterable: false,
+            pageable: false,
+            navigatable: false,
             columns: [
-                { field: "Accion", title: "Acción" },
-                { field: "Resultado", title: "Resultado" },
-                { field: "ValorAnterior", title: "Valor Anterior" },
-                { field: "ValorNuevo", title: "Valor Nuevo" },
-                {
-                    field: "FechaModificacion",
-                    title: "Fecha",
-                    template: "#= kendo.toString(kendo.parseDate(FechaModificacion), 'dd/MM/yyyy HH:mm') #"
-                },
-                { field: "UsuarioModificacion", title: "Usuario" }
+                { field: "FechaHora",     title: "Fecha y Hora",  width: 150 },
+                { field: "Accion",        title: "Acción",        width: 180 },
+                { field: "Resultado",     title: "Resultado",     width: 180 },
+                { field: "Apellido",      title: "Apellido",      width: 130 },
+                { field: "Nombre",        title: "Nombre",        width: 130 },
             ],
-            dataBound: function(e) {
+            dataBound: function (e) {
                 var data = e.sender.dataSource.data();
                 if (data.length === 0) {
-                    $("#gridTrackingBoleto").hide();
+                    $(config.gridId).hide();
                     $("#lblNoTrackingInfo").show();
                 } else {
-                    $("#gridTrackingBoleto").show();
+                    $(config.gridId).show();
                     $("#lblNoTrackingInfo").hide();
+                    autoFitColumnas(e.sender);
                 }
             }
-        });
-
-        state.gridInicializado = true;
+        }).data("kendoGrid");
     }
 
     function mostrarModal() {
@@ -88,13 +165,11 @@
             state.controlDeBoletosId = controlDeBoletosId;
 
             var url = "/ControlDeBoletos/_TrackingControlDeBoletos?id=" + controlDeBoletosId;
-            
-            // Remover modal anterior si existe
+
             $(config.modalId).remove();
-            
-            $.get(url, function(html) {
-                $('body').append(html);
-                
+
+            $.get(url, function (html) {
+                $("body").append(html);
                 try {
                     inicializarGrid();
                     mostrarModal();

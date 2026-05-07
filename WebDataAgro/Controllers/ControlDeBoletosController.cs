@@ -202,12 +202,30 @@ namespace WebDataAgro.Controllers
             try
             {
                 var tracking = _controlDeBoletosManager.ObtenerTrackingBoletos(controlDeBoletosId);
-                var result = new
+
+                var rows = tracking.SelectMany(t =>
                 {
-                    Data = tracking,
-                    Total = tracking.Count
-                };
-                return Json(result, JsonRequestBehavior.AllowGet);
+                    var acciones = string.IsNullOrEmpty(t.Acciones)
+                        ? new List<Molinos.DataAgro.Entities.Dto.Acciones>()
+                        : JsonConvert.DeserializeObject<List<Molinos.DataAgro.Entities.Dto.Acciones>>(t.Acciones)
+                          ?? new List<Molinos.DataAgro.Entities.Dto.Acciones>();
+
+                    return acciones
+                        .Where(a => a.FechaHora != null)
+                        .Select(a => new
+                        {
+                            a.FechaHora,
+                            a.Accion,
+                            a.Resultado,
+                            a.Apellido,
+                            a.Nombre,
+                            a.TipoDocumento,
+                            a.NroDocumento,
+                            a.Cargo
+                        });
+                }).ToList();
+
+                return Json(new { Data = rows, Total = rows.Count }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
