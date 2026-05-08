@@ -376,6 +376,8 @@
     <Build Include="dbo\Tables\ControlDeBoletosSeguimiento.sql" />
     <Build Include="dbo\Tables\ContactoComercialAuditoria.sql" />
     <Build Include="dbo\Triggers\ContactoComercialAuditoria.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaBoletoFisico.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaBoletoConfirma.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
