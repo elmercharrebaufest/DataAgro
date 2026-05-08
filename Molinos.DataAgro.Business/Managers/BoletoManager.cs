@@ -33,6 +33,7 @@ using System.Linq.Dynamic;
 using System.Net.Mail;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -1125,8 +1126,9 @@ namespace Molinos.DataAgro.Business.Managers
             var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoBoleto> ?? result.ToList();
 
-            // Iterar sobre los datos y modificar atributos
-            foreach (var boleto in data)
+            int maxParallelismo = 10;
+
+            Parallel.ForEach(data, new ParallelOptions { MaxDegreeOfParallelism = maxParallelismo }, boleto =>
             {
                 boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
                 if (boleto.Estado_Version == "Anulado")
@@ -1137,7 +1139,8 @@ namespace Molinos.DataAgro.Business.Managers
                     boleto.FechaGeneracion = null;
                     boleto.UsuarioAnulacion = null;
                 }
-            }
+
+            });
             if (filtro.EsSoloPendientes)
             {
                 data = data.Where(b => b.Estado_Version == "Pendiente").ToList();

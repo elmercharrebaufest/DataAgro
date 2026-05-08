@@ -25,6 +25,7 @@ using System.Linq.Expressions;
 using System.Net.Mail;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.WebPages;
 using System.Xml.Linq;
 
@@ -816,7 +817,9 @@ namespace Molinos.DataAgro.Business.Managers
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoConfirma> ?? result.ToList();
 
-            foreach (var confirma in data)
+            int maxParallelismo = 10;
+
+            Parallel.ForEach(data, new ParallelOptions { MaxDegreeOfParallelism = maxParallelismo }, confirma =>
             {
                 confirma.Estado_Version = ObtenerEstadoBoleto(confirma);
                 if (confirma.Estado_Version == "Anulado")
@@ -827,7 +830,7 @@ namespace Molinos.DataAgro.Business.Managers
                     confirma.FechaGeneracion = null;
                     confirma.UsuarioAnulacion = null;
                 }
-            }
+            });
 
             if (filtro.EsSoloPendientes)
             {
