@@ -270,9 +270,9 @@ const GenerarBoleto = (() => {
                     if (operation !== "read") return kendo.stringify(options);
                     return kendo.stringify({
                         page: options.page || 1,
-                        pageSize: options.pageSize || 50,
+                        pageSize: 10,
                         skip: options.skip || 0,
-                        take: options.take || 50,
+                        take: 10,
                         sort: options.sort || [],
                         ...construirFiltros()
                     });
@@ -310,7 +310,7 @@ const GenerarBoleto = (() => {
                 }
             },
             serverPaging: true, serverSorting: true, serverFiltering: false,
-            pageSize: 50,
+            pageSize: 10,
             error(e) {
                 console.error("Error cargando datos del grid:", e);
                 MensErr("Error al cargar los datos: " + (e.errors || "Error desconocido"));
@@ -379,7 +379,7 @@ const GenerarBoleto = (() => {
             resizable: true,
             pageable: {
                 refresh: true,
-                pageSizes: [10, 20, 50, 100, 1000, "all"],
+                pageSizes: false,
                 buttonCount: 5,
                 messages: {
                     display: "{0} - {1} de {2} elementos",
