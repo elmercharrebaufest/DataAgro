@@ -817,6 +817,19 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoConfirma> ?? result.ToList();
+
+            if (!string.IsNullOrEmpty(filtro.NegocioSAP))
+            {
+                var listaContratosSAP = filtro.NegocioSAP.Split(';').Select(s => s.Trim().PadLeft(10, '0')).ToList();
+                foreach (var contratoSAP in listaContratosSAP)
+                {
+                    var cacheKey = $"EstadoBoleto_Confirma_{contratoSAP}";
+                    var consultaBoleto = HttpRuntime.Cache[cacheKey] as DatosEstadoBoletoDto;
+                    if (consultaBoleto != null)
+                        HttpRuntime.Cache.Remove(cacheKey);
+                }
+            }
+
             if (filtro.EsSoloPendientes)
             {
                 data = data.Where(x => x.Version == 1 && x.FechaGeneracion == null).ToList();
