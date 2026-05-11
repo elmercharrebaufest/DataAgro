@@ -228,38 +228,12 @@ namespace WebDataAgro.Controllers
                     filtrosBusqueda.NegocioSAP = contratoSAP;
                 }
 
-                // Obtener todos los boletos con los filtros aplicados
-                var todosBoletos = boletoManager.TraerContratosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
+                var resultado = boletoManager.TraerContratosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
 
-                // Aplicar paginación
-                var boletosQuery = todosBoletos.AsQueryable();
-                var totalRegistros = boletosQuery.Count();
-
-                // Aplicar ordenamiento si existe
-                if (filtrosBusqueda.Sort != null && filtrosBusqueda.Sort.Any())
-                {
-                    var sortDescriptor = filtrosBusqueda.Sort.First();
-                    var orderBy = sortDescriptor.Field + (sortDescriptor.Dir == "desc" ? " descending" : " ascending");
-                    boletosQuery = boletosQuery.OrderBy(orderBy);
-                }
-
-                // Aplicar skip y take para paginación
-                var boletos = boletosQuery
-                    .Skip(filtrosBusqueda.Skip)
-                    .Take(filtrosBusqueda.Take)
-                    .ToList();
-
-                var result = new
-                {
-                    Data = boletos,
-                    Total = totalRegistros
-                };
-
-                return Json(result);
+                return Json(new { Data = resultado.Item1, Total = resultado.Item2 });
             }
             catch (Exception ex)
             {
-                // Log del error para debugging
                 System.Diagnostics.Debug.WriteLine($"Error en BuscaDatosTabla: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
 

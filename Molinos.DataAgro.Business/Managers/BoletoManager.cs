@@ -34,6 +34,7 @@ using System.Net.Mail;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -1121,31 +1122,61 @@ namespace Molinos.DataAgro.Business.Managers
             return clausulas;
         }
 
-        public List<BasicoBoleto> TraerContratosFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo)
+        public (List<BasicoBoleto> Data, int Total) TraerContratosFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerBoletosConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoBoleto> ?? result.ToList();
 
-            int maxParallelismo = 10;
-
-            Parallel.ForEach(data, new ParallelOptions { MaxDegreeOfParallelism = maxParallelismo }, boleto =>
-            {
-                boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
-                if (boleto.Estado_Version == "Anulado")
-                {
-                    boleto.Estado_Version = "Pendiente";
-                    boleto.Version++;
-                    boleto.FechaAnulacion = null;
-                    boleto.FechaGeneracion = null;
-                    boleto.UsuarioAnulacion = null;
-                }
-
-            });
             if (filtro.EsSoloPendientes)
             {
+                // Se necesita llamar a la RFC para todos los registros para poder filtrar los pendientes
+                foreach (var boleto in data)
+                {
+                    boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
+                    if (boleto.Estado_Version == "Anulado")
+                    {
+                        boleto.Estado_Version = "Pendiente";
+                        boleto.Version++;
+                        boleto.FechaAnulacion = null;
+                        boleto.FechaGeneracion = null;
+                        boleto.UsuarioAnulacion = null;
+                    }
+                }
                 data = data.Where(b => b.Estado_Version == "Pendiente").ToList();
+                var totalPendientes = data.Count;
+                var queryPendientes = AplicarOrden(data.AsQueryable(), filtro.Sort);
+                return (queryPendientes.Skip(filtro.Skip).Take(filtro.Take).ToList(), totalPendientes);
             }
-            return data;
+            else
+            {
+                // Paginar primero para llamar a la RFC solo sobre los registros de la página
+                var total = data.Count;
+                var query = AplicarOrden(data.AsQueryable(), filtro.Sort);
+                var pagina = query.Skip(filtro.Skip).Take(filtro.Take).ToList();
+                foreach (var boleto in pagina)
+                {
+                    boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
+                    if (boleto.Estado_Version == "Anulado")
+                    {
+                        boleto.Estado_Version = "Pendiente";
+                        boleto.Version++;
+                        boleto.FechaAnulacion = null;
+                        boleto.FechaGeneracion = null;
+                        boleto.UsuarioAnulacion = null;
+                    }
+                }
+                return (pagina, total);
+            }
+        }
+
+        private static IQueryable<T> AplicarOrden<T>(IQueryable<T> query, List<SortDescriptor> sort)
+        {
+            if (sort != null && sort.Any())
+            {
+                var orderBy = string.Join(",", sort.Select(s => s.Field + (s.Dir == "desc" ? " descending" : " ascending")));
+                return query.OrderBy(orderBy);
+            }
+            return query;
         }
 
         private DataSourceRequest CorregirFiltro(DataSourceRequest request)
@@ -1164,14 +1195,17 @@ namespace Molinos.DataAgro.Business.Managers
             var mensaje = boleto.Estado_Version;
             try
             {
-                //if (boleto.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || boleto.TipoNegocioId == (int)EnumTipoNegocio.A_PRECIO)
-                //    boleto.FijacionSAP = "1";
-                //else
-                //    boleto.FijacionSAP = "2";
-
                 boleto.FijacionSAP = " ";
 
-                var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP);
+                var cacheKey = $"EstadoBoleto_Fisico_{boleto.ContratoSAP}";
+                var consultaBoleto = HttpRuntime.Cache[cacheKey] as DatosEstadoBoletoDto;
+
+                if (consultaBoleto == null)
+                {
+                    consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                    HttpRuntime.Cache.Insert(cacheKey, consultaBoleto, null,
+                        DateTime.UtcNow.AddMinutes(5), System.Web.Caching.Cache.NoSlidingExpiration);
+                }
                 var version = Int32.Parse(consultaBoleto.Version);
                 if (version > boleto.Version)
                 {
