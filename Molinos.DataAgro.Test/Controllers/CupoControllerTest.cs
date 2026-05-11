@@ -1,7 +1,8 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IHabilitacionCupoManager> habilitacionManagerMock;
+        private Mock<ILogger> loggerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -38,12 +40,13 @@ namespace Molinos.DataAgro.Test.Controllers
             cupoManagerMock = new Mock<ICupoManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             habilitacionManagerMock = new Mock<IHabilitacionCupoManager>();
+            loggerMock = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new CupoController(centroManagerMock.Object,
                 materialManagerMock.Object, zonaCupoManagerMock.Object,
                 proveedorManagerMock.Object, cupoManagerMock.Object,
-                comercialManagerMock.Object, habilitacionManagerMock.Object);
+                comercialManagerMock.Object, habilitacionManagerMock.Object, loggerMock.Object);
             centroManagerMock.Setup(y => y.TraerTodoCentro())
                 .Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "a", CodigoSap = "1600" } } });
             materialManagerMock.Setup(y => y.TraerTodoMaterial())
