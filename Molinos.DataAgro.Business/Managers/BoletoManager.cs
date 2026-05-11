@@ -1129,20 +1129,14 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (filtro.EsSoloPendientes)
             {
-                // Se necesita llamar a la RFC para todos los registros para poder filtrar los pendientes
-                foreach (var boleto in data)
+                data = data.Where(x => x.Version == 1 && x.FechaGeneracion == null).ToList();
+                foreach (var confirma in data)
                 {
-                    boleto.Estado_Version = ObtenerEstadoBoleto(boleto);
-                    if (boleto.Estado_Version == "Anulado")
-                    {
-                        boleto.Estado_Version = "Pendiente";
-                        boleto.Version++;
-                        boleto.FechaAnulacion = null;
-                        boleto.FechaGeneracion = null;
-                        boleto.UsuarioAnulacion = null;
-                    }
+                    confirma.Estado_Version = "Pendiente";
+                    confirma.FechaAnulacion = null;
+                    confirma.FechaGeneracion = null;
+                    confirma.UsuarioAnulacion = null;
                 }
-                data = data.Where(b => b.Estado_Version == "Pendiente").ToList();
                 var totalPendientes = data.Count;
                 var queryPendientes = AplicarOrden(data.AsQueryable(), filtro.Sort);
                 return (queryPendientes.Skip(filtro.Skip).Take(filtro.Take).ToList(), totalPendientes);

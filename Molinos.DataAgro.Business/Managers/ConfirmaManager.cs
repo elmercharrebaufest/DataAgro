@@ -817,23 +817,16 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoConfirma> ?? result.ToList();
-
             if (filtro.EsSoloPendientes)
             {
-                // Se necesita llamar a la RFC para todos los registros para poder filtrar los pendientes
+                data = data.Where(x => x.Version == 1 && x.FechaGeneracion == null).ToList();
                 foreach (var confirma in data)
                 {
-                    confirma.Estado_Version = ObtenerEstadoBoleto(confirma);
-                    if (confirma.Estado_Version == "Anulado")
-                    {
-                        confirma.Estado_Version = "Pendiente";
-                        confirma.Version++;
-                        confirma.FechaAnulacion = null;
-                        confirma.FechaGeneracion = null;
-                        confirma.UsuarioAnulacion = null;
-                    }
+                    confirma.Estado_Version = "Pendiente";
+                    confirma.FechaAnulacion = null;
+                    confirma.FechaGeneracion = null;
+                    confirma.UsuarioAnulacion = null;
                 }
-                data = data.Where(b => b.Estado_Version == "Pendiente").ToList();
                 var totalPendientes = data.Count;
                 var queryPendientes = AplicarOrden(data.AsQueryable(), filtro.Sort);
                 return (queryPendientes.Skip(filtro.Skip).Take(filtro.Take).ToList(), totalPendientes);
