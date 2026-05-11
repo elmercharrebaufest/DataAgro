@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -6,6 +6,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -96,7 +97,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         public virtual DataSourceResult Ejecutar(DbContext contexto)
         {
-            return Query(contexto, request, equipo);
+            using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+                return Query(contexto, request, equipo);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -30,13 +31,13 @@ namespace WebDataAgro.Controllers
         private readonly ICupoManager cupoManager;
         private readonly IComercialManager comercialManager;
         private readonly IHabilitacionCupoManager habilitacionManager;
-
+        private readonly ILogger logger;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
         public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager,
-            ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
+            ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager, ILogger logger)
         {
             this.centroManager = centroManager;
             this.materialManager = materialManager;
@@ -45,6 +46,7 @@ namespace WebDataAgro.Controllers
             this.cupoManager = cupoManager;
             this.comercialManager = comercialManager;
             this.habilitacionManager = habilitacionManager;
+            this.logger = logger;
         }
 
         //-----------------------------------------------------
@@ -592,6 +594,7 @@ namespace WebDataAgro.Controllers
                     new Sort { Field = "Material", Dir = "desc" }
                 };
             }
+            logger.Debug($"JSON filtros Cupo/BuscaDatosTabla: {request.ToJson()}");
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);

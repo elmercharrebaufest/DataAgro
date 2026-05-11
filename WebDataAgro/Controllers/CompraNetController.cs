@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -206,6 +206,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [HttpPost]
         public ActionResult GrabarContrato(Contrato oParam, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             if (oParam.Base == null) oParam.Base = false;
@@ -232,7 +233,8 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = model,
-                MaxJsonLength = Int32.MaxValue
+                MaxJsonLength = Int32.MaxValue,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
 

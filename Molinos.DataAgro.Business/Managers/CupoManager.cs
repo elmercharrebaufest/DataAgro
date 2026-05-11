@@ -675,6 +675,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo)
         {
+            logger.Debug("JSON filtros TraerCuposTabla: " + request.ToJson());
             return repositorio.ObtenerConsultaEscalar(new TraerTodosCupos(request, equipo));
         }
 
