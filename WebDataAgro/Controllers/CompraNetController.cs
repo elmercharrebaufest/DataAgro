@@ -230,12 +230,8 @@ namespace WebDataAgro.Controllers
             {
                 model = mobjContratoManager.GrabarContrato(oParam, listCupoConDescargaFechas);
             }
-            return new JsonResult()
-            {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         static readonly object _lockFinalizarContrato = new object();
