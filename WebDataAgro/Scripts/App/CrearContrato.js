@@ -3706,11 +3706,10 @@ function LimpiarValidaciones() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
-    if (guardandoContrato) {
-        return;
-    }
+    if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_FIJAR ||
+        nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_PRECIO ||
+        nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
 
-    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2 || nuevoContrato.TipoNegocioId == 6) {
         var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
         var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
         if (cantidadCamiones > 0) {
@@ -3736,7 +3735,7 @@ function GrabarContrato(nuevoContrato) {
             return;
         }
 
-        if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
+        if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.A_PRECIO && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El contrato madre es obligatorio al fijar el convenio");
             $.unblockUI();
             $("#guardarBtn").prop('disabled', false);
@@ -3751,39 +3750,40 @@ function GrabarContrato(nuevoContrato) {
 
                 var destinoInscripta = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == datosIniCrearContrato.Datos.Destino.find(d => d.Id == objeto.oParam.DestinoId).ProvinciaId).Inscripto;
                 var procedenciaInscriptaObj = datosIniCrearContrato.Datos.prov.find((pr) => pr.Provinciaid == objeto.oParam.ProvinciaId);
-                guardandoContrato = true;
+
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
 
-                    Confirma('La localidad de procedecia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
-                        function (dialogItself) {
+                    Confirma(
+                        'La localidad de procedencia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
+                        function () {
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
-                            dialogItself.close();
-                        });
+                            ProcesarResultado(result);
+                        }
+                    );
+
                 }
                 else {
-                    if (nuevoContrato.TipoNegocioId == 6) {
-                        
+                    if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
                         result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
                     } else {
-                        
                         result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                     }
                 }
             }
         }
 
-        //detenerIntervalo();
-        //LiberarPantalla();
-        /*dataTabla = [];*/
-
-    } else if (nuevoContrato.TipoNegocioId == 3) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.FIJACION) {
         result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 4) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.FASON) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
-    } else if (nuevoContrato.TipoNegocioId == 5) {
+    } else if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.AGENTE_DE_COMPRAS) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
     }
 
+    ProcesarResultado(result);
+}
+
+function ProcesarResultado(result) {
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
