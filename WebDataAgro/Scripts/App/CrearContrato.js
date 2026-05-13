@@ -3752,8 +3752,10 @@ function GrabarContrato(nuevoContrato) {
 
                 if ((procedenciaInscriptaObj != null) && (!destinoInscripta || !procedenciaInscriptaObj.Inscripto)) {
 
-                    Confirma(
-                        'La localidad de procedencia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
+                    ConfirmaConAdvertencia(
+                        'La localidad de procedencia o de destino pertenece a una jurisdicción donde MOA no está inscripta. ' +
+                        'Si guarda el negocio se dará aviso al sector de Impuestos.\n\n' +
+                        'Desea guardar el negocio? ',
                         function (dialogItself) {
                             BlockUi('Guardando...'); // Si bien no aparece el cartel, está bloqueando bien, previniendo el guardado múltiple.
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
