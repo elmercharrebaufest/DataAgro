@@ -331,6 +331,30 @@ function Confirma(mensaje, fncallback) {
 
 }
 
+function ConfirmaConAdvertencia(mensaje, fncallback) {
+
+    BootstrapDialog.show({
+        title: 'Confirmación',
+        message: "\n" + mensaje,
+        type: BootstrapDialog.TYPE_WARNING,
+        draggable: true,
+        buttons: [{
+            label: 'Aceptar',
+            cssClass: 'k-button',
+            action: function (dialogItself) {
+                dialogItself.close();
+                fncallback();
+            }
+        }, {
+            label: 'Cancelar',
+            cssClass: 'k-button',
+            action: function (dialogItself) {
+                dialogItself.close();
+            }
+        }]
+    });
+
+}
 
 function parseJsonDate(jsonDate) {
 
