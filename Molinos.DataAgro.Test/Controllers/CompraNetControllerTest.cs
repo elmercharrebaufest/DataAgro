@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -164,7 +164,7 @@ namespace Molinos.DataAgro.Test.Controllers
             comercialManagerMock.Verify(x => x.TraerComercial(It.IsAny<int>()), Times.Once);
             contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>(), null), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -183,7 +183,7 @@ namespace Molinos.DataAgro.Test.Controllers
             comercialManagerMock.Verify(x => x.TraerComercial(It.IsAny<int>()), Times.Never);
             contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>(), null), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
