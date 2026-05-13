@@ -190,6 +190,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         private string ResolverCondicionPago(BasicoContrato contrato, bool esConvenio)
         {
+            // Warrant
+            if (contrato.Warrant == true)
+                return "Pago contra Warrant";
+
             // A FIJAR o convenio
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio)
                 return "4 días hábiles de fecha de fijación";
@@ -208,10 +212,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 // CD sin fecha cierta
                 if (contrato.CD == true && !contrato.FechaCierta.HasValue)
                     return "Pago Anticipado";
-
-                // Warrant
-                if (contrato.Warrant == true)
-                    return "Pago contra Warrant";
 
                 // Pago diferido
                 if (contrato.PagoDiferido == true)
