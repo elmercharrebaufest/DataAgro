@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.ClausulasBoleto.CartaOferta;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -61,13 +61,23 @@ namespace Molinos.DataAgro.Business.ClausulasBoleto.CartaOferta
                     string porcentajePago = clausula.Basico.PorcentajeDePago.ToString().Replace(",", ".");
                     res.Texto += $"El pago se hará {porcentajePago}% ({MetodosUtiles.DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value)} por ciento)";
                 }
-                var esFijacionDeContratoCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && clausula.Basico.Canje == true;
-                var esAFijarSinCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true;
-                var esConvenio = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Madre == true;
-                //SI EL NEGOCIO ES FIJACIÓN DISPONIBLE DE UN CONTRATO DE CANJE O ES UN NEGOCIO A FIJAR O NEGOCIO CONVENIO
-                if (esFijacionDeContratoCanje || esAFijarSinCanje || esConvenio)
+                if (clausula.Basico.CD != true && clausula.Basico.Warrant != true)
                 {
-                    res.Texto += $", 4 DÍAS HÁBILES DE FECHA DE FIJACIÓN, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato. El pago del valor correspondiente a la mercadería se realizará al corredor.";
+                    var esFijacionDeContratoCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.FIJACION && clausula.Basico.Canje == true;
+                    var esAFijarSinCanje = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Canje != true;
+                    var esConvenio = clausula.Basico.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && clausula.Basico.Madre == true;
+                    //SI EL NEGOCIO ES FIJACIÓN DISPONIBLE DE UN CONTRATO DE CANJE O ES UN NEGOCIO A FIJAR O NEGOCIO CONVENIO
+                    if (esFijacionDeContratoCanje || esAFijarSinCanje || esConvenio)
+                    {
+                        res.Texto += $", 4 DÍAS HÁBILES DE FECHA DE FIJACIÓN, con mercadería descargada en fábrica, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato. El pago del valor correspondiente a la mercadería se realizará al corredor.";
+                    }
+                }
+                else
+                {
+                    if (clausula.Basico.CD == true)
+                        res.Texto += ", de forma anticipada, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato. El pago del valor correspondiente a la mercadería se realizará al corredor.";
+                    if (clausula.Basico.Warrant == true)
+                        res.Texto += ", contra entrega del Warrant, liquidándose el 2.5% (dos y medio por ciento) restando a los 30 (treinta) días del cumplimiento del contrato. El pago del valor correspondiente a la mercadería se realizará al corredor.";
                 }
             }
             return res;
