@@ -17,7 +17,6 @@ var boletoId;
 var cantidadEditar, fechaHastaEditar;
 var porcentajeDePago = null;
 var materialSeleccionado = null;
-var guardandoContrato = false; // Variable de control global
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -3755,12 +3754,13 @@ function GrabarContrato(nuevoContrato) {
 
                     Confirma(
                         'La localidad de procedencia o de destino pertenece a una jurisdicción donde MOA no está inscripto. Si guarda el negocio se dará aviso al sector de Impuestos.\n\n\n',
-                        function () {
+                        function (dialogItself) {
+                            BlockUi('Guardando...'); // Si bien no aparece el cartel, está bloqueando bien, previniendo el guardado múltiple.
                             result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
                             ProcesarResultado(result);
                         }
                     );
-
+                    $.unblockUI();
                 }
                 else {
                     if (nuevoContrato.TipoNegocioId == TIPO_NEGOCIO.CONTRATO_ACUERDO) {
