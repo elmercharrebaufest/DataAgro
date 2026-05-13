@@ -9,6 +9,7 @@ const GenerarBoleto = (() => {
             getComerciales: "/Boleto/GetComerciales",
             getBolsaCompraNet: "/Boleto/GetBolsaCompraNet",
             buscaDatosTabla: "/Boleto/BuscaDatosTabla",
+            buscaContratosPendientes: "/Boleto/BuscaContratosPendientes",
             generarBoletos: "/Boleto/GenerarBoletos",
             validarNegocio: "/Boleto/ValidarNegocio",
             gestionarClausulas: "/Boleto/GestionarClausulas"
@@ -17,7 +18,8 @@ const GenerarBoleto = (() => {
 
     const state = {
         grid: null,
-        datosInicializados: false
+        datosInicializados: false,
+        seleccionarSoloPendientes: false
     };
 
     const el = {
@@ -441,14 +443,19 @@ const GenerarBoleto = (() => {
     function configurarEventosGrid() {
         $("#select-all").off("change").on("change", function () {
             el.grid().find("input.row-checkbox").prop("checked", $(this).is(":checked"));
+            const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+            if (esSoloPendientes)
+                state.seleccionarSoloPendientes = $(this).is(":checked");
+            else
+                state.seleccionarSoloPendientes = false;
         });
 
         $(".row-checkbox").off("change").on("change", function () {
             const total = $(".row-checkbox").length;
             const seleccionados = $(".row-checkbox:checked").length;
-            $("#select-all")
-                .prop("indeterminate", seleccionados > 0 && seleccionados < total)
-                .prop("checked", seleccionados === total);
+            //$("#select-all")
+            //    .prop("indeterminate", seleccionados > 0 && seleccionados < total)
+            //    .prop("checked", seleccionados === total);
         });
     }
 
@@ -484,8 +491,10 @@ const GenerarBoleto = (() => {
 
                 // unir en una sola línea con ;
                 $(this).val(valores.join(";"));
+                el.contratosPendientesCheck().prop("checked", false);
             })
             .on("keypress", e => {
+                el.contratosPendientesCheck().prop("checked", false);
                 if (e.which === 32) e.preventDefault(); // bloquear espacios
             });
     }
@@ -559,15 +568,42 @@ const GenerarBoleto = (() => {
 
     function generarBoletosSeleccionados() {
         const negocioSAPList = [];
-        el.grid().find("tbody input.row-checkbox:checked").each(function () {
-            negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
-        });
 
-        if (negocioSAPList.length) {
-            generarBoleto(negocioSAPList.join(';'));
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+        if (esSoloPendientes && state.seleccionarSoloPendientes) {
+
+            const parseId = $el => { const v = $el.val(); return v ? parseInt(v) : null; };
+            const filtros = {
+                NegocioSAP: el.negocioSAP().val() || "",
+                FechaConfirmacionDesde: getDatePicker(el.fechaConfirmacionDesde())?.toISOString() ?? null,
+                FechaConfirmacionHasta: getDatePicker(el.fechaConfirmacionHasta())?.toISOString() ?? null,
+                ProveedorId: parseId(el.proveedorId()),
+                ComercialId: parseId(el.comercialId()),
+                BolsaCompraNetId: parseId(el.bolsaCompraNetId()),
+                MaterialId: parseId(el.materialId()),
+                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+            };
+
+            var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
+            response.Data.forEach(function (item) {
+                negocioSAPList.push(item.ContratoSAP);
+            });
+
+            if (negocioSAPList.length)
+                generarBoleto(negocioSAPList.join(';'));
+
         } else {
-            MensErr("No hay ningún negocio seleccionado.");
+            el.grid().find("tbody input.row-checkbox:checked").each(function () {
+                negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
+            });
+
+            if (negocioSAPList.length) {
+                generarBoleto(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay ningún negocio seleccionado.");
+            }
         }
+
     }
 
     function gestionarClausulas(negocioSAP) {

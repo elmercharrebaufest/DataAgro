@@ -812,7 +812,22 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return resultado;
         }
-
+        public (List<BasicoConfirma> Data, int Total) TraerNegociosPendientesFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo)
+        {
+            var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
+            var data = result as List<BasicoConfirma> ?? result.ToList();
+                data = data.Where(x => x.Version == 1 && x.FechaGeneracion == null).ToList();
+                foreach (var confirma in data)
+                {
+                    confirma.Estado_Version = "Pendiente";
+                    confirma.FechaAnulacion = null;
+                    confirma.FechaGeneracion = null;
+                    confirma.UsuarioAnulacion = null;
+                }
+                var totalPendientes = data.Count;
+                var queryPendientes = AplicarOrden(data.AsQueryable(), filtro.Sort);
+            return (queryPendientes.ToList(), totalPendientes);
+        }
         public (List<BasicoConfirma> Data, int Total) TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");

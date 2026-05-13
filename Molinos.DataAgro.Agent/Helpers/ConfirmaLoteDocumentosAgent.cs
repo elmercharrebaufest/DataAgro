@@ -184,6 +184,9 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         private string ResolverCondicionPago(BasicoContrato contrato, bool esConvenio)
         {
+            if (contrato.Warrant == true)
+                return "Pago contra Warrant";
+
             if (contrato.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR || esConvenio)
                 return "4 días hábiles de fecha de fijación";
 
@@ -195,8 +198,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     return contrato.FechaCierta.Value.ToString("dd/MM/yyyy") + " Pago Anticipado";
                 if (contrato.CD == true && !contrato.FechaCierta.HasValue)
                     return "Pago Anticipado";
-                if (contrato.Warrant == true)
-                    return "Pago contra Warrant";
                 if (contrato.PagoDiferido == true)
                     return $"{contrato.Dias_Pesificado} Días de diferimiento contra mercadería entregada";
                 return "72 hs contra mercadería descargada.";

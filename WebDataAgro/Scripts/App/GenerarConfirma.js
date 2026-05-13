@@ -9,6 +9,7 @@ const GenerarConfirma = (() => {
             getComerciales: "/Confirma/GetComerciales",
             getBolsaCompraNet: "/Confirma/GetBolsaCompraNet",
             buscaDatosTabla: "/Confirma/BuscaDatosTabla",
+            buscaContratosPendientes: "/Confirma/BuscaContratosPendientes",
             generarConfirma: "/Confirma/GenerarConfirma",
             generarConfirmaAltaBorrador: "/Confirma/GenerarConfirmaAltaBorrador",
             validarNegocio: "/Confirma/ValidarNegocio",
@@ -19,7 +20,8 @@ const GenerarConfirma = (() => {
 
     const state = {
         grid: null,
-        datosInicializados: false
+        datosInicializados: false,
+        seleccionarSoloPendientes: false
     };
 
     const el = {
@@ -446,14 +448,19 @@ const GenerarConfirma = (() => {
     function configurarEventosGrid() {
         $("#select-all").off("change").on("change", function () {
             el.grid().find("input.row-checkbox").prop("checked", $(this).is(":checked"));
+            const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+            if (esSoloPendientes)
+                state.seleccionarSoloPendientes = $(this).is(":checked");
+            else
+                state.seleccionarSoloPendientes = false;
         });
 
         $(".row-checkbox").off("change").on("change", function () {
             const total = $(".row-checkbox").length;
             const seleccionados = $(".row-checkbox:checked").length;
-            $("#select-all")
-                .prop("indeterminate", seleccionados > 0 && seleccionados < total)
-                .prop("checked", seleccionados === total);
+            //$("#select-all")
+            //    .prop("indeterminate", seleccionados > 0 && seleccionados < total)
+            //    .prop("checked", seleccionados === total);
         });
     }
 
@@ -489,8 +496,10 @@ const GenerarConfirma = (() => {
 
                 // unir en una sola línea con ;
                 $(this).val(valores.join(";"));
+                el.contratosPendientesCheck().prop("checked", false);
             })
             .on("keypress", e => {
+                el.contratosPendientesCheck().prop("checked", false);
                 if (e.which === 32) e.preventDefault(); // bloquear espacios
             });
     }
@@ -594,27 +603,80 @@ const GenerarConfirma = (() => {
 
     function generarConfirmasSeleccionados() {
         const negocioSAPList = [];
-        el.grid().find("tbody input.row-checkbox:checked").each(function () {
-            negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
-        });
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
 
-        if (negocioSAPList.length) {
-            generarConfirmaIndividual(negocioSAPList.join(';'));
+        if (esSoloPendientes && state.seleccionarSoloPendientes) {
+            const filtros = {
+                NegocioSAP: el.negocioSAP().val() || "",
+                FechaConfirmacionDesde: getDatePicker(el.fechaConfirmacionDesde())?.toISOString() ?? null,
+                FechaConfirmacionHasta: getDatePicker(el.fechaConfirmacionHasta())?.toISOString() ?? null,
+                ProveedorId: el.proveedorId().val(),
+                ComercialId: el.comercialId().val(),
+                BolsaCompraNetId: el.bolsaCompraNetId().val(),
+                MaterialId: el.materialId().val(),
+                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+            };
+            var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
+
+            response.Data.forEach(function (item) {
+                negocioSAPList.push(item.ContratoSAP);
+            });
+
+            if (negocioSAPList.length) 
+                generarConfirmaIndividual(negocioSAPList.join(';'));
+
         } else {
-            MensErr("No hay ningún negocio seleccionado.");
+            el.grid().find("tbody input.row-checkbox:checked").each(function () {
+                negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
+            });
+
+            if (negocioSAPList.length) {
+                generarConfirmaIndividual(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay ningún negocio seleccionado.");
+            }
         }
+
     }
     function generarConfirmasSeleccionadosAltaBorrador() {
-        const negocioSAPList = [];
-        el.grid().find("tbody input.row-checkbox:checked").each(function () {
-            negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
-        });
 
-        if (negocioSAPList.length) {
-            generarConfirmaIndividualAltaBorrador(negocioSAPList.join(';'));
+        const negocioSAPList = [];
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+
+        if (esSoloPendientes) {
+            const filtros = {
+                NegocioSAP: el.negocioSAP().val() || "",
+                FechaConfirmacionDesde: getDatePicker(el.fechaConfirmacionDesde())?.toISOString() ?? null,
+                FechaConfirmacionHasta: getDatePicker(el.fechaConfirmacionHasta())?.toISOString() ?? null,
+                ProveedorId: el.proveedorId().val(),
+                ComercialId: el.comercialId().val(),
+                BolsaCompraNetId: el.bolsaCompraNetId().val(),
+                MaterialId: el.materialId().val(),
+                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+            };
+            var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
+            response.Data.forEach()
+
+            response.Data.forEach(function (item) {
+                console.log(item.ContratoSAP);
+                negocioSAPList.push(item.ContratoSAP);
+            });
+
+            if (negocioSAPList.length)
+                generarConfirmaIndividualAltaBorrador(negocioSAPList.join(';'));
+
         } else {
-            MensErr("No hay ningún negocio seleccionado.");
+            el.grid().find("tbody input.row-checkbox:checked").each(function () {
+                negocioSAPList.push(state.grid.dataItem($(this).closest("tr")).NegocioSAP);
+            });
+
+            if (negocioSAPList.length) {
+                generarConfirmaIndividualAltaBorrador(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay ningún negocio seleccionado.");
+            }
         }
+
     }
     
     function cargarTablaModal(contratos) {

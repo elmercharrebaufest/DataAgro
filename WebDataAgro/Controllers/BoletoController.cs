@@ -212,6 +212,28 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
+        public JsonResult BuscaContratosPendientes(BoletoFiltroBusquedaDto filtrosBusqueda)
+        {
+            try
+            {
+                var resultado = boletoManager.TraerNegociosPendientesFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
+                return Json(new { Data = resultado.Item1, Total = resultado.Item2 });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en BuscaContratosPendientes: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+
+        [HttpPost]
         public JsonResult BuscaDatosTabla(BoletoFiltroBusquedaDto filtrosBusqueda)
         {
             try
