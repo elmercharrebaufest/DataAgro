@@ -2,7 +2,8 @@ var ControlDeBoletosGestion = (function () {
     "use strict";
 
     var config = {
-        modalId: "#modalGestionControlBoleto"
+        modalId: "#modalGestionControlBoleto",
+        getContrato: "/ControlDeBoletos/ObtenerDatosDeContrato",
     };
 
     var state = {
@@ -12,8 +13,74 @@ var ControlDeBoletosGestion = (function () {
         NegocioId: null
     };
 
+
+    let controlContratoSAP;
+    let controlCuitVendedor;
+    let controlCuitCorredor;
+    let controlPizarraReferencia;
+    let controlMaterial;
+    let controlProvincia;
+    let controlKilos;
+    let controlProcedencia;
+    let controlPrecioXTonelada;
+    let controlDestino;
+    let controlClasificacionProveedor;
+    let controlStandardCalidad;
+    let controlPeriodoEntrega;
+    let controlCampania;
+    let controlTipoBoleto;
+    let controlPeriodoOperacion;
+    let controlRecepcionBoleto;
+    let controlMoneda;
+
+
+    function bindControls() {
+        let $form = $("#accordionGestionBoleto #frmGestionarContrato");
+
+        if (!$form.length) {
+            $form = $("#frmGestionarContrato").first();
+        }
+
+        controlContratoSAP = $form.find("#ContratoSAP");
+        controlCuitVendedor = $form.find("#CuitVendedor");
+        controlCuitCorredor = $form.find("#CuitCorredor");
+        controlPizarraReferencia = $form.find("#PizarraReferencia");
+        controlMaterial = $form.find("#Material");
+        controlProvincia = $form.find("#Provincia");
+        controlKilos = $form.find("#Kilos");
+        controlProcedencia = $form.find("#Procedencia");
+        controlPrecioXTonelada = $form.find("#PrecioXTonelada");
+        controlDestino = $form.find("#Destino");
+        controlClasificacionProveedor = $form.find("#ClasificacionProveedor");
+        controlStandardCalidad = $form.find("#StandardCalidad");
+        controlPeriodoEntrega = $form.find("#PeriodoEntrega");
+        controlCampania = $form.find("#Campania");
+        controlTipoBoleto = $form.find("#TipoBoleto");
+        controlPeriodoOperacion = $form.find("#PeriodoOperacion");
+        controlRecepcionBoleto = $form.find("#RecepcionBoleto");
+        controlMoneda = $form.find("#Moneda");
+    }
+
     function cargarDatos() {
-        $("#txtContratoGestion").text(state.ControlDeBoletosId || "");
+        const url = config.getContrato + "?id=" + state.NegocioId;
+        const contrato = MSExecuteGetOnServer(url);
+
+        controlContratoSAP.text(contrato.ContratoSAP);
+        controlCuitCorredor.text(contrato.CuitCorredor);
+        controlCuitVendedor.text(contrato.CuitVendedor);
+        controlMaterial.text(contrato.Material);
+        controlProvincia.text(contrato.Provincia);
+        controlKilos.text(contrato.Cantidad);
+        controlProcedencia.text(contrato.Localidad);
+        controlPrecioXTonelada.text(contrato.Precio);
+        controlMoneda.text(contrato.Moneda);
+        controlDestino.text(contrato.Destino);
+        controlClasificacionProveedor.text(contrato.Clasificacion);
+        controlStandardCalidad.text(contrato.StandarCalidad);
+        controlPeriodoEntrega.text(contrato.PeriodoEntrega);
+        controlCampania.text(contrato.Campana);
+        controlTipoBoleto.text(contrato.TipoBoleto);
+        controlPeriodoOperacion.text(contrato.FechaOperacion);
 
         BlockUi("Cargando...");
         try {
@@ -50,6 +117,7 @@ var ControlDeBoletosGestion = (function () {
                 $('body').append(html);
 
                 try {
+                    bindControls();
                     cargarDatos();
                     $(config.modalId).modal("show");
                 } catch (error) {

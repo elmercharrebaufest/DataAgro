@@ -335,6 +335,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
