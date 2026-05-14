@@ -26,6 +26,21 @@ namespace WebDataAgro.Controllers
         private readonly IContratoManager _contratoManager;
         // private readonly IComercialService _comercialService;
 
+        private static readonly object _cacheLock = new object();
+        private const string CTRL_BOLETOS_MATERIALES_CACHE_KEY = "CtrlBoletos_Materiales_Cache";
+        private const string CTRL_BOLETOS_ESTADOS_CACHE_KEY = "CtrlBoletos_Estados_Cache";
+        private const string CTRL_BOLETOS_BOLSAS_CACHE_KEY = "CtrlBoletos_Bolsas_Cache";
+        private const string CTRL_BOLETOS_BOLSAS_SAP_CACHE_KEY = "CtrlBoletos_BolsasSAP_Cache";
+        private const string CTRL_BOLETOS_COMERCIALES_CACHE_KEY = "CtrlBoletos_Comerciales_Cache";
+        private const string CTRL_BOLETOS_PROVEEDORES_CACHE_KEY = "CtrlBoletos_Proveedores_Cache_{0}";
+        private const string CTRL_BOLETOS_PROVINCIAS_CACHE_KEY = "CtrlBoletos_Provincias_Cache";
+        private const string CTRL_BOLETOS_COSECHAS_CACHE_KEY = "CtrlBoletos_Cosechas_Cache";
+        private const string CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY = "CtrlBoletos_Clasificaciones_Cache";
+        private const string CTRL_BOLETOS_PROCEDENCIAS_CACHE_KEY = "CtrlBoletos_Procedencias_Cache_{0}";
+        private const string CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY = "CtrlBoletos_TipoOblea_Cache";
+        private const string CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY = "CtrlBoletos_BoletoCompraNet_Cache";
+        private const int CACHE_DURATION_MINUTES = 5;
+
         public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager, IContratoManager contratoManager)
         {
             this._controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
@@ -444,6 +459,19 @@ namespace WebDataAgro.Controllers
                 return Json(new { success = false, message = "Error al modificar el contrato: " + ex.Message });
             }
         }
+        [HttpGet]
+        public ActionResult ObtenerDatosDeContrato(int id)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.ObtenerDatosDeContrato(id);
+                return Json(resultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al obtener los datos del contrato: " + ex.Message });
+            }
+        }
 
         [HttpGet]
         public ActionResult ObtenerDetalleContrato(int id)
@@ -497,285 +525,400 @@ namespace WebDataAgro.Controllers
 
         #region Metodos Get para cargar combos
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")] // Cache por 5 minutos
         public JsonResult GetMateriales()
         {
             try
             {
-                var material = _controlDeBoletosManager.GetMaterial();
-                var materialesListItems = material.Select(
-                    x => new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_MATERIALES_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = x.Descripcion,
-                        Value = x.MaterialId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-                ViewBag.Material = materialesListItems;
-
-                return Json(materialesListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_MATERIALES_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var material = _controlDeBoletosManager.GetMaterial();
+                            cachedData = material.Select(x => new SelectListItem
+                            {
+                                Text = x.Descripcion,
+                                Value = x.MaterialId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_MATERIALES_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                // Log del error
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetMateriales: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetEstadosControl()
         {
             try
             {
-                var listaEstados = this._controlDeBoletosEstadoManager.ListarTodo();
-                var estadoItems = listaEstados.Select(
-                    x => new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_ESTADOS_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = x.Descripcion,
-                        Value = x.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value
-                    );
-
-                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_ESTADOS_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var listaEstados = this._controlDeBoletosEstadoManager.ListarTodo();
+                            cachedData = listaEstados.Select(x => new SelectListItem
+                            {
+                                Text = x.Descripcion,
+                                Value = x.Id.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_ESTADOS_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetEstadosControl: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetBolsaCompraNet()
         {
             try
             {
-                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
-                var estadoItems = listaEstados.Select(
-                    x => new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLSAS_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = x.Descripcion,
-                        Value = x.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value
-                    );
-
-                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLSAS_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                            cachedData = listaEstados.Select(x => new SelectListItem
+                            {
+                                Text = x.Descripcion,
+                                Value = x.Id.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLSAS_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetBolsaCompraNet: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetBolsaCompraNetSAP()
         {
             try
             {
-                var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
-                var estadoItems = listaEstados.Select(
-                    x => new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLSAS_SAP_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = x.Id.ToString(),
-                        Value = x.CodigoSap,
-                        Selected = false
-                    }).OrderBy(x => x.Value
-                    );
-
-                return Json(estadoItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLSAS_SAP_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var listaEstados = this._controlDeBoletosManager.GetBolsaCompraNet();
+                            cachedData = listaEstados.Select(x => new SelectListItem
+                            {
+                                Text = x.Id.ToString(),
+                                Value = x.CodigoSap,
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLSAS_SAP_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetBolsaCompraNetSAP: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
-
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetComerciales()
         {
             try
             {
-
-                var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
-
-                var comercialesListItems = comercial.Select(
-                    x => new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_COMERCIALES_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = x.Apellido,
-                        Value = x.ComercialId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-                return Json(comercialesListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_COMERCIALES_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var comercial = _controlDeBoletosManager.GetComercial().OrderBy(x => x.Apellido);
+                            cachedData = comercial.Select(x => new SelectListItem
+                            {
+                                Text = x.Apellido,
+                                Value = x.ComercialId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_COMERCIALES_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetComerciales: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetProveedores()
         {
             try
             {
-                var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
-                var proveedoresListItems = proveedores.Select(comercial =>
-                    new SelectListItem
+                string cacheKey = string.Format(CTRL_BOLETOS_PROVEEDORES_CACHE_KEY, GlobalVariables.Equipo);
+                var cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = comercial.RazonSocial,
-                        Value = comercial.ProveedorId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Value);
-
-                return Json(proveedoresListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var proveedores = _controlDeBoletosManager.GetProveedorPorComercial(GlobalVariables.Equipo).OrderBy(x => x.RazonSocial);
+                            cachedData = proveedores.Select(comercial => new SelectListItem
+                            {
+                                Text = comercial.RazonSocial,
+                                Value = comercial.ProveedorId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(cacheKey, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetProveedores: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetProvincias()
         {
             try
             {
-                var provincias = _controlDeBoletosManager.GetProvincias();
-                var provinciasListItems = provincias.Select(provincia =>
-                    new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_PROVINCIAS_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = provincia.Nombre,
-                        Value = provincia.ProvinciaId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(provinciasListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_PROVINCIAS_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var provincias = _controlDeBoletosManager.GetProvincias();
+                            cachedData = provincias.Select(provincia => new SelectListItem
+                            {
+                                Text = provincia.Nombre,
+                                Value = provincia.ProvinciaId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_PROVINCIAS_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetProvincias: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetCosechas()
         {
             try
             {
-                var campanias = _controlDeBoletosManager.GetCosechas();
-                var campaniasListItems = campanias.Select(campania =>
-                    new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_COSECHAS_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = campania.Descripcion,
-                        Value = campania.CampaniaId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(campaniasListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_COSECHAS_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var campanias = _controlDeBoletosManager.GetCosechas();
+                            cachedData = campanias.Select(campania => new SelectListItem
+                            {
+                                Text = campania.Descripcion,
+                                Value = campania.CampaniaId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_COSECHAS_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetCosechas: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetClasificaciones()
         {
             try
             {
-                var clasificaciones = _controlDeBoletosManager.GetClasificaciones();
-                var clasificacionesListItems = clasificaciones.Select(clasificacion =>
-                    new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = clasificacion.Descripcion,
-                        Value = clasificacion.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(clasificacionesListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var clasificaciones = _controlDeBoletosManager.GetClasificaciones();
+                            cachedData = clasificaciones.Select(clasificacion => new SelectListItem
+                            {
+                                Text = clasificacion.Descripcion,
+                                Value = clasificacion.Id.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetClasificaciones: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetProcedencias(int provinciaId)
         {
             try
             {
-                var localidades = _controlDeBoletosManager.GetProcedencias(provinciaId);
-                var localidadesListItems = localidades.Select(localidad =>
-                    new SelectListItem
+                string cacheKey = string.Format(CTRL_BOLETOS_PROCEDENCIAS_CACHE_KEY, provinciaId);
+                var cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = localidad.Nombre,
-                        Value = localidad.LocalidadId.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(localidadesListItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[cacheKey] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var localidades = _controlDeBoletosManager.GetProcedencias(provinciaId);
+                            cachedData = localidades.Select(localidad => new SelectListItem
+                            {
+                                Text = localidad.Nombre,
+                                Value = localidad.LocalidadId.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(cacheKey, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetProcedencias: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetTipoOblea()
         {
             try
             {
-                var tipoOblea = _controlDeBoletosManager.GetTipoOblea();
-                var tipoObleaItems = tipoOblea.Select(tipo =>
-                    new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = tipo.Descripcion,
-                        Value = tipo.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(tipoObleaItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var tipoOblea = _controlDeBoletosManager.GetTipoOblea();
+                            cachedData = tipoOblea.Select(tipo => new SelectListItem
+                            {
+                                Text = tipo.Descripcion,
+                                Value = tipo.Id.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetTipoOblea: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
-        [OutputCache(Duration = 300, VaryByParam = "none")]
         public JsonResult GetBoletoCompraNet()
         {
             try
             {
-                var boletosCompraNet = _controlDeBoletosManager.GetBoletoCompraNet();
-                var boletosCompraNetItems = boletosCompraNet.Select(tipo =>
-                    new SelectListItem
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY] as List<SelectListItem>;
+                if (cachedData == null)
+                {
+                    lock (_cacheLock)
                     {
-                        Text = tipo.Descripcion,
-                        Value = tipo.Id.ToString(),
-                        Selected = false
-                    }).OrderBy(x => x.Text);
-
-                return Json(boletosCompraNetItems, JsonRequestBehavior.AllowGet);
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY] as List<SelectListItem>;
+                        if (cachedData == null)
+                        {
+                            var boletosCompraNet = _controlDeBoletosManager.GetBoletoCompraNet();
+                            cachedData = boletosCompraNet.Select(tipo => new SelectListItem
+                            {
+                                Text = tipo.Descripcion,
+                                Value = tipo.Id.ToString(),
+                                Selected = false
+                            }).OrderBy(x => x.Text).ToList();
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                        }
+                    }
+                }
+                return Json(cachedData, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Error GetBoletoCompraNet: {ex.Message}");
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
 

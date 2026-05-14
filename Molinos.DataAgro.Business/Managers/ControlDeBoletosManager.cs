@@ -559,6 +559,36 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultado;
         }
+        public ControlDeBoletosDatosContratoDto ObtenerDatosDeContrato(int negocioId)
+        {
+            var datosContrato = new ControlDeBoletosDatosContratoDto();
+            var contrato = repositorio.Obtener<Negocio>(x => x.Id == negocioId);
+            if (contrato != null)
+            {
+                datosContrato.NegocioId = contrato.Id;
+                datosContrato.LocalidadId = contrato.LocalidadId;
+                datosContrato.CampanaId = contrato.CampanaId;
+                datosContrato.ProvinciaId = contrato.ProvinciaId;
+                datosContrato.ClasificacionId = contrato.ClasificacionId;
+                datosContrato.ContratoSAP = contrato.ContratoSAP;
+                datosContrato.Material = contrato.Material.Descripcion;
+                datosContrato.Provincia = contrato.Provincia.Nombre;
+                datosContrato.Localidad = contrato.Localidad.Nombre;
+                datosContrato.Cantidad = contrato.Cantidad;
+                datosContrato.Precio = contrato.Precio;
+                datosContrato.Destino = contrato.Destino.Descripcion;
+                datosContrato.Clasificacion = contrato.Clasificacion.Descripcion;
+                datosContrato.StandarCalidad = contrato.StandardDeCalidad.Descripcion;
+                datosContrato.Campana = contrato.Campana.Descripcion;
+                datosContrato.TipoBoleto = contrato.Boleto.Descripcion;
+                datosContrato.FechaOperacion = contrato.FechaOperacion.ToString("dd/MM/yyyy");
+                datosContrato.PeriodoEntrega = contrato.FechaDesde.ToString("dd/MM/yyyy") + " - " + contrato.FechaHasta.ToString("dd/MM/yyyy");
+                datosContrato.CuitVendedor = contrato.Proveedor.CUIT;
+                datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : string.Empty;
+                datosContrato.Moneda = contrato.Moneda?.MonedaId;
+            }
+            return datosContrato;
+        }
         #endregion
 
         #region Datos de Seguimiento

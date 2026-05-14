@@ -27,6 +27,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         Resultado AsociarConfirma(int negocioId);
         List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);
+        ControlDeBoletosDatosContratoDto ObtenerDatosDeContrato(int negocioId);
         Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion);
         Resultado ProcesarBoletosPendientesControl();
         Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion);

@@ -6,7 +6,7 @@ var ControlDeBoletosModificarContrato = (function () {
             getClasificaciones: "/ControlDeBoletos/GetClasificaciones",
             getCosechas: "/ControlDeBoletos/GetCosechas",
             getProcedencias: "/ControlDeBoletos/GetProcedencias",
-            getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
+            getContrato: "/ControlDeBoletos/ObtenerDatosDeContrato",
             updateContrato: "/ControlDeBoletos/ModificarContrato",
         },
         modalId: "#modalModificarBoleto",
@@ -109,8 +109,8 @@ var ControlDeBoletosModificarContrato = (function () {
         cargarContrato: function (id) {
             const url = config.urls.getContrato + "?id=" + id;
             const contrato = MSExecuteGetOnServer(url);
-            state.contratoSAP = contrato.Data.ContratoSAP;
-            this.cargarCombos(contrato.Data);
+            state.contratoSAP = contrato.ContratoSAP;
+            this.cargarCombos(contrato);
         },
         cargarCombos: function (contrato) {
             let url = config.urls.getProvincias;
