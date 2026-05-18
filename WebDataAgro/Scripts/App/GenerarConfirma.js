@@ -294,7 +294,7 @@ const GenerarConfirma = (() => {
                 total: "Total",
                 parse(response) {
                     // Convierte "/Date(ticks)/" a Date en todos los campos de fecha
-                    const fechas = ["FechaGeneracion", "FechaOperacion", "FechaConfirmacion", "FechaAnulacion"];
+                    const fechas = ["FechaGeneracion", "FechaOperacion", "FechaConfirmacion", "FechaAnulacion", "FechaConfirmadoSAP"];
                     (response.Data || []).forEach(item => {
                         fechas.forEach(f => {
                             if (item[f] && typeof item[f] === "string") {
@@ -316,6 +316,7 @@ const GenerarConfirma = (() => {
                         Estado_Version: { type: "string" },
                         FechaConfirmacion: { type: "date" },
                         FechaGeneracion: { type: "date" },
+                        FechaConfirmadoSAP: {type: "date"},
                         Comercial: { type: "string" },
                         Vendedor: { type: "string" },
                         Bolsa: { type: "string" }
@@ -340,7 +341,7 @@ const GenerarConfirma = (() => {
             { field: "TipoBoleto", title: "Tipo Boleto" },
             { field: "Material", title: "Material" },
             { field: "Estado_Version", title: "Estado" },
-            { field: "FechaConfirmacion", title: "Fecha Confirmación" },
+            { field: "FechaConfirmadoSAP", title: "Fecha Confirmado SAP" },
             { field: "FechaGeneracion", title: "Fecha Generación" },
             { field: "Comercial", title: "Comercial" },
             { field: "Vendedor", title: "Vendedor" },
@@ -427,7 +428,7 @@ const GenerarConfirma = (() => {
                 { field: "Version", title: "Vers.", type: "number", headerAttributes: { title: "Versión" } },
                 { field: "Estado_Version", title: "Estado V.", type: "string", headerAttributes: { title: "Estado Versión" }, editable: false },
                 { field: "FechaGeneracion", title: "F. Generación", type: "date", headerAttributes: { title: "Fecha Generación" }, format: "{0:dd/MM/yyyy}" },
-                { field: "FechaConfirmacion", title: "F. Confirmación", type: "date", headerAttributes: { title: "Fecha Confirmación" }, format: "{0:dd/MM/yyyy}" },
+                { field: "FechaConfirmadoSAP", title: "F. Confirmación SAP", type: "date", headerAttributes: { title: "Fecha Confirmación SAP" }, format: "{0:dd/MM/yyyy}" },
                 { field: "FechaAnulacion", title: "F. Anulación", type: "date", headerAttributes: { title: "Fecha Anulación" }, format: "{0:dd/MM/yyyy}" },
                 { field: "ContratoVendedor", title: "C. Vendedor", type: "string", headerAttributes: { title: "Contrato Vendedor" } },
                 { field: "ContratoCorredor", title: "C. Corredor", type: "string", headerAttributes: { title: "Contrato Corredor" } },
