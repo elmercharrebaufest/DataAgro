@@ -1,4 +1,4 @@
-﻿var viewModel;
+var viewModel;
 var fecha;
 var zonaSeleccionada;
 var anularCupo;
@@ -101,6 +101,23 @@ function InicializarMultiSelect(textField, valueField, url, columna, serverFilte
     });
 }
 
+
+function limpiarFiltrosNulos(filter) {
+    if (filter && filter.filters) {
+        for (var i = filter.filters.length - 1; i >= 0; i--) {
+            var f = filter.filters[i];
+            if (f.filters) {
+                limpiarFiltrosNulos(f);
+                if (f.filters.length === 0) {
+                    filter.filters.splice(i, 1);
+                }
+            } else if (f.field == null || f.field === undefined) {
+                filter.filters.splice(i, 1);
+            }
+        }
+    }
+}
+
 function InicializarCuposIndex() {
     var Centros = JSON.parse(document.getElementById('Centros').getAttribute('data-value'));
     var estados = new Array();
@@ -153,6 +170,8 @@ function InicializarCuposIndex() {
 
                     if (filtrosEnviados.filter == null) {
                         filtrosEnviados.filter = new FiltroPadre("and", defaultFilter);
+                    } else {
+                        limpiarFiltrosNulos(filtrosEnviados.filter);
                     }
 
                     //let fechaRegistroFiltro = filtrosEnviados.filter.filters.find(function (f) { return f.field == "FechaRegistro" });
