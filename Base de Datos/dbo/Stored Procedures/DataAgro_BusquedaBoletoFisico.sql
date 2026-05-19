@@ -159,7 +159,7 @@ BEGIN
             OR
             (n.ComercialCreadorId IS NOT NULL AND n.ComercialCreadorId IN (SELECT ComercialId FROM #Equipo))
         )
-
+        AND n.TipoNegocioId <> 3 
         -- ── Bloque NegocioSAP ──────────────────────────────────────────────────────
         AND (
             @NegocioSAP IS NULL

@@ -156,9 +156,6 @@ BEGIN
         AND (
             -- No fijaciones: BoletoId = CONFIRMA
             (n.TipoNegocioId <> 3 AND n.BoletoId = 1)
-            OR
-            -- Fijaciones: BoletoId del contrato padre = CONFIRMA
-            (n.TipoNegocioId = 3 AND nPadre.BoletoId = 1)
         )
         -- Filtro de equipo (siempre obligatorio)
         AND (
@@ -173,7 +170,6 @@ BEGIN
         AND (
             @NegocioSAP IS NULL
             OR n.ContratoSAP  IN (SELECT ContratoSAP FROM #NegocioSAP)
-            OR (n.TipoNegocioId = 3 AND n.FijacionSAP IN (SELECT ContratoSAP FROM #NegocioSAP))
         )
         -- Excluir fijaciones cuando no se busca por SAP
         AND (@NegocioSAP IS NOT NULL OR n.TipoNegocioId <> 3)
