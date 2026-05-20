@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -21,7 +21,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly string passSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
         private readonly bool valorPruebaSap = ConfigurationManager.AppSettings["ValorPruebaSap"] == "1";
-        private readonly bool sapSinPi = ConfigurationManager.AppSettings["SAPsinPI"] == "1";
 
         public SeguimientoControlBoletoAgent(ILogger logger)
         {
@@ -34,14 +33,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (valorPruebaSap)
             {
                 return "Modificación de contrato satisfactoria";
-            }
-
-            // SAP con PI no implementado
-            if (!sapSinPi)
-            {
-                throw new NotImplementedException(
-                    "El servicio SAP con PI no está implementado en esta versión."
-                );
             }
 
             try
@@ -70,12 +61,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ImTipoBoleto = dto.TipoBoleto,
                     ImUsuario = dto.Usuario
                 };
+                logger.Debug(request.ToXml());
 
                 var response = agent.ZMprfcSeguimientoBoleto(request);
 
                 if (activarLogDebug)
                 {
-                    logger.Debug(request.ToXml());
                     logger.Debug(response.ToXml());
                 }
 

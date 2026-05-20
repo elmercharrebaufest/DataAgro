@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces.Agent;
@@ -20,7 +20,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         private readonly string passSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
         private readonly bool valorPruebaSap = ConfigurationManager.AppSettings["ValorPruebaSap"] == "1";
-        private readonly bool sapSinPi = ConfigurationManager.AppSettings["SAPsinPI"] == "1";
 
         public DatosCertificacionControlBoletoAgent(ILogger logger)
         {
@@ -36,13 +35,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return "Modificación de contrato satisfactoria";
             }
 
-            // SAP con PI no implementado
-            if (!sapSinPi)
-            {
-                throw new NotImplementedException(
-                    "El servicio SAP con PI no está implementado en esta versión."
-                );
-            }
 
             try
             {
@@ -69,12 +61,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ImUsuario = dto.Usuario,
                     DatosCertificacion = datosCertificacion
                 };
+                logger.Debug(request.ToXml());
 
                 var response = agent.ZMprfcDatosCertificacion(request);
 
                 if (activarLogDebug)
                 {
-                    logger.Debug(request.ToXml());
                     logger.Debug(response.ToXml());
                 }
                 mensaje = response.ExMensaje?.Trim();
