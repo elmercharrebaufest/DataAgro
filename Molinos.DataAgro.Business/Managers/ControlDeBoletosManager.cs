@@ -492,6 +492,15 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Modificacion de Contrato
+        private void ModificarContratoEnDataAgro(Negocio negocio, Provincia provincia, Campaña campana, Localidad procedencia, ClasificacionCompraNet clasificacion)
+        {
+            negocio.Provincia = provincia;
+            negocio.Campana = campana;
+            negocio.ProcedenciaVenta = procedencia;
+            negocio.Clasificacion = clasificacion;
+            repositorio.GuardarCambios();
+        }
+
         public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto dto)
         {
             var resultado = new Resultado();
@@ -502,58 +511,34 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (negocio == null)
                 {
-                    resultado.Errores.Add(new ErrorMessage
-                    {
-                        Message = "No se encontró el negocio."
-                    });
+                    resultado.Errores.Add(new ErrorMessage { Message = "No se encontró el negocio." });
                     return resultado;
                 }
 
-                var provincia = repositorio.Obtener<Provincia>(dto.ProvinciaId);
-                var campana = repositorio.Obtener<Campaña>(dto.CosechaId);
-                var procedencia = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
-                var clasificacion = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
+                var provincia      = repositorio.Obtener<Provincia>(dto.ProvinciaId);
+                var campana        = repositorio.Obtener<Campaña>(dto.CosechaId);
+                var procedencia    = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
+                var clasificacion  = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
+                var ahora          = DateTime.Now;
 
-                negocio.Provincia = provincia;
-                negocio.Campana = campana;
-                negocio.ProcedenciaVenta = procedencia;
-                negocio.Clasificacion = clasificacion;
-
-                repositorio.GuardarCambios();
-
-                #region Modificar Contrato en SAP
-                try
+                var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto
                 {
-                    var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto();
-                    controlDeBoletosModificarContrato.Cosecha = campana.Descripcion;
-                    controlDeBoletosModificarContrato.Contrato = negocio.ContratoSAP;
-                    controlDeBoletosModificarContrato.Clasificacion = clasificacion.Descripcion;
-                    controlDeBoletosModificarContrato.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                    controlDeBoletosModificarContrato.Hora = DateTime.Now.ToString("HH:mm:ss");
-                    controlDeBoletosModificarContrato.Procedencia = procedencia.CodLocalidad;
-                    controlDeBoletosModificarContrato.Provincia = provincia.ProvinciaId.ToString();
-                    controlDeBoletosModificarContrato.Usuario = dto.Usuario;
-                    modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
-                }
-                catch (Exception ex)
-                {
-                    resultado.Errores.Add(new ErrorMessage()
-                    {
-                        Message = "Ocurrió un error al modificar el contrato en SAP"
-                    });
-                    logger.Error(ex.Message);
-                    return resultado;
-                }
-                #endregion
+                    Cosecha       = campana.Descripcion,
+                    Contrato      = negocio.ContratoSAP,
+                    Clasificacion = clasificacion.Descripcion,
+                    Fecha         = ahora.ToString("yyyy-MM-dd"),
+                    Hora          = ahora.ToString("HH:mm:ss"),
+                    Procedencia   = procedencia.CodLocalidad,
+                    Provincia     = provincia.ProvinciaId.ToString(),
+                    Usuario       = dto.Usuario
+                };
 
+                modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
+                ModificarContratoEnDataAgro(negocio, provincia, campana, procedencia, clasificacion);
             }
             catch (Exception ex)
             {
-                resultado.Errores.Add(new ErrorMessage
-                {
-                    Message = "Ocurrió un error al modificar el contrato."
-                });
-
+                resultado.Errores.Add(new ErrorMessage { Message = "Ocurrió un error al modificar el contrato." });
                 logger.Error(ex);
             }
 

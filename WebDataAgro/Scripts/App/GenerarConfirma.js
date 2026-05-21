@@ -656,7 +656,6 @@ const GenerarConfirma = (() => {
                 EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
             };
             var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
-            response.Data.forEach()
 
             response.Data.forEach(function (item) {
                 console.log(item.ContratoSAP);
