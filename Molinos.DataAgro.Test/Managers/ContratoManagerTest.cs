@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -4991,7 +4991,7 @@ namespace Molinos.DataAgro.Test.Managers
                     Descuentos = new List<DescuentoBonificacionDto>(),
                     Calidades = new List<CalidadDto>(),
                     PreciosPactados = new List<PrecioPactadosDto>(),
-
+                    
                 });
             comercialManagerMock.Setup(x => x.TraerComercial(It.IsAny<int>()))
                 .Returns(new ComercialDto());
@@ -5033,7 +5033,7 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaDesde = DateTime.Now.Date,
                 FechaHasta = DateTime.Now.Date.AddMonths(1),
                 DestinoId = 1,
-                ComercialId = WebDataAgro.MvcApplication.GlobalVariables.ComercialId,
+                ComercialId = 1,
                 Cantidad = 1000000
             });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
@@ -5080,7 +5080,7 @@ namespace Molinos.DataAgro.Test.Managers
             negocioManagerMock.Setup(x => x.ValidarAltaTemprana(It.IsAny<Negocio>(), It.IsAny<Proveedor>())).Returns(new Resultado());
             capProdAgentMock.Setup(x => x.VisualizarCapacidadProductiva(It.IsAny<int>(), null, null, null)).Returns(new List<CapacidadProductivaDto> { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 3, CampaniaId = 9 } });
 
-            var resultado = target.AltaMasivaContratos(dsExcel, "010101", WebDataAgro.MvcApplication.GlobalVariables.ComercialId);
+            var resultado = target.AltaMasivaContratos(dsExcel, "010101", 1);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.AreEqual(1, resultado.Count);
