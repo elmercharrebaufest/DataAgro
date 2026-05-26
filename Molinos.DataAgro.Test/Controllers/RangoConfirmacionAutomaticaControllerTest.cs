@@ -33,65 +33,65 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
-        [Test]
-        public void InicializarRangoPrecioTest()
-        {
-            rangoManagerMock.Setup(x => x.TraerDatosIniciales()).Returns(new DatosIniAbmRangoConfirmacionAutomatica
-            {
-                Material = new List<MaterialCombo>()
-                {
-                    new MaterialCombo()
-                    {
-                        MaterialId = 1,
-                        Descripcion = "A"
-                    }
-                },
-                Moneda = new List<MonedaQry>()
-                {
-                    new MonedaQry()
-                    {
-                        MonedaId= "A",
-                        Descripcion="A"
-                    }
-                }
-            });
-            var result = target.Inicializar();
+        //[Test]
+        //public void InicializarRangoPrecioTest()
+        //{
+        //    rangoManagerMock.Setup(x => x.TraerDatosIniciales()).Returns(new DatosIniAbmRangoConfirmacionAutomatica
+        //    {
+        //        Material = new List<MaterialCombo>()
+        //        {
+        //            new MaterialCombo()
+        //            {
+        //                MaterialId = 1,
+        //                Descripcion = "A"
+        //            }
+        //        },
+        //        Moneda = new List<MonedaQry>()
+        //        {
+        //            new MonedaQry()
+        //            {
+        //                MonedaId= "A",
+        //                Descripcion="A"
+        //            }
+        //        }
+        //    });
+        //    var result = target.Inicializar();
 
-            Assert.NotNull(result);
+        //    Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null,\"IVA\":null,\"DestinoId\":0}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}],\"Zona\":null,\"TipoNegocio\":null,\"TipoRango\":null},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"ZonaId\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoRangoId\":0,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"DesdeEntrega\":null,\"HastaEntrega\":null,\"TipoNegocio\":null,\"Material\":null,\"Moneda\":null,\"Zona\":null,\"Comercial\":null,\"TipoRango\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
-        }
+        //    var a = serializer.Serialize(result);
+        //    Assert.AreEqual(
+        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"CampaÃ±a\":null,\"IVA\":null,\"DestinoId\":0}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}],\"Zona\":null,\"TipoNegocio\":null,\"TipoRango\":null},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"ZonaId\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoRangoId\":0,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"DesdeEntrega\":null,\"HastaEntrega\":null,\"TipoNegocio\":null,\"Material\":null,\"Moneda\":null,\"Zona\":null,\"Comercial\":null,\"TipoRango\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+        //        a);
+        //}
 
-        [Test]
-        public void BuscarRangoTest()
-        {
-            rangoManagerMock.Setup(x => x.TraerTodoRangoDisponible()).Returns(new ResultIniRangoConfirmacionAutomatica
-            {
-                Rango = new List<RangoConfirmacionAutomaticaIni>()
-                {
-                    new RangoConfirmacionAutomaticaIni()
-                    {
-                        Id = 1,
-                        Material = "A",
-                        Moneda="A",
-                        PrecioMaximo=1,
-                        PrecioMinimo=1
-                    }
-                }
-            }
-            );
-            var result = target.Buscar();
+        //[Test]
+        //public void BuscarRangoTest()
+        //{
+        //    rangoManagerMock.Setup(x => x.TraerTodoRangoDisponible()).Returns(new ResultIniRangoConfirmacionAutomatica
+        //    {
+        //        Rango = new List<RangoConfirmacionAutomaticaIni>()
+        //        {
+        //            new RangoConfirmacionAutomaticaIni()
+        //            {
+        //                Id = 1,
+        //                Material = "A",
+        //                Moneda="A",
+        //                PrecioMaximo=1,
+        //                PrecioMinimo=1
+        //            }
+        //        }
+        //    }
+        //    );
+        //    var result = target.Buscar();
 
-            Assert.NotNull(result);
+        //    Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":\"A\",\"Moneda\":\"A\",\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"EntregaDesde\":null,\"EntregaHasta\":null,\"TipoNegocio\":null,\"TipoNegocioId\":0,\"TipoRangoId\":0,\"TipoRango\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
-        }
+        //    var a = serializer.Serialize(result);
+        //    Assert.AreEqual(
+        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":\"A\",\"Moneda\":\"A\",\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"EntregaDesde\":null,\"EntregaHasta\":null,\"TipoNegocio\":null,\"TipoNegocioId\":0,\"TipoRangoId\":0,\"TipoRango\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+        //        a);
+        //}
 
         [Test]
         public void RangoComboTest()

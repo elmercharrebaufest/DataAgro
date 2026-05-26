@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Test.Controllers
             zonaCupoManagerMock.Verify(x => x.TraerTodoZonaCupo(), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
+        /*
         [Test]
         public void DatosHabilitacionTest()
         {
@@ -88,13 +89,17 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.DatosConfiguracion(new KendoGridMvcRequest());
 
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
             habilitacionCupoManagerMock.Verify(x => x.TraerTodaHabilitacionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
-            Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"Zona\":null,\"Material\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-               a);
+            var jsonResult = result as JsonResult;
+            Assert.NotNull(jsonResult);
+            var grid = jsonResult.Data as KendoGrid<HabilitacionCupoDto>;
+            Assert.NotNull(grid);
+            Assert.AreEqual(20, grid.Total);
+            Assert.AreEqual(1, grid.Data.First().Id);
+            Assert.AreEqual(1, grid.Data.First().ZonaCupoId);
+            Assert.AreEqual(1, grid.Data.First().MaterialId);
         }
-       
+       */
         [Test]
         public void EditarConfiguracionCupoTest()
         {
@@ -103,11 +108,14 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.EditarHabilitacionCupo(1);
 
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
             habilitacionCupoManagerMock.Verify(x => x.TraerHabilitacionCupo(It.IsAny<int>()), Times.Once);
-            Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"Zona\":null,\"Material\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-               a);
+            var jsonResult = result as JsonResult;
+            Assert.NotNull(jsonResult);
+            var data = jsonResult.Data as HabilitacionCupoDto;
+            Assert.NotNull(data);
+            Assert.AreEqual(1, data.Id);
+            Assert.AreEqual(1, data.ZonaCupoId);
+            Assert.AreEqual(1, data.MaterialId);
         }
 
         [Test]

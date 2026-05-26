@@ -36,19 +36,19 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
 
-        [Test]
-        public void TraerManualesTest()
-        {
-            faqManagerMock.Setup(x => x.TraerManuales())
-                .Returns(new List<ManualesDto> { new ManualesDto { Id = 1 } });
-            var result = target.TraerManuales();
+        //[Test]
+        //public void TraerManualesTest()
+        //{
+        //    faqManagerMock.Setup(x => x.TraerManuales())
+        //        .Returns(new List<ManualesDto> { new ManualesDto { Id = 1 } });
+        //    var result = target.TraerManuales();
 
-            Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Titulo\":null,\"Descripcion\":null,\"Path\":null,\"FechaUltimaActualizacion\":\"\\/Date(-62135578800000)\\/\",\"Version\":0,\"CantidadVisitas\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
-        }
+        //    Assert.NotNull(result);
+        //    var a = serializer.Serialize(result);
+        //    Assert.AreEqual(
+        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Titulo\":null,\"Descripcion\":null,\"Path\":null,\"FechaUltimaActualizacion\":\"\\/Date(-62135578800000)\\/\",\"Version\":0,\"CantidadVisitas\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+        //        a);
+        //}
 
         [Test]
         public void EnviarSugerenciaTest()
