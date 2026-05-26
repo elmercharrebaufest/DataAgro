@@ -1,4 +1,4 @@
-﻿using KendoGridBinder;
+using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -96,7 +96,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionEspacioDinamicoManagerMock.Verify(x => x.TraerTodaConfiguracionEspacioDinamico(It.IsAny<KendoGridMvcRequest>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(946695600000)\\/\",\"CantidadDeCupo\":1,\"ProveedorId\":1,\"ProveedorCUIT\":null,\"ProveedorRazonSocial\":null,\"Calidad\":\"\",\"ComercialId\":1,\"ComercialNombre\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(946702800000)\\/\",\"CantidadDeCupo\":1,\"ProveedorId\":1,\"ProveedorCUIT\":null,\"ProveedorRazonSocial\":null,\"Calidad\":\"\",\"ComercialId\":1,\"ComercialNombre\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]

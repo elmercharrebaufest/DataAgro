@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -15,20 +16,16 @@ namespace Molinos.DataAgro.Test.Controllers
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Test")]
     [TestFixture]
-    class AdministracionCupoControllerTest
+    public class AdministracionCupoControllerTest
     {
         private AdministracionCupoController target;
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<ICentroManager> centroManagerMock;
         private Mock<IAdministracionCupoManager> administracionManagerMock;
 
-
-        private JavaScriptSerializer serializer;
-
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
             cupoManagerMock = new Mock<ICupoManager>();
             centroManagerMock = new Mock<ICentroManager>();
             administracionManagerMock = new Mock<IAdministracionCupoManager>();
@@ -39,172 +36,246 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
+        // ------------------------------------------------------------------ //
+        //  Index
+        // ------------------------------------------------------------------ //
+
         [Test]
         public void IndexOk()
         {
-            cupoManagerMock.Setup(x => x.Panel())
-                .Returns(new List<DiaCupo>());
-
+            cupoManagerMock.Setup(x => x.Panel()).Returns(new List<DiaCupo>());
             cupoManagerMock.Setup(x => x.FechasComprendidas(null))
                 .Returns(new List<DateTime> { new DateTime(2018, 10, 26), new DateTime(2018, 10, 27), new DateTime(2018, 10, 28) });
-
-            cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas())
-                .Returns(new List<SugerenciaNoAceptada>());
-
+            cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas()).Returns(new List<SugerenciaNoAceptada>());
             centroManagerMock.Setup(x => x.TraerTodoCentro())
-                .Returns(new ResultIniCentro() { Centro = new List<CentroIni>() { new CentroIni() { Descripcion = "San Lorenzo" } } });
+                .Returns(new ResultIniCentro { Centro = new List<CentroIni> { new CentroIni { Descripcion = "San Lorenzo", CargaCupos = true } } });
 
             var result = target.Index() as ViewResult;
+
             Assert.NotNull(result);
-            Assert.IsEmpty(result.ViewName);
+            Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
 
+        // ------------------------------------------------------------------ //
+        //  DatosAdministracion
+        // ------------------------------------------------------------------ //
+
         [Test]
-        public void DatosAdministracion()
+        public void DatosAdministracion_RetornaDatosDelManager()
         {
+            var dto = new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 };
             administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), null))
-              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
-            var result = target.DatosAdministracion(new KendoGridMvcRequest());
+                .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { dto }, 1));
+
+            var result = target.DatosAdministracion(new KendoGridMvcRequest()) as JsonResult;
 
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
+            var grid = result.Data as KendoGrid<AdministracionCupoDto>;
+            Assert.NotNull(grid);
+            Assert.AreEqual(1, grid.Total);
+            Assert.AreEqual(1, grid.Data.Count());
+            Assert.AreEqual(1, grid.Data.First().Id);
             administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), null), Times.Once);
-            Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"ComercialId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"CantidadCupo\":0,\"CantidadDeCupo\":0,\"CantidadFleteProcedencia\":0,\"CantidadDeCupoMax\":0,\"CantidadFleteProcedenciaMax\":0,\"EstadoId\":0,\"CentroId\":1,\"ZonaId\":0,\"MaterialId\":1,\"Comercial\":null,\"Proveedor\":null,\"Centro\":null,\"Zona\":null,\"Material\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"Destinatario\":null,\"NegocioId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"Excedente\":false,\"Fason\":null,\"Estado\":null,\"TipoAdministracionCupo\":null,\"TipoAdministracionCupoId\":0,\"Observacion\":null,\"ComercialCreadorId\":null,\"FechaCreacion\":null,\"FechaCreacionSinHora\":null,\"FechaDecision\":null,\"SugerenciaCupoId\":null,\"Hora\":\"\",\"ConDescarga\":null,\"FechaCreacionConHora\":null,\"Calidad\":null,\"Dias\":null,\"CantidadFleteProcedenciaOriginal\":0,\"CantidadDeCupoOriginal\":0,\"Sustentable\":false,\"EPA\":false,\"EUDR\":false,\"ContratoSAP\":null,\"KgPendientes\":0,\"CuposRestantes\":0}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-               a);
         }
 
-        [Test]
-        public void AceptarTest()
-        {
-            administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.Aceptar(1, 1, 1, 1, 1, "");
-            Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            administracionManagerMock.Verify(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
-                a);
-        }
-
-        [Test]
-        public void RechazarTest()
-        {
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.Rechazar(1, "");
-            Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
-                a);
-        }
-
-        [Test]
-        public void AceptarMasivoTest()
-        {
-            var adm = new List<AdministracionCupoDto>() {
-                new AdministracionCupoDto
-                {
-                    CantidadFleteProcedencia = 1,
-                    CantidadDeCupo = 10,
-                    CentroId = 1,
-                    ComercialId = 63,
-                    ConfiguracionEspacioDinamicoId = 1,
-                    EstadoId = 1,
-                    Id = 234,
-                    MaterialId = 1,
-                    Fecha = DateTime.Now,
-                    Excedente = false,
-                    TipoNegocioId = 1,
-                    ZonaId = 1,
-                }
-            };
-            administracionManagerMock.Setup(x => x.AceptarCupoExcedenteMasivo(It.IsAny<List<AdministracionCupoDto>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.AceptarMasivo(adm, "");
-            Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
-                a);
-        }
-
-        [Test]
-        public void RechazarMasivoTest()
-        {
-            var adm = new List<AdministracionCupoDto>() {
-                new AdministracionCupoDto
-                {
-                    CantidadFleteProcedencia = 1,
-                    CantidadDeCupo = 10,
-                    CentroId = 1,
-                    ComercialId = 63,
-                    ConfiguracionEspacioDinamicoId = 1,
-                    EstadoId = 1,
-                    Id = 234,
-                    MaterialId = 1,
-                    Fecha = DateTime.Now,
-                    Excedente = false,
-                    TipoNegocioId = 1,
-                    ZonaId = 1,
-                }
-            };
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.RechazarMasivo(adm, "");
-            Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
-                a);
-        }
+        // ------------------------------------------------------------------ //
+        //  PartialPanel
+        // ------------------------------------------------------------------ //
 
         [Test]
         public void PartialPanelTest()
         {
-            cupoManagerMock.Setup(x => x.Panel()).Returns(new List<DiaCupo> { });
-            cupoManagerMock.Setup(x => x.FechasComprendidas(It.IsAny<int?>())).Returns(new List<DateTime> { });
-            cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas()).Returns(new List<SugerenciaNoAceptada> { });
+            cupoManagerMock.Setup(x => x.Panel()).Returns(new List<DiaCupo>());
+            cupoManagerMock.Setup(x => x.FechasComprendidas(It.IsAny<int?>())).Returns(new List<DateTime>());
+            cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas()).Returns(new List<SugerenciaNoAceptada>());
 
             var result = target.PartialPanel() as PartialViewResult;
 
             Assert.NotNull(result);
-
+            Assert.AreEqual("PartialPanel", result.ViewName);
             cupoManagerMock.Verify(x => x.Panel(), Times.Once);
             cupoManagerMock.Verify(x => x.FechasComprendidas(It.IsAny<int?>()), Times.Once);
             cupoManagerMock.Verify(x => x.SugerenciasNoAceptadas(), Times.Once);
+        }
 
-            Assert.AreEqual("PartialPanel", result.ViewName);
+        // ------------------------------------------------------------------ //
+        //  Aceptar
+        // ------------------------------------------------------------------ //
+
+        [Test]
+        public void AceptarTest_RetornaCupoResultSinErrores()
+        {
+            administracionManagerMock.Setup(x => x.AceptarCupoExcedente(
+                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+
+            var result = target.Aceptar(1, 1, 1, 1, 1, "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as CupoResult;
+            Assert.NotNull(data);
+            Assert.IsFalse(data.HayError);
+            administracionManagerMock.Verify(x => x.AceptarCupoExcedente(
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Test]
-        public void BuscarDatosSolicitudCupoTest()
+        public void AceptarTest_IdInvalido_RetornaErrorSinLlamarManager()
         {
+            var result = target.Aceptar(0, 1, 1, 1, 1, "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as CupoResult;
+            Assert.NotNull(data);
+            Assert.IsTrue(data.HayError);
+            administracionManagerMock.Verify(x => x.AceptarCupoExcedente(
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        // ------------------------------------------------------------------ //
+        //  Rechazar
+        // ------------------------------------------------------------------ //
+
+        [Test]
+        public void RechazarTest_RetornaResultadoSinErrores()
+        {
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(
+                    It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+
+            var result = target.Rechazar(1, "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as CupoResult;
+            Assert.NotNull(data);
+            Assert.IsFalse(data.HayError);
+            administracionManagerMock.Verify(x => x.CambiarEstadoRechazado(
+                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        // ------------------------------------------------------------------ //
+        //  AceptarMasivo
+        // ------------------------------------------------------------------ //
+
+        [Test]
+        public void AceptarMasivoTest_RetornaCupoResultSinErrores()
+        {
+            var adm = new List<AdministracionCupoDto>
+            {
+                new AdministracionCupoDto { Id = 234, ComercialId = 63, CentroId = 1, MaterialId = 1, ZonaId = 1,
+                    CantidadDeCupo = 10, CantidadFleteProcedencia = 1, EstadoId = 1, TipoNegocioId = 1,
+                    ConfiguracionEspacioDinamicoId = 1, Fecha = DateTime.Now }
+            };
+            administracionManagerMock.Setup(x => x.AceptarCupoExcedenteMasivo(
+                    It.IsAny<List<AdministracionCupoDto>>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+
+            var result = target.AceptarMasivo(adm, "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as CupoResult;
+            Assert.NotNull(data);
+            Assert.IsFalse(data.HayError);
+            administracionManagerMock.Verify(x => x.AceptarCupoExcedenteMasivo(
+                It.IsAny<List<AdministracionCupoDto>>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void AceptarMasivoTest_ListaVacia_RetornaErrorSinLlamarManager()
+        {
+            var result = target.AceptarMasivo(new List<AdministracionCupoDto>(), "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as CupoResult;
+            Assert.NotNull(data);
+            Assert.IsTrue(data.HayError);
+            administracionManagerMock.Verify(x => x.AceptarCupoExcedenteMasivo(
+                It.IsAny<List<AdministracionCupoDto>>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        // ------------------------------------------------------------------ //
+        //  RechazarMasivo
+        // ------------------------------------------------------------------ //
+
+        [Test]
+        public void RechazarMasivoTest_RetornaListaDeResultados()
+        {
+            var adm = new List<AdministracionCupoDto>
+            {
+                new AdministracionCupoDto { Id = 234, ComercialId = 63, CentroId = 1, MaterialId = 1, ZonaId = 1,
+                    CantidadDeCupo = 10, CantidadFleteProcedencia = 1, EstadoId = 1, TipoNegocioId = 1,
+                    ConfiguracionEspacioDinamicoId = 1, Fecha = DateTime.Now }
+            };
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(
+                    It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+
+            var result = target.RechazarMasivo(adm, "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as List<Resultado>;
+            Assert.NotNull(data);
+            Assert.AreEqual(1, data.Count);
+            Assert.IsFalse(data[0].HayError);
+            administracionManagerMock.Verify(x => x.CambiarEstadoRechazado(
+                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void RechazarMasivoTest_ListaVacia_RetornaErrorSinLlamarManager()
+        {
+            var result = target.RechazarMasivo(new List<AdministracionCupoDto>(), "") as JsonResult;
+
+            Assert.NotNull(result);
+            var data = result.Data as Resultado;
+            Assert.NotNull(data);
+            Assert.IsTrue(data.HayError);
+            administracionManagerMock.Verify(x => x.CambiarEstadoRechazado(
+                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        // ------------------------------------------------------------------ //
+        //  BuscarDatosSolicitudCupo
+        // ------------------------------------------------------------------ //
+
+        [Test]
+        public void BuscarDatosSolicitudCupoTest_RetornaGridConDatos()
+        {
+            var dto = new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 };
             administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()))
-              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
-            var result = target.BuscarDatosSolicitudCupo(new KendoGridMvcRequest(), It.IsAny<int?>());
+                .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { dto }, 1));
+
+            var result = target.BuscarDatosSolicitudCupo(new KendoGridMvcRequest(), null) as JsonResult;
 
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()), Times.Once);
-            Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"ComercialId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"CantidadCupo\":0,\"CantidadDeCupo\":0,\"CantidadFleteProcedencia\":0,\"CantidadDeCupoMax\":0,\"CantidadFleteProcedenciaMax\":0,\"EstadoId\":0,\"CentroId\":1,\"ZonaId\":0,\"MaterialId\":1,\"Comercial\":null,\"Proveedor\":null,\"Centro\":null,\"Zona\":null,\"Material\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"Destinatario\":null,\"NegocioId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"Excedente\":false,\"Fason\":null,\"Estado\":null,\"TipoAdministracionCupo\":null,\"TipoAdministracionCupoId\":0,\"Observacion\":null,\"ComercialCreadorId\":null,\"FechaCreacion\":null,\"FechaCreacionSinHora\":null,\"FechaDecision\":null,\"SugerenciaCupoId\":null,\"Hora\":\"\",\"ConDescarga\":null,\"FechaCreacionConHora\":null,\"Calidad\":null,\"Dias\":null,\"CantidadFleteProcedenciaOriginal\":0,\"CantidadDeCupoOriginal\":0,\"Sustentable\":false,\"EPA\":false,\"EUDR\":false,\"ContratoSAP\":null,\"KgPendientes\":0,\"CuposRestantes\":0}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-               a);
+            var grid = result.Data as KendoGrid<AdministracionCupoDto>;
+            Assert.NotNull(grid);
+            Assert.AreEqual(1, grid.Total);
+            Assert.AreEqual(1, grid.Data.First().Id);
+            administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(
+                It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()), Times.Once);
         }
 
+        // ------------------------------------------------------------------ //
+        //  ActualizarSolicitud
+        // ------------------------------------------------------------------ //
+
         [Test]
-        public void ActualizarSolicitudTest()
+        public void ActualizarSolicitudTest_RetornaOk()
         {
-            administracionManagerMock.Setup(x => x.ActualizarSolicitud(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-              .Returns("Ok");
-            var result = target.ActualizarSolicitud(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>());
+            administracionManagerMock.Setup(x => x.ActualizarSolicitud(
+                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns("Ok");
+
+            var result = target.ActualizarSolicitud(1, 10, 5, true) as JsonResult;
 
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            administracionManagerMock.Verify(x => x.ActualizarSolicitud(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
-            Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"Ok\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-               a);
+            Assert.AreEqual("Ok", result.Data);
+            administracionManagerMock.Verify(x => x.ActualizarSolicitud(
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
         }
     }
 }

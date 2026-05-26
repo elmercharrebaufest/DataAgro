@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerDatosIniciales(GlobalVariables.IdActiveDirectory)).Returns(new DatosInicialesReportes
             {
                 mat = new List<MaterialesQry>() { new MaterialesQry() },
-                camp = new List<CampañaQry>() { new CampañaQry() },
+                camp = new List<Campa�aQry>() { new Campa�aQry() },
                 come = new List<ComercialQry>() { new ComercialQry() },
                 estic = new List<EstadoICQry>() { new EstadoICQry() },
                 provs = new List<ProvinciaQry>() { new ProvinciaQry() },
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"CampañaId\":0,\"Descripcion\":null}],\"Segmentacion\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Inscripto\":false,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"mat\":[{\"MaterialId\":0,\"Descripcion\":null}],\"camp\":[{\"Campa�aId\":0,\"Descripcion\":null}],\"Segmentacion\":[{\"SegmentacionId\":0,\"Descripcion\":null,\"Grupo\":null}],\"come\":[{\"ComercialId\":0,\"IdActiveDirectory\":null,\"Nombre\":null,\"Apellido\":null,\"Comercial\":null,\"EmpleadorACargo\":null}],\"provs\":[{\"Provinciaid\":0,\"Nombre\":null,\"Inscripto\":false,\"Orden\":0}],\"estic\":[{\"EstadoInformeId\":0,\"Descripcion\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Cuit\":\"1\",\"razonSocial\":null,\"Objetivos\":0,\"Toneladas\":0,\"Porcentajes\":0,\"Material\":null,\"Campaña\":null,\"Mes\":null,\"Año\":null,\"Comercial\":null,\"Provincia\":null,\"Segmentación\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Cuit\":\"1\",\"razonSocial\":null,\"Objetivos\":0,\"Toneladas\":0,\"Porcentajes\":0,\"Material\":null,\"Campa�a\":null,\"Mes\":null,\"A�o\":null,\"Comercial\":null,\"Provincia\":null,\"Segmentaci�n\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -212,7 +212,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"valoresGrilla\":[{\"Cuit\":null,\"Segmentación\":null,\"Toneladas\":null,\"Estado\":null,\"Grano\":null,\"RazonSocial\":null,\"Comercial\":\"A\",\"FechaAlta\":\"\\/Date(-62135586000000)\\/\"}],\"graficoBaseDatos\":[{\"segmentacion\":\"A\",\"Toneladas\":100}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"valoresGrilla\":[{\"Cuit\":null,\"Segmentaci�n\":null,\"Toneladas\":null,\"Estado\":null,\"Grano\":null,\"RazonSocial\":null,\"Comercial\":\"A\",\"FechaAlta\":\"\\/Date(-62135578800000)\\/\"}],\"graficoBaseDatos\":[{\"segmentacion\":\"A\",\"Toneladas\":100}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

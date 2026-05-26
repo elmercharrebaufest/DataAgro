@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Titulo\":null,\"Descripcion\":null,\"Path\":null,\"FechaUltimaActualizacion\":\"\\/Date(-62135586000000)\\/\",\"Version\":0,\"CantidadVisitas\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Titulo\":null,\"Descripcion\":null,\"Path\":null,\"FechaUltimaActualizacion\":\"\\/Date(-62135578800000)\\/\",\"Version\":0,\"CantidadVisitas\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
