@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
@@ -26,6 +27,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly IMailManager mailManager;
         private readonly IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent;
+        private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent;
         private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
         private readonly IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent;
@@ -33,7 +35,8 @@ namespace Molinos.DataAgro.Business.Managers
                                        IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent, 
                                        ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
                                        IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent,
-                                       IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent
+                                       IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent,
+                                       IAltaTempranaAgent altaTempranaAgent
                                        )
         {
             this.logger = logger;
@@ -43,11 +46,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.seguimientoControlBoletoAgent = seguimientoControlBoletoAgent;
             this.confirmaConsultaDocumentosAgent = confirmaConsultaDocumentosAgent;
             this.datosCertificacionControlBoletoAgent = datosCertificacionControlBoletoAgent;
-        }
-
-        public Resultado AsociarConfirma(int negocioId)
-        {
-            throw new NotImplementedException();
+            this.altaTempranaAgent = altaTempranaAgent;
         }
 
         #region Reporte Seguimiento Boletos
@@ -192,6 +191,11 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Metodo para cargar combos
+        private static string FormatDate(DateTime? dt)
+        {
+            if (!dt.HasValue) return string.Empty;
+            return dt.Value.ToString("yyyy-MM-dd");
+        }
         public List<BolsaCompraNet> GetBolsaCompraNet()
         {
             return this.repositorio.Listar<BolsaCompraNet>();
@@ -321,9 +325,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             // Optimización: Usar query LINQ con LEFT JOIN en lugar de N+1 queries
             var result = (from cb in query
-                          join pre in repositorio.Listar<ControlDeBoletosPreCertificacion>()
-                              on cb.Id equals pre.ControlDeBoletosId into preJoin
-                          from pre in preJoin.DefaultIfEmpty()
+                          join preOblea in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "O")
+                              on cb.Id equals preOblea.ControlDeBoletosId into preJoinOblea
+                          from preOblea in preJoinOblea.DefaultIfEmpty()
+
+                          join prePlanCanje in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "F")
+                              on cb.Id equals prePlanCanje.ControlDeBoletosId into preJoinPlanCanje
+                          from prePlanCanje in preJoinPlanCanje.DefaultIfEmpty()
+
+                          join preAfip in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "A")
+                              on cb.Id equals preAfip.ControlDeBoletosId into preJoinAfip
+                          from preAfip in preJoinAfip.DefaultIfEmpty()
+
+                          join preProvisoria in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "P")
+                              on cb.Id equals preProvisoria.ControlDeBoletosId into preJoinProvisoria
+                          from preProvisoria in preJoinProvisoria.DefaultIfEmpty()
+
                           join seg in repositorio.Listar<ControlDeBoletosSeguimiento>()
                               on cb.Id equals seg.ControlDeBoletosId into segJoin
                           from seg in segJoin.DefaultIfEmpty()
@@ -358,7 +375,6 @@ namespace Molinos.DataAgro.Business.Managers
                               ContratoSAP = cb.Negocio.ContratoSAP,
                               ProveedorId = cb.Negocio.ProveedorId,
                               Proveedor = cb.Negocio.Proveedor.RazonSocial,
-                              PreCertificacionId = pre != null ? (int?)pre.Id : null,
                               SeguimientoBoletoId = seg != null ? (int?)seg.Id : null,
                               TipoAltaConfirma = cb.EsConfirma? (cb.EsConfirmaAltaBorrador? "Alta Borrador" : "Alta Definitiva") : string.Empty,
                           }).ToList();
@@ -571,7 +587,14 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.CuitVendedor = contrato.Proveedor.CUIT;
                 datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : string.Empty;
                 datosContrato.Moneda = contrato.Moneda?.MonedaId;
+                datosContrato.CorredorId = contrato.CorredorId;
+                datosContrato.PlanCanje = contrato.PlanCanje;
             }
+
+            var cuitProveedor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : contrato.Proveedor.CUIT;
+            var tipoProveedor = contrato.CorredorId > 0 ? "CORR" : "PROV";
+            var operaSinOblea = VerificarOperaSinOblea(cuitProveedor, tipoProveedor);
+            datosContrato.OperaSinOblea = operaSinOblea == "SI";
             return datosContrato;
         }
         #endregion
@@ -701,101 +724,189 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Datos de PreCertificacion
-        public ControlDeBoletosPreCertificacionDto ObtenerDatosPreCertificacion(int datosPreCertificacionId)
+        public string VerificarOperaSinOblea(string cuit, string tipoProveedor)
         {
-            var datosPreCertificacionDto = new ControlDeBoletosPreCertificacionDto();
-
-            var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.Id == datosPreCertificacionId);
-
-            datosPreCertificacionDto.Id = preCertificacion.Id;
-            datosPreCertificacionDto.ControlDeBoletosId = preCertificacion.ControlDeBoletosId;
-            datosPreCertificacionDto.FechaCertificacion = preCertificacion.FechaCertificacion;
-            datosPreCertificacionDto.FechaVencimiento = preCertificacion.FechaVencimiento;
-            datosPreCertificacionDto.BolsaCompraNetId = preCertificacion.BolsaCompraNetId;
-            datosPreCertificacionDto.Oblea = preCertificacion.Oblea;
-            datosPreCertificacionDto.TipoObleaId = preCertificacion.TipoObleaId;
-            return datosPreCertificacionDto;
+            var resultado = string.Empty;
+            var obtenerAlta = this.altaTempranaAgent.ObtenerAlta(cuit, tipoProveedor);
+            if (obtenerAlta == null)
+                return resultado;
+            resultado = obtenerAlta.SinOblea;
+            return resultado;
+        }
+        public ControlDeBoletosPreCertificacionDto ObtenerDatosPreCertificacion(int controlDeBoletosId)
+        {
+            var listaDatosPreCertificacionDto = new ControlDeBoletosPreCertificacionDto();
+            listaDatosPreCertificacionDto.Detalle = new List<ControlDeBoletosDatosPreCertificacionDto>();
+            var preCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
+            foreach (var item in preCertificacion)
+            {
+                var datosPreCertificacionDto = new ControlDeBoletosDatosPreCertificacionDto();
+                datosPreCertificacionDto.Id = item.Id;
+                datosPreCertificacionDto.ControlDeBoletosId = item.ControlDeBoletosId;
+                datosPreCertificacionDto.FechaCertificacion = item.FechaCertificacion;
+                datosPreCertificacionDto.FechaVencimiento = item.FechaVencimiento;
+                datosPreCertificacionDto.BolsaCompraNetId = item.BolsaCompraNetId;
+                datosPreCertificacionDto.Oblea = item.Oblea;
+                datosPreCertificacionDto.TipoObleaId = item.TipoObleaId;
+                datosPreCertificacionDto.CodigoTipoOblea = item.TipoOblea.Codigo;
+                datosPreCertificacionDto.Rechazado = item.Rechazado;
+                listaDatosPreCertificacionDto.Detalle.Add(datosPreCertificacionDto);
+            }
+            return listaDatosPreCertificacionDto;
         }
         public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion)
         {
             var oResultado = new Resultado();
             try
             {
-                if (controlDeBoletosPreCertificacion.Id > 0)
-                {
-                    var preCertificacion = repositorio.Obtener<ControlDeBoletosPreCertificacion>(controlDeBoletosPreCertificacion.Id);
-                    if (preCertificacion != null)
-                    {
-                        preCertificacion.FechaCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion;
-                        preCertificacion.FechaVencimiento = controlDeBoletosPreCertificacion.FechaVencimiento;
-                        preCertificacion.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId);
-                        preCertificacion.Oblea = controlDeBoletosPreCertificacion.Oblea;
-                        preCertificacion.TipoOblea = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId);
-                        preCertificacion.FechaModificacion = DateTime.Now;
-                        repositorio.GuardarCambios();
+                var controlDeBoletosId = controlDeBoletosPreCertificacion.ControlDeBoletosId;
 
+                // Códigos de tipo oblea presentes en el request
+                var codigosEnRequest = controlDeBoletosPreCertificacion.Detalle!=null ? controlDeBoletosPreCertificacion.Detalle
+                    .Select(d => d.CodigoTipoOblea)
+                    .ToHashSet() : new HashSet<string>();
+
+                // Registros actuales en BD para este control (con TipoOblea cargado)
+                var registrosEnBd = repositorio.Listar<ControlDeBoletosPreCertificacion>(
+                    new List<Expression<Func<ControlDeBoletosPreCertificacion, object>>> { r => r.TipoOblea },
+                    x => x.ControlDeBoletosId == controlDeBoletosId);
+
+                var ahora = DateTime.Now;
+
+                // ── 1. Upsert: crear o actualizar los registros que vienen en el request ──
+                if (controlDeBoletosPreCertificacion.Detalle != null)
+                {
+                    foreach (var item in controlDeBoletosPreCertificacion.Detalle)
+                    {
+                        var tipoOblea = repositorio.Listar<TipoOblea>(t => t.Codigo == item.CodigoTipoOblea).FirstOrDefault();
+                        if (tipoOblea == null) continue;
+
+                        var existente = registrosEnBd.FirstOrDefault(r => r.TipoOblea != null && r.TipoOblea.Codigo == item.CodigoTipoOblea);
+
+                        if (existente != null)
+                        {
+                            // Modificar
+                            existente.Oblea = item.Oblea;
+                            existente.FechaCertificacion = item.FechaCertificacion ?? existente.FechaCertificacion;
+                            existente.FechaVencimiento = item.FechaVencimiento ?? existente.FechaVencimiento;
+                            existente.BolsaCompraNetId = item.BolsaCompraNetId ?? existente.BolsaCompraNetId;
+                            existente.TipoObleaId = tipoOblea.Id;
+                            existente.Rechazado = item.Rechazado ?? existente.Rechazado;
+                            existente.FechaModificacion = ahora;
+                            repositorio.GuardarCambios();
+                            RegistrarAcciones(new List<int> { existente.Id }, EnumControlDeBoletosAcciones.RegistroDatosOblea);
+                        }
+                        else
+                        {
+                            // Crear
+                            var nuevo = new ControlDeBoletosPreCertificacion
+                            {
+                                ControlDeBoletosId = item.ControlDeBoletosId,
+                                Oblea = item.Oblea,
+                                TipoObleaId = tipoOblea.Id,
+                                BolsaCompraNetId = item.BolsaCompraNetId,
+                                FechaCertificacion = item.FechaCertificacion,
+                                FechaVencimiento = item.FechaVencimiento,
+                                Rechazado = item.Rechazado,
+                                FechaCreacion = ahora
+                            };
+                            repositorio.Agregar(nuevo);
+                            repositorio.GuardarCambios();
+                            RegistrarAcciones(new List<int> { nuevo.Id }, EnumControlDeBoletosAcciones.RegistroDatosOblea);
+                        }
                     }
                 }
-                else
+                // ── 2. Eliminar registros en BD que ya no están en el request ──
+                var registrosAEliminar = registrosEnBd
+                    .Where(r => r.TipoOblea != null && !codigosEnRequest.Contains(r.TipoOblea.Codigo))
+                    .ToList();
+
+                foreach (var eliminado in registrosAEliminar)
                 {
-                    var preCertificacion = new ControlDeBoletosPreCertificacion()
-                    {
-                        ControlDeBoletosId = controlDeBoletosPreCertificacion.ControlDeBoletosId,
-                        FechaCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion,
-                        FechaVencimiento = controlDeBoletosPreCertificacion.FechaVencimiento,
-                        BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId),
-                        Oblea = controlDeBoletosPreCertificacion.Oblea,
-                        TipoOblea = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId),
-                        FechaCreacion = DateTime.Now
-                    };
-                    repositorio.Agregar(preCertificacion);
+                    // Notificar a SAP que el registro ya no tiene valores (campos vacíos)
+                    RegistrarDatosCertificacionParaPreCertificacion(eliminado, oResultado, sinValores: true);
+                    repositorio.Remover(eliminado);
+                }
+
+                if (registrosAEliminar.Any())
                     repositorio.GuardarCambios();
-                    RegistrarAcciones(new List<int> { preCertificacion.Id}, EnumControlDeBoletosAcciones.RegistroDatosOblea);
-                }
 
-                #region Registro de Datos para Certificación
-                try
+                // ── 3. Sincronizar con SAP los registros vigentes ──
+                var registrosVigentes = repositorio.Listar<ControlDeBoletosPreCertificacion>(
+                    new List<Expression<Func<ControlDeBoletosPreCertificacion, object>>> { r => r.TipoOblea },
+                    x => x.ControlDeBoletosId == controlDeBoletosId);
+
+                foreach (var preCert in registrosVigentes)
                 {
-                    var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
-                    var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
-                    var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletosPreCertificacion.ControlDeBoletosId);
-
-                    datosCertificacionCabeceraDto.Contrato = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId).ContratoSAP;
-                    datosCertificacionCabeceraDto.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                    datosCertificacionCabeceraDto.Hora = DateTime.Now.ToString("HH:mm:ss");
-                    datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                    datosCertificacionCabeceraDto.Usuario = string.Empty;
-
-                    datosCertificacionDetalleDto.Bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId).CodigoSap;
-                    datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
-                    datosCertificacionDetalleDto.FeCertificacion = controlDeBoletosPreCertificacion.FechaCertificacion.ToString("yyyy-MM-dd");
-                    datosCertificacionDetalleDto.FeVencCerti = controlDeBoletosPreCertificacion.FechaVencimiento.ToString("yyyy-MM-dd");
-                    datosCertificacionDetalleDto.Rechazado = string.Empty;
-                    datosCertificacionDetalleDto.Tipo = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId).Codigo;
-                    datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto>() { datosCertificacionDetalleDto };
-                    this.datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                    var ok = RegistrarDatosCertificacionParaPreCertificacion(preCert, oResultado, sinValores: false);
+                    if (!ok) return oResultado;
                 }
-                catch (Exception ex) {
-                    oResultado.Errores.Add(new ErrorMessage()
-                    {
-                        Message = "Error al registrar datos de certificación en SAP",
-                    });
-                    logger.Error(ex.Message);
-                    return oResultado;
-                }
-
-                #endregion
 
                 return oResultado;
             }
             catch (Exception ex)
             {
-                oResultado.Errores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message,
-                });
+                oResultado.Errores.Add(new ErrorMessage { Message = ex.Message });
                 logger.Error(ex.Message);
                 return oResultado;
+            }
+        }
+        // Reutilizable: registra en SAP los datos de certificación para un registro de preBolsa-certificación
+        private bool RegistrarDatosCertificacionParaPreCertificacion(ControlDeBoletosPreCertificacion controlDeBoletosPreCertificacion, Resultado oResultado, bool sinValores = false)
+        {
+            try
+            {
+                var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+                var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
+
+                var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletosPreCertificacion.ControlDeBoletosId);
+                if (controlDeBoletos == null)
+                {
+                    oResultado.Errores.Add(new ErrorMessage { Message = $"ControlDeBoletos Id {controlDeBoletosPreCertificacion.ControlDeBoletosId} no encontrado." });
+                    return false;
+                }
+
+                var negocio = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId);
+                var tipoOblea = repositorio.Obtener<TipoOblea>(controlDeBoletosPreCertificacion.TipoObleaId);
+
+                var ahora = DateTime.Now;
+                datosCertificacionCabeceraDto.Contrato = negocio?.ContratoSAP ?? string.Empty;
+                datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
+                datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
+                datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                datosCertificacionCabeceraDto.Usuario = string.Empty;
+
+                if (sinValores)
+                {
+                    // Registro eliminado: informar a SAP con todos los campos de detalle vacíos
+                    datosCertificacionDetalleDto.Bolsa = string.Empty;
+                    datosCertificacionDetalleDto.Oblea = string.Empty;
+                    datosCertificacionDetalleDto.FeCertificacion = string.Empty;
+                    datosCertificacionDetalleDto.FeVencCerti = string.Empty;
+                    datosCertificacionDetalleDto.Rechazado = string.Empty;
+                    datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
+                }
+                else
+                {
+                    var bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosPreCertificacion.BolsaCompraNetId);
+                    datosCertificacionDetalleDto.Bolsa = bolsa?.CodigoSap ?? string.Empty;
+                    datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
+                    datosCertificacionDetalleDto.FeCertificacion = FormatDate(controlDeBoletosPreCertificacion.FechaCertificacion);
+                    datosCertificacionDetalleDto.FeVencCerti = FormatDate(controlDeBoletosPreCertificacion.FechaVencimiento);
+                    datosCertificacionDetalleDto.Rechazado = string.Empty;
+                    datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
+                }
+
+                datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto };
+
+                datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage { Message = "Error al registrar datos de certificación en SAP" });
+                logger.Error(ex, "Error al registrar datos de certificación en SAP");
+                return false;
             }
         }
         #endregion

@@ -1,13 +1,13 @@
-﻿CREATE TABLE [dbo].[ControlDeBoletosPreCertificacion]
+CREATE TABLE [dbo].[ControlDeBoletosPreCertificacion]
 (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     ControlDeBoletosId INT NOT NULL,
-    Fijacion VARCHAR(10) NULL,
-    Oblea VARCHAR(10) NOT NULL,
+    Oblea VARCHAR(20) NULL,
+    Rechazado VARCHAR(1) NULL,
     TipoObleaId INT NOT NULL,
-    BolsaCompraNetId INT NOT NULL,
-    FechaCertificacion DATETIME NOT NULL,
-    FechaVencimiento DATETIME NOT NULL,
+    BolsaCompraNetId INT NULL,
+    FechaCertificacion DATETIME NULL,
+    FechaVencimiento DATETIME NULL,
     FechaCreacion DATETIME NOT NULL,
     FechaModificacion DATETIME NULL,
     CONSTRAINT FK_ControlDeBoletos_Certificacion FOREIGN KEY (ControlDeBoletosId) REFERENCES [dbo].[ControlDeBoletos](Id),

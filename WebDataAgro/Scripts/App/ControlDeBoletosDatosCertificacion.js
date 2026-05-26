@@ -4,22 +4,47 @@ var ControlDeBoletosDatosCertificacion = (function () {
     var config = {
         urls: {
             createPreCertificacion: "/ControlDeBoletos/RegistrarDatosPreCertificacion",
-            getPreCertificacion: "/ControlDeBoletos/GetDatosPreCertificacion",
-            getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
-            getTipoOblea: "/ControlDeBoletos/GetTipoOblea",
+            getPreCertificacion:    "/ControlDeBoletos/GetDatosPreCertificacion",
+            getBolsaCompraNet:      "/ControlDeBoletos/GetBolsaCompraNet",
+            getTipoObleaConCodigo:  "/ControlDeBoletos/GetTipoObleaConCodigo"
         },
         modalId: "#modalCertificacion"
     };
 
     var state = {
-        cargando: false,
-        PreCertificacionId: null,
-        ControlDeBoletosId: null
+        cargando:           false,
+        controlDeBoletosId: null,
+        operaSinOblea:      false
     };
+
+    // Controles cacheados del formulario
+    var ctrl = {};
 
     // ======================
     // Funciones privadas
     // ======================
+
+    function bindControls() {
+        var $form = $("#accordionGestionBoleto #frmCertificacion");
+        if (!$form.length) $form = $("#frmCertificacion").first();
+
+        ctrl.rechazado                   = $form.find("#Rechazado");
+        ctrl.oblea                       = $form.find("#Oblea");
+        ctrl.bolsa                       = $form.find("#Bolsa");
+        ctrl.fechaCertificacion          = $form.find("#FechaCertificacion");
+        ctrl.fechaVencimiento            = $form.find("#FechaVencimiento");
+
+        ctrl.rechazadoAfip               = $form.find("#RechazadoAfip");
+        ctrl.codigoRegistracionAfip      = $form.find("#CodigoRegistracionAfip");
+        ctrl.fechaRegistracionAfip       = $form.find("#FechaRegistracionAfip");
+
+        ctrl.fechaVencimientoProvisoria  = $form.find("#FechaVencimientoObleaProvisoria");
+
+        ctrl.obleaPlanCanje              = $form.find("#ObleaPlanCanje");
+        ctrl.bolsaPlanCanje              = $form.find("#BolsaPlanCanje");
+        ctrl.fechaCertificacionPlanCanje = $form.find("#FechaCertificacionPlanCanje");
+        ctrl.fechaVencimientoPlanCanje   = $form.find("#FechaVencimientoPlanCanje");
+    }
 
     function getKendoDate($el) {
         var dp = $el.data("kendoDatePicker");
@@ -36,99 +61,219 @@ var ControlDeBoletosDatosCertificacion = (function () {
         if (!dp) return;
         if (!value) { dp.value(null); return; }
         var match = /\/Date\((\d+)\)\//.exec(value);
-        var date = match ? new Date(parseInt(match[1], 10)) : new Date(value);
+        var date  = match ? new Date(parseInt(match[1], 10)) : new Date(value);
         dp.value(isNaN(date.getTime()) ? null : date);
     }
 
+    function inicializarDatePicker($el) {
+        if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
+        $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
+    }
+
     function inicializarFechas() {
-        var $form = $("#accordionGestionBoleto #frmCertificacion");
-        if (!$form.length) $form = $("#frmCertificacion").first();
-        [$form.find("#FechaCertificacion"), $form.find("#FechaVencimientoCertificacion")].forEach(function ($el) {
-            if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
-            $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
+        [
+            ctrl.fechaCertificacion,
+            ctrl.fechaVencimiento,
+            ctrl.fechaRegistracionAfip,
+            ctrl.fechaVencimientoProvisoria,
+            ctrl.fechaCertificacionPlanCanje,
+            ctrl.fechaVencimientoPlanCanje
+        ].forEach(function ($el) {
+            if ($el && $el.length) inicializarDatePicker($el);
         });
     }
 
-    function limpiarFormularioCertificacion() {
+    function limpiarFormulario() {
+        setKendoDate(ctrl.fechaCertificacion,          null);
+        setKendoDate(ctrl.fechaVencimiento,            null);
+        setKendoDate(ctrl.fechaRegistracionAfip,       null);
+        setKendoDate(ctrl.fechaVencimientoProvisoria,  null);
+        setKendoDate(ctrl.fechaCertificacionPlanCanje, null);
+        setKendoDate(ctrl.fechaVencimientoPlanCanje,   null);
 
-        // Inputs tipo date (kendo)
-        var $form = $("#accordionGestionBoleto #frmCertificacion");
-        if (!$form.length) $form = $("#frmCertificacion").first();
-        setKendoDate($form.find("#FechaCertificacion"), null);
-        setKendoDate($form.find("#FechaVencimientoCertificacion"), null);
+        ctrl.oblea.val('');
+        ctrl.obleaPlanCanje.val('');
+        ctrl.codigoRegistracionAfip.val('');
 
-        // Input texto
-        $("#Oblea").val('');
+        ctrl.rechazado.prop('checked', false);
+        ctrl.rechazadoAfip.prop('checked', false);
 
-        // Selects
-        $("#frmCertificacion #Bolsa").val(null).trigger('change');
-        $("#frmCertificacion #TipoOblea").val(null).trigger('change');
-    }
-    function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || "info";
-        alert(titulo + ": " + mensaje);
-    }
-    function formatearFecha(value) {
-        if (!value) return '';
-
-        const match = /\/Date\((\d+)\)\//.exec(value);
-        const date = match
-            ? new Date(parseInt(match[1], 10))
-            : new Date(value);
-
-        if (isNaN(date)) return '';
-
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const year = date.getUTCFullYear();
-
-        return `${year}-${month}-${day}`;
-    }
-    function obtenerRequest() {
-        return {
-            Id: state.PreCertificacionId ? state.PreCertificacionId : 0,
-            ControlDeBoletosId: state.ControlDeBoletosId,
-            BolsaCompraNetId: $("#frmCertificacion #Bolsa").val(),
-            FechaCertificacion: getKendoDateISO($("#frmCertificacion #FechaCertificacion")),
-            FechaVencimiento: getKendoDateISO($("#frmCertificacion #FechaVencimientoCertificacion")),
-            Oblea: $("#Oblea").val(),
-            TipoObleaId: $("#frmCertificacion #TipoOblea").val(),
-            Rechazado: $("#Rechazado").is(":checked")
-        };
+        ctrl.bolsa.val(null).trigger('change');
+        ctrl.bolsaPlanCanje.val(null).trigger('change');
     }
 
-    function validarFormulario() {
-        var errores = [];
-
-        if (!$("#frmCertificacion #Bolsa").val())
-            errores.push("Debe ingresar la bolsa");
-
-        if (!getKendoDate($("#frmCertificacion #FechaCertificacion")))
-            errores.push("Debe ingresar la fecha de certificación");
-
-        return errores;
+    function cargarDropdown(url, $select, textoDefault) {
+        $select.html('<option value="">Cargando...</option>');
+        return MSExecuteGetOnServerAsync(url)
+            .then(function (data) {
+                $select.empty().append('<option value="">' + textoDefault + '</option>');
+                if (data && Array.isArray(data)) {
+                    $.each(data, function (i, item) {
+                        $select.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                }
+            })
+            .catch(function (e) {
+                console.error("Error cargando dropdown:", e);
+                $select.html('<option value="">Error al cargar datos</option>');
+            });
     }
 
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = $(selector);
-        $select.html('<option value="">' + textoCarga + "</option>");
+    function bloqueaControlesSinOblea() {
+        var enabled = state.operaSinOblea;
+        ctrl.obleaPlanCanje.prop("disabled", !enabled);
+        ctrl.bolsaPlanCanje.prop("disabled", !enabled);
+        ctrl.fechaCertificacionPlanCanje.prop("disabled", !enabled);
+        ctrl.fechaVencimientoPlanCanje.prop("disabled", !enabled);
 
-        try {
-            var data = MSExecuteGetOnServer(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
+        ctrl.fechaCertificacionPlanCanje
+            .data("kendoDatePicker")
+            .enable(enabled);
+
+        ctrl.fechaVencimientoPlanCanje
+            .data("kendoDatePicker")
+            .enable(enabled);
+
+
+        ctrl.rechazado.prop("disabled", enabled);
+        ctrl.oblea.prop("disabled", enabled);
+        ctrl.bolsa.prop("disabled", enabled);
+        ctrl.fechaCertificacion.prop("disabled", enabled);
+        ctrl.fechaVencimiento.prop("disabled", enabled);
+
+        ctrl.fechaCertificacion
+            .data("kendoDatePicker")
+            .enable(!enabled);
+
+        ctrl.fechaVencimiento
+            .data("kendoDatePicker")
+            .enable(!enabled);
+    }
+
+    function setup() {
+        bindControls();
+        limpiarFormulario();
+        inicializarFechas();
+        return Promise.all([
+            cargarDropdown(config.urls.getBolsaCompraNet, ctrl.bolsa,         "Seleccione una bolsa"),
+            cargarDropdown(config.urls.getBolsaCompraNet, ctrl.bolsaPlanCanje, "Seleccione una bolsa")
+        ]);
+    }
+
+    function cargarDatosExistentes() {
+        if (!state.controlDeBoletosId) return Promise.resolve();
+
+        var url = config.urls.getPreCertificacion + "?controlDeBoletosId=" + state.controlDeBoletosId;
+        return MSExecuteGetOnServerAsync(url)
+            .then(function (response) {
+                if (!response || !response.Detalle || !response.Detalle.length) return;
+
+                // Re-bind controls para garantizar que apunten al DOM correcto
+                bindControls();
+
+                ctrl.rechazadoAfip.prop('checked', false);
+                ctrl.rechazado.prop('checked', false);
+
+                $.each(response.Detalle, function (i, item) {
+                    var codigo = item.CodigoTipoOblea;
+
+                    if (codigo === 'O') {
+                        // Precertificación Oblea Bolsa
+                        ctrl.oblea.val(item.Oblea || '');
+                        ctrl.bolsa.val(item.BolsaCompraNetId || '').trigger('change');
+                        setKendoDate(ctrl.fechaCertificacion, item.FechaCertificacion);
+                        setKendoDate(ctrl.fechaVencimiento,   item.FechaVencimiento);
+                        ctrl.rechazado.prop('checked', item.Rechazado === 'X');
+                    }
+                    if (codigo === 'A') {
+                        // Registración AFIP
+                        ctrl.codigoRegistracionAfip.val(item.Oblea || '');
+                        setKendoDate(ctrl.fechaRegistracionAfip, item.FechaCertificacion);
+                        ctrl.rechazadoAfip.prop('checked', item.Rechazado === 'X');
+                    }
+                    if (codigo === 'P') {
+                        // Oblea Provisoria
+                        setKendoDate(ctrl.fechaVencimientoProvisoria, item.FechaVencimiento);
+                    }
+                    if (codigo === 'F') {
+                        // Oblea Plan Canje
+                        ctrl.obleaPlanCanje.val(item.Oblea || '');
+                        ctrl.bolsaPlanCanje.val(item.BolsaCompraNetId || '').trigger('change');
+                        setKendoDate(ctrl.fechaCertificacionPlanCanje, item.FechaCertificacion);
+                        setKendoDate(ctrl.fechaVencimientoPlanCanje,   item.FechaVencimiento);
+                    }
                 });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
+            })
+            .catch(function (e) {
+                console.error("Error cargando datos existentes:", e);
+            });
+    }
+
+    function obtenerRequest() {
+        var detalle = [];
+
+        // Precertificación Oblea Bolsa (código 'O')
+        var oblea              = ctrl.oblea.val();
+        var bolsaId            = ctrl.bolsa.val() ? parseInt(ctrl.bolsa.val(), 10) : null;
+        var fechaCert          = getKendoDateISO(ctrl.fechaCertificacion);
+        var fechaVenc          = getKendoDateISO(ctrl.fechaVencimiento);
+        var rechazado          = ctrl.rechazado.is(":checked");
+        if (oblea || bolsaId || fechaCert || fechaVenc) {
+            detalle.push({
+                ControlDeBoletosId: state.controlDeBoletosId,
+                CodigoTipoOblea:    'O',
+                Oblea:              oblea,
+                BolsaCompraNetId:   bolsaId,
+                FechaCertificacion: fechaCert,
+                FechaVencimiento:   fechaVenc,
+                Rechazado:          rechazado ? "X" : ""
+            });
         }
+
+        // Registración AFIP (código 'A')
+        var codigoAfip         = ctrl.codigoRegistracionAfip.val();
+        var fechaAfip          = getKendoDateISO(ctrl.fechaRegistracionAfip);
+        var rechazadoAfip      = ctrl.rechazadoAfip.is(":checked");
+        if (codigoAfip || fechaAfip) {
+            detalle.push({
+                ControlDeBoletosId: state.controlDeBoletosId,
+                CodigoTipoOblea:    'A',
+                Oblea: codigoAfip,
+                FechaCertificacion: fechaAfip,
+                Rechazado:          rechazadoAfip ? "X" : ""
+            });
+        }
+
+        // Oblea Provisoria (código 'P')
+        var fechaVencProvisoria = getKendoDateISO(ctrl.fechaVencimientoProvisoria);
+        if (fechaVencProvisoria) {
+            detalle.push({
+                ControlDeBoletosId: state.controlDeBoletosId,
+                CodigoTipoOblea:    'P',
+                FechaVencimiento:   fechaVencProvisoria
+            });
+        }
+
+        // Oblea Plan Canje (código 'F')
+        var obleaCanje         = ctrl.obleaPlanCanje.val();
+        var bolsaCanjeId       = ctrl.bolsaPlanCanje.val() ? parseInt(ctrl.bolsaPlanCanje.val(), 10) : null;
+        var fechaCertCanje     = getKendoDateISO(ctrl.fechaCertificacionPlanCanje);
+        var fechaVencCanje     = getKendoDateISO(ctrl.fechaVencimientoPlanCanje);
+        if (obleaCanje || bolsaCanjeId || fechaCertCanje || fechaVencCanje) {
+            detalle.push({
+                ControlDeBoletosId: state.controlDeBoletosId,
+                CodigoTipoOblea:    'F',
+                Oblea:              obleaCanje,
+                BolsaCompraNetId:   bolsaCanjeId,
+                FechaCertificacion: fechaCertCanje,
+                FechaVencimiento:   fechaVencCanje
+            });
+        }
+
+        return {
+            ControlDeBoletosId: state.controlDeBoletosId,
+            Detalle: detalle
+        };
     }
 
     // ======================
@@ -136,113 +281,57 @@ var ControlDeBoletosDatosCertificacion = (function () {
     // ======================
     return {
 
-        inicializar: function (PreCertificacionId, ControlDeBoletosId) {
-            inicializarFechas();
-            state.ControlDeBoletosId = ControlDeBoletosId;
-            state.PreCertificacionId = PreCertificacionId;
-
-            cargarDropdown(
-                config.urls.getBolsaCompraNet,
-                "#frmCertificacion #Bolsa",
-                "Cargando...",
-                "Todos las bolsas",
-            );
-
-            cargarDropdown(
-                config.urls.getTipoOblea,
-                "#frmCertificacion #TipoOblea",
-                "Cargando...",
-                "Todos los tipos de oblea",
-            );
-
-            limpiarFormularioCertificacion();
-
-            if (PreCertificacionId != null && PreCertificacionId > 0) {
-                var url = config.urls.getPreCertificacion + "?datosPreCertificacionId=" + PreCertificacionId;
-                var response = MSExecuteGetOnServer(url);
-                if (response != null) {
-                    setKendoDate($("#frmCertificacion #FechaCertificacion"), response.FechaCertificacion);
-                    setKendoDate($("#frmCertificacion #FechaVencimientoCertificacion"), response.FechaVencimiento);
-                    $("#frmCertificacion #Oblea").val(response.Oblea);
-                    $("#frmCertificacion #Bolsa").val(response.BolsaCompraNetId).trigger('change');
-                    $("#frmCertificacion #TipoOblea").val(response.TipoObleaId).trigger('change');
-                }
-            }
+        inicializar: function (ControlDeBoletosId, OperaSinOblea) {
+            BlockUi('Cargando...');
+            state.controlDeBoletosId = ControlDeBoletosId;
+            state.operaSinOblea      = !!OperaSinOblea;
+            setup().then(function () {
+                bloqueaControlesSinOblea();
+                var promise = state.controlDeBoletosId > 0 ? cargarDatosExistentes() : Promise.resolve();
+                return promise;
+            }).then(function () {
+                $.unblockUI();
+            });
         },
 
-        abrir: function (PreCertificacionId, ControlDeBoletosId) {
-
-            inicializarFechas();
+        abrir: function (ControlDeBoletosId) {
             BlockUi('Cargando...');
-            state.ControlDeBoletosId = ControlDeBoletosId;
-            state.PreCertificacionId = PreCertificacionId;
-
-            cargarDropdown(
-                config.urls.getBolsaCompraNet,
-                "#frmCertificacion #Bolsa",
-                "Cargando...",
-                "Todos las bolsas",
-            );
-
-            cargarDropdown(
-                config.urls.getTipoOblea,
-                "#frmCertificacion #TipoOblea",
-                "Cargando...",
-                "Todos los tipos de oblea",
-            );
-
-            limpiarFormularioCertificacion();
-
-            if (PreCertificacionId != null && PreCertificacionId > 0) {
-                var url = config.urls.getPreCertificacion + "?datosPreCertificacionId=" + PreCertificacionId;
-                var response = MSExecuteGetOnServer(url);
-                if (response != null) {
-                    setKendoDate($("#frmCertificacion #FechaCertificacion"), response.FechaCertificacion);
-                    setKendoDate($("#frmCertificacion #FechaVencimientoCertificacion"), response.FechaVencimiento);
-                    $("#Oblea").val(response.Oblea);
-                    $("#frmCertificacion #Bolsa").val(response.BolsaCompraNetId).trigger('change');
-                    $("#frmCertificacion #TipoOblea").val(response.TipoObleaId).trigger('change');
-                }
-            }
-
-            $(config.modalId).modal("show");
-            setTimeout(function () { $.unblockUI() }, 1000);
+            state.controlDeBoletosId = ControlDeBoletosId;
+            setup().then(function () {
+                bloqueaControlesSinOblea();
+                var promise = state.controlDeBoletosId > 0 ? cargarDatosExistentes() : Promise.resolve();
+                return promise;
+            }).then(function () {
+                $(config.modalId).modal("show");
+                $.unblockUI();
+            });
         },
 
         guardar: function () {
             if (state.cargando) return;
 
-            var errores = validarFormulario();
-            if (errores.length > 0) {
-                MensAlerta(errores.join("<br>"));
-                return;
-            }
-
             state.cargando = true;
-
-            try {
-                BlockUi('Guardando...');
-                var request = obtenerRequest();
-                var response = MSExecuteOnServer(
-                    config.urls.createPreCertificacion,
-                    request
-                );
-                if (response != null) {
+            var self = this;
+            BlockUi('Guardando...');
+            MSExecuteOnServerAsync(config.urls.createPreCertificacion, obtenerRequest())
+                .then(function (response) {
                     $.unblockUI();
-
-                    if (!response.success) {
-                        MensErr(response.message);
-                        return;
-                    }
-
+                    if (!response) return;
                     if (response.success) {
                         MensInfo(response.message);
-                        this.cerrar();
+                        cargarDatosExistentes();
+                        self.cerrar();
+                    } else {
+                        MensErr(response.message);
                     }
-                }
-            } finally {
-                state.cargando = false;
-            }
+                })
+                .catch(function (e) {
+                    $.unblockUI();
+                    console.error("Error al guardar:", e);
+                })
+                .then(function () {
+                    state.cargando = false;
+                });
         },
 
         cerrar: function () {
@@ -251,3 +340,4 @@ var ControlDeBoletosDatosCertificacion = (function () {
     };
 
 })();
+

@@ -368,11 +368,11 @@ namespace WebDataAgro.Controllers
 
         #region Datos de PreCertificacion
         [HttpGet]
-        public JsonResult GetDatosPreCertificacion(int datosPreCertificacionId)
+        public JsonResult GetDatosPreCertificacion(int controlDeBoletosId)
         {
             try
             {
-                var resultado = _controlDeBoletosManager.ObtenerDatosPreCertificacion(datosPreCertificacionId);
+                var resultado = _controlDeBoletosManager.ObtenerDatosPreCertificacion(controlDeBoletosId);
                 return Json(resultado, JsonRequestBehavior.AllowGet);
 
             }

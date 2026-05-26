@@ -92,17 +92,27 @@ function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
             url: MSGetUrl(url),
             type: 'POST',
             data: kendo.stringify(datos),
-            dataType: "json",
+            dataType: "text",   // evita parseerror cuando el servidor devuelve cuerpo vacío con 200
             contentType: "application/json; charset=utf-8",
             success: function (data) {
                 var owait = $('#myPleaseWait');
                 if (owait != null) {
                     owait.modal('hide');
                 }
-                if (fncallback) {
-                    fncallback(data);
+
+                var parsed = null;
+                if (data && data.trim() !== '') {
+                    try {
+                        parsed = JSON.parse(data);
+                    } catch (e) {
+                        console.warn("MSExecuteOnServerAsync: respuesta no es JSON válido para URL: " + url, data);
+                    }
                 }
-                resolve(data);
+
+                if (fncallback) {
+                    fncallback(parsed);
+                }
+                resolve(parsed);
             },
             error: function (xhr, status, error) {
                 var owait = $('#myPleaseWait');
@@ -728,9 +738,18 @@ function MSExecuteGetOnServerAsync(url, datos) {
             type: 'GET',
             cache: false,
             data: datos,
-            dataType: "json",
+            dataType: "text",
             success: function (data) {
-                resolve(data);
+                if (!data || data.trim() === '') {
+                    resolve(null);
+                    return;
+                }
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    console.warn("MSExecuteGetOnServerAsync: respuesta no es JSON válido para URL: " + url, data);
+                    resolve(null);
+                }
             },
             error: function (xhr, status, error) {
                 var errObj = {

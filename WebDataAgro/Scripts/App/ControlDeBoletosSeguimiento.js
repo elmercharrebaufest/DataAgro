@@ -92,22 +92,6 @@ var ControlDeBoletosSeguimiento = (function () {
         });
     }
 
-    function formatearFecha(value) {
-        if (!value) return '';
-
-        const match = /\/Date\((\d+)\)\//.exec(value);
-        const date = match
-            ? new Date(parseInt(match[1], 10))
-            : new Date(value);
-
-        if (isNaN(date)) return '';
-
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const year = date.getUTCFullYear();
-
-        return `${year}-${month}-${day}`;
-    }
     function validarFechas() {
 
         var feRecepBoleto    = getKendoDate(controlFechaRecepBoleto);
@@ -197,45 +181,49 @@ var ControlDeBoletosSeguimiento = (function () {
     function cargarDropdown(url, selector, textoCarga, textoDefault) {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
-
-        try {
-            var data = MSExecuteGetOnServer(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
-                });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
-        }
+        return MSExecuteGetOnServerAsync(url)
+            .then(function (data) {
+                $select.empty().append('<option value="">' + textoDefault + "</option>");
+                if (data && Array.isArray(data)) {
+                    $.each(data, function (i, item) {
+                        $select.append(
+                            '<option value="' + item.Value + '">' + item.Text + "</option>",
+                        );
+                    });
+                } else {
+                    $select.append('<option value="">Sin datos disponibles</option>');
+                }
+            })
+            .catch(function (error) {
+                console.error("Error cargando dropdown " + selector + ":", error);
+                $select.html('<option value="">Error al cargar datos</option>');
+            });
     }
     function obtener(datosSeguimientoId) {
         var url = config.urls.getSeguimiento + "?datosSeguimientoId=" + datosSeguimientoId;
-        var response = MSExecuteGetOnServer(url);
-        if (response != null) {
-            controlBolsa.val(response.BolsaCompraNetId).trigger('change');
-            controlBolsaSellado.val(response.BolsaSellado);
-            controlBoleto.val(response.BoletoCompraNetId).trigger('change');
-            controlRechazadoAfip.val(response.RechazadoAfip);
+        return MSExecuteGetOnServerAsync(url)
+            .then(function (response) {
+                if (!response) return;
+                controlBolsa.val(response.BolsaCompraNetId).trigger('change');
+                controlBolsaSellado.val(response.BolsaSellado);
+                controlBoleto.val(response.BoletoCompraNetId).trigger('change');
+                controlRechazadoAfip.val(response.RechazadoAfip);
 
-            setKendoDate(controlFechaEnvio,        response.FechaEnvio);
-            setKendoDate(controlFechaEnvioAfip,     response.FechaEnvioAfip);
-            setKendoDate(controlFechaEnvioBolsa,    response.FechaEnvioBolsa);
-            setKendoDate(controlFechaRecepBoleto,   response.FechaRecepBoleto);
-            setKendoDate(controlFechaRecibFirma,    response.FechaRecibFirma);
-            setKendoDate(controlFechaVueltaAfip,    response.FechaVueltaAfip);
-            setKendoDate(controlFechaVueltaBolsa,   response.FechaVueltaBolsa);
-            setKendoDate(controlFechaEnviadoFirma,  response.FechaEnviadoFirma);
+                setKendoDate(controlFechaEnvio,        response.FechaEnvio);
+                setKendoDate(controlFechaEnvioAfip,     response.FechaEnvioAfip);
+                setKendoDate(controlFechaEnvioBolsa,    response.FechaEnvioBolsa);
+                setKendoDate(controlFechaRecepBoleto,   response.FechaRecepBoleto);
+                setKendoDate(controlFechaRecibFirma,    response.FechaRecibFirma);
+                setKendoDate(controlFechaVueltaAfip,    response.FechaVueltaAfip);
+                setKendoDate(controlFechaVueltaBolsa,   response.FechaVueltaBolsa);
+                setKendoDate(controlFechaEnviadoFirma,  response.FechaEnviadoFirma);
 
-            controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
-            controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
-        }
+                controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
+                controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
+            })
+            .catch(function (e) {
+                console.error("Error cargando seguimiento:", e);
+            });
     }
     function limpiarSeguimientoControlBoleto() {
 
@@ -269,24 +257,15 @@ var ControlDeBoletosSeguimiento = (function () {
             state.ControlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
 
-            cargarDropdown(
-                config.urls.getBoletoCompraNet,
-                controlBoleto,
-                "Cargando...",
-                "Todos los boletos",
-            );
+            var pBoleto  = cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Todos los boletos");
+            var pBolsa   = cargarDropdown(config.urls.getBolsa,           controlBolsa,  "Cargando...", "Todas las bolsas");
+            var pSAP     = MSExecuteGetOnServerAsync(config.urls.getBolsaSAP).then(function (data) { listaBolsaSAP = data; });
 
-            cargarDropdown(
-                config.urls.getBolsa,
-                controlBolsa,
-                "Cargando...",
-                "Todas las bolsas",
-            );
-
-            listaBolsaSAP = MSExecuteGetOnServer(config.urls.getBolsaSAP);
-            if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                obtener(state.SeguimientoBoletoId);
-            }
+            Promise.all([pBoleto, pBolsa, pSAP]).then(function () {
+                if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
+                    obtener(state.SeguimientoBoletoId);
+                }
+            });
         },
 
         abrir: function (SeguimientoBoletoId, ControlDeBoletosId) {
@@ -297,66 +276,52 @@ var ControlDeBoletosSeguimiento = (function () {
             limpiarSeguimientoControlBoleto();
             BlockUi('Cargando...');
 
-            cargarDropdown(
-                config.urls.getBoletoCompraNet,
-                controlBoleto,
-                "Cargando...",
-                "Todos los boletos",
-            );
+            var pBoleto = cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Todos los boletos");
+            var pBolsa  = cargarDropdown(config.urls.getBolsa,           controlBolsa,  "Cargando...", "Todas las bolsas");
+            var pSAP    = MSExecuteGetOnServerAsync(config.urls.getBolsaSAP).then(function (data) { listaBolsaSAP = data; });
 
-            cargarDropdown(
-                config.urls.getBolsa,
-                controlBolsa,
-                "Cargando...",
-                "Todas las bolsas",
-            );
-
-            listaBolsaSAP = MSExecuteGetOnServer(config.urls.getBolsaSAP);
-            if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                obtener(state.SeguimientoBoletoId);
-            }
-
-            $("#txtContrato").val(ControlDeBoletosId || "");
-            $(config.modalId).modal("show");
-            setTimeout(function () { $.unblockUI() }, 100);
+            Promise.all([pBoleto, pBolsa, pSAP]).then(function () {
+                if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
+                    return obtener(state.SeguimientoBoletoId);
+                }
+            }).then(function () {
+                $("#txtContrato").val(ControlDeBoletosId || "");
+                $(config.modalId).modal("show");
+                $.unblockUI();
+            });
         },
 
         guardar: function () {
             if (state.cargando) return;
+
+            var errorValidacion = validarFechas();
+            if (errorValidacion) {
+                MensAlerta(errorValidacion);
+                return;
+            }
+
+            var self = this;
             state.cargando = true;
-
-            try {
-
-                var errorValidacion = validarFechas();
-                if (errorValidacion) {
-                    MensAlerta(errorValidacion);
-                    state.cargando = false;
-                    return;
-                }
-                BlockUi('Guardando...');
-                var request = obtenerRequest();
-                var response = MSExecuteOnServer(
-                    config.urls.createSeguimiento,
-                    request
-                );
-                if (response != null) {
+            BlockUi('Guardando...');
+            var request = obtenerRequest();
+            MSExecuteOnServerAsync(config.urls.createSeguimiento, request)
+                .then(function (response) {
                     $.unblockUI();
-
-                    if (!response.success) {
-                        MensErr(response.message);
-                        return;
-                    }
-
+                    if (!response) return;
                     if (response.success) {
                         MensInfo(response.message);
-                        this.cerrar();
+                        self.cerrar();
+                    } else {
+                        MensErr(response.message);
                     }
-
-                }
-            }
-            finally {
-                state.cargando = false;
-            }
+                })
+                .catch(function (e) {
+                    $.unblockUI();
+                    console.error("Error al guardar seguimiento:", e);
+                })
+                .then(function () {
+                    state.cargando = false;
+                });
         },
 
         cerrar: function () {
