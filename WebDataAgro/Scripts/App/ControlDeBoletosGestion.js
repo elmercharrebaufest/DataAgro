@@ -62,52 +62,56 @@ var ControlDeBoletosGestion = (function () {
     }
 
     function cargarDatos() {
-        const url = config.getContrato + "?id=" + state.NegocioId;
-        const contrato = MSExecuteGetOnServer(url);
-
-        controlContratoSAP.text(contrato.ContratoSAP);
-        controlCuitCorredor.text(contrato.CuitCorredor);
-        controlCuitVendedor.text(contrato.CuitVendedor);
-        controlMaterial.text(contrato.Material);
-        controlProvincia.text(contrato.Provincia);
-        controlKilos.text(contrato.Cantidad);
-        controlProcedencia.text(contrato.Localidad);
-        controlPrecioXTonelada.text(contrato.Precio);
-        controlMoneda.text(contrato.Moneda);
-        controlDestino.text(contrato.Destino);
-        controlClasificacionProveedor.text(contrato.Clasificacion);
-        controlStandardCalidad.text(contrato.StandarCalidad);
-        controlPeriodoEntrega.text(contrato.PeriodoEntrega);
-        controlCampania.text(contrato.Campana);
-        controlTipoBoleto.text(contrato.TipoBoleto);
-        controlPeriodoOperacion.text(contrato.FechaOperacion);
-
+        var url = config.getContrato + "?id=" + state.NegocioId;
         BlockUi("Cargando...");
-        try {
-            ControlDeBoletosSeguimiento.inicializar(
-                state.SeguimientoBoletoId,
-                state.ControlDeBoletosId
-            );
-            ControlDeBoletosDatosCertificacion.inicializar(
-                state.PreCertificacionId,
-                state.ControlDeBoletosId
-            );
-            if (state.NegocioId > 0) {
-                ControlDeBoletosModificarContrato.inicializar(state.NegocioId);
-            }
-        } finally {
-            setTimeout(function () { $.unblockUI(); }, 300);
-        }
+        MSExecuteGetOnServerAsync(url)
+            .then(function (contrato) {
+                if (!contrato) return;
+
+                controlContratoSAP.text(contrato.ContratoSAP);
+                controlCuitCorredor.text(contrato.CuitCorredor);
+                controlCuitVendedor.text(contrato.CuitVendedor);
+                controlMaterial.text(contrato.Material);
+                controlProvincia.text(contrato.Provincia);
+                controlKilos.text(contrato.Cantidad);
+                controlProcedencia.text(contrato.Localidad);
+                controlPrecioXTonelada.text(contrato.Precio);
+                controlMoneda.text(contrato.Moneda);
+                controlDestino.text(contrato.Destino);
+                controlClasificacionProveedor.text(contrato.Clasificacion);
+                controlStandardCalidad.text(contrato.StandarCalidad);
+                controlPeriodoEntrega.text(contrato.PeriodoEntrega);
+                controlCampania.text(contrato.Campana);
+                controlTipoBoleto.text(contrato.TipoBoleto);
+                controlPeriodoOperacion.text(contrato.FechaOperacion);
+
+                ControlDeBoletosSeguimiento.inicializar(
+                    state.SeguimientoBoletoId,
+                    state.ControlDeBoletosId
+                );
+                ControlDeBoletosDatosCertificacion.inicializar(
+                    state.ControlDeBoletosId,
+                    contrato.OperaSinOblea
+                );
+                if (state.NegocioId > 0) {
+                    ControlDeBoletosModificarContrato.inicializar(state.NegocioId, contrato);
+                }
+            })
+            .catch(function (e) {
+                console.error("Error cargando datos del contrato:", e);
+            })
+            .then(function () {
+                $.unblockUI();
+            });
     }
 
     return {
         abrir: function (params) {
             state.ControlDeBoletosId  = params.ControlDeBoletosId  || 0;
             state.SeguimientoBoletoId = params.SeguimientoBoletoId || 0;
-            state.PreCertificacionId  = params.PreCertificacionId  || 0;
             state.NegocioId           = params.NegocioId           || 0;
 
-            var parametros = "?controlDeBoletosId=" + state.ControlDeBoletosId + "&seguimientoBoletoId=" + state.SeguimientoBoletoId + "&preCertificacionId=" + state.PreCertificacionId + "&negocioId=" + state.NegocioId;
+            var parametros = "?controlDeBoletosId=" + state.ControlDeBoletosId + "&seguimientoBoletoId=" + state.SeguimientoBoletoId + "&negocioId=" + state.NegocioId;
             var url = "/ControlDeBoletos/_GestionControlBoleto" + parametros;
 
             // Remover modal anterior si existe

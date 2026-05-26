@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PlanCanje { get; set; }
         public string Consignatario { get; set; }
         public Ruca Ruca { get; set; }
+        public string SinOblea { get; set; }
         public string Carta { get; set; }
         public string Mensaje { get; set; }
         public string ProveedorGrano { get; set; }

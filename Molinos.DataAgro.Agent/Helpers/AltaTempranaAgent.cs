@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -111,6 +111,7 @@ namespace Molinos.DataAgro.Agent
                             Corredor = valor.ExRuca.Corredor,
                             Fason = valor.ExRuca.Fason
                         },
+                        SinOblea = valor.ExSinOblea,
                         PlanCanje = valor.ExPlanCanje,
                         Consignatario = valor.ExConsignatario,
                         Nosis = valor.ExNosis,

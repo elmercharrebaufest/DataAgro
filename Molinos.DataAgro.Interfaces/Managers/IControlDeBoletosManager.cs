@@ -24,7 +24,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<TipoOblea> GetTipoOblea();
         List<BoletoCompraNet> GetBoletoCompraNet();
         Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false);
-        Resultado AsociarConfirma(int negocioId);
         List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);
         ControlDeBoletosDatosContratoDto ObtenerDatosDeContrato(int negocioId);
@@ -36,5 +35,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         ControlDeBoletosDatosSeguimientoDto ObtenerDatosDeSeguimiento(int datosSeguimientoId);
         List<ControlDeBoletoTrackingDto> ObtenerTrackingBoletos(int controlDeBoletosId);
         List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros);
+        string VerificarOperaSinOblea(string cuit, string tipoProveedor);
     }
 }

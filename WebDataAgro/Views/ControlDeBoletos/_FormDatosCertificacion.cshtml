@@ -1,39 +1,106 @@
-﻿<form id="frmCertificacion">
+<form id="frmCertificacion">
 
+    <!-- Datos de Precertificación de la Bolsa -->
     <div class="row">
-        <div class="col-md-4">
-            <label>Bolsa</label>
-            <select id="Bolsa" class="form-control">
-                <option value="">Cargando Bolsas...</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label>Fecha Certificación</label>
-            <input type="text" id="FechaCertificacion" class="form-control" style="width: stretch"/>
-        </div>
-        <div class="col-md-4">
-            <label>Fecha Vencimiento</label>
-            <input type="text" id="FechaVencimientoCertificacion" class="form-control" style="width: stretch"/>
+        <div class="col-md-12">
+            <label><strong>Datos de Precertificación de la Bolsa</strong></label>
         </div>
     </div>
-
-    <div class="row mt-2">
-        <div class="col-md-4">
-            <label>Oblea</label>
-            <input type="text" id="Oblea" class="form-control" maxlength="10" />
-        </div>
-        <div class="col-md-4">
-            <label>Tipo Oblea</label>
-            <select id="TipoOblea" class="form-control">
-                <option value="">Cargando Tipo Oblea...</option>
-            </select>
-        </div>
+    <div class="row">
         <div class="col-md-4">
             <label>Rechazado</label>
             <div>
                 <input id="Rechazado" class="form-control" role="switch" type="checkbox"
                        style="width:20px; margin-top:0 !important; margin-left:0 !important;" />
             </div>
+        </div>
+        <div class="col-md-4">
+            <label>Oblea</label>
+            <input type="text" id="Oblea" class="form-control" maxlength="18" />
+        </div>
+        <div class="col-md-4">
+            <label>Bolsa</label>
+            <select id="Bolsa" class="form-control">
+                <option value="">Cargando Bolsas...</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Fecha Certificación</label>
+            <input type="text" id="FechaCertificacion" class="form-control" style="width: stretch" />
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Vencimiento</label>
+            <input type="text" id="FechaVencimiento" class="form-control" style="width: stretch" />
+        </div>
+    </div>
+
+
+    <!-- Registracion AFIP -->
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <label><strong>Registracion AFIP</strong></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Rechazado</label>
+            <div>
+                <input id="RechazadoAfip" class="form-control" role="switch" type="checkbox"
+                       style="width:20px; margin-top:0 !important; margin-left:0 !important;" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label>Codigo Registracion</label>
+            <input type="text" id="CodigoRegistracionAfip" class="form-control" style="width: stretch" maxlength="20" />
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Registracion</label>
+            <input type="text" id="FechaRegistracionAfip" class="form-control" style="width: stretch" />
+        </div>
+    </div>
+
+    <!-- Oblea Provisoria -->
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <label><strong>Oblea Provisoria</strong></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Fecha Vencimiento</label>
+            <input type="text" id="FechaVencimientoObleaProvisoria" class="form-control" style="width: stretch" />
+        </div>
+    </div>
+
+    <!-- Oblea Plan Canje -->
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <label><strong>Oblea Plan Canje</strong></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Oblea</label>
+            <input type="text" id="ObleaPlanCanje" class="form-control" maxlength="10" />
+        </div>
+        <div class="col-md-4">
+            <label>Bolsa</label>
+            <select id="BolsaPlanCanje" class="form-control">
+                <option value="">Cargando Bolsas...</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Certificación</label>
+            <input type="text" id="FechaCertificacionPlanCanje" class="form-control" style="width: stretch" />
+        </div>
+        <div class="col-md-4">
+            <label>Fecha Vencimiento</label>
+            <input type="text" id="FechaVencimientoPlanCanje" class="form-control" style="width: stretch" />
         </div>
     </div>
 

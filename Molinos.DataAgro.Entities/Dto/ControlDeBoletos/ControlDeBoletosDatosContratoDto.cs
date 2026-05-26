@@ -29,5 +29,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string CuitVendedor { get; set; }
         public string CuitCorredor { get; set; }
         public string Moneda { get; set; }
+        public int? CorredorId { get; set; }
+        public bool? PlanCanje { get; set; }
+        public bool? OperaSinOblea { get; set; }
     }
 }

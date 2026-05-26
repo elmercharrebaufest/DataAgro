@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,14 +14,13 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public int ControlDeBoletosId { get; set; }
 
-        public string Fijacion { get; set; }
         public string Oblea { get; set; }
-
+        public string Rechazado { get; set; }
         public int TipoObleaId { get; set; }
-        public int BolsaCompraNetId { get; set; }
+        public int? BolsaCompraNetId { get; set; }
 
-        public DateTime FechaCertificacion { get; set; }
-        public DateTime FechaVencimiento { get; set; }
+        public DateTime? FechaCertificacion { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
 
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
