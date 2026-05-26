@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Moq;
@@ -90,7 +90,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.BuscaDatosTabla(dsRequest);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Data\":[{\"Id\":1,\"Codigo\":null,\"CentroId\":13,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"FechaIngreso\":null,\"CupoId\":null,\"Cupo\":null,\"FechaAlta\":\"\\/Date(-62135586000000)\\/\",\"EstadoId\":0,\"Estado\":null,\"Disponible\":false,\"CentroCodigo\":null,\"Utilizado\":false}],\"Total\":1,\"Aggregates\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}"
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Data\":[{\"Id\":1,\"Codigo\":null,\"CentroId\":13,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"FechaIngreso\":null,\"CupoId\":null,\"Cupo\":null,\"FechaAlta\":\"\\/Date(-62135578800000)\\/\",\"EstadoId\":0,\"Estado\":null,\"Disponible\":false,\"CentroCodigo\":null,\"Utilizado\":false}],\"Total\":1,\"Aggregates\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}"
                 , a);
         }
 

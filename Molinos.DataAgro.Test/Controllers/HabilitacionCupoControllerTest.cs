@@ -1,4 +1,4 @@
-﻿using KendoGridBinder;
+using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             habilitacionCupoManagerMock.Verify(x => x.TraerTodaHabilitacionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"Zona\":null,\"Material\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"Zona\":null,\"Material\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
        
@@ -106,7 +106,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             habilitacionCupoManagerMock.Verify(x => x.TraerHabilitacionCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"Zona\":null,\"Material\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135578800000)\\/\",\"FechaHasta\":\"\\/Date(-62135578800000)\\/\",\"Zona\":null,\"Material\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
 

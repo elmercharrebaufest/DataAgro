@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<IComercialManager> mobjComercialManagerMock;
         private Mock<IMaterialManager> mobjMaterialManagerMock;
-        private Mock<ICampañaManager> mobjCampaniaManagerMock;
+        private Mock<ICampa�aManager> mobjCampaniaManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Test.Controllers
             informeComercialManagerMock = new Mock<IInformeComercialManager>();
             mobjComercialManagerMock = new Mock<IComercialManager>();
             mobjMaterialManagerMock = new Mock<IMaterialManager>();
-            mobjCampaniaManagerMock = new Mock<ICampañaManager>();
+            mobjCampaniaManagerMock = new Mock<ICampa�aManager>();
             homeManagerMock = new Mock<IHomeManager>();
 
 
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void InformeAdministrativoOkTest()
         {
             mobjMaterialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
-            mobjCampaniaManagerMock.Setup(x => x.TraerTodoCampania()).Returns(new List<CampañaDto> { new CampañaDto { CampañaId = 2, Descripcion = "" } });
+            mobjCampaniaManagerMock.Setup(x => x.TraerTodoCampania()).Returns(new List<Campa�aDto> { new Campa�aDto { Campa�aId = 2, Descripcion = "" } });
             mobjComercialManagerMock.Setup(x => x.TraerTodoComercial()).Returns(new ResultIniComercial
             {
                 Comercial = new List<ComercialIni>()
@@ -149,13 +149,13 @@ namespace Molinos.DataAgro.Test.Controllers
                         Toneladas=1
                     }
                 },
-                Campaña = "18-19"
+                Campa�a = "18-19"
             };
             var rtaInforme = new RptInformeComercialInfo()
             {
                 RazonSocial = "A",
                 CUIT = "111",
-                Campaña = "18-19"
+                Campa�a = "18-19"
             };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(10);
             informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(informeComercial, 10, null, null, null, null, null, null)).Returns(new InformeResult()
@@ -185,7 +185,7 @@ namespace Molinos.DataAgro.Test.Controllers
             {
                 new InformeComercialMaterialDisponible()
                 {
-                    CampañaId=1,
+                    Campa�aId=1,
                     MaterialId=1,
                     ProveedorId =1
                 }
@@ -194,7 +194,7 @@ namespace Molinos.DataAgro.Test.Controllers
             {
                 new InformeGeneradoList()
                 {
-                    Campaña="18-19",
+                    Campa�a="18-19",
                     Cuit="aaa",
                     InformeComercialId=1
                 }
@@ -207,8 +207,8 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                //"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"CampañaId\":1,\"Campaña\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campaña\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"CampañaId\":1,\"Campaña\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campaña\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null,\"FechaAlta\":\"\\/Date(-62135586000000)\\/\"}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                //"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"Campa�aId\":1,\"Campa�a\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campa�a\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"Campa�aId\":1,\"Campa�a\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campa�a\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null,\"FechaAlta\":\"\\/Date(-62135578800000)\\/\"}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -220,7 +220,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 new InformeList()
                 {
                     InformeComercialId=1,
-                    Campaña="18-19",
+                    Campa�a="18-19",
                     Cuit="12",
                     Comercial="a",
                     RazonSocial="C",
@@ -237,7 +237,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campaña\":\"18-19\",\"MaterialesList\":[\"\"],\"Comercial\":\"a\",\"Seleccionado\":true,\"ProveedorId\":0,\"CampanaId\":null,\"ComercialId\":null,\"MaterialesIdList\":[1],\"Materiales\":\"\",\"MaterialId\":\"1\",\"FechaAlta\":null,\"OrigenDA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campa�a\":\"18-19\",\"MaterialesList\":[\"\"],\"Comercial\":\"a\",\"Seleccionado\":true,\"ProveedorId\":0,\"CampanaId\":null,\"ComercialId\":null,\"MaterialesIdList\":[1],\"Materiales\":\"\",\"MaterialId\":\"1\",\"FechaAlta\":null,\"OrigenDA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -296,13 +296,13 @@ namespace Molinos.DataAgro.Test.Controllers
                         Toneladas=1
                     }
                 },
-                Campaña = "18-19"
+                Campa�a = "18-19"
             };
             var rtaInforme = new RptInformeComercialInfo()
             {
                 RazonSocial = "A",
                 CUIT = "111",
-                Campaña = "18-19"
+                Campa�a = "18-19"
             };
             informeComercialManagerMock.Setup(x => x.ReimprimirInformeComercial(1)).Returns(informeComercial);
 
@@ -344,7 +344,7 @@ namespace Molinos.DataAgro.Test.Controllers
                         Toneladas=1
                     }
                 },
-                Campaña = "18-19"
+                Campa�a = "18-19"
             };
             informeComercialManagerMock.Setup(x => x.ReimprimirInformeComercial(1)).Returns(informeComercial);
             informeComercialManagerMock.Setup(x => x.TraerInformeMateriales(1)).Returns(new List<MaterialesModificacionInforme>() { new MaterialesModificacionInforme { Material = "A", MaterialId = 1, Seleccionado = true } });
@@ -356,7 +356,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"CampañaId\":0,\"Campaña\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null,\"FechaDescarga\":null,\"OrigenDA\":null,\"ComercialId\":0},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"Campa�aId\":0,\"Campa�a\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null,\"FechaDescarga\":null,\"OrigenDA\":null,\"ComercialId\":0},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

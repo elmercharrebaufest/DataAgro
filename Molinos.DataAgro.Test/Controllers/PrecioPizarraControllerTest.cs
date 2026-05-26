@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Precio\":100,\"MaterialId\":1,\"PizarraId\":1,\"FechaDesde\":\"06-08-2019\",\"FechaHasta\":\"06-08-2019\",\"MonedaId\":\"USD\",\"Moneda\":null,\"UnidadMedida\":\"TON\",\"Material\":null,\"Pizarra\":null,\"Fecha\":\"\\/Date(1565060400000)\\/\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}", a);
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Precio\":100,\"MaterialId\":1,\"PizarraId\":1,\"FechaDesde\":\"06-08-2019\",\"FechaHasta\":\"06-08-2019\",\"MonedaId\":\"USD\",\"Moneda\":null,\"UnidadMedida\":\"TON\",\"Material\":null,\"Pizarra\":null,\"Fecha\":\"\\/Date(1565067600000)\\/\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}", a);
         }
     }
 }

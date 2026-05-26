@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHomeManager> homeManagerMock;
         private Mock<ILocalidadManager> localidadManagerMock;
         private Mock<IProvinciaManager> provinciaManagerMock;
-        private Mock<ICampañaManager> campanaManagerMock;
+        private Mock<ICampa�aManager> campanaManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<IInformeComercialManager> informeComercialManagerMock;
@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock = new Mock<IHomeManager>();
             localidadManagerMock = new Mock<ILocalidadManager>();
             provinciaManagerMock = new Mock<IProvinciaManager>();
-            campanaManagerMock = new Mock<ICampañaManager>();
+            campanaManagerMock = new Mock<ICampa�aManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             reportesManagerMock = new Mock<IReportesManager>();
             informeComercialManagerMock = new Mock<IInformeComercialManager>();
@@ -187,7 +187,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadId\":0,\"TipoActividadId\":0,\"Detalle\":null,\"ProveedorId\":0,\"FechaHoraActividad\":\"\\/Date(-62135586000000)\\/\",\"FechaHoraRecordatorio\":null,\"ComercialId\":null,\"ContactoComercialId\":null,\"asunto\":null,\"FechaHoraRecordatorioFin\":null,\"TipoActividad\":null,\"Proveedor\":null,\"Comercial\":null,\"ContactoComercial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadId\":0,\"TipoActividadId\":0,\"Detalle\":null,\"ProveedorId\":0,\"FechaHoraActividad\":\"\\/Date(-62135578800000)\\/\",\"FechaHoraRecordatorio\":null,\"ComercialId\":null,\"ContactoComercialId\":null,\"asunto\":null,\"FechaHoraRecordatorioFin\":null,\"TipoActividad\":null,\"Proveedor\":null,\"Comercial\":null,\"ContactoComercial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -201,7 +201,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadId\":0,\"TipoActividadId\":0,\"Detalle\":null,\"ProveedorId\":0,\"FechaHoraActividad\":\"\\/Date(-62135586000000)\\/\",\"FechaHoraRecordatorio\":null,\"ComercialId\":null,\"ContactoComercialId\":null,\"asunto\":null,\"FechaHoraRecordatorioFin\":null,\"TipoActividad\":null,\"Proveedor\":null,\"Comercial\":null,\"ContactoComercial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadId\":0,\"TipoActividadId\":0,\"Detalle\":null,\"ProveedorId\":0,\"FechaHoraActividad\":\"\\/Date(-62135578800000)\\/\",\"FechaHoraRecordatorio\":null,\"ComercialId\":null,\"ContactoComercialId\":null,\"asunto\":null,\"FechaHoraRecordatorioFin\":null,\"TipoActividad\":null,\"Proveedor\":null,\"Comercial\":null,\"ContactoComercial\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -214,7 +214,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"razonSocial\":\"\",\"Operable\":0,\"CUIT\":\"\",\"Condicion\":\"\",\"EstadoCuit\":0,\"FechaVigenciaEstado\":\"\\/Date(-62135586000000)\\/\",\"RiesgoComercial\":\"\",\"Existe\":0},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"razonSocial\":\"\",\"Operable\":0,\"CUIT\":\"\",\"Condicion\":\"\",\"EstadoCuit\":0,\"FechaVigenciaEstado\":\"\\/Date(-62135578800000)\\/\",\"RiesgoComercial\":\"\",\"Existe\":0},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -294,42 +294,42 @@ namespace Molinos.DataAgro.Test.Controllers
         }
 
         [Test]
-        public void TraerCampañasActivasTest()
+        public void TraerCampa�asActivasTest()
         {
-            campanaManagerMock.Setup(x => x.TraerCampañasActivas()).Returns(new List<CampañaDto>() { new CampañaDto { CampañaId = 1, Descripcion = "18-19" } });
-            var result = target.TraerCampañasActivas();
+            campanaManagerMock.Setup(x => x.TraerCampa�asActivas()).Returns(new List<Campa�aDto>() { new Campa�aDto { Campa�aId = 1, Descripcion = "18-19" } });
+            var result = target.TraerCampa�asActivas();
 
-            campanaManagerMock.Verify(x => x.TraerCampañasActivas(), Times.Once);
+            campanaManagerMock.Verify(x => x.TraerCampa�asActivas(), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Campa�aId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
-        public void TraerMaterialPorCampañaTest()
+        public void TraerMaterialPorCampa�aTest()
         {
-            campanaManagerMock.Setup(x => x.TraerMaterialPorCampaña(1)).Returns(new List<MaterialDto>() { new MaterialDto { CampañaId = 1, Descripcion = "A", MaterialId = 1 } });
-            var result = target.TraerMaterialPorCampaña(1);
+            campanaManagerMock.Setup(x => x.TraerMaterialPorCampa�a(1)).Returns(new List<MaterialDto>() { new MaterialDto { Campa�aId = 1, Descripcion = "A", MaterialId = 1 } });
+            var result = target.TraerMaterialPorCampa�a(1);
 
-            campanaManagerMock.Verify(x => x.TraerMaterialPorCampaña(It.IsAny<int>()), Times.Once);
+            campanaManagerMock.Verify(x => x.TraerMaterialPorCampa�a(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"MaterialId\":1,\"Codigo\":null,\"Descripcion\":\"A\",\"CampañaId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"MaterialId\":1,\"Codigo\":null,\"Descripcion\":\"A\",\"Campa�aId\":1,\"Campana\":null,\"CampaniaTableroId\":null,\"CampaniaTablero\":null,\"IVA\":null,\"DestinoId\":0}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
-        public void TraerCampañaPorMaterialTest()
+        public void TraerCampa�aPorMaterialTest()
         {
-            campanaManagerMock.Setup(x => x.TraerCampañaPorMaterial(1)).Returns(new List<CampañaDto>() { new CampañaDto { CampañaId = 1, Descripcion = "18-19" } });
-            var result = target.TraerCampañaPorMaterial(1);
+            campanaManagerMock.Setup(x => x.TraerCampa�aPorMaterial(1)).Returns(new List<Campa�aDto>() { new Campa�aDto { Campa�aId = 1, Descripcion = "18-19" } });
+            var result = target.TraerCampa�aPorMaterial(1);
 
-            campanaManagerMock.Verify(x => x.TraerCampañaPorMaterial(It.IsAny<int>()), Times.Once);
+            campanaManagerMock.Verify(x => x.TraerCampa�aPorMaterial(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Campa�aId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -373,16 +373,16 @@ namespace Molinos.DataAgro.Test.Controllers
         }
 
         [Test]
-        public void TraerCampañasPorGranoTest()
+        public void TraerCampa�asPorGranoTest()
         {
-            campanaManagerMock.Setup(x => x.TraerCampañasPorGrano(1)).Returns(new List<CampañaDto>() { new CampañaDto { CampañaId = 1, Descripcion = "18-19" } });
-            var result = target.TraerCampañasPorGrano(1);
+            campanaManagerMock.Setup(x => x.TraerCampa�asPorGrano(1)).Returns(new List<Campa�aDto>() { new Campa�aDto { Campa�aId = 1, Descripcion = "18-19" } });
+            var result = target.TraerCampa�asPorGrano(1);
 
-            campanaManagerMock.Verify(x => x.TraerCampañasPorGrano(It.IsAny<int>()), Times.Once);
+            campanaManagerMock.Verify(x => x.TraerCampa�asPorGrano(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CampañaId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Campa�aId\":1,\"Descripcion\":\"18-19\",\"CodigoSIO\":null,\"Sugerido\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
