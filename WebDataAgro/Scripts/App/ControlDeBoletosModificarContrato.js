@@ -45,24 +45,23 @@ var ControlDeBoletosModificarContrato = (function () {
         );
         $("#mensajeModal").modal("show");
     }
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
+    async function cargarDropdown(url, selector, textoCarga, textoDefault) {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (data) {
-                $select.empty().append('<option value="">' + textoDefault + "</option>");
-                if (data && Array.isArray(data)) {
-                    $.each(data, function (i, item) {
-                        $select.append(
-                            '<option value="' + item.Value + '">' + item.Text + "</option>",
-                        );
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.error("Error cargando dropdown:", error);
-                $select.html('<option value="">Error al cargar</option>');
-            });
+        try {
+            var data = await MSExecuteGetOnServerAsync(url);
+            $select.empty().append('<option value="">' + textoDefault + "</option>");
+            if (data && Array.isArray(data)) {
+                $.each(data, function (i, item) {
+                    $select.append(
+                        '<option value="' + item.Value + '">' + item.Text + "</option>",
+                    );
+                });
+            }
+        } catch (error) {
+            console.error("Error cargando dropdown:", error);
+            $select.html('<option value="">Error al cargar</option>');
+        }
     }
 
     function obtenerRequest() {
@@ -90,22 +89,32 @@ var ControlDeBoletosModificarContrato = (function () {
     // API pública
     // ======================
     return {
-        inicializar: function (NegocioId, Contrato) {
+        inicializar: async function (NegocioId) {
             bindControls();
             state.negocioId = NegocioId;
-            this.cargarContrato(Contrato);
+            await this.cargarContrato();
         },
         abrir: function (NegocioId) {
             bindControls();
             BlockUi('Cargando...');
-            //state.negocioId = NegocioId;
-            //this.cargarContrato(state.negocioId);
             $("#modalModificarBoleto").modal("show");
             setTimeout(function () { $.unblockUI() }, 1000);
         },
-        cargarContrato: function (contrato) {
-            state.contratoSAP = contrato.ContratoSAP;
-            this.cargarCombos(contrato);
+        cargarContrato: async function () {
+            BlockUi('Cargando...');
+            var url = config.urls.getContrato + "?id=" + state.negocioId;
+            try {
+                var contrato = await MSExecuteGetOnServerAsync(url);
+                if (!contrato) {
+                    return;
+                }
+                state.contrato = contrato;
+                state.contratoSAP = contrato.ContratoSAP;
+                await this.cargarCombos(contrato);
+                $.unblockUI() 
+            } catch (e) {
+                console.error("Error cargando contrato:", e);
+            }
         },
         cargarCombos: function (contrato) {
             var self = this;
@@ -127,7 +136,7 @@ var ControlDeBoletosModificarContrato = (function () {
             });
         },
 
-        guardar: function () {
+        guardar: async function () {
             if (state.cargando) return;
 
             var errores = validarFormulario();
@@ -136,28 +145,26 @@ var ControlDeBoletosModificarContrato = (function () {
                 return;
             }
 
-            var self = this;
             state.cargando = true;
             BlockUi('Guardando...');
             var request = obtenerRequest();
-            MSExecuteOnServerAsync(config.urls.updateContrato, request)
-                .then(function (response) {
-                    $.unblockUI();
-                    if (!response) return;
-                    if (response.success) {
-                        MensInfo(response.message);
-                        self.cerrar();
-                    } else {
-                        MensErr(response.message);
-                    }
-                })
-                .catch(function (e) {
-                    $.unblockUI();
-                    console.error("Error al guardar contrato:", e);
-                })
-                .then(function () {
-                    state.cargando = false;
-                });
+
+            try {
+                var response = await MSExecuteOnServerAsync(config.urls.updateContrato, request);
+                if (!response) return;
+
+                if (response.success) {
+                    MensInfo(response.message);
+                    this.cerrar();
+                } else {
+                    MensErr(response.message);
+                }
+            } catch (e) {
+                console.error("Error al guardar contrato:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
         },
 
         cerrar: function () {

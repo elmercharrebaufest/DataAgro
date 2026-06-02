@@ -10,7 +10,9 @@ var ControlDeBoletosGestion = (function () {
         ControlDeBoletosId: null,
         SeguimientoBoletoId: null,
         PreCertificacionId: null,
-        NegocioId: null
+        NegocioId: null,
+        OperaSinOblea: false,
+        PlanCanje: false,
     };
 
 
@@ -33,7 +35,30 @@ var ControlDeBoletosGestion = (function () {
     let controlRecepcionBoleto;
     let controlMoneda;
 
+    async function configurarEventos() {
 
+        $("#collapseModificar").on("show.bs.collapse", async function () {
+            if (state.NegocioId > 0) {
+                ControlDeBoletosModificarContrato.inicializar(state.NegocioId);
+            }
+        });
+
+        $("#collapseCertificacion").on("show.bs.collapse", async function () {
+            await ControlDeBoletosDatosCertificacion.inicializar(
+                state.ControlDeBoletosId,
+                state.OperaSinOblea,
+                state.PlanCanje
+            );
+        });
+
+        $("#collapseSeguimiento").on("show.bs.collapse", async function () {
+            await ControlDeBoletosSeguimiento.inicializar(
+                state.SeguimientoBoletoId,
+                state.ControlDeBoletosId
+            );
+        });
+
+    }
     function bindControls() {
         let $form = $("#accordionGestionBoleto #frmGestionarContrato");
 
@@ -61,48 +86,38 @@ var ControlDeBoletosGestion = (function () {
         controlMoneda = $form.find("#Moneda");
     }
 
-    function cargarDatos() {
+    async function cargarDatos() {
         var url = config.getContrato + "?id=" + state.NegocioId;
         BlockUi("Cargando...");
-        MSExecuteGetOnServerAsync(url)
-            .then(function (contrato) {
-                if (!contrato) return;
+        try {
+            var contrato = await MSExecuteGetOnServerAsync(url);
+            if (!contrato) return;
 
-                controlContratoSAP.text(contrato.ContratoSAP);
-                controlCuitCorredor.text(contrato.CuitCorredor);
-                controlCuitVendedor.text(contrato.CuitVendedor);
-                controlMaterial.text(contrato.Material);
-                controlProvincia.text(contrato.Provincia);
-                controlKilos.text(contrato.Cantidad);
-                controlProcedencia.text(contrato.Localidad);
-                controlPrecioXTonelada.text(contrato.Precio);
-                controlMoneda.text(contrato.Moneda);
-                controlDestino.text(contrato.Destino);
-                controlClasificacionProveedor.text(contrato.Clasificacion);
-                controlStandardCalidad.text(contrato.StandarCalidad);
-                controlPeriodoEntrega.text(contrato.PeriodoEntrega);
-                controlCampania.text(contrato.Campana);
-                controlTipoBoleto.text(contrato.TipoBoleto);
-                controlPeriodoOperacion.text(contrato.FechaOperacion);
+            controlContratoSAP.text(contrato.ContratoSAP);
+            controlCuitCorredor.text(contrato.CuitCorredor);
+            controlCuitVendedor.text(contrato.CuitVendedor);
+            controlMaterial.text(contrato.Material);
+            controlProvincia.text(contrato.Provincia);
+            controlKilos.text(contrato.Cantidad);
+            controlProcedencia.text(contrato.Localidad);
+            controlPrecioXTonelada.text(contrato.Precio);
+            controlMoneda.text(contrato.Moneda);
+            controlDestino.text(contrato.Destino);
+            controlClasificacionProveedor.text(contrato.Clasificacion);
+            controlStandardCalidad.text(contrato.StandarCalidad);
+            controlPeriodoEntrega.text(contrato.PeriodoEntrega);
+            controlCampania.text(contrato.Campana);
+            controlTipoBoleto.text(contrato.TipoBoleto);
+            controlPeriodoOperacion.text(contrato.FechaOperacion);
 
-                ControlDeBoletosSeguimiento.inicializar(
-                    state.SeguimientoBoletoId,
-                    state.ControlDeBoletosId
-                );
-                ControlDeBoletosDatosCertificacion.inicializar(
-                    state.ControlDeBoletosId,
-                    contrato.OperaSinOblea
-                );
-                if (state.NegocioId > 0) {
-                    ControlDeBoletosModificarContrato.inicializar(state.NegocioId, contrato);
-                }
-            })
-            .catch(function (e) {
-                console.error("Error cargando datos del contrato:", e);
-            })
-            .then(function () {
-                $.unblockUI();
-            });
+            state.OperaSinOblea = contrato.OperaSinOblea;
+            state.PlanCanje = contrato.PlanCanje;
+
+        } catch (e) {
+            console.error("Error cargando datos del contrato:", e);
+        } finally {
+            $.unblockUI();
+        }
     }
 
     return {
@@ -123,6 +138,7 @@ var ControlDeBoletosGestion = (function () {
                 try {
                     bindControls();
                     cargarDatos();
+                    configurarEventos();
                     $(config.modalId).modal("show");
                 } catch (error) {
                     console.error("Error cargando tracking:", error);
@@ -131,7 +147,6 @@ var ControlDeBoletosGestion = (function () {
 
 
         },
-
         cerrar: function () {
             $(config.modalId).modal("hide");
         }

@@ -25,9 +25,11 @@ var ControlDeBoletosSeguimiento = (function () {
 
     let listaBolsaSAP = null;
     let controlBoleto, controlBolsa, controlBolsaSellado;
-    let controlRechazadoAfip, controlFechaEnvio, controlFechaEnvioAfip;
-    let controlFechaEnvioBolsa, controlFechaRecepBoleto, controlFechaRecibFirma;
-    let controlFechaVueltaAfip, controlFechaVueltaBolsa, controlFechaEnviadoFirma;
+    let controlFechaRecepcionBoleto;
+    let controlFechaEnvioFirma, controlFechaEnvioBolsa, controlFechaEnvioAfip;
+    let controlFechaRecepcionFirma, controlFechaRecepcionBolsa, controlFechaRecepcionAfip;
+    let controlFechaEnvioSellado;
+    let controlRechazadoAfip;
     let controlObsCtrlBoleto, controlObsCtrlBoleto2;
 
     function bindControls() {
@@ -38,14 +40,20 @@ var ControlDeBoletosSeguimiento = (function () {
         controlBolsa         = $form.find("#Bolsa");
         controlBolsaSellado  = $form.find("#BolsaSellado");
         controlRechazadoAfip = $form.find("#txtRechazadoAfip");
-        controlFechaEnvio       = $form.find("#FechaEnvio");
-        controlFechaEnvioAfip   = $form.find("#FechaEnvioAfip");
-        controlFechaEnvioBolsa  = $form.find("#FechaEnvioBolsa");
-        controlFechaRecepBoleto = $form.find("#FechaRecepBoleto");
-        controlFechaRecibFirma  = $form.find("#FechaRecibFirma");
-        controlFechaVueltaAfip  = $form.find("#FechaVueltaAfip");
-        controlFechaVueltaBolsa = $form.find("#FechaVueltaBolsa");
-        controlFechaEnviadoFirma = $form.find("#FechaEnviadoFirma");
+
+        controlFechaRecepcionBoleto = $form.find("#FechaRecepcionBoleto");
+
+        controlFechaEnvioFirma = $form.find("#FechaEnvioFirma");
+        controlFechaEnvioBolsa = $form.find("#FechaEnvioBolsa");
+        controlFechaEnvioAfip = $form.find("#FechaEnvioAfip");
+
+        controlFechaRecepcionFirma = $form.find("#FechaRecepcionFirma");
+        controlFechaRecepcionAfip = $form.find("#FechaRecepcionAfip");
+        controlFechaRecepcionBolsa = $form.find("#FechaRecepcionBolsa");
+
+
+        controlFechaEnvioSellado = $form.find("#FechaEnvioSellado");
+
         controlObsCtrlBoleto  = $form.find("#ObsCtrlBoleto");
         controlObsCtrlBoleto2 = $form.find("#ObsCtrlBoleto2");
 
@@ -83,9 +91,10 @@ var ControlDeBoletosSeguimiento = (function () {
 
     function inicializarFechas() {
         [
-            controlFechaRecepBoleto, controlFechaEnviadoFirma, controlFechaEnvioBolsa,
-            controlFechaEnvioAfip, controlFechaRecibFirma, controlFechaVueltaBolsa,
-            controlFechaVueltaAfip, controlFechaEnvio
+            controlFechaRecepcionBoleto,
+            controlFechaEnvioFirma, controlFechaEnvioBolsa, controlFechaEnvioAfip,
+            controlFechaRecepcionFirma, controlFechaRecepcionBolsa, controlFechaRecepcionAfip,
+            controlFechaEnvioSellado
         ].forEach(function ($el) {
             if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
             $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
@@ -94,67 +103,71 @@ var ControlDeBoletosSeguimiento = (function () {
 
     function validarFechas() {
 
-        var feRecepBoleto    = getKendoDate(controlFechaRecepBoleto);
-        var feEnvioFirmas    = getKendoDate(controlFechaEnvio);
+        var feRecepcionBoleto    = getKendoDate(controlFechaRecepcionBoleto);
+
+        var feEnvioFirmas = getKendoDate(controlFechaEnvioFirma);
         var feEnvioBolsa     = getKendoDate(controlFechaEnvioBolsa);
-        var feVueltaBolsa    = getKendoDate(controlFechaVueltaBolsa);
-        var feEnvioAfip      = getKendoDate(controlFechaEnvioAfip);
-        var feVueltaAfip     = getKendoDate(controlFechaVueltaAfip);
-        var feEnviadoFirma   = getKendoDate(controlFechaEnviadoFirma);
-        var feRecibFirma     = getKendoDate(controlFechaRecibFirma);
+        var feEnvioAfip = getKendoDate(controlFechaEnvioAfip);
+        var feRecepcionFirma = getKendoDate(controlFechaRecepcionFirma);
+        var feRecepcionBolsa = getKendoDate(controlFechaRecepcionBolsa);
+        var feRecepcionAfip  = getKendoDate(controlFechaRecepcionAfip);
+
+        var feEnvioSellado = getKendoDate(controlFechaEnvioSellado);
+
 
         // 🔴 Base obligatoria para validar relaciones
-        if (!feRecepBoleto) {
+        if (!feRecepcionBoleto) {
             return "La Fecha de recepción de boleto es obligatoria.";
         }
 
         // 📌 Envío Firmas >= Recepción boleto
-        if (feEnvioFirmas && feEnvioFirmas < feRecepBoleto)
+        if (feEnvioFirmas && feEnvioFirmas < feRecepcionBoleto)
             return "La Fecha de envío Firmas no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Envío Obleado Bolsa >= Recepción boleto
-        if (feEnvioBolsa && feEnvioBolsa < feRecepBoleto)
+        if (feEnvioBolsa && feEnvioBolsa < feRecepcionBoleto)
             return "La Fecha de envío Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
+        // 📌 Envío Certificación AFIP >= Recepción boleto
+        if (feEnvioAfip && feEnvioAfip < feRecepcionBoleto)
+            return "La Fecha de envío Certificación AFIP no puede ser anterior a la Fecha de recepción de boleto.";
+
+        // 📌 Recepción Firmas
+        if (feRecepcionFirma) {
+            if (feRecepcionFirma < feRecepcionBoleto)
+                return "La Fecha de recepción Firmas no puede ser anterior a la Fecha de recepción de boleto.";
+
+            if (feEnvioFirmas && feRecepcionFirma < feEnvioFirmas)
+                return "La Fecha de recepción Firmas debe ser igual o mayor a la Fecha de envío Firmas.";
+        }
+
         // 📌 Recepción Obleado Bolsa
-        if (feVueltaBolsa) {
-            if (feVueltaBolsa < feRecepBoleto)
+        if (feRecepcionBolsa) {
+            if (feRecepcionBolsa < feRecepcionBoleto)
                 return "La Fecha de recepción Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
-            if (feEnvioBolsa && feVueltaBolsa < feEnvioBolsa)
+            if (feEnvioBolsa && feRecepcionBolsa < feEnvioBolsa)
                 return "La Fecha de recepción Obleado Bolsa debe ser igual o mayor a la Fecha de envío Obleado Bolsa.";
         }
 
-        // 📌 Envío Certificación AFIP >= Recepción boleto
-        if (feEnvioAfip && feEnvioAfip < feRecepBoleto)
-            return "La Fecha de envío Certificación AFIP no puede ser anterior a la Fecha de recepción de boleto.";
-
         // 📌 Recepción Certificación AFIP
-        if (feVueltaAfip) {
-            if (feVueltaAfip < feRecepBoleto)
+        if (feRecepcionAfip) {
+            if (feRecepcionAfip < feRecepcionBoleto)
                 return "La Fecha de recepción Certificación AFIP no puede ser anterior a la Fecha de recepción de boleto.";
 
-            if (feEnvioAfip && feVueltaAfip < feEnvioAfip)
+            if (feEnvioAfip && feRecepcionAfip < feEnvioAfip)
                 return "La Fecha de recepción Certificación AFIP debe ser igual o mayor a la Fecha de envío Certificación AFIP.";
         }
 
         // 📌 Envío Sellado (dtFeEnviadoFirma)
-        if (feEnviadoFirma) {
-            if (feEnviadoFirma < feRecepBoleto)
+        if (feEnvioSellado) {
+            if (feEnvioSellado < feRecepcionBoleto)
                 return "La Fecha de envío Sellado no puede ser anterior a la Fecha de recepción de boleto.";
 
-            if (feVueltaBolsa && feEnviadoFirma < feVueltaBolsa)
+            if (feRecepcionBolsa && feEnvioSellado < feRecepcionBolsa)
                 return "La Fecha de envío Sellado debe ser igual o mayor a la Fecha de recepción Obleado Bolsa.";
         }
 
-        // 📌 Recepción Firmas
-        if (feRecibFirma) {
-            if (feRecibFirma < feRecepBoleto)
-                return "La Fecha de recepción Firmas no puede ser anterior a la Fecha de recepción de boleto.";
-
-            if (feEnvioFirmas && feRecibFirma < feEnvioFirmas)
-                return "La Fecha de recepción Firmas debe ser igual o mayor a la Fecha de envío Firmas.";
-        }
 
         return null; // ✅ Todo correcto
     }
@@ -166,64 +179,73 @@ var ControlDeBoletosSeguimiento = (function () {
             BolsaSellado: controlBolsaSellado.val(),
             BoletoCompraNetId: controlBoleto.val(),
             RechazadoAfip: controlRechazadoAfip.val(),
-            FechaEnvio: getKendoDateISO(controlFechaEnvio),
+
+            FechaRecepcionBoleto: getKendoDateISO(controlFechaRecepcionBoleto),
+
+            FechaEnvioFirma: getKendoDateISO(controlFechaEnvioFirma),
             FechaEnvioAfip: getKendoDateISO(controlFechaEnvioAfip),
             FechaEnvioBolsa: getKendoDateISO(controlFechaEnvioBolsa),
-            FechaRecepBoleto: getKendoDateISO(controlFechaRecepBoleto),
-            FechaRecibFirma: getKendoDateISO(controlFechaRecibFirma),
-            FechaVueltaAfip: getKendoDateISO(controlFechaVueltaAfip),
-            FechaVueltaBolsa: getKendoDateISO(controlFechaVueltaBolsa),
-            FechaEnviadoFirma: getKendoDateISO(controlFechaEnviadoFirma),
+
+            FechaRecepcionFirma: getKendoDateISO(controlFechaRecepcionFirma),           
+            FechaRecepcionAfip: getKendoDateISO(controlFechaRecepcionAfip),
+            FechaRecepcionBolsa: getKendoDateISO(controlFechaRecepcionBolsa),
+
+            FechaEnvioSellado: getKendoDateISO(controlFechaEnvioSellado),
             ObsCtrlBoleto: controlObsCtrlBoleto.val(),
             ObsCtrlBoleto2: controlObsCtrlBoleto2.val()
         };
     }
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
+    async function cargarDropdown(url, selector, textoCarga, textoDefault) {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (data) {
-                $select.empty().append('<option value="">' + textoDefault + "</option>");
-                if (data && Array.isArray(data)) {
-                    $.each(data, function (i, item) {
-                        $select.append(
-                            '<option value="' + item.Value + '">' + item.Text + "</option>",
-                        );
-                    });
-                } else {
-                    $select.append('<option value="">Sin datos disponibles</option>');
-                }
-            })
-            .catch(function (error) {
-                console.error("Error cargando dropdown " + selector + ":", error);
-                $select.html('<option value="">Error al cargar datos</option>');
-            });
+        try {
+            var data = await MSExecuteGetOnServerAsync(url);
+            $select.empty().append('<option value="">' + textoDefault + "</option>");
+            if (data && Array.isArray(data)) {
+                $.each(data, function (i, item) {
+                    $select.append(
+                        '<option value="' + item.Value + '">' + item.Text + "</option>",
+                    );
+                });
+            } else {
+                $select.append('<option value="">Sin datos disponibles</option>');
+            }
+        } catch (error) {
+            console.error("Error cargando dropdown " + selector + ":", error);
+            $select.html('<option value="">Error al cargar datos</option>');
+        }
     }
-    function obtener(datosSeguimientoId) {
+    async function obtener(datosSeguimientoId) {
         var url = config.urls.getSeguimiento + "?datosSeguimientoId=" + datosSeguimientoId;
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (response) {
-                if (!response) return;
-                controlBolsa.val(response.BolsaCompraNetId).trigger('change');
-                controlBolsaSellado.val(response.BolsaSellado);
-                controlBoleto.val(response.BoletoCompraNetId).trigger('change');
-                controlRechazadoAfip.val(response.RechazadoAfip);
+        try {
+            var response = await MSExecuteGetOnServerAsync(url);
+            if (!response) return;
 
-                setKendoDate(controlFechaEnvio,        response.FechaEnvio);
-                setKendoDate(controlFechaEnvioAfip,     response.FechaEnvioAfip);
-                setKendoDate(controlFechaEnvioBolsa,    response.FechaEnvioBolsa);
-                setKendoDate(controlFechaRecepBoleto,   response.FechaRecepBoleto);
-                setKendoDate(controlFechaRecibFirma,    response.FechaRecibFirma);
-                setKendoDate(controlFechaVueltaAfip,    response.FechaVueltaAfip);
-                setKendoDate(controlFechaVueltaBolsa,   response.FechaVueltaBolsa);
-                setKendoDate(controlFechaEnviadoFirma,  response.FechaEnviadoFirma);
+            controlBolsa.val(response.BolsaCompraNetId).trigger('change');
+            controlBolsaSellado.val(response.BolsaSellado);
+            controlBoleto.val(response.BoletoCompraNetId).trigger('change');
+            controlRechazadoAfip.val(response.RechazadoAfip);
 
-                controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
-                controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
-            })
-            .catch(function (e) {
-                console.error("Error cargando seguimiento:", e);
-            });
+            setKendoDate(controlFechaRecepcionBoleto, response.FechaRecepcionBoleto);
+            setKendoDate(controlFechaEnvioFirma, response.FechaEnvioFirmas);
+            setKendoDate(controlFechaEnvioBolsa, response.FechaEnvioBolsa);
+            setKendoDate(controlFechaEnvioAfip, response.FechaEnvioAfip);
+
+            setKendoDate(controlFechaRecepcionFirma, response.FechaRecepcionFirma);
+            setKendoDate(controlFechaRecepcionBolsa, response.FechaRecepcionBolsa);
+            setKendoDate(controlFechaRecepcionAfip, response.FechaRecepcionAfip);
+
+            setKendoDate(controlFechaEnvioSellado, response.FechaEnvioSellado);
+
+            controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
+            controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
+        } catch (e) {
+            console.error("Error cargando seguimiento:", e);
+        }
+    }
+
+    async function cargarBolsaSAP() {
+        listaBolsaSAP = await MSExecuteGetOnServerAsync(config.urls.getBolsaSAP);
     }
     function limpiarSeguimientoControlBoleto() {
 
@@ -238,37 +260,37 @@ var ControlDeBoletosSeguimiento = (function () {
         controlObsCtrlBoleto2.val('');
 
         // Inputs fecha
-        setKendoDate(controlFechaEnvio, null);
-        setKendoDate(controlFechaEnvioAfip, null);
+        setKendoDate(controlFechaRecepcionBoleto, null);
+        setKendoDate(controlFechaEnvioFirma, null);
         setKendoDate(controlFechaEnvioBolsa, null);
-        setKendoDate(controlFechaRecepBoleto, null);
-        setKendoDate(controlFechaRecibFirma, null);
-        setKendoDate(controlFechaVueltaAfip, null);
-        setKendoDate(controlFechaVueltaBolsa, null);
-        setKendoDate(controlFechaEnviadoFirma, null);
+        setKendoDate(controlFechaEnvioAfip, null);
+        setKendoDate(controlFechaRecepcionFirma, null);
+        setKendoDate(controlFechaRecepcionBolsa, null);
+        setKendoDate(controlFechaRecepcionAfip, null);
+        setKendoDate(controlFechaEnvioSellado, null);
     }
 
     return {
 
-        inicializar: function (SeguimientoBoletoId, ControlDeBoletosId) {
+        inicializar: async function (SeguimientoBoletoId, ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
             state.SeguimientoBoletoId = SeguimientoBoletoId || 0;
             state.ControlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
 
-            var pBoleto  = cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Todos los boletos");
-            var pBolsa   = cargarDropdown(config.urls.getBolsa,           controlBolsa,  "Cargando...", "Todas las bolsas");
-            var pSAP     = MSExecuteGetOnServerAsync(config.urls.getBolsaSAP).then(function (data) { listaBolsaSAP = data; });
+            await Promise.all([
+                cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Seleccione un boleto"),
+                cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
+                cargarBolsaSAP()
+            ]);
 
-            Promise.all([pBoleto, pBolsa, pSAP]).then(function () {
-                if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                    obtener(state.SeguimientoBoletoId);
-                }
-            });
+            if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
+                await obtener(state.SeguimientoBoletoId);
+            }
         },
 
-        abrir: function (SeguimientoBoletoId, ControlDeBoletosId) {
+        abrir: async function (SeguimientoBoletoId, ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
             state.SeguimientoBoletoId = SeguimientoBoletoId || 0;
@@ -276,22 +298,25 @@ var ControlDeBoletosSeguimiento = (function () {
             limpiarSeguimientoControlBoleto();
             BlockUi('Cargando...');
 
-            var pBoleto = cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Todos los boletos");
-            var pBolsa  = cargarDropdown(config.urls.getBolsa,           controlBolsa,  "Cargando...", "Todas las bolsas");
-            var pSAP    = MSExecuteGetOnServerAsync(config.urls.getBolsaSAP).then(function (data) { listaBolsaSAP = data; });
+            try {
+                await Promise.all([
+                    cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Seleccione un boleto"),
+                    cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
+                    cargarBolsaSAP()
+                ]);
 
-            Promise.all([pBoleto, pBolsa, pSAP]).then(function () {
                 if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                    return obtener(state.SeguimientoBoletoId);
+                    await obtener(state.SeguimientoBoletoId);
                 }
-            }).then(function () {
+
                 $("#txtContrato").val(ControlDeBoletosId || "");
                 $(config.modalId).modal("show");
+            } finally {
                 $.unblockUI();
-            });
+            }
         },
 
-        guardar: function () {
+        guardar: async function () {
             if (state.cargando) return;
 
             var errorValidacion = validarFechas();
@@ -300,28 +325,26 @@ var ControlDeBoletosSeguimiento = (function () {
                 return;
             }
 
-            var self = this;
             state.cargando = true;
             BlockUi('Guardando...');
             var request = obtenerRequest();
-            MSExecuteOnServerAsync(config.urls.createSeguimiento, request)
-                .then(function (response) {
-                    $.unblockUI();
-                    if (!response) return;
-                    if (response.success) {
-                        MensInfo(response.message);
-                        self.cerrar();
-                    } else {
-                        MensErr(response.message);
-                    }
-                })
-                .catch(function (e) {
-                    $.unblockUI();
-                    console.error("Error al guardar seguimiento:", e);
-                })
-                .then(function () {
-                    state.cargando = false;
-                });
+
+            try {
+                var response = await MSExecuteOnServerAsync(config.urls.createSeguimiento, request);
+                if (!response) return;
+
+                if (response.success) {
+                    MensInfo(response.message);
+                    this.cerrar();
+                } else {
+                    MensErr(response.message);
+                }
+            } catch (e) {
+                console.error("Error al guardar seguimiento:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
         },
 
         cerrar: function () {

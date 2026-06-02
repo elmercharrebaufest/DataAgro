@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Control de Boletos";
 }
 
@@ -10,8 +10,6 @@
 @section Scripts{
     @Scripts.Render("~/bundles/ControlDeBoletos")
 }
-@* Codificación UTF-8 para caracteres especiales *@
-<meta charset="utf-8" />
 
 <div class="container-fluid" style="margin-left:2em; margin-right:2em;" id="frmPendienteControl">
     <!-- Header Section -->
@@ -97,9 +95,9 @@
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Tipo de Boleto</label>
-                        <div class="custom-control custom-checkbox mt-2">
-                            <input type="checkbox" class="custom-control-input" id="esConfirma">
-                            <label class="custom-control-label" for="esConfirma">Solo Confirmas</label>
+                        <div style="display: flex;">
+                            <input class="form-control" role="switch" type="checkbox" id="esConfirma" style="width:20px; margin-top:0 !important; margin-left:0 !important;">
+                            <label style="margin-left: 5px;" for="esConfirma">Solo Confirmas</label>
                         </div>
                     </div>
                 </div>
@@ -129,10 +127,8 @@
     <!-- Results Section -->
     <div class="card results-card mt-3 fade-in">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <div class="results-summary">
-                <span class="badge badge-info" id="totalRegistros">0 registros</span>
-            </div>
         </div>
+        <br />
         <div class="card-body p-0">
             <!-- Quick Actions Bar -->
             <div class="quick-actions-bar">

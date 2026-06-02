@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +13,16 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int BolsaCompraNetId { get; set; }
         public int BoletoCompraNetId { get; set; }
         public string BolsaSellado { get; set; }
-        public DateTime? FechaEnviadoFirma { get; set; }
-        public DateTime? FechaEnvio { get; set; }
-        public DateTime? FechaEnvioAfip { get; set; }
+
+        public DateTime? FechaRecepcionBoleto { get; set; }
+
+        public DateTime? FechaEnvioFirmas { get; set; }
         public DateTime? FechaEnvioBolsa { get; set; }
-        public DateTime? FechaRecepBoleto { get; set; }
-        public DateTime? FechaRecibFirma { get; set; }
-        public DateTime? FechaVueltaAfip { get; set; }
-        public DateTime? FechaVueltaBolsa { get; set; }
+        public DateTime? FechaEnvioAfip { get; set; }
+        public DateTime? FechaRecepcionFirma { get; set; }
+        public DateTime? FechaRecepcionBolsa { get; set; }
+        public DateTime? FechaRecepcionAfip { get; set; }
+        public DateTime? FechaEnvioSellado { get; set; }
         public string ObsCtrlBoleto { get; set; }
         public string ObsCtrlBoleto2 { get; set; }
     }

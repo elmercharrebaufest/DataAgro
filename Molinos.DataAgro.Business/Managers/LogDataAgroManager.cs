@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using JsonDiffPatchDotNet;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -734,6 +734,10 @@ namespace Molinos.DataAgro.Business.Managers
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPagoDiferido", cambios.TipoNegocio + " - " + cambios.Material);
         }
 
+        public int LogCambiosControlBoletos<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion,int id, string descripcion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, id, "ControlBoletos", descripcion);
+        }
 
         public string AddSpacesToSentence(string text, char limite)
         {

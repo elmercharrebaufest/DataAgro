@@ -84,24 +84,24 @@
 
                         <div class="row">
                             <div class="col-md-4">
-                                <label><strong>Clasificaci&oacute;n Proveedor</strong></label>
+                                <label><strong>Clasificación Proveedor</strong></label>
                                 <label id="ClasificacionProveedor" style="width: stretch"></label>
                             </div>
 
                             <div class="col-md-4">
-                                <label><strong>Est&aacute;ndar Calidad</strong></label>
+                                <label><strong>Estándar Calidad</strong></label>
                                 <label id="StandardCalidad" style="width: stretch"></label>
                             </div>
 
                             <div class="col-md-4">
-                                <label><strong>Per&iacute;odo Entrega</strong></label>
+                                <label><strong>Período Entrega</strong></label>
                                 <label id="PeriodoEntrega" style="width: stretch"></label>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4">
-                                <label><strong>Campa&ntilde;a</strong></label>
+                                <label><strong>Campaña</strong></label>
                                 <label id="Campania" style="width: stretch"></label>
                             </div>
 
@@ -111,18 +111,10 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label><strong>Per&iacute;odo Operaci&oacute;n</strong></label>
+                                <label><strong>Período Operación</strong></label>
                                 <label id="PeriodoOperacion" style="width: stretch"></label>
                             </div>
                         </div>
-
-                        @*<div class="row">
-                <div class="col-md-4">
-                    <label><strong>Recepci&oacute;n Boleto</strong></label>
-                    <label id="RecepcionBoleto" style="width: stretch"></label>
-                </div>
-            </div>*@
-
                     </form>
 
                     <!-- ════════ 1. MODIFICAR DATOS DEL CONTRATO ════════ -->
@@ -142,7 +134,7 @@
                              data-parent="#accordionGestionBoleto">
                             <div class="panel-body">
                                 @Html.Partial("_FormModificarDatosDelContrato")
-                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosModificarContrato.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
@@ -162,7 +154,7 @@
                                         aria-expanded="false"
                                         aria-controls="collapseCertificacion">
                                     <i class="fa fa-certificate" aria-hidden="true"></i>
-                                    Datos de Certificaci&oacute;n
+                                    Datos de Certificación
                                 </button>
                             </h5>
                         </div>
@@ -170,7 +162,7 @@
                              data-parent="#accordionGestionBoleto">
                             <div class="panel-body">
                                 @Html.Partial("_FormDatosCertificacion")
-                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosDatosCertificacion.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
@@ -197,7 +189,7 @@
                              data-parent="#accordionGestionBoleto">
                             <div class="panel-body">
                                 @Html.Partial("_FormSeguimientoControlBoleto")
-                                <div class="text-right" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                                <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosSeguimiento.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
@@ -207,14 +199,11 @@
                         </div>
                     </div>
 
-
-                </div><!-- /accordionGestionBoleto -->
+                </div>
             </div>
-
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
-
         </div>
     </div>
 </div>

@@ -36,5 +36,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<ControlDeBoletoTrackingDto> ObtenerTrackingBoletos(int controlDeBoletosId);
         List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros);
         string VerificarOperaSinOblea(string cuit, string tipoProveedor);
+        string VerificarTipoBoletoyFechaRecepcion(int controlDeBoletosId);
     }
 }
