@@ -14,40 +14,32 @@ var ControlBoletosReporteSeguimiento = (function () {
         }
     };
 
-    let controlMaterial = $("#frmReporteSeguimientoBoletos #materialId");
-    let controlProveedor = $("#frmReporteSeguimientoBoletos #proveedorId");
-    let controlBolsaCompraNet = $("#frmReporteSeguimientoBoletos #bolsaCompraNetId");
-
-    let controlNegocioSAPDesde = $("#frmReporteSeguimientoBoletos #NegocioSAP-desde");
-    let controlNegocioSAPHasta = $("#frmReporteSeguimientoBoletos #NegocioSAP-hasta");
-
-    let controlFechaVueltaAfipHasta = $("#frmReporteSeguimientoBoletos #fechaCertificacionDesde");
-    let controlFechaVueltaAfipDesde = $("#frmReporteSeguimientoBoletos #fechaCertificacionHasta");
-    let controlFechaEnvioAfipHasta = $("#frmReporteSeguimientoBoletos #fechaVencimientoCertificacionDesde");
-    let controlFechaEnvioAfipDesde = $("#frmReporteSeguimientoBoletos #fechaVencimientoCertificacionHasta");
-    let controlFechaVueltaBolsaHasta = $("#frmReporteSeguimientoBoletos #fechaRecepBoletoDesde");
-    let controlFechaVueltaBolsaDesde = $("#frmReporteSeguimientoBoletos #fechaRecepBoletoHasta");
-    let controlFechaEnvioBolsaHasta = $("#frmReporteSeguimientoBoletos #fechaEnviadoFirmaDesde");
-    let controlFechaEnvioBolsaDesde = $("#frmReporteSeguimientoBoletos #fechaEnviadoFirmaHasta");
-    let controlFechaRecibFirmaHasta = $("#frmReporteSeguimientoBoletos #fechaRecibFirmaDesde");
-    let controlFechaRecibFirmaDesde = $("#frmReporteSeguimientoBoletos #fechaRecibFirmaHasta");
-    let controlFechaEnviadoFirmaHasta = $("#frmReporteSeguimientoBoletos #fechaEnvioBolsaDesde");
-    let controlFechaEnviadoFirmaDesde = $("#frmReporteSeguimientoBoletos #fechaEnvioBolsaHasta");
-    let controlFechaRecepBoletoHasta = $("#frmReporteSeguimientoBoletos #fechaVueltaBolsaDesde");
-    let controlFechaRecepBoletoDesde = $("#frmReporteSeguimientoBoletos #fechaVueltaBolsaHasta");
-    let controlFechaVencimientoCertificacionHasta = $("#frmReporteSeguimientoBoletos #fechaEnvioAfipDesde");
-    let controlFechaVencimientoCertificacionDesde = $("#frmReporteSeguimientoBoletos #fechaEnvioAfipHasta");
-    let controlFechaCertificacionHasta = $("#frmReporteSeguimientoBoletos #fechaVueltaAfipDesde");
-    let controlFechaCertificacionDesde = $("#frmReporteSeguimientoBoletos #fechaVueltaAfipHasta");
-
-    let controlFiltrarBoletos = $("#frmReporteSeguimientoBoletos #filtrarBoletos");
-    let controlLimpiarFiltros = $("#frmReporteSeguimientoBoletos #limpiarFiltros");
-    let controlExportarExcel = $("#frmReporteSeguimientoBoletos #exportarExcel");
-
-    let controlSelectAll = $("#frmReporteSeguimientoBoletos #selectAll");
-
-    let controlIniciarControlMasivo = $("#frmReporteSeguimientoBoletos #iniciarControlMasivo");
-    let controlFinalizarControlMasivo = $("#frmReporteSeguimientoBoletos #finalizarControlMasivo");
+    // Controles — se inicializan en bindControls() dentro de init()
+    var controlMaterial;
+    var controlProveedor;
+    var controlBolsaCompraNet;
+    var controlNegocioSAP;
+    var controlFechaCertificacionDesde;
+    var controlFechaCertificacionHasta;
+    var controlFechaVencimientoCertificacionDesde;
+    var controlFechaVencimientoCertificacionHasta;
+    var controlFechaRecepBoletoDesde;
+    var controlFechaRecepBoletoHasta;
+    var controlFechaEnviadoFirmaDesde;
+    var controlFechaEnviadoFirmaHasta;
+    var controlFechaRecibFirmaDesde;
+    var controlFechaRecibFirmaHasta;
+    var controlFechaEnvioBolsaDesde;
+    var controlFechaEnvioBolsaHasta;
+    var controlFechaVueltaBolsaDesde;
+    var controlFechaVueltaBolsaHasta;
+    var controlFechaEnvioAfipDesde;
+    var controlFechaEnvioAfipHasta;
+    var controlFechaVueltaAfipDesde;
+    var controlFechaVueltaAfipHasta;
+    var controlFiltrarBoletos;
+    var controlLimpiarFiltros;
+    var controlExportarExcel;
 
     var state = {
         grid: null,
@@ -55,12 +47,51 @@ var ControlBoletosReporteSeguimiento = (function () {
         datosInicializados: false,
     };
 
-    const controlMasivoAccion = Object.freeze({
-        ControlIniciado: 1,
-        RegistroDatosOblea: 2,
-        CertificacionCompletada: 3,
-        ControlFinalizado: 4,
-    });
+    // Cachea todos los controles del formulario (debe llamarse cuando el DOM ya existe)
+    function inicializarFechas() {
+        [
+            controlFechaCertificacionDesde, controlFechaCertificacionHasta, controlFechaVencimientoCertificacionDesde,
+            controlFechaVencimientoCertificacionHasta, controlFechaRecepBoletoDesde, controlFechaRecepBoletoHasta,
+            controlFechaEnviadoFirmaDesde, controlFechaEnviadoFirmaHasta, controlFechaRecibFirmaDesde,
+            controlFechaRecibFirmaHasta, controlFechaEnvioBolsaDesde, controlFechaEnvioBolsaHasta,
+            controlFechaVueltaBolsaDesde, controlFechaVueltaBolsaHasta, controlFechaEnvioAfipDesde,
+            controlFechaEnvioAfipHasta, controlFechaVueltaAfipDesde, controlFechaVueltaAfipHasta
+        ].forEach(function ($el) {
+            if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
+            $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
+        });
+    }
+    function bindControls() {
+        var $form = $("#frmReporteSeguimientoBoletos");
+
+        controlMaterial         = $form.find("#materialId");
+        controlProveedor        = $form.find("#proveedorId");
+        controlBolsaCompraNet   = $form.find("#bolsaCompraNetId");
+        controlNegocioSAP       = $form.find("#NegocioSAP");
+
+        controlFechaCertificacionDesde              = $form.find("#fechaCertificacionDesde");
+        controlFechaCertificacionHasta              = $form.find("#fechaCertificacionHasta");
+        controlFechaVencimientoCertificacionDesde   = $form.find("#fechaVencimientoCertificacionDesde");
+        controlFechaVencimientoCertificacionHasta   = $form.find("#fechaVencimientoCertificacionHasta");
+        controlFechaRecepBoletoDesde                = $form.find("#fechaRecepBoletoDesde");
+        controlFechaRecepBoletoHasta                = $form.find("#fechaRecepBoletoHasta");
+        controlFechaEnviadoFirmaDesde               = $form.find("#fechaEnviadoFirmaDesde");
+        controlFechaEnviadoFirmaHasta               = $form.find("#fechaEnviadoFirmaHasta");
+        controlFechaRecibFirmaDesde                 = $form.find("#fechaRecibFirmaDesde");
+        controlFechaRecibFirmaHasta                 = $form.find("#fechaRecibFirmaHasta");
+        controlFechaEnvioBolsaDesde                 = $form.find("#fechaEnvioBolsaDesde");
+        controlFechaEnvioBolsaHasta                 = $form.find("#fechaEnvioBolsaHasta");
+        controlFechaVueltaBolsaDesde                = $form.find("#fechaVueltaBolsaDesde");
+        controlFechaVueltaBolsaHasta                = $form.find("#fechaVueltaBolsaHasta");
+        controlFechaEnvioAfipDesde                  = $form.find("#fechaEnvioAfipDesde");
+        controlFechaEnvioAfipHasta                  = $form.find("#fechaEnvioAfipHasta");
+        controlFechaVueltaAfipDesde                 = $form.find("#fechaVueltaAfipDesde");
+        controlFechaVueltaAfipHasta                 = $form.find("#fechaVueltaAfipHasta");
+
+        controlFiltrarBoletos   = $form.find("#filtrarBoletos");
+        controlLimpiarFiltros   = $form.find("#limpiarFiltros");
+        controlExportarExcel    = $form.find("#exportarExcel");
+    }
 
     // Funciones privadas
     function mostrarSpinner(mostrar) {
@@ -91,75 +122,149 @@ var ControlBoletosReporteSeguimiento = (function () {
         return valor === "" || (!isNaN(valor) && parseInt(valor) >= 0);
     }
 
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = selector;
-        $select.html('<option value="">' + textoCarga + "</option>");
-
-        try {
-            var data = MSExecuteGetOnServer(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
-                });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
-        }
+    function esNegocioSAPValido() {
+        const val = controlNegocioSAP.val()?.trim();
+        return !val || /^[0-9;]+$/.test(val);
     }
 
-    // Funciones públicas
+    function cargarDropdown(url, $select, textoCarga, textoDefault) {
+        $select.html('<option value="">' + textoCarga + "</option>");
+        return MSExecuteGetOnServerAsync(url)
+            .then(function (data) {
+                $select.empty().append('<option value="">' + textoDefault + "</option>");
+                if (data && Array.isArray(data)) {
+                    $.each(data, function (i, item) {
+                        $select.append(
+                            '<option value="' + item.Value + '">' + item.Text + "</option>",
+                        );
+                    });
+                } else {
+                    $select.append('<option value="">Sin datos disponibles</option>');
+                }
+            })
+            .catch(function (error) {
+                console.error("Error cargando dropdown:", error);
+                $select.html('<option value="">Error al cargar datos</option>');
+            });
+    }
+
+    // ── Estilos globales del grid ────────────────────────────────────────────
+
+    function inyectarEstilosGrid() {
+        if ($("#grid-reporte-seguimiento-styles").length) return;
+        $("<style id='grid-reporte-seguimiento-styles'>").text(
+            "#boletos-grid .k-grid-header th {" +
+            "  font-weight: bold !important; font-size: 13px !important;" +
+            "  font-family: Arial, sans-serif !important; white-space: nowrap; background-color: #f5f5f5; }" +
+            "#boletos-grid .k-grid-content td {" +
+            "  font-size: 13px !important; font-family: Arial, sans-serif !important; }" +
+            "#boletos-grid .k-grid-header-wrap { overflow: hidden !important; }" +
+            "#boletos-grid .k-grid-content { overflow-x: auto !important; overflow-y: auto !important; }" +
+            "#boletos-grid .k-grid-header-wrap table, #boletos-grid .k-grid-content table { table-layout: fixed; }" +
+            "#boletos-grid .k-grid-content tr:hover td, #boletos-grid .k-grid-content tr.k-state-hover td { color: #333 !important; }" +
+            "#boletos-grid .k-grid-content tr.k-state-selected td { color: #333 !important; }"
+        ).appendTo("head");
+    }
+
+    // ── Auto-ajuste de columnas ──────────────────────────────────────────────
+
+    var _canvas = document.createElement("canvas");
+
+    function medirTexto(texto, fuente) {
+        var ctx = _canvas.getContext("2d");
+        ctx.font = fuente;
+        return Math.ceil(ctx.measureText(texto).width);
+    }
+
+    function autoFitColumnas(grid) {
+        var $wrapper     = grid.element;
+        var $headerCols  = $wrapper.find(".k-grid-header-wrap colgroup col");
+        var $contentCols = $wrapper.find(".k-grid-content colgroup col");
+        var $headerCells = $wrapper.find(".k-grid-header-wrap tr:first th");
+        var $rows        = $wrapper.find(".k-grid-content tbody tr");
+        var columns      = grid.columns;
+
+        $headerCells.each(function (colIdx) {
+            var colDef   = columns[colIdx];
+            var hasField = colDef && colDef.field;
+
+            if (!hasField) {
+                var fixedW = (colDef && colDef.width) ? colDef.width : 50;
+                $headerCols.eq(colIdx).css("width", fixedW + "px");
+                $contentCols.eq(colIdx).css("width", fixedW + "px");
+                return;
+            }
+
+            var headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
+            var maxPx = medirTexto(headerText, "bold 13px Arial") + 32;
+
+            $rows.each(function () {
+                var cellPx = medirTexto($(this).find("td").eq(colIdx).text().trim(), "13px Arial") + 24;
+                if (cellPx > maxPx) maxPx = cellPx;
+            });
+
+            maxPx = Math.max(maxPx, 60);
+            $headerCols.eq(colIdx).css("width", maxPx + "px");
+            $contentCols.eq(colIdx).css("width", maxPx + "px");
+        });
+
+        var totalWidth = Array.from($headerCols).reduce(function (sum, col) {
+            return sum + (parseInt($(col).css("width")) || 0);
+        }, 0);
+        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
+    }
+
+    // ── API pública ──────────────────────────────────────────────────────────
+
     return {
         init: function () {
             if (state.datosInicializados) return;
 
-            this.cargarDatosIniciales();
-            this.configurarEventos();
-            this.inicializarGrid();
-
-            state.datosInicializados = true;
+            bindControls();
+            inyectarEstilosGrid();
+            inicializarFechas();
+            var self = this;
+            this.cargarDatosIniciales().then(function () {
+                self.configurarEventos();
+                self.inicializarGrid();
+                state.datosInicializados = true;
+            });
         },
 
         cargarDatosIniciales: function () {
-            cargarDropdown(
-                config.urls.getMateriales,
-                controlMaterial,
-                "Cargando...",
-                "Todos los materiales",
-            );
-            cargarDropdown(
-                config.urls.getProveedores,
-                controlProveedor,
-                "Cargando...",
-                "Todos los proveedores",
-            );
-            cargarDropdown(
-                config.urls.getBolsaCompraNet,
-                controlBolsaCompraNet,
-                "Cargando...",
-                "Todas las Bolsas",
-            );
+            return Promise.all([
+                cargarDropdown(config.urls.getMateriales,    controlMaterial,       "Cargando...", "Todos los materiales"),
+                cargarDropdown(config.urls.getProveedores,   controlProveedor,      "Cargando...", "Todos los proveedores"),
+                cargarDropdown(config.urls.getBolsaCompraNet, controlBolsaCompraNet, "Cargando...", "Todas las Bolsas"),
+            ]);
         },
 
         configurarEventos: function () {
             var self = this;
 
-            // Validación en tiempo real para campos numéricos
-            $("#NegocioSAP-desde, #NegocioSAP-hasta").on("input", function () {
-                var valor = this.value;
-                if (!validarNumero(valor)) {
-                    this.setCustomValidity("Ingrese un número válido");
-                    $(this).addClass("is-invalid");
-                } else {
-                    this.setCustomValidity("");
-                    $(this).removeClass("is-invalid");
-                }
-            });
+            controlNegocioSAP
+                .on("paste", function (e) {
+
+                    e.preventDefault();
+
+                    let texto = (e.originalEvent.clipboardData || window.clipboardData)
+                        .getData("text");
+
+                    // Separar por saltos de línea
+                    let valores = texto
+                        .split(/\r?\n/)           // soporta Excel / Windows / Linux
+                        .map(v => v.trim())       // quitar espacios
+                        .filter(v => v !== "");   // eliminar vacíos
+
+                    // eliminar duplicados
+                    valores = [...new Set(valores)];
+
+                    // unir en una sola línea con ;
+                    $(this).val(valores.join(";"));
+                })
+                .on("keypress", e => {
+                    if (e.which === 32) e.preventDefault(); // bloquear espacios
+                });	
 
             // Eventos de botones
             controlFiltrarBoletos
@@ -181,22 +286,6 @@ var ControlBoletosReporteSeguimiento = (function () {
                 });
         },
 
-        autoFitSelectedColumns: function () {
-            if (!state.grid) return;
-            var colsToFit = ["EstadoConfirma", "Proveedor", "Comercial"];
-            var columns = state.grid.columns;
-            for (var i = 0; i < columns.length; i++) {
-                var field = columns[i].field;
-                if (field && colsToFit.indexOf(field) !== -1) {
-                    try {
-                        state.grid.autoFitColumn(i);
-                    } catch (e) {
-                        // autoFitColumn puede no estar disponible en algunas versiones; ignorar errores
-                    }
-                }
-            }
-        },
-
         inicializarGrid: function () {
             var self = this;
 
@@ -210,51 +299,46 @@ var ControlBoletosReporteSeguimiento = (function () {
                             serverFiltering: true,
                             pageSize: 20,
                             transport: {
-                                read: {
-                                    url: config.urls.getReporteSeguimiento,
-                                    type: "POST",
-                                    dataType: "json",
-                                    contentType: "application/json; charset=utf-8",
-                                },
-                                parameterMap: function (options, operation) {
-                                    if (operation === "read") {
-                                        // Combinar los filtros personalizados con las opciones de Kendo
-                                        var filtros = self.obtenerFiltros();
-                                        var parametros = {
-                                            // Opciones de Kendo (paginación, sorting)
-                                            page: options.page || 1,
-                                            pageSize: options.pageSize || 50,
-                                            skip: options.skip || 0,
-                                            take: options.take || 50,
-                                            sort: options.sort || [],
-                                            // Filtros personalizados
-                                            contratoSAPDesde: filtros.contratoSAPDesde,
-                                            contratoSAPHasta: filtros.contratoSAPHasta,
-                                            materialId: filtros.materialId,
-                                            bolsaId: filtros.bolsaId,
-                                            proveedor: filtros.proveedor,
-                                            fechaCertificacionDesde: filtros.fechaVueltaAfipHasta,
-                                            fechaCertificacionHasta: filtros.fechaVueltaAfipDesde,
-                                            fechaVencimientoCertificacionDesde: filtros.fechaEnvioAfipHasta,
-                                            fechaVencimientoCertificacionHasta: filtros.fechaEnvioAfipDesde,
-                                            fechaRecepBoletoDesde: filtros.fechaVueltaBolsaHasta,
-                                            fechaRecepBoletoHasta: filtros.fechaVueltaBolsaDesde,
-                                            fechaEnviadoFirmaDesde: filtros.fechaEnvioBolsaHasta,
-                                            fechaEnviadoFirmaHasta: filtros.fechaEnvioBolsaDesde,
-                                            fechaRecibFirmaDesde: filtros.fechaRecibFirmaHasta,
-                                            fechaRecibFirmaHasta: filtros.fechaRecibFirmaDesde,
-                                            fechaEnvioBolsaDesde: filtros.fechaEnviadoFirmaHasta,
-                                            fechaEnvioBolsaHasta: filtros.fechaEnviadoFirmaDesde,
-                                            fechaVueltaBolsaDesde: filtros.fechaRecepBoletoHasta,
-                                            fechaVueltaBolsaHasta: filtros.fechaRecepBoletoDesde,
-                                            fechaEnvioAfipDesde: filtros.fechaVencimientoCertificacionHasta,
-                                            fechaEnvioAfipHasta: filtros.fechaVencimientoCertificacionDesde,
-                                            fechaVueltaAfipDesde: filtros.fechaCertificacionHasta,
-                                            fechaVueltaAfipHasta: filtros.fechaCertificacionDesde,
-                                        };
-                                        return kendo.stringify(parametros);
-                                    }
-                                    return kendo.stringify(options);
+                                read: function (options) {
+                                    var data = options.data || {};
+                                    var filtros = self.obtenerFiltros();
+                                    var parametros = {
+                                        page:     data.page     || 1,
+                                        pageSize: data.pageSize || 50,
+                                        skip:     data.skip     || 0,
+                                        take:     data.take     || 50,
+                                        sort:     data.sort     || [],
+                                        contratoSAP:                         filtros.contratoSAP,
+                                        materialId:                          filtros.materialId,
+                                        bolsaId:                             filtros.bolsaId,
+                                        proveedor:                           filtros.proveedor,
+                                        fechaCertificacionDesde:             filtros.fechaCertificacionDesde,
+                                        fechaCertificacionHasta:             filtros.fechaCertificacionHasta,
+                                        fechaVencimientoCertificacionDesde:  filtros.fechaVencimientoCertificacionDesde,
+                                        fechaVencimientoCertificacionHasta:  filtros.fechaVencimientoCertificacionHasta,
+                                        fechaRecepBoletoDesde:               filtros.fechaRecepBoletoDesde,
+                                        fechaRecepBoletoHasta:               filtros.fechaRecepBoletoHasta,
+                                        fechaEnviadoFirmaDesde:              filtros.fechaEnviadoFirmaDesde,
+                                        fechaEnviadoFirmaHasta:              filtros.fechaEnviadoFirmaHasta,
+                                        fechaRecibFirmaDesde:                filtros.fechaRecibFirmaDesde,
+                                        fechaRecibFirmaHasta:                filtros.fechaRecibFirmaHasta,
+                                        fechaEnvioBolsaDesde:                filtros.fechaEnvioBolsaDesde,
+                                        fechaEnvioBolsaHasta:                filtros.fechaEnvioBolsaHasta,
+                                        fechaVueltaBolsaDesde:               filtros.fechaVueltaBolsaDesde,
+                                        fechaVueltaBolsaHasta:               filtros.fechaVueltaBolsaHasta,
+                                        fechaEnvioAfipDesde:                 filtros.fechaEnvioAfipDesde,
+                                        fechaEnvioAfipHasta:                 filtros.fechaEnvioAfipHasta,
+                                        fechaVueltaAfipDesde:                filtros.fechaVueltaAfipDesde,
+                                        fechaVueltaAfipHasta:                filtros.fechaVueltaAfipHasta,
+                                    };
+
+                                    MSExecuteOnServerAsync(config.urls.getReporteSeguimiento, parametros)
+                                        .then(function (response) {
+                                            options.success(response || { Data: [], Total: 0 });
+                                        })
+                                        .catch(function (error) {
+                                            options.error(error);
+                                        });
                                 },
                             },
                             schema: {
@@ -317,11 +401,8 @@ var ControlBoletosReporteSeguimiento = (function () {
                                 refresh: "Actualizar",
                             },
                         },
-                        navigatable: true,
-                        selectable: {
-                            mode: "multiple",
-                            type: "row",
-                        },
+                        scrollable: { virtual: false },
+                        navigatable: false,
                         columns: [
                             {
                                 field: "TipoBoleto",
@@ -422,8 +503,7 @@ var ControlBoletosReporteSeguimiento = (function () {
                             },
                         ],
                         dataBound: function (e) {
-                            // Ajustar automáticamente solo las columnas solicitadas
-                            //self.autoFitSelectedColumns();
+                            autoFitColumnas(e.sender);
                         }
                     })
                     .data("kendoGrid");
@@ -454,29 +534,28 @@ var ControlBoletosReporteSeguimiento = (function () {
 
         obtenerFiltros: function () {
             return {
-                contratoSAPDesde: controlNegocioSAPDesde.val().trim() || null,
-                contratoSAPHasta: controlNegocioSAPHasta.val().trim() || null,
-                materialId: controlMaterial.val() || null,
-                proveedor: controlProveedor.val() || null,
-                bolsaId: controlBolsaCompraNet.val() || null,
-                fechaCertificacionDesde: controlFechaCertificacionDesde.val() || null,
-                fechaCertificacionHasta: controlFechaCertificacionHasta.val() || null,
-                fechaVencimientoCertificacionDesde: controlFechaVencimientoCertificacionDesde.val() || null,
-                fechaVencimientoCertificacionHasta: controlFechaVencimientoCertificacionHasta.val() || null,
-                fechaRecepBoletoDesde: controlFechaRecepBoletoDesde.val() || null,
-                fechaRecepBoletoHasta: controlFechaRecepBoletoHasta.val() || null,
-                fechaEnviadoFirmaDesde: controlFechaEnviadoFirmaDesde.val() || null,
-                fechaEnviadoFirmaHasta: controlFechaEnviadoFirmaHasta.val() || null,
-                fechaRecibFirmaDesde: controlFechaRecibFirmaDesde.val() || null,
-                fechaRecibFirmaHasta: controlFechaRecibFirmaHasta.val() || null,
-                fechaEnvioBolsaDesde: controlFechaEnvioBolsaDesde.val() || null,
-                fechaEnvioBolsaHasta: controlFechaEnvioBolsaHasta.val() || null,
-                fechaVueltaBolsaDesde: controlFechaVueltaBolsaDesde.val() || null,
-                fechaVueltaBolsaHasta: controlFechaVueltaBolsaHasta.val() || null,
-                fechaEnvioAfipDesde: controlFechaEnvioAfipDesde.val() || null,
-                fechaEnvioAfipHasta: controlFechaEnvioAfipHasta.val() || null,
-                fechaVueltaAfipDesde: controlFechaVueltaAfipDesde.val() || null,
-                fechaVueltaAfipHasta: controlFechaVueltaAfipHasta.val() || null,
+                contratoSAP:                        controlNegocioSAP.val().trim()                        || null,
+                materialId:                         controlMaterial.val()                                 || null,
+                proveedor:                          controlProveedor.val()                                || null,
+                bolsaId:                            controlBolsaCompraNet.val()                           || null,
+                fechaCertificacionDesde:            controlFechaCertificacionDesde.val()                  || null,
+                fechaCertificacionHasta:            controlFechaCertificacionHasta.val()                  || null,
+                fechaVencimientoCertificacionDesde: controlFechaVencimientoCertificacionDesde.val()       || null,
+                fechaVencimientoCertificacionHasta: controlFechaVencimientoCertificacionHasta.val()       || null,
+                fechaRecepBoletoDesde:              controlFechaRecepBoletoDesde.val()                    || null,
+                fechaRecepBoletoHasta:              controlFechaRecepBoletoHasta.val()                    || null,
+                fechaEnviadoFirmaDesde:             controlFechaEnviadoFirmaDesde.val()                   || null,
+                fechaEnviadoFirmaHasta:             controlFechaEnviadoFirmaHasta.val()                   || null,
+                fechaRecibFirmaDesde:               controlFechaRecibFirmaDesde.val()                     || null,
+                fechaRecibFirmaHasta:               controlFechaRecibFirmaHasta.val()                     || null,
+                fechaEnvioBolsaDesde:               controlFechaEnvioBolsaDesde.val()                     || null,
+                fechaEnvioBolsaHasta:               controlFechaEnvioBolsaHasta.val()                     || null,
+                fechaVueltaBolsaDesde:              controlFechaVueltaBolsaDesde.val()                    || null,
+                fechaVueltaBolsaHasta:              controlFechaVueltaBolsaHasta.val()                    || null,
+                fechaEnvioAfipDesde:                controlFechaEnvioAfipDesde.val()                      || null,
+                fechaEnvioAfipHasta:                controlFechaEnvioAfipHasta.val()                      || null,
+                fechaVueltaAfipDesde:               controlFechaVueltaAfipDesde.val()                     || null,
+                fechaVueltaAfipHasta:               controlFechaVueltaAfipHasta.val()                     || null,
             };
         },
 
@@ -484,28 +563,9 @@ var ControlBoletosReporteSeguimiento = (function () {
             var filtros = this.obtenerFiltros();
             var errores = [];
 
-            if (
-                filtros.contratoSAPDesde &&
-                !validarNumero(filtros.contratoSAPDesde)
-            ) {
-                errores.push("El número SAP desde debe ser un número válido");
-            }
-
-            if (
-                filtros.contratoSAPHasta &&
-                !validarNumero(filtros.contratoSAPHasta)
-            ) {
-                errores.push("El número SAP hasta debe ser un número válido");
-            }
-
-            if (
-                filtros.contratoSAPDesde &&
-                filtros.contratoSAPHasta &&
-                parseInt(filtros.contratoSAPDesde) > parseInt(filtros.contratoSAPHasta)
-            ) {
-                errores.push(
-                    "El número SAP desde debe ser menor o igual al número SAP hasta",
-                );
+            if (!esNegocioSAPValido()) {
+                errores.push("Solo se admiten números y el ';' en el campo Negocio SAP.");
+                return;
             }
 
             if (
@@ -537,26 +597,28 @@ var ControlBoletosReporteSeguimiento = (function () {
         },
 
         limpiarFiltros: function () {
-
-            controlNegocioSAPDesde
-                .val("")
-                .removeClass("is-invalid");
-
-            controlNegocioSAPHasta
-                .val("")
-                .removeClass("is-invalid");
-
+            controlNegocioSAP.val("").removeClass("is-invalid");
             controlMaterial.val("");
-            controlEstadoControl.val("");
-            controlComercial.val("");
             controlProveedor.val("");
             controlBolsaCompraNet.val("");
-
-            controlFechaCargaDesde.val("");
-            controlFechaCargaHasta.val("");
-
-            controlEsConfirma.prop("checked", false);
-
+            controlFechaCertificacionDesde.val("");
+            controlFechaCertificacionHasta.val("");
+            controlFechaVencimientoCertificacionDesde.val("");
+            controlFechaVencimientoCertificacionHasta.val("");
+            controlFechaRecepBoletoDesde.val("");
+            controlFechaRecepBoletoHasta.val("");
+            controlFechaEnviadoFirmaDesde.val("");
+            controlFechaEnviadoFirmaHasta.val("");
+            controlFechaRecibFirmaDesde.val("");
+            controlFechaRecibFirmaHasta.val("");
+            controlFechaEnvioBolsaDesde.val("");
+            controlFechaEnvioBolsaHasta.val("");
+            controlFechaVueltaBolsaDesde.val("");
+            controlFechaVueltaBolsaHasta.val("");
+            controlFechaEnvioAfipDesde.val("");
+            controlFechaEnvioAfipHasta.val("");
+            controlFechaVueltaAfipDesde.val("");
+            controlFechaVueltaAfipHasta.val("");
             this.filtrarBoletos();
         },
 

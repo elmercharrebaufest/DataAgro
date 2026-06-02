@@ -6,7 +6,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
             createPreCertificacion: "/ControlDeBoletos/RegistrarDatosPreCertificacion",
             getPreCertificacion:    "/ControlDeBoletos/GetDatosPreCertificacion",
             getBolsaCompraNet:      "/ControlDeBoletos/GetBolsaCompraNet",
-            getTipoObleaConCodigo:  "/ControlDeBoletos/GetTipoObleaConCodigo"
+            getTipoObleaConCodigo: "/ControlDeBoletos/GetTipoObleaConCodigo",
+            getVerificarTipoBoletoyFechaRecepcion: "/ControlDeBoletos/GetVerificarTipoBoletoyFechaRecepcion"
         },
         modalId: "#modalCertificacion"
     };
@@ -14,7 +15,9 @@ var ControlDeBoletosDatosCertificacion = (function () {
     var state = {
         cargando:           false,
         controlDeBoletosId: null,
-        operaSinOblea:      false
+        operaSinOblea: false,
+        planCanje: false,
+        verificaDatosSeguimiento: false
     };
 
     // Controles cacheados del formulario
@@ -102,54 +105,84 @@ var ControlDeBoletosDatosCertificacion = (function () {
         ctrl.bolsaPlanCanje.val(null).trigger('change');
     }
 
-    function cargarDropdown(url, $select, textoDefault) {
+    async function cargarDropdown(url, $select, textoDefault) {
         $select.html('<option value="">Cargando...</option>');
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (data) {
-                $select.empty().append('<option value="">' + textoDefault + '</option>');
-                if (data && Array.isArray(data)) {
-                    $.each(data, function (i, item) {
-                        $select.append('<option value="' + item.Value + '">' + item.Text + '</option>');
-                    });
-                }
-            })
-            .catch(function (e) {
-                console.error("Error cargando dropdown:", e);
-                $select.html('<option value="">Error al cargar datos</option>');
-            });
+        try {
+            var data = await MSExecuteGetOnServerAsync(url);
+            $select.empty().append('<option value="">' + textoDefault + '</option>');
+            if (data && Array.isArray(data)) {
+                $.each(data, function (i, item) {
+                    $select.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                });
+            }
+        } catch (e) {
+            console.error("Error cargando dropdown:", e);
+            $select.html('<option value="">Error al cargar datos</option>');
+        }
     }
 
     function bloqueaControlesSinOblea() {
-        var enabled = state.operaSinOblea;
-        ctrl.obleaPlanCanje.prop("disabled", !enabled);
-        ctrl.bolsaPlanCanje.prop("disabled", !enabled);
-        ctrl.fechaCertificacionPlanCanje.prop("disabled", !enabled);
-        ctrl.fechaVencimientoPlanCanje.prop("disabled", !enabled);
+        var enabledOperaSinOblea = state.operaSinOblea? true: false;
+        var enabledPlanCanje = !state.planCanje? true: false;
 
-        ctrl.fechaCertificacionPlanCanje
-            .data("kendoDatePicker")
-            .enable(enabled);
+        [
+            ctrl.obleaPlanCanje,
+            ctrl.bolsaPlanCanje,
+            ctrl.fechaCertificacionPlanCanje,
+            ctrl.fechaVencimientoPlanCanje
+        ].forEach(function (control) {
+            control.prop("disabled", enabledPlanCanje);
+        });
 
-        ctrl.fechaVencimientoPlanCanje
-            .data("kendoDatePicker")
-            .enable(enabled);
+        [
+            ctrl.fechaCertificacionPlanCanje,
+            ctrl.fechaVencimientoPlanCanje
+        ].forEach(function (control) {
+            control.data("kendoDatePicker").enable(!enabledPlanCanje);
+        });
 
+        [
+            ctrl.rechazado,
+            ctrl.oblea,
+            ctrl.bolsa,
+            ctrl.fechaCertificacion,
+            ctrl.fechaVencimiento
+        ].forEach(function (control) {
+            control.prop("disabled", enabledOperaSinOblea);
+        });
 
-        ctrl.rechazado.prop("disabled", enabled);
-        ctrl.oblea.prop("disabled", enabled);
-        ctrl.bolsa.prop("disabled", enabled);
-        ctrl.fechaCertificacion.prop("disabled", enabled);
-        ctrl.fechaVencimiento.prop("disabled", enabled);
-
-        ctrl.fechaCertificacion
-            .data("kendoDatePicker")
-            .enable(!enabled);
-
-        ctrl.fechaVencimiento
-            .data("kendoDatePicker")
-            .enable(!enabled);
+        [
+            ctrl.fechaCertificacion,
+            ctrl.fechaVencimiento
+        ].forEach(function (control) {
+            control.data("kendoDatePicker").enable(!enabledOperaSinOblea);
+        });
     }
+    function bloqueaControles() {
+        var enabledControles = !state.verificaDatosSeguimiento ? true : false;
+        [ctrl.rechazado,
+        ctrl.oblea,
+        ctrl.bolsa,
+        ctrl.rechazadoAfip,
+        ctrl.codigoRegistracionAfip,
+        ctrl.obleaPlanCanje,
+        ctrl.bolsaPlanCanje
+        ].forEach(function (control) {
+            control.prop("disabled", enabledControles);
+        });
 
+        [
+            ctrl.fechaCertificacion,
+            ctrl.fechaVencimiento,
+            ctrl.fechaRegistracionAfip,
+            ctrl.fechaVencimientoProvisoria,
+            ctrl.fechaCertificacionPlanCanje,
+            ctrl.fechaVencimientoPlanCanje,
+        ].forEach(function (control) {
+            control.data("kendoDatePicker").enable(!enabledControles);
+        });
+
+    }		
     function setup() {
         bindControls();
         limpiarFormulario();
@@ -159,54 +192,71 @@ var ControlDeBoletosDatosCertificacion = (function () {
             cargarDropdown(config.urls.getBolsaCompraNet, ctrl.bolsaPlanCanje, "Seleccione una bolsa")
         ]);
     }
+    async function verificarTipoBoletoYFechaRecepcion() {
+        if (!state.controlDeBoletosId) return;
+        var url = config.urls.getVerificarTipoBoletoyFechaRecepcion + "?controlDeBoletosId=" + state.controlDeBoletosId;
+        try {
+            var response = await MSExecuteGetOnServerAsync(url);
+            if (!response) state.verificaDatosSeguimiento = false;
+            if (response) {
+                state.verificaDatosSeguimiento = response == "SI" ? true : false;
+            }
 
-    function cargarDatosExistentes() {
-        if (!state.controlDeBoletosId) return Promise.resolve();
+            bloqueaControles();
+
+            if (state.verificaDatosSeguimiento)
+                bloqueaControlesSinOblea();
+
+        } catch (e) {
+            console.error("Error cargando datos existentes:", e);
+        }
+    }
+    async function cargarDatosExistentes() {
+        if (!state.controlDeBoletosId) return;
 
         var url = config.urls.getPreCertificacion + "?controlDeBoletosId=" + state.controlDeBoletosId;
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (response) {
-                if (!response || !response.Detalle || !response.Detalle.length) return;
+        try {
+            var response = await MSExecuteGetOnServerAsync(url);
+            if (!response || !response.Detalle || !response.Detalle.length) return;
 
-                // Re-bind controls para garantizar que apunten al DOM correcto
-                bindControls();
+            // Re-bind controls para garantizar que apunten al DOM correcto
+            bindControls();
 
-                ctrl.rechazadoAfip.prop('checked', false);
-                ctrl.rechazado.prop('checked', false);
+            ctrl.rechazadoAfip.prop('checked', false);
+            ctrl.rechazado.prop('checked', false);
 
-                $.each(response.Detalle, function (i, item) {
-                    var codigo = item.CodigoTipoOblea;
+            $.each(response.Detalle, function (i, item) {
+                var codigo = item.CodigoTipoOblea;
 
-                    if (codigo === 'O') {
-                        // Precertificación Oblea Bolsa
-                        ctrl.oblea.val(item.Oblea || '');
-                        ctrl.bolsa.val(item.BolsaCompraNetId || '').trigger('change');
-                        setKendoDate(ctrl.fechaCertificacion, item.FechaCertificacion);
-                        setKendoDate(ctrl.fechaVencimiento,   item.FechaVencimiento);
-                        ctrl.rechazado.prop('checked', item.Rechazado === 'X');
-                    }
-                    if (codigo === 'A') {
-                        // Registración AFIP
-                        ctrl.codigoRegistracionAfip.val(item.Oblea || '');
-                        setKendoDate(ctrl.fechaRegistracionAfip, item.FechaCertificacion);
-                        ctrl.rechazadoAfip.prop('checked', item.Rechazado === 'X');
-                    }
-                    if (codigo === 'P') {
-                        // Oblea Provisoria
-                        setKendoDate(ctrl.fechaVencimientoProvisoria, item.FechaVencimiento);
-                    }
-                    if (codigo === 'F') {
-                        // Oblea Plan Canje
-                        ctrl.obleaPlanCanje.val(item.Oblea || '');
-                        ctrl.bolsaPlanCanje.val(item.BolsaCompraNetId || '').trigger('change');
-                        setKendoDate(ctrl.fechaCertificacionPlanCanje, item.FechaCertificacion);
-                        setKendoDate(ctrl.fechaVencimientoPlanCanje,   item.FechaVencimiento);
-                    }
-                });
-            })
-            .catch(function (e) {
-                console.error("Error cargando datos existentes:", e);
+                if (codigo === 'O') {
+                    // Precertificación Oblea Bolsa
+                    ctrl.oblea.val(item.Oblea || '');
+                    ctrl.bolsa.val(item.BolsaCompraNetId || '').trigger('change');
+                    setKendoDate(ctrl.fechaCertificacion, item.FechaCertificacion);
+                    setKendoDate(ctrl.fechaVencimiento,   item.FechaVencimiento);
+                    ctrl.rechazado.prop('checked', item.Rechazado === 'X');
+                }
+                if (codigo === 'A') {
+                    // Registración AFIP
+                    ctrl.codigoRegistracionAfip.val(item.Oblea || '');
+                    setKendoDate(ctrl.fechaRegistracionAfip, item.FechaCertificacion);
+                    ctrl.rechazadoAfip.prop('checked', item.Rechazado === 'X');
+                }
+                if (codigo === 'P') {
+                    // Oblea Provisoria
+                    setKendoDate(ctrl.fechaVencimientoProvisoria, item.FechaVencimiento);
+                }
+                if (codigo === 'F') {
+                    // Oblea Plan Canje
+                    ctrl.obleaPlanCanje.val(item.Oblea || '');
+                    ctrl.bolsaPlanCanje.val(item.BolsaCompraNetId || '').trigger('change');
+                    setKendoDate(ctrl.fechaCertificacionPlanCanje, item.FechaCertificacion);
+                    setKendoDate(ctrl.fechaVencimientoPlanCanje,   item.FechaVencimiento);
+                }
             });
+        } catch (e) {
+            console.error("Error cargando datos existentes:", e);
+        }
     }
 
     function obtenerRequest() {
@@ -281,57 +331,87 @@ var ControlDeBoletosDatosCertificacion = (function () {
     // ======================
     return {
 
-        inicializar: function (ControlDeBoletosId, OperaSinOblea) {
+        inicializar: async function (ControlDeBoletosId, OperaSinOblea, PlanCanje) {
             BlockUi('Cargando...');
             state.controlDeBoletosId = ControlDeBoletosId;
-            state.operaSinOblea      = !!OperaSinOblea;
-            setup().then(function () {
-                bloqueaControlesSinOblea();
-                var promise = state.controlDeBoletosId > 0 ? cargarDatosExistentes() : Promise.resolve();
-                return promise;
-            }).then(function () {
+            state.operaSinOblea = OperaSinOblea;
+            state.planCanje = PlanCanje
+            try {
+                await setup();
+                await verificarTipoBoletoYFechaRecepcion();
+                if (state.controlDeBoletosId > 0) {
+                    await cargarDatosExistentes();
+                }
+                this.configurarEventos();
+            } finally {
                 $.unblockUI();
-            });
+            }
         },
 
-        abrir: function (ControlDeBoletosId) {
+        abrir: async function (ControlDeBoletosId) {
             BlockUi('Cargando...');
             state.controlDeBoletosId = ControlDeBoletosId;
-            setup().then(function () {
+
+            try {
+                await setup();
                 bloqueaControlesSinOblea();
-                var promise = state.controlDeBoletosId > 0 ? cargarDatosExistentes() : Promise.resolve();
-                return promise;
-            }).then(function () {
+                if (state.controlDeBoletosId > 0) {
+                    await cargarDatosExistentes();
+                }
                 $(config.modalId).modal("show");
+            } finally {
                 $.unblockUI();
-            });
+            }
         },
+        configurarEventos: function () {
 
-        guardar: function () {
+            if (!ctrl || !ctrl.oblea) {
+                console.error("No se encontró ctrl.oblea");
+                return;
+            }
+
+            ctrl.oblea
+                .off("blur")
+                .on("blur", function () {
+
+                    var datePicker = ctrl.fechaVencimientoProvisoria.data("kendoDatePicker");
+
+                    if (!datePicker) {
+                        return;
+                    }
+
+                    if ($.trim(ctrl.oblea.val()) !== '') {
+                        ctrl.fechaVencimientoProvisoria.val('');
+                        datePicker.enable(false);
+                    } else {
+                        ctrl.fechaVencimientoProvisoria.val('');
+                        datePicker.enable(true);
+                    }
+                });
+        },
+        guardar: async function () {
             if (state.cargando) return;
 
             state.cargando = true;
-            var self = this;
             BlockUi('Guardando...');
-            MSExecuteOnServerAsync(config.urls.createPreCertificacion, obtenerRequest())
-                .then(function (response) {
-                    $.unblockUI();
-                    if (!response) return;
-                    if (response.success) {
-                        MensInfo(response.message);
-                        cargarDatosExistentes();
-                        self.cerrar();
-                    } else {
-                        MensErr(response.message);
-                    }
-                })
-                .catch(function (e) {
-                    $.unblockUI();
-                    console.error("Error al guardar:", e);
-                })
-                .then(function () {
-                    state.cargando = false;
-                });
+
+            try {
+                var response = await MSExecuteOnServerAsync(config.urls.createPreCertificacion, obtenerRequest());
+                if (!response) return;
+
+                if (response.success) {
+                    MensInfo(response.message);
+                    await cargarDatosExistentes();
+                    this.cerrar();
+                } else {
+                    MensErr(response.message);
+                }
+            } catch (e) {
+                console.error("Error al guardar:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
         },
 
         cerrar: function () {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
   <Operation Name="Rename Refactor" Key="a2bd918a-2ae2-4552-abe3-fe3e3a9f6235" ChangeDateTime="02/07/2019 13:48:00">
     <Property Name="ElementName" Value="[dbo].[RangoConfirmacionAutomatica].[PrecioMaximo]" />
@@ -1140,5 +1140,54 @@
     <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="FechaRecepBoleto" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3f8e5316-937e-45e6-839f-4a58f3803d9a" ChangeDateTime="05/26/2026 21:40:33">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaEnviadoFirma]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaRecepcionBoleto" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a079948e-eefe-4e26-8bde-1a8f40b118ae" ChangeDateTime="05/26/2026 21:40:45">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaEnvio]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaEnvioFirmas" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b41cda75-2728-41fc-b8d6-f0d55b82a851" ChangeDateTime="05/26/2026 21:40:52">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaEnvioAfip]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaEnvioBolsa" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="afab5ba5-bf30-4a88-9629-85265d4e1770" ChangeDateTime="05/26/2026 21:41:02">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaRecepBoleto]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaRecepcionFirma" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ace484c1-c04c-4880-9603-034ef38f96d8" ChangeDateTime="05/26/2026 21:41:07">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaRecibFirma]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaRecepcionBolsa" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="12b460b6-3320-4aec-ac96-492a46618b42" ChangeDateTime="05/26/2026 21:41:11">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaVueltaAfip]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaRecepcionAfip" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d44166b7-a2f3-4d75-ab86-2350ed5456bd" ChangeDateTime="05/26/2026 21:41:13">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaVueltaBolsa]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaEnvioSellado" />
   </Operation>
 </Operations>
