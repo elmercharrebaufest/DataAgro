@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
     public class ControlDeBoletoFiltroSeguimientoDto
     {
         // Filtros de búsqueda
-        public string ContratoSAPDesde { get; set; }
-        public string ContratoSAPHasta { get; set; }
+        public string ContratoSAP { get; set; }
         public int? MaterialId { get; set; }
         public DateTime? FechaCertificacionDesde { get; set; }
         public DateTime? FechaCertificacionHasta { get; set; }

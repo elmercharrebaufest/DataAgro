@@ -78,12 +78,12 @@ var ControlBoletos = (function () {
         return valor === "" || (!isNaN(valor) && parseInt(valor) >= 0);
     }
 
-    function cargarDropdown(url, selector, textoCarga, textoDefault) {
+    async function cargarDropdown(url, selector, textoCarga, textoDefault) {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
 
         try {
-            var data = MSExecuteGetOnServer(url);
+            var data = await MSExecuteGetOnServerAsync(url);
             $select.empty().append('<option value="">' + textoDefault + "</option>");
             if (data && Array.isArray(data)) {
                 $.each(data, function (i, item) {
@@ -232,17 +232,29 @@ var ControlBoletos = (function () {
         configurarEventos: function () {
             var self = this;
 
-            // Validación en tiempo real para campos numéricos
-            $("#NegocioSAP-desde, #NegocioSAP-hasta").on("input", function () {
-                var valor = this.value;
-                if (!validarNumero(valor)) {
-                    this.setCustomValidity("Ingrese un número válido");
-                    $(this).addClass("is-invalid");
-                } else {
-                    this.setCustomValidity("");
-                    $(this).removeClass("is-invalid");
-                }
-            });
+            controlNegocioSAP
+                .on("paste", function (e) {
+
+                    e.preventDefault();
+
+                    let texto = (e.originalEvent.clipboardData || window.clipboardData)
+                        .getData("text");
+
+                    // Separar por saltos de línea
+                    let valores = texto
+                        .split(/\r?\n/)           // soporta Excel / Windows / Linux
+                        .map(v => v.trim())       // quitar espacios
+                        .filter(v => v !== "");   // eliminar vacíos
+
+                    // eliminar duplicados
+                    valores = [...new Set(valores)];
+
+                    // unir en una sola línea con ;
+                    $(this).val(valores.join(";"));
+                })
+                .on("keypress", e => {
+                    if (e.which === 32) e.preventDefault(); // bloquear espacios
+                });
 
             // Eventos de botones
             controlFiltrarBoletos
@@ -307,37 +319,35 @@ var ControlBoletos = (function () {
                             serverFiltering: true,
                             pageSize: 20,
                             transport: {
-                                read: {
-                                    url: config.urls.getBoletos,
-                                    type: "POST",
-                                    dataType: "json",
-                                    contentType: "application/json; charset=utf-8",
-                                },
-                                parameterMap: function (options, operation) {
-                                    if (operation === "read") {
-                                        // Combinar los filtros personalizados con las opciones de Kendo
-                                        var filtros = self.obtenerFiltros();
-                                        var parametros = {
-                                            // Opciones de Kendo (paginación, sorting)
-                                            page: options.page || 1,
-                                            pageSize: options.pageSize || 50,
-                                            skip: options.skip || 0,
-                                            take: options.take || 50,
-                                            sort: options.sort || [],
-                                            // Filtros personalizados
-                                            negocioSAP: filtros.negocioSAP,
-                                            materialId: filtros.materialId,
-                                            estadoControlId: filtros.estadoControlId,
-                                            esConfirma: filtros.esConfirma,
-                                            fechaCargaDesde: filtros.fechaCargaDesde,
-                                            fechaCargaHasta: filtros.fechaCargaHasta,
-                                            proveedor: filtros.proveedor,
-                                            bolsaId: filtros.bolsaId,
-                                            comercialId: filtros.comercialId,
-                                        };
-                                        return kendo.stringify(parametros);
-                                    }
-                                    return kendo.stringify(options);
+                                read: function (options) {
+                                    var data = options.data || {};
+                                    var filtros = self.obtenerFiltros();
+                                    var parametros = {
+                                        // Opciones de Kendo (paginación, sorting)
+                                        page: data.page || 1,
+                                        pageSize: data.pageSize || 50,
+                                        skip: data.skip || 0,
+                                        take: data.take || 50,
+                                        sort: data.sort || [],
+                                        // Filtros personalizados
+                                        negocioSAP: filtros.negocioSAP,
+                                        materialId: filtros.materialId,
+                                        estadoControlId: filtros.estadoControlId,
+                                        esConfirma: filtros.esConfirma,
+                                        fechaCargaDesde: filtros.fechaCargaDesde,
+                                        fechaCargaHasta: filtros.fechaCargaHasta,
+                                        proveedor: filtros.proveedor,
+                                        bolsaId: filtros.bolsaId,
+                                        comercialId: filtros.comercialId,
+                                    };
+
+                                    MSExecuteOnServerAsync(config.urls.getBoletos, parametros)
+                                        .then(function (response) {
+                                            options.success(response || { Data: [], Total: 0 });
+                                        })
+                                        .catch(function (error) {
+                                            options.error(error);
+                                        });
                                 },
                             },
                             schema: {
@@ -528,13 +538,15 @@ var ControlBoletos = (function () {
         },
 
         obtenerFiltros: function () {
+
+
             return {
                 negocioSAP: controlNegocioSAP.val().trim() || null,
                 materialId: controlMaterial.val() || null,
                 estadoControlId: controlEstadoControl.val() || null,
                 esConfirma: controlEsConfirma.is(":checked"),
-                fechaCargaDesde: controlFechaCargaDesde.val() || null,
-                fechaCargaHasta: controlFechaCargaHasta.val() || null,
+                fechaCargaDesde: formatearFecha(controlFechaCargaDesde.val()) || null,
+                fechaCargaHasta: formatearFecha(controlFechaCargaHasta.val()) || null,
                 proveedor: controlProveedor.val() || null,
                 bolsaId: controlBolsaCompraNet.val() || null,
                 comercialId: controlComercial.val() || null,
@@ -581,15 +593,7 @@ var ControlBoletos = (function () {
         },
 
         limpiarFiltros: function () {
-
-            controlNegocioSAPDesde
-                .val("")
-                .removeClass("is-invalid");
-
-            controlNegocioSAPHasta
-                .val("")
-                .removeClass("is-invalid");
-
+            controlNegocioSAP.val("");
             controlMaterial.val("");
             controlEstadoControl.val("");
             controlComercial.val("");
@@ -673,8 +677,7 @@ var ControlBoletos = (function () {
         inicializarFechas: function () {
             const hoy = new Date();
             const desde = new Date(hoy);
-            desde.setDate(hoy.getDate() - 30);
-
+            desde.setDate(hoy.getDate() - 60);
             [
                 { $el: controlFechaCargaDesde, value: desde },
                 { $el: controlFechaCargaHasta, value: hoy }
@@ -682,7 +685,6 @@ var ControlBoletos = (function () {
                 if ($el.data("kendoDatePicker")) {
                     $el.data("kendoDatePicker").destroy();
                 }
-
                 $el.kendoDatePicker({
                     weekNumber: true,
                     format: "dd/MM/yyyy",
@@ -741,7 +743,7 @@ var ControlBoletos = (function () {
             return ids;
         },
 
-        procesarControlBoleto: function (accion, ids) {
+        procesarControlBoleto: async function (accion, ids) {
             var self = this;
 
             if (!ids || ids.length === 0) {
@@ -758,14 +760,20 @@ var ControlBoletos = (function () {
                 ControlDeBoletoIds: ids,
             };
 
-            const response = MSExecuteOnServer(config.urls.processControlMasivo, request);
-            if (response.success) {
+            try {
+                const response = await MSExecuteOnServerAsync(config.urls.processControlMasivo, request);
+                if (response && response.success) {
+                    self.actualizarBotonesControlMasivo();
+                    self.filtrarBoletos();
+                }
+            } catch (error) {
+                console.error("Error procesando control de boleto:", error);
+            } finally {
                 self.actualizarBotonesControlMasivo();
-                self.filtrarBoletos();
             }
         },
 
-        procesarControlMasivo: function (accion, ids) {
+        procesarControlMasivo: async function (accion, ids) {
             var self = this;
 
             if (!ids || ids.length === 0) {
@@ -782,10 +790,16 @@ var ControlBoletos = (function () {
                 ControlDeBoletoIds: ids,
             };
 
-            const response = MSExecuteOnServer(config.urls.processControlMasivo, request);
-
-            if (response) {
+            try {
+                const response = await MSExecuteOnServerAsync(config.urls.processControlMasivo, request);
+                if (response) {
+                    self.actualizarBotonesControlMasivo();
+                }
+            } catch (error) {
+                console.error("Error procesando control masivo:", error);
+            } finally {
                 self.actualizarBotonesControlMasivo();
+                self.filtrarBoletos();
             }
         },
 
@@ -834,7 +848,7 @@ var ControlBoletos = (function () {
             this.procesarControlBoleto(controlMasivoAccion.ControlFinalizado, [id]);
         },
 
-        visualizarContrato: function (id) {
+        visualizarContrato: async function (id) {
             // Mostrar loader o indicador de carga
 
             if (!id || id <= 0) {
@@ -847,79 +861,65 @@ var ControlBoletos = (function () {
                 showLoading(loadingMessage);
             }
 
-            // Llamar al servidor para obtener los datos del contrato
-            $.ajax({
-                url: config.urls.getContrato,
-                type: "GET",
-                data: { id: id },
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                success: function (response) {
+            try {
+                var response = await MSExecuteGetOnServerAsync(config.urls.getContrato, { id: id });
 
-                    if (typeof hideLoading === "function") {
-                        hideLoading();
+                if (!response) {
+                    alert("Error al obtener los datos del contrato: respuesta vacía");
+                    return;
+                }
+
+                // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
+                var contrato = null;
+
+                if (response.Data !== undefined) {
+                    if (Array.isArray(response.Data)) {
+                        // Es un array, tomar el primer elemento
+                        contrato = response.Data.length > 0 ? response.Data[0] : null;
+                    } else if (
+                        typeof response.Data === "object" &&
+                        response.Data !== null
+                    ) {
+                        // Es un objeto, usar directamente
+                        contrato = response.Data;
                     }
+                } else {
+                    // La respuesta directamente es el contrato
+                    contrato = response;
+                }
 
-                    if (!response) {
-                        alert("Error al obtener los datos del contrato: respuesta vacía");
-                        return;
-                    }
-
-                    // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
-                    var contrato = null;
-
-                    if (response.Data !== undefined) {
-                        if (Array.isArray(response.Data)) {
-                            // Es un array, tomar el primer elemento
-                            contrato = response.Data.length > 0 ? response.Data[0] : null;
-                        } else if (
-                            typeof response.Data === "object" &&
-                            response.Data !== null
-                        ) {
-                            // Es un objeto, usar directamente
-                            contrato = response.Data;
-                        }
+                if (contrato && typeof contrato === "object") {
+                    // Verificar que ModalVisualizar esté disponible
+                    if (
+                        typeof ModalVisualizar !== "undefined" &&
+                        typeof ModalVisualizar.abrir === "function"
+                    ) {
+                        ModalVisualizar.abrir(contrato);
                     } else {
-                        // La respuesta directamente es el contrato
-                        contrato = response;
+                        console.error("ModalVisualizar no está disponible");
+                        alert("Error: El módulo de visualización no está cargado");
                     }
+                } else {
+                    console.error("No se pudo extraer el contrato de la respuesta");
+                    alert("No se encontró el contrato solicitado.");
+                }
+            } catch (error) {
+                console.error("Error al obtener detalle del contrato:", error);
 
-                    if (contrato && typeof contrato === "object") {
-                        // Verificar que ModalVisualizar esté disponible
-                        if (
-                            typeof ModalVisualizar !== "undefined" &&
-                            typeof ModalVisualizar.abrir === "function"
-                        ) {
-                            ModalVisualizar.abrir(contrato);
-                        } else {
-                            console.error("ModalVisualizar no está disponible");
-                            alert("Error: El módulo de visualización no está cargado");
-                        }
-                    } else {
-                        console.error("No se pudo extraer el contrato de la respuesta");
-                        alert("No se encontró el contrato solicitado.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    if (typeof hideLoading === "function") {
-                        hideLoading();
-                    }
-                    console.error("Error AJAX al obtener detalle del contrato:");
-                    console.error("Status:", status);
-                    console.error("Error:", error);
-                    console.error("Response:", xhr.responseText);
+                var mensajeError = "Error al comunicarse con el servidor.";
+                var status = error && error.xhr ? error.xhr.status : 0;
+                if (status === 404) {
+                    mensajeError = "No se encontró el contrato solicitado.";
+                } else if (status === 500) {
+                    mensajeError = "Error interno del servidor.";
+                }
 
-                    var mensajeError = "Error al comunicarse con el servidor.";
-                    if (xhr.status === 404) {
-                        mensajeError = "No se encontró el contrato solicitado.";
-                    } else if (xhr.status === 500) {
-                        mensajeError = "Error interno del servidor.";
-                    }
-
-                    alert(mensajeError + " Por favor, intente nuevamente.");
-                },
-            });
+                alert(mensajeError + " Por favor, intente nuevamente.");
+            } finally {
+                if (typeof hideLoading === "function") {
+                    hideLoading();
+                }
+            }
         },
     };
 })();
@@ -930,7 +930,10 @@ function formatearFecha(fecha) {
     var date = new Date(fecha);
     return date.toLocaleDateString("es-AR");
 }
-
+function getKendoDateISO($el) {
+    var d = getKendoDate($el);
+    return d ? d.toISOString() : null;
+}
 // Inicializar cuando el DOM esté listo
 $(document).ready(function () {
     try {

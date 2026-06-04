@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Reporte de Seguimiento de Control de Boletos";
 }
 
@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/ControlDeBoletosReporteSeguimiento")
 }
 
-<div class="container-fluid" style="margin-left: 2em !important; margin-right: 2em !important;" id="frmReporteSeguimientoBoletos">
+<div class="container-fluid" style="margin-left:2em; margin-right:2em;" id="frmReporteSeguimientoBoletos">
     <!-- Header Section -->
     <div class="row header-section">
         <div class="col-12">
@@ -19,27 +19,19 @@
                 <i class="fa fa-clipboard-check" aria-hidden="true"></i>
                 Reporte Seguimiento Control de Boletos
             </h2>
-            <p class="page-subtitle">Gestión y seguimiento de boletos</p>
         </div>
     </div>
 
     <!-- Filters Section -->
     <div class="card filter-card fade-in">
-        <div class="card-header">
-            <h5 class="card-title mb-0">
-                <i class="fa fa-filter" aria-hidden="true"></i>
-                Filtros de Búsqueda
-            </h5>
-        </div>
         <div class="card-body">
             <!-- First Row -->
             <div class="row form-row">
-                <div class="col-md-3 col-sm-4">
+                <div class="col-md-9 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Contrato SAP</label>
+                        <label class="form-label">Contratos SAP</label>
                         <div class="filter-espacio-input">
-                            <input type="number" id="NegocioSAP-desde" class="form-control" placeholder="SAP desde" min="0" />
-                            <input type="number" id="NegocioSAP-hasta" class="form-control" placeholder="SAP hasta" min="0" />
+                            <input type="text" id="NegocioSAP" class="form-control" placeholder="Contratos SAP" />
                         </div>
                     </div>
                 </div>
@@ -67,119 +59,115 @@
                         </select>
                     </div>
                 </div>
-            </div>
-
-            <!-- Second Row -->
-            <div class="row form-row">
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Certificación Desde</label>
-                        <input id="fechaCertificacionDesde" class="form-control" type="date" />
+                        <input id="fechaCertificacionDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Certificación Hasta</label>
-                        <input id="fechaCertificacionHasta" class="form-control" type="date" />
+                        <input id="fechaCertificacionHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Vencimiento Certificación Desde</label>
-                        <input id="fechaVencimientoCertificacionDesde" class="form-control" type="date" />
+                        <input id="fechaVencimientoCertificacionDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Vencimiento Certificación Hasta</label>
-                        <input id="fechaVencimientoCertificacionHasta" class="form-control" type="date" />
+                        <input id="fechaVencimientoCertificacionHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Boleto Desde</label>
-                        <input id="fechaRecepBoletoDesde" class="form-control" type="date" />
+                        <input id="fechaRecepBoletoDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Boleto Hasta</label>
-                        <input id="fechaRecepBoletoHasta" class="form-control" type="date" />
+                        <input id="fechaRecepBoletoHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envío Firmas Desde</label>
-                        <input id="fechaEnviadoFirmaDesde" class="form-control" type="date" />
+                        <input id="fechaEnviadoFirmaDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envío Firmas Hasta</label>
-                        <input id="fechaEnviadoFirmaHasta" class="form-control" type="date" />
+                        <input id="fechaEnviadoFirmaHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Firmas Desde</label>
-                        <input id="fechaRecibFirmaDesde" class="form-control" type="date" />
+                        <input id="fechaRecibFirmaDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Firmas Hasta</label>
-                        <input id="fechaRecibFirmaHasta" class="form-control" type="date" />
+                        <input id="fechaRecibFirmaHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
 
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envio Bolsa Desde</label>
-                        <input id="fechaEnvioBolsaDesde" class="form-control" type="date" />
+                        <input id="fechaEnvioBolsaDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envio Bolsa Hasta</label>
-                        <input id="fechaEnvioBolsaHasta" class="form-control" type="date" />
+                        <input id="fechaEnvioBolsaHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Bolsa Desde</label>
-                        <input id="fechaVueltaBolsaDesde" class="form-control" type="date" />
+                        <input id="fechaVueltaBolsaDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Bolsa Hasta</label>
-                        <input id="fechaVueltaBolsaHasta" class="form-control" type="date" />
+                        <input id="fechaVueltaBolsaHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
 
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envio Afip Desde</label>
-                        <input id="fechaEnvioAfipDesde" class="form-control" type="date" />
+                        <input id="fechaEnvioAfipDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Envio Afip Hasta</label>
-                        <input id="fechaEnvioAfipHasta" class="form-control" type="date" />
+                        <input id="fechaEnvioAfipHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
 
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Afip Desde</label>
-                        <input id="fechaVueltaAfipDesde" class="form-control" type="date" />
+                        <input id="fechaVueltaAfipDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
                         <label class="form-label">Fecha Recepción Afip Hasta</label>
-                        <input id="fechaVueltaAfipHasta" class="form-control" type="date" />
+                        <input id="fechaVueltaAfipHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
             </div>
@@ -208,10 +196,8 @@
     <!-- Results Section -->
     <div class="card results-card mt-3 fade-in">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <div class="results-summary">
-                <span class="badge badge-info" id="totalRegistros">0 registros</span>
-            </div>
         </div>
+        <br/>
         <div class="card-body p-0">
             <!-- Grid Container -->
             <div id="boletos-grid" class="grid-container">

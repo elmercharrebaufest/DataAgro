@@ -368,6 +368,25 @@ namespace WebDataAgro.Controllers
 
         #region Datos de PreCertificacion
         [HttpGet]
+        public JsonResult GetVerificarTipoBoletoyFechaRecepcion(int controlDeBoletosId)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.VerificarTipoBoletoyFechaRecepcion(controlDeBoletosId);
+                return Json(resultado, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new object(),
+                    Total = 0,
+                    Errors = "Error al verificar tipo de boleto y fecha de recepción: " + ex.Message
+                });
+            }
+        }
+        [HttpGet]
         public JsonResult GetDatosPreCertificacion(int controlDeBoletosId)
         {
             try
@@ -382,11 +401,10 @@ namespace WebDataAgro.Controllers
                 {
                     Data = new object(),
                     Total = 0,
-                    Errors = "Error al cargar datos: " + ex.Message
+                    Errors = "Error al Obtener datos de pre certificacion: " + ex.Message
                 });
             }
         }
-        
         [HttpPost]
         public JsonResult RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion)
         {

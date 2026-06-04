@@ -1,4 +1,4 @@
-﻿using Kendo.DynamicLinq;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -27,5 +27,7 @@ namespace Molinos.DataAgro.Interfaces
         List<int> ObtenerCuposId(List<string> cupoSap);
         int LogCambiosDataAgro(HabilitacionCampañaDto habilitacionCampañaDto, TipoAccionLogDataAgro tipo);
         void LogCambiosDataAgro(HabilitacionSustentableDto habilitacionSustentableDto, TipoAccionLogDataAgro tipo);
+        int LogCambiosControlBoletos<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string descripcion);
+
     }
 }

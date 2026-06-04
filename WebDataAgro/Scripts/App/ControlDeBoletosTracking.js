@@ -112,9 +112,15 @@ var ControlBoletosTracking = (function () {
         state.grid = $(config.gridId).kendoGrid({
             dataSource: {
                 transport: {
-                    read: {
-                        url: url,
-                        dataType: "json"
+                    read: function (options) {
+                        MSExecuteGetOnServerAsync(url)
+                            .then(function (data) {
+                                options.success(data || { Data: [], Total: 0 });
+                            })
+                            .catch(function (error) {
+                                console.error("Error cargando tracking:", error);
+                                options.error(error);
+                            });
                     }
                 },
                 schema: {
