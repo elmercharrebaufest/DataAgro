@@ -1657,7 +1657,7 @@ namespace Molinos.DataAgro.Business.Managers
                   .Select(row => new AltaMasivaCupoDto
                   {
                       ContratoSAP = row["ContratoSAP"]?.ToString().PadLeft(10, '0'),
-                      FechaSugerida = DateTime.FromOADate(double.Parse(row["FechaSugerida"]?.ToString())),
+                      FechaSugerida = row.Field<DateTime>("FechaSugerida"),
                       CantidadDeCupos = int.Parse(row["CantidadDeCupos"]?.ToString()),
                   })
                   .Where(x => !string.IsNullOrEmpty(x.ContratoSAP))
