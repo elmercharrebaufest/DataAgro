@@ -137,7 +137,7 @@ namespace WebDataAgro.Controllers
                 {
                     Data = new List<object>(),
                     Total = 0,
-                    Errors = "Error al cargar datos: " + ex.Message
+                    Errors = "Error al cargar datos: " + ex.StackTrace
                 });
             }
         }

@@ -43,7 +43,7 @@ var ControlDeBoletosGestion = (function () {
             }
         });
 
-        $("#collapseCertificacion").on("show.bs.collapse", async function () {
+        $("#collapseCertificacion").on("shown.bs.collapse", async function () {
             await ControlDeBoletosDatosCertificacion.inicializar(
                 state.ControlDeBoletosId,
                 state.OperaSinOblea,
@@ -51,7 +51,7 @@ var ControlDeBoletosGestion = (function () {
             );
         });
 
-        $("#collapseSeguimiento").on("show.bs.collapse", async function () {
+        $("#collapseSeguimiento").on("shown.bs.collapse", async function () {
             await ControlDeBoletosSeguimiento.inicializar(
                 state.ControlDeBoletosId
             );

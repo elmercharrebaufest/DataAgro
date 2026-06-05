@@ -31,6 +31,11 @@ var ControlDeBoletosDatosCertificacion = (function () {
         var $form = $("#accordionGestionBoleto #frmCertificacion");
         if (!$form.length) $form = $("#frmCertificacion").first();
 
+        if (!$form.length) {
+            console.error("bindControls: No se encontró el formulario #frmCertificacion");
+            return false;
+        }
+
         ctrl.rechazado                   = $form.find("#Rechazado");
         ctrl.oblea                       = $form.find("#Oblea");
         ctrl.bolsa                       = $form.find("#Bolsa");
@@ -47,6 +52,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
         ctrl.bolsaPlanCanje              = $form.find("#BolsaPlanCanje");
         ctrl.fechaCertificacionPlanCanje = $form.find("#FechaCertificacionPlanCanje");
         ctrl.fechaVencimientoPlanCanje   = $form.find("#FechaVencimientoPlanCanje");
+
+        return true;
     }
 
     function getKendoDate($el) {
@@ -183,7 +190,9 @@ var ControlDeBoletosDatosCertificacion = (function () {
 
     }		
     function setup() {
-        bindControls();
+        if (!bindControls()) {
+            throw new Error("No se pudieron enlazar los controles del formulario");
+        }
         limpiarFormulario();
         inicializarFechas();
         return Promise.all([
@@ -342,6 +351,9 @@ var ControlDeBoletosDatosCertificacion = (function () {
                     await cargarDatosExistentes();
                 }
                 this.configurarEventos();
+            } catch (e) {
+                console.error("Error al inicializar ControlDeBoletosDatosCertificacion:", e);
+                MensErr("Error cargando datos del contrato: " + e.message);
             } finally {
                 $.unblockUI();
             }
@@ -364,8 +376,13 @@ var ControlDeBoletosDatosCertificacion = (function () {
         },
         configurarEventos: function () {
 
-            if (!ctrl || !ctrl.oblea) {
-                console.error("No se encontró ctrl.oblea");
+            if (!ctrl || !ctrl.oblea || !ctrl.oblea.length) {
+                console.warn("configurarEventos: ctrl.oblea no está disponible");
+                return;
+            }
+
+            if (!ctrl.fechaVencimientoProvisoria || !ctrl.fechaVencimientoProvisoria.length) {
+                console.warn("configurarEventos: ctrl.fechaVencimientoProvisoria no está disponible");
                 return;
             }
 

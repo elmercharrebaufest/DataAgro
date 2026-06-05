@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Id = x.cb.Id,
                     NegocioId = x.cb.NegocioId,
                     ControlDeBoletosEstadoId = x.cb.ControlDeBoletosEstadoId,
-                    ControlDeBoletosEstado = x.cb.ControlDeBoletosEstado.Descripcion,
+                    ControlDeBoletosEstado = x.cb.ControlDeBoletosEstado != null ? x.cb.ControlDeBoletosEstado.Descripcion : null,
                     EsConfirma = x.cb.EsConfirma,
                     AltaIdLoteConfirma = x.cb.AltaIdLoteConfirma.HasValue ? x.cb.AltaIdLoteConfirma.Value.ToString() : null,
                     IdentificadorConfirma = x.cb.IdentificadorConfirma.HasValue ? x.cb.IdentificadorConfirma.Value.ToString() : null,
@@ -169,7 +169,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaCertificacionCompletada = x.cb.FechaCertificacionCompletada,
                     FechaRegistroDatosOblea = x.cb.FechaRegistroDatosOblea,
                     MaterialId = x.cb.Negocio.MaterialId,
-                    Material = x.cb.Negocio.Material.Descripcion,
+                    Material = x.cb.Negocio.Material != null ? x.cb.Negocio.Material.Descripcion : null,
                     BolsaCompraNetId = x.cb.Negocio.BolsaId ?? 0,
                     BolsaCompraNet = x.cb.Negocio.Bolsa != null ? x.cb.Negocio.Bolsa.Descripcion : null,
                     ComercialId = x.cb.Negocio.ComercialId ?? 0,
@@ -360,20 +360,23 @@ namespace Molinos.DataAgro.Business.Managers
                           join seg in repositorio.Listar<ControlDeBoletosSeguimiento>()
                               on cb.Id equals seg.ControlDeBoletosId into segJoin
                           from seg in segJoin.DefaultIfEmpty()
+                          join estado in repositorio.Listar<EstadoConfirma>()
+                              on cb.EstadoConfirmaId equals estado.Id into estadoJoin
+                          from estado in estadoJoin.DefaultIfEmpty()
                           select new ControlDeBoletosConsultaDto
                           {
                               Id = cb.Id,
                               NegocioId = cb.NegocioId,
                               ControlDeBoletosEstadoId = cb.ControlDeBoletosEstadoId,
-                              ControlDeBoletosEstado = cb.ControlDeBoletosEstado.Descripcion,
+                              ControlDeBoletosEstado = cb.ControlDeBoletosEstado != null ? cb.ControlDeBoletosEstado.Descripcion : null,
                               EsConfirma = cb.EsConfirma,
                               AltaIdLoteConfirma = cb.AltaIdLoteConfirma,
                               IdentificadorConfirma = cb.IdentificadorConfirma,
                               FechaCreacion = cb.FechaCreacion,
                               FechaModificacion = cb.FechaModificacion,
                               EstadoConfirmaId = cb.EstadoConfirmaId,
-                              EstadoConfirma = cb.EstadoConfirmaId.HasValue ? repositorio.Obtener<EstadoConfirma>(cb.EstadoConfirmaId.Value).Descripcion : null,
-                              TipoBoleto = cb.Negocio.Boleto.Descripcion,
+                              EstadoConfirma = estado != null ? estado.Descripcion : null,
+                              TipoBoleto = cb.Negocio.Boleto != null ? cb.Negocio.Boleto.Descripcion : null,
                               ControlIniciado = cb.ControlIniciado,
                               ControlFinalizado = cb.ControlFinalizado,
                               CertificacionCompletada = cb.CertificacionCompletada,
@@ -387,10 +390,10 @@ namespace Molinos.DataAgro.Business.Managers
                               BolsaCompraNetId = cb.Negocio.BolsaId != null ? (int?)cb.Negocio.BolsaId : null,
                               BolsaCompraNet = cb.Negocio.Bolsa != null ? cb.Negocio.Bolsa.Descripcion : null,
                               ComercialId = cb.Negocio.ComercialId,
-                              Comercial = cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido,
+                              Comercial = cb.Negocio.Comercial != null ? cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido : null,
                               ContratoSAP = cb.Negocio.ContratoSAP,
                               ProveedorId = cb.Negocio.ProveedorId,
-                              Proveedor = cb.Negocio.Proveedor.RazonSocial,
+                              Proveedor = cb.Negocio.Proveedor != null ? cb.Negocio.Proveedor.RazonSocial : null,
                               SeguimientoBoletoId = seg != null ? (int?)seg.Id : null,
                               TipoAltaConfirma = cb.EsConfirma? (cb.EsConfirmaAltaBorrador? "Alta Borrador" : "Alta Definitiva") : string.Empty,
                           }).ToList();
