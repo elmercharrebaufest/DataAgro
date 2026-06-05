@@ -687,34 +687,75 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var seguimientoControlDeBoletos = ConstruirSeguimientoDto(controlDeBoletosDatosSeguimiento);
-                seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                var mensajeSap = seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+
+                // Validar el mensaje de respuesta de SAP
+                if (string.IsNullOrWhiteSpace(mensajeSap))
+                {
+                    logger.Warn("SAP retornó un mensaje vacío al registrar seguimiento de boleto");
+                }
+                else
+                {
+                    logger.Info($"Respuesta de SAP al registrar seguimiento: {mensajeSap}");
+                }
             }
             catch (Exception ex)
             {
-                oResultado.Errores.Add(new ErrorMessage() { Message = "Error al registrar datos de seguimiento en SAP" });
-                logger.Error(ex.Message);
+                oResultado.Errores.Add(new ErrorMessage() { Message = "Error al registrar datos de seguimiento en SAP: " + ex.Message });
+                logger.Error(ex, "Error al registrar seguimiento en SAP");
             }
             return oResultado;
         }
 
         private SeguimientoControlDeBoletosDto ConstruirSeguimientoDto(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
+            // Validar ControlDeBoletos
             var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
-            var contrato = repositorio.Obtener<Negocio>(controlDeBoletos.NegocioId).ContratoSAP;
-            var bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId).CodigoSap;
-            var tipoBoleto = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId).Id.ToString("D2");
+            if (controlDeBoletos == null)
+            {
+                logger.Error($"No se encontró ControlDeBoletos con Id: {controlDeBoletosDatosSeguimiento.ControlDeBoletosId}");
+                throw new Exception($"No se encontró el control de boleto con ID {controlDeBoletosDatosSeguimiento.ControlDeBoletosId}");
+            }
+
+            // Validar Negocio y obtener ContratoSAP
+            var negocio = repositorio.Obtener<Negocio>(controlDeBoletos.NegocioId);
+            if (negocio == null)
+            {
+                logger.Error($"No se encontró Negocio con Id: {controlDeBoletos.NegocioId}");
+                throw new Exception($"No se encontró el negocio asociado al control de boleto");
+            }
+            var contrato = negocio.ContratoSAP;
+
+            // Validar BolsaCompraNet y obtener CodigoSap
+            var bolsaEntity = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
+            if (bolsaEntity == null)
+            {
+                logger.Error($"No se encontró BolsaCompraNet con Id: {controlDeBoletosDatosSeguimiento.BolsaCompraNetId}");
+                throw new Exception($"No se encontró la bolsa de compra especificada");
+            }
+            var bolsa = bolsaEntity.CodigoSap;
+
+            // Validar BoletoSap y obtener Id
+            var boletoSapEntity = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId);
+            if (boletoSapEntity == null)
+            {
+                logger.Error($"No se encontró BoletoSap con Id: {controlDeBoletosDatosSeguimiento.BoletoSapId}");
+                throw new Exception($"No se encontró el tipo de boleto SAP especificado");
+            }
+            var tipoBoleto = boletoSapEntity.Id.ToString("D2");
+
             var ahora = DateTime.Now;
 
             return new SeguimientoControlDeBoletosDto
             {
                 Bolsa = bolsa,
-                BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
+                BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado ?? string.Empty,
                 Contrato = contrato,
                 FeEnvio = string.Empty,
                 FecAcopio = string.Empty,
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
-                TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
+                TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter ?? string.Empty,
                 Usuario = string.Empty,
                 FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
                 FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas?.ToString("yyyy-MM-dd"),
@@ -723,8 +764,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FeRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma?.ToString("yyyy-MM-dd"),
                 FeVueltaAfip = controlDeBoletosDatosSeguimiento.FechaRecepcionAfip?.ToString("yyyy-MM-dd"),
                 FeVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa?.ToString("yyyy-MM-dd"),
-                ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto,
-                ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2,
+                ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto ?? string.Empty,
+                ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2 ?? string.Empty,
+                RechazadoAfip = string.Empty // TODO: Verificar si debe venir del DTO de entrada
             };
         }
 

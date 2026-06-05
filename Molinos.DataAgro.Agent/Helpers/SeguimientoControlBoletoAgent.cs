@@ -65,12 +65,27 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var response = agent.ZMprfcSeguimientoBoleto(request);
 
+                if (response == null)
+                {
+                    logger.Error("La respuesta de SAP es nula al registrar seguimiento de boleto.");
+                    throw new Exception("No se recibió respuesta de SAP al registrar seguimiento de boleto.");
+                }
+
                 if (activarLogDebug)
                 {
                     logger.Debug(response.ToXml());
                 }
 
-                return response.ExMensaje?.Trim();
+                var mensaje = response.ExMensaje?.Trim() ?? string.Empty;
+
+                // Validar si el mensaje indica error
+                if (mensaje.ToLower().Contains("error") || mensaje.ToLower().Contains("fallo"))
+                {
+                    logger.Error($"SAP retornó error: {mensaje}");
+                    throw new Exception($"Error en SAP: {mensaje}");
+                }
+
+                return mensaje;
             }
             catch (Exception ex)
             {
@@ -80,7 +95,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         }
         private string ValorPorDefecto(string valor)
         {
-            return string.IsNullOrWhiteSpace(valor) ? " " : valor;
+            return string.IsNullOrWhiteSpace(valor) ? string.Empty : valor;
         }
         private Z_MP_WS_DATAAGRO_DIRECTOClient CrearClienteSap()
         {
