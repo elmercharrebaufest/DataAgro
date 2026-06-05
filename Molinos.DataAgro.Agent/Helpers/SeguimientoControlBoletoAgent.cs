@@ -41,25 +41,25 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var request = new ZMprfcSeguimientoBoleto
                 {
-                    ImBolsa = dto.Bolsa,
-                    ImBolsaSellado = dto.BolsaSellado,
-                    ImContrato = dto.Contrato,
-                    ImFeEnviadoFirma = dto.FeEnviadoFirma,
-                    ImFeEnvio = dto.FeEnvio,
-                    ImFeEnvioAfip = dto.FeEnvioAfip,
-                    ImFeEnvioBolsa = dto.FeEnvioBolsa,
-                    ImFeRecepBoleto = dto.FeRecepBoleto,
-                    ImFeRecibFirma = dto.FeRecibFirma,
-                    ImFeVueltaAfip = dto.FeVueltaAfip,
-                    ImFeVueltaBolsa = dto.FeVueltaBolsa,
-                    ImFecAcopio = dto.FecAcopio,
-                    ImFecha = dto.Fecha,
-                    ImHora = dto.Hora,
-                    ImObsCtrlBoleto = dto.ObsCtrlBoleto,
-                    ImObsCtrlBoleto2 = dto.ObsCtrlBoleto2,
-                    ImRechazadoAfip = dto.RechazadoAfip,
-                    ImTipoBoleto = dto.TipoBoleto,
-                    ImUsuario = dto.Usuario
+                    ImBolsa = ValorPorDefecto(dto.Bolsa),
+                    ImBolsaSellado = ValorPorDefecto(dto.BolsaSellado),
+                    ImContrato = ValorPorDefecto(dto.Contrato),
+                    ImFeEnviadoFirma = ValorPorDefecto(dto.FeEnviadoFirma),
+                    ImFeEnvio = ValorPorDefecto(dto.FeEnvio),
+                    ImFeEnvioAfip = ValorPorDefecto(dto.FeEnvioAfip),
+                    ImFeEnvioBolsa = ValorPorDefecto(dto.FeEnvioBolsa),
+                    ImFeRecepBoleto = ValorPorDefecto(dto.FeRecepBoleto),
+                    ImFeRecibFirma = ValorPorDefecto(dto.FeRecibFirma),
+                    ImFeVueltaAfip = ValorPorDefecto(dto.FeVueltaAfip),
+                    ImFeVueltaBolsa = ValorPorDefecto(dto.FeVueltaBolsa),
+                    ImFecAcopio = ValorPorDefecto(dto.FecAcopio),
+                    ImFecha = ValorPorDefecto(dto.Fecha),
+                    ImHora = ValorPorDefecto(dto.Hora),
+                    ImObsCtrlBoleto = ValorPorDefecto(dto.ObsCtrlBoleto),
+                    ImObsCtrlBoleto2 = ValorPorDefecto(dto.ObsCtrlBoleto2),
+                    ImRechazadoAfip = ValorPorDefecto(dto.RechazadoAfip),
+                    ImTipoBoleto = ValorPorDefecto(dto.TipoBoleto),
+                    ImUsuario = ValorPorDefecto(dto.Usuario)
                 };
                 logger.Debug(request.ToXml());
 
@@ -78,7 +78,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
-
+        private string ValorPorDefecto(string valor)
+        {
+            return string.IsNullOrWhiteSpace(valor) ? " " : valor;
+        }
         private Z_MP_WS_DATAAGRO_DIRECTOClient CrearClienteSap()
         {
             var client = new Z_MP_WS_DATAAGRO_DIRECTOClient();
