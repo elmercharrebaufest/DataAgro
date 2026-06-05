@@ -53,7 +53,6 @@ var ControlDeBoletosGestion = (function () {
 
         $("#collapseSeguimiento").on("show.bs.collapse", async function () {
             await ControlDeBoletosSeguimiento.inicializar(
-                state.SeguimientoBoletoId,
                 state.ControlDeBoletosId
             );
         });

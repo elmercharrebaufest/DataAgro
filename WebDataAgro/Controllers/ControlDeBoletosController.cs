@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Dto;
 
 namespace WebDataAgro.Controllers
 {
@@ -38,7 +39,7 @@ namespace WebDataAgro.Controllers
         private const string CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY = "CtrlBoletos_Clasificaciones_Cache";
         private const string CTRL_BOLETOS_PROCEDENCIAS_CACHE_KEY = "CtrlBoletos_Procedencias_Cache_{0}";
         private const string CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY = "CtrlBoletos_TipoOblea_Cache";
-        private const string CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY = "CtrlBoletos_BoletoCompraNet_Cache";
+        private const string CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY = "CtrlBoletos_BoletoSAP_Cache";
         private const int CACHE_DURATION_MINUTES = 5;
 
         public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager, IContratoManager contratoManager)
@@ -424,11 +425,11 @@ namespace WebDataAgro.Controllers
 
         #region Datos de Seguimiento
         [HttpGet]
-        public JsonResult GetDatosDeSeguimiento(int datosSeguimientoId)
+        public JsonResult GetDatosDeSeguimiento(int controlDeBoletosId)
         {
             try
             {
-                var resultado = _controlDeBoletosManager.ObtenerDatosDeSeguimiento(datosSeguimientoId);
+                var resultado = _controlDeBoletosManager.ObtenerDatosDeSeguimiento(controlDeBoletosId);
                 return Json(resultado, JsonRequestBehavior.AllowGet);
 
             }
@@ -908,26 +909,21 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetBoletoCompraNet()
+        public JsonResult GetBoletoSap()
         {
             try
             {
-                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY] as List<SelectListItem>;
+                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY] as List<BoletoSapDto>;
                 if (cachedData == null)
                 {
                     lock (_cacheLock)
                     {
-                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY] as List<SelectListItem>;
+                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY] as List<BoletoSapDto>;
                         if (cachedData == null)
                         {
-                            var boletosCompraNet = _controlDeBoletosManager.GetBoletoCompraNet();
-                            cachedData = boletosCompraNet.Select(tipo => new SelectListItem
-                            {
-                                Text = tipo.Descripcion,
-                                Value = tipo.Id.ToString(),
-                                Selected = false
-                            }).OrderBy(x => x.Text).ToList();
-                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLETO_COMPRANET_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
+                            var boletosSap = _controlDeBoletosManager.GetBoletoSap();
+                            cachedData = boletosSap;
+                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
                         }
                     }
                 }
@@ -935,7 +931,7 @@ namespace WebDataAgro.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error GetBoletoCompraNet: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error GetBoletoSap: {ex.Message}");
                 return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }

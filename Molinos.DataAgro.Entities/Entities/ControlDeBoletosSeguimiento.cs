@@ -14,7 +14,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         public int ControlDeBoletosId { get; set; }
         public int BolsaCompraNetId { get; set; }
-        public int BoletoCompraNetId { get; set; }
+        public int BoletoSapId { get; set; }
+        public string BoletoSapCaracter { get; set; }
         public string BolsaSellado { get; set; }
 
         public DateTime? FechaRecepcionBoleto { get; set; }
@@ -36,7 +37,7 @@ namespace Molinos.DataAgro.Entities.Entities
         // 🔹 Navigation
         public virtual ControlDeBoletos ControlDeBoletos { get; set; }
         public virtual BolsaCompraNet BolsaCompraNet { get; set; }
-        public virtual BoletoCompraNet BoletoCompraNet { get; set; }
+        public virtual BoletoSap BoletoSap { get; set; }
     }
 
 }
