@@ -116,7 +116,6 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 });
             }
         } catch (e) {
-            console.error("Error cargando dropdown:", e);
             $select.html('<option value="">Error al cargar datos</option>');
         }
     }
@@ -208,7 +207,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 bloqueaControlesSinOblea();
 
         } catch (e) {
-            console.error("Error cargando datos existentes:", e);
+            console.error("Error al verificar tipo de boleto y fecha de recepción:", e);
         }
     }
     async function cargarDatosExistentes() {
@@ -390,6 +389,12 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 });
         },
         guardar: async function () {
+
+            if (!state.verificaDatosSeguimiento) {
+                MensInfo("No se ha ingresado el tipo de boleto y fecha de recepción para el contrato.");
+                return;
+            }
+
             if (state.cargando) return;
 
             state.cargando = true;

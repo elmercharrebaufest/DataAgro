@@ -1358,3 +1358,30 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolControlDeboletos and Pe
    BEGIN
 		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolControlDeboletos, 922)
    END
+
+
+-- Registro en tabla BoletoSap
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 1)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Confirma', 'C', 1);
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 2)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Físico', 'F', 2);
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 3)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Ninguno', 'C - F - K', 3);
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 4)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Carta Oferta', 'K', 4);
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 5)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Sin Boleto', 'S', 5);
+
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 0)
+    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
+    VALUES ('Observado', 'O', 0);

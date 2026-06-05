@@ -12,7 +12,7 @@ var ControlDeBoletosSeguimiento = (function () {
             getSeguimiento: "/ControlDeBoletos/GetDatosDeSeguimiento",
             getBolsa: "/ControlDeBoletos/GetBolsaCompraNet",
             getBolsaSAP: "/ControlDeBoletos/GetBolsaCompraNetSAP",
-            getBoletoCompraNet: "/ControlDeBoletos/GetBoletoCompraNet",
+            getBoletoSap: "/ControlDeBoletos/GetBoletoSap",
         },
         modalId: "#modalSeguimientoControlBoleto"
     };
@@ -20,11 +20,12 @@ var ControlDeBoletosSeguimiento = (function () {
     var state = {
         cargando: false,
         ControlDeBoletosId: null,
-        SeguimientoBoletoId: null
+        SeguimientoBoletoId: null,
+        BoletoSap: null
     };
 
     let listaBolsaSAP = null;
-    let controlBoleto, controlBolsa, controlBolsaSellado;
+    let controlBoleto, controlBolsa, controlBolsaSellado, controlCaracterBoleto;
     let controlFechaRecepcionBoleto;
     let controlFechaEnvioFirma, controlFechaEnvioBolsa, controlFechaEnvioAfip;
     let controlFechaRecepcionFirma, controlFechaRecepcionBolsa, controlFechaRecepcionAfip;
@@ -36,7 +37,8 @@ var ControlDeBoletosSeguimiento = (function () {
         var $form = $("#accordionGestionBoleto #frmSeguimientoControlBoleto");
         if (!$form.length) $form = $("#frmSeguimientoControlBoleto").first();
 
-        controlBoleto        = $form.find("#Boleto");
+        controlBoleto = $form.find("#Boleto");
+        controlCaracterBoleto = $form.find("#CaracterBoleto");
         controlBolsa         = $form.find("#Bolsa");
         controlBolsaSellado  = $form.find("#BolsaSellado");
         controlRechazadoAfip = $form.find("#txtRechazadoAfip");
@@ -68,6 +70,22 @@ var ControlDeBoletosSeguimiento = (function () {
             } else {
                 controlBolsaSellado.val("");
             }
+        });
+        controlBoleto.off("change.seg").on("change.seg", function () {
+
+            if (Array.isArray(state.BoletoSap) && state.BoletoSap.length) {
+                var idSeleccionado = $(this).val();
+                var caracterSAP = null;
+
+                const boleto = state.BoletoSap.find(x => x.Id == idSeleccionado);
+                controlCaracterBoleto.empty().append('<option value="">Seleccione</option>');
+                controlCaracterBoleto.prop('disabled', false);
+                if (boleto)
+                    cargarDropdownBoletoCaracterSap(boleto,controlCaracterBoleto, "Cargando...", "Seleccione");
+            } else {
+                controlCaracterBoleto.val("");
+            }
+
         });
     }
     function getKendoDate($el) {
@@ -103,17 +121,23 @@ var ControlDeBoletosSeguimiento = (function () {
 
     function validarFechas() {
 
-        var feRecepcionBoleto    = getKendoDate(controlFechaRecepcionBoleto);
 
+        var feRecepcionBoleto    = getKendoDate(controlFechaRecepcionBoleto);
         var feEnvioFirmas = getKendoDate(controlFechaEnvioFirma);
         var feEnvioBolsa     = getKendoDate(controlFechaEnvioBolsa);
         var feEnvioAfip = getKendoDate(controlFechaEnvioAfip);
         var feRecepcionFirma = getKendoDate(controlFechaRecepcionFirma);
         var feRecepcionBolsa = getKendoDate(controlFechaRecepcionBolsa);
         var feRecepcionAfip  = getKendoDate(controlFechaRecepcionAfip);
-
         var feEnvioSellado = getKendoDate(controlFechaEnvioSellado);
 
+        if (controlBoleto.val() == '' || controlCaracterBoleto.val() == '') {
+            return "Debe seleccionar un boleto y un carácter.";
+        }
+
+        if (controlBolsa.val() == '') {
+            return "Debe seleccionar una bolsa.";
+        }
 
         // 🔴 Base obligatoria para validar relaciones
         if (!feRecepcionBoleto) {
@@ -177,11 +201,10 @@ var ControlDeBoletosSeguimiento = (function () {
             ControlDeBoletosId: state.ControlDeBoletosId,
             BolsaCompraNetId: controlBolsa.val(),
             BolsaSellado: controlBolsaSellado.val(),
-            BoletoCompraNetId: controlBoleto.val(),
+            BoletoSapId: controlBoleto.val(),
+            BoletoSapCaracter: controlCaracterBoleto.val(),
             RechazadoAfip: controlRechazadoAfip.val(),
-
             FechaRecepcionBoleto: getKendoDateISO(controlFechaRecepcionBoleto),
-
             FechaEnvioFirma: getKendoDateISO(controlFechaEnvioFirma),
             FechaEnvioAfip: getKendoDateISO(controlFechaEnvioAfip),
             FechaEnvioBolsa: getKendoDateISO(controlFechaEnvioBolsa),
@@ -215,15 +238,73 @@ var ControlDeBoletosSeguimiento = (function () {
             $select.html('<option value="">Error al cargar datos</option>');
         }
     }
-    async function obtener(datosSeguimientoId) {
-        var url = config.urls.getSeguimiento + "?datosSeguimientoId=" + datosSeguimientoId;
+    async function cargarDropdownBoletoSap(selector, textoCarga, textoDefault) {
+        var $select = selector;
+        $select.html('<option value="">' + textoCarga + "</option>");
+        try {
+            var data = state.BoletoSap;
+            $select.empty().append('<option value="">' + textoDefault + "</option>");
+            if (data && Array.isArray(data)) {
+                $.each(data, function (i, item) {
+                    $select.append(
+                        '<option value="' + item.Id + '">' + item.Descripcion + "</option>",
+                    );
+                });
+            } else {
+                $select.append('<option value="">Sin datos disponibles</option>');
+            }
+        } catch (error) {
+            console.error("Error cargando dropdown " + selector + ":", error);
+            $select.html('<option value="">Error al cargar datos</option>');
+        }
+    }
+    async function cargarDropdownBoletoCaracterSap(data, selector, textoCarga, textoDefault) {
+        var $select = selector;
+        $select.html('<option value="">' + textoCarga + "</option>");
+        $select.prop('disabled', false);
+        try {
+            const listaCaracter = data.Caracter
+                .split('-')
+                .map(caracter => ({
+                    Id: data.Id,
+                    Descripcion: data.Descripcion,
+                    Caracter: caracter.trim(),
+                    BoletoCompraNetId: data.BoletoCompraNetId
+                }));
+
+            $select.empty().append('<option value="">' + textoDefault + "</option>");
+            if (listaCaracter && Array.isArray(listaCaracter)) {
+
+
+                $.each(listaCaracter, function (i, item) {
+                    $select.append(
+                        '<option value="' + item.Caracter + '">' + item.Caracter + "</option>",
+                    );
+                });
+                if (listaCaracter.length == 1 ) {
+                    $select.val(listaCaracter[0].Caracter);
+                    $select.prop('disabled', true);
+                }
+            } else {
+                $select.append('<option value="">Sin datos disponibles</option>');
+            }
+        } catch (error) {
+            console.error("Error cargando dropdown " + selector + ":", error);
+            $select.html('<option value="">Error al cargar datos</option>');
+        }
+
+
+    }
+    async function obtener(controlDeBoletosId) {
+        var url = config.urls.getSeguimiento + "?controlDeBoletosId=" + controlDeBoletosId;
         try {
             var response = await MSExecuteGetOnServerAsync(url);
             if (!response) return;
 
             controlBolsa.val(response.BolsaCompraNetId).trigger('change');
             controlBolsaSellado.val(response.BolsaSellado);
-            controlBoleto.val(response.BoletoCompraNetId).trigger('change');
+            controlBoleto.val(response.BoletoSapId).trigger('change');
+            controlCaracterBoleto.val(response.BoletoSapCaracter).trigger('change');
             controlRechazadoAfip.val(response.RechazadoAfip);
 
             setKendoDate(controlFechaRecepcionBoleto, response.FechaRecepcionBoleto);
@@ -236,6 +317,7 @@ var ControlDeBoletosSeguimiento = (function () {
             setKendoDate(controlFechaRecepcionAfip, response.FechaRecepcionAfip);
 
             setKendoDate(controlFechaEnvioSellado, response.FechaEnvioSellado);
+            state.SeguimientoBoletoId = response.Id;
 
             controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
             controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
@@ -272,28 +354,30 @@ var ControlDeBoletosSeguimiento = (function () {
 
     return {
 
-        inicializar: async function (SeguimientoBoletoId, ControlDeBoletosId) {
+        inicializar: async function (ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
-            state.SeguimientoBoletoId = SeguimientoBoletoId || 0;
             state.ControlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
 
             await Promise.all([
-                cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Seleccione un boleto"),
+                // cargarDropdown(config.urls.getBoletoSap, controlBoleto, "Cargando...", "Seleccione un boleto"),
                 cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
                 cargarBolsaSAP()
             ]);
 
-            if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                await obtener(state.SeguimientoBoletoId);
+            var dataBoletoSap = await MSExecuteGetOnServerAsync(config.urls.getBoletoSap);
+            state.BoletoSap = dataBoletoSap || [];
+            cargarDropdownBoletoSap(controlBoleto, "Cargando...", "Seleccione un boleto");
+
+            if (state.ControlDeBoletosId != null && state.ControlDeBoletosId > 0) {
+                await obtener(state.ControlDeBoletosId);
             }
         },
 
         abrir: async function (SeguimientoBoletoId, ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
-            state.SeguimientoBoletoId = SeguimientoBoletoId || 0;
             state.ControlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
             BlockUi('Cargando...');
@@ -305,8 +389,8 @@ var ControlDeBoletosSeguimiento = (function () {
                     cargarBolsaSAP()
                 ]);
 
-                if (state.SeguimientoBoletoId != null && state.SeguimientoBoletoId > 0) {
-                    await obtener(state.SeguimientoBoletoId);
+                if (state.state.ControlDeBoletosId != null && state.state.ControlDeBoletosId > 0) {
+                    await obtener(state.state.ControlDeBoletosId);
                 }
 
                 $("#txtContrato").val(ControlDeBoletosId || "");

@@ -247,9 +247,16 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return this.repositorio.Listar<TipoOblea>().OrderBy(x=> x.Descripcion).ToList();
         }
-        public List<BoletoCompraNet> GetBoletoCompraNet()
+        public List<BoletoSapDto> GetBoletoSap()
         {
-            return this.repositorio.Listar<BoletoCompraNet>().OrderBy(x => x.Descripcion).ToList();
+            var listadoBoletoSap = this.repositorio.Listar<BoletoSap>().Select(x => new BoletoSapDto
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion,
+                Caracter = x.Caracter,
+                BoletoCompraNetId = x.BoletoCompraNetId
+            }).ToList();
+            return listadoBoletoSap.OrderBy(x => x.Descripcion).ToList();
         }
         #endregion
 
@@ -619,15 +626,16 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Datos de Seguimiento
-        public ControlDeBoletosDatosSeguimientoDto ObtenerDatosDeSeguimiento(int datosSeguimientoId)
+        public ControlDeBoletosDatosSeguimientoDto ObtenerDatosDeSeguimiento(int controlDeBoletosId)
         {
             var seguimientoControlDeBoletos = new ControlDeBoletosDatosSeguimientoDto();
-            var controlDeBoletosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.Id == datosSeguimientoId);
+            var controlDeBoletosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
             if (controlDeBoletosSeguimiento != null)
             {
                 seguimientoControlDeBoletos.Id = controlDeBoletosSeguimiento.Id;
                 seguimientoControlDeBoletos.ControlDeBoletosId = controlDeBoletosSeguimiento.ControlDeBoletosId;
-                seguimientoControlDeBoletos.BoletoCompraNetId = controlDeBoletosSeguimiento.BoletoCompraNetId;
+                seguimientoControlDeBoletos.BoletoSapId = controlDeBoletosSeguimiento.BoletoSapId;
+                seguimientoControlDeBoletos.BoletoSapCaracter = controlDeBoletosSeguimiento.BoletoSapCaracter;
                 seguimientoControlDeBoletos.BolsaCompraNetId = controlDeBoletosSeguimiento.BolsaCompraNetId;
                 seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosSeguimiento.BolsaSellado;
                 seguimientoControlDeBoletos.FechaRecepcionBoleto = controlDeBoletosSeguimiento.FechaRecepcionBoleto;
@@ -691,7 +699,7 @@ namespace Molinos.DataAgro.Business.Managers
             var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
             var contrato = repositorio.Obtener<Negocio>(controlDeBoletos.NegocioId).ContratoSAP;
             var bolsa = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId).CodigoSap;
-            var tipoBoleto = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId).Id.ToString("D2");
+            var tipoBoleto = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId).Id.ToString("D2");
             var ahora = DateTime.Now;
 
             return new SeguimientoControlDeBoletosDto
@@ -703,7 +711,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FecAcopio = string.Empty,
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
-                TipoBoleto = tipoBoleto,
+                TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
                 Usuario = string.Empty,
                 FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
                 FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas?.ToString("yyyy-MM-dd"),
@@ -732,7 +740,8 @@ namespace Molinos.DataAgro.Business.Managers
         private void ActualizarSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(controlDeBoletosDatosSeguimiento.Id);
-            datosSeguimiento.BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId);
+            datosSeguimiento.BoletoSap = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId);
+            datosSeguimiento.BoletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter;
             datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
             datosSeguimiento.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
             datosSeguimiento.FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto;
@@ -756,7 +765,8 @@ namespace Molinos.DataAgro.Business.Managers
             var datosSeguimiento = new ControlDeBoletosSeguimiento
             {
                 ControlDeBoletosId = controlDeBoletosDatosSeguimiento.ControlDeBoletosId,
-                BoletoCompraNet = repositorio.Obtener<BoletoCompraNet>(controlDeBoletosDatosSeguimiento.BoletoCompraNetId),
+                BoletoSap = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId),
+                BoletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
                 BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId),
                 BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
                 FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto,
@@ -785,7 +795,7 @@ namespace Molinos.DataAgro.Business.Managers
             var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(s => s.ControlDeBoletosId == controlDeBoletosId);
             if (seguimiento != null)
             {
-                if (seguimiento.BoletoCompraNetId > 0 && seguimiento.FechaRecepcionBoleto.HasValue)
+                if (seguimiento.BoletoSapId > 0 && seguimiento.FechaRecepcionBoleto.HasValue)
                     resultado = "SI";
             }
             return resultado;
