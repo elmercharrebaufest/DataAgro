@@ -2119,7 +2119,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x => contrato.FechaDesde >= x.DesdeEntrega &&
                    contrato.FechaHasta <= x.HastaEntrega);
 
-            if (rango != null && contrato.Servicios != null && !contrato.Servicios.Any(x => x.Modificado == true))
+            if (rango != null && contrato.Calidad == null)
             {
                 var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
                 //double cantidad = 0;
