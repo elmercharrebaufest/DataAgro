@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             Observaciones = cupo.Observaciones,
                             Destinatario = cupo.Destinatario,
                             FleteProc = cupo.FleteProcedencia == true ? "S" : "N",
-                            Calidad = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
+                            Calidad = cupo.Calidad == "Camara" || cupo.Calidad == "Cámara" ? "01" : cupo.Calidad == "Fabrica" || cupo.Calidad == "Fábrica" ? "03" : ""
                         },
                         ImPropuesta = "X", //Si se envía vacío la RFC responde "No hay cupos disponibles."
                         ImExcepcion = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
