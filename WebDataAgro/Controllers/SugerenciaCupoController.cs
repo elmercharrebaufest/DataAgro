@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
@@ -123,8 +123,11 @@ namespace WebDataAgro.Controllers
                 ViewBag.ComercialSeleccionado = new SelectList(comercialesListItems.Where(a => a.Value == GlobalVariables.ComercialId.ToString()).ToList(), "Value", "Text", ComercialSeleccionado);
             }
 
-            var calidades = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
-                new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
+            var calidades = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Camara", Value = "1", Selected = false },
+                new SelectListItem { Text = "Fabrica", Value = "2", Selected = true }
+            };
             ViewBag.Calidad = new SelectList(calidades, "Value", "Text", 2);
             ViewBag.Fechas = new List<DateTime>();
 
