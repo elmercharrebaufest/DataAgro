@@ -86,7 +86,7 @@ namespace WebDataAgro.Controllers
                 var cupoModel = new CupoModel
                 {
                     Id = cupo.Id,
-                    CalidadId = cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
+                    CalidadId = cupo.Calidad == "Camara" || cupo.Calidad == "Cámara" ? 1 : cupo.Calidad == "Fabrica" || cupo.Calidad == "Fábrica" ? 2 : 0,
                     CantidadCupos = null,
                     FasonId = cupo.Fason ?? false,
                     FechaEntrega = cupo.FechaIngreso,
@@ -129,7 +129,7 @@ namespace WebDataAgro.Controllers
                 var cupoModel = new CupoModel
                 {
                     Id = cupo.Id,
-                    CalidadId = cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
+                    CalidadId = cupo.Calidad == "Camara" || cupo.Calidad == "Cámara" ? 1 : cupo.Calidad == "Fabrica" || cupo.Calidad == "Fábrica" ? 2 : 0,
                     CantidadCupos = null,
                     FasonId = cupo.Fason ?? false,
                     FechaEntrega = cupo.FechaIngreso,

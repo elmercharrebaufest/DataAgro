@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
+using Molinos.DataAgro.Agent.WS_GAQ_sin_PI;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var rq = new ZMprfcModificarCupo
                     {
                         ImComercial = cupo.Comercial.IdActiveDirectory,
-                        ImCalidad = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : "",
+                        ImCalidad = cupo.Calidad == "Camara" || cupo.Calidad == "Cámara" ? "01" : cupo.Calidad == "Fabrica" || cupo.Calidad == "Fábrica" ? "03" : "",
                         ImDestinatario = cupo.Destinatario,
                         ImObservaciones = cupo.Observaciones,
                         ImProveedor = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
