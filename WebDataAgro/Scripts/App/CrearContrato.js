@@ -3152,7 +3152,8 @@ function CambioCalidades(calidades) {
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
         }
-        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || 
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
@@ -4037,6 +4038,7 @@ function AgregarCalidades() {
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto" ? 6 :
                         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
                             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad" ||
                                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? 2 : 0,
 
             Borrar: function () {
@@ -4063,7 +4065,8 @@ function AgregarCalidades() {
             if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
             }
-            else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados") {
+            else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" ||
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad") {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
             }
         }
@@ -6667,7 +6670,8 @@ function MostrarServiciosYCalidades() {
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || 
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad";
     //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
     if (validar == false) {
         $("#servicioBtn").hide();
