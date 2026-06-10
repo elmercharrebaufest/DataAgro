@@ -4492,7 +4492,7 @@ function CargarDatosEditar(contrato, hijo) {
         viewModel.set("Servicios", contrato.Servicios);
         kendo.bind($("#ModalServicio"), viewModel);
         InicializarServicios();
-        $("#servicioBtn").show();
+        //$("#servicioBtn").show();
     } else {
         MostrarServiciosYCalidades();
     }
@@ -6665,24 +6665,9 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
 }
 
 function MostrarServiciosYCalidades() {
-    var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || 
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad";
-    //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
-    if (validar == false) {
-        $("#servicioBtn").hide();
-        LimpiarServicios();
-    } else {
-        $("#servicioBtn").show();
-        LimpiarServicios();
-        TraerServicio();
-    }
-
-    return validar;
+    $("#servicioBtn").hide();
+    LimpiarServicios();
+    return false;
 }
 
 function SustentableTipoDB() {
