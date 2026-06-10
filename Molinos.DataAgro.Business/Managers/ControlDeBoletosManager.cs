@@ -53,7 +53,6 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         #region Reporte Seguimiento Boletos
-
         public List<ControlDeBoletosReporteSeguimientoConsultaDto> GetReporteDeSeguimientoBoletos(ControlDeBoletoFiltroSeguimientoDto filtros)
         {
             var controlBoletosQuery = repositorio.Listar<ControlDeBoletos>().AsQueryable();
@@ -196,7 +195,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return data;
         }
-
         #endregion
 
         #region Metodo para cargar combos
@@ -432,7 +430,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     controlDeBoletosExiste.FechaAnulacionConfirma = DateTime.Now;
                     controlDeBoletosExiste.EstadoConfirmaId = (int)EnumEstadoConfirma.ANULADO;
-                    controlDeBoletosExiste.ControlDeBoletosEstadoId = (int) EnumControlDeBoletosEstado.ANULADO;
                     repositorio.GuardarCambios();
 
                     var controlDeBoletosSustitutorio = new ControlDeBoletos()
@@ -455,72 +452,6 @@ namespace Molinos.DataAgro.Business.Managers
                     repositorio.Agregar(controlDeBoletosSustitutorio);
                     repositorio.GuardarCambios();
                 }
-            }
-            return oResultado;
-        }
-        public Resultado RegistrarAcciones(List<int> ControlDeBoletoIds, EnumControlDeBoletosAcciones accion)
-        {
-            var oResultado = new Resultado();
-            try
-            {
-                var boletos = repositorio.Listar<ControlDeBoletos>(x => ControlDeBoletoIds.Contains(x.Id));
-
-                if (boletos.Count == 0)
-                {
-                    oResultado.Errores.Add(new ErrorMessage()
-                    {
-                        Message = "No se encontró el control de boletos.",
-                    });
-                    return oResultado;
-                }
-
-                var ahora = DateTime.Now;
-
-                foreach (var boleto in boletos)
-                {
-                    switch (accion)
-                    {
-                        case EnumControlDeBoletosAcciones.ControlIniciado:
-                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_PROCESO;
-                            boleto.ControlIniciado = true;
-                            boleto.FechaControlIniciado = ahora;
-                            break;
-
-                        case EnumControlDeBoletosAcciones.RegistroDatosOblea:
-                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_OBLEA;
-                            boleto.RegistroDatosOblea = true;
-                            boleto.FechaRegistroDatosOblea = ahora;
-                            break;
-
-                        case EnumControlDeBoletosAcciones.CertificacionCompletada:
-                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.EN_CERTIFICACION;
-                            boleto.CertificacionCompletada = true;
-                            boleto.FechaCertificacionCompletada = ahora;
-                            break;
-
-                        case EnumControlDeBoletosAcciones.ControlFinalizado:
-                            boleto.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.FINALIZADO;
-                            boleto.ControlFinalizado = true;
-                            boleto.FechaControlFinalizado = ahora;
-                            break;
-
-                        default:
-                            oResultado.Errores.Add(new ErrorMessage()
-                            {
-                                Message = "Acción no válida.",
-                            });
-                            return oResultado;
-                    }
-                    repositorio.GuardarCambios();
-                }
-            }
-            catch (Exception ex)
-            {
-                oResultado.Errores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message,
-                });
-                return oResultado;
             }
             return oResultado;
         }
@@ -802,7 +733,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosSeguimiento.FechaModificacion = DateTime.Now;
             repositorio.GuardarCambios();
             this.logDataAgroManager.LogCambiosControlBoletos(controlDeBoletosDatosSeguimiento, TipoAccionLogDataAgro.Modificar, datosSeguimiento.Id, "Modificacion de Seguimiento - Control de Boletos");
-
+            EstablecerEstadoBoleto(datosSeguimiento.ControlDeBoletosId);
         }
 
         private void InsertarSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
@@ -828,7 +759,7 @@ namespace Molinos.DataAgro.Business.Managers
             };
             repositorio.Agregar(datosSeguimiento);
             repositorio.GuardarCambios();
-            RegistrarAcciones(new List<int> { datosSeguimiento.Id }, EnumControlDeBoletosAcciones.CertificacionCompletada);
+            EstablecerEstadoBoleto(datosSeguimiento.ControlDeBoletosId);
             this.logDataAgroManager.LogCambiosControlBoletos(controlDeBoletosDatosSeguimiento, TipoAccionLogDataAgro.Crear, datosSeguimiento.Id, "Registro de Seguimiento - Control de Boletos");
         }
         #endregion
@@ -915,9 +846,8 @@ namespace Molinos.DataAgro.Business.Managers
                             existente.Rechazado = item.Rechazado ?? existente.Rechazado;
                             existente.FechaModificacion = ahora;
                             repositorio.GuardarCambios();
-                            RegistrarAcciones(new List<int> { existente.Id }, EnumControlDeBoletosAcciones.RegistroDatosOblea);
+                            EstablecerEstadoBoleto(existente.ControlDeBoletosId);
                             this.logDataAgroManager.LogCambiosControlBoletos(item, TipoAccionLogDataAgro.Modificar, existente.Id, "Modificacion de Certificacion - Control de Boletos");
-
                         }
                         else
                         {
@@ -936,7 +866,7 @@ namespace Molinos.DataAgro.Business.Managers
                             repositorio.Agregar(nuevo);
                             repositorio.GuardarCambios();
                             this.logDataAgroManager.LogCambiosControlBoletos(item, TipoAccionLogDataAgro.Crear, nuevo.Id, "Registro de Certificacion - Control de Boletos");
-                            RegistrarAcciones(new List<int> { nuevo.Id }, EnumControlDeBoletosAcciones.RegistroDatosOblea);
+                            EstablecerEstadoBoleto(nuevo.ControlDeBoletosId);
                         }
                     }
                 }
@@ -1131,6 +1061,65 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex, "Error en ProcesarBoletosPendientesControl");
                 return oResultado;
             }
+        }
+        #endregion
+
+        #region Metodo para establecer el estado de Boleto
+        private void EstablecerEstadoBoleto(int controlDeBoletoId)
+        {
+            int estadoControlBoleto = 0;
+            var datosCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletoId);
+            var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletoId);
+            if (datosCertificacion.Count == 0 && datosSeguimiento == null)
+            {
+                var boletoPendiente = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
+                if (boletoPendiente != null)
+                {
+                    estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL;
+                }
+            }
+            else
+            {
+                if (datosCertificacion.Count > 0)
+                {
+                    var tipoObleaBolsa = repositorio.Listar<TipoOblea>(x => x.Codigo == "O").FirstOrDefault();
+                    var tipoRegistracionAfip = repositorio.Listar<TipoOblea>(x => x.Codigo == "A").FirstOrDefault();
+                    var obleaBolsa = datosCertificacion.Where(x => x.TipoObleaId == tipoObleaBolsa.Id);
+                    var obleaAfip = datosCertificacion.Where(x => x.TipoObleaId == tipoRegistracionAfip.Id);
+
+                    if (!obleaBolsa.Any())
+                    {
+                        estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA;
+                    }
+                    else
+                    {
+                        if(!obleaAfip.Any())
+                        {
+                            estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA;
+                        }
+                        else
+                        {
+                            if(datosSeguimiento.FechaRecepcionAfip.HasValue &&
+                               datosSeguimiento.FechaEnvioBolsa.HasValue &&
+                               datosSeguimiento.FechaEnvioFirmas.HasValue &&
+                               datosSeguimiento.FechaEnvioAfip.HasValue &&
+                               datosSeguimiento.FechaRecepcionBolsa.HasValue &&
+                               datosSeguimiento.FechaRecepcionFirma.HasValue &&
+                               datosSeguimiento.FechaRecepcionAfip.HasValue &&
+                               datosSeguimiento.FechaEnvioSellado.HasValue
+                              )
+                                estadoControlBoleto = (int)EnumControlDeBoletosEstado.CONTROLADO;
+                        }
+                    }
+                }
+                else
+                {
+                    estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA;
+                }
+            }
+            var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
+            controlDeBoletos.ControlDeBoletosEstado = repositorio.Obtener<ControlDeBoletosEstado>(x => x.Id == estadoControlBoleto);
+            repositorio.GuardarCambios();
         }
         #endregion
 

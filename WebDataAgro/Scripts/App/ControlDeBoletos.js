@@ -11,7 +11,6 @@ var ControlBoletos = (function () {
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
             getBoletos: "/ControlDeBoletos/GetBoletos",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
-            processControlMasivo: "/ControlDeBoletos/ControlMasivo",
             exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel"
         }
     };
@@ -31,23 +30,11 @@ var ControlBoletos = (function () {
     let controlLimpiarFiltros = $("#frmPendienteControl #limpiarFiltros");
     let controlExportarExcel = $("#frmPendienteControl #exportarExcel");
 
-    let controlSelectAll = $("#frmPendienteControl #selectAll");
-
-    let controlIniciarControlMasivo = $("#frmPendienteControl #iniciarControlMasivo");
-    let controlFinalizarControlMasivo = $("#frmPendienteControl #finalizarControlMasivo");
-
     var state = {
         grid: null,
         cargandoDatos: false,
         datosInicializados: false,
     };
-
-    const controlMasivoAccion = Object.freeze({
-        ControlIniciado: 1,
-        RegistroDatosOblea: 2,
-        CertificacionCompletada: 3,
-        ControlFinalizado: 4,
-    });
 
     // Funciones privadas
     function mostrarSpinner(mostrar) {
@@ -72,10 +59,6 @@ var ControlBoletos = (function () {
         if (texto) {
             btn.find("span").text(texto);
         }
-    }
-
-    function validarNumero(valor) {
-        return valor === "" || (!isNaN(valor) && parseInt(valor) >= 0);
     }
 
     async function cargarDropdown(url, selector, textoCarga, textoDefault) {
@@ -186,47 +169,50 @@ var ControlBoletos = (function () {
 
     // Funciones públicas
     return {
-        init: function () {
+        init: async function () {
             if (state.datosInicializados) return;
             this.inicializarFechas();
-            this.cargarDatosIniciales();
+            await this.cargarDatosIniciales();
+            controlEstadoControl.val(1).trigger('change');
             this.configurarEventos();
             this.inicializarGrid();
 
             state.datosInicializados = true;
         },
 
-        cargarDatosIniciales: function () {
-            cargarDropdown(
-                config.urls.getMateriales,
-                controlMaterial,
-                "Cargando...",
-                "Todos los materiales",
-            );
-            cargarDropdown(
-                config.urls.getEstados,
-                controlEstadoControl,
-                "Cargando...",
-                "Todos los estados",
-            );
-            cargarDropdown(
-                config.urls.getComerciales,
-                controlComercial,
-                "Cargando...",
-                "Todos los comerciales",
-            );
-            cargarDropdown(
-                config.urls.getProveedores,
-                controlProveedor,
-                "Cargando...",
-                "Todos los proveedores",
-            );
-            cargarDropdown(
-                config.urls.getBolsaCompraNet,
-                controlBolsaCompraNet,
-                "Cargando...",
-                "Todas las Bolsas",
-            );
+        cargarDatosIniciales: async function () {
+            await Promise.all([
+                cargarDropdown(
+                    config.urls.getMateriales,
+                    controlMaterial,
+                    "Cargando...",
+                    "Todos los materiales",
+                ),
+                cargarDropdown(
+                    config.urls.getEstados,
+                    controlEstadoControl,
+                    "Cargando...",
+                    "Todos los estados",
+                ),
+                cargarDropdown(
+                    config.urls.getComerciales,
+                    controlComercial,
+                    "Cargando...",
+                    "Todos los comerciales",
+                ),
+                cargarDropdown(
+                    config.urls.getProveedores,
+                    controlProveedor,
+                    "Cargando...",
+                    "Todos los proveedores",
+                ),
+                cargarDropdown(
+                    config.urls.getBolsaCompraNet,
+                    controlBolsaCompraNet,
+                    "Cargando...",
+                    "Todas las Bolsas",
+                ),
+            ]);
         },
 
         configurarEventos: function () {
@@ -273,34 +259,6 @@ var ControlBoletos = (function () {
                 .off("click")
                 .on("click", function () {
                     self.exportarExcel();
-                });
-
-            // Selección múltiple
-            controlSelectAll
-                .off("change")
-                .on("change", function () {
-                    self.seleccionarTodos(this.checked);
-                });
-
-            // Control masivo
-            controlIniciarControlMasivo
-                .off("click")
-                .on("click", function () {
-                    self.iniciarControlMasivo();
-                });
-
-            controlFinalizarControlMasivo
-                .off("click")
-                .on("click", function () {
-                    self.finalizarControlMasivo();
-                });
-
-            // Cards de progreso como filtros rápidos
-            $(".progress-card[data-filter]")
-                .off("click")
-                .on("click", function () {
-                    var filtro = $(this).data("filter");
-                    self.aplicarFiltroRapido(filtro);
                 });
         },
 
@@ -413,16 +371,6 @@ var ControlBoletos = (function () {
                         navigatable: false,
                         columns: [
                             {
-                                field: "Selected",
-                                title:
-                                    "<input type='checkbox' id='gridSelectAll' class='form-check-input' />",
-                                template:
-                                    "<input type='checkbox' class='row-checkbox form-check-input' data-id='#=Id#' />",
-                                width: 50,
-                                sortable: false,
-                                filterable: false,
-                            },
-                            {
                                 field: "TipoBoleto",
                                 title: "Boleto",
                                 width: 80,
@@ -489,10 +437,6 @@ var ControlBoletos = (function () {
                         dataBound: function (e) {
                             autoFitColumnas(e.sender);
                             self.configurarEventosGrid();
-                            self.actualizarSeleccion();
-                        },
-                        change: function (e) {
-                            self.actualizarBotonesControlMasivo();
                         },
                     })
                     .data("kendoGrid");
@@ -512,29 +456,6 @@ var ControlBoletos = (function () {
         },
 
         configurarEventosGrid: function () {
-            var self = this;
-
-            $("#gridSelectAll")
-                .off("change")
-                .on("change", function () {
-                    self.seleccionarTodos(this.checked);
-                });
-
-            // Checkboxes individuales
-            $(".row-checkbox")
-                .off("change")
-                .on("change", function () {
-                    self.actualizarBotonesControlMasivo();
-
-                    // Actualizar estado del checkbox principal
-                    var total = $(".row-checkbox").length;
-                    var seleccionados = $(".row-checkbox:checked").length;
-                    $("#gridSelectAll").prop(
-                        "indeterminate",
-                        seleccionados > 0 && seleccionados < total,
-                    );
-                    $("#gridSelectAll").prop("checked", seleccionados === total);
-                });
         },
 
         obtenerFiltros: function () {
@@ -545,8 +466,8 @@ var ControlBoletos = (function () {
                 materialId: controlMaterial.val() || null,
                 estadoControlId: controlEstadoControl.val() || null,
                 esConfirma: controlEsConfirma.is(":checked"),
-                fechaCargaDesde: formatearFecha(controlFechaCargaDesde.val()) || null,
-                fechaCargaHasta: formatearFecha(controlFechaCargaHasta.val()) || null,
+                fechaCargaDesde: (function() { var dp = controlFechaCargaDesde.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
+                fechaCargaHasta: (function() { var dp = controlFechaCargaHasta.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
                 proveedor: controlProveedor.val() || null,
                 bolsaId: controlBolsaCompraNet.val() || null,
                 comercialId: controlComercial.val() || null,
@@ -555,30 +476,24 @@ var ControlBoletos = (function () {
 
         validarFiltros: function () {
             var filtros = this.obtenerFiltros();
-            var errores = [];
 
-            const sinFiltrosPrincipales =
+            var sinFiltrosPrincipales =
                 !filtros.negocioSAP &&
                 !filtros.fechaCargaDesde &&
                 !filtros.fechaCargaHasta;
 
-            const sinFiltrosSecundarios =
-                !filtros.proveedorId &&
+            var sinFiltrosSecundarios =
+                !filtros.proveedor &&
                 !filtros.comercialId &&
                 !filtros.materialId &&
                 !filtros.bolsaId;
 
-            if (sinFiltrosPrincipales && sinFiltrosSecundarios) {
-                return false;
-            }
-
-            return errores;
+            return !(sinFiltrosPrincipales && sinFiltrosSecundarios);
         },
 
         filtrarBoletos: function () {
-            var errores = this.validarFiltros();
-            if (errores.length > 0) {
-                mostrarMensaje("Error de Validación", errores.join("<br>"), "warning");
+            if (!this.validarFiltros()) {
+                mostrarMensaje("Error de Validación", "No se ha seleccionado ningún filtro para la búsqueda.", "warning");
                 return;
             }
 
@@ -600,37 +515,14 @@ var ControlBoletos = (function () {
             controlProveedor.val("");
             controlBolsaCompraNet.val("");
 
-            controlFechaCargaDesde.val("");
-            controlFechaCargaHasta.val("");
+            var dpDesde = controlFechaCargaDesde.data("kendoDatePicker");
+            var dpHasta = controlFechaCargaHasta.data("kendoDatePicker");
+            if (dpDesde) dpDesde.value(null);
+            if (dpHasta) dpHasta.value(null);
 
             controlEsConfirma.prop("checked", false);
 
             this.filtrarBoletos();
-        },
-
-        aplicarFiltroRapido: function (estado) {
-            this.limpiarFiltros();
-
-            var estadoId = "";
-            switch (estado) {
-                case "pendiente":
-                    estadoId = "1";
-                    break;
-                case "proceso":
-                    estadoId = "2";
-                    break;
-                case "completado":
-                    estadoId = "3";
-                    break;
-                case "certificado":
-                    estadoId = "4";
-                    break;
-            }
-
-            if (estadoId) {
-                controlEstadoControl.val(estadoId);
-                this.filtrarBoletos();
-            }
         },
 
         exportarExcel: function () {
@@ -653,27 +545,6 @@ var ControlBoletos = (function () {
             form.submit();
             document.body.removeChild(form);
         },
-
-        seleccionarTodos: function (seleccionar) {
-            $(".row-checkbox").prop("checked", seleccionar);
-            this.actualizarBotonesControlMasivo();
-        },
-
-        actualizarSeleccion: function () {
-            this.actualizarBotonesControlMasivo();
-        },
-
-        actualizarBotonesControlMasivo: function () {
-            var seleccionados = $(".row-checkbox:checked").length;
-            var habilitado = seleccionados > 0;
-
-            actualizarBoton(controlIniciarControlMasivo, habilitado);
-            actualizarBoton(controlFinalizarControlMasivo, habilitado);
-
-            // Actualizar checkbox principal
-            var total = $(".row-checkbox").length;
-            $("#selectAll").prop("checked", seleccionados === total && total > 0);
-        },
         inicializarFechas: function () {
             const hoy = new Date();
             const desde = new Date(hoy);
@@ -692,160 +563,35 @@ var ControlBoletos = (function () {
                 });
             });
         },
-        iniciarControlMasivo: function () {
-            var ids = this.obtenerSeleccionados();
-            if (ids.length === 0) {
-                mostrarMensaje(
-                    "Atención",
-                    "Debe seleccionar al menos un boleto para iniciar el control",
-                    "warning",
-                );
-                return;
-            }
-
-            var mensaje =
-                "¿Está seguro de iniciar el control para " +
-                ids.length +
-                " boleto(s) seleccionado(s)?";
-            if (confirm(mensaje)) {
-                this.procesarControlMasivo("iniciar", ids);
-            }
-        },
-
-        finalizarControlMasivo: function () {
-            var ids = this.obtenerSeleccionados();
-            if (ids.length === 0) {
-                mostrarMensaje(
-                    "Atención",
-                    "Debe seleccionar al menos un boleto para finalizar el control",
-                    "warning",
-                );
-                return;
-            }
-
-            var mensaje =
-                "¿Está seguro de finalizar el control para " +
-                ids.length +
-                " boleto(s) seleccionado(s)?";
-            if (confirm(mensaje)) {
-                this.procesarControlMasivo("finalizar", ids);
-            }
-        },
-
-        obtenerSeleccionados: function () {
-            var ids = [];
-            $(".row-checkbox:checked").each(function () {
-                var id = $(this).data("id");
-                if (id) {
-                    ids.push(id);
-                }
-            });
-            return ids;
-        },
-
-        procesarControlBoleto: async function (accion, ids) {
-            var self = this;
-
-            if (!ids || ids.length === 0) {
-                mostrarMensaje("Error", "No hay elementos seleccionados", "warning");
-                return;
-            }
-
-            // Deshabilitar botones durante el procesamiento
-            actualizarBoton(controlIniciarControlMasivo, false);
-            actualizarBoton(controlFinalizarControlMasivo, false);
-
-            let request = {
-                AccionControlDeBoletos: accion,
-                ControlDeBoletoIds: ids,
-            };
-
-            try {
-                const response = await MSExecuteOnServerAsync(config.urls.processControlMasivo, request);
-                if (response && response.success) {
-                    self.actualizarBotonesControlMasivo();
-                    self.filtrarBoletos();
-                }
-            } catch (error) {
-                console.error("Error procesando control de boleto:", error);
-            } finally {
-                self.actualizarBotonesControlMasivo();
-            }
-        },
-
-        procesarControlMasivo: async function (accion, ids) {
-            var self = this;
-
-            if (!ids || ids.length === 0) {
-                mostrarMensaje("Error", "No hay elementos seleccionados", "warning");
-                return;
-            }
-
-            // Deshabilitar botones durante el procesamiento
-            actualizarBoton(controlIniciarControlMasivo, false);
-            actualizarBoton(controlFinalizarControlMasivo, false);
-
-            let request = {
-                AccionControlDeBoletos: accion,
-                ControlDeBoletoIds: ids,
-            };
-
-            try {
-                const response = await MSExecuteOnServerAsync(config.urls.processControlMasivo, request);
-                if (response) {
-                    self.actualizarBotonesControlMasivo();
-                }
-            } catch (error) {
-                console.error("Error procesando control masivo:", error);
-            } finally {
-                self.actualizarBotonesControlMasivo();
-                self.filtrarBoletos();
-            }
-        },
-
         generarBotonesAccion: function (data) {
+
             var botones = [];
             botones.push(
                 '<button class="btn btn-sm btn-outline-secondary btn-acciones tooltip-custom" onclick="ControlBoletos.visualizarContrato(' +
                 data.NegocioId +
                 ')" title="Visualizar Contrato"><i class="fa fa-file-text-o"></i><span class="tooltiptext"></span></button>',
             );
-            if (data.ControlIniciado) {
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlDeBoletosGestion.abrir({ControlDeBoletosId:' +
-                    data.Id + ',SeguimientoBoletoId:' + (data.SeguimientoBoletoId || 0) +
-                    ',PreCertificacionId:' + (data.PreCertificacionId || 0) +
-                    ',NegocioId:' + data.NegocioId +
-                    '})" title="Gestión Control"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
-                );
-                if (data.EsConfirma) {
 
-                    botones.push(
-                        '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
-                        data.Id +
-                        ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
-                    );
-                }
-            }
-            if (!data.ControlIniciado) {
+            botones.push(
+                '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlDeBoletosGestion.abrir({ControlDeBoletosId:' +
+                data.Id + ',SeguimientoBoletoId:' + (data.SeguimientoBoletoId || 0) +
+                ',PreCertificacionId:' + (data.PreCertificacionId || 0) +
+                ',NegocioId:' + data.NegocioId +
+                '})" title="Gestión Control"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
+            );
+
+            if (data.EsConfirma) {
+
                 botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.iniciarControl(' +
+                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
                     data.Id +
-                    ')" title="Iniciar Control"><i class="fa fa-play"></i><span class="tooltiptext"></span></button>',
+                    ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
                 );
             }
 
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
             );
-        },
-
-        iniciarControl: function (id) {
-            this.procesarControlBoleto(controlMasivoAccion.ControlIniciado, [id]);
-        },
-
-        finalizarControl: function (id) {
-            this.procesarControlBoleto(controlMasivoAccion.ControlFinalizado, [id]);
         },
 
         visualizarContrato: async function (id) {
@@ -930,18 +676,12 @@ function formatearFecha(fecha) {
     var date = new Date(fecha);
     return date.toLocaleDateString("es-AR");
 }
-function getKendoDateISO($el) {
-    var d = getKendoDate($el);
-    return d ? d.toISOString() : null;
-}
 // Inicializar cuando el DOM esté listo
 $(document).ready(function () {
-    try {
-        ControlBoletos.init();
-    } catch (error) {
+    ControlBoletos.init().catch(function (error) {
         console.error("Error inicializando Control de Boletos:", error);
         alert("Error al inicializar la aplicación. Por favor, recargue la página.");
-    }
+    });
 });
 
 // Manejar errores globales

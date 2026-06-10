@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,6 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         ControlIniciado = 1,
         RegistroDatosOblea = 2,
         CertificacionCompletada = 3,
-        ControlFinalizado = 4
+        Controlado = 4
     }
 }

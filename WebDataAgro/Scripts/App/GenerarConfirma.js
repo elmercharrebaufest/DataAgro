@@ -103,6 +103,12 @@ const GenerarConfirma = (() => {
         return !(desde && hasta && desde > hasta);
     }
 
+    function estanTodosLosChecksSeleccionadosGrid() {
+        const $checks = el.grid().find("tbody input.row-checkbox");
+        if (!$checks.length) return false;
+        return $checks.length === $checks.filter(":checked").length;
+    }
+
     function cargarDropdown(url, $selector, textoDefault) {
         $.ajax({
             url,
@@ -548,7 +554,7 @@ const GenerarConfirma = (() => {
     }
 
     function generarConfirmaIndividual(negocioSAP) {
-        BlockUi('Cargando...');
+        BlockUi('Generando Confirmas...');
         setTimeout(() => {
             MSExecuteOnServerAsync(config.urls.generarConfirma, {
                 ContratoSAP: negocioSAP,
@@ -575,7 +581,7 @@ const GenerarConfirma = (() => {
         }, 200);
     }
     function generarConfirmaIndividualAltaBorrador(negocioSAP) {
-        BlockUi('Cargando...');
+        BlockUi('Generando Confirmas...');
         setTimeout(() => {
             MSExecuteOnServerAsync(config.urls.generarConfirmaAltaBorrador, {
                 ContratoSAP: negocioSAP,
@@ -604,9 +610,11 @@ const GenerarConfirma = (() => {
 
     function generarConfirmasSeleccionados() {
         const negocioSAPList = [];
-        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked");
+        const seleccionarTodos = estanTodosLosChecksSeleccionadosGrid();
 
-        if (esSoloPendientes && state.seleccionarSoloPendientes) {
+        if (esSoloPendientes && seleccionarTodos) {
+            BlockUi('Obteniendo Pendientes...');
             const filtros = {
                 NegocioSAP: el.negocioSAP().val() || "",
                 FechaConfirmacionDesde: getDatePicker(el.fechaConfirmacionDesde())?.toISOString() ?? null,
@@ -615,16 +623,21 @@ const GenerarConfirma = (() => {
                 ComercialId: el.comercialId().val(),
                 BolsaCompraNetId: el.bolsaCompraNetId().val(),
                 MaterialId: el.materialId().val(),
-                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+                EsSoloPendientes: esSoloPendientes
             };
             var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
 
-            response.Data.forEach(function (item) {
-                negocioSAPList.push(item.ContratoSAP);
-            });
-
-            if (negocioSAPList.length) 
+            if (response && response.Data) {
+                response.Data.forEach(function (item) {
+                    negocioSAPList.push(item.ContratoSAP);
+                });
+            }
+            $.unblockUI();
+            if (negocioSAPList.length) {
                 generarConfirmaIndividual(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay negocios pendientes para generar Confirma.");
+            }
 
         } else {
             el.grid().find("tbody input.row-checkbox:checked").each(function () {
@@ -642,9 +655,11 @@ const GenerarConfirma = (() => {
     function generarConfirmasSeleccionadosAltaBorrador() {
 
         const negocioSAPList = [];
-        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked");
+        const seleccionarTodos = estanTodosLosChecksSeleccionadosGrid();
 
-        if (esSoloPendientes) {
+        if (esSoloPendientes && seleccionarTodos) {
+            BlockUi('Obteniendo Pendientes...');
             const filtros = {
                 NegocioSAP: el.negocioSAP().val() || "",
                 FechaConfirmacionDesde: getDatePicker(el.fechaConfirmacionDesde())?.toISOString() ?? null,
@@ -653,17 +668,21 @@ const GenerarConfirma = (() => {
                 ComercialId: el.comercialId().val(),
                 BolsaCompraNetId: el.bolsaCompraNetId().val(),
                 MaterialId: el.materialId().val(),
-                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+                EsSoloPendientes: esSoloPendientes
             };
             var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
 
-            response.Data.forEach(function (item) {
-                console.log(item.ContratoSAP);
-                negocioSAPList.push(item.ContratoSAP);
-            });
-
-            if (negocioSAPList.length)
+            if (response && response.Data) {
+                response.Data.forEach(function (item) {
+                    negocioSAPList.push(item.ContratoSAP);
+                });
+            }
+            $.unblockUI();
+            if (negocioSAPList.length) {
                 generarConfirmaIndividualAltaBorrador(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay negocios pendientes para generar Confirma.");
+            }
 
         } else {
             el.grid().find("tbody input.row-checkbox:checked").each(function () {
@@ -683,7 +702,6 @@ const GenerarConfirma = (() => {
         const descargaHabilitada = el.checkDescargar().is(":checked");
 
         const filas = contratos.map(c => {
-            console.log('c---->>>', c);
             const iconCheck = '<i class="fa fa-check generado" aria-hidden="true" style="color:green;text-align:center"></i>';
             const iconTimes = '<i class="fa fa-times generado" aria-hidden="true" style="color:red;text-align:center"></i>';
             const btnDescarga = c.Generado && descargaHabilitada
