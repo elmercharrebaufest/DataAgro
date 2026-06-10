@@ -1284,42 +1284,6 @@ begin
  insert into EstadoConfirma(Codigo,Descripcion) values (9, 'Excluído porTiempo Excedido')
 end
 
---Estado ControlDeBoletos
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Pendiente')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('Pendiente')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Proceso')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('En Proceso')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Oblea')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('En Oblea')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'En Certificacion')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('En Certificacion')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Enviado Afip / Arca')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('Enviado Afip / Arca')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Finalizado')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('Finalizado')
-end
-
-if not exists(select 1 from ControlDeBoletosEstado where Descripcion = 'Anulado')
-begin
- insert into ControlDeBoletosEstado(Descripcion) values ('Anulado')
-end
-
 -- Insert TipoOblea
 IF NOT EXISTS (SELECT 1 FROM TipoOblea WHERE Descripcion = 'Certificado AFIP')
 BEGIN

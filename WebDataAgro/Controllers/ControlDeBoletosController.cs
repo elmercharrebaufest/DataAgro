@@ -190,28 +190,6 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult ControlMasivo(ControlDeBoletosRegistrarAccionesDto controlDeBoletosRegistrarAcciones)
-        {
-            try
-            {
-                var accion = (EnumControlDeBoletosAcciones)controlDeBoletosRegistrarAcciones.AccionControlDeBoletos;
-                var resultado = _controlDeBoletosManager.RegistrarAcciones(controlDeBoletosRegistrarAcciones.ControlDeBoletoIds, accion);
-                string mensaje = "Se modifico la accion en el control de boletos";
-                if (resultado.HayError)
-                {
-                    mensaje = resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next);
-                    return Json(new { success = false, message = mensaje });
-                }
-
-                return Json(new { success = true, message = mensaje });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al registrar la accion en el control de boletos: " + ex.Message });
-            }
-        }
-
         [HttpGet]
         public JsonResult GetTrackingBoleto(int controlDeBoletosId)
         {
@@ -595,7 +573,7 @@ namespace WebDataAgro.Controllers
                                 Text = x.Descripcion,
                                 Value = x.Id.ToString(),
                                 Selected = false
-                            }).OrderBy(x => x.Text).ToList();
+                            }).ToList();
                             HttpContext.Cache.Insert(CTRL_BOLETOS_ESTADOS_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
                         }
                     }

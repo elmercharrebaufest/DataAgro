@@ -99,6 +99,13 @@ const GenerarBoleto = (() => {
         if (!validarRangoFechas(desde, hasta)) return false;
         return true;
     }
+
+    function estanTodosLosChecksSeleccionadosGrid() {
+        const $checks = el.grid().find("tbody input.row-checkbox");
+        if (!$checks.length) return false;
+        return $checks.length === $checks.filter(":checked").length;
+    }
+
     function cargarDropdown(url, $selector, textoDefault) {
         $.ajax({
             url,
@@ -570,9 +577,11 @@ const GenerarBoleto = (() => {
     function generarBoletosSeleccionados() {
         const negocioSAPList = [];
 
-        const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
-        if (esSoloPendientes && state.seleccionarSoloPendientes) {
+        const esSoloPendientes = el.contratosPendientesCheck().is(":checked");
+        const seleccionarTodos = estanTodosLosChecksSeleccionadosGrid();
 
+        if (esSoloPendientes && seleccionarTodos) {
+            BlockUi('Obteniendo Pendientes...');
             const parseId = $el => { const v = $el.val(); return v ? parseInt(v) : null; };
             const filtros = {
                 NegocioSAP: el.negocioSAP().val() || "",
@@ -582,16 +591,21 @@ const GenerarBoleto = (() => {
                 ComercialId: parseId(el.comercialId()),
                 BolsaCompraNetId: parseId(el.bolsaCompraNetId()),
                 MaterialId: parseId(el.materialId()),
-                EsSoloPendientes: el.contratosPendientesCheck().is(":checked")
+                EsSoloPendientes: esSoloPendientes
             };
 
             var response = MSExecuteOnServer(config.urls.buscaContratosPendientes, { filtrosBusqueda: filtros });
-            response.Data.forEach(function (item) {
-                negocioSAPList.push(item.ContratoSAP);
-            });
-
-            if (negocioSAPList.length)
+            if (response && response.Data) {
+                response.Data.forEach(function (item) {
+                    negocioSAPList.push(item.ContratoSAP);
+                });
+            }
+            $.unblockUI();
+            if (negocioSAPList.length) {
                 generarBoleto(negocioSAPList.join(';'));
+            } else {
+                MensErr("No hay boletos pendientes para generar.");
+            }
 
         } else {
             el.grid().find("tbody input.row-checkbox:checked").each(function () {

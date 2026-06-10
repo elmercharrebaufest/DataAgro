@@ -299,7 +299,7 @@ var ControlDeBoletosSeguimiento = (function () {
         var url = config.urls.getSeguimiento + "?controlDeBoletosId=" + controlDeBoletosId;
         try {
             var response = await MSExecuteGetOnServerAsync(url);
-            if (!response) return;
+            if (!response || response.Id == 0) return;
 
             controlBolsa.val(response.BolsaCompraNetId).trigger('change');
             controlBolsaSellado.val(response.BolsaSellado);

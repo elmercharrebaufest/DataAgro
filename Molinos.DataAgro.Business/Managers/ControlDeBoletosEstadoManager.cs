@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces.Managers;
@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.Id,
                 Descripcion = x.Descripcion
-            });
+            }).OrderBy(x => x.Id).ToList();
             return listarEstados;
         }
     }
