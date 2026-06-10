@@ -54,6 +54,7 @@ IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPMAZGRA') BEGIN
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPTRPGRA') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Grado','MPTRPGRA',2); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPGIRCEX'AND MaterialId=4) BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Materia Extraña','MPGIRCEX',4); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPGIRCEX' AND MaterialId=5) BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Materia Extraña','MPGIRCEX',5); END
+IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Humedad') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Humedad','MPTRPGRA',3); END
 
 --TipoDB
 IF NOT EXISTS (select 1 from TipoDB where Descripcion = 'Sobre el precio') BEGIN insert into TipoDB (Descripcion, CodigoSap) values ('Sobre el precio','S'); END

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Molinos.DataAgro.Entities.Common.Enums
 {
@@ -17,6 +17,8 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         [Description("Girasol AO")]
         MATERIA_EXTRAÑA_AO = 9,
         [Description("Trigo")]
-        ESPECIAL = 10
+        ESPECIAL = 10,
+        [Description("Trigo")]
+        HUMEDO = 11
     }
 }
