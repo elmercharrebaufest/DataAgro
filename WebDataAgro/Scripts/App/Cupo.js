@@ -1094,10 +1094,9 @@ function Filtrar() {
     var grid = $('#gridCupo').data('kendoGrid');
     let filtroSap = TraerFiltrosConValores();
 
-    if (filtroSap.filter != null) {
-        //-----------------------------------------
-        var contratoSapFilters = { logic: 'and', filters: [] };
+    var contratoSapFilters = { logic: 'and', filters: [] };
 
+    if (filtroSap.filter != null) {
         for (var i = 0; i < filtroSap.filter.filters.length; i += 1) {
             let item = filtroSap.filter.filters[i];
             if (item.field == 'CupoSap') contratoSapFilters.filters.push({ field: 'CupoSap', operator: 'contains', value: item.value });
@@ -1116,6 +1115,46 @@ function Filtrar() {
                 contratoSapFilters.filters.push(item);
             }
         }
+    }
+
+    //Filtros de multiselect: Material, Estado, Proveedor
+    var materialMs = $("#MaterialId").data("kendoMultiSelect");
+    if (materialMs) {
+        var materialValues = materialMs.value().filter(function (v) { return v !== ''; });
+        if (materialValues.length > 0) {
+            var materialFilters = { logic: 'or', filters: [] };
+            materialValues.forEach(function (v) {
+                materialFilters.filters.push({ field: 'MaterialId', operator: 'eq', value: parseInt(v) });
+            });
+            contratoSapFilters.filters.push(materialFilters);
+        }
+    }
+
+    var estadoMs = $("#EstadoCupoId").data("kendoMultiSelect");
+    if (estadoMs) {
+        var estadoValues = estadoMs.value().filter(function (v) { return v !== ''; });
+        if (estadoValues.length > 0) {
+            var estadoFilters = { logic: 'or', filters: [] };
+            estadoValues.forEach(function (v) {
+                estadoFilters.filters.push({ field: 'EstadoCupoId', operator: 'eq', value: parseInt(v) });
+            });
+            contratoSapFilters.filters.push(estadoFilters);
+        }
+    }
+
+    var proveedorMs = $("#ProveedorId").data("kendoMultiSelect");
+    if (proveedorMs) {
+        var proveedorValues = proveedorMs.value().filter(function (v) { return v !== ''; });
+        if (proveedorValues.length > 0) {
+            var proveedorFilters = { logic: 'or', filters: [] };
+            proveedorValues.forEach(function (v) {
+                proveedorFilters.filters.push({ field: 'ProveedorId', operator: 'eq', value: parseInt(v) });
+            });
+            contratoSapFilters.filters.push(proveedorFilters);
+        }
+    }
+
+    if (contratoSapFilters.filters.length > 0) {
         grid.dataSource.filter(contratoSapFilters);
     } else {
         BorrarFiltro();
@@ -1137,31 +1176,7 @@ function BorrarFiltro() {
     deseleccionarRadioButtonSustentable();
     var grid = $('#gridCupo').data('kendoGrid');
     var dataSource = grid.dataSource;
-    var filters = null;
-    if (dataSource.filter() != null) {
-        filters = dataSource.filter().filters;
-    }
-    //Remove filter 
-    var removeIndex = -1;
-    if (filters != null) {
-        for (var x = 0; x < filters.length; x++) {
-            var temp = filters[x];
-            if (temp.filters != undefined) {
-
-                for (var i = 0; i < temp.filters.length; i++) {
-                    if (temp.filters[i].field == 'CupoSap') {
-                        removeIndex = x;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        if (removeIndex != -1)
-            filters.splice(removeIndex, 1);
-
-    }
-    dataSource.filter(filters);
+    dataSource.filter({});
 }
 
 function setPageSize() {
