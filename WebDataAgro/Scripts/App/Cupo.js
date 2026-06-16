@@ -1117,42 +1117,9 @@ function Filtrar() {
         }
     }
 
-    //Filtros de multiselect: Material, Estado, Proveedor
-    var materialMs = $("#MaterialId").data("kendoMultiSelect");
-    if (materialMs) {
-        var materialValues = materialMs.value().filter(function (v) { return v !== ''; });
-        if (materialValues.length > 0) {
-            var materialFilters = { logic: 'or', filters: [] };
-            materialValues.forEach(function (v) {
-                materialFilters.filters.push({ field: 'MaterialId', operator: 'eq', value: parseInt(v) });
-            });
-            contratoSapFilters.filters.push(materialFilters);
-        }
-    }
-
-    var estadoMs = $("#EstadoCupoId").data("kendoMultiSelect");
-    if (estadoMs) {
-        var estadoValues = estadoMs.value().filter(function (v) { return v !== ''; });
-        if (estadoValues.length > 0) {
-            var estadoFilters = { logic: 'or', filters: [] };
-            estadoValues.forEach(function (v) {
-                estadoFilters.filters.push({ field: 'EstadoCupoId', operator: 'eq', value: parseInt(v) });
-            });
-            contratoSapFilters.filters.push(estadoFilters);
-        }
-    }
-
-    var proveedorMs = $("#ProveedorId").data("kendoMultiSelect");
-    if (proveedorMs) {
-        var proveedorValues = proveedorMs.value().filter(function (v) { return v !== ''; });
-        if (proveedorValues.length > 0) {
-            var proveedorFilters = { logic: 'or', filters: [] };
-            proveedorValues.forEach(function (v) {
-                proveedorFilters.filters.push({ field: 'ProveedorId', operator: 'eq', value: parseInt(v) });
-            });
-            contratoSapFilters.filters.push(proveedorFilters);
-        }
-    }
+    agregarFiltroMultiSelect("#MaterialId", "MaterialId", contratoSapFilters);
+    agregarFiltroMultiSelect("#EstadoCupoId", "EstadoCupoId", contratoSapFilters);
+    agregarFiltroMultiSelect("#ProveedorId", "ProveedorId", contratoSapFilters);
 
     if (contratoSapFilters.filters.length > 0) {
         grid.dataSource.filter(contratoSapFilters);
@@ -1160,6 +1127,34 @@ function Filtrar() {
         BorrarFiltro();
     }
 }
+
+function agregarFiltroMultiSelect(selector, fieldName, filtros) {
+    var multiSelect = $(selector).data("kendoMultiSelect");
+
+    if (!multiSelect) return;
+
+    var values = multiSelect.value().filter(function (v) {
+        return v !== '';
+    });
+
+    if (values.length > 0) {
+        filtros.filters.push({
+            logic: "or",
+            filters: values.map(function (v) {
+                return {
+                    field: fieldName,
+                    operator: "eq",
+                    value: parseInt(v)
+                };
+            })
+        });
+    }
+}
+
+// Uso
+agregarFiltroMultiSelect("#MaterialId", "MaterialId", contratoSapFilters);
+agregarFiltroMultiSelect("#EstadoCupoId", "EstadoCupoId", contratoSapFilters);
+agregarFiltroMultiSelect("#ProveedorId", "ProveedorId", contratoSapFilters);
 
 
 function BorrarFiltro() {
