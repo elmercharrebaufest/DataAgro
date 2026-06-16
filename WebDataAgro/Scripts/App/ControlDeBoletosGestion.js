@@ -13,6 +13,9 @@ var ControlDeBoletosGestion = (function () {
         NegocioId: null,
         OperaSinOblea: false,
         PlanCanje: false,
+        EsCartaOferta: false,
+        EsSinBoleto: false,
+        BoletoCompraNet: null,
     };
 
 
@@ -44,16 +47,27 @@ var ControlDeBoletosGestion = (function () {
         });
 
         $("#collapseCertificacion").on("shown.bs.collapse", async function () {
+            // state.EsSinBoleto = true;
+            // state.OperaSinOblea = true;
+
             await ControlDeBoletosDatosCertificacion.inicializar(
                 state.ControlDeBoletosId,
                 state.OperaSinOblea,
-                state.PlanCanje
+                state.PlanCanje,
+                state.EsSinBoleto,
             );
         });
 
         $("#collapseSeguimiento").on("shown.bs.collapse", async function () {
+            // state.EsCartaOferta = true;
+            // state.OperaSinOblea = true;
+            // state.EsSinBoleto = true;
             await ControlDeBoletosSeguimiento.inicializar(
-                state.ControlDeBoletosId
+                state.ControlDeBoletosId,
+                state.OperaSinOblea,
+                state.EsCartaOferta,
+                state.EsSinBoleto,
+                state.BoletoCompraNet
             );
         });
 
@@ -111,6 +125,9 @@ var ControlDeBoletosGestion = (function () {
 
             state.OperaSinOblea = contrato.OperaSinOblea;
             state.PlanCanje = contrato.PlanCanje;
+            state.EsCartaOferta = contrato.EsCartaOferta;
+            state.EsSinBoleto = contrato.EsSinBoleto;
+            state.BoletoCompraNet = contrato.BoletoCompraNetId;
 
         } catch (e) {
             console.error("Error cargando datos del contrato:", e);

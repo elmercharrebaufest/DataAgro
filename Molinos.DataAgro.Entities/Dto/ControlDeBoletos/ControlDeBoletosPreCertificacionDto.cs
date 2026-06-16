@@ -9,11 +9,9 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
     public class ControlDeBoletosPreCertificacionDto
     {
         public int ControlDeBoletosId { get; set; }
+        public DateTime? FechaRecepcionBoleto { get; set; }
         public List<ControlDeBoletosDatosPreCertificacionDto> Detalle { get; set; }
     }
-
-
-
     public class ControlDeBoletosDatosPreCertificacionDto
     {
         public int Id { get; set; }

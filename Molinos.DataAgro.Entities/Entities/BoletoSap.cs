@@ -10,12 +10,12 @@ namespace Molinos.DataAgro.Entities.Entities
     public class BoletoSap
     {
         public int Id { get; set; }
-
         public string Descripcion { get; set; }
-
         public string Caracter { get; set; }
-
-        public int? BoletoCompraNetId { get; set; }
-        public virtual BoletoCompraNet BoletoCompraNet { get; set; }
+        public bool? Confirma { get; set; }
+        public bool? CartaOferta { get; set; }
+        public bool? Fisico { get; set; }
+        public bool? Ninguno { get; set; }
+        public bool? SinBoleto { get; set; }
     }
 }

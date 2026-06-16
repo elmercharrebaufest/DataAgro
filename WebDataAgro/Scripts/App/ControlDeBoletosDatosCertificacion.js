@@ -17,7 +17,9 @@ var ControlDeBoletosDatosCertificacion = (function () {
         controlDeBoletosId: null,
         operaSinOblea: false,
         planCanje: false,
-        verificaDatosSeguimiento: false
+        verificaDatosSeguimiento: false,
+        esSinBoleto: false,
+        fechaRecepcionBoleto: null
     };
 
     // Controles cacheados del formulario
@@ -75,11 +77,110 @@ var ControlDeBoletosDatosCertificacion = (function () {
         dp.value(isNaN(date.getTime()) ? null : date);
     }
 
-    function inicializarDatePicker($el) {
-        if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
-        $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
+    function parseFechaTexto(texto) {
+        if (!texto) return null;
+        var parsed = kendo.parseDate(texto, "dd/MM/yyyy") || kendo.parseDate(texto);
+        return parsed && !isNaN(parsed.getTime()) ? parsed : null;
     }
 
+    function inicializarDatePicker($el) {
+        if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
+
+        $el.off(".seg");
+
+        var options = {
+            weekNumber: true,
+            format: "dd/MM/yyyy",
+            value: null
+        };
+
+        var minDateActual = state.fechaRecepcionBoleto;
+        if (minDateActual && !isNaN(minDateActual.getTime())) {
+            options.min = minDateActual;
+        }
+
+        $el.kendoDatePicker(options);
+
+        $el.on("change.seg blur.seg", function () {
+            validarFechaMinima($el);
+        });
+    }
+
+    function validarFechaMinima($el) {
+        var dp = $el.data("kendoDatePicker");
+        if (!dp) return true;
+
+        var texto = $.trim($el.val());
+        var selectedDate = dp.value();
+        var minDate = state.fechaRecepcionBoleto;
+
+        if (texto !== "" && !selectedDate) {
+            selectedDate = parseFechaTexto(texto);
+            if (selectedDate) {
+                dp.value(selectedDate);
+            }
+        }
+
+        if (texto !== "" && !selectedDate) {
+            $el.addClass("fecha-invalida");
+            $el.val("");
+            mostrarNotificacion("Ingrese una fecha válida", "error");
+            setTimeout(function () {
+                $el.focus();
+            }, 100);
+            return false;
+        }
+
+        if (minDate && selectedDate && selectedDate < minDate) {
+            $el.addClass("fecha-invalida");
+            dp.value(null);
+            $el.val("");
+            mostrarNotificacion("La fecha no puede ser anterior a " + formatDateForDisplay(minDate), "error");
+            setTimeout(function () {
+                $el.focus();
+            }, 100);
+            return false;
+        }
+
+        if (selectedDate) {
+            $el.removeClass("fecha-invalida");
+        }
+
+        return true;
+    }
+
+    function parseDateFromResponse(dateValue) {
+        if (!dateValue) return null;
+
+        // Si es una cadena vacía
+        if (typeof dateValue === 'string' && $.trim(dateValue) === '') return null;
+
+        var date = null;
+
+        // Formato JSON de .NET: /Date(1234567890)/
+        var match = /\/Date\((\d+)\)\//.exec(dateValue);
+        if (match) {
+            date = new Date(parseInt(match[1], 10));
+        } else {
+            // Intenta parsear como ISO o fecha normal
+            date = new Date(dateValue);
+        }
+
+        // Verificar que la fecha sea válida
+        if (isNaN(date.getTime())) {
+            console.warn("Invalid date format received:", dateValue);
+            return null;
+        }
+
+        return date;
+    }
+    function formatDateForDisplay(date) {
+        if (!date) return "";
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return day + "/" + month + "/" + year;
+    }
     function inicializarFechas() {
         [
             ctrl.fechaCertificacion,
@@ -93,6 +194,31 @@ var ControlDeBoletosDatosCertificacion = (function () {
         });
     }
 
+    function actualizarMinimosFechas() {
+        var minDate = state.fechaRecepcionBoleto;
+        if (!minDate || isNaN(minDate.getTime())) return;
+
+        [
+            ctrl.fechaCertificacion,
+            ctrl.fechaVencimiento,
+            ctrl.fechaVencimientoProvisoria,
+            ctrl.fechaCertificacionPlanCanje,
+            ctrl.fechaVencimientoPlanCanje
+        ].forEach(function ($el) {
+            if (!$el || !$el.length) return;
+
+            var dp = $el.data("kendoDatePicker");
+            if (!dp) return;
+
+            dp.min(minDate);
+            var actual = dp.value();
+            if (actual && actual < minDate) {
+                dp.value(null);
+                $el.val("");
+                $el.addClass("fecha-invalida");
+            }
+        });
+    }
     function limpiarFormulario() {
         setKendoDate(ctrl.fechaCertificacion,          null);
         setKendoDate(ctrl.fechaVencimiento,            null);
@@ -111,7 +237,6 @@ var ControlDeBoletosDatosCertificacion = (function () {
         ctrl.bolsa.val(null).trigger('change');
         ctrl.bolsaPlanCanje.val(null).trigger('change');
     }
-
     async function cargarDropdown(url, $select, textoDefault) {
         $select.html('<option value="">Cargando...</option>');
         try {
@@ -126,10 +251,56 @@ var ControlDeBoletosDatosCertificacion = (function () {
             $select.html('<option value="">Error al cargar datos</option>');
         }
     }
+    function cargarFechasPorDefecto() {
+        if (state.esSinBoleto) return;
 
+        var ahora = new Date();
+        var ultimoDiaDelAnio = new Date(ahora.getFullYear(), 11, 31);
+
+        if (state.planCanje) {
+            setKendoDate(ctrl.fechaVencimientoPlanCanje, ultimoDiaDelAnio);
+        } else {
+            if (!state.operaSinOblea) {
+                setKendoDate(ctrl.fechaVencimiento, ultimoDiaDelAnio);
+            }
+        }
+    }
     function bloqueaControlesSinOblea() {
         var enabledOperaSinOblea = state.operaSinOblea? true: false;
-        var enabledPlanCanje = !state.planCanje? true: false;
+        var enabledPlanCanje = !state.planCanje ? true : false;
+        var esSinBoleto = state.esSinBoleto ? true : false;
+        if (esSinBoleto) {
+            [
+                ctrl.fechaCertificacion,
+                ctrl.fechaVencimiento,
+                ctrl.fechaVencimientoProvisoria,
+                ctrl.fechaCertificacionPlanCanje,
+                ctrl.fechaVencimientoPlanCanje,
+                ctrl.rechazado,
+                ctrl.oblea,
+                ctrl.bolsa,
+                ctrl.obleaPlanCanje,
+                ctrl.bolsaPlanCanje
+            ].forEach(function (control) {
+                control.prop("disabled", true);
+            });
+            return;
+        } else {
+            [
+                ctrl.fechaCertificacion,
+                ctrl.fechaVencimiento,
+                ctrl.fechaVencimientoProvisoria,
+                ctrl.fechaCertificacionPlanCanje,
+                ctrl.fechaVencimientoPlanCanje,
+                ctrl.rechazado,
+                ctrl.oblea,
+                ctrl.bolsa,
+                ctrl.obleaPlanCanje,
+                ctrl.bolsaPlanCanje
+            ].forEach(function (control) {
+                control.prop("disabled", false);
+            });
+        }
 
         [
             ctrl.obleaPlanCanje,
@@ -200,6 +371,25 @@ var ControlDeBoletosDatosCertificacion = (function () {
             cargarDropdown(config.urls.getBolsaCompraNet, ctrl.bolsaPlanCanje, "Seleccione una bolsa")
         ]);
     }
+    function mostrarNotificacion(mensaje, tipo) {
+        var $notification = $("#notification");
+        var notification = $notification.data("kendoNotification");
+
+        if (!notification) {
+            $notification.kendoNotification({
+                position: {
+                    pinned: true,
+                    top: 50,
+                    left: "50%"
+                },
+                autoHideAfter: 3000,
+                stacking: "down"
+            });
+            notification = $notification.data("kendoNotification");
+        }
+
+        notification.show(mensaje, tipo);
+    }
     async function verificarTipoBoletoYFechaRecepcion() {
         if (!state.controlDeBoletosId) return;
         var url = config.urls.getVerificarTipoBoletoyFechaRecepcion + "?controlDeBoletosId=" + state.controlDeBoletosId;
@@ -232,6 +422,13 @@ var ControlDeBoletosDatosCertificacion = (function () {
 
             ctrl.rechazadoAfip.prop('checked', false);
             ctrl.rechazado.prop('checked', false);
+            state.controlDeBoletosId = response.ControlDeBoletosId || state.controlDeBoletosId;
+
+            // Parsear fechaRecepcionBoleto correctamente
+            state.fechaRecepcionBoleto = parseDateFromResponse(response.FechaRecepcionBoleto);
+
+            // Recalcular mínimos con la fecha de recepción cargada
+            actualizarMinimosFechas();
 
             $.each(response.Detalle, function (i, item) {
                 var codigo = item.CodigoTipoOblea;
@@ -262,6 +459,10 @@ var ControlDeBoletosDatosCertificacion = (function () {
                     setKendoDate(ctrl.fechaVencimientoPlanCanje,   item.FechaVencimiento);
                 }
             });
+            if (ctrl.fechaVencimientoPlanCanje.val() == '' ||
+                ctrl.fechaVencimiento.val() == '')
+                cargarFechasPorDefecto();
+
         } catch (e) {
             console.error("Error cargando datos existentes:", e);
         }
@@ -339,17 +540,17 @@ var ControlDeBoletosDatosCertificacion = (function () {
     // ======================
     return {
 
-        inicializar: async function (ControlDeBoletosId, OperaSinOblea, PlanCanje) {
+        inicializar: async function (ControlDeBoletosId, OperaSinOblea, PlanCanje, EsSinBoleto) {
             BlockUi('Cargando...');
             state.controlDeBoletosId = ControlDeBoletosId;
             state.operaSinOblea = OperaSinOblea;
-            state.planCanje = PlanCanje
+            state.planCanje = PlanCanje;
+            state.esSinBoleto = EsSinBoleto;
             try {
                 await setup();
                 await verificarTipoBoletoYFechaRecepcion();
-                if (state.controlDeBoletosId > 0) {
+                if (state.controlDeBoletosId > 0)
                     await cargarDatosExistentes();
-                }
                 this.configurarEventos();
             } catch (e) {
                 console.error("Error al inicializar ControlDeBoletosDatosCertificacion:", e);
@@ -366,9 +567,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
             try {
                 await setup();
                 bloqueaControlesSinOblea();
-                if (state.controlDeBoletosId > 0) {
+                if (state.controlDeBoletosId > 0)
                     await cargarDatosExistentes();
-                }
                 $(config.modalId).modal("show");
             } finally {
                 $.unblockUI();

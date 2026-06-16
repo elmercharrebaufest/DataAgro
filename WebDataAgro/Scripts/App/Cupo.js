@@ -1094,10 +1094,9 @@ function Filtrar() {
     var grid = $('#gridCupo').data('kendoGrid');
     let filtroSap = TraerFiltrosConValores();
 
-    if (filtroSap.filter != null) {
-        //-----------------------------------------
-        var contratoSapFilters = { logic: 'and', filters: [] };
+    var contratoSapFilters = { logic: 'and', filters: [] };
 
+    if (filtroSap.filter != null) {
         for (var i = 0; i < filtroSap.filter.filters.length; i += 1) {
             let item = filtroSap.filter.filters[i];
             if (item.field == 'CupoSap') contratoSapFilters.filters.push({ field: 'CupoSap', operator: 'contains', value: item.value });
@@ -1116,9 +1115,39 @@ function Filtrar() {
                 contratoSapFilters.filters.push(item);
             }
         }
+    }
+
+    agregarFiltroMultiSelect("#MaterialId", "MaterialId", contratoSapFilters);
+    agregarFiltroMultiSelect("#EstadoCupoId", "EstadoCupoId", contratoSapFilters);
+    agregarFiltroMultiSelect("#ProveedorId", "ProveedorId", contratoSapFilters);
+
+    if (contratoSapFilters.filters.length > 0) {
         grid.dataSource.filter(contratoSapFilters);
     } else {
         BorrarFiltro();
+    }
+}
+
+function agregarFiltroMultiSelect(selector, fieldName, filtros) {
+    var multiSelect = $(selector).data("kendoMultiSelect");
+
+    if (!multiSelect) return;
+
+    var values = multiSelect.value().filter(function (v) {
+        return v !== '';
+    });
+
+    if (values.length > 0) {
+        filtros.filters.push({
+            logic: "or",
+            filters: values.map(function (v) {
+                return {
+                    field: fieldName,
+                    operator: "eq",
+                    value: parseInt(v)
+                };
+            })
+        });
     }
 }
 
@@ -1137,31 +1166,7 @@ function BorrarFiltro() {
     deseleccionarRadioButtonSustentable();
     var grid = $('#gridCupo').data('kendoGrid');
     var dataSource = grid.dataSource;
-    var filters = null;
-    if (dataSource.filter() != null) {
-        filters = dataSource.filter().filters;
-    }
-    //Remove filter 
-    var removeIndex = -1;
-    if (filters != null) {
-        for (var x = 0; x < filters.length; x++) {
-            var temp = filters[x];
-            if (temp.filters != undefined) {
-
-                for (var i = 0; i < temp.filters.length; i++) {
-                    if (temp.filters[i].field == 'CupoSap') {
-                        removeIndex = x;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        if (removeIndex != -1)
-            filters.splice(removeIndex, 1);
-
-    }
-    dataSource.filter(filters);
+    dataSource.filter({});
 }
 
 function setPageSize() {

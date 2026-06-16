@@ -887,7 +887,7 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetBoletoSap()
+        public JsonResult GetBoletoSap(int boletoCompraNetId)
         {
             try
             {
@@ -899,7 +899,7 @@ namespace WebDataAgro.Controllers
                         cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY] as List<BoletoSapDto>;
                         if (cachedData == null)
                         {
-                            var boletosSap = _controlDeBoletosManager.GetBoletoSap();
+                            var boletosSap = _controlDeBoletosManager.GetBoletoSap(boletoCompraNetId);
                             cachedData = boletosSap;
                             HttpContext.Cache.Insert(CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
                         }
