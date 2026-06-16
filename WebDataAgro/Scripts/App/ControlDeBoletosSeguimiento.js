@@ -21,7 +21,11 @@ var ControlDeBoletosSeguimiento = (function () {
         cargando: false,
         ControlDeBoletosId: null,
         SeguimientoBoletoId: null,
-        BoletoSap: null
+        BoletoSap: null,
+        OperaSinOblea: false,
+        EsCartaOferta: false,
+        EsSinBoleto: false,
+        BoletoCompraNet: null,
     };
 
     let listaBolsaSAP = null;
@@ -107,15 +111,204 @@ var ControlDeBoletosSeguimiento = (function () {
         dp.value(isNaN(date.getTime()) ? null : date);
     }
 
-    function inicializarFechas() {
-        [
-            controlFechaRecepcionBoleto,
-            controlFechaEnvioFirma, controlFechaEnvioBolsa, controlFechaEnvioAfip,
-            controlFechaRecepcionFirma, controlFechaRecepcionBolsa, controlFechaRecepcionAfip,
-            controlFechaEnvioSellado
+    var fechaMinimaFallback = new Date(1900, 0, 1);
+
+    function obtenerFechaRecepcionBoleto() {
+        var fecha = getKendoDate(controlFechaRecepcionBoleto);
+        return fecha && !isNaN(fecha.getTime()) ? fecha : null;
+    }
+
+    function parseFechaTexto(texto) {
+        if (!texto) return null;
+
+        var parsed = kendo.parseDate(texto, "dd/MM/yyyy") || kendo.parseDate(texto);
+        return parsed && !isNaN(parsed.getTime()) ? parsed : null;
+    }
+
+    function validarFechaDatePicker($el, esRecepcionBoleto) {
+        var dp = $el.data("kendoDatePicker");
+        if (!dp) return true;
+
+        var texto = $.trim($el.val());
+        var valor = dp.value();
+        var minFecha = esRecepcionBoleto ? null : obtenerFechaRecepcionBoleto();
+
+        // Si el datepicker no parseó el texto, intentar parsearlo manualmente (caso copy/paste)
+        if (texto !== "" && !valor) {
+            valor = parseFechaTexto(texto);
+            if (valor) {
+                dp.value(valor);
+            }
+        }
+
+        if (texto !== "" && !valor) {
+            $el.addClass("fecha-invalida");
+            $el.val("");
+            mostrarNotificacion("Ingrese una fecha válida", "error");
+            setTimeout(function () {
+                $el.focus();
+            }, 100);
+            return false;
+        }
+
+        if (!esRecepcionBoleto && valor && minFecha && valor < minFecha) {
+            $el.addClass("fecha-invalida");
+            dp.value(null);
+            $el.val("");
+            mostrarNotificacion("La fecha no puede ser anterior a la Fecha de recepción de boleto.", "error");
+            setTimeout(function () {
+                $el.focus();
+            }, 100);
+            return false;
+        }
+
+        if (valor) {
+            $el.removeClass("fecha-invalida");
+        }
+
+        return true;
+    }
+    function mostrarNotificacion(mensaje, tipo) {
+        $("#notification").kendoNotification({
+            position: {
+                pinned: true,
+                top: 50,
+                left: "50%"
+            },
+            autoHideAfter: 3000,
+            stacking: "down"
+        });
+        var notification = $("#notification").data("kendoNotification");
+        notification.show(mensaje, tipo);
+    }
+    function aplicarMinimoDatePicker($el) {
+        var dp = $el.data("kendoDatePicker");
+        if (!dp) return;
+
+        var minFecha = obtenerFechaRecepcionBoleto() || fechaMinimaFallback;
+        dp.min(minFecha);
+
+        var valorActual = dp.value();
+        if (valorActual && valorActual < minFecha) {
+            dp.value(null);
+            $el.val("");
+            $el.addClass("fecha-invalida");
+        }
+    }
+
+    function actualizarMinimosFechas() {
+        [ controlFechaEnvioFirma,
+          controlFechaEnvioBolsa,
+          controlFechaEnvioAfip,
+          controlFechaRecepcionFirma,
+          controlFechaRecepcionBolsa,
+          controlFechaRecepcionAfip,
+          controlFechaEnvioSellado
         ].forEach(function ($el) {
-            if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
-            $el.kendoDatePicker({ weekNumber: true, format: "dd/MM/yyyy", value: null });
+            if ($el && $el.length) {
+                aplicarMinimoDatePicker($el);
+            }
+        });
+    }
+
+    function inicializarDatePicker($el, esRecepcionBoleto) {
+        if ($el.data("kendoDatePicker")) $el.data("kendoDatePicker").destroy();
+
+        $el.off(".seg");
+
+        var options = { weekNumber: true, format: "dd/MM/yyyy", value: null };
+        if (!esRecepcionBoleto) {
+            options.min = obtenerFechaRecepcionBoleto() || fechaMinimaFallback;
+        }
+
+        $el.kendoDatePicker(options);
+
+        $el.on("change.seg blur.seg", function () {
+            validarFechaDatePicker($el, !!esRecepcionBoleto);
+
+            if (esRecepcionBoleto) {
+                actualizarMinimosFechas();
+            } else {
+                aplicarMinimoDatePicker($el);
+            }
+        });
+    }
+
+    function inicializarFechas() {
+        [ controlFechaRecepcionBoleto,
+          controlFechaEnvioFirma,
+          controlFechaEnvioBolsa,
+          controlFechaEnvioAfip,
+          controlFechaRecepcionFirma,
+          controlFechaRecepcionBolsa,
+          controlFechaRecepcionAfip,
+          controlFechaEnvioSellado
+        ].forEach(function ($el) {
+            if ($el && $el.length) {
+                inicializarDatePicker($el, $el.is(controlFechaRecepcionBoleto));
+            }
+        });
+    }
+
+    function bloqueaControlesSinOblea() {
+        var habilitaOperaSinOblea = state.OperaSinOblea ? true : false;
+        var habilitaCartaOferta = state.EsCartaOferta ? true : false;
+        var desHabilitaSinBoleta = state.EsSinBoleto ? true : false;
+
+        if (desHabilitaSinBoleta) {
+            [ controlFechaRecepcionBoleto,
+              controlFechaEnvioFirma,
+              controlFechaEnvioBolsa,
+              controlFechaEnvioAfip,
+              controlFechaRecepcionFirma,
+              controlFechaRecepcionBolsa,
+              controlFechaRecepcionAfip,
+              controlFechaEnvioSellado
+            ].forEach(function (control) {
+                control.prop("disabled", true);
+            });
+
+            controlRechazadoAfip.prop('disabled', true);
+            controlObsCtrlBoleto.prop('disabled', true);
+            controlObsCtrlBoleto2.prop('disabled', true);
+            return;
+        } else {
+
+            [controlFechaRecepcionBoleto,
+                controlFechaEnvioFirma,
+                controlFechaEnvioBolsa,
+                controlFechaEnvioAfip,
+                controlFechaRecepcionFirma,
+                controlFechaRecepcionBolsa,
+                controlFechaRecepcionAfip,
+                controlFechaEnvioSellado
+            ].forEach(function (control) {
+                control.prop("disabled", false);
+            });
+            controlRechazadoAfip.prop('disabled', false);
+            controlObsCtrlBoleto.prop('disabled', false);
+            controlObsCtrlBoleto2.prop('disabled', false);
+        }
+
+        [
+            controlFechaEnvioBolsa,
+            controlFechaRecepcionBolsa,
+            controlFechaEnvioSellado
+        ].forEach(function (control) {
+            control.prop("disabled", false);
+        });
+
+        [
+            controlFechaEnvioBolsa,
+            controlFechaRecepcionBolsa
+        ].forEach(function (control) {
+            control.prop("disabled", habilitaOperaSinOblea);
+        });
+
+        [
+            controlFechaEnvioSellado
+        ].forEach(function (control) {
+            control.prop("disabled", habilitaCartaOferta);
         });
     }
 
@@ -139,6 +332,10 @@ var ControlDeBoletosSeguimiento = (function () {
             return "Debe seleccionar una bolsa.";
         }
 
+        if(state.EsSinBoleto) {
+            return null;
+        }
+
         // 🔴 Base obligatoria para validar relaciones
         if (!feRecepcionBoleto) {
             return "La Fecha de recepción de boleto es obligatoria.";
@@ -149,12 +346,12 @@ var ControlDeBoletosSeguimiento = (function () {
             return "La Fecha de envío Firmas no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Envío Obleado Bolsa >= Recepción boleto
-        if (feEnvioBolsa && feEnvioBolsa < feRecepcionBoleto)
+        if ((feEnvioBolsa && !state.OperaSinOblea) && feEnvioBolsa < feRecepcionBoleto)
             return "La Fecha de envío Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Envío Certificación AFIP >= Recepción boleto
         if (feEnvioAfip && feEnvioAfip < feRecepcionBoleto)
-            return "La Fecha de envío Certificación AFIP no puede ser anterior a la Fecha de recepción de boleto.";
+            return "La Fecha de envío Certificación Arca no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Recepción Firmas
         if (feRecepcionFirma) {
@@ -166,7 +363,7 @@ var ControlDeBoletosSeguimiento = (function () {
         }
 
         // 📌 Recepción Obleado Bolsa
-        if (feRecepcionBolsa) {
+        if (feRecepcionBolsa && !state.OperaSinOblea) {
             if (feRecepcionBolsa < feRecepcionBoleto)
                 return "La Fecha de recepción Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
@@ -177,14 +374,14 @@ var ControlDeBoletosSeguimiento = (function () {
         // 📌 Recepción Certificación AFIP
         if (feRecepcionAfip) {
             if (feRecepcionAfip < feRecepcionBoleto)
-                return "La Fecha de recepción Certificación AFIP no puede ser anterior a la Fecha de recepción de boleto.";
+                return "La Fecha de recepción Certificación Arca no puede ser anterior a la Fecha de recepción de boleto.";
 
             if (feEnvioAfip && feRecepcionAfip < feEnvioAfip)
-                return "La Fecha de recepción Certificación AFIP debe ser igual o mayor a la Fecha de envío Certificación AFIP.";
+                return "La Fecha de recepción Certificación Arca debe ser igual o mayor a la Fecha de envío Certificación Arca.";
         }
 
         // 📌 Envío Sellado (dtFeEnviadoFirma)
-        if (feEnvioSellado) {
+        if (feEnvioSellado && !state.EsCartaOferta) {
             if (feEnvioSellado < feRecepcionBoleto)
                 return "La Fecha de envío Sellado no puede ser anterior a la Fecha de recepción de boleto.";
 
@@ -319,6 +516,8 @@ var ControlDeBoletosSeguimiento = (function () {
             setKendoDate(controlFechaEnvioSellado, response.FechaEnvioSellado);
             state.SeguimientoBoletoId = response.Id;
 
+            actualizarMinimosFechas();
+
             controlObsCtrlBoleto.val(response.ObsCtrlBoleto);
             controlObsCtrlBoleto2.val(response.ObsCtrlBoleto2);
         } catch (e) {
@@ -350,23 +549,29 @@ var ControlDeBoletosSeguimiento = (function () {
         setKendoDate(controlFechaRecepcionBolsa, null);
         setKendoDate(controlFechaRecepcionAfip, null);
         setKendoDate(controlFechaEnvioSellado, null);
+
+        actualizarMinimosFechas();
     }
 
     return {
 
-        inicializar: async function (ControlDeBoletosId) {
+        inicializar: async function (ControlDeBoletosId, OperaSinOblea, EsCartaOferta, EsSinBoleto, BoletoCompraNet) {
             bindControls();
             inicializarFechas();
             state.ControlDeBoletosId = ControlDeBoletosId;
+            state.OperaSinOblea = OperaSinOblea;
+            state.EsCartaOferta = EsCartaOferta;
+            state.EsSinBoleto = EsSinBoleto;
+            state.BoletoCompraNet = BoletoCompraNet;
             limpiarSeguimientoControlBoleto();
-
+            bloqueaControlesSinOblea();
             await Promise.all([
-                // cargarDropdown(config.urls.getBoletoSap, controlBoleto, "Cargando...", "Seleccione un boleto"),
                 cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
                 cargarBolsaSAP()
             ]);
-
-            var dataBoletoSap = await MSExecuteGetOnServerAsync(config.urls.getBoletoSap);
+            var parametros = "?boletoCompraNetId=" + state.BoletoCompraNet;
+            var urlBoletoSap = config.urls.getBoletoSap + parametros;
+            var dataBoletoSap = await MSExecuteGetOnServerAsync(urlBoletoSap);
             state.BoletoSap = dataBoletoSap || [];
             cargarDropdownBoletoSap(controlBoleto, "Cargando...", "Seleccione un boleto");
 
@@ -375,7 +580,7 @@ var ControlDeBoletosSeguimiento = (function () {
             }
         },
 
-        abrir: async function (SeguimientoBoletoId, ControlDeBoletosId) {
+        abrir: async function (ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
             state.ControlDeBoletosId = ControlDeBoletosId;
@@ -389,8 +594,8 @@ var ControlDeBoletosSeguimiento = (function () {
                     cargarBolsaSAP()
                 ]);
 
-                if (state.state.ControlDeBoletosId != null && state.state.ControlDeBoletosId > 0) {
-                    await obtener(state.state.ControlDeBoletosId);
+                if (state.ControlDeBoletosId != null && state.ControlDeBoletosId > 0) {
+                    await obtener(state.ControlDeBoletosId);
                 }
 
                 $("#txtContrato").val(ControlDeBoletosId || "");

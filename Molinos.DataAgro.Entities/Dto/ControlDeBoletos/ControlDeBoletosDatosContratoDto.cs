@@ -32,5 +32,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int? CorredorId { get; set; }
         public bool? PlanCanje { get; set; }
         public bool? OperaSinOblea { get; set; }
+        public bool? EsCartaOferta { get; set; }
+        public bool? EsSinBoleto { get; set; }
+        public int? BoletoCompraNetId { get; set; }
     }
 }

@@ -34,6 +34,8 @@ var ControlBoletos = (function () {
         grid: null,
         cargandoDatos: false,
         datosInicializados: false,
+        columnasAjustadas: false,
+        columnWidths: [], // Guardar anchos para preservarlos en reordenamiento
     };
 
     // Funciones privadas
@@ -137,6 +139,8 @@ var ControlBoletos = (function () {
         var $rows = $wrapper.find(".k-grid-content tbody tr");
         var columns = grid.columns;
 
+        state.columnWidths = []; // Resetear anchos guardados
+
         $headerCells.each(function (colIdx) {
             var colDef = columns[colIdx];
             var hasField = colDef && colDef.field && colDef.field !== "Selected";
@@ -145,6 +149,7 @@ var ControlBoletos = (function () {
                 var fixedW = (colDef && colDef.width) ? colDef.width : 50;
                 $headerCols.eq(colIdx).css("width", fixedW + "px");
                 $contentCols.eq(colIdx).css("width", fixedW + "px");
+                state.columnWidths.push(fixedW + "px");
                 return;
             }
 
@@ -159,10 +164,31 @@ var ControlBoletos = (function () {
             maxPx = Math.max(maxPx, 60);
             $headerCols.eq(colIdx).css("width", maxPx + "px");
             $contentCols.eq(colIdx).css("width", maxPx + "px");
+            state.columnWidths.push(maxPx + "px");
         });
 
         var totalWidth = Array.from($headerCols).reduce(function (sum, col) {
             return sum + (parseInt($(col).css("width")) || 0);
+        }, 0);
+        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
+    }
+
+    // ── Restaurar anchos de columnas ────────────────────────────────────────
+
+    function restaurarAnchosColumnas(grid) {
+        if (!state.columnWidths || state.columnWidths.length === 0) return;
+
+        var $wrapper = grid.element;
+        var $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
+        var $contentCols = $wrapper.find(".k-grid-content colgroup col");
+
+        state.columnWidths.forEach(function (width, idx) {
+            $headerCols.eq(idx).css("width", width);
+            $contentCols.eq(idx).css("width", width);
+        });
+
+        var totalWidth = state.columnWidths.reduce(function (sum, widthStr) {
+            return sum + (parseInt(widthStr) || 0);
         }, 0);
         $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
     }
@@ -351,6 +377,14 @@ var ControlBoletos = (function () {
                             allowUnsort: false,
                         },
                         filterable: false,
+                        reorderable: true,
+                        resizable: false,
+                        columnReorder: function (e) {
+                            // Recalcular anchos según el contenido en la nueva posición
+                            setTimeout(function () {
+                                autoFitColumnas(e.sender);
+                            }, 0);
+                        },
                         pageable: {
                             refresh: true,
                             pageSizes: [25, 50, 100, 200],
@@ -435,7 +469,11 @@ var ControlBoletos = (function () {
                             },
                         ],
                         dataBound: function (e) {
-                            autoFitColumnas(e.sender);
+                            // Ejecutar autoFitColumnas solo en la primera carga
+                            if (!state.columnasAjustadas) {
+                                autoFitColumnas(e.sender);
+                                state.columnasAjustadas = true;
+                            }
                             self.configurarEventosGrid();
                         },
                     })
@@ -497,6 +535,9 @@ var ControlBoletos = (function () {
                 return;
             }
 
+            // Resetear ajuste de columnas para que se recalcule con nuevo contenido
+            state.columnasAjustadas = false;
+
             if (state.grid) {
                 // Si el grid ya existe, solo recargar los datos
                 state.grid.dataSource.page(1); // Volver a la página 1
@@ -521,6 +562,9 @@ var ControlBoletos = (function () {
             if (dpHasta) dpHasta.value(null);
 
             controlEsConfirma.prop("checked", false);
+
+            // Resetear ajuste de columnas para recalcular con nuevo contenido
+            state.columnasAjustadas = false;
 
             this.filtrarBoletos();
         },

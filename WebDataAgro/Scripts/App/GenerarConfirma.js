@@ -21,7 +21,9 @@ const GenerarConfirma = (() => {
     const state = {
         grid: null,
         datosInicializados: false,
-        seleccionarSoloPendientes: false
+        seleccionarSoloPendientes: false,
+        columnasAjustadas: false,
+        columnWidths: []
     };
 
     const el = {
@@ -150,6 +152,8 @@ const GenerarConfirma = (() => {
         const $rows = $wrapper.find(".k-grid-content tbody tr");
         const columns = grid.columns;
 
+        state.columnWidths = []; // Resetear anchos guardados
+
         $headerCells.each(function (colIdx) {
             const colDef = columns[colIdx];
             const hasField = colDef && colDef.field && colDef.field !== "Select";
@@ -159,6 +163,7 @@ const GenerarConfirma = (() => {
                 const fixedW = (colDef && colDef.width) ? colDef.width : 40;
                 $headerCols.eq(colIdx).css("width", fixedW + "px");
                 $contentCols.eq(colIdx).css("width", fixedW + "px");
+                state.columnWidths.push(fixedW + "px");
                 return;
             }
 
@@ -176,6 +181,7 @@ const GenerarConfirma = (() => {
 
             $headerCols.eq(colIdx).css("width", maxPx + "px");
             $contentCols.eq(colIdx).css("width", maxPx + "px");
+            state.columnWidths.push(maxPx + "px");
         });
 
         // Sincronizar ancho total de ambas tablas para evitar descuadre
@@ -388,7 +394,14 @@ const GenerarConfirma = (() => {
             dataSource,
             height: 550,
             scrollable: { virtual: false },
-            resizable: true,
+            resizable: false,
+            reorderable: true,
+            columnReorder: function (e) {
+                // Recalcular anchos según el contenido en la nueva posición
+                setTimeout(function () {
+                    autoFitColumnas(e.sender);
+                }, 0);
+            },
             pageable: {
                 refresh: true,
                 pageSizes: false,

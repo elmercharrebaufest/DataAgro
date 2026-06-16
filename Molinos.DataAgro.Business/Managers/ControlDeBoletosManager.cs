@@ -10,6 +10,7 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -245,16 +246,57 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return this.repositorio.Listar<TipoOblea>().OrderBy(x=> x.Descripcion).ToList();
         }
-        public List<BoletoSapDto> GetBoletoSap()
+        public List<BoletoSapDto> GetBoletoSap(int boletoCompraNetId)
         {
-            var listadoBoletoSap = this.repositorio.Listar<BoletoSap>().Select(x => new BoletoSapDto
+            if (!Enum.IsDefined(typeof(EnumBoletoCompraNet), boletoCompraNetId))
             {
-                Id = x.Id,
-                Descripcion = x.Descripcion,
-                Caracter = x.Caracter,
-                BoletoCompraNetId = x.BoletoCompraNetId
-            }).ToList();
-            return listadoBoletoSap.OrderBy(x => x.Descripcion).ToList();
+                return new List<BoletoSapDto>();
+            }
+
+            var enumValue = (EnumBoletoCompraNet)boletoCompraNetId;
+            IEnumerable<BoletoSap> query = repositorio.Listar<BoletoSap>();
+
+            switch (enumValue)
+            {
+                case EnumBoletoCompraNet.CONFIRMA:
+                    query = query.Where(x => x.Confirma.HasValue && x.Confirma.Value);
+                    break;
+
+                case EnumBoletoCompraNet.CARTA_OFERTA:
+                    query = query.Where(x => x.CartaOferta.HasValue && x.CartaOferta.Value);
+                    break;
+
+                case EnumBoletoCompraNet.SIN_BOLETO:
+                    query = query.Where(x => x.SinBoleto.HasValue && x.SinBoleto.Value);
+                    break;
+
+                case EnumBoletoCompraNet.FISICO:
+                    query = query.Where(x => x.Fisico.HasValue && x.Fisico.Value);
+                    break;
+
+                case EnumBoletoCompraNet.NINGUNO:
+                    query = query.Where(x => x.Ninguno.HasValue && x.Ninguno.Value);
+                    break;
+
+                default:
+                    return new List<BoletoSapDto>();
+            }
+
+            return query
+                .Where(x => x != null)
+                .OrderBy(x => x.Descripcion ?? string.Empty)
+                .Select(x => new BoletoSapDto
+                {
+                    Id = x.Id,
+                    Descripcion = x.Descripcion ?? string.Empty,
+                    Caracter = x.Caracter ?? string.Empty,
+                    CartaOferta = x.CartaOferta ?? false,
+                    Confirma = x.Confirma ?? false,
+                    Fisico = x.Fisico ?? false,
+                    Ninguno = x.Ninguno ?? false,
+                    SinBoleto = x.SinBoleto ?? false
+                })
+                .ToList();
         }
         #endregion
 
@@ -549,6 +591,9 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.Moneda = contrato.Moneda?.MonedaId;
                 datosContrato.CorredorId = contrato.CorredorId;
                 datosContrato.PlanCanje = contrato.PlanCanje;
+                datosContrato.EsCartaOferta = contrato.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA;
+                datosContrato.EsSinBoleto = contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
+                datosContrato.BoletoCompraNetId = contrato.BoletoId;
             }
 
             var cuitProveedor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : contrato.Proveedor.CUIT;
@@ -790,6 +835,9 @@ namespace Molinos.DataAgro.Business.Managers
             var listaDatosPreCertificacionDto = new ControlDeBoletosPreCertificacionDto();
             listaDatosPreCertificacionDto.Detalle = new List<ControlDeBoletosDatosPreCertificacionDto>();
             var preCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
+            var controlDeBoletosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
+            listaDatosPreCertificacionDto.ControlDeBoletosId = controlDeBoletosId;
+            listaDatosPreCertificacionDto.FechaRecepcionBoleto = controlDeBoletosSeguimiento?.FechaRecepcionBoleto;
             foreach (var item in preCertificacion)
             {
                 var datosPreCertificacionDto = new ControlDeBoletosDatosPreCertificacionDto();
@@ -818,9 +866,8 @@ namespace Molinos.DataAgro.Business.Managers
                     .Select(d => d.CodigoTipoOblea)
                     .ToHashSet() : new HashSet<string>();
 
-                // Registros actuales en BD para este control (con TipoOblea cargado)
+                // Registros actuales en BD para este control (sin navegación para evitar conflictos FK)
                 var registrosEnBd = repositorio.Listar<ControlDeBoletosPreCertificacion>(
-                    new List<Expression<Func<ControlDeBoletosPreCertificacion, object>>> { r => r.TipoOblea },
                     x => x.ControlDeBoletosId == controlDeBoletosId);
 
                 var ahora = DateTime.Now;
@@ -833,12 +880,12 @@ namespace Molinos.DataAgro.Business.Managers
                         var tipoOblea = repositorio.Listar<TipoOblea>(t => t.Codigo == item.CodigoTipoOblea).FirstOrDefault();
                         if (tipoOblea == null) continue;
 
-                        var existente = registrosEnBd.FirstOrDefault(r => r.TipoOblea != null && r.TipoOblea.Codigo == item.CodigoTipoOblea);
+                        var existente = registrosEnBd.FirstOrDefault(r => r.TipoObleaId == tipoOblea.Id);
 
                         if (existente != null)
                         {
-                            // Modificar
-                            existente.Oblea = item.Oblea;
+                            // Modificar - solo actualizar propiedades escalares y FK, NO navegaciones
+                            existente.Oblea = item.Oblea?.Trim();
                             existente.FechaCertificacion = item.FechaCertificacion ?? existente.FechaCertificacion;
                             existente.FechaVencimiento = item.FechaVencimiento ?? existente.FechaVencimiento;
                             existente.BolsaCompraNetId = item.BolsaCompraNetId ?? existente.BolsaCompraNetId;
@@ -855,12 +902,12 @@ namespace Molinos.DataAgro.Business.Managers
                             var nuevo = new ControlDeBoletosPreCertificacion
                             {
                                 ControlDeBoletosId = item.ControlDeBoletosId,
-                                Oblea = item.Oblea,
+                                Oblea = item.Oblea?.Trim(),
                                 TipoObleaId = tipoOblea.Id,
                                 BolsaCompraNetId = item.BolsaCompraNetId,
                                 FechaCertificacion = item.FechaCertificacion,
                                 FechaVencimiento = item.FechaVencimiento,
-                                Rechazado = item.Rechazado,
+                                Rechazado = item.Rechazado ?? string.Empty,
                                 FechaCreacion = ahora
                             };
                             repositorio.Agregar(nuevo);
@@ -871,14 +918,30 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 // ── 2. Eliminar registros en BD que ya no están en el request ──
-                var registrosAEliminar = registrosEnBd
-                    .Where(r => r.TipoOblea != null && !codigosEnRequest.Contains(r.TipoOblea.Codigo))
+                // Recargar sin navegaciones para evitar conflictos
+                var registrosActuales = repositorio.Listar<ControlDeBoletosPreCertificacion>(
+                    x => x.ControlDeBoletosId == controlDeBoletosId);
+
+                var tiposObleaEnRequest = repositorio.Listar<TipoOblea>(
+                    t => codigosEnRequest.Contains(t.Codigo))
+                    .ToDictionary(t => t.Codigo, t => t.Id);
+
+                var registrosAEliminar = registrosActuales
+                    .Where(r => !tiposObleaEnRequest.ContainsValue(r.TipoObleaId))
                     .ToList();
 
                 foreach (var eliminado in registrosAEliminar)
                 {
-                    // Notificar a SAP que el registro ya no tiene valores (campos vacíos)
-                    RegistrarDatosCertificacionParaPreCertificacion(eliminado, oResultado, sinValores: true);
+                    // Cargar solo para SAP notification
+                    var preCertConNavegacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(
+                        new List<Expression<Func<ControlDeBoletosPreCertificacion, object>>> { r => r.TipoOblea },
+                        x => x.Id == eliminado.Id).FirstOrDefault();
+
+                    if (preCertConNavegacion != null)
+                    {
+                        RegistrarDatosCertificacionParaPreCertificacion(preCertConNavegacion, oResultado, sinValores: true);
+                    }
+
                     repositorio.Remover(eliminado);
                 }
 
@@ -1067,58 +1130,139 @@ namespace Molinos.DataAgro.Business.Managers
         #region Metodo para establecer el estado de Boleto
         private void EstablecerEstadoBoleto(int controlDeBoletoId)
         {
-            int estadoControlBoleto = 0;
-            var datosCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletoId);
-            var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletoId);
-            if (datosCertificacion.Count == 0 && datosSeguimiento == null)
+            var controlBoleto = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
+
+            if (controlBoleto == null)
+                return;
+
+            var certificaciones = repositorio.Listar<ControlDeBoletosPreCertificacion>(
+                x => x.ControlDeBoletosId == controlDeBoletoId);
+
+            var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(
+                x => x.ControlDeBoletosId == controlDeBoletoId);
+
+            // Pendiente de control
+            if (!certificaciones.Any() && seguimiento == null)
             {
-                var boletoPendiente = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
-                if (boletoPendiente != null)
+                ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CONTROL);
+                return;
+            }
+
+            var contrato = repositorio.Obtener<Negocio>(x => x.Id == controlBoleto.NegocioId);
+
+            var cuitProveedor = contrato.CorredorId > 0
+                ? contrato.Corredor.CUIT
+                : contrato.Proveedor.CUIT;
+
+            var tipoProveedor = contrato.CorredorId > 0 ? "CORR" : "PROV";
+
+            bool operaSinOblea =
+                VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
+
+            bool esCartaOferta =
+                contrato.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA;
+
+            bool esSinBoleto =
+                contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
+
+            if (!certificaciones.Any() && !esSinBoleto)
+            {
+                ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                return;
+            }
+
+            var tipoObleaBolsa = repositorio.Listar<TipoOblea>(x => x.Codigo == "O")
+                                            .FirstOrDefault();
+
+            var tipoObleaArca = repositorio.Listar<TipoOblea>(x => x.Codigo == "A")
+                                           .FirstOrDefault();
+
+            bool tieneObleaBolsa =
+                certificaciones.Any(x => x.TipoObleaId == tipoObleaBolsa.Id);
+
+            bool tieneCodigoArca =
+                certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id);
+
+            // Sin boleto
+            if (esSinBoleto)
+            {
+                if (!tieneCodigoArca)
                 {
-                    estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL;
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA);
+                    return;
+                }
+
+                if (seguimiento?.FechaEnvioAfip.HasValue == true &&
+                    seguimiento.FechaRecepcionAfip.HasValue)
+                {
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
+                }
+
+                return;
+            }
+
+            // Requiere Oblea Bolsa
+            if (!operaSinOblea && !tieneObleaBolsa)
+            {
+                ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                return;
+            }
+
+            if (!tieneCodigoArca)
+            {
+                ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA);
+                return;
+            }
+
+            bool seguimientoCompletoSinOblea =
+                seguimiento != null &&
+                seguimiento.FechaEnvioFirmas.HasValue &&
+                seguimiento.FechaRecepcionFirma.HasValue &&
+                seguimiento.FechaEnvioAfip.HasValue &&
+                seguimiento.FechaRecepcionAfip.HasValue;
+
+            bool seguimientoCompletoConOblea =
+                seguimiento != null &&
+                seguimiento.FechaEnvioBolsa.HasValue &&
+                seguimiento.FechaRecepcionBolsa.HasValue &&
+                seguimiento.FechaEnvioFirmas.HasValue &&
+                seguimiento.FechaRecepcionFirma.HasValue &&
+                seguimiento.FechaEnvioAfip.HasValue &&
+                seguimiento.FechaRecepcionAfip.HasValue;
+
+            bool requiereSellado = false;
+
+            if (operaSinOblea)
+            {
+                requiereSellado =
+                    !esCartaOferta &&
+                    seguimiento?.FechaEnvioSellado.HasValue != true;
+                if (seguimientoCompletoConOblea && !requiereSellado)
+                {
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
                 }
             }
             else
             {
-                if (datosCertificacion.Count > 0)
+                requiereSellado =
+                !esCartaOferta &&
+                seguimiento?.FechaEnvioSellado.HasValue != true;
+                if (seguimientoCompletoSinOblea && !requiereSellado)
                 {
-                    var tipoObleaBolsa = repositorio.Listar<TipoOblea>(x => x.Codigo == "O").FirstOrDefault();
-                    var tipoRegistracionAfip = repositorio.Listar<TipoOblea>(x => x.Codigo == "A").FirstOrDefault();
-                    var obleaBolsa = datosCertificacion.Where(x => x.TipoObleaId == tipoObleaBolsa.Id);
-                    var obleaAfip = datosCertificacion.Where(x => x.TipoObleaId == tipoRegistracionAfip.Id);
-
-                    if (!obleaBolsa.Any())
-                    {
-                        estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA;
-                    }
-                    else
-                    {
-                        if(!obleaAfip.Any())
-                        {
-                            estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA;
-                        }
-                        else
-                        {
-                            if(datosSeguimiento.FechaRecepcionAfip.HasValue &&
-                               datosSeguimiento.FechaEnvioBolsa.HasValue &&
-                               datosSeguimiento.FechaEnvioFirmas.HasValue &&
-                               datosSeguimiento.FechaEnvioAfip.HasValue &&
-                               datosSeguimiento.FechaRecepcionBolsa.HasValue &&
-                               datosSeguimiento.FechaRecepcionFirma.HasValue &&
-                               datosSeguimiento.FechaRecepcionAfip.HasValue &&
-                               datosSeguimiento.FechaEnvioSellado.HasValue
-                              )
-                                estadoControlBoleto = (int)EnumControlDeBoletosEstado.CONTROLADO;
-                        }
-                    }
-                }
-                else
-                {
-                    estadoControlBoleto = (int)EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA;
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
                 }
             }
-            var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
-            controlDeBoletos.ControlDeBoletosEstado = repositorio.Obtener<ControlDeBoletosEstado>(x => x.Id == estadoControlBoleto);
+
+        }
+
+        private void ActualizarEstado(
+            ControlDeBoletos boleto,
+            EnumControlDeBoletosEstado estado)
+        {
+            boleto.ControlDeBoletosEstado =
+                repositorio.Obtener<ControlDeBoletosEstado>(
+                    x => x.Id == (int)estado);
+
             repositorio.GuardarCambios();
         }
         #endregion

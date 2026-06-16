@@ -117,33 +117,32 @@
                         </div>
                     </form>
 
-                    <!-- ════════ 1. MODIFICAR DATOS DEL CONTRATO ════════ -->
-                    <div class="panel panel-default" style="margin-bottom:10px; margin-top: 10px">
-                        <div class="panel-heading" id="headingModificar">
+                    <!-- ════════ 1. SEGUIMIENTO CONTROL BOLETO ════════ -->
+                    <div class="panel panel-default" style="margin-bottom:10px;">
+                        <div class="panel-heading" id="headingSeguimiento">
                             <h5 style="margin-bottom:0;">
                                 <button class="btn btn-link" data-toggle="collapse"
-                                        data-target="#collapseModificar"
-                                        aria-expanded="false"
-                                        aria-controls="collapseModificar">
-                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                    Modificar Datos del Contrato
+                                        data-target="#collapseSeguimiento"
+                                        aria-expanded="true"
+                                        aria-controls="collapseSeguimiento">
+                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                    Seguimiento Control Boleto
                                 </button>
                             </h5>
                         </div>
-                        <div id="collapseModificar" class="panel-collapse collapse"
+                        <div id="collapseSeguimiento" class="panel-collapse collapse"
                              data-parent="#accordionGestionBoleto">
-                            <div class="panel-body">
-                                @Html.Partial("_FormModificarDatosDelContrato")
-                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
+                            <div class="panel-body" style="padding-top: 2px;">
+                                @Html.Partial("_FormSeguimientoControlBoleto")
+                                <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
                                     <button class="btn btn-primary"
-                                            onclick="ControlDeBoletosModificarContrato.guardar()">
+                                            onclick="ControlDeBoletosSeguimiento.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
 
                     <!-- ════════ 2. DATOS DE CERTIFICACIÓN ════════ -->
                     <div class="panel panel-default" style="margin-bottom:10px;">
@@ -160,7 +159,7 @@
                         </div>
                         <div id="collapseCertificacion" class="panel-collapse collapse"
                              data-parent="#accordionGestionBoleto">
-                            <div class="panel-body">
+                            <div class="panel-body" style="padding-top: 2px;">
                                 @Html.Partial("_FormDatosCertificacion")
                                 <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
                                     <button class="btn btn-primary"
@@ -172,26 +171,26 @@
                         </div>
                     </div>
 
-                    <!-- ════════ 3. SEGUIMIENTO CONTROL BOLETO ════════ -->
-                    <div class="panel panel-default" style="margin-bottom:10px;">
-                        <div class="panel-heading" id="headingSeguimiento">
+                    <!-- ════════ 3. MODIFICAR DATOS DEL CONTRATO ════════ -->
+                    <div class="panel panel-default" style="margin-bottom:10px; margin-top: 10px">
+                        <div class="panel-heading" id="headingModificar">
                             <h5 style="margin-bottom:0;">
                                 <button class="btn btn-link" data-toggle="collapse"
-                                        data-target="#collapseSeguimiento"
-                                        aria-expanded="true"
-                                        aria-controls="collapseSeguimiento">
-                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
-                                    Seguimiento Control Boleto
+                                        data-target="#collapseModificar"
+                                        aria-expanded="false"
+                                        aria-controls="collapseModificar">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                    Modificar Datos del Contrato
                                 </button>
                             </h5>
                         </div>
-                        <div id="collapseSeguimiento" class="panel-collapse collapse"
+                        <div id="collapseModificar" class="panel-collapse collapse"
                              data-parent="#accordionGestionBoleto">
-                            <div class="panel-body">
-                                @Html.Partial("_FormSeguimientoControlBoleto")
-                                <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
+                            <div class="panel-body" style="padding-top: 2px;">
+                                @Html.Partial("_FormModificarDatosDelContrato")
+                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
                                     <button class="btn btn-primary"
-                                            onclick="ControlDeBoletosSeguimiento.guardar()">
+                                            onclick="ControlDeBoletosModificarContrato.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
                                     </button>
                                 </div>

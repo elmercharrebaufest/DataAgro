@@ -1327,26 +1327,33 @@ IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolControlDeboletos and Pe
 
 -- Registro en tabla BoletoSap
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 1)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Confirma', 'C', 1);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Confirma')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Confirma', 'C');
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 2)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Físico', 'F', 2);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Físico')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Físico', 'F');
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 3)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Ninguno', 'C - F - K', 3);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Ninguno')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Ninguno', 'C - F - K');
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 4)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Carta Oferta', 'K', 4);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Carta Oferta')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Carta Oferta', 'K');
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 5)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Sin Boleto', 'S', 5);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Sin Boleto')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Sin Boleto', 'S');
 
-IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE BoletoCompraNetId = 0)
-    INSERT INTO BoletoSap (Descripcion, Caracter, BoletoCompraNetId)
-    VALUES ('Observado', 'O', 0);
+IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Observado')
+    INSERT INTO BoletoSap (Descripcion, Caracter)
+    VALUES ('Observado', 'O');
+
+Update BoletoSap set Confirma = 1,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Confirma'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 1,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Físico'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Ninguno'
+Update BoletoSap set Confirma = 0,CartaOferta = 1,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Carta Oferta'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Sin Boleto'
+Update BoletoSap set Confirma = 1,CartaOferta = 1,Fisico = 1,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Observado'
