@@ -1151,11 +1151,6 @@ function agregarFiltroMultiSelect(selector, fieldName, filtros) {
     }
 }
 
-// Uso
-agregarFiltroMultiSelect("#MaterialId", "MaterialId", contratoSapFilters);
-agregarFiltroMultiSelect("#EstadoCupoId", "EstadoCupoId", contratoSapFilters);
-agregarFiltroMultiSelect("#ProveedorId", "ProveedorId", contratoSapFilters);
-
 
 function BorrarFiltro() {
     $("#CupoSAPId").val("");
