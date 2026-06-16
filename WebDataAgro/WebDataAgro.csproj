@@ -3197,7 +3197,9 @@
     <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx" />
+	<Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
