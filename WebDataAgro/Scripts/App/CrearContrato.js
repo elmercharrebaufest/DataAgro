@@ -3114,6 +3114,7 @@ function AbrirModalCapacidadProductivaPendiente() {
 }
 
 function CambioCalidades(calidades) {
+    var tieneCalidadesCargadas = calidades !== undefined && calidades.length > 0;
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara"
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica"
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Bonif. SECO de 7% a 10% Por punto"
@@ -3124,13 +3125,17 @@ function CambioCalidades(calidades) {
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
             $(".calidad-no-grado").hide();
-            LimpiarCalidades();
+            if (!tieneCalidadesCargadas) {
+                LimpiarCalidades();
+            }
         } else {
             $(".calidad-no-grado").show();
         }
     } else {
         $(".calidadesEspecialesDatos").hide();
-        LimpiarCalidades();
+        if (!tieneCalidadesCargadas) {
+            LimpiarCalidades();
+        }
     }
 
     if (calidades !== undefined && calidades.length == 1) {
@@ -3314,17 +3319,19 @@ function CargarCalidadPorMaterial(value) {
         }
         viewModel.set("EspecialesCombo", calidadGrano);
 
-        if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
-        } else {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+        if (viewModel.Calidades.length === 0) {
+            if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
+                $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
+            } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
+                $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
+            } else {
+                $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+            }
+            if ($("#material").val() == Materiales.TRIGO) {
+                $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
+            }
+            CambioCalidades();
         }
-        if ($("#material").val() == Materiales.TRIGO) {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
-        }
-        CambioCalidades();
     });
 }
 
