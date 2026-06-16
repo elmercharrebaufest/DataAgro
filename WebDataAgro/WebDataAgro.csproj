@@ -3197,7 +3197,7 @@
     <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Templates\AltaMasivaSugerenciasDeCupos.xlsx">
+	<Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
