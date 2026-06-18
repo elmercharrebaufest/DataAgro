@@ -2334,8 +2334,8 @@ namespace Molinos.DataAgro.Business.Managers
                         con.CuitApoderado = mod.cuit;
                         con.EsApoderado = mod.esApoderado;
                         con.PuestoApoderadoId = mod.puestoApoderadoId;
-                        con.FechaDesde = mod.desde;
-                        con.FechaHasta = mod.hasta;
+                        con.FechaDesde = mod.desde == null ? con.FechaDesde : mod.desde;
+                        con.FechaHasta = mod.hasta == null ? con.FechaHasta : mod.hasta;
                         con.ProveedorId = (int)oParam.ProveedorId;
                         con.OtrosIntereses = mod.otrosIntereses;
                         con.Puesto = mod.puesto;
