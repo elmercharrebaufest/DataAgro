@@ -379,6 +379,7 @@
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaBoletoFisico.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaBoletoConfirma.sql" />
     <Build Include="dbo\Tables\BoletoSap.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaControlBoletosPendientes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

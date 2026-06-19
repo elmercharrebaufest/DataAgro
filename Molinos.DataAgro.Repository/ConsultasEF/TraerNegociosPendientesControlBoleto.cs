@@ -23,12 +23,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     .Where(n => n.ConfirmadoSAP == true
                         && n.EstadoId == (int)EnumEstadoContrato.Finalizado
                         && (
-                            (n.TipoNegocioId != (int)EnumTipoNegocio.FIJACION && n.BoletoId == (int)EnumBoletoCompraNet.NINGUNO)
-                            ||
-                            (n.TipoNegocioId == (int)EnumTipoNegocio.FIJACION
-                                && (n as FijacionDePrecioContrato).Contrato != null
-                                && (n as FijacionDePrecioContrato).Contrato.BoletoId == (int)EnumBoletoCompraNet.NINGUNO)
-                        )
+                            ( n.TipoNegocioId != (int)EnumTipoNegocio.FIJACION &&
+                             (n.BoletoId == (int)EnumBoletoCompraNet.NINGUNO || n.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO)
+                            )
+                           )
                         && n.FechaConfirmadoSAP >= fechaLimite)
                     .Select(n => n.Id)
                     .ToList();
