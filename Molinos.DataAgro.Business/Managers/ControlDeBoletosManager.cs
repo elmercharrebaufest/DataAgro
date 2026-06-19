@@ -303,142 +303,32 @@ namespace Molinos.DataAgro.Business.Managers
         #region Pendientes de Control
         public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
         {
-            var query = repositorio.Listar<ControlDeBoletos>()
-                .Where(x => (filtros.EstadoControlId == null ||  (x.ControlDeBoletosEstadoId == (int)filtros.EstadoControlId)));
-
-            // Limitar a negocios confirmados en SAP en los últimos 2 meses (consulta optimizada con ReadUncommitted)
+            // Paso 1: detectar negocios SAP confirmados sin registro en ControlDeBoletos e insertarlos vía EF
             var negociosIds = repositorio.ObtenerConsultaEscalar(new TraerNegociosPendientesControlBoleto());
 
             if (negociosIds != null && negociosIds.Count > 0)
             {
-                var negociosIdsEnQuery = query
-                    .Select(cb => cb.NegocioId)
-                    .Distinct()
-                    .ToList();
-                var negociosNoEnQuery = negociosIds
-                    .Where(id => !negociosIdsEnQuery.Contains(id))
-                    .ToList();
-
-                if (negociosNoEnQuery != null && negociosNoEnQuery.Count > 0)
+                var controlBoletosNuevos = negociosIds.Select(id => new ControlDeBoletos
                 {
-                    var controlBoletosNuevos = negociosNoEnQuery.Select(id => new ControlDeBoletos
-                    {
-                        NegocioId = id,
-                        FechaCreacion = DateTime.Now,
-                        EsConfirma = false,
-                        AltaIdLoteConfirma = null,
-                        AltaIdDocumentoConfirma = null,
-                        ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
-                        EstadoConfirmaId = (int?)null,
-                        ControlIniciado = false,
-                        ControlFinalizado = false,
-                        CertificacionCompletada = false,
-                        RegistroDatosOblea = false,
-                        EsConfirmaAltaBorrador = false
-                    }).ToList();
-                    repositorio.AgregarTodos(controlBoletosNuevos);
-                    repositorio.GuardarCambios();
-                }
+                    NegocioId = id,
+                    FechaCreacion = DateTime.Now,
+                    EsConfirma = false,
+                    AltaIdLoteConfirma = null,
+                    AltaIdDocumentoConfirma = null,
+                    ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                    EstadoConfirmaId = (int?)null,
+                    ControlIniciado = false,
+                    ControlFinalizado = false,
+                    CertificacionCompletada = false,
+                    RegistroDatosOblea = false,
+                    EsConfirmaAltaBorrador = false
+                }).ToList();
+                repositorio.AgregarTodos(controlBoletosNuevos);
+                repositorio.GuardarCambios();
             }
 
-            if (!string.IsNullOrWhiteSpace(filtros.NegocioSAP))
-            {
-                var negociosSAPList = filtros.NegocioSAP.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim())
-                    .ToList();
-
-                if (negociosSAPList.Count > 0)
-                    query = query.Where(n => negociosSAPList.Contains(n.Negocio.ContratoSAP));
-            }
-            else
-            {
-                if (filtros.MaterialId.HasValue)
-                    query = query.Where(x => x.Negocio.MaterialId == filtros.MaterialId.Value);
-
-                if (filtros.EstadoControlId.HasValue)
-                    query = query.Where(x => x.ControlDeBoletosEstadoId == filtros.EstadoControlId.Value);
-
-                if (filtros.EsConfirma)
-                    query = query.Where(x => x.EsConfirma == true);
-
-                if (filtros.FechaCargaDesde.HasValue)
-                    query = query.Where(x => x.FechaCreacion >= filtros.FechaCargaDesde.Value);
-
-                if (filtros.FechaCargaHasta.HasValue)
-                    query = query.Where(x => x.FechaCreacion < filtros.FechaCargaHasta.Value.Date.AddDays(1));
-
-                if (filtros.Proveedor.HasValue)
-                    query = query.Where(x => x.Negocio.ProveedorId == filtros.Proveedor.Value);
-
-                if (filtros.BolsaId.HasValue)
-                    query = query.Where(x => x.Negocio.BolsaId == filtros.BolsaId.Value);
-
-                if (filtros.ComercialId.HasValue)
-                    query = query.Where(x => x.Negocio.ComercialId == filtros.ComercialId.Value);
-            }
-
-
-
-            // Optimización: Usar query LINQ con LEFT JOIN en lugar de N+1 queries
-            var result = (from cb in query
-                          join preOblea in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "O")
-                              on cb.Id equals preOblea.ControlDeBoletosId into preJoinOblea
-                          from preOblea in preJoinOblea.DefaultIfEmpty()
-
-                          join prePlanCanje in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "F")
-                              on cb.Id equals prePlanCanje.ControlDeBoletosId into preJoinPlanCanje
-                          from prePlanCanje in preJoinPlanCanje.DefaultIfEmpty()
-
-                          join preAfip in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "A")
-                              on cb.Id equals preAfip.ControlDeBoletosId into preJoinAfip
-                          from preAfip in preJoinAfip.DefaultIfEmpty()
-
-                          join preProvisoria in repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.TipoOblea.Codigo == "P")
-                              on cb.Id equals preProvisoria.ControlDeBoletosId into preJoinProvisoria
-                          from preProvisoria in preJoinProvisoria.DefaultIfEmpty()
-
-                          join seg in repositorio.Listar<ControlDeBoletosSeguimiento>()
-                              on cb.Id equals seg.ControlDeBoletosId into segJoin
-                          from seg in segJoin.DefaultIfEmpty()
-                          join estado in repositorio.Listar<EstadoConfirma>()
-                              on cb.EstadoConfirmaId equals estado.Id into estadoJoin
-                          from estado in estadoJoin.DefaultIfEmpty()
-                          select new ControlDeBoletosConsultaDto
-                          {
-                              Id = cb.Id,
-                              NegocioId = cb.NegocioId,
-                              ControlDeBoletosEstadoId = cb.ControlDeBoletosEstadoId,
-                              ControlDeBoletosEstado = cb.ControlDeBoletosEstado != null ? cb.ControlDeBoletosEstado.Descripcion : null,
-                              EsConfirma = cb.EsConfirma,
-                              AltaIdLoteConfirma = cb.AltaIdLoteConfirma,
-                              IdentificadorConfirma = cb.IdentificadorConfirma,
-                              FechaCreacion = cb.FechaCreacion,
-                              FechaModificacion = cb.FechaModificacion,
-                              EstadoConfirmaId = cb.EstadoConfirmaId,
-                              EstadoConfirma = estado != null ? estado.Descripcion : null,
-                              TipoBoleto = cb.Negocio.Boleto != null ? cb.Negocio.Boleto.Descripcion : null,
-                              ControlIniciado = cb.ControlIniciado,
-                              ControlFinalizado = cb.ControlFinalizado,
-                              CertificacionCompletada = cb.CertificacionCompletada,
-                              RegistroDatosOblea = cb.RegistroDatosOblea,
-                              FechaControlIniciado = cb.FechaControlIniciado,
-                              FechaControlFinalizado = cb.FechaControlFinalizado,
-                              FechaCertificacionCompletada = cb.FechaCertificacionCompletada,
-                              FechaRegistroDatosOblea = cb.FechaRegistroDatosOblea,
-                              MaterialId = cb.Negocio.MaterialId,
-                              Material = cb.Negocio.Material.Descripcion,
-                              BolsaCompraNetId = cb.Negocio.BolsaId != null ? (int?)cb.Negocio.BolsaId : null,
-                              BolsaCompraNet = cb.Negocio.Bolsa != null ? cb.Negocio.Bolsa.Descripcion : null,
-                              ComercialId = cb.Negocio.ComercialId,
-                              Comercial = cb.Negocio.Comercial != null ? cb.Negocio.Comercial.Nombres + " " + cb.Negocio.Comercial.Apellido : null,
-                              ContratoSAP = cb.Negocio.ContratoSAP,
-                              ProveedorId = cb.Negocio.ProveedorId,
-                              Proveedor = cb.Negocio.Proveedor != null ? cb.Negocio.Proveedor.RazonSocial : null,
-                              SeguimientoBoletoId = seg != null ? (int?)seg.Id : null,
-                              TipoAltaConfirma = cb.EsConfirma? (cb.EsConfirmaAltaBorrador? "Alta Borrador" : "Alta Definitiva") : string.Empty,
-                          }).ToList();
-
-            return result;
+            // Paso 2: consulta principal vía SP (filtros + JOINs + seguimiento resueltos en SQL Server)
+            return repositorio.ObtenerConsultaEscalar(new TraerControlBoletosPendientes(filtros));
         }
         public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false)
         {

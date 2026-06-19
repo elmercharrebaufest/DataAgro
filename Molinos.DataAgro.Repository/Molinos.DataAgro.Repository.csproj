@@ -209,6 +209,7 @@
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
     <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerConfirmasConFiltro.cs" />
+    <Compile Include="ConsultasEF\TraerControlBoletosPendientes.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
     <Compile Include="ConsultasEF\TraerNegociosPendientesControlBoleto.cs" />
