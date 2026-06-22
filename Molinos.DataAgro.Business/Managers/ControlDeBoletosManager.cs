@@ -1157,5 +1157,65 @@ namespace Molinos.DataAgro.Business.Managers
         }
         #endregion
 
+        #region Reporte Seguimiento Boletos
+        public List<ControlDeBoletosParaModificarDto> GetBoletosParaModificar(ControlDeBoletosParaModificarFiltroDto filtros)
+        {
+            var query = new TraerBoletosParaModificar(filtros ?? new ControlDeBoletosParaModificarFiltroDto());
+            var data = repositorio.ObtenerConsultaEscalar(query);
+
+            foreach (var item in data)
+            {
+                string cuitProveedor = item.EsCorredor ? item.CUITCorredor : item.CUITProveedor;
+                string tipoProveedor = item.EsCorredor ? "CORR" : "PROV";
+                bool operaSinOblea = VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
+                item.OperaSinOblea = operaSinOblea;
+            }
+
+            return data;
+        }
+
+        public Resultado GuardarBoletosParaModificarFechas(List<ControlDeBoletosParaModificarDto> boletos)
+        {
+            var resultado = new Resultado();
+
+            try
+            {
+                if (boletos == null || boletos.Count == 0)
+                {
+                    return resultado;
+                }
+
+                foreach (var boleto in boletos)
+                {
+                    var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId);
+                    if (seguimiento == null)
+                    {
+                        resultado.Errores.Add(new ErrorMessage { Message = "No existe seguimiento para el ControlDeBoletosId " + boleto.ControlDeBoletosId });
+                        continue;
+                    }
+
+                    seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
+                    seguimiento.FechaEnvioFirmas = boleto.FechaEnviadoFirma;
+                    seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
+                    seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
+                    seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
+                    seguimiento.FechaRecepcionBolsa = boleto.FechaVueltaBolsa;
+                    seguimiento.FechaRecepcionAfip = boleto.FechaVueltaAfip;
+                    seguimiento.FechaEnvioSellado = boleto.FechaEnvioSellado;
+                    seguimiento.FechaModificacion = DateTime.Now;
+                }
+
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                logger.Error(ex, "Error guardando modificación masiva de boletos");
+            }
+
+            return resultado;
+        }
+        #endregion
+
     }
 }

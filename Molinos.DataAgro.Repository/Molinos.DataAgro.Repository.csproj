@@ -208,6 +208,7 @@
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
     <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
+    <Compile Include="ConsultasEF\TraerBoletosParaModificar.cs" />
     <Compile Include="ConsultasEF\TraerConfirmasConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerControlBoletosPendientes.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
