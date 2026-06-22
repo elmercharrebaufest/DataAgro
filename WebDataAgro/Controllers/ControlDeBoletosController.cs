@@ -967,6 +967,61 @@ namespace WebDataAgro.Controllers
         }
         #endregion
 
+
+        #region Modificacion masiva de boletos
+        [HttpPost]
+        public JsonResult GetBoletosParaModificar(ControlDeBoletosParaModificarFiltroDto filtrosBusqueda)
+        {
+            try
+            {
+                var boletos = this._controlDeBoletosManager.GetBoletosParaModificar(filtrosBusqueda);
+
+                var result = new
+                {
+                    Data = boletos,
+                    Total = boletos.Count
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en GetBoletosParaModificar: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GuardarBoletosParaModificarFechas(List<ControlDeBoletosParaModificarDto> boletos)
+        {
+            try
+            {
+                var resultado = this._controlDeBoletosManager.GuardarBoletosParaModificarFechas(boletos);
+                return Json(new
+                {
+                    success = !resultado.HayError,
+                    errors = resultado.Errores
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en GuardarBoletosParaModificarFechas: {ex.Message}");
+                return Json(new
+                {
+                    success = false,
+                    errors = new[] { new { Message = "Error al guardar fechas: " + ex.Message } }
+                });
+            }
+        }
+        #endregion
+
         [HttpGet]
         public JsonResult ProcesarBoletosPendientesControl()
         {

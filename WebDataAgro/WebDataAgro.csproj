@@ -378,6 +378,7 @@
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
     <Content Include="Scripts\App\ControlDeBoletosGestion.js" />
+    <Content Include="Scripts\App\ControlDeBoletosModificacionMasiva.js" />
     <Content Include="Scripts\App\ControlDeBoletosModificarContrato.js" />
     <Content Include="Scripts\App\ControlDeBoletosReporteSeguimiento.js" />
     <Content Include="Scripts\App\ControlDeBoletosSeguimiento.js" />
@@ -3197,7 +3198,7 @@
     <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
+    <Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
