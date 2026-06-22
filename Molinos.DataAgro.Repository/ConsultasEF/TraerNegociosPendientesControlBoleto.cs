@@ -19,7 +19,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             {
                 var fechaLimite = DateTime.Now.AddMonths(-2);
 
-                return contexto.Set<Negocio>()
+                var negocios = contexto.Set<Negocio>();
+                var controles = contexto.Set<ControlDeBoletos>();
+
+                return negocios
                     .Where(n => n.ConfirmadoSAP == true
                         && n.EstadoId == (int)EnumEstadoContrato.Finalizado
                         && (
@@ -27,7 +30,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                              (n.BoletoId == (int)EnumBoletoCompraNet.NINGUNO || n.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO)
                             )
                            )
-                        && n.FechaConfirmadoSAP >= fechaLimite)
+                        && n.FechaConfirmadoSAP >= fechaLimite
+                        && !controles.Any(cb => cb.NegocioId == n.Id))
                     .Select(n => n.Id)
                     .ToList();
             }

@@ -1188,21 +1188,41 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var boleto in boletos)
                 {
                     var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId);
-                    if (seguimiento == null)
+                    if (seguimiento != null)
                     {
-                        resultado.Errores.Add(new ErrorMessage { Message = "No existe seguimiento para el ControlDeBoletosId " + boleto.ControlDeBoletosId });
-                        continue;
+                        var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.BolsaSellado);
+
+                        seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
+                        seguimiento.FechaEnvioFirmas = boleto.FechaEnviadoFirma;
+                        seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
+                        seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
+                        seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
+                        seguimiento.FechaRecepcionBolsa = boleto.FechaVueltaBolsa;
+                        seguimiento.FechaRecepcionAfip = boleto.FechaVueltaAfip;
+                        seguimiento.FechaEnvioSellado = boleto.FechaEnvioSellado;
+                        seguimiento.BolsaSellado = boleto.BolsaSellado;
+                        seguimiento.BolsaCompraNet = bolsa;
+                        seguimiento.FechaModificacion = DateTime.Now;
                     }
 
-                    seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
-                    seguimiento.FechaEnvioFirmas = boleto.FechaEnviadoFirma;
-                    seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
-                    seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
-                    seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
-                    seguimiento.FechaRecepcionBolsa = boleto.FechaVueltaBolsa;
-                    seguimiento.FechaRecepcionAfip = boleto.FechaVueltaAfip;
-                    seguimiento.FechaEnvioSellado = boleto.FechaEnvioSellado;
-                    seguimiento.FechaModificacion = DateTime.Now;
+                    var pre = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId && x.TipoObleaId == 3);
+                    if (pre != null)
+                    {
+                        pre.Oblea = boleto.Oblea;
+                        pre.FechaCertificacion = boleto.FechaCertificacion;
+                        pre.FechaVencimiento = boleto.FechaVencimientoCertificacion;
+
+                        if (!string.IsNullOrWhiteSpace(boleto.PreCertificacionBolsa))
+                        {
+                            var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.PreCertificacionBolsa);
+                            if (bolsa != null)
+                            {
+                                pre.BolsaCompraNetId = bolsa.Id;
+                            }
+                        }
+
+                        pre.FechaModificacion = DateTime.Now;
+                    }
                 }
 
                 repositorio.GuardarCambios();

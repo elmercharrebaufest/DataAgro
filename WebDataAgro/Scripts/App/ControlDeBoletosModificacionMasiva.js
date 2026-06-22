@@ -5,6 +5,8 @@ var ControlBoletos = (function () {
     var config = {
         urls: {
             getBoletosParaModificar: "/ControlDeBoletos/GetBoletosParaModificar",
+            getBolsa: "/ControlDeBoletos/GetBolsaCompraNet",
+            getBolsaSAP: "/ControlDeBoletos/GetBolsaCompraNetSAP",
             guardarBoletosParaModificarFechas: "/ControlDeBoletos/GuardarBoletosParaModificarFechas"
         }
     };
@@ -22,7 +24,10 @@ var ControlBoletos = (function () {
         columnWidths: [],
         dirtyItems: {},
         selectedPasteField: null,
-        selectedPasteRowIndex: 0
+        selectedPasteRowIndex: 0,
+        listaBolsaSAP: null,
+        listaBolsa: null,
+        comboPopupAbierto: false
     };
 
     // Funciones privadas
@@ -50,6 +55,12 @@ var ControlBoletos = (function () {
         }
     }
 
+    async function cargarBolsaSAP() {
+        state.listaBolsaSAP = await MSExecuteGetOnServerAsync(config.urls.getBolsaSAP);
+        state.listaBolsa = await MSExecuteGetOnServerAsync(config.urls.getBolsa);
+
+    }
+
     async function cargarDropdown(url, selector, textoCarga, textoDefault) {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
@@ -60,7 +71,7 @@ var ControlBoletos = (function () {
             if (data && Array.isArray(data)) {
                 $.each(data, function (i, item) {
                     $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
+                        '<option value="' + item.Value + '">' + item.Value + "</option>",
                     );
                 });
             } else {
@@ -242,8 +253,83 @@ var ControlBoletos = (function () {
             "FechaRecibFirma",
             "FechaVueltaBolsa",
             "FechaVueltaAfip",
-            "FechaEnvioSellado"
+            "FechaEnvioSellado",
+            "FechaCertificacion",
+            "FechaVencimientoCertificacion"
         ].indexOf(field) >= 0;
+    }
+
+    function esCampoComboBolsa(field) {
+        return ["PreCertificacionBolsa", "BolsaSellado"].indexOf(field) >= 0;
+    }
+
+    function esCampoTextoEditable(field) {
+        return ["Oblea"].indexOf(field) >= 0;
+    }
+
+    function esCampoEditablePegado(field) {
+        return esCampoFecha(field) || esCampoComboBolsa(field) || esCampoTextoEditable(field);
+    }
+
+    function obtenerOpcionesBolsaParaCombo() {
+        var listaBase = state.listaBolsa || [];
+        var listaSap = state.listaBolsaSAP || [];
+
+        var sapPorId = {};
+        for (var i = 0; i < listaSap.length; i++) {
+            var idKey = String(listaSap[i].Text || "").trim();
+            var sapValue = String(listaSap[i].Value || "").trim();
+            if (idKey && sapValue) sapPorId[idKey] = sapValue;
+        }
+
+        var opciones = [];
+        for (var j = 0; j < listaBase.length; j++) {
+            var item = listaBase[j];
+            var id = String(item.Value || "").trim();
+            var codigoSap = sapPorId[id] || "";
+            if (!codigoSap) continue;
+            opciones.push({ Text: item.Text, Value: codigoSap });
+        }
+
+        return opciones;
+    }
+
+    function obtenerValorComboBolsaValido(valorTexto) {
+        var texto = (valorTexto || "").trim();
+        if (!texto) return null;
+
+        var opciones = obtenerOpcionesBolsaParaCombo();
+        var upper = texto.toUpperCase();
+        for (var i = 0; i < opciones.length; i++) {
+            var value = String(opciones[i].Value || "").trim();
+            if (value && value.toUpperCase() === upper) return value;
+        }
+        return null;
+    }
+
+    function comboBolsaEditor(container, options) {
+        var input = $('<input name="' + options.field + '" />');
+        input.appendTo(container);
+        input.kendoDropDownList({
+            dataTextField: "Value",
+            dataValueField: "Value",
+            optionLabel: "Seleccione...",
+            filter: "contains",
+            ignoreCase: true,
+            dataSource: obtenerOpcionesBolsaParaCombo(),
+            valuePrimitive: true,
+            open: function () {
+                state.comboPopupAbierto = true;
+            },
+            close: function () {
+                state.comboPopupAbierto = false;
+            }
+        });
+    }
+
+    function textCellEditor(container, options) {
+        var maxLength = options.field === "Oblea" ? 18 : 50;
+        $('<input class="k-input k-textbox" name="' + options.field + '" maxlength="' + maxLength + '" />').appendTo(container);
     }
 
     function parsearValoresFechaPegados(texto) {
@@ -256,13 +342,10 @@ var ControlBoletos = (function () {
             .map(function (linea) {
                 var limpio = (linea || "").trim();
                 if (!limpio) return "";
-
-                // Si viene desde Excel con columnas, tomar solo la primera celda de la fila
                 return limpio.split("\t")[0].trim();
             })
             .filter(function (v) { return v !== ""; });
 
-        // Fallback robusto: extraer todas las fechas dd/MM/yyyy del bloque completo
         if (valores.length <= 1) {
             var matches = raw.match(/\b\d{1,2}\/\d{1,2}\/\d{4}\b/g);
             if (matches && matches.length > 1) {
@@ -273,13 +356,40 @@ var ControlBoletos = (function () {
         return valores;
     }
 
+    function parsearValoresPegadosPorCampo(field, texto) {
+        if (!texto) return [];
+        if (esCampoFecha(field)) return parsearValoresFechaPegados(texto);
+
+        return String(texto)
+            .replace(/\u0000/g, "")
+            .split(/(?:\r\n|\n|\r)+/)
+            .map(function (linea) {
+                var limpio = (linea || "").trim();
+                if (!limpio) return "";
+                return limpio.split("\t")[0].trim();
+            })
+            .filter(function (v) { return v !== ""; });
+    }
+
+    function normalizarValorPegado(field, valorTexto) {
+        if (esCampoFecha(field)) return parseDateDdMmYyyy(valorTexto);
+        if (esCampoComboBolsa(field)) return obtenerValorComboBolsaValido(valorTexto);
+        if (esCampoTextoEditable(field)) {
+            var texto = (valorTexto || "").trim();
+            if (field === "Oblea" && texto.length > 18) return null;
+            return texto;
+        }
+        return valorTexto;
+    }
+
     function aplicarPegadoMasivoEnColumna(field, filaInicial, valoresTexto) {
         if (!state.grid || !field || !valoresTexto || !valoresTexto.length) return;
-        if (!esCampoFecha(field)) return;
+        if (!esCampoEditablePegado(field)) return;
 
-        // Usar dataSource.view() para acceder a los items reales sin depender del DOM
         var view = state.grid.dataSource.view();
         var start = Math.max(0, filaInicial || 0);
+        var huboValorInvalido = false;
+        var huboValorInvalidoOblea = false;
 
         for (var i = 0; i < valoresTexto.length; i++) {
             var filaIdx = start + i;
@@ -291,9 +401,25 @@ var ControlBoletos = (function () {
             var item = view[filaIdx];
             if (!item) continue;
 
-            var fecha = parseDateDdMmYyyy(valorTexto);
-            item.set(field, fecha);
+            var valor = normalizarValorPegado(field, valorTexto);
+            if (esCampoComboBolsa(field) && !valor) {
+                huboValorInvalido = true;
+                continue;
+            }
+            if (field === "Oblea" && valor === null) {
+                huboValorInvalidoOblea = true;
+                continue;
+            }
+
+            item.set(field, valor);
             state.dirtyItems[item.ControlDeBoletosId] = item.toJSON();
+        }
+
+        if (huboValorInvalido) {
+            mostrarMensaje("Validación", "Se ignoraron los valores pegados que no coinciden con los códigos de bolsas existentes.", "warning");
+        }
+        if (huboValorInvalidoOblea) {
+            mostrarMensaje("Validación", "Se ignoraron los valores de oblea porque superan el límite de 18 caracteres.", "warning");
         }
 
         actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
@@ -336,8 +462,8 @@ var ControlBoletos = (function () {
         }
 
         function manejarPegado(field, filaInicial, textoClipboard) {
-            if (!esCampoFecha(field)) return;
-            var valores = parsearValoresFechaPegados(textoClipboard);
+            if (!esCampoEditablePegado(field)) return;
+            var valores = parsearValoresPegadosPorCampo(field, textoClipboard);
             if (!valores.length) return;
 
             state.selectedPasteField = field;
@@ -354,7 +480,6 @@ var ControlBoletos = (function () {
 
             aplicarPegadoMasivoEnColumna(field, filaInicial, valores);
 
-            // Mantener la celda actual donde se inició el pegado (estilo Excel)
             if (colIndex >= 0) {
                 setTimeout(function () {
                     var $celdaActual = state.grid.tbody.find("tr").eq(state.selectedPasteRowIndex).find("td").eq(colIndex);
@@ -369,7 +494,7 @@ var ControlBoletos = (function () {
         // ── Selección de columna por clic en encabezado ──
         state.grid.thead.off("click.modifMasivaCol").on("click.modifMasivaCol", "th[data-field]", function () {
             var field = $(this).attr("data-field");
-            state.selectedPasteField = esCampoFecha(field) ? field : null;
+            state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
             state.selectedPasteRowIndex = 0;
             marcarColumnaSeleccionada(state.selectedPasteField);
             state.grid.wrapper.focus();
@@ -377,9 +502,9 @@ var ControlBoletos = (function () {
 
         // ── Selección de celda por clic en el cuerpo ──
         state.grid.tbody.off("click.modifMasivaCol").on("click.modifMasivaCol", "td", function (e) {
-            // Si el click ocurre dentro del DatePicker/Popup, no forzar foco al wrapper
-            // para evitar que el calendario se cierre inmediatamente.
-            if ($(e.target).closest(".k-datepicker, .k-date-picker, .k-animation-container, .k-calendar-container, .k-popup").length) {
+            // Si el click ocurre dentro de DatePicker o Combo/Popup, no forzar foco al wrapper
+            // para evitar que el popup se cierre inmediatamente.
+            if ($(e.target).closest(".k-datepicker, .k-date-picker, .k-dropdown, .k-dropdownlist, .k-picker, .k-animation-container, .k-list-container, .k-calendar-container, .k-popup").length) {
                 return;
             }
 
@@ -390,10 +515,9 @@ var ControlBoletos = (function () {
             var rowIndex = $cell.closest("tr").index();
 
             state.grid.current($cell);
-            state.selectedPasteField = esCampoFecha(field) ? field : null;
+            state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
             state.selectedPasteRowIndex = rowIndex >= 0 ? rowIndex : 0;
             marcarColumnaSeleccionada(state.selectedPasteField);
-            state.grid.wrapper.focus();
         });
 
         // ── Paste en el textarea trampa ──
@@ -412,7 +536,7 @@ var ControlBoletos = (function () {
             var colIndex = $(this).index();
             var columna = state.grid.columns[colIndex];
             var field = columna && columna.field ? columna.field : null;
-            if (!esCampoFecha(field)) return;
+            if (!esCampoEditablePegado(field)) return;
             var texto = obtenerTextoPortapapeles(e);
             if (!texto) return;
             e.preventDefault();
@@ -426,8 +550,11 @@ var ControlBoletos = (function () {
             var esFlecha = key === 37 || key === 38 || key === 39 || key === 40;
             if (!esFlecha) return;
 
-            // No interferir si el usuario está escribiendo en un input editable
+            if (state.comboPopupAbierto) return;
+
+            // No interferir si el usuario está escribiendo o navegando dentro de un editor/popup
             var $target = $(e.target);
+            if ($target.closest(".k-dropdown, .k-dropdownlist, .k-picker, .k-list-container, .k-animation-container, .k-popup").length) return;
             if ($target.is("input, textarea, select") && !$target.is("[readonly]")) return;
 
             var $rows = state.grid.tbody.find("tr");
@@ -469,7 +596,7 @@ var ControlBoletos = (function () {
 
                 var col = state.grid.columns[colIndex];
                 var field = col && col.field ? col.field : null;
-                state.selectedPasteField = esCampoFecha(field) ? field : null;
+                state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
                 state.selectedPasteRowIndex = rowIndex;
                 marcarColumnaSeleccionada(state.selectedPasteField);
 
@@ -479,13 +606,18 @@ var ControlBoletos = (function () {
 
         // ── Teclado: Delete/Supr + Ctrl+D ──
         state.grid.wrapper.off("keydown.modifMasivaDelete").on("keydown.modifMasivaDelete", function (e) {
+            if (state.comboPopupAbierto) return;
+
+            var $target = $(e.target);
+            if ($target.closest(".k-dropdown, .k-dropdownlist, .k-picker, .k-list-container, .k-animation-container, .k-popup").length) return;
+
             var current = state.grid.current();
             if (!current || !current.length) return;
 
             var colIndex = current.index();
             var columna = state.grid.columns[colIndex];
             var field = columna && columna.field ? columna.field : null;
-            if (!esCampoFecha(field)) return;
+            if (!esCampoEditablePegado(field)) return;
 
             var row = current.closest("tr");
             var rowIndex = row.index();
@@ -520,6 +652,10 @@ var ControlBoletos = (function () {
             if ((e.ctrlKey || e.metaKey) && (e.key === "d" || e.key === "D" || e.keyCode === 68)) {
                 e.preventDefault();
                 var valorOrigen = item.get(field);
+                if (field === "Oblea" && valorOrigen != null && String(valorOrigen).length > 18) {
+                    mostrarMensaje("Validación", "Oblea no puede superar 18 caracteres.", "warning");
+                    return;
+                }
                 var siguiente = rowIndex + 1;
                 if (siguiente < view.length) {
                     var itemDestino = view[siguiente];
@@ -540,22 +676,29 @@ var ControlBoletos = (function () {
 
         // ── Ctrl+C / Ctrl+V sobre la celda actual (estilo Excel) ──
         state.grid.wrapper.off("keydown.modifMasivaClipboard").on("keydown.modifMasivaClipboard", function (e) {
+            if (state.comboPopupAbierto) return;
+
+            var $target = $(e.target);
+            if ($target.closest(".k-dropdown, .k-dropdownlist, .k-picker, .k-list-container, .k-animation-container, .k-popup").length) return;
+
             var current = state.grid.current();
             var colIndex = current && current.length ? current.index() : -1;
             var columna = colIndex >= 0 ? state.grid.columns[colIndex] : null;
             var fieldActual = columna && columna.field ? columna.field : state.selectedPasteField;
             var rowIndexActual = current && current.length ? current.closest("tr").index() : state.selectedPasteRowIndex;
 
-            // Ctrl+C en fecha: copiar valor actual al portapapeles
+            // Ctrl+C en campo editable: copiar valor actual al portapapeles
             if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C" || e.keyCode === 67)) {
-                if (!esCampoFecha(fieldActual) || rowIndexActual < 0) return;
+                if (!esCampoEditablePegado(fieldActual) || rowIndexActual < 0) return;
 
                 var viewCopy = state.grid.dataSource.view();
                 var itemCopy = viewCopy[rowIndexActual];
                 if (!itemCopy) return;
 
                 var valor = itemCopy.get(fieldActual);
-                var texto = valor ? kendo.toString(valor, "dd/MM/yyyy") : "";
+                var texto = "";
+                if (esCampoFecha(fieldActual)) texto = valor ? kendo.toString(valor, "dd/MM/yyyy") : "";
+                else texto = valor == null ? "" : String(valor);
 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     e.preventDefault();
@@ -564,9 +707,9 @@ var ControlBoletos = (function () {
                 return;
             }
 
-            // Ctrl+V en fecha: pegar desde portapapeles comenzando en la celda actual
+            // Ctrl+V en campo editable: pegar desde portapapeles comenzando en la celda actual
             if ((e.ctrlKey || e.metaKey) && (e.key === "v" || e.key === "V" || e.keyCode === 86)) {
-                if (!esCampoFecha(fieldActual)) return;
+                if (!esCampoEditablePegado(fieldActual)) return;
 
                 state.selectedPasteField = fieldActual;
                 state.selectedPasteRowIndex = rowIndexActual >= 0 ? rowIndexActual : 0;
@@ -590,8 +733,8 @@ var ControlBoletos = (function () {
         init: async function () {
             if (state.datosInicializados) return;
             this.configurarEventos();
+            await cargarBolsaSAP();
             this.inicializarGrid();
-
             state.datosInicializados = true;
         },
 
@@ -652,10 +795,9 @@ var ControlBoletos = (function () {
                     .kendoGrid({
                         dataSource: {
                             type: "json",
-                            serverPaging: true,
-                            serverSorting: true,
-                            serverFiltering: true,
-                            pageSize: 20,
+                            serverPaging: false,
+                            serverSorting: false,
+                            serverFiltering: false,
                             transport: {
                                 read: function (options) {
                                     var filtros = self.obtenerFiltros();
@@ -674,7 +816,6 @@ var ControlBoletos = (function () {
                             },
                             schema: {
                                 data: "Data",
-                                total: "Total",
                                 errors: "Errors",
                                 model: {
                                     id: "ControlDeBoletosId",
@@ -684,6 +825,12 @@ var ControlBoletos = (function () {
                                         ContratoSAP: { type: "string", editable: false },
                                         TipoBoleto: { type: "string", editable: false },
                                         SeguimientoBoletoId: { type: "number", editable: false },
+                                        PreCertificacionId: { type: "number", editable: false },
+                                        Oblea: { type: "string" },
+                                        PreCertificacionBolsa: { type: "string" },
+                                        BolsaSellado: { type: "string" },
+                                        FechaCertificacion: { type: "date" },
+                                        FechaVencimientoCertificacion: { type: "date" },
                                         FechaRecepBoleto: { type: "date" },
                                         FechaEnviadoFirma: { type: "date" },
                                         FechaEnvioBolsa: { type: "date" },
@@ -714,7 +861,7 @@ var ControlBoletos = (function () {
                             },
                         },
                         height: 550,
-                        scrollable: { virtual: false },
+                        scrollable: { virtual: true },
                         sortable: false,
                         filterable: false,
                         reorderable: true,
@@ -727,7 +874,6 @@ var ControlBoletos = (function () {
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [25, 50, 100, 200],
                             buttonCount: 5,
                             messages: {
                                 display: "Mostrando {0}-{1} de {2} registros",
@@ -757,6 +903,40 @@ var ControlBoletos = (function () {
                                 title: "Contrato SAP",
                                 width: 120,
                                 editable: function () { return false; }
+                            },
+                            {
+                                field: "Oblea",
+                                title: "Oblea",
+                                width: 120,
+                                editor: textCellEditor
+                            },
+                            {
+                                field: "PreCertificacionBolsa",
+                                title: "Codigo Bolsa",
+                                width: 140,
+                                editor: comboBolsaEditor
+                            },
+                            {
+                                field: "FechaCertificacion",
+                                title: "F. Certificación Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaCertificacion) #",
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "FechaVencimientoCertificacion",
+                                title: "Fecha Vencimiento Certificación",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaVencimientoCertificacion) #",
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "BolsaSellado",
+                                title: "Codigo Bolsa",
+                                width: 140,
+                                editor: comboBolsaEditor
                             },
                             {
                                 field: "FechaRecepBoleto",
@@ -876,7 +1056,6 @@ var ControlBoletos = (function () {
 
             if (state.grid) {
                 // Si el grid ya existe, solo recargar los datos
-                state.grid.dataSource.page(1); // Volver a la página 1
                 state.grid.dataSource.read(); // Recargar datos con los nuevos filtros
             } else {
                 // Si el grid no existe, inicializarlo
