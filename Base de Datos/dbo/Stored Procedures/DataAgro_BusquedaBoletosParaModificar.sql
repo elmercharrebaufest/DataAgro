@@ -49,8 +49,8 @@ BEGIN
     LEFT JOIN ControlDeBoletosSeguimiento seg ON seg.ControlDeBoletosId = cb.Id
     WHERE pre.TipoObleaId = 3
       AND (
-            @ContratoSAP IS NULL
-            OR LTRIM(RTRIM(@ContratoSAP)) = ''
+            @ContratoSAP IS NOT NULL
+            OR LTRIM(RTRIM(@ContratoSAP)) > ''
             OR EXISTS (
                 SELECT 1
                 FROM ContratosFiltro f

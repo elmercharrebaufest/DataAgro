@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                 return contexto.Database
                     .SqlQuery<ControlDeBoletosParaModificarDto>(
-                        "EXEC dbo.DataAgro_GetBoletosParaModificar @ContratoSAP",
+                        "EXEC dbo.DataAgro_BusquedaBoletosParaModificar @ContratoSAP",
                         parametros)
                     .ToList();
             }
