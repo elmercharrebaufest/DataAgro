@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
@@ -30,17 +30,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
+            var espacioFiltro = " " + filtro;
+
             var resultado =
                 (from Proveedor in contexto.Set<Proveedor>()
                  join contactoComercial in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                  from contactoComercial in cons.DefaultIfEmpty()
                  where
                      (Proveedor.CUIT.Contains(filtro) ||
-                     contactoComercial.Nombres.Contains(filtro) ||
-                     contactoComercial.Apellido.Contains(filtro) ||
+                     contactoComercial.Nombres.StartsWith(filtro) || contactoComercial.Nombres.Contains(espacioFiltro) ||
+                     contactoComercial.Apellido.StartsWith(filtro) || contactoComercial.Apellido.Contains(espacioFiltro) ||
                      contactoComercial.Proveedor.RazonSocial.Contains(filtro) ||
                      Proveedor.RazonSocial.Contains(filtro) ||
-                     Proveedor.Alias.Contains(filtro))
+                     Proveedor.Alias.StartsWith(filtro) || Proveedor.Alias.Contains(espacioFiltro))
 
                  select new BusquedaHome
                  {
@@ -56,6 +58,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      Consignatario = Proveedor.Consignatario,
                      PlanCanje = Proveedor.PlanCanje,
                      OperaConMATBA = Proveedor.OperaConMATBA,
+                     prioridad = Proveedor.RazonSocial.Contains(filtro) ? 0 :
+                                contactoComercial.Nombres.Contains(filtro) ? 1 :
+                                contactoComercial.Apellido.Contains(filtro) ? 2 : 3,
                  }).Distinct().Take(15).ToList();
 
             var lista = DevolverEstadoSisa(contexto, resultado.ToList(), equipo, corredor);

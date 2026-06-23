@@ -1,4 +1,4 @@
-﻿namespace Molinos.DataAgro.Entities.Dto
+namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class BusquedaHome
     {
@@ -24,5 +24,6 @@
         public string Segmentacion { get; set; }
         public string Grupo { get; set; }
         public int SegmentacionId { get; set; }
+        public int? prioridad { get; set; }
     }
 }
