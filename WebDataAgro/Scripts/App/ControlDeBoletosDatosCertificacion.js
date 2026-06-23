@@ -215,6 +215,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
             ctrl.fechaCertificacion,
             ctrl.fechaVencimiento,
             ctrl.fechaVencimientoProvisoria,
+            ctrl.fechaRegistracionAfip,
             ctrl.fechaCertificacionPlanCanje,
             ctrl.fechaVencimientoPlanCanje
         ].forEach(function ($el) {
