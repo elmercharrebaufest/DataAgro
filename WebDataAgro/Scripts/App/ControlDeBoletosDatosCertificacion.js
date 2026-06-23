@@ -95,7 +95,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
         };
 
         var minDateActual = state.fechaRecepcionBoleto;
-        if (minDateActual && !isNaN(minDateActual.getTime())) {
+        if (minDateActual && minDateActual instanceof Date && !isNaN(minDateActual.getTime())) {
             options.min = minDateActual;
         }
 
@@ -131,7 +131,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
             return false;
         }
 
-        if (minDate && selectedDate && selectedDate < minDate) {
+        if (minDate && minDate instanceof Date && !isNaN(minDate.getTime()) && selectedDate && selectedDate < minDate) {
             $el.addClass("fecha-invalida");
             dp.value(null);
             $el.val("");
@@ -153,12 +153,21 @@ var ControlDeBoletosDatosCertificacion = (function () {
         if (!dateValue) return null;
 
         // Si es una cadena vacía
-        if (typeof dateValue === 'string' && $.trim(dateValue) === '') return null;
+        if (typeof dateValue === 'string' && $.trim(dateValue) === '') {
+            return null;
+        }
+
+        // Normalizar formato escapado: \/Date(...)\/ -> Date(...)
+        if (typeof dateValue === 'string') {
+            // Remover todas las barras invertidas
+            dateValue = dateValue.replace(/\\/g, '');
+        }
 
         var date = null;
 
-        // Formato JSON de .NET: /Date(1234567890)/
-        var match = /\/Date\((\d+)\)\//.exec(dateValue);
+        // Formato JSON de .NET: Date(1234567890) - más flexible sin las barras
+        var match = /Date\((\d+)\)/.exec(dateValue);
+
         if (match) {
             date = new Date(parseInt(match[1], 10));
         } else {
@@ -196,7 +205,11 @@ var ControlDeBoletosDatosCertificacion = (function () {
 
     function actualizarMinimosFechas() {
         var minDate = state.fechaRecepcionBoleto;
-        if (!minDate || isNaN(minDate.getTime())) return;
+
+        // Validar que minDate sea una instancia de Date válida
+        if (!minDate || !(minDate instanceof Date) || isNaN(minDate.getTime())) {
+            return;
+        }
 
         [
             ctrl.fechaCertificacion,

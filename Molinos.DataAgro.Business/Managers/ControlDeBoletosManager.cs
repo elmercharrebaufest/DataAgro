@@ -638,8 +638,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void PersistirDatosDeSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
-            if (controlDeBoletosDatosSeguimiento.Id > 0)
+            var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x=> x.ControlDeBoletosId == controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
+
+            if (datosSeguimiento!=null)
             {
+                controlDeBoletosDatosSeguimiento.Id = datosSeguimiento.Id;
                 ActualizarSeguimientoLocal(controlDeBoletosDatosSeguimiento);
             }
             else
