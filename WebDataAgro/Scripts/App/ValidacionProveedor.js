@@ -1,4 +1,4 @@
-﻿function validar() {
+function validar() {
     if (!$("#cuit").val()) {
         MensErr("El CUIT es obligatorio.");
         return false;
@@ -224,6 +224,11 @@ if (!$("#concom-puesto").val() || $("#concom-puesto").val() === "") {
 
         if (!$("#concom-hasta").val() || $("#concom-hasta").val() === "" || $("#concom-hasta").val() === "null") {
             MensErr("Se debe indicar la Fecha Hasta del rol de apoderado");
+            return false;
+        }
+
+        if ($("#concom-desde").val() && $("#concom-hasta").val() && new Date($("#concom-desde").val()) > new Date($("#concom-hasta").val())) {
+            MensErr("La Fecha Desde no puede ser mayor a la Fecha Hasta del rol de apoderado");
             return false;
         }
 
