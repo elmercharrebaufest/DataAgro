@@ -3052,6 +3052,11 @@ function ObtenerDatos() {
         || $("#concom-puesto").val() !== ""
         || $("#concom-cargo").val() !== "") {
         $("#GuardarContactoComercial").trigger("click");
+        // Si el formulario aún tiene datos, la validación del contacto falló.
+        // No continuar con el guardado para no perder datos del contacto.
+        if ($("#concom-nombre").val() !== "" || $("#concom-apellido").val() !== "") {
+            return false;
+        }
     }
     if (aGuardarContactoComercial.length == 0 && (
         !$("#concom-nombre").val() || $("#concom-nombre").val() === ""
