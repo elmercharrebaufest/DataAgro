@@ -39,7 +39,6 @@ namespace WebDataAgro.Controllers
         private const string CTRL_BOLETOS_CLASIFICACIONES_CACHE_KEY = "CtrlBoletos_Clasificaciones_Cache";
         private const string CTRL_BOLETOS_PROCEDENCIAS_CACHE_KEY = "CtrlBoletos_Procedencias_Cache_{0}";
         private const string CTRL_BOLETOS_TIPO_OBLEA_CACHE_KEY = "CtrlBoletos_TipoOblea_Cache";
-        private const string CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY = "CtrlBoletos_BoletoSAP_Cache";
         private const int CACHE_DURATION_MINUTES = 5;
 
         public ControlDeBoletosController(IControlDeBoletosEstadoManager controlDeBoletosEstadoManager, IControlDeBoletosManager controlDeBoletosManager, IContratoManager contratoManager)
@@ -891,21 +890,8 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY] as List<BoletoSapDto>;
-                if (cachedData == null)
-                {
-                    lock (_cacheLock)
-                    {
-                        cachedData = HttpContext.Cache[CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY] as List<BoletoSapDto>;
-                        if (cachedData == null)
-                        {
-                            var boletosSap = _controlDeBoletosManager.GetBoletoSap(boletoCompraNetId);
-                            cachedData = boletosSap;
-                            HttpContext.Cache.Insert(CTRL_BOLETOS_BOLETO_SAP_CACHE_KEY, cachedData, null, DateTime.Now.AddMinutes(CACHE_DURATION_MINUTES), System.Web.Caching.Cache.NoSlidingExpiration);
-                        }
-                    }
-                }
-                return Json(cachedData, JsonRequestBehavior.AllowGet);
+                var boletosSap = _controlDeBoletosManager.GetBoletoSap(boletoCompraNetId);
+                return Json(boletosSap, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -966,7 +952,6 @@ namespace WebDataAgro.Controllers
             }
         }
         #endregion
-
 
         #region Modificacion masiva de boletos
         [HttpPost]

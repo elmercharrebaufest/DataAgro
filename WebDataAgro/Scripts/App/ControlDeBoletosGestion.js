@@ -16,6 +16,8 @@ var ControlDeBoletosGestion = (function () {
         EsCartaOferta: false,
         EsSinBoleto: false,
         BoletoCompraNet: null,
+        ContratoSAP: null,
+        Bolsa: null
     };
 
 
@@ -55,6 +57,8 @@ var ControlDeBoletosGestion = (function () {
                 state.OperaSinOblea,
                 state.PlanCanje,
                 state.EsSinBoleto,
+                state.Bolsa,
+                state.ContratoSAP
             );
         });
 
@@ -128,6 +132,8 @@ var ControlDeBoletosGestion = (function () {
             state.EsCartaOferta = contrato.EsCartaOferta;
             state.EsSinBoleto = contrato.EsSinBoleto;
             state.BoletoCompraNet = contrato.BoletoCompraNetId;
+            state.ContratoSAP = contrato.ContratoSAP;
+            state.Bolsa = contrato.BolsaId;
 
         } catch (e) {
             console.error("Error cargando datos del contrato:", e);
