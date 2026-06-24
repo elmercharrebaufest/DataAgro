@@ -459,6 +459,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (contrato != null)
             {
                 datosContrato.NegocioId = contrato.Id;
+                datosContrato.BolsaId = contrato.Bolsa != null ? contrato.Bolsa.Id : 0;
                 datosContrato.LocalidadId = contrato.LocalidadId;
                 datosContrato.CampanaId = contrato.CampanaId;
                 datosContrato.ProvinciaId = contrato.ProvinciaId;
@@ -727,10 +728,15 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var listaDatosPreCertificacionDto = new ControlDeBoletosPreCertificacionDto();
             listaDatosPreCertificacionDto.Detalle = new List<ControlDeBoletosDatosPreCertificacionDto>();
+
+            //Para los casos que se trabaje con boleto fisico y opera sin oblea se grabara la oblea con valores por defecto en DataAgro y SAP
+            RegistrarDatosSinObleaYSinBoleto(controlDeBoletosId);
+
             var preCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
             var controlDeBoletosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
             listaDatosPreCertificacionDto.ControlDeBoletosId = controlDeBoletosId;
             listaDatosPreCertificacionDto.FechaRecepcionBoleto = controlDeBoletosSeguimiento?.FechaRecepcionBoleto;
+
             foreach (var item in preCertificacion)
             {
                 var datosPreCertificacionDto = new ControlDeBoletosDatosPreCertificacionDto();
@@ -861,7 +867,6 @@ namespace Molinos.DataAgro.Business.Managers
                 return oResultado;
             }
         }
-        // Reutilizable: registra en SAP los datos de certificación para un registro de preBolsa-certificación
         private bool RegistrarDatosCertificacionParaPreCertificacion(ControlDeBoletosPreCertificacion controlDeBoletosPreCertificacion, Resultado oResultado, bool sinValores = false)
         {
             try
@@ -919,6 +924,63 @@ namespace Molinos.DataAgro.Business.Managers
                 return false;
             }
         }
+        private void RegistrarDatosSinObleaYSinBoleto(int controlDeBoletosId)
+        {
+            var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletosId);
+            var contrato = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId);
+            bool esSinBoleto = contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
+            var cuitProveedor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : contrato.Proveedor.CUIT;
+            var tipoProveedor = contrato.CorredorId > 0 ? "CORR" : "PROV";
+            var verificaOperacionSinOblea = VerificarOperaSinOblea(cuitProveedor, tipoProveedor);
+            var operaSinOblea = verificaOperacionSinOblea == "SI";
+            if (esSinBoleto && operaSinOblea)
+            {
+                DateTime fechaActual = DateTime.Now.Date;
+                DateTime ultimoDiaAnio = new DateTime(DateTime.Now.Year, 12, 31);
+                var tipoOblea = repositorio.Listar<TipoOblea>(t => t.Codigo == "O").FirstOrDefault();
+                var preCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId && x.TipoOblea.Id == tipoOblea.Id);
+                if (preCertificacion == null || preCertificacion.Count == 0)
+                {
+                    var nuevo = new ControlDeBoletosPreCertificacion
+                    {
+                        ControlDeBoletosId = controlDeBoletosId,
+                        Oblea = contrato.ContratoSAP,
+                        TipoObleaId = tipoOblea.Id,
+                        BolsaCompraNetId = contrato.Bolsa?.Id,
+                        FechaCertificacion = fechaActual,
+                        FechaVencimiento = ultimoDiaAnio,
+                        Rechazado = string.Empty,
+                        FechaCreacion = DateTime.Now
+                    };
+                    repositorio.Agregar(nuevo);
+                    this.logDataAgroManager.LogCambiosControlBoletos(new ControlDeBoletosDatosPreCertificacionDto
+                    {
+                        ControlDeBoletosId = controlDeBoletosId,
+                        CodigoTipoOblea = tipoOblea.Codigo
+                    }, TipoAccionLogDataAgro.Crear, nuevo.Id, "Registro de Certificacion - Control de Boletos (Sin Oblea y Sin Boleto)");
+
+                    var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+                    var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
+
+                    datosCertificacionCabeceraDto.Contrato = contrato?.ContratoSAP ?? string.Empty;
+                    datosCertificacionCabeceraDto.Fecha = fechaActual.ToString("yyyy-MM-dd");
+                    datosCertificacionCabeceraDto.Hora = fechaActual.ToString("HH:mm:ss");
+                    datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                    datosCertificacionCabeceraDto.Usuario = string.Empty;
+
+                    datosCertificacionDetalleDto.Bolsa = contrato.Bolsa?.CodigoSap ?? string.Empty;
+                    datosCertificacionDetalleDto.Oblea = contrato.ContratoSAP;
+                    datosCertificacionDetalleDto.FeCertificacion = FormatDate(fechaActual);
+                    datosCertificacionDetalleDto.FeVencCerti = FormatDate(ultimoDiaAnio);
+                    datosCertificacionDetalleDto.Rechazado = string.Empty;
+                    datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
+
+                    datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                    repositorio.GuardarCambios();
+                }
+            }
+        }
+
         #endregion
 
         #region Tracking de Boletos

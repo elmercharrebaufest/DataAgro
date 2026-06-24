@@ -13,13 +13,15 @@ var ControlDeBoletosDatosCertificacion = (function () {
     };
 
     var state = {
-        cargando:           false,
+        cargando: false,
         controlDeBoletosId: null,
         operaSinOblea: false,
         planCanje: false,
         verificaDatosSeguimiento: false,
         esSinBoleto: false,
-        fechaRecepcionBoleto: null
+        fechaRecepcionBoleto: null,
+        bolsa: null,
+        contratoSAP: null
     };
 
     // Controles cacheados del formulario
@@ -266,8 +268,6 @@ var ControlDeBoletosDatosCertificacion = (function () {
         }
     }
     function cargarFechasPorDefecto() {
-        if (state.esSinBoleto) return;
-
         var ahora = new Date();
         var ultimoDiaDelAnio = new Date(ahora.getFullYear(), 11, 31);
 
@@ -429,7 +429,15 @@ var ControlDeBoletosDatosCertificacion = (function () {
         var url = config.urls.getPreCertificacion + "?controlDeBoletosId=" + state.controlDeBoletosId;
         try {
             var response = await MSExecuteGetOnServerAsync(url);
-            if (!response || !response.Detalle || !response.Detalle.length) return;
+            if (!response || response.Detalle.length == 0) {
+                cargarFechasPorDefecto();
+                // Parsear fechaRecepcionBoleto correctamente
+                state.fechaRecepcionBoleto = parseDateFromResponse(response.FechaRecepcionBoleto);
+
+                // Recalcular mínimos con la fecha de recepción cargada
+                actualizarMinimosFechas();
+                return;
+            }
 
             // Re-bind controls para garantizar que apunten al DOM correcto
             bindControls();
@@ -554,12 +562,14 @@ var ControlDeBoletosDatosCertificacion = (function () {
     // ======================
     return {
 
-        inicializar: async function (ControlDeBoletosId, OperaSinOblea, PlanCanje, EsSinBoleto) {
+        inicializar: async function (ControlDeBoletosId, OperaSinOblea, PlanCanje, EsSinBoleto, Bolsa, ContratoSAP) {
             BlockUi('Cargando...');
             state.controlDeBoletosId = ControlDeBoletosId;
             state.operaSinOblea = OperaSinOblea;
             state.planCanje = PlanCanje;
             state.esSinBoleto = EsSinBoleto;
+            state.bolsa = Bolsa;
+            state.contratoSAP = ContratoSAP;
             try {
                 await setup();
                 await verificarTipoBoletoYFechaRecepcion();

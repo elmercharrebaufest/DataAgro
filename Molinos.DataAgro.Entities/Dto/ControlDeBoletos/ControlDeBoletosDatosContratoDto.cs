@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
     public class ControlDeBoletosDatosContratoDto
     {
         public int NegocioId { get; set; }
+        public int? BolsaId { get; set; }
         public int? ProvinciaId { get; set; }
         public int? CampanaId { get; set; }
         public int? LocalidadId { get; set; }
