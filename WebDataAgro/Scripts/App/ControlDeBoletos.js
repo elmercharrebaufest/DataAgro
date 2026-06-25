@@ -248,7 +248,7 @@ var ControlBoletos = (function () {
                 .on("paste", function (e) {
 
                     e.preventDefault();
-
+                    controlEstadoControl.val("").trigger('change');
                     let texto = (e.originalEvent.clipboardData || window.clipboardData)
                         .getData("text");
 
@@ -263,6 +263,7 @@ var ControlBoletos = (function () {
 
                     // unir en una sola línea con ;
                     $(this).val(valores.join(";"));
+
                 })
                 .on("keypress", e => {
                     if (e.which === 32) e.preventDefault(); // bloquear espacios

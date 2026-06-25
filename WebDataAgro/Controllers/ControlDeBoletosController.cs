@@ -383,6 +383,25 @@ namespace WebDataAgro.Controllers
                 });
             }
         }
+        [HttpGet]
+        public JsonResult GetVerificarDuplicidadObleaCodigoArca(int controlDeBoletosId, string numeroOblea, string codigoArca)
+        {
+            try
+            {
+                var validacion = _controlDeBoletosManager.VerificarDuplicidadObleaCodigoArca(controlDeBoletosId, numeroOblea, codigoArca);
+                return Json(validacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    Data = new object(),
+                    Total = 0,
+                    Errors = "Error al verificar duplicidad de oblea y código Arca: " + ex.Message
+                });
+            }
+        }
         [HttpPost]
         public JsonResult RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion)
         {

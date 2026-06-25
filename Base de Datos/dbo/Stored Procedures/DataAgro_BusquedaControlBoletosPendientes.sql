@@ -17,7 +17,7 @@ BEGIN
     CREATE TABLE #NegocioSAP (ContratoSAP NVARCHAR(50));
     IF @NegocioSAP IS NOT NULL AND LEN(LTRIM(RTRIM(@NegocioSAP))) > 0
         INSERT INTO #NegocioSAP (ContratoSAP)
-        SELECT LTRIM(RTRIM(value))
+        SELECT RIGHT('0000000000' + LTRIM(RTRIM(value)), 10)
         FROM STRING_SPLIT(@NegocioSAP, ';')
         WHERE LTRIM(RTRIM(value)) <> '';
 

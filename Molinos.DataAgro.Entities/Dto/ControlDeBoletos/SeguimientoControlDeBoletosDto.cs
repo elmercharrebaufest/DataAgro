@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +11,14 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string Bolsa { get; set; }
         public string BolsaSellado { get; set; }
         public string Contrato { get; set; }
-        public string FeEnviadoFirma { get; set; }
-        public string FeEnvio { get; set; }
-        public string FeEnvioAfip { get; set; }
-        public string FeEnvioBolsa { get; set; }
-        public string FeRecepBoleto { get; set; }
-        public string FeRecibFirma { get; set; }
-        public string FeVueltaAfip { get; set; }
-        public string FeVueltaBolsa { get; set; }
+        public string FechaEnvioFirma { get; set; }
+        public string FechaEnvioSellado { get; set; }
+        public string FechaEnvioAfip { get; set; }
+        public string FechaEnvioBolsa { get; set; }
+        public string FechaRecepBoleto { get; set; }
+        public string FechaRecepcionFirma { get; set; }
+        public string FechaRecepcionAfip { get; set; }
+        public string FechaRecepcionBolsa { get; set; }
         public string FecAcopio { get; set; }
         public string Fecha { get; set; }
         public string Hora { get; set; }

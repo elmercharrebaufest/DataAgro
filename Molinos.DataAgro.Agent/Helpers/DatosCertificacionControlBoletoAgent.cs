@@ -43,22 +43,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var datosCertificacion = dto.Detalle
                     .Select(d => new Zmpes7080
                     {
-                        Bolsa = d.Bolsa,
-                        FeCertificacion = d.FeCertificacion,
-                        FeVencCerti = d.FeVencCerti,
-                        Oblea = d.Oblea,
-                        Tipo = d.Tipo,
-                        Rechazado = d.Rechazado
+                        Bolsa = ValorPorDefecto(d.Bolsa),
+                        FeCertificacion = ValorPorDefecto(d.FeCertificacion),
+                        FeVencCerti = ValorPorDefecto(d.FeVencCerti),
+                        Oblea = ValorPorDefecto(d.Oblea),
+                        Tipo = ValorPorDefecto(d.Tipo),
+                        Rechazado = ValorPorDefecto(d.Rechazado)
                     })
                     .ToArray();
 
                 var request = new ZMprfcDatosCertificacion
                 {
-                    ImContrato = dto.Contrato,
-                    ImFecha = dto.Fecha,
-                    ImFijacion = dto.Fijacion,
-                    ImHora = dto.Hora,
-                    ImUsuario = dto.Usuario,
+                    ImContrato = ValorPorDefecto(dto.Contrato),
+                    ImFecha = ValorPorDefecto(dto.Fecha),
+                    ImFijacion = ValorPorDefecto(dto.Fijacion),
+                    ImHora = ValorPorDefecto(dto.Hora),
+                    ImUsuario = ValorPorDefecto(dto.Usuario),
                     DatosCertificacion = datosCertificacion
                 };
                 logger.Debug(request.ToXml());
@@ -85,6 +85,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             client.ClientCredentials.UserName.UserName = userSap;
             client.ClientCredentials.UserName.Password = passSap;
             return client;
+        }
+        private string ValorPorDefecto(string valor)
+        {
+            return string.IsNullOrWhiteSpace(valor) ? string.Empty : valor;
         }
     }
 

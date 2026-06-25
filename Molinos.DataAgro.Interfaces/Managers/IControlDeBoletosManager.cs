@@ -38,5 +38,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         string VerificarTipoBoletoyFechaRecepcion(int controlDeBoletosId);
         List<ControlDeBoletosParaModificarDto> GetBoletosParaModificar(ControlDeBoletosParaModificarFiltroDto filtros);
         Resultado GuardarBoletosParaModificarFechas(List<ControlDeBoletosParaModificarDto> boletos);
+        string VerificarDuplicidadObleaCodigoArca(int controlDeBoletosId, string numeroOblea, string codigoArca);
     }
 }
