@@ -1357,3 +1357,4 @@ Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBole
 Update BoletoSap set Confirma = 0,CartaOferta = 1,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Carta Oferta'
 Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Sin Boleto'
 Update BoletoSap set Confirma = 1,CartaOferta = 1,Fisico = 1,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Observado'
+Update BoletoSap set Caracter = 'C - F - K - O' where Descripcion = 'Ninguno'

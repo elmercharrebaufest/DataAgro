@@ -7,7 +7,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
             getPreCertificacion:    "/ControlDeBoletos/GetDatosPreCertificacion",
             getBolsaCompraNet:      "/ControlDeBoletos/GetBolsaCompraNet",
             getTipoObleaConCodigo: "/ControlDeBoletos/GetTipoObleaConCodigo",
-            getVerificarTipoBoletoyFechaRecepcion: "/ControlDeBoletos/GetVerificarTipoBoletoyFechaRecepcion"
+            getVerificarTipoBoletoyFechaRecepcion: "/ControlDeBoletos/GetVerificarTipoBoletoyFechaRecepcion",
+            getVerificarDuplicidadObleaCodigoArca: "/ControlDeBoletos/GetVerificarDuplicidadObleaCodigoArca",
         },
         modalId: "#modalCertificacion"
     };
@@ -642,7 +643,16 @@ var ControlDeBoletosDatosCertificacion = (function () {
             BlockUi('Guardando...');
 
             try {
-                var response = await MSExecuteOnServerAsync(config.urls.createPreCertificacion, obtenerRequest());
+                var request = obtenerRequest();
+                var oblea = request.Detalle.find(d => d.CodigoTipoOblea === 'O')?.Oblea || '';
+                var codigoArca = request.Detalle.find(d => d.CodigoTipoOblea === 'A')?.Oblea || '';
+                var urlValidacion = config.urls.getVerificarDuplicidadObleaCodigoArca + "?controlDeBoletosId=" + state.controlDeBoletosId + "&numeroOblea=" + oblea + "&codigoArca=" + codigoArca;
+                var validacion = await MSExecuteGetOnServerAsync(urlValidacion);
+                if (validacion!=null && validacion > '') {
+                    MensErr(validacion);
+                    return;
+                }
+                var response = await MSExecuteOnServerAsync(config.urls.createPreCertificacion, request);
                 if (!response) return;
 
                 if (response.success) {

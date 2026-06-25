@@ -618,19 +618,19 @@ namespace Molinos.DataAgro.Business.Managers
                 Bolsa = bolsa,
                 BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado ?? string.Empty,
                 Contrato = contrato,
-                FeEnvio = string.Empty,
                 FecAcopio = string.Empty,
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
                 TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter ?? string.Empty,
                 Usuario = string.Empty,
-                FeRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
-                FeEnviadoFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas?.ToString("yyyy-MM-dd"),
-                FeEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd"),
-                FeEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd"),
-                FeRecibFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma?.ToString("yyyy-MM-dd"),
-                FeVueltaAfip = controlDeBoletosDatosSeguimiento.FechaRecepcionAfip?.ToString("yyyy-MM-dd"),
-                FeVueltaBolsa = controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa?.ToString("yyyy-MM-dd"),
+                FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
+                FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas?.ToString("yyyy-MM-dd"),
+                FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd"),
+                FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd"),
+                FechaRecepcionFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma?.ToString("yyyy-MM-dd"),
+                FechaRecepcionBolsa = controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa?.ToString("yyyy-MM-dd"),
+                FechaRecepcionAfip = controlDeBoletosDatosSeguimiento.FechaRecepcionAfip?.ToString("yyyy-MM-dd"),
+                FechaEnvioSellado = controlDeBoletosDatosSeguimiento.FechaEnvioSellado?.ToString("yyyy-MM-dd"),
                 ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto ?? string.Empty,
                 ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2 ?? string.Empty,
                 RechazadoAfip = string.Empty // TODO: Verificar si debe venir del DTO de entrada
@@ -723,6 +723,29 @@ namespace Molinos.DataAgro.Business.Managers
                 return resultado;
             resultado = obtenerAlta.SinOblea;
             return resultado;
+        }
+        public string VerificarDuplicidadObleaCodigoArca(int controlDeBoletosId, string numeroOblea, string codigoArca)
+        {
+            string mensaje = string.Empty;
+            var certificacionOblea = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId != controlDeBoletosId && x.Oblea.Equals(numeroOblea) && x.TipoOblea.Codigo.Equals("O"));
+            var certificacionCodigoArca = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId != controlDeBoletosId && x.Oblea.Equals(codigoArca) && x.TipoOblea.Codigo.Equals("A"));
+            var duplicidadOblea = certificacionOblea != null && certificacionOblea.Any();
+            var duplicidadCodigoArca = certificacionCodigoArca != null && certificacionCodigoArca.Any();
+
+            if (duplicidadOblea && duplicidadCodigoArca)
+            {
+                mensaje = "Ya existe el numero de oblea y codigo arca en otro contrato.";
+            }
+            else if (duplicidadOblea)
+            {
+                mensaje = "Ya existe el numero de oblea en otro contrato.";
+            }
+            else if(duplicidadCodigoArca)
+            {
+                mensaje = "Ya existe el codigo arca en otro contrato.";
+            }
+
+            return mensaje;
         }
         public ControlDeBoletosPreCertificacionDto ObtenerDatosPreCertificacion(int controlDeBoletosId)
         {
@@ -1136,7 +1159,7 @@ namespace Molinos.DataAgro.Business.Managers
                 certificaciones.Any(x => x.TipoObleaId == tipoObleaBolsa.Id);
 
             bool tieneCodigoArca =
-                certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id);
+                certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id && x.FechaCertificacion.HasValue);
 
             // Sin boleto
             if (esSinBoleto)
@@ -1146,14 +1169,6 @@ namespace Molinos.DataAgro.Business.Managers
                     ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA);
                     return;
                 }
-
-                if (seguimiento?.FechaEnvioAfip.HasValue == true &&
-                    seguimiento.FechaRecepcionAfip.HasValue)
-                {
-                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
-                }
-
-                return;
             }
 
             // Requiere Oblea Bolsa
@@ -1168,46 +1183,11 @@ namespace Molinos.DataAgro.Business.Managers
                 ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA);
                 return;
             }
-
-            bool seguimientoCompletoSinOblea =
-                seguimiento != null &&
-                seguimiento.FechaEnvioFirmas.HasValue &&
-                seguimiento.FechaRecepcionFirma.HasValue &&
-                seguimiento.FechaEnvioAfip.HasValue &&
-                seguimiento.FechaRecepcionAfip.HasValue;
-
-            bool seguimientoCompletoConOblea =
-                seguimiento != null &&
-                seguimiento.FechaEnvioBolsa.HasValue &&
-                seguimiento.FechaRecepcionBolsa.HasValue &&
-                seguimiento.FechaEnvioFirmas.HasValue &&
-                seguimiento.FechaRecepcionFirma.HasValue &&
-                seguimiento.FechaEnvioAfip.HasValue &&
-                seguimiento.FechaRecepcionAfip.HasValue;
-
-            bool requiereSellado = false;
-
-            if (operaSinOblea)
-            {
-                requiereSellado =
-                    !esCartaOferta &&
-                    seguimiento?.FechaEnvioSellado.HasValue != true;
-                if (seguimientoCompletoConOblea && !requiereSellado)
-                {
-                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
-                }
-            }
             else
             {
-                requiereSellado =
-                !esCartaOferta &&
-                seguimiento?.FechaEnvioSellado.HasValue != true;
-                if (seguimientoCompletoSinOblea && !requiereSellado)
-                {
-                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
-                }
+                ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.CONTROLADO);
+                return;
             }
-
         }
 
         private void ActualizarEstado(
