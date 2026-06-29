@@ -4890,7 +4890,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaIngreso = fechaCupo ?? s.FechaSugerida,
                 ZonaCupoId = s.ZonaCupoId.Value,
                 ComercialId = s.ComercialId,
-                Calidad = s.StandardDeCalidad,
+                Calidad = s.StandardDeCalidad == "Cámara" || s.StandardDeCalidad == "Camara" ? "Camara" : "Fabrica",
                 Fason = s.TipoNegocioId == 4,
                 Destinatario = s.Destinatario,
                 FechaGeneracion = DateTime.Now,
