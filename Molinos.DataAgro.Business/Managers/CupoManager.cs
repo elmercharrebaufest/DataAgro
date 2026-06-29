@@ -1653,6 +1653,8 @@ namespace Molinos.DataAgro.Business.Managers
             List<Material> materialesDB = repositorio.Listar<Material>();
             List<ZonaCupo> zonasDB = repositorio.Listar<ZonaCupo>();
 
+
+
             var ExcelData = dsExcel.Tables[0].AsEnumerable()
                   .Select(row => new AltaMasivaCupoDto
                   {
@@ -1668,6 +1670,13 @@ namespace Molinos.DataAgro.Business.Managers
 
             //List<SugerenciaCupo> sugerenciasExcelList = new List<SugerenciaCupo>();
             List<SugerenciaCupoDto> sugerenciasDtoExcelList = new List<SugerenciaCupoDto>();
+
+            var calidadError = listaNegocios.Where(x => x.StandardDeCalidad.Descripcion == "Cámara" || x.StandardDeCalidad.Descripcion == "Fábrica").ToList();
+
+            if (calidadError.Count != 0)
+            {
+                logger.Debug("AltaMasivaSugerenciaCuposV2 - Negocios con calidad Erronea : " + calidadError.Select(x => x.Id).ToString());
+            }
 
             foreach (var negocioExcel in ExcelData)
             {
@@ -1700,7 +1709,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ProveedorDesc = negocio.CorredorId > 0 && negocio.Corredor != null ? negocio.Corredor.RazonSocial : negocio.Proveedor.RazonSocial,//dto
                         Aceptado = null,
                         //StandardDeCalidad = negocio.MaterialId == (int)EnumMateriales.SOJA ? negocio.StandardDeCalidad?.Descripcion == "Camara" ? negocio.StandardDeCalidad?.Descripcion : "Fabrica" : "",
-                        StandardDeCalidad = negocio.StandardDeCalidadId.HasValue ? negocio.StandardDeCalidad.Descripcion : "", //
+                        StandardDeCalidad = negocio.StandardDeCalidad.Descripcion == "Cámara" || negocio.StandardDeCalidad.Descripcion == "Camara"
+                        ? "Camara" : "Fabrica", //
                         TipoAgenteCompraId = negocio.TipoAgenteCompraId,//dto
                         ZonaCupoId = zonasDB.Where(a => a.Descripcion == negocio.GrupoDeCompras.Descripcion).Select(a => a.Id).SingleOrDefault(),
                         ComercialId = (int)negocio.ComercialId,//
@@ -2475,6 +2485,14 @@ namespace Molinos.DataAgro.Business.Managers
             // Colección que almacena contratos que no pudieron tener cupos sugeridos
             List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
 
+            var calidadError = negocios.Where(x => x.StandardDeCalidad == "Cámara" || x.StandardDeCalidad == "Fábrica").ToList();
+
+            if (calidadError.Count != 0)
+            {
+
+                logger.Debug("ObtenerNegocios - Negocios con calidad Erronea : " + calidadError.Select(x => x.Id).ToString());
+            }
+
             // ========================================================================
             // FASE 1: OBTENER EXCLUSIONES Y FILTRADO INICIAL
             // ========================================================================
@@ -2540,7 +2558,8 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
                     FechaHastaOriginal = x.FechaHastaOriginal,
-                    StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
+                    StandardDeCalidad = x.StandardDeCalidad.Descripcion == "Cámara" || x.StandardDeCalidad.Descripcion == "Camara"
+                        ? "Camara" : "Fabrica",
                     TipoAgenteCompraId = x.TipoAgenteCompraId,
 
                     // Cantidad total de kilos del contrato (se usa como referencia)
@@ -3197,6 +3216,14 @@ namespace Molinos.DataAgro.Business.Managers
             // Colección que almacena contratos que no pudieron tener cupos sugeridos
             List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
 
+            var calidadError = negocios.Where(x => x.StandardDeCalidad == "Cámara" || x.StandardDeCalidad == "Fábrica").ToList();
+
+            if (calidadError.Count != 0)
+            {
+
+                logger.Debug("ObtenerNegociosAltaMasiva - Negocios con calidad Erronea : " + calidadError.Select(x => x.Id).ToString());
+            }
+
             // ========================================================================
             // FASE 1: OBTENER EXCLUSIONES Y FILTRADO INICIAL
             // ========================================================================
@@ -3267,7 +3294,8 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
                     FechaHastaOriginal = x.FechaHastaOriginal,
-                    StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
+                    StandardDeCalidad = x.StandardDeCalidad.Descripcion == "Cámara" || x.StandardDeCalidad.Descripcion == "Camara"
+                        ? "Camara" : "Fabrica",
                     TipoAgenteCompraId = x.TipoAgenteCompraId,
 
                     // Cantidad total de kilos del contrato (se usa como referencia)
@@ -3893,6 +3921,14 @@ namespace Molinos.DataAgro.Business.Managers
             // Colección que almacena contratos que no pudieron tener cupos sugeridos
             List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
 
+            var calidadError = negocios.Where(x => x.StandardDeCalidad == "Cámara" || x.StandardDeCalidad == "Fábrica").ToList();
+
+            if (calidadError.Count != 0)
+            {
+
+                logger.Debug("ObtenerNegociosAltaMasivaV2 - Negocios con calidad Erronea : " + calidadError.Select(x=>x.Id).ToString());
+            }
+
             // ========================================================================
             // FASE 1: OBTENER EXCLUSIONES Y FILTRADO INICIAL
             // ========================================================================
@@ -3963,7 +3999,8 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
                     FechaHastaOriginal = x.FechaHastaOriginal,
-                    StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
+                    StandardDeCalidad = x.StandardDeCalidad.Descripcion == "Cámara" || x.StandardDeCalidad.Descripcion == "Camara"
+                        ? "Camara" : "Fabrica",
                     TipoAgenteCompraId = x.TipoAgenteCompraId,
 
                     // Cantidad total de kilos del contrato (se usa como referencia)
