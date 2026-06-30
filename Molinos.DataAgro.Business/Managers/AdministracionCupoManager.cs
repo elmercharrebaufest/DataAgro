@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -107,7 +107,8 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaIngreso = solicitud.Fecha,
                         ZonaCupoId = solicitud.ZonaId,
                         ComercialId = solicitud.ComercialId,
-                        Calidad = solicitud.SugerenciaCupo.StandardDeCalidad,
+                        Calidad = solicitud.SugerenciaCupo.StandardDeCalidad == null ? null : solicitud.SugerenciaCupo.StandardDeCalidad == "Cámara"
+                        || solicitud.SugerenciaCupo.StandardDeCalidad == "Camara" ? "Camara" : "Fabrica",
                         Fason = false,
                         Destinatario = solicitud.SugerenciaCupo.Destinatario,
                         FechaGeneracion = DateTime.Now,
