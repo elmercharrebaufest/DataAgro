@@ -3067,11 +3067,12 @@ namespace Molinos.DataAgro.Business.Managers
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id,
                 ComisionistaId = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).ComisionistaId,
+                prioridad = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).prioridad,
 
             }).ToList();
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             CompletarEstadoAltaTemprana(listaOrdenada);
-            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(i=>i.prioridad).ThenBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
 
         private void CompletarEstadoAltaTemprana(List<BusquedaHome> listaOrdenada)
@@ -3114,7 +3115,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 CompletarEstadoAltaTemprana(listaOrdenada);
             }
-            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(i=> i.prioridad).ThenBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {

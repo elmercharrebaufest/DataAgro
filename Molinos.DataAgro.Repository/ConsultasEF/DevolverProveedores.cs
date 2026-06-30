@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
@@ -32,44 +32,111 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.agenteCompraId = agenteCompraId;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int corredor, List<int> equipo, int? agenteCompraId)
+        private static List<BusquedaHome> Query(
+            DbContext contexto,
+            string filtro,
+            int corredor,
+            List<int> equipo,
+            int? agenteCompraId)
         {
-            var resultado = (from Proveedor in contexto.Set<Proveedor>()
-                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
-                             from p in rgs.DefaultIfEmpty()
-                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
-                             from c in rg.DefaultIfEmpty()
-                             where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
-                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
-                             (corredor.Equals(0) ? Proveedor.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios && Proveedor.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales
-                             : corredor.Equals(1) ? (Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios || Proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales) : Proveedor.SegmentacionId > 0))
-                             group c by Proveedor into provs
-                             select new BusquedaHome
-                             {
-                                 Id = provs.Key.ProveedorId,
-                                 Cuit = provs.Key.CUIT,
-                                 RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
-                                 Alias = provs.Key.Alias,
-                                 ClasificacionId = provs.Key.ClasificacionCompraNetId,
-                                 RiesgoComercialSap = provs.Key.RiesgoComercialSap,
-                                 Deshabilitado = provs.Key.Deshabilitado,
-                                 Consignatario = provs.Key.Consignatario,
-                                 PlanCanje = provs.Key.PlanCanje,
-                                 Deshabilitar = false,
-                                 Color = "",
-                                 Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
-                                 ComisionistaId = provs.Key.ComisionistaId,
-                                 OperaConMATBA = provs.Key.OperaConMATBA,
-                             }).Distinct().Take(15).ToList();
+            ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto)
+                .ObjectContext.CommandTimeout = 180;
+
+            var espacioFiltro = " " + filtro;
+
+            var resultado =
+                (from proveedor in contexto.Set<Proveedor>()
+
+                 join contactoComercial in contexto.Set<ContactoComercial>()
+                     on proveedor.ProveedorId equals contactoComercial.ProveedorId into contactos
+                 from contactoComercial in contactos.DefaultIfEmpty()
+
+                 where
+                     (
+                         proveedor.CUIT.Contains(filtro) ||
+                         proveedor.RazonSocial.Contains(filtro) ||
+                         proveedor.Alias.StartsWith(filtro) ||
+                         proveedor.Alias.Contains(espacioFiltro) ||
+                         contactoComercial.Nombres.StartsWith(filtro) ||
+                         contactoComercial.Nombres.Contains(espacioFiltro) ||
+                         contactoComercial.Apellido.StartsWith(filtro) ||
+                         contactoComercial.Apellido.Contains(espacioFiltro)
+                     )
+                     &&
+                     (
+                         corredor == 0
+                             ? proveedor.SegmentacionId != (int)EnumSegmentacion.Corredor_Correacopios &&
+                               proveedor.SegmentacionId != (int)EnumSegmentacion.Corredores_tradicionales
+                         : corredor == 1
+                             ? proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                               proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales
+                         : proveedor.SegmentacionId > 0
+                     )
+
+                 select new BusquedaHome
+                 {
+                     Id = proveedor.ProveedorId,
+                     Cuit = proveedor.CUIT,
+                     Alias = proveedor.Alias,
+
+                     RazonSocial =
+                         proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                         proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales
+                             ? "COR - " +
+                               (!string.IsNullOrEmpty(proveedor.Alias)
+                                   ? proveedor.Alias + " - " + proveedor.RazonSocial
+                                   : proveedor.RazonSocial)
+                             : !string.IsNullOrEmpty(proveedor.Alias)
+                                 ? proveedor.Alias + " - " + proveedor.RazonSocial
+                                 : proveedor.RazonSocial,
+
+                     Corredor =
+                         proveedor.SegmentacionId == (int)EnumSegmentacion.Corredor_Correacopios ||
+                         proveedor.SegmentacionId == (int)EnumSegmentacion.Corredores_tradicionales
+                             ? "COR"
+                             : "",
+
+                     Filtro =
+                         filtro + "|" +
+                         (!string.IsNullOrEmpty(proveedor.Alias)
+                             ? proveedor.Alias + " - " + proveedor.RazonSocial
+                             : proveedor.RazonSocial)
+                         + " (" + proveedor.CUIT + ")",
+
+                     ClasificacionId = proveedor.ClasificacionCompraNetId,
+                     RiesgoComercialSap = proveedor.RiesgoComercialSap,
+                     Deshabilitado = proveedor.Deshabilitado,
+                     Consignatario = proveedor.Consignatario,
+                     PlanCanje = proveedor.PlanCanje,
+
+                     Deshabilitar = false,
+                     Color = "",
+
+                     ComisionistaId = proveedor.ComisionistaId,
+                     OperaConMATBA = proveedor.OperaConMATBA,
+
+                     CuposConRiesgo = proveedor.CuposConRiesgo,
+                     Segmentacion = proveedor.Segmentacion.Descripcion,
+                     Grupo = proveedor.Segmentacion.Grupo,
+                     SegmentacionId = proveedor.SegmentacionId,
+
+                     prioridad =
+                         proveedor.RazonSocial.Contains(filtro) ? 0 :
+                         contactoComercial.Nombres.Contains(filtro) ? 1 :
+                         contactoComercial.Apellido.Contains(filtro) ? 2 : 3
+                 })
+                .Distinct()
+                .Take(15)
+                .ToList();
 
             if (agenteCompraId == null)
             {
-                resultado = resultado.Where(x => x.OperaConMATBA != true).ToList();
+                resultado = resultado
+                    .Where(x => x.OperaConMATBA != true)
+                    .ToList();
             }
 
-            var lista = DevolverEstadoSisa(contexto, resultado, corredor, agenteCompraId);
-
-            return lista;
+            return DevolverEstadoSisa(contexto, resultado, corredor, agenteCompraId);
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)
