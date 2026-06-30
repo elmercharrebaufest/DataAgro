@@ -401,6 +401,7 @@
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />
+    <Compile Include="Jobs\ActualizarEstadoBoletosConfirmaHangfireJob.cs" />
     <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />
     <Compile Include="Jobs\AnulacionMasivaJob.cs" />
     <Compile Include="Jobs\ProcessCapacidadProductivaHangfireJob.cs" />

@@ -11,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         PENDIENTE_CONTROL = 1,
         PENDIENTE_OBLEA_BOLSA = 2,
         PENDIENTE_CODIGO_ARCA = 3,
-        CONTROLADO = 4
+        CONTROLADO = 4,
+        ANULADO = 5
     }
 }

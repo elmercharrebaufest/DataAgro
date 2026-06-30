@@ -1008,10 +1008,12 @@ namespace WebDataAgro.Controllers
             try
             {
                 var resultado = this._controlDeBoletosManager.GuardarBoletosParaModificarFechas(boletos);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Se guardaron los cambios correctamente";
                 return Json(new
                 {
-                    success = !resultado.HayError,
-                    errors = resultado.Errores
+                    success = success,
+                    message = mensaje
                 });
             }
             catch (Exception ex)
@@ -1026,28 +1028,55 @@ namespace WebDataAgro.Controllers
         }
         #endregion
 
-        [HttpGet]
-        public JsonResult ProcesarBoletosPendientesControl()
+        #region Eliminacion de control de boletos
+        [HttpPost]
+        public JsonResult EliminarControlDeBoletos(EliminarControlDeBoletoDto eliminarControlDeBoleto)
         {
             try
             {
-                var tracking = _controlDeBoletosManager.ProcesarBoletosPendientesControl();
-                var result = new
+                var resultado = this._controlDeBoletosManager.EliminarControlDeBoletos(eliminarControlDeBoleto);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Eliminación realizada correctamente";
+                return Json(new
                 {
-                    Data = tracking
-                };
-                return Json(result, JsonRequestBehavior.AllowGet);
+                    success = success,
+                    message = mensaje
+                });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error en EliminarControlDeBoletos: {ex.Message}");
                 return Json(new
                 {
-                    Data = new List<object>(),
-                    Total = 0,
-                    Errors = "Error al cargar datos: " + ex.Message
+                    success = false,
+                    errors = new[] { new { Message = "Error al eliminar control de boletos: " + ex.Message } }
                 });
             }
         }
+        #endregion
+
+        //[HttpGet]
+        //public JsonResult ProcesarBoletosPendientesControl()
+        //{
+        //    try
+        //    {
+        //        var tracking = _controlDeBoletosManager.ProcesarBoletosPendientesControl();
+        //        var result = new
+        //        {
+        //            Data = tracking
+        //        };
+        //        return Json(result, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new
+        //        {
+        //            Data = new List<object>(),
+        //            Total = 0,
+        //            Errors = "Error al cargar datos: " + ex.Message
+        //        });
+        //    }
+        //}
 
 
 

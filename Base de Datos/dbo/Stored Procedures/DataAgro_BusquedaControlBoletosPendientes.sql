@@ -60,8 +60,9 @@ BEGIN
             WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 1 THEN 'Alta Borrador'
             WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 0 THEN 'Alta Definitiva'
             ELSE ''
-        END                                                                      AS TipoAltaConfirma
-
+        END                                                                      AS TipoAltaConfirma,
+        (case when bc.Id = 1 then confirma.Version else boleto.Version end)                 AS Version,
+        (case when bc.Id = 1 then confirma.FechaGeneracion else boleto.FechaGeneracion end) AS FechaGeneracion 
     FROM ControlDeBoletos cb
 
     INNER JOIN Negocio n
@@ -99,7 +100,19 @@ BEGIN
         WHERE s.ControlDeBoletosId = cb.Id
         ORDER BY s.Id DESC
     ) seg
+    OUTER APPLY (
+        SELECT TOP 1 s.Version, s.FechaGeneracion
+        FROM Boleto s
+        WHERE s.NegocioId = cb.NegocioId
+        ORDER BY s.FechaGeneracion DESC
+    ) boleto
 
+    OUTER APPLY (
+        SELECT TOP 1 s.Version, s.FechaGeneracion
+        FROM Confirma s
+        WHERE s.NegocioId = cb.NegocioId
+        ORDER BY s.FechaGeneracion DESC
+    ) confirma 
     WHERE
         -- Filtro base de estado
         (@EstadoControlId IS NULL OR cb.ControlDeBoletosEstadoId = @EstadoControlId)

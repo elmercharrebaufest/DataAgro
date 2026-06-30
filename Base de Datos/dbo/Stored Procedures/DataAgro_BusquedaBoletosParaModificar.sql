@@ -32,7 +32,7 @@ BEGIN
         seg.BolsaSellado,
         seg.Id AS SeguimientoBoletoId,
         seg.FechaRecepcionBoleto AS FechaRecepBoleto,
-        seg.FechaEnvioFirmas AS FechaEnviadoFirma,
+        seg.FechaEnvioFirma AS FechaEnviadoFirma,
         seg.FechaEnvioBolsa,
         seg.FechaEnvioAfip,
         seg.FechaRecepcionFirma AS FechaRecibFirma,

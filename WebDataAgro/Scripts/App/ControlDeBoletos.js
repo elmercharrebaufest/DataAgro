@@ -11,7 +11,7 @@ var ControlBoletos = (function () {
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
             getBoletos: "/ControlDeBoletos/GetBoletos",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
-            exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel"
+            exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel",
         }
     };
 
@@ -347,6 +347,7 @@ var ControlBoletos = (function () {
                                         Material: { type: "string" },
                                         ControlDeBoletosEstado: { type: "string" },
                                         FechaCreacion: { type: "date" },
+                                        FechaGeneracion: {type: "date"},
                                         Proveedor: { type: "string" },
                                         Comercial: { type: "string" },
                                     },
@@ -426,6 +427,18 @@ var ControlBoletos = (function () {
                                 width: 120,
                                 template:
                                     "<span class='font-weight-bold'>#=ContratoSAP#</span>",
+                            },
+                            {
+                                field: "Version",
+                                title: "Version",
+                                width: 80
+                            },
+                            {
+                                field: "FechaGeneracion",
+                                title: "Fecha Generación",
+                                width: 120,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaGeneracion) #",
                             },
                             {
                                 field: "Material",
@@ -590,6 +603,7 @@ var ControlBoletos = (function () {
             form.submit();
             document.body.removeChild(form);
         },
+
         inicializarFechas: function () {
             const hoy = new Date();
             const desde = new Date(hoy);
@@ -608,6 +622,7 @@ var ControlBoletos = (function () {
                 });
             });
         },
+
         generarBotonesAccion: function (data) {
 
             var botones = [];
@@ -622,7 +637,7 @@ var ControlBoletos = (function () {
                 data.Id + ',SeguimientoBoletoId:' + (data.SeguimientoBoletoId || 0) +
                 ',PreCertificacionId:' + (data.PreCertificacionId || 0) +
                 ',NegocioId:' + data.NegocioId +
-                '})" title="Gestión Control"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
+                '})" title="Gestión de control de boletos"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
             );
 
             if (data.EsConfirma) {
