@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);
         ControlDeBoletosDatosContratoDto ObtenerDatosDeContrato(int negocioId);
-        Resultado ProcesarBoletosPendientesControl();
+        Resultado ActualizarEstadoBoletosConfirma();
         Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionDto controlDeBoletosPreCertificacion);
         ControlDeBoletosPreCertificacionDto ObtenerDatosPreCertificacion(int datosPreCertificacionId);
         Resultado RegistroDatosDeSeguimiento(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento);
@@ -39,5 +39,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<ControlDeBoletosParaModificarDto> GetBoletosParaModificar(ControlDeBoletosParaModificarFiltroDto filtros);
         Resultado GuardarBoletosParaModificarFechas(List<ControlDeBoletosParaModificarDto> boletos);
         string VerificarDuplicidadObleaCodigoArca(int controlDeBoletosId, string numeroOblea, string codigoArca);
+        Resultado EliminarControlDeBoletos(EliminarControlDeBoletoDto eliminarControlDeBoleto);
     }
 }

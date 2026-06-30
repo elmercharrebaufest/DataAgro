@@ -347,6 +347,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosReporteSeguimientoConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoTrackingDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\EliminarControlDeBoletoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\RegistroDatosCertificacionControlDeBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\SeguimientoControlDeBoletosDto.cs" />

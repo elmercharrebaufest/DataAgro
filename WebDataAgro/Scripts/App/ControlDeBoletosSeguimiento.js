@@ -503,9 +503,9 @@ var ControlDeBoletosSeguimiento = (function () {
             controlBoleto.val(response.BoletoSapId).trigger('change');
             controlCaracterBoleto.val(response.BoletoSapCaracter).trigger('change');
             controlRechazadoAfip.val(response.RechazadoAfip);
-
+            console.log('response-->>', response);
             setKendoDate(controlFechaRecepcionBoleto, response.FechaRecepcionBoleto);
-            setKendoDate(controlFechaEnvioFirma, response.FechaEnvioFirmas);
+            setKendoDate(controlFechaEnvioFirma, response.FechaEnvioFirma);
             setKendoDate(controlFechaEnvioBolsa, response.FechaEnvioBolsa);
             setKendoDate(controlFechaEnvioAfip, response.FechaEnvioAfip);
 

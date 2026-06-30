@@ -36,6 +36,10 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int? BolsaCompraNetId { get; set; }
         public string BolsaCompraNet { get; set; }
 
+        //Versiones Boleto
+        public int? Version { get; set; }
+        public DateTime? FechaGeneracion { get; set; }
+
         // Campos BIT para control de procesos
         public bool ControlIniciado { get; set; }
         public bool ControlFinalizado { get; set; }

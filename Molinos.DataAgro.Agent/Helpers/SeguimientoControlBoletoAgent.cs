@@ -59,7 +59,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     ImObsCtrlBoleto2 = ValorPorDefecto(dto.ObsCtrlBoleto2),
                     ImRechazadoAfip = ValorPorDefecto(dto.RechazadoAfip),
                     ImTipoBoleto = ValorPorDefecto(dto.TipoBoleto),
-                    ImUsuario = ValorPorDefecto(dto.Usuario)
+                    ImUsuario = ValorPorDefecto(dto.Usuario),
+                    ImFijacion = string.Empty
                 };
                 logger.Debug(request.ToXml());
 

@@ -4,6 +4,7 @@ var ControlDeBoletosGestion = (function () {
     var config = {
         modalId: "#modalGestionControlBoleto",
         getContrato: "/ControlDeBoletos/ObtenerDatosDeContrato",
+        eliminarControlDeBoletos: "/ControlDeBoletos/EliminarControlDeBoletos",
     };
 
     var state = {
@@ -63,9 +64,6 @@ var ControlDeBoletosGestion = (function () {
         });
 
         $("#collapseSeguimiento").on("shown.bs.collapse", async function () {
-            // state.EsCartaOferta = true;
-            // state.OperaSinOblea = true;
-            // state.EsSinBoleto = true;
             await ControlDeBoletosSeguimiento.inicializar(
                 state.ControlDeBoletosId,
                 state.OperaSinOblea,
@@ -73,6 +71,29 @@ var ControlDeBoletosGestion = (function () {
                 state.EsSinBoleto,
                 state.BoletoCompraNet
             );
+        });
+        $("#btnEliminarControlBoleto").on("click", async function () {
+            BlockUi('Eliminando...');
+
+            try {
+                Confirma('¿Desea eliminar todo el control de boletos para el contrato ' + state.ContratoSAP + "?", async function () {
+                    var request = {
+                        ControlDeBoletosId: state.ControlDeBoletosId,
+                        ContratoSAP: state.ContratoSAP
+                    };
+                    var response = await MSExecuteOnServerAsync(config.eliminarControlDeBoletos, request);
+                    if (response.success) {
+                        MensInfo(response.message);
+                    } else {
+                        MensErr(response.message);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al guardar:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
         });
 
     }
@@ -144,9 +165,9 @@ var ControlDeBoletosGestion = (function () {
 
     return {
         abrir: function (params) {
-            state.ControlDeBoletosId  = params.ControlDeBoletosId  || 0;
+            state.ControlDeBoletosId = params.ControlDeBoletosId || 0;
             state.SeguimientoBoletoId = params.SeguimientoBoletoId || 0;
-            state.NegocioId           = params.NegocioId           || 0;
+            state.NegocioId = params.NegocioId || 0;
 
             var parametros = "?controlDeBoletosId=" + state.ControlDeBoletosId + "&seguimientoBoletoId=" + state.SeguimientoBoletoId + "&negocioId=" + state.NegocioId;
             var url = "/ControlDeBoletos/_GestionControlBoleto" + parametros;

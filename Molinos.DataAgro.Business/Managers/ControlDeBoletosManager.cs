@@ -33,8 +33,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
         private readonly IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent;
         private readonly ILogDataAgroManager logDataAgroManager;
-        public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, 
-                                       IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent, 
+        public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager,
+                                       IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent,
                                        ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
                                        IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent,
                                        IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent,
@@ -113,10 +113,10 @@ namespace Molinos.DataAgro.Business.Managers
                     query = query.Where(x => x.seg != null && x.seg.FechaRecepcionBoleto.HasValue && x.seg.FechaRecepcionBoleto.Value <= filtros.FechaRecepBoletoHasta.Value);
 
                 if (filtros.FechaEnviadoFirmaDesde.HasValue)
-                    query = query.Where(x => x.seg != null && x.seg.FechaEnvioFirmas.HasValue && x.seg.FechaEnvioFirmas.Value >= filtros.FechaEnviadoFirmaDesde.Value);
+                    query = query.Where(x => x.seg != null && x.seg.FechaEnvioFirma.HasValue && x.seg.FechaEnvioFirma.Value >= filtros.FechaEnviadoFirmaDesde.Value);
 
                 if (filtros.FechaEnviadoFirmaHasta.HasValue)
-                    query = query.Where(x => x.seg != null && x.seg.FechaEnvioFirmas.HasValue && x.seg.FechaEnvioFirmas.Value <= filtros.FechaEnviadoFirmaHasta.Value);
+                    query = query.Where(x => x.seg != null && x.seg.FechaEnvioFirma.HasValue && x.seg.FechaEnvioFirma.Value <= filtros.FechaEnviadoFirmaHasta.Value);
 
                 if (filtros.FechaRecibFirmaDesde.HasValue)
                     query = query.Where(x => x.seg != null && x.seg.FechaRecepcionFirma.HasValue && x.seg.FechaRecepcionFirma.Value >= filtros.FechaRecibFirmaDesde.Value);
@@ -182,7 +182,7 @@ namespace Molinos.DataAgro.Business.Managers
                     SeguimientoBoletoId = x.seg != null ? (int?)x.seg.Id : null,
                     FechaCertificacion = x.pre != null ? (DateTime?)x.pre.FechaCertificacion : null,
                     FechaVencimientoCertificacion = x.pre != null ? (DateTime?)x.pre.FechaVencimiento : null,
-                    FechaEnviadoFirma = x.seg != null ? x.seg.FechaEnvioFirmas : null,
+                    FechaEnviadoFirma = x.seg != null ? x.seg.FechaEnvioFirma : null,
                     FechaEnvio = null,
                     FechaEnvioAfip = x.seg != null ? x.seg.FechaEnvioAfip : null,
                     FechaEnvioBolsa = x.seg != null ? x.seg.FechaEnvioBolsa : null,
@@ -244,7 +244,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<TipoOblea> GetTipoOblea()
         {
-            return this.repositorio.Listar<TipoOblea>().OrderBy(x=> x.Descripcion).ToList();
+            return this.repositorio.Listar<TipoOblea>().OrderBy(x => x.Descripcion).ToList();
         }
         public List<BoletoSapDto> GetBoletoSap(int boletoCompraNetId)
         {
@@ -423,22 +423,22 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultado;
                 }
 
-                var provincia      = repositorio.Obtener<Provincia>(dto.ProvinciaId);
-                var campana        = repositorio.Obtener<Campaña>(dto.CosechaId);
-                var procedencia    = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
-                var clasificacion  = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
-                var ahora          = DateTime.Now;
+                var provincia = repositorio.Obtener<Provincia>(dto.ProvinciaId);
+                var campana = repositorio.Obtener<Campaña>(dto.CosechaId);
+                var procedencia = repositorio.Obtener<Localidad>(dto.ProcedenciaId);
+                var clasificacion = repositorio.Obtener<ClasificacionCompraNet>(dto.ClasificacionId);
+                var ahora = DateTime.Now;
 
                 var controlDeBoletosModificarContrato = new ControlDeBoletosModificarContratoDto
                 {
-                    Cosecha       = campana.Descripcion,
-                    Contrato      = negocio.ContratoSAP,
+                    Cosecha = campana.Descripcion,
+                    Contrato = negocio.ContratoSAP,
                     Clasificacion = clasificacion.Descripcion,
-                    Fecha         = ahora.ToString("yyyy-MM-dd"),
-                    Hora          = ahora.ToString("HH:mm:ss"),
-                    Procedencia   = procedencia.CodLocalidad,
-                    Provincia     = provincia.ProvinciaId.ToString(),
-                    Usuario       = dto.Usuario
+                    Fecha = ahora.ToString("yyyy-MM-dd"),
+                    Hora = ahora.ToString("HH:mm:ss"),
+                    Procedencia = procedencia.CodLocalidad,
+                    Provincia = provincia.ProvinciaId.ToString(),
+                    Usuario = dto.Usuario
                 };
 
                 modificacionContratoControlBoletoAgent.ModificarContrato(controlDeBoletosModificarContrato);
@@ -510,7 +510,7 @@ namespace Molinos.DataAgro.Business.Managers
                 seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosSeguimiento.BolsaSellado;
                 seguimientoControlDeBoletos.FechaRecepcionBoleto = controlDeBoletosSeguimiento.FechaRecepcionBoleto;
 
-                seguimientoControlDeBoletos.FechaEnvioFirmas = controlDeBoletosSeguimiento.FechaEnvioFirmas;
+                seguimientoControlDeBoletos.FechaEnvioFirma = controlDeBoletosSeguimiento.FechaEnvioFirma;
                 seguimientoControlDeBoletos.FechaEnvioBolsa = controlDeBoletosSeguimiento.FechaEnvioBolsa;
                 seguimientoControlDeBoletos.FechaEnvioAfip = controlDeBoletosSeguimiento.FechaEnvioAfip;
 
@@ -624,7 +624,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter ?? string.Empty,
                 Usuario = string.Empty,
                 FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
-                FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas?.ToString("yyyy-MM-dd"),
+                FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma?.ToString("yyyy-MM-dd"),
                 FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd"),
                 FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa?.ToString("yyyy-MM-dd"),
                 FechaRecepcionFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma?.ToString("yyyy-MM-dd"),
@@ -639,9 +639,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void PersistirDatosDeSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
-            var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x=> x.ControlDeBoletosId == controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
+            var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
 
-            if (datosSeguimiento!=null)
+            if (datosSeguimiento != null)
             {
                 controlDeBoletosDatosSeguimiento.Id = datosSeguimiento.Id;
                 ActualizarSeguimientoLocal(controlDeBoletosDatosSeguimiento);
@@ -660,7 +660,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
             datosSeguimiento.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
             datosSeguimiento.FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto;
-            datosSeguimiento.FechaEnvioFirmas = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas;
+            datosSeguimiento.FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma;
             datosSeguimiento.FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa;
             datosSeguimiento.FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip;
             datosSeguimiento.FechaRecepcionFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma;
@@ -685,7 +685,7 @@ namespace Molinos.DataAgro.Business.Managers
                 BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId),
                 BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
                 FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto,
-                FechaEnvioFirmas = controlDeBoletosDatosSeguimiento.FechaEnvioFirmas,
+                FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma,
                 FechaEnvioBolsa = controlDeBoletosDatosSeguimiento.FechaEnvioBolsa,
                 FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip,
                 FechaRecepcionFirma = controlDeBoletosDatosSeguimiento.FechaRecepcionFirma,
@@ -740,7 +740,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 mensaje = "Ya existe el numero de oblea en otro contrato.";
             }
-            else if(duplicidadCodigoArca)
+            else if (duplicidadCodigoArca)
             {
                 mensaje = "Ya existe el codigo arca en otro contrato.";
             }
@@ -784,7 +784,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var controlDeBoletosId = controlDeBoletosPreCertificacion.ControlDeBoletosId;
 
                 // Códigos de tipo oblea presentes en el request
-                var codigosEnRequest = controlDeBoletosPreCertificacion.Detalle!=null ? controlDeBoletosPreCertificacion.Detalle
+                var codigosEnRequest = controlDeBoletosPreCertificacion.Detalle != null ? controlDeBoletosPreCertificacion.Detalle
                     .Select(d => d.CodigoTipoOblea)
                     .ToHashSet() : new HashSet<string>();
 
@@ -793,6 +793,8 @@ namespace Molinos.DataAgro.Business.Managers
                     x => x.ControlDeBoletosId == controlDeBoletosId);
 
                 var ahora = DateTime.Now;
+
+                bool hayCambiosEnBd = false;
 
                 // ── 1. Upsert: crear o actualizar los registros que vienen en el request ──
                 if (controlDeBoletosPreCertificacion.Detalle != null)
@@ -814,9 +816,8 @@ namespace Molinos.DataAgro.Business.Managers
                             existente.TipoObleaId = tipoOblea.Id;
                             existente.Rechazado = item.Rechazado ?? existente.Rechazado;
                             existente.FechaModificacion = ahora;
-                            repositorio.GuardarCambios();
-                            EstablecerEstadoBoleto(existente.ControlDeBoletosId);
                             this.logDataAgroManager.LogCambiosControlBoletos(item, TipoAccionLogDataAgro.Modificar, existente.Id, "Modificacion de Certificacion - Control de Boletos");
+                            hayCambiosEnBd = true;
                         }
                         else
                         {
@@ -833,12 +834,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 FechaCreacion = ahora
                             };
                             repositorio.Agregar(nuevo);
-                            repositorio.GuardarCambios();
                             this.logDataAgroManager.LogCambiosControlBoletos(item, TipoAccionLogDataAgro.Crear, nuevo.Id, "Registro de Certificacion - Control de Boletos");
-                            EstablecerEstadoBoleto(nuevo.ControlDeBoletosId);
+                            hayCambiosEnBd = true;
                         }
                     }
                 }
+
                 // ── 2. Eliminar registros en BD que ya no están en el request ──
                 // Recargar sin navegaciones para evitar conflictos
                 var registrosActuales = repositorio.Listar<ControlDeBoletosPreCertificacion>(
@@ -868,7 +869,17 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 if (registrosAEliminar.Any())
+                {
+                    hayCambiosEnBd = true;
+                }
+
+                if (hayCambiosEnBd)
+                {
                     repositorio.GuardarCambios();
+                }
+
+                // Ejecutar el estado al final, con la persistencia ya aplicada completa.
+                EstablecerEstadoBoleto(controlDeBoletosId);
 
                 // ── 3. Sincronizar con SAP los registros vigentes ──
                 var registrosVigentes = repositorio.Listar<ControlDeBoletosPreCertificacion>(
@@ -1032,7 +1043,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return Encoding.UTF8.GetString(ms.ToArray());
             }
         }
-        public Resultado ProcesarBoletosPendientesControl()
+        public Resultado ActualizarEstadoBoletosConfirma()
         {
             var oResultado = new Resultado();
             try
@@ -1040,10 +1051,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var boletosPendientes = repositorio.Listar<ControlDeBoletos>(x => x.EsConfirma == true &&
                                                                                   x.EsConfirmaAltaBorrador == false &&
                                                                                   x.AltaIdDocumentoConfirma > 0 &&
-                                                                                  (x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTRATO_PENDIENTE_DE_CONTROL ||
-                                                                                   x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.CONTROLADO ||
-                                                                                   x.EstadoConfirmaId == (int)EnumConfirmaEstadoDocumento.EN_FIRMA
-                                                                                  )
+                                                                                  (x.EstadoConfirmaId != (int)EnumConfirmaEstadoDocumento.EN_FIRMA && x.ControlDeBoletosEstadoId != (int)EnumControlDeBoletosEstado.ANULADO)
                                                                                   );
                 if (boletosPendientes.Count > 0)
                 {
@@ -1064,21 +1072,21 @@ namespace Molinos.DataAgro.Business.Managers
                                     var controlDeBoletoTracking = new ControlDeBoletoTracking()
                                     {
                                         ControlDeBoletosId = boleto.Id,
-                                        CUIT              = documento.EnPoderDe?.CUIT.ToString(),
-                                        RazonSocial       = documento.EnPoderDe?.RazonSocial,
+                                        CUIT = documento.EnPoderDe?.CUIT.ToString(),
+                                        RazonSocial = documento.EnPoderDe?.RazonSocial,
                                         EstadoDocumentoId = documento.ConsultaEstadoDocumento,
-                                        Acciones          = ToJson(documento.Acciones),
-                                        FechaCreacion     = DateTime.Now
+                                        Acciones = ToJson(documento.Acciones),
+                                        FechaCreacion = DateTime.Now
                                     };
                                     this.repositorio.Agregar(controlDeBoletoTracking);
                                     this.repositorio.GuardarCambios();
                                 }
                                 else
                                 {
-                                    existe.CUIT              = documento.EnPoderDe?.CUIT.ToString();
-                                    existe.RazonSocial       = documento.EnPoderDe?.RazonSocial;
+                                    existe.CUIT = documento.EnPoderDe?.CUIT.ToString();
+                                    existe.RazonSocial = documento.EnPoderDe?.RazonSocial;
                                     existe.EstadoDocumentoId = documento.ConsultaEstadoDocumento;
-                                    existe.Acciones          = ToJson(documento.Acciones);
+                                    existe.Acciones = ToJson(documento.Acciones);
                                     this.repositorio.GuardarCambios();
                                 }
 
@@ -1238,7 +1246,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.BolsaSellado);
 
                         seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
-                        seguimiento.FechaEnvioFirmas = boleto.FechaEnviadoFirma;
+                        seguimiento.FechaEnvioFirma = boleto.FechaEnviadoFirma;
                         seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
                         seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
                         seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
@@ -1282,5 +1290,113 @@ namespace Molinos.DataAgro.Business.Managers
         }
         #endregion
 
+        #region Eliminar Control de Boletos
+        
+        public Resultado EliminarControlDeBoletos(EliminarControlDeBoletoDto eliminarControlDeBoleto)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var datosPreCertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == eliminarControlDeBoleto.ControlDeBoletosId);
+                var datosSeguimiento = repositorio.Listar<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == eliminarControlDeBoleto.ControlDeBoletosId);
+
+                NotificarEliminacionPreCertificacionesEnSap(datosPreCertificacion, eliminarControlDeBoleto.ContratoSAP);
+                NotificarEliminacionSeguimientosEnSap(datosSeguimiento, eliminarControlDeBoleto.ContratoSAP);
+
+                RemoverYGuardar(datosPreCertificacion);
+                RemoverYGuardar(datosSeguimiento);
+
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+
+        private void NotificarEliminacionPreCertificacionesEnSap(List<ControlDeBoletosPreCertificacion> certificaciones, string contratoSap)
+        {
+            foreach (var certificacion in certificaciones)
+            {
+                var tipoObleaCodigo = certificacion.TipoOblea?.Codigo;
+                if (string.IsNullOrWhiteSpace(tipoObleaCodigo))
+                {
+                    tipoObleaCodigo = repositorio.Obtener<TipoOblea>(certificacion.TipoObleaId)?.Codigo ?? string.Empty;
+                }
+
+                var datosCertificacionDetalle = new RegistroDatosCertificacionControlDeBoletosDetalleDto
+                {
+                    Bolsa = string.Empty,
+                    FeCertificacion = string.Empty,
+                    FeVencCerti = string.Empty,
+                    Oblea = string.Empty,
+                    Rechazado = string.Empty,
+                    Tipo = tipoObleaCodigo
+                };
+
+                var datosCertificacionCabecera = new RegistroDatosCertificacionControlDeBoletosDto
+                {
+                    Contrato = contratoSap,
+                    Usuario = string.Empty,
+                    Fecha = string.Empty,
+                    Hora = string.Empty,
+                    Fijacion = string.Empty,
+                    Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalle }
+                };
+
+                datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabecera);
+            }
+        }
+
+        private void NotificarEliminacionSeguimientosEnSap(List<ControlDeBoletosSeguimiento> seguimientos, string contratoSap)
+        {
+            foreach (var _ in seguimientos)
+            {
+                seguimientoControlBoletoAgent.RegistrarSeguimiento(CrearSeguimientoVacioParaSap(contratoSap));
+            }
+        }
+
+        private static SeguimientoControlDeBoletosDto CrearSeguimientoVacioParaSap(string contratoSap)
+        {
+            return new SeguimientoControlDeBoletosDto
+            {
+                Bolsa = string.Empty,
+                BolsaSellado = string.Empty,
+                Contrato = contratoSap,
+                FechaEnvioFirma = string.Empty,
+                FechaEnvioSellado = string.Empty,
+                FechaEnvioAfip = string.Empty,
+                FechaEnvioBolsa = string.Empty,
+                FechaRecepBoleto = string.Empty,
+                FechaRecepcionFirma = string.Empty,
+                FechaRecepcionAfip = string.Empty,
+                FechaRecepcionBolsa = string.Empty,
+                FecAcopio = string.Empty,
+                Fecha = string.Empty,
+                Hora = string.Empty,
+                ObsCtrlBoleto = string.Empty,
+                ObsCtrlBoleto2 = string.Empty,
+                RechazadoAfip = string.Empty,
+                TipoBoleto = string.Empty,
+                Usuario = string.Empty
+            };
+        }
+
+        private void RemoverYGuardar<T>(List<T> entidades) where T : class
+        {
+            if (entidades == null || !entidades.Any())
+                return;
+
+            foreach (var entidad in entidades)
+            {
+                repositorio.Remover(entidad);
+            }
+
+            repositorio.GuardarCambios();
+        }
+        
+        #endregion
     }
 }
