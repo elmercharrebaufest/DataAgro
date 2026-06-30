@@ -346,7 +346,6 @@ var ControlBoletos = (function () {
                                         ContratoSAP: { type: "string" },
                                         Material: { type: "string" },
                                         ControlDeBoletosEstado: { type: "string" },
-                                        FechaCreacion: { type: "date" },
                                         FechaGeneracion: {type: "date"},
                                         Proveedor: { type: "string" },
                                         Comercial: { type: "string" },
@@ -454,13 +453,6 @@ var ControlBoletos = (function () {
                                 field: "ControlDeBoletosEstado",
                                 title: "Estado",
                                 width: 100,
-                            },
-                            {
-                                field: "FechaCreacion",
-                                title: "Fecha Creación",
-                                width: 120,
-                                format: "{0:dd/MM/yyyy}",
-                                template: "#= formatearFecha(FechaCreacion) #",
                             },
                             {
                                 field: "Proveedor",
