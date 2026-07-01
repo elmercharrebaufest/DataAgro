@@ -15,6 +15,8 @@ using System.Linq.Dynamic;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
 using Molinos.DataAgro.Entities.Dto;
+using WebDataAgro.Atributos;
+using WebDataAgro.Core;
 
 namespace WebDataAgro.Controllers
 {
@@ -49,6 +51,7 @@ namespace WebDataAgro.Controllers
         }
 
         #region Vistas Principales
+        [Autorizacion(PermisosDataAgro.Control_de_Boletos)]
         public ActionResult Index()
         {
             try

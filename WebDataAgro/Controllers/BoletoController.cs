@@ -51,6 +51,7 @@ namespace WebDataAgro.Controllers
             _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
 
+        [Autorizacion(PermisosDataAgro.GenerarBoleto)]
         public ActionResult Index()
         {
             CompletarVista();
@@ -58,6 +59,7 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpGet]
+        [Autorizacion(PermisosDataAgro.GenerarBoleto)]
         public ActionResult GenerarBoletos()
         {
             CompletarVista();

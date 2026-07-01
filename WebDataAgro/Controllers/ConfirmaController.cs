@@ -49,6 +49,7 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
+        [Autorizacion(PermisosDataAgro.Confirma)]
         public ActionResult GenerarConfirma()
         {
             CargarSeleccionables();
