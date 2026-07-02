@@ -1114,7 +1114,7 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Metodo para establecer el estado de Boleto
-        private void EstablecerEstadoBoleto(int controlDeBoletoId)
+        public void EstablecerEstadoBoleto(int controlDeBoletoId)
         {
             var controlBoleto = repositorio.Obtener<ControlDeBoletos>(controlDeBoletoId);
 
@@ -1210,7 +1210,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         #endregion
 
-        #region Reporte Seguimiento Boletos
+        #region Modificacion Masiva de Boletos
         public List<ControlDeBoletosParaModificarDto> GetBoletosParaModificar(ControlDeBoletosParaModificarFiltroDto filtros)
         {
             var query = new TraerBoletosParaModificar(filtros ?? new ControlDeBoletosParaModificarFiltroDto());
@@ -1396,7 +1396,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             repositorio.GuardarCambios();
         }
-        
+
         #endregion
+
     }
 }

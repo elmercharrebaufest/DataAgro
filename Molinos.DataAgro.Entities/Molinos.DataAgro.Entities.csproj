@@ -338,11 +338,13 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosSeguimientoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosDatosSeguimientoServiceDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificarContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosParaModificarDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosParaModificarFiltroDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosPreCertificacionServiceDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosRegistrarAccionesDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosReporteSeguimientoConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoDto.cs" />
