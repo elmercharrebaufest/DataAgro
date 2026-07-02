@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Autofac.Integration.Mvc;
 using Molinos.DataAgro.Repository;
 using System;
@@ -16,6 +16,7 @@ namespace WebDataAgro.App_Start
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
 
             builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
+            builder.RegisterType<DataAgroCBServices>().As<IDataAgroCBServices>().InstancePerLifetimeScope();
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
             builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerLifetimeScope();
             builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerLifetimeScope();

@@ -408,6 +408,7 @@
     <Compile Include="Managers\ContactoComercialAuditoriaManager.cs" />
     <Compile Include="Managers\ControlDeBoletosEstadoManager.cs" />
     <Compile Include="Managers\ControlDeBoletosManager.cs" />
+    <Compile Include="Managers\ControlDeBoletosSAPManager.cs" />
     <Compile Include="Managers\CupoNoPropioManager.cs" />
     <Compile Include="Managers\FAQManager.cs" />
     <Compile Include="Managers\HabilitacionBoletoManager.cs" />
