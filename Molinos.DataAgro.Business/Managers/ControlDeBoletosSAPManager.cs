@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,18 @@ namespace Molinos.DataAgro.Business.Managers
 
         private static DateTime? ConvertirFechaNullable(string fecha)
         {
-            return string.IsNullOrWhiteSpace(fecha) ? (DateTime?)null : Convert.ToDateTime(fecha);
+            if (string.IsNullOrWhiteSpace(fecha))
+                return null;
+
+            DateTime resultado;
+            return DateTime.TryParseExact(
+                fecha,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out resultado)
+                ? resultado
+                : (DateTime?)null;
         }
 
         #region Metodos para servicio SAP
@@ -217,11 +229,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var controlDeBoletosId = controlDeBoletos.Id;
                 var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
-                var boletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter;
+                var tipoBoletoSAP = controlDeBoletosDatosSeguimiento.TipoBoletoSAP;
                 var bolsaCodigoSap = controlDeBoletosDatosSeguimiento.Bolsa;
-                var boletoSap = string.IsNullOrWhiteSpace(boletoSapCaracter)
+                var boletoSap = string.IsNullOrWhiteSpace(tipoBoletoSAP)
                     ? null
-                    : repositorio.Obtener<BoletoSap>(x => x.Caracter.Contains(boletoSapCaracter));
+                    : repositorio.Obtener<BoletoSap>(x => x.Tipo.Contains(tipoBoletoSAP));
                 var bolsaCompraNet = string.IsNullOrWhiteSpace(bolsaCodigoSap)
                     ? null
                     : repositorio.Obtener<BolsaCompraNet>(b => b.CodigoSap == bolsaCodigoSap);
