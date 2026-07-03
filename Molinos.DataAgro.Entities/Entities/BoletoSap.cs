@@ -11,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
+        public string Tipo { get; set; }
         public string Caracter { get; set; }
         public bool? Confirma { get; set; }
         public bool? CartaOferta { get; set; }

@@ -1351,11 +1351,11 @@ IF NOT EXISTS (SELECT 1 FROM BoletoSap WHERE Descripcion = 'Observado')
     INSERT INTO BoletoSap (Descripcion, Caracter)
     VALUES ('Observado', 'O');
 
-Update BoletoSap set Confirma = 1,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Confirma'
-Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 1,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Físico'
-Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Ninguno'
-Update BoletoSap set Confirma = 0,CartaOferta = 1,Fisico = 0,Ninguno = 1,SinBoleto = 0 where Descripcion = 'Carta Oferta'
-Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Sin Boleto'
-Update BoletoSap set Confirma = 1,CartaOferta = 1,Fisico = 1,Ninguno = 1,SinBoleto = 1 where Descripcion = 'Observado'
+Update BoletoSap set Confirma = 1,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0, Tipo='C' where Descripcion = 'Confirma'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 1,Ninguno = 1,SinBoleto = 0, Tipo='F' where Descripcion = 'Físico'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 0, Tipo='N' where Descripcion = 'Ninguno'
+Update BoletoSap set Confirma = 0,CartaOferta = 1,Fisico = 0,Ninguno = 1,SinBoleto = 0, Tipo='K' where Descripcion = 'Carta Oferta'
+Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBoleto = 1, Tipo='S' where Descripcion = 'Sin Boleto'
+Update BoletoSap set Confirma = 1,CartaOferta = 1,Fisico = 1,Ninguno = 1,SinBoleto = 1, Tipo='O' where Descripcion = 'Observado'
 Update BoletoSap set Caracter = 'C - F - K - O' where Descripcion = 'Ninguno'
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarEstadoBoletosConfirmaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarEstadoBoletosConfirmaHangfireJob', 1) END
