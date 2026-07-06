@@ -1,9 +1,11 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
@@ -44,6 +46,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IFechaFeriadoManager> fechaFeriadoManager;
         private Mock<IReportesManager> reportesManager;
         private Mock<ICartaDePresentacionManager> cartaDePresentacionManager;
+        private Mock<IControlDeBoletosSAPManager> controlDeBoletosSapManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -72,6 +75,7 @@ namespace Molinos.DataAgro.Test.Services
             fechaFeriadoManager = new Mock<IFechaFeriadoManager>();
             reportesManager = new Mock<IReportesManager>();
             cartaDePresentacionManager = new Mock<ICartaDePresentacionManager>();
+            controlDeBoletosSapManager = new Mock<IControlDeBoletosSAPManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
@@ -79,7 +83,8 @@ namespace Molinos.DataAgro.Test.Services
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, 
                 cupoManagerMock.Object, mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object, 
                 homeManager.Object, configuracionInternaManager.Object, materialManager.Object, centroManager.Object, campañaManager.Object,
-                configuracionBolsaManager.Object, localidadManager.Object, fechaFeriadoManager.Object, reportesManager.Object, cartaDePresentacionManager.Object);
+                configuracionBolsaManager.Object, localidadManager.Object, fechaFeriadoManager.Object, reportesManager.Object, cartaDePresentacionManager.Object,
+                controlDeBoletosSapManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
@@ -1088,6 +1093,108 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.NotNull(result.Contactos);
             Assert.AreEqual(expectedContactos.Count, result.Contactos.Count);
+        }
+
+        [Test]
+        public void RegistrarDatosPreCertificacion_RequestNulo_DevuelveError()
+        {
+            var resultado = target.RegistrarDatosPreCertificacion(null);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+            Assert.AreEqual(52001, resultado.Errores[0].ErrorCode);
+            Assert.AreEqual("RegistrarDatosPreCertificacion", resultado.Errores[0].Source);
+        }
+
+        [Test]
+        public void RegistrarDatosPreCertificacion_ManagerDevuelveResultado_PropagaRespuesta()
+        {
+            var request = new ControlDeBoletosPreCertificacionServiceDto
+            {
+                ContratoSAP = "4500000001",
+                Detalle = new List<ControlDeBoletosDatosPreCertificacionServiceDto>()
+            };
+            var respuestaEsperada = new Resultado();
+
+            controlDeBoletosSapManager
+                .Setup(x => x.RegistrarDatosPreCertificacion(request))
+                .Returns(respuestaEsperada);
+
+            var resultado = target.RegistrarDatosPreCertificacion(request);
+
+            Assert.AreSame(respuestaEsperada, resultado);
+        }
+
+        [Test]
+        public void RegistrarDatosPreCertificacion_ManagerLanzaExcepcion_DevuelveError()
+        {
+            var request = new ControlDeBoletosPreCertificacionServiceDto
+            {
+                ContratoSAP = "4500000002",
+                Detalle = new List<ControlDeBoletosDatosPreCertificacionServiceDto>()
+            };
+
+            controlDeBoletosSapManager
+                .Setup(x => x.RegistrarDatosPreCertificacion(request))
+                .Throws(new InvalidOperationException("fallo forzado"));
+
+            var resultado = target.RegistrarDatosPreCertificacion(request);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+            Assert.AreEqual(52003, resultado.Errores[0].ErrorCode);
+        }
+
+        [Test]
+        public void RegistrarDatosSeguimiento_RequestNulo_DevuelveError()
+        {
+            var resultado = target.RegistrarDatosSeguimiento(null);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+            Assert.AreEqual(52001, resultado.Errores[0].ErrorCode);
+            Assert.AreEqual("RegistrarDatosSeguimiento", resultado.Errores[0].Source);
+        }
+
+        [Test]
+        public void RegistrarDatosSeguimiento_ManagerDevuelveResultado_PropagaRespuesta()
+        {
+            var request = new ControlDeBoletosDatosSeguimientoServiceDto
+            {
+                ContratoSAP = "4500000003"
+            };
+            var respuestaEsperada = new Resultado();
+
+            controlDeBoletosSapManager
+                .Setup(x => x.RegistrarDatosSeguimiento(request))
+                .Returns(respuestaEsperada);
+
+            var resultado = target.RegistrarDatosSeguimiento(request);
+
+            Assert.AreSame(respuestaEsperada, resultado);
+        }
+
+        [Test]
+        public void RegistrarDatosSeguimiento_ManagerLanzaExcepcion_DevuelveError()
+        {
+            var request = new ControlDeBoletosDatosSeguimientoServiceDto
+            {
+                ContratoSAP = "4500000004"
+            };
+
+            controlDeBoletosSapManager
+                .Setup(x => x.RegistrarDatosSeguimiento(request))
+                .Throws(new InvalidOperationException("fallo forzado"));
+
+            var resultado = target.RegistrarDatosSeguimiento(request);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+            Assert.AreEqual(52003, resultado.Errores[0].ErrorCode);
         }
     }
 }

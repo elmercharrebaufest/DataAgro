@@ -1,1 +1,0 @@
-<%@ ServiceHost Language="C#" Debug="true" Service="WebDataAgro.Services.IDataAgroCBServices,WebDataAgro" CodeBehind="DataAgroCBServices.svc.cs" Factory="Autofac.Integration.Wcf.AutofacServiceHostFactory, Autofac.Integration.Wcf"%>
