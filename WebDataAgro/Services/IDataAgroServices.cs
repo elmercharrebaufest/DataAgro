@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
@@ -187,6 +188,12 @@ namespace WebDataAgro.Services
         [OperationContract]
         RespuestaArchivoDto InformeComercial(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
+
+        [OperationContract]
+        Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
+
+        [OperationContract]
+        Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
 
     }
 }
