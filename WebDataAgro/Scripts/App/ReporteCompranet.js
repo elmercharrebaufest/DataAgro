@@ -1,4 +1,4 @@
-﻿var fechaString;
+var fechaString;
 var url = "/ReporteCompraNet/ReporteComprasDelDia";
 var viewModel;
 var datosIniCrearContrato;
@@ -203,7 +203,7 @@ function AbrirModalIds(
       verDepositoTipoNegocio: verDepositoTipoNegocio,
     },
     function (data) {
-      if (esFijacion == true) {
+    if (esFijacion == true) {
         crearGrilladetalleFijacion(data);
         var jsonD = JSON.parse(data);
         jsonD.items = jsonD.items.filter(function (el) {
@@ -273,13 +273,52 @@ function AbrirModalIds(
         }, {});
 
         crearGrillaFijacionLargaCorta(
+          JSON.stringify({ items: dFijCortas, total: dFijCortas.length }),
+           "grillaFijacionCorta",
+        );
+
+        crearGrillaFijacionLargaCorta(
           JSON.stringify({ items: dFijLargas, total: dFijLargas.length }),
           "grillaFijacionLarga",
         );
-        crearGrillaFijacionLargaCorta(
-          JSON.stringify({ items: dFijCortas, total: dFijCortas.length }),
-          "grillaFijacionCorta",
+
+        var dFijPorMes = [];
+        jsonD.items.reduce(function (res, value) {
+          var mesAnio = MesAnioDesdeFecha(value.HastaFijacion);
+          var key = mesAnio + value.Moneda;
+          if (!res[key]) {
+            res[key] = {
+              MesAnio: mesAnio,
+              Moneda: value.Moneda,
+              CantidadTotal: 0,
+              PrecioPonderadoAcum: 0,
+              Precio: 0,
+              Orden: OrdenMesAnio(value.HastaFijacion),
+            };
+            dFijPorMes.push(res[key]);
+          }
+          res[key].CantidadTotal += value.CantidadD;
+          res[key].PrecioPonderadoAcum +=
+            parseFloat(value.Precio) * value.CantidadD;
+          return res;
+        }, {});
+
+        dFijPorMes.forEach(function (item) {
+          item.Precio =
+            item.CantidadTotal > 0
+              ? item.PrecioPonderadoAcum / item.CantidadTotal
+              : 0;
+        });
+
+        dFijPorMes.sort(function (a, b) {
+          return a.Orden - b.Orden;
+        });
+
+        crearGrillaFijacionesPorMes(
+          JSON.stringify({ items: dFijPorMes, total: dFijPorMes.length }),
+          "grillaFijacionesPorMes",
         );
+
       } else {
         crearGrilladetallePosicion(data);
       }
@@ -334,6 +373,36 @@ function DiferenciaFechasEnDias(fechaA, fechaB) {
     Date.parse(partsB[2] + "/" + partsB[1] + "/" + partsB[0]),
   );
   return (fechaADate.getTime() - fechaBDate.getTime()) / (1000 * 3600 * 24);
+}
+
+//Formato de Fechas DD/MM/YYYY -> "MMM YYYY" (ej: "Ene 2025")
+function MesAnioDesdeFecha(fecha) {
+  var meses = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+  var parts = fecha.split("/");
+  var mes = parseInt(parts[1], 10);
+  var anio = parts[2];
+  return meses[mes - 1] + " " + anio;
+}
+
+//Formato de Fechas DD/MM/YYYY -> clave numerica AAAAMM para ordenar
+function OrdenMesAnio(fecha) {
+  var parts = fecha.split("/");
+  var mes = parseInt(parts[1], 10);
+  var anio = parseInt(parts[2], 10);
+  return anio * 100 + mes;
 }
 
 function setearTituloModal(materialNombre, mesNombre, anio) {
@@ -1234,6 +1303,78 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             field: "HastaFijacion",
             title: "Fijación Hasta",
             width: 50,
+          },
+          {
+            field: "Moneda",
+            title: "Moneda",
+            width: 80,
+          },
+          {
+            field: "Precio",
+            title: "Precio",
+            width: 100,
+            template: function (dataItem) {
+              return kendo.toString(dataItem.Precio, "n0");
+            },
+          },
+          {
+            field: "CantidadTotal",
+            title: "Toneladas",
+            width: 150,
+            template: function (dataItem) {
+              return kendo.toString(dataItem.CantidadTotal, "n0");
+            },
+            aggregates: ["sum"],
+            footerTemplate: '#=kendo.toString(sum, "n0")#',
+          },
+        ],
+      },
+    ],
+  });
+}
+
+function crearGrillaFijacionesPorMes(href, grilla) {
+  $("#" + grilla + "").kendoGrid({
+    culture: "es-AR",
+    dataSource: {
+      data: JSON.parse(href),
+      type: JSON,
+      schema: {
+        data: "items",
+        total: "total",
+      },
+      pageSize: 20,
+
+      aggregate: [{ field: "CantidadTotal", aggregate: "sum" }],
+    },
+    sortable: false,
+    scrollable: false,
+    reorderable: false,
+    groupable: false,
+    resizable: true,
+    pageable: {
+      messages: {
+        display: "{2} elementos",
+        empty: "No hay elementos para mostrar",
+        page: "P&aacute;gina",
+        allPages: "Todas",
+        of: "de {0}",
+        itemsPerPage: "Elementos por p&aacute;gina",
+        first: "Ir a la primer p&aacute;gina",
+        previous: "Ir a la p&aacute;gina anterior",
+        next: "Ir a la p&aacute;gina siguiente",
+        last: "Ir a la &uacute;ltima p&aacute;gina",
+        refresh: "Recargar",
+      },
+    },
+    columns: [
+      {
+        title: "Fijaciones por Mes",
+        columns: [
+          {
+            field: "MesAnio",
+            title: "Mes",
+            width: 80,
           },
           {
             field: "Moneda",
