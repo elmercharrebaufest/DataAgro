@@ -385,7 +385,6 @@
     <Content Include="Scripts\App\ControlDeBoletosTracking.js" />
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
     <Content Include="Scripts\App\OptimizationCache.js" />
-    <Content Include="Services\DataAgroCBServices.svc" />
     <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
@@ -442,10 +441,6 @@
     <Compile Include="Jobs\ReportePagosDiferidosHangfireJob.cs" />
     <Compile Include="Jobs\SincronizarResearchHangfireJob.cs" />
     <Compile Include="Jobs\VerificarSolicitudesExtraordinariasPendientesHangfireJob.cs" />
-    <Compile Include="Services\DataAgroCBServices.svc.cs">
-      <DependentUpon>DataAgroCBServices.svc</DependentUpon>
-    </Compile>
-    <Compile Include="Services\IDataAgroCBServices.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Atributos\AutorizacionAttribute.cs" />
     <Compile Include="Controllers\AuthController.cs" />

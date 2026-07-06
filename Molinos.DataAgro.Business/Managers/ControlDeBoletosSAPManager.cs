@@ -45,6 +45,89 @@ namespace Molinos.DataAgro.Business.Managers
                 : (DateTime?)null;
         }
 
+        private static string ValidarFechasSeguimiento(
+            ControlDeBoletosDatosSeguimientoServiceDto seguimiento,
+            bool operaSinOblea,
+            bool esCartaOferta,
+            bool esSinBoleto,
+            DateTime? feRecepcionBoleto,
+            DateTime? feEnvioFirmas,
+            DateTime? feEnvioBolsa,
+            DateTime? feEnvioAfip,
+            DateTime? feRecepcionFirma,
+            DateTime? feRecepcionBolsa,
+            DateTime? feRecepcionAfip,
+            DateTime? feEnvioSellado)
+        {
+            if (string.IsNullOrWhiteSpace(seguimiento.TipoBoletoSAP) ||
+                string.IsNullOrWhiteSpace(seguimiento.BoletoSapCaracter))
+            {
+                return "Debe seleccionar un boleto y un caracter.";
+            }
+
+            if (string.IsNullOrWhiteSpace(seguimiento.Bolsa))
+            {
+                return "Debe seleccionar una bolsa.";
+            }
+
+            if (esSinBoleto)
+            {
+                return null;
+            }
+
+            if (!feRecepcionBoleto.HasValue)
+            {
+                return "La Fecha de recepcion de boleto es obligatoria.";
+            }
+
+            if (feEnvioFirmas.HasValue && feEnvioFirmas.Value < feRecepcionBoleto.Value)
+                return "La Fecha de envio Firmas no puede ser anterior a la Fecha de recepcion de boleto.";
+
+            if ((feEnvioBolsa.HasValue && !operaSinOblea) && feEnvioBolsa.Value < feRecepcionBoleto.Value)
+                return "La Fecha de envio Obleado Bolsa no puede ser anterior a la Fecha de recepcion de boleto.";
+
+            if (feEnvioAfip.HasValue && feEnvioAfip.Value < feRecepcionBoleto.Value)
+                return "La Fecha de envio Certificacion Arca no puede ser anterior a la Fecha de recepcion de boleto.";
+
+            if (feRecepcionFirma.HasValue)
+            {
+                if (feRecepcionFirma.Value < feRecepcionBoleto.Value)
+                    return "La Fecha de recepcion Firmas no puede ser anterior a la Fecha de recepcion de boleto.";
+
+                if (feEnvioFirmas.HasValue && feRecepcionFirma.Value < feEnvioFirmas.Value)
+                    return "La Fecha de recepcion Firmas debe ser igual o mayor a la Fecha de envio Firmas.";
+            }
+
+            if (feRecepcionBolsa.HasValue && !operaSinOblea)
+            {
+                if (feRecepcionBolsa.Value < feRecepcionBoleto.Value)
+                    return "La Fecha de recepcion Obleado Bolsa no puede ser anterior a la Fecha de recepcion de boleto.";
+
+                if (feEnvioBolsa.HasValue && feRecepcionBolsa.Value < feEnvioBolsa.Value)
+                    return "La Fecha de recepcion Obleado Bolsa debe ser igual o mayor a la Fecha de envio Obleado Bolsa.";
+            }
+
+            if (feRecepcionAfip.HasValue)
+            {
+                if (feRecepcionAfip.Value < feRecepcionBoleto.Value)
+                    return "La Fecha de recepcion Certificacion Arca no puede ser anterior a la Fecha de recepcion de boleto.";
+
+                if (feEnvioAfip.HasValue && feRecepcionAfip.Value < feEnvioAfip.Value)
+                    return "La Fecha de recepcion Certificacion Arca debe ser igual o mayor a la Fecha de envio Certificacion Arca.";
+            }
+
+            if (feEnvioSellado.HasValue && !esCartaOferta)
+            {
+                if (feEnvioSellado.Value < feRecepcionBoleto.Value)
+                    return "La Fecha de envio Sellado no puede ser anterior a la Fecha de recepcion de boleto.";
+
+                if (feRecepcionBolsa.HasValue && feEnvioSellado.Value < feRecepcionBolsa.Value)
+                    return "La Fecha de envio Sellado debe ser igual o mayor a la Fecha de recepcion Obleado Bolsa.";
+            }
+
+            return null;
+        }
+
         #region Metodos para servicio SAP
         public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
         {
@@ -60,14 +143,22 @@ namespace Molinos.DataAgro.Business.Managers
                 var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == controlDeBoletosPreCertificacion.ContratoSAP);
                 if (negocio == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro un negocio para el ContratoSAP informado." });
+                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el ContratoSAP informado." });
                     return oResultado;
                 }
 
                 var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocio.Id);
                 if (controlDeBoletos == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el Control de Boletos asociado al negocio." });
+                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el Control de Boletos asociado al contrato." });
+                    return oResultado;
+                }
+
+
+                var seguimientoBoleto = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletos.Id);
+                if (seguimientoBoleto == null || seguimientoBoleto.FechaRecepcionBoleto.HasValue)
+                {
+                    oResultado.Errores.Add(new ErrorMessage { Message = "No se ha registrado una fecha de recepción para el Control de Boletos asociado al contrato." });
                     return oResultado;
                 }
 
@@ -131,6 +222,51 @@ namespace Molinos.DataAgro.Business.Managers
                     var bolsaCompraNetIdNullable = !string.IsNullOrWhiteSpace(item.Bolsa) && bolsasPorCodigoSap.TryGetValue(item.Bolsa, out bolsaCompraNetId)
                         ? (int?)bolsaCompraNetId
                         : null;
+
+                    var erroresValidacion = new List<string>();
+                    switch (item.TipoOblea)
+                    {
+                        case "A":
+                            if (bolsaCompraNetIdNullable != null)
+                                erroresValidacion.Add("No se debe informar codigo de bolsa.");
+                            if (fechaVencimiento != null)
+                                erroresValidacion.Add("No se debe informar fecha de vencimiento.");
+
+                            var mensajeDuplicidadA = this.controlDeBoletosManager.VerificarDuplicidadObleaCodigoArca(controlDeBoletosId, string.Empty, item.Oblea);
+                            if (!string.IsNullOrWhiteSpace(mensajeDuplicidadA))
+                                erroresValidacion.Add(mensajeDuplicidadA.Trim().TrimEnd(','));
+                            break;
+                        case "F":
+                            var mensajeDuplicidadF = this.controlDeBoletosManager.VerificarDuplicidadObleaCodigoArca(controlDeBoletosId, item.Oblea, string.Empty);
+                            if (!string.IsNullOrWhiteSpace(mensajeDuplicidadF))
+                                erroresValidacion.Add(mensajeDuplicidadF.Trim().TrimEnd(','));
+                            break;
+                        case "P":
+                            if (string.IsNullOrEmpty(item.Bolsa?.Trim()))
+                                erroresValidacion.Add("No se debe informar codigo de bolsa.");
+                            if (!string.IsNullOrWhiteSpace(item.Bolsa) && bolsaCompraNetIdNullable == null)
+                                erroresValidacion.Add("El codigo de bolsa informado no existe.");
+                            if (fechaCertificacion != null)
+                                erroresValidacion.Add("No se debe informar fecha de certificacion.");
+                            break;
+                        case "O":
+                            var mensajeDuplicidadO = this.controlDeBoletosManager.VerificarDuplicidadObleaCodigoArca(controlDeBoletosId, item.Oblea, string.Empty);
+                            if (!string.IsNullOrWhiteSpace(mensajeDuplicidadO))
+                                erroresValidacion.Add(mensajeDuplicidadO.Trim().TrimEnd(','));
+                            break;
+                    }
+
+                    if (erroresValidacion.Any())
+                    {
+                        oResultado.Errores.Add(new ErrorMessage
+                        {
+                            Message = string.Format(
+                                "Validacion de pre-certificacion para '{0}': {1}",
+                                tipoOblea.Descripcion,
+                                string.Join(" ", erroresValidacion))
+                        });
+                        return oResultado;
+                    }
 
                     if (existente != null)
                     {
@@ -245,6 +381,50 @@ namespace Molinos.DataAgro.Business.Managers
                 var fechaRecepcionBolsa = ConvertirFechaNullable(controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa);
                 var fechaRecepcionAfip = ConvertirFechaNullable(controlDeBoletosDatosSeguimiento.FechaRecepcionAfip);
                 var fechaEnvioSellado = ConvertirFechaNullable(controlDeBoletosDatosSeguimiento.FechaEnvioSellado);
+
+                var esCartaOferta = negocio.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA;
+                var esSinBoleto = negocio.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
+
+                string tipoProveedor;
+                string cuitProveedor;
+                if (negocio.CorredorId.HasValue && negocio.CorredorId.Value > 0)
+                {
+                    tipoProveedor = "CORR";
+                    var corredor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == negocio.CorredorId.Value);
+                    cuitProveedor = corredor == null ? string.Empty : corredor.CUIT;
+                }
+                else
+                {
+                    tipoProveedor = "PROV";
+                    var proveedor = negocio.ProveedorId.HasValue
+                        ? repositorio.Obtener<Proveedor>(x => x.ProveedorId == negocio.ProveedorId.Value)
+                        : null;
+                    cuitProveedor = proveedor == null ? string.Empty : proveedor.CUIT;
+                }
+
+                var operaSinOblea = !string.IsNullOrWhiteSpace(cuitProveedor) &&
+                                    this.controlDeBoletosManager.VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
+
+                var mensajeValidacionFechas = ValidarFechasSeguimiento(
+                    controlDeBoletosDatosSeguimiento,
+                    operaSinOblea,
+                    esCartaOferta,
+                    esSinBoleto,
+                    fechaRecepcionBoleto,
+                    fechaEnvioFirma,
+                    fechaEnvioBolsa,
+                    fechaEnvioAfip,
+                    fechaRecepcionFirma,
+                    fechaRecepcionBolsa,
+                    fechaRecepcionAfip,
+                    fechaEnvioSellado);
+
+                if (!string.IsNullOrWhiteSpace(mensajeValidacionFechas))
+                {
+                    oResultado.Errores.Add(new ErrorMessage { Message = mensajeValidacionFechas });
+                    return oResultado;
+                }
+
                 var ahora = DateTime.Now;
 
                 if (datosSeguimiento != null)

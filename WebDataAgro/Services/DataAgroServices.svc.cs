@@ -2,9 +2,11 @@ using Kendo.DynamicLinq;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Report.Clases;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
@@ -51,6 +53,8 @@ namespace WebDataAgro.Services
         private readonly IFechaFeriadoManager fechaFeriadoManager;
         private readonly IReportesManager reportesManager;
         private readonly ICartaDePresentacionManager cartaDePresentacionManager;
+        private readonly IControlDeBoletosSAPManager controlDeBoletosSapManager;
+
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
             ICampaniaActualManager campanaActual,
@@ -72,7 +76,8 @@ namespace WebDataAgro.Services
             ILocalidadManager localidadManager,
             IFechaFeriadoManager fechaFeriadoManager,
             IReportesManager reportesManager,
-            ICartaDePresentacionManager cartaDePresentacionManager
+            ICartaDePresentacionManager cartaDePresentacionManager,
+            IControlDeBoletosSAPManager controlDeBoletosSapManager
             )
         {
             this.logger = logger;
@@ -97,6 +102,7 @@ namespace WebDataAgro.Services
             this.fechaFeriadoManager = fechaFeriadoManager;
             this.reportesManager = reportesManager;
             this.cartaDePresentacionManager = cartaDePresentacionManager;
+            this.controlDeBoletosSapManager = controlDeBoletosSapManager;
         }
 
         public ResultadoSap Ping()
@@ -2220,5 +2226,96 @@ namespace WebDataAgro.Services
         }
 
         #endregion MOA_Operaciones
+
+
+        #region Control de Boletos
+        private static class ErrorCatalogo
+        {
+            public const int RequestNulo = 52001;
+            public const int RespuestaNula = 52002;
+            public const int ErrorInterno = 52003;
+
+            public const string MsgRequestNulo = "El request recibido es nulo.";
+            public const string MsgRespuestaNula = "La operacion no devolvio respuesta.";
+            public const string MsgErrorInterno = "Error interno al procesar la operacion SAP de Control de Boletos.";
+        }
+
+        private static ErrorMessage CrearError(int codigo, string source, string mensaje)
+        {
+            return new ErrorMessage(codigo, mensaje)
+            {
+                Source = source
+            };
+        }
+
+        private Resultado EjecutarOperacion(string nombreOperacion, Func<Resultado> operacion)
+        {
+            var resultado = new Resultado();
+
+            try
+            {
+                var respuesta = operacion();
+
+                if (respuesta == null)
+                {
+                    resultado.Errores.Add(CrearError(
+                        ErrorCatalogo.RespuestaNula,
+                        nombreOperacion,
+                        string.Format("{0} Operacion: {1}", ErrorCatalogo.MsgRespuestaNula, nombreOperacion)));
+                    logger.Error("{0} devolvio null.", nombreOperacion);
+                    return resultado;
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(CrearError(
+                    ErrorCatalogo.ErrorInterno,
+                    nombreOperacion,
+                    string.Format("{0} Codigo: {1}", ErrorCatalogo.MsgErrorInterno, ErrorCatalogo.ErrorInterno)));
+                logger.Error(ex, "Error en {0}.", nombreOperacion);
+                return resultado;
+            }
+        }
+
+        public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
+        {
+            logger.Info("Inicio {0}.", nameof(RegistrarDatosPreCertificacion));
+
+            if (controlDeBoletosPreCertificacion == null)
+            {
+                var resultado = new Resultado();
+                resultado.Errores.Add(CrearError(
+                    ErrorCatalogo.RequestNulo,
+                    nameof(RegistrarDatosPreCertificacion),
+                    ErrorCatalogo.MsgRequestNulo));
+                return resultado;
+            }
+
+            return EjecutarOperacion(
+                nameof(RegistrarDatosPreCertificacion),
+                () => controlDeBoletosSapManager.RegistrarDatosPreCertificacion(controlDeBoletosPreCertificacion));
+        }
+
+        public Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento)
+        {
+            logger.Info("Inicio {0}.", nameof(RegistrarDatosSeguimiento));
+
+            if (controlDeBoletosDatosSeguimiento == null)
+            {
+                var resultado = new Resultado();
+                resultado.Errores.Add(CrearError(
+                    ErrorCatalogo.RequestNulo,
+                    nameof(RegistrarDatosSeguimiento),
+                    ErrorCatalogo.MsgRequestNulo));
+                return resultado;
+            }
+
+            return EjecutarOperacion(
+                nameof(RegistrarDatosSeguimiento),
+                () => controlDeBoletosSapManager.RegistrarDatosSeguimiento(controlDeBoletosDatosSeguimiento));
+        }
+        #endregion
     }
 }
