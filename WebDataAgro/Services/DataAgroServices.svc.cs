@@ -2240,17 +2240,17 @@ namespace WebDataAgro.Services
             public const string MsgErrorInterno = "Error interno al procesar la operacion SAP de Control de Boletos.";
         }
 
-        private static ErrorMessage CrearError(int codigo, string source, string mensaje)
+        private static ErroresControlDeBoletosOperacionSapDto CrearError(int codigo, string source, string mensaje)
         {
-            return new ErrorMessage(codigo, mensaje)
+            return new ErroresControlDeBoletosOperacionSapDto
             {
-                Source = source
+                Message = mensaje
             };
         }
 
-        private Resultado EjecutarOperacion(string nombreOperacion, Func<Resultado> operacion)
+        private ControlDeBoletosOperacionSapResultadoDto EjecutarOperacionControlDeBoletos(string nombreOperacion, Func<ControlDeBoletosOperacionSapResultadoDto> operacion)
         {
-            var resultado = new Resultado();
+            var resultado = new ControlDeBoletosOperacionSapResultadoDto();
 
             try
             {
@@ -2279,13 +2279,13 @@ namespace WebDataAgro.Services
             }
         }
 
-        public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
+        public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
         {
             logger.Info("Inicio {0}.", nameof(RegistrarDatosPreCertificacion));
 
             if (controlDeBoletosPreCertificacion == null)
             {
-                var resultado = new Resultado();
+                var resultado = new ControlDeBoletosOperacionSapResultadoDto();
                 resultado.Errores.Add(CrearError(
                     ErrorCatalogo.RequestNulo,
                     nameof(RegistrarDatosPreCertificacion),
@@ -2293,18 +2293,18 @@ namespace WebDataAgro.Services
                 return resultado;
             }
 
-            return EjecutarOperacion(
+            return EjecutarOperacionControlDeBoletos(
                 nameof(RegistrarDatosPreCertificacion),
                 () => controlDeBoletosSapManager.RegistrarDatosPreCertificacion(controlDeBoletosPreCertificacion));
         }
 
-        public Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento)
+        public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento)
         {
             logger.Info("Inicio {0}.", nameof(RegistrarDatosSeguimiento));
 
             if (controlDeBoletosDatosSeguimiento == null)
             {
-                var resultado = new Resultado();
+                var resultado = new ControlDeBoletosOperacionSapResultadoDto();
                 resultado.Errores.Add(CrearError(
                     ErrorCatalogo.RequestNulo,
                     nameof(RegistrarDatosSeguimiento),
@@ -2312,7 +2312,7 @@ namespace WebDataAgro.Services
                 return resultado;
             }
 
-            return EjecutarOperacion(
+            return EjecutarOperacionControlDeBoletos(
                 nameof(RegistrarDatosSeguimiento),
                 () => controlDeBoletosSapManager.RegistrarDatosSeguimiento(controlDeBoletosDatosSeguimiento));
         }

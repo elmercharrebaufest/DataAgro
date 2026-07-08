@@ -129,28 +129,28 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         #region Metodos para servicio SAP
-        public Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
+        public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
         {
-            var oResultado = new Resultado();
+            var oResultado = new ControlDeBoletosOperacionSapResultadoDto();
             try
             {
                 if (controlDeBoletosPreCertificacion == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "El request de pre-certificacion no puede ser nulo." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "El request de pre-certificacion no puede ser nulo." });
                     return oResultado;
                 }
 
                 var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == controlDeBoletosPreCertificacion.ContratoSAP);
                 if (negocio == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el ContratoSAP informado." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro el ContratoSAP informado." });
                     return oResultado;
                 }
 
                 var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocio.Id);
                 if (controlDeBoletos == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el Control de Boletos asociado al contrato." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro el Control de Boletos asociado al contrato." });
                     return oResultado;
                 }
 
@@ -158,7 +158,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var seguimientoBoleto = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletos.Id);
                 if (seguimientoBoleto == null || seguimientoBoleto.FechaRecepcionBoleto.HasValue)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se ha registrado una fecha de recepción para el Control de Boletos asociado al contrato." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se ha registrado una fecha de recepción para el Control de Boletos asociado al contrato." });
                     return oResultado;
                 }
 
@@ -258,7 +258,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (erroresValidacion.Any())
                     {
-                        oResultado.Errores.Add(new ErrorMessage
+                        oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto
                         {
                             Message = string.Format(
                                 "Validacion de pre-certificacion para '{0}': {1}",
@@ -333,33 +333,33 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                oResultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = ex.Message });
                 logger.Error(ex.Message);
                 return oResultado;
             }
         }
-        public Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento)
+        public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento)
         {
-            var oResultado = new Resultado();
+            var oResultado = new ControlDeBoletosOperacionSapResultadoDto();
             try
             {
                 if (controlDeBoletosDatosSeguimiento == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "El request de seguimiento no puede ser nulo." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "El request de seguimiento no puede ser nulo." });
                     return oResultado;
                 }
 
                 var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == controlDeBoletosDatosSeguimiento.ContratoSAP);
                 if (negocio == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro un negocio para el ContratoSAP informado." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro un negocio para el ContratoSAP informado." });
                     return oResultado;
                 }
 
                 var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocio.Id);
                 if (controlDeBoletos == null)
                 {
-                    oResultado.Errores.Add(new ErrorMessage { Message = "No se encontro el Control de Boletos asociado al negocio." });
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro el Control de Boletos asociado al negocio." });
                     return oResultado;
                 }
 
@@ -405,25 +405,25 @@ namespace Molinos.DataAgro.Business.Managers
                 var operaSinOblea = !string.IsNullOrWhiteSpace(cuitProveedor) &&
                                     this.controlDeBoletosManager.VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
 
-                var mensajeValidacionFechas = ValidarFechasSeguimiento(
-                    controlDeBoletosDatosSeguimiento,
-                    operaSinOblea,
-                    esCartaOferta,
-                    esSinBoleto,
-                    fechaRecepcionBoleto,
-                    fechaEnvioFirma,
-                    fechaEnvioBolsa,
-                    fechaEnvioAfip,
-                    fechaRecepcionFirma,
-                    fechaRecepcionBolsa,
-                    fechaRecepcionAfip,
-                    fechaEnvioSellado);
+                //var mensajeValidacionFechas = ValidarFechasSeguimiento(
+                //    controlDeBoletosDatosSeguimiento,
+                //    operaSinOblea,
+                //    esCartaOferta,
+                //    esSinBoleto,
+                //    fechaRecepcionBoleto,
+                //    fechaEnvioFirma,
+                //    fechaEnvioBolsa,
+                //    fechaEnvioAfip,
+                //    fechaRecepcionFirma,
+                //    fechaRecepcionBolsa,
+                //    fechaRecepcionAfip,
+                //    fechaEnvioSellado);
 
-                if (!string.IsNullOrWhiteSpace(mensajeValidacionFechas))
-                {
-                    oResultado.Errores.Add(new ErrorMessage { Message = mensajeValidacionFechas });
-                    return oResultado;
-                }
+                //if (!string.IsNullOrWhiteSpace(mensajeValidacionFechas))
+                //{
+                //    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = mensajeValidacionFechas });
+                //    return oResultado;
+                //}
 
                 var ahora = DateTime.Now;
 
@@ -495,7 +495,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                oResultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = ex.Message });
                 logger.Error(ex.Message);
                 return oResultado;
             }

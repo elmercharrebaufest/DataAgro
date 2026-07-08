@@ -17,6 +17,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public bool EsCorredor { get; set; }
         public string TipoBoleto { get; set; }
         public bool EsCartaOferta { get; set; }
+        public bool EsSinBoleto { get; set; }
+
         public bool OperaSinOblea { get; set; }
         public string ContratoSAP { get; set; }
 

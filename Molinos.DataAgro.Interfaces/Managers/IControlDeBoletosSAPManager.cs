@@ -10,7 +10,16 @@ namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IControlDeBoletosSAPManager
     {
-        Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
-        Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
+        /// <summary>
+        /// Registra datos de pre-certificación de un único contrato.
+        /// Ejecuta RFC SAP y guarda cambios en BD.
+        /// </summary>
+        ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
+
+        /// <summary>
+        /// Registra datos de seguimiento de un único contrato.
+        /// Ejecuta RFC SAP y guarda cambios en BD.
+        /// </summary>
+        ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
     }
 }

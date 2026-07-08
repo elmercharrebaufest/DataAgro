@@ -20,6 +20,7 @@ BEGIN
         CAST(CASE WHEN n.CorredorId > 0 THEN 1 ELSE 0 END AS bit) AS EsCorredor,
         b.Descripcion AS TipoBoleto,
         CAST(CASE WHEN n.BoletoId = 3 THEN 1 ELSE 0 END AS bit) AS EsCartaOferta,
+        CAST(CASE WHEN n.BoletoId = 5 THEN 1 ELSE 0 END AS bit) AS EsSinBoleto,
         CAST(0 AS bit) AS OperaSinOblea,
         n.ContratoSAP,
         pre.Id AS PreCertificacionId,
@@ -41,21 +42,16 @@ BEGIN
         seg.FechaEnvioSellado
     FROM ControlDeBoletos cb
     INNER JOIN Negocio n ON n.Id = cb.NegocioId
+    INNER JOIN ControlDeBoletosSeguimiento seg ON seg.ControlDeBoletosId = cb.Id
     LEFT JOIN BoletoCompraNet b ON b.Id = n.BoletoId
     LEFT JOIN Proveedor p ON p.ProveedorId = n.ProveedorId
     LEFT JOIN Proveedor cor ON cor.ProveedorId = n.CorredorId
-    LEFT JOIN ControlDeBoletosPreCertificacion pre ON pre.ControlDeBoletosId = cb.Id
+    LEFT JOIN ControlDeBoletosPreCertificacion pre ON pre.ControlDeBoletosId = cb.Id and pre.TipoObleaId = 3
     LEFT JOIN BolsaCompraNet bolsaPre ON bolsaPre.Id = pre.BolsaCompraNetId
-    LEFT JOIN ControlDeBoletosSeguimiento seg ON seg.ControlDeBoletosId = cb.Id
-    WHERE pre.TipoObleaId = 3
-      AND (
-            @ContratoSAP IS NOT NULL
-            OR LTRIM(RTRIM(@ContratoSAP)) > ''
-            OR EXISTS (
+    WHERE EXISTS (
                 SELECT 1
                 FROM ContratosFiltro f
                 WHERE f.ContratoSAP = n.ContratoSAP
             )
-          )
     ORDER BY cb.Id;
 END;
