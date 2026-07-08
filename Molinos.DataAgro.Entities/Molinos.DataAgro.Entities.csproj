@@ -342,6 +342,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificacionContratoResultDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosModificarContratoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosOperacionSapResultadoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosParaModificarDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosParaModificarFiltroDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosPreCertificacionServiceDto.cs" />

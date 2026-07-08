@@ -1215,7 +1215,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var query = new TraerBoletosParaModificar(filtros ?? new ControlDeBoletosParaModificarFiltroDto());
             var data = repositorio.ObtenerConsultaEscalar(query);
-
             foreach (var item in data)
             {
                 string cuitProveedor = item.EsCorredor ? item.CUITCorredor : item.CUITProveedor;
@@ -1223,7 +1222,6 @@ namespace Molinos.DataAgro.Business.Managers
                 bool operaSinOblea = VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
                 item.OperaSinOblea = operaSinOblea;
             }
-
             return data;
         }
 
@@ -1238,52 +1236,225 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultado;
                 }
 
+                var indiceContrato = 0;
+
                 foreach (var boleto in boletos)
                 {
-                    var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId);
-                    if (seguimiento != null)
+                    indiceContrato++;
+
+                    try
                     {
-                        var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.BolsaSellado);
-
-                        seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
-                        seguimiento.FechaEnvioFirma = boleto.FechaEnviadoFirma;
-                        seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
-                        seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
-                        seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
-                        seguimiento.FechaRecepcionBolsa = boleto.FechaVueltaBolsa;
-                        seguimiento.FechaRecepcionAfip = boleto.FechaVueltaAfip;
-                        seguimiento.FechaEnvioSellado = boleto.FechaEnvioSellado;
-                        seguimiento.BolsaSellado = boleto.BolsaSellado;
-                        seguimiento.BolsaCompraNet = bolsa;
-                        seguimiento.FechaModificacion = DateTime.Now;
-                    }
-
-                    var pre = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId && x.TipoObleaId == 3);
-                    if (pre != null)
-                    {
-                        pre.Oblea = boleto.Oblea;
-                        pre.FechaCertificacion = boleto.FechaCertificacion;
-                        pre.FechaVencimiento = boleto.FechaVencimientoCertificacion;
-
-                        if (!string.IsNullOrWhiteSpace(boleto.PreCertificacionBolsa))
+                        var resultadoSeguimiento = ProcesarModificacionMasivaSeguimiento(boleto, indiceContrato);
+                        if (resultadoSeguimiento.HayError)
                         {
-                            var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.PreCertificacionBolsa);
-                            if (bolsa != null)
-                            {
-                                pre.BolsaCompraNetId = bolsa.Id;
-                            }
+                            resultado.Errores.AddRange(resultadoSeguimiento.Errores);
+                            continue;
                         }
 
-                        pre.FechaModificacion = DateTime.Now;
+                        var resultadoPreCertificacion = ProcesarModificacionMasivaPreCertificacion(boleto, indiceContrato);
+                        if (resultadoPreCertificacion.HayError)
+                        {
+                            resultado.Errores.AddRange(resultadoPreCertificacion.Errores);
+                            continue;
+                        }
+
+                        EstablecerEstadoBoleto(boleto.ControlDeBoletosId);
+                    }
+                    catch (Exception exBoleto)
+                    {
+                        resultado.Errores.Add(new ErrorMessage
+                        {
+                            Item = indiceContrato,
+                            Message = $"Error procesando boleto para el contrato {boleto?.ContratoSAP}: {exBoleto.Message}"
+                        });
+                        logger.Error($"Error GuardarBoletosParaModificarFechas para el contrato {boleto?.ContratoSAP}: {exBoleto.Message}");
                     }
                 }
-
-                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
                 resultado.Errores.Add(new ErrorMessage { Message = ex.Message });
                 logger.Error(ex, "Error guardando modificación masiva de boletos");
+            }
+
+            return resultado;
+        }
+
+        private Resultado ProcesarModificacionMasivaSeguimiento(ControlDeBoletosParaModificarDto boleto, int indiceContrato)
+        {
+            var resultado = new Resultado();
+
+            try
+            {
+                if (boleto == null)
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = "No se encontró el boleto a procesar."
+                    });
+                    return resultado;
+                }
+
+                var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId);
+                if (seguimiento == null)
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = $"No se encontró el seguimiento para el contrato {boleto.ContratoSAP}."
+                    });
+                    return resultado;
+                }
+
+                var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.BolsaSellado);
+                var seguimientoBoleto = new ControlDeBoletosDatosSeguimientoDto
+                {
+                    Id = seguimiento.Id,
+                    ControlDeBoletosId = seguimiento.ControlDeBoletosId,
+                    BoletoSapId = seguimiento.BoletoSapId,
+                    BoletoSapCaracter = seguimiento.BoletoSapCaracter,
+                    BolsaCompraNetId = bolsa?.Id ?? 0,
+                    BolsaSellado = bolsa?.CodigoSap ?? string.Empty,
+                    FechaRecepcionBoleto = boleto.FechaRecepBoleto,
+                    FechaEnvioFirma = boleto.FechaEnviadoFirma,
+                    FechaEnvioBolsa = boleto.FechaEnvioBolsa,
+                    FechaEnvioAfip = boleto.FechaEnvioAfip,
+                    FechaRecepcionFirma = boleto.FechaRecibFirma,
+                    FechaRecepcionBolsa = boleto.FechaVueltaBolsa,
+                    FechaRecepcionAfip = boleto.FechaVueltaAfip,
+                    FechaEnvioSellado = boleto.FechaEnvioSellado,
+                    ObsCtrlBoleto = seguimiento.ObsCtrlBoleto,
+                    ObsCtrlBoleto2 = seguimiento.ObsCtrlBoleto2
+                };
+
+                var seguimientoControlDeBoletos = ConstruirSeguimientoDto(seguimientoBoleto);
+                var resultadoRfc = seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
+                if (!string.IsNullOrWhiteSpace(resultadoRfc) && resultadoRfc.ToUpper().Contains("ERROR"))
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = $"Error en RFC SAP Seguimiento para el contrato {boleto.ContratoSAP}: {resultadoRfc}"
+                    });
+                    return resultado;
+                }
+
+                if (!string.IsNullOrWhiteSpace(boleto.BolsaSellado))
+                {
+                    seguimiento.BolsaCompraNet = bolsa;
+                    seguimiento.BolsaSellado = boleto.BolsaSellado;
+                }
+
+                if (boleto.FechaRecepBoleto.HasValue)
+                    seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
+                if (boleto.FechaEnviadoFirma.HasValue)
+                    seguimiento.FechaEnvioFirma = boleto.FechaEnviadoFirma;
+                if (boleto.FechaEnvioBolsa.HasValue)
+                    seguimiento.FechaEnvioBolsa = boleto.FechaEnvioBolsa;
+                if (boleto.FechaEnvioAfip.HasValue)
+                    seguimiento.FechaEnvioAfip = boleto.FechaEnvioAfip;
+                if (boleto.FechaRecibFirma.HasValue)
+                    seguimiento.FechaRecepcionFirma = boleto.FechaRecibFirma;
+                if (boleto.FechaVueltaBolsa.HasValue)
+                    seguimiento.FechaRecepcionBolsa = boleto.FechaVueltaBolsa;
+                if (boleto.FechaVueltaAfip.HasValue)
+                    seguimiento.FechaRecepcionAfip = boleto.FechaVueltaAfip;
+                if (boleto.FechaEnvioSellado.HasValue)
+                    seguimiento.FechaEnvioSellado = boleto.FechaEnvioSellado;
+
+                seguimiento.FechaModificacion = DateTime.Now;
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage
+                {
+                    Item = indiceContrato,
+                    Message = $"Error procesando seguimiento para el contrato {boleto?.ContratoSAP}: {ex.Message}"
+                });
+                logger.Error($"Error ProcesarModificacionMasivaSeguimiento para el contrato {boleto?.ContratoSAP}: {ex.Message}");
+            }
+
+            return resultado;
+        }
+
+        private Resultado ProcesarModificacionMasivaPreCertificacion(ControlDeBoletosParaModificarDto boleto, int indiceContrato)
+        {
+            var resultado = new Resultado();
+
+            try
+            {
+                if (boleto == null)
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = "No se encontró el boleto a procesar."
+                    });
+                    return resultado;
+                }
+
+                var bolsa = repositorio.Obtener<BolsaCompraNet>(x => x.CodigoSap == boleto.PreCertificacionBolsa);
+                var pre = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId && x.TipoOblea.Codigo == "O");
+                if (pre == null)
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = $"No se encontró la pre-certificación para el contrato {boleto.ContratoSAP}."
+                    });
+                    return resultado;
+                }
+
+                var ahora = DateTime.Now;
+                var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+                var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
+
+                datosCertificacionCabeceraDto.Contrato = boleto.ContratoSAP ?? string.Empty;
+                datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
+                datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
+                datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                datosCertificacionCabeceraDto.Usuario = string.Empty;
+                datosCertificacionDetalleDto.Bolsa = bolsa?.CodigoSap ?? string.Empty;
+                datosCertificacionDetalleDto.Oblea = boleto.Oblea;
+                datosCertificacionDetalleDto.FeCertificacion = FormatDate(boleto.FechaCertificacion);
+                datosCertificacionDetalleDto.FeVencCerti = FormatDate(boleto.FechaVencimientoCertificacion);
+                datosCertificacionDetalleDto.Rechazado = string.Empty;
+                datosCertificacionDetalleDto.Tipo = pre.TipoOblea?.Codigo ?? string.Empty;
+                datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto };
+
+                var resultadoRfc = datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
+                if (!string.IsNullOrWhiteSpace(resultadoRfc) && resultadoRfc.ToUpper().Contains("ERROR"))
+                {
+                    resultado.Errores.Add(new ErrorMessage
+                    {
+                        Item = indiceContrato,
+                        Message = $"Error en RFC SAP PreCertificación para el contrato {boleto.ContratoSAP}: {resultadoRfc}"
+                    });
+                    return resultado;
+                }
+
+                if (!string.IsNullOrWhiteSpace(boleto.Oblea))
+                    pre.Oblea = boleto.Oblea;
+                if (boleto.FechaCertificacion.HasValue)
+                    pre.FechaCertificacion = boleto.FechaCertificacion;
+                if (boleto.FechaVencimientoCertificacion.HasValue)
+                    pre.FechaVencimiento = boleto.FechaVencimientoCertificacion;
+                if (!string.IsNullOrWhiteSpace(boleto.PreCertificacionBolsa) && bolsa != null)
+                    pre.BolsaCompraNetId = bolsa.Id;
+
+                pre.FechaModificacion = DateTime.Now;
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage
+                {
+                    Item = indiceContrato,
+                    Message = $"Error procesando pre-certificación para el contrato {boleto?.ContratoSAP}: {ex.Message}"
+                });
+                logger.Error($"Error ProcesarModificacionMasivaPreCertificacion para el contrato {boleto?.ContratoSAP}: {ex.Message}");
             }
 
             return resultado;

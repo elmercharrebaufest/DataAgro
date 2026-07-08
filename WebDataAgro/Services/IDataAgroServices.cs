@@ -190,10 +190,10 @@ namespace WebDataAgro.Services
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
 
         [OperationContract]
-        Resultado RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
+        ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
 
         [OperationContract]
-        Resultado RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
+        ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
 
     }
 }

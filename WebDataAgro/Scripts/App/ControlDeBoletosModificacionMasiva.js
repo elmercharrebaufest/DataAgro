@@ -117,6 +117,18 @@ var ControlBoletos = (function () {
             #boletos-grid .k-grid-content tr.k-state-selected td {
                 color: #333 !important;
             }
+            #boletos-grid .k-grid-content td.campo-bloqueado {
+                background-color: #efefef !important;
+                color: #999 !important;
+                cursor: not-allowed !important;
+            }
+            #boletos-grid .k-grid-content td.campo-bloqueado .k-input,
+            #boletos-grid .k-grid-content td.campo-bloqueado .k-textbox,
+            #boletos-grid .k-grid-content td.campo-bloqueado .k-dropdown,
+            #boletos-grid .k-grid-content td.campo-bloqueado .k-datepicker {
+                background-color: #efefef !important;
+                color: #999 !important;
+            }
         `).appendTo("head");
     }
 
@@ -212,13 +224,36 @@ var ControlBoletos = (function () {
     }
 
     function dateCellEditor(container, options) {
+        var bloqueado = esCampoBloqueadoPorFila(options.model, options.field);
         var input = $('<input name="' + options.field + '" />');
         input.appendTo(container);
-        input.kendoDatePicker({
-            format: "dd/MM/yyyy",
-            parseFormats: ["dd/MM/yyyy", "d/M/yyyy", "yyyy-MM-dd"]
-        });
 
+        if (bloqueado) {
+            input.prop("readonly", true).prop("disabled", true).addClass("campo-bloqueado");
+            container.closest("td").addClass("campo-bloqueado");
+            return;
+        }
+
+        var fechaMinima = null;
+        if (options.field !== "FechaRecepBoleto") {
+            var feRecepBoleto = obtenerValorFila(options.model, "FechaRecepBoleto");
+            if (feRecepBoleto && typeof feRecepBoleto.getTime === "function") {
+                fechaMinima = feRecepBoleto;
+            } else if (feRecepBoleto) {
+                fechaMinima = parseDateDdMmYyyy(feRecepBoleto);
+            }
+
+            input.kendoDatePicker({
+                format: "dd/MM/yyyy",
+                parseFormats: ["dd/MM/yyyy", "d/M/yyyy", "yyyy-MM-dd"],
+                min: fechaMinima
+            });
+        } else {
+            input.kendoDatePicker({
+                format: "dd/MM/yyyy",
+                parseFormats: ["dd/MM/yyyy", "d/M/yyyy", "yyyy-MM-dd"]
+            });
+        }
         var dp = input.data("kendoDatePicker");
 
         // Evitar que el click del ícono del calendario cierre el popup por burbujeo
@@ -233,6 +268,12 @@ var ControlBoletos = (function () {
             setTimeout(function () {
                 var parsed = parseDateDdMmYyyy($this.val());
                 dp.value(parsed);
+                var error = validarFechaRelacional(options.model, options.field, parsed);
+                if (error) {
+                    mostrarMensaje("Validaci\u00f3n", error, "warning");
+                    dp.value("");
+                    return;
+                }
                 options.model.set(options.field, parsed);
             }, 0);
         });
@@ -267,8 +308,133 @@ var ControlBoletos = (function () {
         return ["Oblea"].indexOf(field) >= 0;
     }
 
+    function obtenerValorFila(item, field) {
+        if (!item || !field) return null;
+        if (typeof item.get === "function") {
+            var valor = item.get(field);
+            if (valor !== undefined) return valor;
+        }
+        return item[field];
+    }
+
+    function esValorVerdadero(valor) {
+        if (valor === true || valor === 1) return true;
+        if (valor === false || valor === 0 || valor === null || valor === undefined) return false;
+
+        var texto = String(valor).trim().toUpperCase();
+        return texto === "1" || texto === "TRUE" || texto === "SI" || texto === "S" || texto === "YES" || texto === "Y";
+    }
+
+    function esCampoBloqueadoPorFila(item, field) {
+        if (!item || !field) return false;
+
+        var esCartaOferta = esValorVerdadero(obtenerValorFila(item, "EsCartaOferta"));
+        var operaSinOblea = esValorVerdadero(obtenerValorFila(item, "OperaSinOblea"));
+        var esSinBoleto = esValorVerdadero(obtenerValorFila(item, "EsSinBoleto"));
+        var preCertificacionId = obtenerValorFila(item, "PreCertificacionId");
+        var existePreCertificacion = preCertificacionId !== null && preCertificacionId !== undefined && preCertificacionId !== "";
+        if (esCartaOferta && field === "FechaEnvioSellado") return true;
+
+        if (operaSinOblea) {
+            return [
+                "Oblea",
+                "FechaCertificacion",
+                "FechaVencimientoCertificacion",
+                "PreCertificacionBolsa",
+                "FechaEnvioBolsa",
+                "FechaVueltaBolsa",
+            ].indexOf(field) >= 0;
+        }
+        if (esSinBoleto) {
+            return [
+                "Oblea",
+                "FechaCertificacion",
+                "FechaVencimientoCertificacion",
+                "PreCertificacionBolsa",
+                "FechaEnvioBolsa",
+                "FechaVueltaBolsa",
+                "FechaRecibFirma",
+                "FechaEnviadoFirma",
+                "FechaEnvioSellado",
+                "FechaEnvioAfip",
+                "FechaVueltaAfip",
+                "FechaEnvioSellado"
+            ].indexOf(field) >= 0;
+        }
+        if (!existePreCertificacion) {
+            return [
+                "Oblea",
+                "FechaCertificacion",
+                "FechaVencimientoCertificacion",
+                "PreCertificacionBolsa"
+            ].indexOf(field) >= 0;
+        }
+        return false;
+    }
+
     function esCampoEditablePegado(field) {
         return esCampoFecha(field) || esCampoComboBolsa(field) || esCampoTextoEditable(field);
+    }
+
+    function esCampoEditablePegadoEnFila(item, field) {
+        return esCampoEditablePegado(field) && !esCampoBloqueadoPorFila(item, field);
+    }
+
+    function validarFechaRelacional(item, field, valorFecha) {
+        if (!valorFecha || !esCampoFecha(field)) return null;
+
+        var esCartaOferta = esValorVerdadero(obtenerValorFila(item, "EsCartaOferta"));
+        var operaSinOblea = esValorVerdadero(obtenerValorFila(item, "OperaSinOblea"));
+        var esSinBoleto = esValorVerdadero(obtenerValorFila(item, "EsSinBoleto"));
+
+        if (esSinBoleto) return null;
+
+        var feRecepcionBoleto = obtenerValorFila(item, "FechaRecepBoleto");
+        if (feRecepcionBoleto && typeof feRecepcionBoleto.getTime === "function") {
+            feRecepcionBoleto = feRecepcionBoleto;
+        } else if (feRecepcionBoleto) {
+            feRecepcionBoleto = parseDateDdMmYyyy(feRecepcionBoleto);
+        }
+
+        if (field === "FechaRecepBoleto") return null;
+
+        if (!feRecepcionBoleto) {
+            return "La Fecha de recepci\u00f3n de boleto es obligatoria.";
+        }
+
+        if (valorFecha < feRecepcionBoleto) {
+            return "La fecha no puede ser anterior a la Fecha de recepci\u00f3n de boleto.";
+        }
+
+        var feEnvioFirmas = obtenerValorFila(item, "FechaEnviadoFirma");
+        var feEnvioBolsa = obtenerValorFila(item, "FechaEnvioBolsa");
+        var feEnvioAfip = obtenerValorFila(item, "FechaEnvioAfip");
+        var feRecepcionBolsa = obtenerValorFila(item, "FechaVueltaBolsa");
+        var feRecepcionAfip = obtenerValorFila(item, "FechaVueltaAfip");
+
+        if (feEnvioFirmas && typeof feEnvioFirmas.getTime !== "function") feEnvioFirmas = parseDateDdMmYyyy(feEnvioFirmas);
+        if (feEnvioBolsa && typeof feEnvioBolsa.getTime !== "function") feEnvioBolsa = parseDateDdMmYyyy(feEnvioBolsa);
+        if (feEnvioAfip && typeof feEnvioAfip.getTime !== "function") feEnvioAfip = parseDateDdMmYyyy(feEnvioAfip);
+        if (feRecepcionBolsa && typeof feRecepcionBolsa.getTime !== "function") feRecepcionBolsa = parseDateDdMmYyyy(feRecepcionBolsa);
+        if (feRecepcionAfip && typeof feRecepcionAfip.getTime !== "function") feRecepcionAfip = parseDateDdMmYyyy(feRecepcionAfip);
+
+        if (field == "FechaRecibFirma" && feEnvioFirmas && valorFecha < feEnvioFirmas) {
+            return "La Fecha de recepci\u00f3n Firmas debe ser igual o mayor a la Fecha de env\u00edo Firmas.";
+        }
+
+        if (field == "FechaVueltaBolsa" && !operaSinOblea && feEnvioBolsa && valorFecha < feEnvioBolsa) {
+            return "La Fecha de recepci\u00f3n Oblea debe ser igual o mayor a la Fecha de env\u00edo Oblea.";
+        }
+
+        if (field == "FechaVueltaAfip" && feEnvioAfip && valorFecha < feEnvioAfip) {
+            return "La Fecha de recepci\u00f3n Arca debe ser igual o mayor a la Fecha de env\u00edo Arca.";
+        }
+
+        if (field == "FechaEnvioSellado" && !esCartaOferta && feRecepcionBolsa && valorFecha < feRecepcionBolsa) {
+            return "La Fecha de env\u00edo Sellado debe ser igual o mayor a la Fecha de recepci\u00f3n Obleado Bolsa.";
+        }
+
+        return null;
     }
 
     function obtenerOpcionesBolsaParaCombo() {
@@ -308,8 +474,16 @@ var ControlBoletos = (function () {
     }
 
     function comboBolsaEditor(container, options) {
+        var bloqueado = esCampoBloqueadoPorFila(options.model, options.field);
         var input = $('<input name="' + options.field + '" />');
         input.appendTo(container);
+
+        if (bloqueado) {
+            input.prop("readonly", true).prop("disabled", true).addClass("campo-bloqueado");
+            container.closest("td").addClass("campo-bloqueado");
+            return;
+        }
+
         input.kendoDropDownList({
             dataTextField: "Value",
             dataValueField: "Value",
@@ -328,8 +502,15 @@ var ControlBoletos = (function () {
     }
 
     function textCellEditor(container, options) {
+        var bloqueado = esCampoBloqueadoPorFila(options.model, options.field);
         var maxLength = options.field === "Oblea" ? 18 : 50;
-        $('<input class="k-input k-textbox" name="' + options.field + '" maxlength="' + maxLength + '" />').appendTo(container);
+        var input = $('<input class="k-input k-textbox" name="' + options.field + '" maxlength="' + maxLength + '" />');
+        input.appendTo(container);
+
+        if (bloqueado) {
+            input.prop("readonly", true).prop("disabled", true).addClass("campo-bloqueado");
+            container.closest("td").addClass("campo-bloqueado");
+        }
     }
 
     function parsearValoresFechaPegados(texto) {
@@ -390,7 +571,9 @@ var ControlBoletos = (function () {
         var start = Math.max(0, filaInicial || 0);
         var huboValorInvalido = false;
         var huboValorInvalidoOblea = false;
-
+        var huboCampoBloqueado = false;
+        var huboFechaInvalida = false;
+        var mensajeFechasInvalidas = [];
         for (var i = 0; i < valoresTexto.length; i++) {
             var filaIdx = start + i;
             if (filaIdx >= view.length) break;
@@ -400,6 +583,11 @@ var ControlBoletos = (function () {
 
             var item = view[filaIdx];
             if (!item) continue;
+
+            if (!esCampoEditablePegadoEnFila(item, field)) {
+                huboCampoBloqueado = true;
+                continue;
+            }
 
             var valor = normalizarValorPegado(field, valorTexto);
             if (esCampoComboBolsa(field) && !valor) {
@@ -411,6 +599,18 @@ var ControlBoletos = (function () {
                 continue;
             }
 
+            // Validar fechas relacionales antes de pegar
+            if (esCampoFecha(field) && valor) {
+                var errorFechaValidacion = validarFechaRelacional(item, field, valor);
+                if (errorFechaValidacion) {
+                    mensajeFechasInvalidas.push(
+                        `Para el contrato ${item.ContratoSAP}, se encontró la siguiente observación: ${errorFechaValidacion}`
+                    );
+                    huboFechaInvalida = true;
+                    continue;
+                }
+            }
+
             item.set(field, valor);
             state.dirtyItems[item.ControlDeBoletosId] = item.toJSON();
         }
@@ -420,6 +620,12 @@ var ControlBoletos = (function () {
         }
         if (huboValorInvalidoOblea) {
             mostrarMensaje("Validación", "Se ignoraron los valores de oblea porque superan el límite de 18 caracteres.", "warning");
+        }
+        if (huboCampoBloqueado) {
+            mostrarMensaje("Validación", "Se ignoraron valores pegados en filas bloqueadas por reglas de negocio.", "warning");
+        }
+        if (huboFechaInvalida) {
+            mostrarMensaje("Validación", mensajeFechasInvalidas.join("<br>"), "warning");
         }
 
         actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
@@ -465,6 +671,10 @@ var ControlBoletos = (function () {
             if (!esCampoEditablePegado(field)) return;
             var valores = parsearValoresPegadosPorCampo(field, textoClipboard);
             if (!valores.length) return;
+
+            var viewActual = state.grid.dataSource.view();
+            var itemInicial = viewActual[Math.max(0, filaInicial || 0)];
+            if (!esCampoEditablePegadoEnFila(itemInicial, field)) return;
 
             state.selectedPasteField = field;
             state.selectedPasteRowIndex = Math.max(0, filaInicial || 0);
@@ -575,6 +785,9 @@ var ControlBoletos = (function () {
             var colIndex = current.index();
             var maxRow = $rows.length - 1;
             var maxCol = current.closest("tr").find("td").length - 1;
+            var currentItem = state.grid.dataSource.view()[rowIndex];
+            var currentField = state.grid.columns[colIndex] && state.grid.columns[colIndex].field ? state.grid.columns[colIndex].field : null;
+            if (esCampoBloqueadoPorFila(currentItem, currentField)) return;
 
             if (e.ctrlKey || e.metaKey) {
                 // Ctrl+flecha: ir a borde (inicio/fin) como Excel
@@ -623,7 +836,7 @@ var ControlBoletos = (function () {
             var rowIndex = row.index();
             var view = state.grid.dataSource.view();
             var item = view[rowIndex];
-            if (!item) return;
+            if (!item || esCampoBloqueadoPorFila(item, field)) return;
 
             // Delete / Supr → limpiar fecha y quedarse en la misma celda
             if (e.key === "Delete" || e.key === "Del" || e.keyCode === 46) {
@@ -693,7 +906,7 @@ var ControlBoletos = (function () {
 
                 var viewCopy = state.grid.dataSource.view();
                 var itemCopy = viewCopy[rowIndexActual];
-                if (!itemCopy) return;
+                if (!itemCopy || esCampoBloqueadoPorFila(itemCopy, fieldActual)) return;
 
                 var valor = itemCopy.get(fieldActual);
                 var texto = "";
@@ -710,6 +923,10 @@ var ControlBoletos = (function () {
             // Ctrl+V en campo editable: pegar desde portapapeles comenzando en la celda actual
             if ((e.ctrlKey || e.metaKey) && (e.key === "v" || e.key === "V" || e.keyCode === 86)) {
                 if (!esCampoEditablePegado(fieldActual)) return;
+
+                var viewPaste = state.grid.dataSource.view();
+                var itemPaste = viewPaste[rowIndexActual];
+                if (!esCampoEditablePegadoEnFila(itemPaste, fieldActual)) return;
 
                 state.selectedPasteField = fieldActual;
                 state.selectedPasteRowIndex = rowIndexActual >= 0 ? rowIndexActual : 0;
@@ -838,7 +1055,9 @@ var ControlBoletos = (function () {
                                         FechaRecibFirma: { type: "date" },
                                         FechaVueltaBolsa: { type: "date" },
                                         FechaVueltaAfip: { type: "date" },
-                                        FechaEnvioSellado: { type: "date" }
+                                        FechaEnvioSellado: { type: "date" },
+                                        EsCartaOferta: { type: "boolean" },
+                                        OperaSinOblea: { type: "boolean" }
                                     }
                                 },
                             },
@@ -872,22 +1091,7 @@ var ControlBoletos = (function () {
                                 autoFitColumnas(e.sender);
                             }, 0);
                         },
-                        pageable: {
-                            refresh: true,
-                            buttonCount: 5,
-                            messages: {
-                                display: "Mostrando {0}-{1} de {2} registros",
-                                empty: "No se encontraron registros",
-                                page: "Página",
-                                of: "de {0}",
-                                itemsPerPage: "registros por página",
-                                first: "Primera página",
-                                last: "Última página",
-                                next: "Página siguiente",
-                                previous: "Página anterior",
-                                refresh: "Actualizar",
-                            },
-                        },
+                        pageable: false,
                         navigatable: true,
                         selectable: "cell",
                         editable: "incell",
@@ -905,37 +1109,10 @@ var ControlBoletos = (function () {
                                 editable: function () { return false; }
                             },
                             {
-                                field: "Oblea",
-                                title: "Oblea",
-                                width: 120,
-                                editor: textCellEditor
-                            },
-                            {
                                 field: "PreCertificacionBolsa",
                                 title: "Codigo Bolsa",
                                 width: 140,
-                                editor: comboBolsaEditor
-                            },
-                            {
-                                field: "FechaCertificacion",
-                                title: "F. Certificación Bolsa",
-                                width: 200,
-                                format: "{0:dd/MM/yyyy}",
-                                template: "#= formatearFecha(FechaCertificacion) #",
-                                editor: dateCellEditor
-                            },
-                            {
-                                field: "FechaVencimientoCertificacion",
-                                title: "Fecha Vencimiento Certificación",
-                                width: 200,
-                                format: "{0:dd/MM/yyyy}",
-                                template: "#= formatearFecha(FechaVencimientoCertificacion) #",
-                                editor: dateCellEditor
-                            },
-                            {
-                                field: "BolsaSellado",
-                                title: "Codigo Bolsa",
-                                width: 140,
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "PreCertificacionBolsa"); },
                                 editor: comboBolsaEditor
                             },
                             {
@@ -944,6 +1121,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaRecepBoleto) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaRecepBoleto"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -952,6 +1130,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaEnviadoFirma) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaEnviadoFirma"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -960,6 +1139,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaEnvioBolsa) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaEnvioBolsa"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -968,6 +1148,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaEnvioAfip) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaEnvioAfip"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -976,6 +1157,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaRecibFirma) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaRecibFirma"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -984,6 +1166,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaVueltaBolsa) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaVueltaBolsa"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -992,6 +1175,39 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaVueltaAfip) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaVueltaAfip"); },
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "Oblea",
+                                title: "Oblea",
+                                width: 120,
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "Oblea"); },
+                                editor: textCellEditor
+                            },
+                            {
+                                field: "BolsaSellado",
+                                title: "Bolsa",
+                                width: 140,
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "BolsaSellado"); },
+                                editor: comboBolsaEditor
+                            },
+                            {
+                                field: "FechaCertificacion",
+                                title: "F. Certificación Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaCertificacion) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaCertificacion"); },
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "FechaVencimientoCertificacion",
+                                title: "F. Vencimiento Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaVencimientoCertificacion) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaVencimientoCertificacion"); },
                                 editor: dateCellEditor
                             },
                             {
@@ -1000,6 +1216,7 @@ var ControlBoletos = (function () {
                                 width: 200,
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaEnvioSellado) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaEnvioSellado"); },
                                 editor: dateCellEditor
                             },
                         ],
@@ -1013,6 +1230,18 @@ var ControlBoletos = (function () {
                                 autoFitColumnas(e.sender);
                                 state.columnasAjustadas = true;
                             }
+
+                            var $rows = e.sender.tbody.find("tr");
+                            $rows.each(function () {
+                                var item = e.sender.dataItem(this);
+                                var $tds = $(this).find("td");
+                                e.sender.columns.forEach(function (col, idx) {
+                                    if (!col || !col.field) return;
+                                    var bloqueado = esCampoBloqueadoPorFila(item, col.field);
+                                    $tds.eq(idx).toggleClass("campo-bloqueado", bloqueado);
+                                });
+                            });
+
                             configurarPegadoMasivoFechas();
                             actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
                         },
@@ -1070,7 +1299,7 @@ var ControlBoletos = (function () {
             actualizarBoton(controlGuardarFechas, false);
         },
 
-        guardarFechas: function () {
+        guardarFechas: async function () {
             var self = this;
             var items = Object.keys(state.dirtyItems).map(function (k) { return state.dirtyItems[k]; });
 
@@ -1079,30 +1308,26 @@ var ControlBoletos = (function () {
                 return;
             }
 
-            $.ajax({
-                url: config.urls.guardarBoletosParaModificarFechas,
-                type: "POST",
-                data: { boletos: items },
-                success: function (resp) {
-                    if (resp && resp.success) {
-                        state.dirtyItems = {};
-                        actualizarBoton(controlGuardarFechas, false);
-                        mostrarMensaje("Éxito", "Fechas guardadas correctamente.", "success");
-                        if (state.grid) {
-                            state.grid.dataSource.read();
-                        }
-                    } else {
-                        var msg = "Error al guardar fechas.";
-                        if (resp && resp.errors && resp.errors.length > 0 && resp.errors[0].Message) {
-                            msg = resp.errors[0].Message;
-                        }
-                        mostrarMensaje("Error", msg, "danger");
+            BlockUi('Guardando...');
+            try {
+
+                var response = await MSExecuteOnServerAsync(config.urls.guardarBoletosParaModificarFechas, items);
+                if (response.success) {
+                    actualizarBoton(controlGuardarFechas, false);
+                    MensInfo("Se guardaron los cambios a los contratos de manera exitosa.");
+                    if (state.grid) {
+                        state.grid.dataSource.read();
                     }
-                },
-                error: function () {
-                    mostrarMensaje("Error", "Error al comunicarse con el servidor al guardar.", "danger");
+                } else {
+                    MensErr(response.message);
                 }
-            });
+
+
+            } catch (e) {
+                console.error("Error al guardaron los cambios a los contratos de manera exitosa:", e);
+            } finally {
+                $.unblockUI();
+            }
         },
     };
 })();

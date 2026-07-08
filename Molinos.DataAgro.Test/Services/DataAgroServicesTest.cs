@@ -1101,10 +1101,9 @@ namespace Molinos.DataAgro.Test.Services
             var resultado = target.RegistrarDatosPreCertificacion(null);
 
             Assert.NotNull(resultado);
-            Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(1, resultado.Errores.Count);
-            Assert.AreEqual(52001, resultado.Errores[0].ErrorCode);
-            Assert.AreEqual("RegistrarDatosPreCertificacion", resultado.Errores[0].Source);
+            Assert.IsFalse(resultado.EjecutadoCorrectamente);
+            Assert.AreEqual(1, resultado.ListaErrores.Count);
+            Assert.AreEqual("El request recibido es nulo.", resultado.ListaErrores[0].Message);
         }
 
         [Test]
@@ -1115,7 +1114,7 @@ namespace Molinos.DataAgro.Test.Services
                 ContratoSAP = "4500000001",
                 Detalle = new List<ControlDeBoletosDatosPreCertificacionServiceDto>()
             };
-            var respuestaEsperada = new Resultado();
+            var respuestaEsperada = new ControlDeBoletosOperacionSapResultadoDto();
 
             controlDeBoletosSapManager
                 .Setup(x => x.RegistrarDatosPreCertificacion(request))
@@ -1142,9 +1141,9 @@ namespace Molinos.DataAgro.Test.Services
             var resultado = target.RegistrarDatosPreCertificacion(request);
 
             Assert.NotNull(resultado);
-            Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(1, resultado.Errores.Count);
-            Assert.AreEqual(52003, resultado.Errores[0].ErrorCode);
+            Assert.IsFalse(resultado.EjecutadoCorrectamente);
+            Assert.AreEqual(1, resultado.ListaErrores.Count);
+            StringAssert.Contains("Error interno al procesar la operacion SAP de Control de Boletos.", resultado.ListaErrores[0].Message);
         }
 
         [Test]
@@ -1153,10 +1152,9 @@ namespace Molinos.DataAgro.Test.Services
             var resultado = target.RegistrarDatosSeguimiento(null);
 
             Assert.NotNull(resultado);
-            Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(1, resultado.Errores.Count);
-            Assert.AreEqual(52001, resultado.Errores[0].ErrorCode);
-            Assert.AreEqual("RegistrarDatosSeguimiento", resultado.Errores[0].Source);
+            Assert.IsFalse(resultado.EjecutadoCorrectamente);
+            Assert.AreEqual(1, resultado.ListaErrores.Count);
+            Assert.AreEqual("El request recibido es nulo.", resultado.ListaErrores[0].Message);
         }
 
         [Test]
@@ -1166,7 +1164,7 @@ namespace Molinos.DataAgro.Test.Services
             {
                 ContratoSAP = "4500000003"
             };
-            var respuestaEsperada = new Resultado();
+            var respuestaEsperada = new ControlDeBoletosOperacionSapResultadoDto();
 
             controlDeBoletosSapManager
                 .Setup(x => x.RegistrarDatosSeguimiento(request))
@@ -1192,9 +1190,9 @@ namespace Molinos.DataAgro.Test.Services
             var resultado = target.RegistrarDatosSeguimiento(request);
 
             Assert.NotNull(resultado);
-            Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(1, resultado.Errores.Count);
-            Assert.AreEqual(52003, resultado.Errores[0].ErrorCode);
+            Assert.IsFalse(resultado.EjecutadoCorrectamente);
+            Assert.AreEqual(1, resultado.ListaErrores.Count);
+            StringAssert.Contains("Error interno al procesar la operacion SAP de Control de Boletos.", resultado.ListaErrores[0].Message);
         }
     }
 }
