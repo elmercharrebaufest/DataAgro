@@ -1483,11 +1483,19 @@ namespace Molinos.DataAgro.Business.Managers
                 var pre = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId && x.TipoOblea.Codigo == "O");
                 if (pre == null)
                 {
-                    resultado.Errores.Add(new ErrorMessage
+                    pre = new ControlDeBoletosPreCertificacion()
                     {
-                        Item = indiceContrato,
-                        Message = $"No se encontró la pre-certificación para el contrato {boleto.ContratoSAP}."
-                    });
+                        ControlDeBoletosId = boleto.ControlDeBoletosId,
+                        Oblea = boleto.Oblea,
+                        FechaCertificacion = boleto.FechaCertificacion,
+                        FechaVencimiento = boleto.FechaVencimientoCertificacion,
+                        BolsaCompraNetId = bolsa?.Id ?? 0,
+                        TipoObleaId = repositorio.Obtener<TipoOblea>(x => x.Codigo == "O")?.Id ?? 0,
+                        Rechazado = string.Empty,
+                        FechaCreacion = DateTime.Now,
+                    };
+                    repositorio.Agregar(pre);
+                    repositorio.GuardarCambios();
                     return resultado;
                 }
 

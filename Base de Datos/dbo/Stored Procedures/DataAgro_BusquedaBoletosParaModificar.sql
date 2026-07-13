@@ -19,7 +19,7 @@ BEGIN
         cor.CUIT AS CUITCorredor,
         CAST(CASE WHEN n.CorredorId > 0 THEN 1 ELSE 0 END AS bit) AS EsCorredor,
         b.Descripcion AS TipoBoleto,
-        CAST(CASE WHEN n.BoletoId = 3 THEN 1 ELSE 0 END AS bit) AS EsCartaOferta,
+        CAST(CASE WHEN n.BoletoId = 4 THEN 1 ELSE 0 END AS bit) AS EsCartaOferta,
         CAST(CASE WHEN n.BoletoId = 5 THEN 1 ELSE 0 END AS bit) AS EsSinBoleto,
         CAST(0 AS bit) AS OperaSinOblea,
         n.ContratoSAP,
