@@ -41,5 +41,8 @@ namespace Molinos.DataAgro.Interfaces.Managers
         string VerificarDuplicidadObleaCodigoArca(int controlDeBoletosId, string numeroOblea, string codigoArca);
         Resultado EliminarControlDeBoletos(EliminarControlDeBoletoDto eliminarControlDeBoleto);
         void EstablecerEstadoBoleto(int controlDeBoletoId);
+        ConfirmaDocumentoRegistradoDto ObtenerDocumentoConfirma(int controlDeBoletoId);
+        Resultado EliminarPreCertificacion(int controlDeBoletosId);
+        Resultado EliminarDatosSeguimiento(int controlDeBoletosId);
     }
 }

@@ -11,6 +11,7 @@ var ControlBoletos = (function () {
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
             getBoletos: "/ControlDeBoletos/GetBoletos",
             getContrato: "/ControlDeBoletos/ObtenerDetalleContrato",
+            getDocumentoConfirmaPDF: "/ControlDeBoletos/GetDocumentoConfirmaPDF",
             exportBoletosExcel: "/ControlDeBoletos/ExportarBoletosExcel",
         }
     };
@@ -632,15 +633,19 @@ var ControlBoletos = (function () {
                 '})" title="Gestión de control de boletos"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
             );
 
-            if (data.EsConfirma) {
+            if (data.EsConfirma && data.TipoAltaConfirma == 'Alta Definitiva') {
 
                 botones.push(
                     '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
                     data.Id +
                     ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
                 );
+                botones.push(
+                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.descargarPDFConfirma(' +
+                    data.Id +
+                    ')" title="Descargar PDF Confirma"><i class="fa fa-file-pdf-o"></i><span class="tooltiptext"></span></button>',
+                );
             }
-
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
             );
@@ -719,6 +724,19 @@ var ControlBoletos = (function () {
                 }
             }
         },
+        descargarPDFConfirma: async function (id) {
+
+            try {
+
+                await MSDownloadFileAsync(
+                    config.urls.getDocumentoConfirmaPDF,
+                    { controlDeBoletoId: id }
+                );
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
     };
 })();
 

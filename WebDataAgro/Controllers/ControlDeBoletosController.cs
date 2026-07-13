@@ -1,7 +1,9 @@
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Agent.ScatoRepositorio;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -12,11 +14,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
 using System.Web.Mvc;
-using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Dto;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -412,12 +414,27 @@ namespace WebDataAgro.Controllers
             {
                 var resultado = _controlDeBoletosManager.RegistrarDatosPreCertificacion(controlDeBoletosPreCertificacion);
                 bool success = !resultado.HayError;
-                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Modificacion los datos de pre certificacion correctamente";
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Modificacion los datos de precertificacion correctamente";
                 return Json(new { success = success, message = mensaje });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Error al modificar los datos de pre certificacion en el control de boletos: " + ex.Message });
+                return Json(new { success = false, message = "Error al modificar los datos de precertificacion en el control de boletos: " + ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult EliminarDatosPreCertificacion(int controlDeBoletosId)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.EliminarPreCertificacion(controlDeBoletosId);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Se eliminaron los datos de precertificacion correctamente";
+                return Json(new { success = success, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al eliminar los datos de precertificacion en el control de boletos: " + ex.Message });
             }
         }
         #endregion
@@ -455,6 +472,21 @@ namespace WebDataAgro.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error al modificar los datos de seguimiento en el control de boletos: " + ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult EliminarDatosDeSeguimiento(int controlDeBoletosId)
+        {
+            try
+            {
+                var resultado = _controlDeBoletosManager.EliminarDatosSeguimiento(controlDeBoletosId);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Se eliminaron los datos de seguimiento correctamente";
+                return Json(new { success = success, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al eliminar los datos de seguimiento en el control de boletos: " + ex.Message });
             }
         }
         #endregion
@@ -1058,30 +1090,28 @@ namespace WebDataAgro.Controllers
         }
         #endregion
 
-        //[HttpGet]
-        //public JsonResult ProcesarBoletosPendientesControl()
-        //{
-        //    try
-        //    {
-        //        var tracking = _controlDeBoletosManager.ProcesarBoletosPendientesControl();
-        //        var result = new
-        //        {
-        //            Data = tracking
-        //        };
-        //        return Json(result, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new
-        //        {
-        //            Data = new List<object>(),
-        //            Total = 0,
-        //            Errors = "Error al cargar datos: " + ex.Message
-        //        });
-        //    }
-        //}
+        #region Descarga Documento Confirma
+        [HttpGet]
+        public ActionResult GetDocumentoConfirmaPDF(int controlDeBoletoId)
+        {
+            var documentoConfirma = _controlDeBoletosManager.ObtenerDocumentoConfirma(controlDeBoletoId);
 
+            if (documentoConfirma == null)
+            {
+                return HttpNotFound();
+            }
 
+            if (documentoConfirma.PdfBinario == null || documentoConfirma.PdfBinario.Length == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NoContent, "No se encontró el PDF.");
+            }
+
+            return File(
+                documentoConfirma.PdfBinario,
+                "application/pdf",
+                $"Documento_Confirma_{controlDeBoletoId}.pdf");
+        }
+        #endregion
 
     }
 

@@ -33,13 +33,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent;
         private readonly IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IConfirmaConsultaDocumentosRegistradosAgent confirmaConsultaDocumentosRegistradosAgent;
         public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager,
                                        IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent,
                                        ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
                                        IConfirmaConsultaDocumentosAgent confirmaConsultaDocumentosAgent,
                                        IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent,
                                        IAltaTempranaAgent altaTempranaAgent,
-                                       ILogDataAgroManager logDataAgroManager
+                                       ILogDataAgroManager logDataAgroManager,
+                                       IConfirmaConsultaDocumentosRegistradosAgent confirmaConsultaDocumentosRegistradosAgent
                                        )
         {
             this.logger = logger;
@@ -51,6 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.datosCertificacionControlBoletoAgent = datosCertificacionControlBoletoAgent;
             this.altaTempranaAgent = altaTempranaAgent;
             this.logDataAgroManager = logDataAgroManager;
+            this.confirmaConsultaDocumentosRegistradosAgent = confirmaConsultaDocumentosRegistradosAgent;
         }
 
         #region Reporte Seguimiento Boletos
@@ -576,6 +579,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         private SeguimientoControlDeBoletosDto ConstruirSeguimientoDto(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
+            string tipoBoleto = string.Empty;
+            string bolsa = string.Empty;
+
             // Validar ControlDeBoletos
             var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
             if (controlDeBoletos == null)
@@ -595,21 +601,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             // Validar BolsaCompraNet y obtener CodigoSap
             var bolsaEntity = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
-            if (bolsaEntity == null)
-            {
-                logger.Error($"No se encontró BolsaCompraNet con Id: {controlDeBoletosDatosSeguimiento.BolsaCompraNetId}");
-                throw new Exception($"No se encontró la bolsa de compra especificada");
-            }
-            var bolsa = bolsaEntity.CodigoSap;
-
-            // Validar BoletoSap y obtener Id
-            var boletoSapEntity = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId);
-            if (boletoSapEntity == null)
-            {
-                logger.Error($"No se encontró BoletoSap con Id: {controlDeBoletosDatosSeguimiento.BoletoSapId}");
-                throw new Exception($"No se encontró el tipo de boleto SAP especificado");
-            }
-            var tipoBoleto = boletoSapEntity.Id.ToString("D2");
+            if (bolsaEntity != null)
+                bolsa = bolsaEntity.CodigoSap;
 
             var ahora = DateTime.Now;
 
@@ -655,6 +648,29 @@ namespace Molinos.DataAgro.Business.Managers
         private void ActualizarSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(controlDeBoletosDatosSeguimiento.Id);
+
+            if (controlDeBoletosDatosSeguimiento.BoletoSapId == 0 &&
+                controlDeBoletosDatosSeguimiento.BolsaCompraNetId == 0 &&
+                string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
+                string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
+                !controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaEnvioFirma.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaEnvioBolsa.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaEnvioAfip.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaRecepcionFirma.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaRecepcionAfip.HasValue &&
+                !controlDeBoletosDatosSeguimiento.FechaEnvioSellado.HasValue &&
+                string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.ObsCtrlBoleto) &&
+                string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2))
+            {
+                repositorio.Remover(datosSeguimiento);
+                repositorio.GuardarCambios();
+                this.logDataAgroManager.LogCambiosControlBoletos(controlDeBoletosDatosSeguimiento, TipoAccionLogDataAgro.Eliminar, datosSeguimiento.Id, "Eliminacion de Seguimiento - Control de Boletos");
+                EstablecerEstadoBoleto(datosSeguimiento.ControlDeBoletosId);
+                return;
+            }
+
             datosSeguimiento.BoletoSap = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId);
             datosSeguimiento.BoletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter;
             datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
@@ -701,6 +717,43 @@ namespace Molinos.DataAgro.Business.Managers
             EstablecerEstadoBoleto(datosSeguimiento.ControlDeBoletosId);
             this.logDataAgroManager.LogCambiosControlBoletos(controlDeBoletosDatosSeguimiento, TipoAccionLogDataAgro.Crear, datosSeguimiento.Id, "Registro de Seguimiento - Control de Boletos");
         }
+        public Resultado EliminarDatosSeguimiento(int controlDeBoletosId)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
+                var precertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
+
+                if (seguimiento != null) {
+                    repositorio.Remover(seguimiento);
+                }
+
+                if (precertificacion != null && precertificacion.Any())
+                {
+                    repositorio.RemoverTodos(precertificacion);
+                }
+                repositorio.GuardarCambios();
+
+                if (precertificacion != null && precertificacion.Any())
+                {
+                    this.logDataAgroManager.LogCambiosControlBoletos(precertificacion, TipoAccionLogDataAgro.Eliminar, precertificacion.FirstOrDefault()?.Id ?? 0, "Eliminar de Certificacion - Control de Boletos");
+                }
+                if (seguimiento != null)
+                {
+                    this.logDataAgroManager.LogCambiosControlBoletos(seguimiento, TipoAccionLogDataAgro.Eliminar, seguimiento.Id, "Eliminar de Seguimiento - Control de Boletos");
+                }
+                this.EstablecerEstadoBoleto(controlDeBoletosId);
+
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = "Error al eliminar datos de seguimiento y pre-certificación: " + ex.Message });
+                logger.Error(ex, "Error al eliminar datos de seguimiento y pre-certificación en SAP");
+            }
+            return oResultado;
+        }
+
         #endregion
 
         #region Datos de PreCertificacion
@@ -1014,7 +1067,28 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
+        public Resultado EliminarPreCertificacion(int controlDeBoletosId)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var precertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
 
+                if (precertificacion != null && precertificacion.Any())
+                {
+                    repositorio.RemoverTodos(precertificacion);
+                }
+                repositorio.GuardarCambios();
+                this.logDataAgroManager.LogCambiosControlBoletos(precertificacion, TipoAccionLogDataAgro.Eliminar, precertificacion.FirstOrDefault()?.Id ?? 0 , "Eliminar de Certificacion - Control de Boletos");
+                this.EstablecerEstadoBoleto(controlDeBoletosId);
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = "Error al eliminar datos de precertificación: " + ex.Message });
+                logger.Error(ex, "Error al eliminar precertificación");
+            }
+            return oResultado;
+        }
         #endregion
 
         #region Tracking de Boletos
@@ -1167,7 +1241,7 @@ namespace Molinos.DataAgro.Business.Managers
                 certificaciones.Any(x => x.TipoObleaId == tipoObleaBolsa.Id);
 
             bool tieneCodigoArca =
-                certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id && x.FechaCertificacion.HasValue);
+                certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id && !string.IsNullOrEmpty(x.Oblea));
 
             // Sin boleto
             if (esSinBoleto)
@@ -1184,6 +1258,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
                 return;
+            }
+            if (tieneObleaBolsa)
+            {
+                var obleaBolsa = certificaciones.FirstOrDefault(x => x.TipoObleaId == tipoObleaBolsa.Id);
+                var noTieneOblea = string.IsNullOrEmpty(obleaBolsa?.Oblea);
+                if (noTieneOblea)
+                {
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                    return;
+                }
             }
 
             if (!tieneCodigoArca)
@@ -1477,6 +1561,10 @@ namespace Molinos.DataAgro.Business.Managers
                 RemoverYGuardar(datosPreCertificacion);
                 RemoverYGuardar(datosSeguimiento);
 
+                this.logDataAgroManager.LogCambiosControlBoletos(datosPreCertificacion, TipoAccionLogDataAgro.Eliminar, datosPreCertificacion.FirstOrDefault()?.Id ?? 0, "Eliminar de Certificacion - Control de Boletos");
+                this.logDataAgroManager.LogCambiosControlBoletos(datosSeguimiento, TipoAccionLogDataAgro.Eliminar, datosSeguimiento.FirstOrDefault()?.Id ?? 0, "Eliminar de Seguimiento - Control de Boletos");
+                this.EstablecerEstadoBoleto(eliminarControlDeBoleto.ControlDeBoletosId);
+
                 return oResultado;
             }
             catch (Exception ex)
@@ -1570,5 +1658,17 @@ namespace Molinos.DataAgro.Business.Managers
 
         #endregion
 
+        #region Descargar PDF Confirma
+        public ConfirmaDocumentoRegistradoDto ObtenerDocumentoConfirma(int controlDeBoletoId)
+        {
+            var controlDeBoleto = repositorio.Obtener<ControlDeBoletos>(x => x.Id == controlDeBoletoId);
+            var negocio = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoleto.NegocioId);
+            string documento = controlDeBoleto.AltaIdDocumentoConfirma.ToString();
+            string bolsa = negocio.Bolsa?.CodigoConfirma ?? string.Empty;
+            string cuit = negocio.CorredorId > 0 ? negocio.Corredor.CUIT : negocio.Proveedor.CUIT;
+            var documentoConfirmaPDF = confirmaConsultaDocumentosRegistradosAgent.ConfirmaConsultaDocumentosRegistrados(bolsa, documento, cuit);
+            return documentoConfirmaPDF;
+        }
+        #endregion
     }
 }

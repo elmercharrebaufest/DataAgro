@@ -8,17 +8,17 @@ var ControlDeBoletosGestion = (function () {
     };
 
     var state = {
-        ControlDeBoletosId: null,
-        SeguimientoBoletoId: null,
-        PreCertificacionId: null,
-        NegocioId: null,
-        OperaSinOblea: false,
-        PlanCanje: false,
-        EsCartaOferta: false,
-        EsSinBoleto: false,
-        BoletoCompraNet: null,
-        ContratoSAP: null,
-        Bolsa: null
+        controlDeBoletosId: null,
+        seguimientoBoletoId: null,
+        preCertificacionId: null,
+        negocioId: null,
+        operaSinOblea: false,
+        planCanje: false,
+        esCartaOferta: false,
+        esSinBoleto: false,
+        boletoCompraNet: null,
+        contratoSAP: null,
+        bolsa: null
     };
 
 
@@ -44,8 +44,8 @@ var ControlDeBoletosGestion = (function () {
     async function configurarEventos() {
 
         $("#collapseModificar").on("show.bs.collapse", async function () {
-            if (state.NegocioId > 0) {
-                ControlDeBoletosModificarContrato.inicializar(state.NegocioId);
+            if (state.negocioId > 0) {
+                ControlDeBoletosModificarContrato.inicializar(state.negocioId);
             }
         });
 
@@ -54,32 +54,33 @@ var ControlDeBoletosGestion = (function () {
             // state.OperaSinOblea = true;
 
             await ControlDeBoletosDatosCertificacion.inicializar(
-                state.ControlDeBoletosId,
-                state.OperaSinOblea,
-                state.PlanCanje,
-                state.EsSinBoleto,
-                state.Bolsa,
-                state.ContratoSAP
+                state.controlDeBoletosId,
+                state.operaSinOblea,
+                state.planCanje,
+                state.esSinBoleto,
+                state.bolsa,
+                state.contratoSAP
             );
         });
 
         $("#collapseSeguimiento").on("shown.bs.collapse", async function () {
             await ControlDeBoletosSeguimiento.inicializar(
-                state.ControlDeBoletosId,
-                state.OperaSinOblea,
-                state.EsCartaOferta,
-                state.EsSinBoleto,
-                state.BoletoCompraNet
+                state.controlDeBoletosId,
+                state.operaSinOblea,
+                state.esCartaOferta,
+                state.esSinBoleto,
+                state.boletoCompraNet,
+                state.contratoSAP
             );
         });
         $("#btnEliminarControlBoleto").on("click", async function () {
             BlockUi('Eliminando...');
 
             try {
-                Confirma('¿Desea eliminar todo el control de boletos para el contrato ' + state.ContratoSAP + "?", async function () {
+                Confirma('¿Desea eliminar todo el control de boletos para el contrato ' + state.contratoSAP + "?", async function () {
                     var request = {
-                        ControlDeBoletosId: state.ControlDeBoletosId,
-                        ContratoSAP: state.ContratoSAP
+                        ControlDeBoletosId: state.controlDeBoletosId,
+                        ContratoSAP: state.contratoSAP
                     };
                     var response = await MSExecuteOnServerAsync(config.eliminarControlDeBoletos, request);
                     if (response.success) {
@@ -125,7 +126,7 @@ var ControlDeBoletosGestion = (function () {
     }
 
     async function cargarDatos() {
-        var url = config.getContrato + "?id=" + state.NegocioId;
+        var url = config.getContrato + "?id=" + state.negocioId;
         BlockUi("Cargando...");
         try {
             var contrato = await MSExecuteGetOnServerAsync(url);
@@ -148,13 +149,13 @@ var ControlDeBoletosGestion = (function () {
             controlTipoBoleto.text(contrato.TipoBoleto);
             controlPeriodoOperacion.text(contrato.FechaOperacion);
 
-            state.OperaSinOblea = contrato.OperaSinOblea;
-            state.PlanCanje = contrato.PlanCanje;
-            state.EsCartaOferta = contrato.EsCartaOferta;
-            state.EsSinBoleto = contrato.EsSinBoleto;
-            state.BoletoCompraNet = contrato.BoletoCompraNetId;
-            state.ContratoSAP = contrato.ContratoSAP;
-            state.Bolsa = contrato.BolsaId;
+            state.operaSinOblea = contrato.OperaSinOblea;
+            state.planCanje = contrato.PlanCanje;
+            state.esCartaOferta = contrato.EsCartaOferta;
+            state.esSinBoleto = contrato.EsSinBoleto;
+            state.boletoCompraNet = contrato.BoletoCompraNetId;
+            state.contratoSAP = contrato.ContratoSAP;
+            state.bolsa = contrato.BolsaId;
 
         } catch (e) {
             console.error("Error cargando datos del contrato:", e);
@@ -165,11 +166,11 @@ var ControlDeBoletosGestion = (function () {
 
     return {
         abrir: function (params) {
-            state.ControlDeBoletosId = params.ControlDeBoletosId || 0;
-            state.SeguimientoBoletoId = params.SeguimientoBoletoId || 0;
-            state.NegocioId = params.NegocioId || 0;
+            state.controlDeBoletosId = params.ControlDeBoletosId || 0;
+            state.seguimientoBoletoId = params.SeguimientoBoletoId || 0;
+            state.negocioId = params.NegocioId || 0;
 
-            var parametros = "?controlDeBoletosId=" + state.ControlDeBoletosId + "&seguimientoBoletoId=" + state.SeguimientoBoletoId + "&negocioId=" + state.NegocioId;
+            var parametros = "?controlDeBoletosId=" + state.controlDeBoletosId + "&seguimientoBoletoId=" + state.seguimientoBoletoId + "&negocioId=" + state.negocioId;
             var url = "/ControlDeBoletos/_GestionControlBoleto" + parametros;
 
             // Remover modal anterior si existe
