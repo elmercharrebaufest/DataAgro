@@ -331,9 +331,9 @@ var ControlBoletos = (function () {
         var esCartaOferta = esValorVerdadero(obtenerValorFila(item, "EsCartaOferta"));
         var operaSinOblea = esValorVerdadero(obtenerValorFila(item, "OperaSinOblea"));
         var esSinBoleto = esValorVerdadero(obtenerValorFila(item, "EsSinBoleto"));
-        var preCertificacionId = obtenerValorFila(item, "PreCertificacionId");
-        var existePreCertificacion = preCertificacionId !== null && preCertificacionId !== undefined && preCertificacionId !== "";
+        console.log('esCartaOferta--->>', esCartaOferta);
         if (esCartaOferta && field === "FechaEnvioSellado") return true;
+        console.log('operaSinOblea--->>', operaSinOblea);
 
         if (operaSinOblea) {
             return [
@@ -345,28 +345,20 @@ var ControlBoletos = (function () {
                 "FechaVueltaBolsa",
             ].indexOf(field) >= 0;
         }
+        console.log('esSinBoleto--->>', esSinBoleto);
         if (esSinBoleto) {
             return [
                 "Oblea",
                 "FechaCertificacion",
                 "FechaVencimientoCertificacion",
                 "PreCertificacionBolsa",
-                "FechaEnvioBolsa",
-                "FechaVueltaBolsa",
-                "FechaRecibFirma",
                 "FechaEnviadoFirma",
-                "FechaEnvioSellado",
+                "FechaEnvioBolsa",
                 "FechaEnvioAfip",
+                "FechaRecibFirma",
+                "FechaVueltaBolsa",
                 "FechaVueltaAfip",
                 "FechaEnvioSellado"
-            ].indexOf(field) >= 0;
-        }
-        if (!existePreCertificacion) {
-            return [
-                "Oblea",
-                "FechaCertificacion",
-                "FechaVencimientoCertificacion",
-                "PreCertificacionBolsa"
             ].indexOf(field) >= 0;
         }
         return false;
@@ -1109,10 +1101,10 @@ var ControlBoletos = (function () {
                                 editable: function () { return false; }
                             },
                             {
-                                field: "PreCertificacionBolsa",
-                                title: "Codigo Bolsa",
+                                field: "BolsaSellado",
+                                title: "Bolsa",
                                 width: 140,
-                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "PreCertificacionBolsa"); },
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "BolsaSellado"); },
                                 editor: comboBolsaEditor
                             },
                             {
@@ -1186,10 +1178,10 @@ var ControlBoletos = (function () {
                                 editor: textCellEditor
                             },
                             {
-                                field: "BolsaSellado",
-                                title: "Bolsa",
+                                field: "PreCertificacionBolsa",
+                                title: "Codigo Bolsa",
                                 width: 140,
-                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "BolsaSellado"); },
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "PreCertificacionBolsa"); },
                                 editor: comboBolsaEditor
                             },
                             {
