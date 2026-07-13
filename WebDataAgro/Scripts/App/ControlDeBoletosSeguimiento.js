@@ -13,19 +13,23 @@ var ControlDeBoletosSeguimiento = (function () {
             getBolsa: "/ControlDeBoletos/GetBolsaCompraNet",
             getBolsaSAP: "/ControlDeBoletos/GetBolsaCompraNetSAP",
             getBoletoSap: "/ControlDeBoletos/GetBoletoSap",
+            eliminarSeguimiento: "/ControlDeBoletos/EliminarDatosDeSeguimiento",
+
         },
         modalId: "#modalSeguimientoControlBoleto"
     };
 
     var state = {
         cargando: false,
-        ControlDeBoletosId: null,
-        SeguimientoBoletoId: null,
-        BoletoSap: null,
-        OperaSinOblea: false,
-        EsCartaOferta: false,
-        EsSinBoleto: false,
-        BoletoCompraNet: null,
+        controlDeBoletosId: null,
+        seguimientoBoletoId: null,
+        boletoSap: null,
+        operaSinOblea: false,
+        esCartaOferta: false,
+        esSinBoleto: false,
+        boletoCompraNet: null,
+        contratoSAP: null
+
     };
 
     let listaBolsaSAP = null;
@@ -77,11 +81,11 @@ var ControlDeBoletosSeguimiento = (function () {
         });
         controlBoleto.off("change.seg").on("change.seg", function () {
 
-            if (Array.isArray(state.BoletoSap) && state.BoletoSap.length) {
+            if (Array.isArray(state.boletoSap) && state.boletoSap.length) {
                 var idSeleccionado = $(this).val();
                 var caracterSAP = null;
 
-                const boleto = state.BoletoSap.find(x => x.Id == idSeleccionado);
+                const boleto = state.boletoSap.find(x => x.Id == idSeleccionado);
                 controlCaracterBoleto.empty().append('<option value="">Seleccione</option>');
                 controlCaracterBoleto.prop('disabled', false);
                 if (boleto)
@@ -251,9 +255,9 @@ var ControlDeBoletosSeguimiento = (function () {
     }
 
     function bloqueaControlesSinOblea() {
-        var habilitaOperaSinOblea = state.OperaSinOblea ? true : false;
-        var habilitaCartaOferta = state.EsCartaOferta ? true : false;
-        var desHabilitaSinBoleta = state.EsSinBoleto ? true : false;
+        var habilitaOperaSinOblea = state.operaSinOblea ? true : false;
+        var habilitaCartaOferta = state.esCartaOferta ? true : false;
+        var desHabilitaSinBoleta = state.esSinBoleto ? true : false;
 
         if (desHabilitaSinBoleta) {
             [ controlFechaRecepcionBoleto,
@@ -314,16 +318,16 @@ var ControlDeBoletosSeguimiento = (function () {
 
     function validarFechas() {
 
-
-        var feRecepcionBoleto    = getKendoDate(controlFechaRecepcionBoleto);
+        var feRecepcionBoleto = getKendoDate(controlFechaRecepcionBoleto);
         var feEnvioFirmas = getKendoDate(controlFechaEnvioFirma);
-        var feEnvioBolsa     = getKendoDate(controlFechaEnvioBolsa);
+        var feEnvioBolsa = getKendoDate(controlFechaEnvioBolsa);
         var feEnvioAfip = getKendoDate(controlFechaEnvioAfip);
         var feRecepcionFirma = getKendoDate(controlFechaRecepcionFirma);
         var feRecepcionBolsa = getKendoDate(controlFechaRecepcionBolsa);
         var feRecepcionAfip  = getKendoDate(controlFechaRecepcionAfip);
         var feEnvioSellado = getKendoDate(controlFechaEnvioSellado);
 
+        /*
         if (controlBoleto.val() == '' || controlCaracterBoleto.val() == '') {
             return "Debe seleccionar un boleto y un carácter.";
         }
@@ -331,22 +335,28 @@ var ControlDeBoletosSeguimiento = (function () {
         if (controlBolsa.val() == '') {
             return "Debe seleccionar una bolsa.";
         }
-
-        if(state.EsSinBoleto) {
+        */
+        if(state.esSinBoleto) {
             return null;
         }
 
-        // 🔴 Base obligatoria para validar relaciones
-        if (!feRecepcionBoleto) {
-            return "La Fecha de recepción de boleto es obligatoria.";
-        }
+        // 🔴 Valida que no se ingrese una fecha si hay otras fechas que deben depender de una fecha de recepción de boleto
+        if ((feEnvioFirmas ||
+            feEnvioBolsa ||
+            feEnvioAfip ||
+            feRecepcionFirma ||
+            feRecepcionBolsa ||
+            feRecepcionAfip ||
+            feEnvioSellado) && !feRecepcionBoleto
+        )
+            return "No se puede ingresar ninguna fecha de seguimiento sin haber ingresado previamente la fecha de recepción de boletos."
 
         // 📌 Envío Firmas >= Recepción boleto
         if (feEnvioFirmas && feEnvioFirmas < feRecepcionBoleto)
             return "La Fecha de envío Firmas no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Envío Obleado Bolsa >= Recepción boleto
-        if ((feEnvioBolsa && !state.OperaSinOblea) && feEnvioBolsa < feRecepcionBoleto)
+        if ((feEnvioBolsa && !state.operaSinOblea) && feEnvioBolsa < feRecepcionBoleto)
             return "La Fecha de envío Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
         // 📌 Envío Certificación AFIP >= Recepción boleto
@@ -363,7 +373,7 @@ var ControlDeBoletosSeguimiento = (function () {
         }
 
         // 📌 Recepción Obleado Bolsa
-        if (feRecepcionBolsa && !state.OperaSinOblea) {
+        if (feRecepcionBolsa && !state.operaSinOblea) {
             if (feRecepcionBolsa < feRecepcionBoleto)
                 return "La Fecha de recepción Obleado Bolsa no puede ser anterior a la Fecha de recepción de boleto.";
 
@@ -381,7 +391,7 @@ var ControlDeBoletosSeguimiento = (function () {
         }
 
         // 📌 Envío Sellado (dtFeEnviadoFirma)
-        if (feEnvioSellado && !state.EsCartaOferta) {
+        if (feEnvioSellado && !state.esCartaOferta) {
             if (feEnvioSellado < feRecepcionBoleto)
                 return "La Fecha de envío Sellado no puede ser anterior a la Fecha de recepción de boleto.";
 
@@ -389,13 +399,12 @@ var ControlDeBoletosSeguimiento = (function () {
                 return "La Fecha de envío Sellado debe ser igual o mayor a la Fecha de recepción Obleado Bolsa.";
         }
 
-
         return null; // ✅ Todo correcto
     }
     function obtenerRequest() {
         return {
-            Id: state.SeguimientoBoletoId ? state.SeguimientoBoletoId : 0,
-            ControlDeBoletosId: state.ControlDeBoletosId,
+            Id: state.seguimientoBoletoId ? state.seguimientoBoletoId : 0,
+            ControlDeBoletosId: state.controlDeBoletosId,
             BolsaCompraNetId: controlBolsa.val(),
             BolsaSellado: controlBolsaSellado.val(),
             BoletoSapId: controlBoleto.val(),
@@ -439,7 +448,7 @@ var ControlDeBoletosSeguimiento = (function () {
         var $select = selector;
         $select.html('<option value="">' + textoCarga + "</option>");
         try {
-            var data = state.BoletoSap;
+            var data = state.boletoSap;
             $select.empty().append('<option value="">' + textoDefault + "</option>");
             if (data && Array.isArray(data)) {
                 $.each(data, function (i, item) {
@@ -514,7 +523,7 @@ var ControlDeBoletosSeguimiento = (function () {
             setKendoDate(controlFechaRecepcionAfip, response.FechaRecepcionAfip);
 
             setKendoDate(controlFechaEnvioSellado, response.FechaEnvioSellado);
-            state.SeguimientoBoletoId = response.Id;
+            state.seguimientoBoletoId = response.Id;
 
             actualizarMinimosFechas();
 
@@ -555,35 +564,36 @@ var ControlDeBoletosSeguimiento = (function () {
 
     return {
 
-        inicializar: async function (ControlDeBoletosId, OperaSinOblea, EsCartaOferta, EsSinBoleto, BoletoCompraNet) {
+        inicializar: async function (ControlDeBoletosId, OperaSinOblea, EsCartaOferta, EsSinBoleto, BoletoCompraNet, ContratoSAP) {
             bindControls();
             inicializarFechas();
-            state.ControlDeBoletosId = ControlDeBoletosId;
-            state.OperaSinOblea = OperaSinOblea;
-            state.EsCartaOferta = EsCartaOferta;
-            state.EsSinBoleto = EsSinBoleto;
-            state.BoletoCompraNet = BoletoCompraNet;
+            state.controlDeBoletosId = ControlDeBoletosId;
+            state.operaSinOblea = OperaSinOblea;
+            state.esCartaOferta = EsCartaOferta;
+            state.esSinBoleto = EsSinBoleto;
+            state.boletoCompraNet = BoletoCompraNet;
+            state.contratoSAP = ContratoSAP;
             limpiarSeguimientoControlBoleto();
             bloqueaControlesSinOblea();
             await Promise.all([
                 cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
                 cargarBolsaSAP()
             ]);
-            var parametros = "?boletoCompraNetId=" + state.BoletoCompraNet;
+            var parametros = "?boletoCompraNetId=" + state.boletoCompraNet;
             var urlBoletoSap = config.urls.getBoletoSap + parametros;
             var dataBoletoSap = await MSExecuteGetOnServerAsync(urlBoletoSap);
-            state.BoletoSap = dataBoletoSap || [];
+            state.boletoSap = dataBoletoSap || [];
             cargarDropdownBoletoSap(controlBoleto, "Cargando...", "Seleccione un boleto");
 
-            if (state.ControlDeBoletosId != null && state.ControlDeBoletosId > 0) {
-                await obtener(state.ControlDeBoletosId);
+            if (state.controlDeBoletosId != null && state.controlDeBoletosId > 0) {
+                await obtener(state.controlDeBoletosId);
             }
         },
 
         abrir: async function (ControlDeBoletosId) {
             bindControls();
             inicializarFechas();
-            state.ControlDeBoletosId = ControlDeBoletosId;
+            state.controlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
             BlockUi('Cargando...');
 
@@ -594,8 +604,8 @@ var ControlDeBoletosSeguimiento = (function () {
                     cargarBolsaSAP()
                 ]);
 
-                if (state.ControlDeBoletosId != null && state.ControlDeBoletosId > 0) {
-                    await obtener(state.ControlDeBoletosId);
+                if (state.controlDeBoletosId != null && state.controlDeBoletosId > 0) {
+                    await obtener(state.controlDeBoletosId);
                 }
 
                 $("#txtContrato").val(ControlDeBoletosId || "");
@@ -635,7 +645,31 @@ var ControlDeBoletosSeguimiento = (function () {
                 state.cargando = false;
             }
         },
+        eliminar: async function () {
+            if (state.cargando) return;
+            state.cargando = true;
+            BlockUi('Guardando...');
+            var request = new Object();
+            request.controlDeBoletosId = state.controlDeBoletosId;
+            try {
+                Confirma('¿Desea eliminar todo el seguimiento para el contrato ' + state.contratoSAP + "?", async function () {
+                    var response = await MSExecuteOnServerAsync(config.urls.eliminarSeguimiento, request);
+                    if (!response) return;
 
+                    if (response.success) {
+                        MensInfo(response.message);
+                        await obtener(state.controlDeBoletosId);
+                    } else {
+                        MensErr(response.message);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al eliminar seguimiento:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
+        },
         cerrar: function () {
             $(config.modalId).modal("hide");
         }

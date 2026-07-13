@@ -9,6 +9,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
             getTipoObleaConCodigo: "/ControlDeBoletos/GetTipoObleaConCodigo",
             getVerificarTipoBoletoyFechaRecepcion: "/ControlDeBoletos/GetVerificarTipoBoletoyFechaRecepcion",
             getVerificarDuplicidadObleaCodigoArca: "/ControlDeBoletos/GetVerificarDuplicidadObleaCodigoArca",
+            eliminarDatosPreCertificacion: "/ControlDeBoletos/EliminarDatosPreCertificacion",
+
         },
         modalId: "#modalCertificacion"
     };
@@ -669,7 +671,31 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 state.cargando = false;
             }
         },
+        eliminar: async function () {
+            if (state.cargando) return;
+            state.cargando = true;
+            BlockUi('Guardando...');
+            var request = new Object();
+            request.controlDeBoletosId = state.ControlDeBoletosId;
+            try {
+                Confirma('¿Desea eliminar todo los datos de precertificación para el contrato ' + state.contratoSAP + "?", async function () {
+                    var response = await MSExecuteOnServerAsync(config.urls.eliminarDatosPreCertificacion, request);
+                    if (!response) return;
 
+                    if (response.success) {
+                        MensInfo(response.message);
+                        await cargarDatosExistentes();
+                    } else {
+                        MensErr(response.message);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al eliminar datos de precertificación:", e);
+            } finally {
+                $.unblockUI();
+                state.cargando = false;
+            }
+        },
         cerrar: function () {
             $(config.modalId).modal("hide");
         }

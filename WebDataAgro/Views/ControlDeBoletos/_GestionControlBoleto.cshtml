@@ -135,7 +135,7 @@
                                         aria-expanded="true"
                                         aria-controls="collapseSeguimiento">
                                     <i class="fa fa-list-alt" aria-hidden="true"></i>
-                                    Seguimiento Control Boleto
+                                    Seguimiento de Boleto
                                 </button>
                             </h5>
                         </div>
@@ -144,6 +144,10 @@
                             <div class="panel-body" style="padding-top: 2px;">
                                 @Html.Partial("_FormSeguimientoControlBoleto")
                                 <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
+                                    <button class="btn btn-danger"
+                                            onclick="ControlDeBoletosSeguimiento.eliminar()">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar Seguimiento
+                                    </button>
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosSeguimiento.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
@@ -162,7 +166,7 @@
                                         aria-expanded="false"
                                         aria-controls="collapseCertificacion">
                                     <i class="fa fa-certificate" aria-hidden="true"></i>
-                                    Datos de Certificación
+                                    PreCertificación de Boleto
                                 </button>
                             </h5>
                         </div>
@@ -171,6 +175,10 @@
                             <div class="panel-body" style="padding-top: 2px;">
                                 @Html.Partial("_FormDatosCertificacion")
                                 <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
+                                    <button class="btn btn-danger"
+                                            onclick="ControlDeBoletosDatosCertificacion.eliminar()">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar PreCertificación
+                                    </button>
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosDatosCertificacion.guardar()">
                                         <i class="fa fa-save" aria-hidden="true"></i> Guardar
@@ -189,7 +197,7 @@
                                         aria-expanded="false"
                                         aria-controls="collapseModificar">
                                     <i class="fa fa-edit" aria-hidden="true"></i>
-                                    Modificar Datos del Contrato
+                                    Datos del Contrato
                                 </button>
                             </h5>
                         </div>

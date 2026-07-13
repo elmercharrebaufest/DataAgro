@@ -323,6 +323,7 @@
     <Compile Include="Dto\BuscarCentroDto.cs" />
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
+    <Compile Include="Dto\ConfirmaDocumentoRegistradoDto.cs" />
     <Compile Include="Dto\ConfirmaFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ConsultaConfirmaDto.cs" />
     <Compile Include="Common\Enums\EnumControlDeBoletosAcciones.cs" />
