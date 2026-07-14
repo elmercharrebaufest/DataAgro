@@ -22,7 +22,7 @@ var ControlDeBoletosSeguimiento = (function () {
     var state = {
         cargando: false,
         controlDeBoletosId: null,
-        seguimientoBoletoId: null,
+        seguimientoBoletoId: 0,
         boletoSap: null,
         operaSinOblea: false,
         esCartaOferta: false,
@@ -512,7 +512,6 @@ var ControlDeBoletosSeguimiento = (function () {
             controlBoleto.val(response.BoletoSapId).trigger('change');
             controlCaracterBoleto.val(response.BoletoSapCaracter).trigger('change');
             controlRechazadoAfip.val(response.RechazadoAfip);
-            console.log('response-->>', response);
             setKendoDate(controlFechaRecepcionBoleto, response.FechaRecepcionBoleto);
             setKendoDate(controlFechaEnvioFirma, response.FechaEnvioFirma);
             setKendoDate(controlFechaEnvioBolsa, response.FechaEnvioBolsa);
@@ -634,7 +633,7 @@ var ControlDeBoletosSeguimiento = (function () {
 
                 if (response.success) {
                     MensInfo(response.message);
-                    this.cerrar();
+                    await obtener(state.controlDeBoletosId);
                 } else {
                     MensErr(response.message);
                 }
@@ -646,6 +645,10 @@ var ControlDeBoletosSeguimiento = (function () {
             }
         },
         eliminar: async function () {
+            if (state.seguimientoBoletoId == 0) {
+                MensAlerta('No se ha registrado datos de seguimiento para el boleto.');
+                return;
+            }
             if (state.cargando) return;
             state.cargando = true;
             BlockUi('Guardando...');
@@ -658,6 +661,7 @@ var ControlDeBoletosSeguimiento = (function () {
 
                     if (response.success) {
                         MensInfo(response.message);
+                        limpiarSeguimientoControlBoleto();
                         await obtener(state.controlDeBoletosId);
                     } else {
                         MensErr(response.message);

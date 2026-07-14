@@ -1076,9 +1076,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (precertificacion != null && precertificacion.Any())
                 {
-                    repositorio.RemoverTodos(precertificacion);
+                    foreach(var datos in precertificacion)
+                    {
+                        repositorio.Remover(datos);
+                    }
+                    repositorio.GuardarCambios();
                 }
-                repositorio.GuardarCambios();
                 this.logDataAgroManager.LogCambiosControlBoletos(precertificacion, TipoAccionLogDataAgro.Eliminar, precertificacion.FirstOrDefault()?.Id ?? 0 , "Eliminar de Certificacion - Control de Boletos");
                 this.EstablecerEstadoBoleto(controlDeBoletosId);
             }
@@ -1554,7 +1557,6 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Eliminar Control de Boletos
-        
         public Resultado EliminarControlDeBoletos(EliminarControlDeBoletoDto eliminarControlDeBoleto)
         {
             var oResultado = new Resultado();
