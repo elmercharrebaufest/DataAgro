@@ -2278,7 +2278,7 @@ namespace WebDataAgro.Services
                 return resultado;
             }
         }
-
+        /*
         public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
         {
             logger.Info("Inicio {0}.", nameof(RegistrarDatosPreCertificacion));
@@ -2315,6 +2315,25 @@ namespace WebDataAgro.Services
             return EjecutarOperacionControlDeBoletos(
                 nameof(RegistrarDatosSeguimiento),
                 () => controlDeBoletosSapManager.RegistrarDatosSeguimiento(controlDeBoletosDatosSeguimiento));
+        }
+        */
+        public ControlDeBoletosOperacionSapResultadoDto ModificarDatosSeguimientoYCertificacion(ControlDeBoletosSeguimientoYCertificacionServiceDto controlDeBoletosSeguimientoYCertificacion)
+        {
+            logger.Info("Inicio {0}.", nameof(ModificarDatosSeguimientoYCertificacion));
+
+            if (controlDeBoletosSeguimientoYCertificacion == null)
+            {
+                var resultado = new ControlDeBoletosOperacionSapResultadoDto();
+                resultado.Errores.Add(CrearError(
+                    ErrorCatalogo.RequestNulo,
+                    nameof(ModificarDatosSeguimientoYCertificacion),
+                    ErrorCatalogo.MsgRequestNulo));
+                return resultado;
+            }
+
+            return EjecutarOperacionControlDeBoletos(
+                nameof(ModificarDatosSeguimientoYCertificacion),
+                () => controlDeBoletosSapManager.ModificarDatosSeguimientoYCertificacion(controlDeBoletosSeguimientoYCertificacion));
         }
         #endregion
     }

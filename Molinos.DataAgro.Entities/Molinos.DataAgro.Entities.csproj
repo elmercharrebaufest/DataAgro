@@ -350,6 +350,7 @@
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosRegistrarAccionesDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosReporteSeguimientoConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosSeguimientoYCertificacionServiceDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoTrackingDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EliminarControlDeBoletoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\EstadoConfirmaDto.cs" />
