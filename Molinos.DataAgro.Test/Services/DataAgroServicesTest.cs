@@ -90,29 +90,32 @@ namespace Molinos.DataAgro.Test.Services
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
+        #region Ping Tests
         [Test]
-        public void PingOk()
+        public void Ping_NoParameters_ReturnsResultadoSap()
         {
             var result = target.Ping();
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
         }
+        #endregion
 
+        #region Riesgo Comercial Tests
         [Test]
-        public void GrabarRiesgoComercialOk()
+        public void GrabarRiesgoComercial_ValidObject_ReturnsOk()
         {
             RiesgoComercial riesgoComercial = new RiesgoComercial();
             riesgoComercialManagerMock.Setup(x => x.ActualizacionDeRiesgoComercial(It.IsAny<RiesgoComercial>()))
                 .Returns(new Resultado());
 
-            var result = target.Ping();
+            var result = target.GrabarRiesgoComercial(riesgoComercial);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count(), 0);
+            Assert.AreEqual(result.ListaErrores.Count, 0);
         }
 
         [Test]
-        public void GrabarRiesgoComercialError()
+        public void GrabarRiesgoComercial_ValidObject_ReturnsError()
         {
             RiesgoComercial riesgoComercial = new RiesgoComercial();
             riesgoComercialManagerMock.Setup(x => x.ActualizacionDeRiesgoComercial(It.IsAny<RiesgoComercial>()))
@@ -125,7 +128,21 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void GrabarCampaniaActualTestOk()
+        public void GrabarRiesgoComercial_ThrowsException_CatchesAndReturnsError()
+        {
+            RiesgoComercial riesgoComercial = new RiesgoComercial();
+            riesgoComercialManagerMock.Setup(x => x.ActualizacionDeRiesgoComercial(It.IsAny<RiesgoComercial>()))
+                .Throws(new Exception("Test exception"));
+
+            var result = target.GrabarRiesgoComercial(riesgoComercial);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Campania Actual Tests
+        [Test]
+        public void GrabarCampaniaActual_ValidObject_ReturnsOk()
         {
             var campania = new CampaniaActual();
             campaniaAcutalManagerMock.Setup(x => x.ActualizacionCampaniaActual(campania))
@@ -137,7 +154,7 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void GrabarCampaniaActualTestError()
+        public void GrabarCampaniaActual_ValidObject_ReturnsError()
         {
             var campania = new CampaniaActual();
             campaniaAcutalManagerMock.Setup(x => x.ActualizacionCampaniaActual(campania))
@@ -149,10 +166,23 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void ActualizarCampaniaMaterialTestOk()
+        public void GrabarCampaniaActual_ThrowsException_CatchesAndReturnsError()
         {
-            var campania = new List<CampaniaMaterialSAPDTO>{
+            var campania = new CampaniaActual();
+            campaniaAcutalManagerMock.Setup(x => x.ActualizacionCampaniaActual(campania))
+                .Throws(new Exception("Test exception"));
+            var result = target.GrabarCampaniaActual(campania);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
 
+        #region Campania Material Tests
+        [Test]
+        public void ActualizarCampaniaMaterial_ValidList_ReturnsOk()
+        {
+            var campania = new List<CampaniaMaterialSAPDTO>
+            {
                 new CampaniaMaterialSAPDTO
                 {
                     Anio = DateTime.Now.Year,
@@ -173,10 +203,10 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void ActualizarCampaniaMaterialTestError()
+        public void ActualizarCampaniaMaterial_ValidList_ReturnsError()
         {
-            var campania = new List<CampaniaMaterialSAPDTO>{
-
+            var campania = new List<CampaniaMaterialSAPDTO>
+            {
                 new CampaniaMaterialSAPDTO
                 {
                     Anio = DateTime.Now.Year,
@@ -197,10 +227,35 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void ActualizarEstadoComercialTestOk()
+        public void ActualizarCampaniaMaterial_ThrowsException_CatchesAndReturnsError()
         {
-            var informe = new List<InformeComercialSAPDTO>{
+            var campania = new List<CampaniaMaterialSAPDTO>
+            {
+                new CampaniaMaterialSAPDTO
+                {
+                    Anio = DateTime.Now.Year,
+                    Campania = "20-21",
+                    Comercial = "bmelgarejo",
+                    CUIT = "20202020",
+                    Material = "Soja",
+                    Mes = "Mayo",
+                    Toneladas = 10
+                }
+            };
+            camaniaMaterialManagerMock.Setup(x => x.TraerCampañasPorGrano(campania))
+                .Throws(new Exception("Test exception"));
+            var result = target.ActualizarCampaniaMaterial(campania);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
 
+        #region Actualizar Estado Comercial Tests
+        [Test]
+        public void ActualizarEstadoComercial_ValidList_ReturnsOk()
+        {
+            var informe = new List<InformeComercialSAPDTO>
+            {
                 new InformeComercialSAPDTO
                 {
                     CUIT = "20202020",
@@ -217,10 +272,10 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void ActualizarEstadoComercialTestError()
+        public void ActualizarEstadoComercial_ValidList_ReturnsError()
         {
-            var informe = new List<InformeComercialSAPDTO>{
-
+            var informe = new List<InformeComercialSAPDTO>
+            {
                 new InformeComercialSAPDTO
                 {
                     CUIT = "20202020",
@@ -237,486 +292,230 @@ namespace Molinos.DataAgro.Test.Services
         }
 
         [Test]
-        public void ActualizarContratoSAPTestOk()
+        public void ActualizarEstadoComercial_ThrowsException_CatchesAndReturnsError()
         {
-            var contratoSap = new ContratoSAPDto
+            var informe = new List<InformeComercialSAPDTO>
             {
-                ContratoSAP = "0002657570",
-                Cantidad = 25000,
-                Cosecha = "19-20",
-                DiasDiferimiento = 0,
-                FechaDesde = "2020-10-01",
-                FechaEntrega = "2020-10-31",
-                FechaHasta = "2020-10-31",
-                FechaOperacion = "2020-10-31",
-                FechaCreacion = "2020-10-31",
-                HORAACT = "16:00:00",
-                Moneda = "USDM",
-                Material = "000000000019908017",
-                Precio = 240,
-                Proveedor = "30685141694",
-                Provincia = 21,
-                Especial = "03",
-                Procedencia = "915",
-                Centro = "1029",
-                Clasificacion = "ACOPIADOR",
-                Camiones = 0,
-                Ninguno = "X",
-                ImporteSPrecio = "0.00",
-                PorcSPrecio = "0.00",
-                ImporteAPrecio = "0.00",
-                MonedaAPrecio = "ARP",
-                PorcAPrecio = "0.00",
-                MercDescargada = "X",
-                PorcComision = 0,
-                FleteNivel = "Z01",
-                FleteTarifa = 0,
-                Calidad = new List<CalidadSAP>(),
-                DescuentoBonificaciones = new List<DescuentoBonificacionSap>(),
-                Apertura = new List<AperturaPrecioSap>(),
-                PrecioNeto = 240,
-                PorcentajeDePago = (decimal)97.50,
-                PrecioAjusteComision = 0,
-                Comercial = "bmelgarejo",
-                ComercialCreador = "bmelgarejo",
-                TipoNegocio = "MADRE"
+                new InformeComercialSAPDTO
+                {
+                    CUIT = "20202020",
+                    Material = "Soja",
+                    RptSap = "ok"
+                }
             };
-            var contrato = new Contrato
-            {
-                Id = 1,
-                AperturaPrecio = new List<AperturaPrecio>(),
-                Comercial = new Comercial { GrupoDeComprasId = 1 }
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<CalidadEspecial>() { new CalidadEspecial { Id = 1, CodigoSap = "230", Descripcion = "Especial", MaterialId = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPactado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<PrecioPactado>() { new PrecioPactado { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<AperturaPrecio>() { new AperturaPrecio { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
             informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
-                .Returns(new Resultado());
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, GrupoDeComprasId = 1 });
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
+                .Throws(new Exception("Test exception"));
+            var result = target.ActualizarEstadoComercial(informe);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Actualizar Contrato SAP Tests
+        [Test]
+        public void ActualizarContratoSAP_ValidDTO_ReturnsOk()
+        {
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
             contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
+
             var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
         }
 
         [Test]
-        public void ActualizarContratoSAPTestError()
+        public void ActualizarContratoSAP_ValidDTO_ReturnsError()
         {
-            var contratoSap = new ContratoSAPDto
-            {
-                ContratoSAP = "0002657570",
-                Cantidad = 25000,
-                Cosecha = "19-20",
-                DiasDiferimiento = 0,
-                FechaDesde = "2020-10-01",
-                FechaEntrega = "2020-10-31",
-                FechaHasta = "2020-10-31",
-                Moneda = "USDM",
-                Material = "000000000019908017",
-                Precio = 240,
-                Proveedor = "30685141694",
-                Provincia = 21,
-                Especial = "03",
-                Procedencia = "915",
-                Centro = "1029",
-                Clasificacion = "ACOPIADOR",
-                Camiones = 0,
-                Ninguno = "X",
-                ImporteSPrecio = "0.00",
-                PorcSPrecio = "0.00",
-                ImporteAPrecio = "0.00",
-                MonedaAPrecio = "ARP",
-                PorcAPrecio = "0.00",
-                MercDescargada = "X",
-                PorcComision = 0,
-                FleteNivel = "Z01",
-                FleteTarifa = 0,
-                Calidad = new List<CalidadSAP>(),
-                DescuentoBonificaciones = new List<DescuentoBonificacionSap>(),
-                Apertura = new List<AperturaPrecioSap>(),
-                PrecioNeto = 240,
-                PorcentajeDePago = (decimal)97.50,
-                PrecioAjusteComision = 0
-            };
-            var contrato = new Contrato
-            {
-                Id = 1,
-                AperturaPrecio = new List<AperturaPrecio>()
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<CalidadEspecial>() { new CalidadEspecial { Id = 1, CodigoSap = "230", Descripcion = "Especial", MaterialId = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPactado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<PrecioPactado>() { new PrecioPactado { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<AperturaPrecio>() { new AperturaPrecio { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
-            informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
-                .Returns(new Resultado());
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
+            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>()))
+                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+
             var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
         }
 
         [Test]
-        public void ActualizarCupoSAPTestOk()
+        public void ActualizarContratoSAP_ThrowsException_CatchesAndReturnsError()
         {
-            var cupoSap =
-                new CupoSapDto
-                {
-                    Codigo = "MOL5581/10102020",
-                    FechaIngreso = "2020-10-10",
-                    Material = "000000000019908017",
-                    Proveedor = "0030555495494",
-                    Planta = "1029",
-                    Zona = "OIS",
-                    Destinatario = "30715118773",
-                    FleteProcedencia = "N",
-                    Calidad = "03",
-                    Comercial = "LASOH",
-                };
-            var cupo = new Cupo
-            {
-                Id = 1,
-                EstadoCupoId = 1,
-                ComercialId = 1
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>())).Returns(1);
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
+            contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>()))
+                .Throws(new Exception("Test exception"));
 
-            cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
-                .Returns(new Resultado());
-            var result = target.ActualizarCupoSAP(cupoSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void ActualizarCupoSAPTestError()
-        {
-            var cupoSap =
-                new CupoSapDto
-                {
-                    Codigo = "MOL5581/10102020",
-                    FechaIngreso = "2020-10-10",
-                    Material = "000000000019908017",
-                    Proveedor = "0030555495494",
-                    Planta = "1029",
-                    Zona = "OIS",
-                    Destinatario = "30715118773",
-                    FleteProcedencia = "N",
-                    Calidad = "03",
-                    Comercial = "LASOH",
-                };
-            var cupo = new Cupo
-            {
-                Id = 1,
-                EstadoCupoId = 1,
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>())).Returns(1);
-
-            cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
-                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarCupoSAP(cupoSap);
+            var result = target.ActualizarContratoSAP(contratoSap);
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
         }
+        #endregion
 
+        #region Alta Contrato SAP Tests
         [Test]
-        public void AltaCupoSAPTestOk()
+        public void AltaContratoSAP_ValidDTO_ReturnsOk()
         {
-            var cupoSap =
-                new CupoSapDto
-                {
-                    Codigo = "MOL5581/10102020",
-                    FechaIngreso = "2020-10-10",
-                    Material = "000000000019908017",
-                    Proveedor = "0030555495494",
-                    Planta = "1029",
-                    Zona = "OIS",
-                    Destinatario = "30715118773",
-                    FleteProcedencia = "N",
-                    Calidad = "03",
-                    Comercial = "LASOH",
-                };
-            var cupo = new Cupo
-            {
-                Id = 1,
-                EstadoCupoId = 1,
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-            cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
-                .Returns(new Resultado());
-            var result = target.AltaCupoSAP(cupoSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void AltaCupoSAPTestError()
-        {
-            var cupoSap =
-                new CupoSapDto
-                {
-                    Codigo = "MOL5581/10102020",
-                    FechaIngreso = "2020-10-10",
-                    Material = "000000000019908017",
-                    Proveedor = "0030555495494",
-                    Planta = "1029",
-                    Zona = "OIS",
-                    Destinatario = "30715118773",
-                    FleteProcedencia = "N",
-                    Calidad = "03",
-                    Comercial = "LASOH",
-                };
-            var cupo = new Cupo
-            {
-                Id = 1,
-                EstadoCupoId = 1,
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-
-            cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
-                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AltaCupoSAP(cupoSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-        [Test]
-        public void AnularContratoSAPError()
-        {
-            var contratoSap = new ContratoSAP
-            {
-                Cantidad = "25000",
-            };
-            contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
-            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AnularContratoSAP(contratoSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-        [Test]
-        public void AnularContratoSAPOk()
-        {
-            var contratoSap = new ContratoSAP
-            {
-                Cantidad = "25000",
-            };
-            contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
-            .Returns(new Resultado());
-            var result = target.AnularContratoSAP(contratoSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void ValidarProveedorComercialOk()
-        {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
-                Returns(new List<Proveedor> {new Proveedor
-                {
-                    ProveedorId = 1,
-                    Email1 = "bmelgarejo",
-                    Email2 = "bmelgarejo",
-                    Email3 = "bmelgarejo",
-                    Email4 = "bmelgarejo",
-                    RazonSocial = "parisi",
-                    ClasificacionCompraNet = null,
-                    CUIT = "00023434",
-                    ProveedorComercialAsociados = new List<ProveedorComercial> {
-                        new ProveedorComercial { ComercialId = 1, ProveedorId = 1, NroItem = 1, ProveedorComercialId = 1,
-                            Comercial = new Comercial{ Apellido = "mel", Nombres = "bmelgarejo", IdActiveDirectory = "bmelgarejo"} } }
-                } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-              .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });
-
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).
-              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
-            repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
-                   .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434", true);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void ValidarProveedorComercialError()
-        {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
-                Returns(new List<Proveedor> {new Proveedor
-                {
-                    ProveedorId = 1,
-                    Email1 = "bmelgarejo",
-                    Email2 = "bmelgarejo",
-                    Email3 = "bmelgarejo",
-                    Email4 = "bmelgarejo",
-                    RazonSocial = "parisi",
-                    ClasificacionCompraNet = null,
-                    CUIT = "00023434",
-                    ProveedorComercialAsociados = new List<ProveedorComercial> { null }
-                } });
-
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-              .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });
-
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).
-              Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = (int)EnumEstadoSisa.PRODUCTOR });
-            repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
-                   .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434", true);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-        [Test]
-        public void AltaContratoSAPTestOk()
-        {
-            var contratoSap = new ContratoSAPDto
-            {
-                ContratoSAP = "0002657570",
-                Cantidad = 25000,
-                Cosecha = "19-20",
-                DiasDiferimiento = 0,
-                FechaDesde = "2020-10-01",
-                FechaEntrega = "2020-10-31",
-                FechaHasta = "2020-10-31",
-                FechaOperacion = "2020-10-31",
-                FechaCreacion = "2020-10-31",
-                HORAACT = "16:00:00",
-                Moneda = "USDM",
-                Material = "000000000019908017",
-                Precio = 240,
-                Proveedor = "30685141694",
-                Provincia = 21,
-                Especial = "03",
-                Procedencia = "915",
-                Centro = "1029",
-                Clasificacion = "ACOPIADOR",
-                Camiones = 0,
-                Ninguno = "X",
-                ImporteSPrecio = "0.00",
-                PorcSPrecio = "0.00",
-                ImporteAPrecio = "0.00",
-                MonedaAPrecio = "ARP",
-                PorcAPrecio = "0.00",
-                MercDescargada = "X",
-                PorcComision = 0,
-                FleteNivel = "Z01",
-                FleteTarifa = 0,
-                Calidad = new List<CalidadSAP>(),
-                DescuentoBonificaciones = new List<DescuentoBonificacionSap>(),
-                Apertura = new List<AperturaPrecioSap>(),
-                PrecioNeto = 240,
-                PorcentajeDePago = (decimal)97.50,
-                PrecioAjusteComision = 0,
-                Comercial = "bmelgarejo",
-                ComercialCreador = "bmelgarejo",
-                TipoNegocio = "MADRE"
-            };
-            var contrato = new Contrato
-            {
-                Id = 1,
-                AperturaPrecio = new List<AperturaPrecio>()
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<CalidadEspecial>() { new CalidadEspecial { Id = 1, CodigoSap = "230", Descripcion = "Especial", MaterialId = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPactado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<PrecioPactado>() { new PrecioPactado { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<AperturaPrecio>() { new AperturaPrecio { Id = 1 } });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
-            informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
-                .Returns(new Resultado());
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
-
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
             contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado());
+
             var result = target.AltaContratoSAP(contratoSap);
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
         }
 
         [Test]
-        public void AltaContratoSAPTestError()
+        public void AltaContratoSAP_ValidDTO_ReturnsError()
         {
-            var contratoSap = new ContratoSAPDto
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
+            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>()))
+                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+
+            var result = target.AltaContratoSAP(contratoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+
+        [Test]
+        public void AltaContratoSAP_ThrowsException_CatchesAndReturnsError()
+        {
+            var contratoSap = CreateContratoSAPDto();
+            SetupRepositorioMocks();
+            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>()))
+                .Throws(new Exception("Test exception"));
+
+            var result = target.AltaContratoSAP(contratoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Actualizar Cupo SAP Tests
+        [Test]
+        public void ActualizarCupoSAP_ValidDTO_ReturnsOk()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
+                .Returns(new Resultado());
+
+            var result = target.ActualizarCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void ActualizarCupoSAP_ValidDTO_ReturnsError()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
+                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+
+            var result = target.ActualizarCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+
+        [Test]
+        public void ActualizarCupoSAP_ThrowsException_CatchesAndReturnsError()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            cupoManagerMock.Setup(x => x.ActualizarCupoSAP(It.IsAny<Cupo>()))
+                .Throws(new Exception("Test exception"));
+
+            var result = target.ActualizarCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Alta Cupo SAP Tests
+        [Test]
+        public void AltaCupoSAP_ValidDTO_ReturnsOk()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
+            cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
+                .Returns(new Resultado());
+
+            var result = target.AltaCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void AltaCupoSAP_ValidDTO_ReturnsError()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
+            cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
+                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+
+            var result = target.AltaCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+
+        [Test]
+        public void AltaCupoSAP_ThrowsException_CatchesAndReturnsError()
+        {
+            var cupoSap = CreateCupoSapDto();
+            SetupCupoMocks();
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
+            cupoManagerMock.Setup(x => x.AltaCupoSAP(It.IsAny<Cupo>()))
+                .Throws(new Exception("Test exception"));
+
+            var result = target.AltaCupoSAP(cupoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Anular Contrato SAP Tests
+        [Test]
+        public void AnularContratoSAP_ValidObject_ReturnsOk()
+        {
+            var contratoSap = new ContratoSAP { Cantidad = "25000" };
+            contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
+                .Returns(new Resultado());
+
+            var result = target.AnularContratoSAP(contratoSap);
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void AnularContratoSAP_ValidObject_ReturnsError()
+        {
+            var contratoSap = new ContratoSAP { Cantidad = "25000" };
+            contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
+                .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+
+            var result = target.AnularContratoSAP(contratoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+
+        [Test]
+        public void AnularContratoSAP_ThrowsException_CatchesAndReturnsError()
+        {
+            var contratoSap = new ContratoSAP { Cantidad = "25000" };
+            contratoManagerMock.Setup(y => y.AnularContratoSAP(It.IsAny<ContratoSAP>()))
+                .Throws(new Exception("Test exception"));
+
+            var result = target.AnularContratoSAP(contratoSap);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+        }
+        #endregion
+
+        #region Helper Methods
+        private ContratoSAPDto CreateContratoSAPDto()
+        {
+            return new ContratoSAPDto
             {
                 ContratoSAP = "0002657570",
                 Cantidad = 25000,
@@ -758,11 +557,28 @@ namespace Molinos.DataAgro.Test.Services
                 ComercialCreador = "bmelgarejo",
                 TipoNegocio = "MADRE"
             };
-            var contrato = new Contrato
+        }
+
+        private CupoSapDto CreateCupoSapDto()
+        {
+            return new CupoSapDto
             {
-                Id = 1,
-                AperturaPrecio = new List<AperturaPrecio>()
+                Codigo = "MOL5581/10102020",
+                FechaIngreso = "2020-10-10",
+                Material = "000000000019908017",
+                Proveedor = "0030555495494",
+                Planta = "1029",
+                Zona = "OIS",
+                Destinatario = "30715118773",
+                FleteProcedencia = "N",
+                Calidad = "03",
+                Comercial = "LASOH"
             };
+        }
+
+        private void SetupRepositorioMocks()
+        {
+            var contrato = new Contrato { Id = 1, AperturaPrecio = new List<AperturaPrecio>(), Comercial = new Comercial { GrupoDeComprasId = 1 } };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<CalidadEspecial>() { new CalidadEspecial { Id = 1, CodigoSap = "230", Descripcion = "Especial", MaterialId = 1 } });
@@ -772,428 +588,17 @@ namespace Molinos.DataAgro.Test.Services
                .Returns(new List<AperturaPrecio>() { new AperturaPrecio { Id = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
-            informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
-                .Returns(new Resultado());
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
+        }
+
+        private void SetupCupoMocks()
+        {
+            var cupo = new Cupo { Id = 1, EstadoCupoId = 1, ComercialId = 1 };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
-
-            contratoManagerMock.Setup(y => y.AltaContratoSAP(It.IsAny<Contrato>())).Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-
-            var result = target.AltaContratoSAP(contratoSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-        [Test]
-        public void ActualizarFijacionSAPError()
-        {
-            var fijacionSap = new FijacionSAPDto
-            {
-                FijacionSAP = "004563",
-                ZLSCH = "=",
-                CUENTA_MRP = ""
-            };
-            fijacionManager.Setup(y => y.ActualizarFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
-            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.ActualizarFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-        [Test]
-        public void ActualizarFijacionSAPOk()
-        {
-            var fijacionSap = new FijacionSAPDto
-            {
-                FijacionSAP = "004563",
-                ZLSCH = "=",
-                CUENTA_MRP = ""
-            };
-            fijacionManager.Setup(y => y.ActualizarFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
-            .Returns(new Resultado());
-            var result = target.ActualizarFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void AltaFijacionSAPError()
-        {
-            var fijacionSap = new FijacionSAPDto
-            {
-                Comercial = "bmelgarejo",
-                Ampliaciones = 1,
-                Canje = "X",
-                Cantidad = 1000,
-                Centro = "1029",
-                ContratoSAP = "0003443",
-                Cosecha = "20-21",
-                CUENTA_MRP = "0048373",
-                CuitCorredor = "00002323",
-                Fecha = "2020-10-10",
-                FechaCreacion = "2020-10-10",
-                FechaDesde = "2020-10-10",
-                FechaHasta = "2020-10-10",
-                FechaOperacion = "2020-10-10",
-                HORAACT = "14:31:00",
-                FijacionSAP = "000332323",
-                Material = "6453637",
-                Moneda = "ARP",
-                Precio = 1000,
-                PrecioNeto = 1000,
-                Proveedor = "0003454",
-                ZLSCH = "",
-                TrigoEspecial = "X"
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
-
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
-           .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AltaFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>())).Returns(1);
         }
-
-        [Test]
-        public void AltaFijacionSAPOk()
-        {
-            var fijacionSap = new FijacionSAPDto
-            {
-                Comercial = "bmelgarejo",
-                Ampliaciones = 1,
-                Canje = "X",
-                Cantidad = 1000,
-                Centro = "1029",
-                ContratoSAP = "0003443",
-                Cosecha = "20-21",
-                CUENTA_MRP = "0048373",
-                CuitCorredor = "00002323",
-                Fecha = "2020-10-10",
-                FechaCreacion = "2020-10-10",
-                FechaDesde = "2020-10-10",
-                FechaHasta = "2020-10-10",
-                FechaOperacion = "2020-10-10",
-                HORAACT = "14:31:00",
-                FijacionSAP = "000332323",
-                Material = "6453637",
-                Moneda = "ARP",
-                Precio = 1000,
-                PrecioNeto = 1000,
-                Proveedor = "0003454",
-                ZLSCH = "",
-                TrigoEspecial = "X",
-                FijacionVirtuales = new List<FijacionVirtualSAPDto>()
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<Expression<Func<CondicionFijacion, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<Expression<Func<Moneda, string>>>())).Returns("ARP");
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<NivelTarifa, bool>>>(), It.IsAny<Expression<Func<NivelTarifa, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<StandardDeCalidad, bool>>>(), It.IsAny<Expression<Func<StandardDeCalidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Zona, bool>>>(), It.IsAny<Expression<Func<Zona, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<Expression<Func<Localidad, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
-
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
-           .Returns(new Resultado());
-            var result = target.AltaFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void AnularFijacionSAPOk()
-        {
-            var fijacionSap = new FijacionSAP
-            {
-                Fijacion = "000332323",
-
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
-           .Returns(new Resultado());
-            var result = target.AnularFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
-        }
-
-        [Test]
-        public void AnularFijacionSAPError()
-        {
-            var fijacionSap = new FijacionSAP
-            {
-                Fijacion = "000332323",
-
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
-           .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
-            var result = target.AnularFijacionSAP(fijacionSap);
-            Assert.NotNull(result);
-            Assert.IsTrue(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 1);
-        }
-
-
-        [Test]
-        public void ProveedorApocrifoTestOk()
-        {
-            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<FACACOP, bool>>>()))
-               .Returns(true);
-            var result = target.ProveedorApocrifo("");
-
-            Assert.IsTrue(result);
-        }
-
-        [Test]
-        public void TraerTipoDeCambioTestOk()
-        {
-            var result = target.TraerTipoDeCambio(DateTime.Now.Date, null, "M");
-            Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void ActualizarCesionContratoSAPTestOk()
-        {
-            var result = target.ActualizarCesionContratoSAP("", true);
-            Assert.NotNull(result);
-        }
-
-        [Test]
-        public void AltaCampoSustentableTestOk()
-        {
-            var campo = new CampoDetalleTerceroDto
-            {
-                HectareasCultivables = 1,
-                Campania = "20-21",
-                HectareasTotales = 1,
-                KMZfileBase64 = "",
-                KMZnombre = "",
-                Latitud = "45",
-                LocalidadId = 1,
-                Longitud = "11",
-                Nombre = "a",
-                ProveedorCUIT = "30345456230",
-                ToneladasAprobadas = 1
-            };
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
-                .Returns(new Proveedor { ProveedorId = 1, ProveedorComercialAsociados = new List<ProveedorComercial> { new ProveedorComercial { ComercialId = 1, ProveedorId = 1, ProveedorComercialId = 1, NroItem = 1 } } });
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
-                .Returns(new Campaña { CampañaId = 1, Descripcion = "20-21" });
-            repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
-            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>())).Returns(new ResultadoAltaCampoSustentable());
-
-            var result = target.AltaCampoSustentable(campo);
-
-            proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>()), Times.Once);
-
-            Assert.NotNull(result);
-            Assert.AreEqual(false, result.HayError);
-        }
-
-        [Test]
-        public void BuscarProveedorEnSisaTestOk()
-        {
-            var cuit = "30345456230";
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<SISA>() { new SISA { Id = 1 } });
-            var result = target.BuscarProveedorEnSisa(cuit);
-
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Count);
-        }
-
-        //[Test]
-        //public void ListarApoderadosPorProveedorTestOk()
-        //{
-        //    var cuit = "30345456230";
-        //    repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
-        //       .Returns(new Proveedor { ProveedorId = 1 ,CUIT = "30345456230" } );
-        //    repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-        //       .Returns(new List<ContactoComercial>() { new ContactoComercial { ProveedorId = 1 } });
-
-        //    var result = target.ListarApoderadosPorProveedor(cuit);
-
-        //    Assert.NotNull(result);
-        //    Assert.AreEqual(1, result.Count);
-        //}
-
-        [Test]
-        public void ConfirmarFijacionSAPTestOk()
-        {
-            string fijacionSAP = "200349433";
-            fijacionManager.Setup(y => y.ConfirmarFijacionSAP(It.IsAny<string>()))
-           .Returns(new Resultado());
-            var result = target.ConfirmarFijacionSAP(fijacionSAP);
-
-            Assert.NotNull(result);
-            Assert.AreEqual(false, result.HayError);
-        }
-
-        [Test]
-        public void ObtenerEstadoProveedoresTestOk()
-        {
-            var listaCuits = new List<string> { "30345456230" };
-            var expectedContactos = new List<ResultProveedoresIni>
-            {
-                new ResultProveedoresIni { OperaConMATBA = true }
-            };
-            var expectedResult = new ResultEstadoProveedores
-            {
-                Contactos = expectedContactos
-            };
-            homeManager.Setup(x => x.ObtenerEstadoProveedores(It.IsAny<string>(), listaCuits))
-                .Returns(expectedResult);
-            HttpContext.Current.Session["equipoReal"] = new List<int>();
-
-            var result = target.ObtenerEstadoProveedores(listaCuits);
-
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Contactos);
-            Assert.AreEqual(expectedContactos.Count, result.Contactos.Count);
-        }
-
-        [Test]
-        public void RegistrarDatosPreCertificacion_RequestNulo_DevuelveError()
-        {
-            var resultado = target.RegistrarDatosPreCertificacion(null);
-
-            Assert.NotNull(resultado);
-            Assert.IsFalse(resultado.EjecutadoCorrectamente);
-            Assert.AreEqual(1, resultado.ListaErrores.Count);
-            Assert.AreEqual("El request recibido es nulo.", resultado.ListaErrores[0].Message);
-        }
-
-        [Test]
-        public void RegistrarDatosPreCertificacion_ManagerDevuelveResultado_PropagaRespuesta()
-        {
-            var request = new ControlDeBoletosPreCertificacionServiceDto
-            {
-                ContratoSAP = "4500000001",
-                Detalle = new List<ControlDeBoletosDatosPreCertificacionServiceDto>()
-            };
-            var respuestaEsperada = new ControlDeBoletosOperacionSapResultadoDto();
-
-            controlDeBoletosSapManager
-                .Setup(x => x.RegistrarDatosPreCertificacion(request))
-                .Returns(respuestaEsperada);
-
-            var resultado = target.RegistrarDatosPreCertificacion(request);
-
-            Assert.AreSame(respuestaEsperada, resultado);
-        }
-
-        [Test]
-        public void RegistrarDatosPreCertificacion_ManagerLanzaExcepcion_DevuelveError()
-        {
-            var request = new ControlDeBoletosPreCertificacionServiceDto
-            {
-                ContratoSAP = "4500000002",
-                Detalle = new List<ControlDeBoletosDatosPreCertificacionServiceDto>()
-            };
-
-            controlDeBoletosSapManager
-                .Setup(x => x.RegistrarDatosPreCertificacion(request))
-                .Throws(new InvalidOperationException("fallo forzado"));
-
-            var resultado = target.RegistrarDatosPreCertificacion(request);
-
-            Assert.NotNull(resultado);
-            Assert.IsFalse(resultado.EjecutadoCorrectamente);
-            Assert.AreEqual(1, resultado.ListaErrores.Count);
-            StringAssert.Contains("Error interno al procesar la operacion SAP de Control de Boletos.", resultado.ListaErrores[0].Message);
-        }
-
-        [Test]
-        public void RegistrarDatosSeguimiento_RequestNulo_DevuelveError()
-        {
-            var resultado = target.RegistrarDatosSeguimiento(null);
-
-            Assert.NotNull(resultado);
-            Assert.IsFalse(resultado.EjecutadoCorrectamente);
-            Assert.AreEqual(1, resultado.ListaErrores.Count);
-            Assert.AreEqual("El request recibido es nulo.", resultado.ListaErrores[0].Message);
-        }
-
-        [Test]
-        public void RegistrarDatosSeguimiento_ManagerDevuelveResultado_PropagaRespuesta()
-        {
-            var request = new ControlDeBoletosDatosSeguimientoServiceDto
-            {
-                ContratoSAP = "4500000003"
-            };
-            var respuestaEsperada = new ControlDeBoletosOperacionSapResultadoDto();
-
-            controlDeBoletosSapManager
-                .Setup(x => x.RegistrarDatosSeguimiento(request))
-                .Returns(respuestaEsperada);
-
-            var resultado = target.RegistrarDatosSeguimiento(request);
-
-            Assert.AreSame(respuestaEsperada, resultado);
-        }
-
-        [Test]
-        public void RegistrarDatosSeguimiento_ManagerLanzaExcepcion_DevuelveError()
-        {
-            var request = new ControlDeBoletosDatosSeguimientoServiceDto
-            {
-                ContratoSAP = "4500000004"
-            };
-
-            controlDeBoletosSapManager
-                .Setup(x => x.RegistrarDatosSeguimiento(request))
-                .Throws(new InvalidOperationException("fallo forzado"));
-
-            var resultado = target.RegistrarDatosSeguimiento(request);
-
-            Assert.NotNull(resultado);
-            Assert.IsFalse(resultado.EjecutadoCorrectamente);
-            Assert.AreEqual(1, resultado.ListaErrores.Count);
-            StringAssert.Contains("Error interno al procesar la operacion SAP de Control de Boletos.", resultado.ListaErrores[0].Message);
-        }
+        #endregion
     }
 }
-

@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.controlDeBoletosManager = controlDeBoletosManager;
         }
 
+        #region Metodos privados
         private static DateTime? ConvertirFechaNullable(string fecha)
         {
             if (string.IsNullOrWhiteSpace(fecha))
@@ -127,6 +128,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return null;
         }
+        #endregion
 
         #region Metodos para servicio SAP
         public ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion)
@@ -501,6 +503,62 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
         #endregion
+
+        public ControlDeBoletosOperacionSapResultadoDto ModificarDatosSeguimientoYCertificacion(ControlDeBoletosSeguimientoYCertificacionServiceDto controlDeBoletosSeguimientoYCertificacion)
+        {
+            var oResultado = new ControlDeBoletosOperacionSapResultadoDto();
+            try
+            {
+                var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == controlDeBoletosSeguimientoYCertificacion.ContratoSAP);
+                if (negocio == null)
+                {
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro el ContratoSAP informado." });
+                    return oResultado;
+                }
+
+                var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocio.Id);
+                if (controlDeBoletos == null)
+                {
+                    oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = "No se encontro el Control de Boletos asociado al contrato." });
+                    return oResultado;
+                }
+                var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletos.Id);
+                var datosCertificacionAfip = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletos.Id && x.TipoOblea.Codigo.Equals("A"));
+
+                if (datosSeguimiento != null)
+                {
+                    datosSeguimiento.FechaRecepcionAfip = ConvertirFechaNullable(controlDeBoletosSeguimientoYCertificacion.FechaRecepcionAfip);
+                    datosSeguimiento.FechaModificacion = DateTime.Now;
+                    repositorio.GuardarCambios();
+                }
+                if (datosCertificacionAfip != null)
+                {
+                    datosCertificacionAfip.FechaCertificacion = ConvertirFechaNullable(controlDeBoletosSeguimientoYCertificacion.FechaRecepcionAfip);
+                    datosCertificacionAfip.Oblea = controlDeBoletosSeguimientoYCertificacion.CodigoRegistracionAfip;
+                    datosCertificacionAfip.FechaModificacion = DateTime.Now;
+                    repositorio.GuardarCambios();
+                }
+                else
+                {
+                    datosCertificacionAfip = new ControlDeBoletosPreCertificacion();
+                    datosCertificacionAfip.ControlDeBoletosId = controlDeBoletos.Id;
+                    datosCertificacionAfip.TipoObleaId = repositorio.Obtener<TipoOblea>(x => x.Codigo.Equals("A")).Id;
+                    datosCertificacionAfip.FechaCertificacion = ConvertirFechaNullable(controlDeBoletosSeguimientoYCertificacion.FechaRecepcionAfip);
+                    datosCertificacionAfip.Oblea = controlDeBoletosSeguimientoYCertificacion.CodigoRegistracionAfip;
+                    datosCertificacionAfip.FechaCreacion = DateTime.Now;
+                    repositorio.Agregar(datosCertificacionAfip);
+                    repositorio.GuardarCambios();
+                }
+                this.controlDeBoletosManager.EstablecerEstadoBoleto(controlDeBoletos.Id);
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErroresControlDeBoletosOperacionSapDto { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
 
     }
 }

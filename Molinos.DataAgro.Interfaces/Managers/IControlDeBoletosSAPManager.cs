@@ -21,5 +21,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         /// Ejecuta RFC SAP y guarda cambios en BD.
         /// </summary>
         ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
+        ControlDeBoletosOperacionSapResultadoDto ModificarDatosSeguimientoYCertificacion(ControlDeBoletosSeguimientoYCertificacionServiceDto controlDeBoletosSeguimientoYCertificacion);
     }
 }

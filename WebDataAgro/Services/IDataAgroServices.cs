@@ -189,11 +189,15 @@ namespace WebDataAgro.Services
         RespuestaArchivoDto InformeComercial(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
 
+        /*
         [OperationContract]
         ControlDeBoletosOperacionSapResultadoDto RegistrarDatosPreCertificacion(ControlDeBoletosPreCertificacionServiceDto controlDeBoletosPreCertificacion);
 
         [OperationContract]
         ControlDeBoletosOperacionSapResultadoDto RegistrarDatosSeguimiento(ControlDeBoletosDatosSeguimientoServiceDto controlDeBoletosDatosSeguimiento);
+        */
 
+        [OperationContract]
+        ControlDeBoletosOperacionSapResultadoDto ModificarDatosSeguimientoYCertificacion(ControlDeBoletosSeguimientoYCertificacionServiceDto controlDeBoletosSeguimientoYCertificacion);
     }
 }
