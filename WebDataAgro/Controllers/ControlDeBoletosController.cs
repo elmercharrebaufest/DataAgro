@@ -1095,7 +1095,6 @@ namespace WebDataAgro.Controllers
         public ActionResult GetDocumentoConfirmaPDF(int controlDeBoletoId)
         {
             var documentoConfirma = _controlDeBoletosManager.ObtenerDocumentoConfirma(controlDeBoletoId);
-
             if (documentoConfirma == null)
             {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;

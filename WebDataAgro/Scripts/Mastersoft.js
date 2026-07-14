@@ -769,61 +769,57 @@ function MSExecuteGetOnServerAsync(url, datos) {
 }
 async function MSDownloadFileAsync(url, datos) {
     datos = datos ?? null;
-    return new Promise(function (resolve, reject) {
-        $.ajax({
-            url: MSGetUrl(url),
-            type: 'GET',
-            cache: false,
-            data: datos,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (data, textStatus, xhr) {
-                const contentType = xhr.getResponseHeader("Content-Type");
-                if (!contentType || !contentType.includes("application/pdf")) {
-                    reject({
-                        mensaje: "La respuesta no es un PDF."
-                    });
-                    return;
-                }
-                let fileName = "archivo.pdf";
-                const disposition = xhr.getResponseHeader("Content-Disposition");
-                if (disposition) {
-                    const match = disposition.match(/filename="?([^"]+)"?/);
-                    if (match) {
-                        fileName = match[1];
-                    }
-                }
-                const blobUrl = URL.createObjectURL(data);
-                const link = document.createElement("a");
-                link.href = blobUrl;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                URL.revokeObjectURL(blobUrl);
-                resolve();
-            },
-            error: async function (xhr, status, error) {
-                let mensaje = "No fue posible descargar el archivo.";
-                try {
 
-                    if (xhr.response instanceof Blob) {
-                        mensaje = await xhr.response.text();
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-                MensErr(mensaje);
-                reject({
-                    status: xhr.status,
-                    mensaje: mensaje
-                });
-            }
-        });
+    // Armar query string si hay datos
+    let fullUrl = MSGetUrl(url);
+    if (datos) {
+        const params = new URLSearchParams(datos).toString();
+        fullUrl += (fullUrl.includes('?') ? '&' : '?') + params;
+    }
 
+    const response = await fetch(fullUrl, {
+        method: 'GET',
+        cache: 'no-cache'
     });
 
+    const contentType = response.headers.get('Content-Type') || '';
+
+    if (!response.ok) {
+        // El error puede venir como texto plano (tu Content(documentoConfirma.Errores))
+        let mensaje = 'No fue posible descargar el archivo.';
+        try {
+            mensaje = await response.text();
+        } catch (e) {
+            console.error(e);
+        }
+        MensErr(mensaje);
+        throw { status: response.status, mensaje: mensaje };
+    }
+
+    if (!contentType.includes('application/pdf')) {
+        const mensaje = 'La respuesta no es un PDF.';
+        MensErr(mensaje);
+        throw { mensaje: mensaje };
+    }
+
+    let fileName = 'archivo.pdf';
+    const disposition = response.headers.get('Content-Disposition');
+    if (disposition) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match) {
+            fileName = match[1];
+        }
+    }
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(blobUrl);
 }
 
 const Materiales = {

@@ -24,7 +24,8 @@ var ControlDeBoletosDatosCertificacion = (function () {
         esSinBoleto: false,
         fechaRecepcionBoleto: null,
         bolsa: null,
-        contratoSAP: null
+        contratoSAP: null,
+        existeDatosCerificacion: false
     };
 
     // Controles cacheados del formulario
@@ -441,7 +442,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 actualizarMinimosFechas();
                 return;
             }
-
+            state.existeDatosCerificacion = true;
             // Re-bind controls para garantizar que apunten al DOM correcto
             bindControls();
 
@@ -672,18 +673,24 @@ var ControlDeBoletosDatosCertificacion = (function () {
             }
         },
         eliminar: async function () {
+            if (!state.existeDatosCerificacion) {
+                MensAlerta('No se ha registrado datos de certificación para el boleto.');
+                return;
+            }
             if (state.cargando) return;
             state.cargando = true;
             BlockUi('Guardando...');
             var request = new Object();
-            request.controlDeBoletosId = state.ControlDeBoletosId;
+            request.controlDeBoletosId = state.controlDeBoletosId;
             try {
+                console.log('request--->>', request);
                 Confirma('¿Desea eliminar todo los datos de precertificación para el contrato ' + state.contratoSAP + "?", async function () {
                     var response = await MSExecuteOnServerAsync(config.urls.eliminarDatosPreCertificacion, request);
                     if (!response) return;
 
                     if (response.success) {
                         MensInfo(response.message);
+                        limpiarFormulario();
                         await cargarDatosExistentes();
                     } else {
                         MensErr(response.message);

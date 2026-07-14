@@ -87,49 +87,76 @@ var ControlBoletos = (function () {
 
     function inyectarEstilosGrid() {
         if ($("#grid-boletos-styles").length) return;
+
         $("<style id='grid-boletos-styles'>").text(`
-            #boletos-grid .k-grid-header th {
-                font-weight: bold !important;
-                font-size: 13px !important;
-                font-family: Arial, sans-serif !important;
-                white-space: nowrap;
-                background-color: #f5f5f5;
-            }
-            #boletos-grid .k-grid-content td {
-                font-size: 13px !important;
-                font-family: Arial, sans-serif !important;
-            }
-            #boletos-grid .k-grid-header-wrap {
-                overflow: hidden !important;
-            }
-            #boletos-grid .k-grid-content {
-                overflow-x: auto !important;
-                overflow-y: auto !important;
-            }
-            #boletos-grid .k-grid-header-wrap table,
-            #boletos-grid .k-grid-content table {
-                table-layout: fixed;
-            }
-            #boletos-grid .k-grid-content tr:hover td,
-            #boletos-grid .k-grid-content tr.k-state-hover td {
-                color: #333 !important;
-            }
-            #boletos-grid .k-grid-content tr.k-state-selected td {
-                color: #333 !important;
-            }
-            #boletos-grid .k-grid-content td.campo-bloqueado {
-                background-color: #efefef !important;
-                color: #999 !important;
-                cursor: not-allowed !important;
-            }
-            #boletos-grid .k-grid-content td.campo-bloqueado .k-input,
-            #boletos-grid .k-grid-content td.campo-bloqueado .k-textbox,
-            #boletos-grid .k-grid-content td.campo-bloqueado .k-dropdown,
-            #boletos-grid .k-grid-content td.campo-bloqueado .k-datepicker {
-                background-color: #efefef !important;
-                color: #999 !important;
-            }
-        `).appendTo("head");
+        #boletos-grid .k-grid-header th {
+            font-weight: bold !important;
+            font-size: 13px !important;
+            font-family: Arial, sans-serif !important;
+            white-space: nowrap;
+            background-color: #f5f5f5;
+        }
+
+        #boletos-grid .k-grid-content td {
+            font-size: 13px !important;
+            font-family: Arial, sans-serif !important;
+            background-color: #fff !important;
+        }
+
+        /* Todas las filas siempre blancas */
+        #boletos-grid .k-grid-content tr,
+        #boletos-grid .k-grid-content tr.k-alt {
+            background-color: #fff !important;
+        }
+
+        #boletos-grid .k-grid-content tr td,
+        #boletos-grid .k-grid-content tr.k-alt td {
+            background-color: #fff !important;
+        }
+
+        /* Hover sin cambiar el color */
+        #boletos-grid .k-grid-content tr:hover td,
+        #boletos-grid .k-grid-content tr.k-state-hover td {
+            background-color: #fff !important;
+            color: #333 !important;
+        }
+
+        /* Selección sin cambiar el color */
+        #boletos-grid .k-grid-content tr.k-state-selected td,
+        #boletos-grid .k-grid-content tr.k-selected td {
+            background-color: #fff !important;
+            color: #333 !important;
+        }
+
+        #boletos-grid .k-grid-header-wrap {
+            overflow: hidden !important;
+        }
+
+        #boletos-grid .k-grid-content {
+            overflow-x: auto !important;
+            overflow-y: auto !important;
+        }
+
+        #boletos-grid .k-grid-header-wrap table,
+        #boletos-grid .k-grid-content table {
+            table-layout: fixed;
+        }
+
+        /* Solo los campos bloqueados permanecen grises */
+        #boletos-grid .k-grid-content td.campo-bloqueado {
+            background-color: #efefef !important;
+            color: #999 !important;
+            cursor: not-allowed !important;
+        }
+
+        #boletos-grid .k-grid-content td.campo-bloqueado .k-input,
+        #boletos-grid .k-grid-content td.campo-bloqueado .k-textbox,
+        #boletos-grid .k-grid-content td.campo-bloqueado .k-dropdown,
+        #boletos-grid .k-grid-content td.campo-bloqueado .k-datepicker {
+            background-color: #efefef !important;
+            color: #999 !important;
+        }
+    `).appendTo("head");
     }
 
     // ── Auto-ajuste de columnas ──────────────────────────────────────────────
