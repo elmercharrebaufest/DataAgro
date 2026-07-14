@@ -331,10 +331,7 @@ var ControlBoletos = (function () {
         var esCartaOferta = esValorVerdadero(obtenerValorFila(item, "EsCartaOferta"));
         var operaSinOblea = esValorVerdadero(obtenerValorFila(item, "OperaSinOblea"));
         var esSinBoleto = esValorVerdadero(obtenerValorFila(item, "EsSinBoleto"));
-        console.log('esCartaOferta--->>', esCartaOferta);
         if (esCartaOferta && field === "FechaEnvioSellado") return true;
-        console.log('operaSinOblea--->>', operaSinOblea);
-
         if (operaSinOblea) {
             return [
                 "Oblea",
