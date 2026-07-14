@@ -1098,12 +1098,18 @@ namespace WebDataAgro.Controllers
 
             if (documentoConfirma == null)
             {
-                return HttpNotFound();
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return Content("No se encontró el documento.");
             }
-
+            if (documentoConfirma.Errores != null && !string.IsNullOrEmpty(documentoConfirma.Errores))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Content(documentoConfirma.Errores);
+            }
             if (documentoConfirma.PdfBinario == null || documentoConfirma.PdfBinario.Length == 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NoContent, "No se encontró el PDF.");
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return Content("No se encontró el PDF.");
             }
 
             return File(
