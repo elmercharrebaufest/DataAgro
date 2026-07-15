@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -52,13 +52,20 @@ namespace WebDataAgro.Controllers
             if (request.Sort == null)
             {
                 request.Sort = new List<Sort> {
-                    new Sort {Field= "FechaIngreso", Dir="desc" },
-                    new Sort {Field="Material", Dir="desc" } };
+            new Sort {Field= "FechaIngreso", Dir="desc" },
+            new Sort {Field="Material", Dir="desc" } };
             }
 
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
-            return Json(model);
+
+            // Aumentar el límite para soportar más de ~1000 registros
+            return new JsonResult
+            {
+                Data = model,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = int.MaxValue
+            };
         }
         public JsonResult BuscarProveedor(string text)
         {
