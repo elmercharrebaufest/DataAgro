@@ -13,6 +13,11 @@ namespace WebDataAgro.Filters
     {
         public void OnException(ExceptionContext filterContext)
         {
+            if (ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(filterContext.HttpContext?.Request))
+            {
+                return;
+            }
+
             if (!filterContext.ExceptionHandled)
             {
                 try

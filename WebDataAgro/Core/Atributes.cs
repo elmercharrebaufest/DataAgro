@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -24,6 +24,13 @@ namespace WebDataAgro.Filters
         public void OnAuthorization(AuthorizationContext filterContext)
         {
             var request = filterContext.RequestContext.HttpContext.Request;
+
+            // Rutas API con token propio: no exigir anti-forgery de formularios MVC.
+            if (ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(request))
+            {
+                return;
+            }
+
             var requestType = request.RequestType;
             if (!_acceptVerbs.Verbs.Contains(requestType))
             {

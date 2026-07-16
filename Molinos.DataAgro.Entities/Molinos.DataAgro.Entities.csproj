@@ -333,6 +333,7 @@
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
     <Compile Include="Dto\ContactoComercialAuditoriaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ControlDeBoletosValidacionIADatosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroSeguimientoDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletosConsultaDto.cs" />

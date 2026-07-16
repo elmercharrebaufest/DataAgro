@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
 namespace WebDataAgro.Filters
 {
@@ -7,12 +7,17 @@ namespace WebDataAgro.Filters
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             var request = filterContext.HttpContext.Request;
+            var path = request.Url?.AbsolutePath?.ToLower() ?? string.Empty;
+
+            // Rutas API con token propio: no redirigir a login por cookie.
+            if (ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(request))
+                return;
+
             // Si ya tiene cookie → pasa
             if (filterContext.HttpContext.User?.Identity?.IsAuthenticated == true)
                 return;
 
             // Si viene del Login, no hacemos nada
-            var path = request.Url?.AbsolutePath?.ToLower();
             if (path == "/home/login" || path == "/home/error")
                 return;
             // Si Azure está enviando el "code", dejamos seguir
