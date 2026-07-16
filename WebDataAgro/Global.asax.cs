@@ -11,11 +11,13 @@ using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using WebDataAgro.Filters;
 
 namespace WebDataAgro
 {
@@ -47,6 +49,56 @@ namespace WebDataAgro
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
+        protected void Application_BeginRequest()
+        {
+            var context = HttpContext.Current;
+            if (context == null)
+                return;
+
+            var request = context.Request;
+            var isApiValidacionBoletos = ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(request);
+
+            if (!isApiValidacionBoletos)
+            {
+                return;
+            }
+
+            var expectedToken = ApiRequestSecurityHelper.GetExpectedToken();
+            var providedToken = request.Headers["X-API-Token"];
+
+            if (string.IsNullOrWhiteSpace(expectedToken) || string.IsNullOrWhiteSpace(providedToken) || !SlowEquals(expectedToken, providedToken))
+            {
+                var response = context.Response;
+                response.Clear();
+                response.StatusCode = 401;
+                response.SuppressFormsAuthenticationRedirect = true;
+                response.TrySkipIisCustomErrors = true;
+                response.ContentType = "application/json";
+                response.Write("{\"ok\":false,\"error\":\"unauthorized\",\"detail\":\"Token invalido o ausente\"}");
+                context.ApplicationInstance.CompleteRequest();
+            }
+        }
+
+        private static bool SlowEquals(string a, string b)
+        {
+            if (a == null || b == null)
+            {
+                return false;
+            }
+
+            var bytesA = Encoding.UTF8.GetBytes(a);
+            var bytesB = Encoding.UTF8.GetBytes(b);
+
+            var diff = bytesA.Length ^ bytesB.Length;
+            var length = Math.Min(bytesA.Length, bytesB.Length);
+            for (int i = 0; i < length; i++)
+            {
+                diff |= bytesA[i] ^ bytesB[i];
+            }
+
+            return diff == 0;
+        }
+
         protected void Application_EndRequest()
         {
             var context = HttpContext.Current;
@@ -55,6 +107,12 @@ namespace WebDataAgro
 
             var request = context.Request;
             var response = context.Response;
+            var isApiValidacionBoletos = ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(request);
+
+            if (isApiValidacionBoletos)
+            {
+                return;
+            }
 
             bool isAjaxRequest =
                 request.Headers["X-Requested-With"] == "XMLHttpRequest";
@@ -97,10 +155,27 @@ namespace WebDataAgro
         protected void Application_Error(object sender, EventArgs e)
         {
             var context = HttpContext.Current;
-            var path = context?.Request?.Path;
+            var request = context?.Request;
+            var path = request?.Path;
             // Si es un servicio WCF, NO redirigir
             if (path != null && path.EndsWith(".svc", StringComparison.OrdinalIgnoreCase))
             {
+                return;
+            }
+
+            if (ApiRequestSecurityHelper.IsValidacionBoletosApiRequest(request))
+            {
+                Exception apiException = Server.GetLastError();
+                HttpException apiHttpException = apiException as HttpException;
+
+                Response.Clear();
+                Response.StatusCode = apiHttpException != null ? apiHttpException.GetHttpCode() : 500;
+                Response.SuppressFormsAuthenticationRedirect = true;
+                Response.TrySkipIisCustomErrors = true;
+                Response.ContentType = "application/json";
+                Response.Write("{\"ok\":false,\"error\":\"internal_error\",\"detail\":\"Error interno\"}");
+
+                Server.ClearError();
                 return;
             }
 

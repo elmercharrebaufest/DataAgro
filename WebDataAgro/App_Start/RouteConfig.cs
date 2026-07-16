@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace WebDataAgro
@@ -9,6 +9,9 @@ namespace WebDataAgro
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(".well-known/{*pathInfo}");
+
+            // Habilitar Attribute Routing
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 name: "Default",

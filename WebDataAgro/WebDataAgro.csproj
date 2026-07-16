@@ -378,7 +378,6 @@
     <Content Include="Scripts\App\ControlDeBoletos.js" />
     <Content Include="Scripts\App\ControlDeBoletosDatosCertificacion.js" />
     <Content Include="Scripts\App\ControlDeBoletosGestion.js" />
-    <Content Include="Scripts\App\ControlDeBoletosModificacionMasiva.js" />
     <Content Include="Scripts\App\ControlDeBoletosModificarContrato.js" />
     <Content Include="Scripts\App\ControlDeBoletosReporteSeguimiento.js" />
     <Content Include="Scripts\App\ControlDeBoletosSeguimiento.js" />
@@ -400,6 +399,9 @@
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
+    <Compile Include="Controllers\ValidacionBoletosController.cs" />
+    <Compile Include="Filters\ApiRequestSecurityHelper.cs" />
+    <Compile Include="Filters\ApiTokenAuthorizeAttribute.cs" />
     <Compile Include="Filters\RequireLoginAttribute.cs" />
     <Compile Include="Jobs\ActualizarEstadoBoletosConfirmaHangfireJob.cs" />
     <Compile Include="Jobs\ActualizarScoringCuposDeProveedoresHangfireJob.cs" />

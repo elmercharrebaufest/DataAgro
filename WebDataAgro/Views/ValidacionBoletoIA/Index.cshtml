@@ -1,0 +1,140 @@
+@{
+    ViewBag.Title = "Validación de Boletos IA";
+}
+
+@section styles{
+    <link href="~/Content/control-boletos.css" rel="stylesheet" />
+    <link href="~/Content/control-boletos-contrato.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/ValidacionBoletoIA")
+}
+
+<div class="container-fluid" style="margin-left:2em; margin-right:2em;" id="frmValidacionBoletos">
+    <!-- Header Section -->
+    <div class="row header-section">
+        <div class="col-12">
+            <h2 class="page-title">
+                <i class="fa fa-clipboard-check" aria-hidden="true"></i>
+                Validación de Boletos IA
+            </h2>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="card filter-card fade-in">
+        <div class="card-body">
+            <!-- First Row -->
+            <div class="row form-row">
+                <div class="col-md-6 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Contratos SAP</label>
+                        <div class="filter-espacio-input">
+                            <input type="text" id="NegocioSAP" class="form-control" placeholder="Contratos SAP" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Material</label>
+                        <select id="materialId" class="form-control">
+                            <option value="">Cargando materiales...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Estado de Validación</label>
+                        <select id="estadoControlId" class="form-control">
+                            <option value="">Cargando estados...</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Second Row -->
+            <div class="row form-row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Validación Desde</label>
+                        <input id="fechaValidacionDesde" class="form-control" type="date" style="width: stretch" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Validación Hasta</label>
+                        <input id="fechaValidacionHasta" class="form-control" type="date" style="width: stretch" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Bolsa</label>
+                        <select id="bolsaCompraNetId" class="form-control">
+                            <option value="">Cargando Bolsas...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label class="form-label">Proveedor</label>
+                        <select id="proveedorId" class="form-control">
+                            <option value="">Cargando proveedores...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="row form-row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 filter-actions" style="display:flex; justify-content: flex-end">
+                    <button type="button" id="filtrarBoletos" class="btn btn-primary">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Buscar</span>
+                    </button>
+                    <button type="button" id="limpiarFiltros" class="btn btn-secondary">
+                        <i class="fa fa-eraser" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Limpiar</span>
+                    </button>
+                    <button type="button" id="exportarExcel" class="btn btn-success" disabled>
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Excel</span>
+                    </button>
+                    <button type="button" id="cargarBoleto" class="btn btn-success" disabled>
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        <span class="d-sm-inline">Cargar Boleto</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card results-card mt-3 fade-in">
+        <div class="card-header d-flex justify-content-between align-items-center">
+        </div>
+        <br />
+        <div class="card-body p-0">
+            <!-- Quick Actions Bar -->
+            <div class="quick-actions-bar">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6 text-right">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="boletos-grid" class="grid-container">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border-custom" role="status">
+                        <span class="sr-only">Cargando datos...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

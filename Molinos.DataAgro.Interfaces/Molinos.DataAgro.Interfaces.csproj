@@ -289,6 +289,7 @@
     <Compile Include="Managers\IControlDeBoletosEstadoManager.cs" />
     <Compile Include="Managers\IControlDeBoletosManager.cs" />
     <Compile Include="Managers\IControlDeBoletosSAPManager.cs" />
+    <Compile Include="Managers\IControlDeBoletosValidacionIAManagerIA.cs" />
     <Compile Include="Managers\ICupoNoPropioManager.cs" />
     <Compile Include="Managers\IFAQManager.cs" />
     <Compile Include="Managers\IHabilitacionBoletoManager.cs" />
