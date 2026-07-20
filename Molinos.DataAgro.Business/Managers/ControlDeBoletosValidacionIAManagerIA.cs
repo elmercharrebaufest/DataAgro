@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.Cosecha = contrato.Campana.Descripcion;
                 datosContrato.TipoBoleto = contrato.Boleto.Descripcion;
                 datosContrato.FechaOperacion = contrato.FechaOperacion != null ? contrato.FechaOperacion.ToString("dd/MM/yyyy") : string.Empty;
-                datosContrato.PeriodoEntrega = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("dd/MM/yyyy") : string.Empty + " - " + contrato.FechaHasta != null ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.PeriodoEntrega = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("dd/MM/yyyy") : string.Empty + " - " + contrato.FechaHasta != null ? contrato.FechaHasta.ToString("dd/MM/yyyy") : string.Empty;
                 datosContrato.CuitVendedor = contrato.Proveedor.CUIT;
                 datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : string.Empty;
                 datosContrato.Moneda = contrato.Moneda?.MonedaId;
