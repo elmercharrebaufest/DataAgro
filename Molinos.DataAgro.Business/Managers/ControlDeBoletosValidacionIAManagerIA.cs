@@ -43,27 +43,27 @@ namespace Molinos.DataAgro.Business.Managers
         public ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP)
         {
             var datosContrato = new ValidacionDeBoletosIADatosContratoDto();
-            var contrato = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contratoSAP);
+            var contrato = repositorio.ObtenerConsultaEscalar(new TraerContratoBoletoPorSAP(contratoSAP));
             if (contrato != null)
             {
 
-                datosContrato.Material = contrato.Material.Descripcion;
+                datosContrato.Material = contrato.Material;
                 datosContrato.Precio = contrato.Precio;
-                datosContrato.Destino = contrato.Destino.Descripcion;
-                datosContrato.Cosecha = contrato.Campana.Descripcion;
-                datosContrato.TipoBoleto = contrato.Boleto.Descripcion;
-                datosContrato.FechaOperacion = contrato.FechaOperacion != null ? contrato.FechaOperacion.ToString("dd/MM/yyyy") : string.Empty;
-                datosContrato.PeriodoEntrega = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("dd/MM/yyyy") : string.Empty + " - " + contrato.FechaHasta != null ? contrato.FechaHasta.ToString("dd/MM/yyyy") : string.Empty;
-                datosContrato.CuitVendedor = contrato.Proveedor.CUIT;
-                datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : string.Empty;
-                datosContrato.Moneda = contrato.Moneda?.MonedaId;
-                datosContrato.ProvinciaOrigen = contrato.Provincia.Nombre;
-                datosContrato.LocalidadOrigen = contrato.Localidad.Nombre;
+                datosContrato.Destino = contrato.DestinoDescripcion;
+                datosContrato.Cosecha = contrato.Campania;
+                datosContrato.TipoBoleto = contrato.BoletoDescripcion;
+                datosContrato.FechaOperacion = contrato.FechaOperacion != null ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.PeriodoEntrega = contrato.FechaDesde != null ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : string.Empty + " - " + contrato.FechaHasta != null ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.CuitVendedor = contrato.Cuit;
+                datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.CUITCorredor : string.Empty;
+                datosContrato.Moneda = contrato.Moneda;
+                datosContrato.ProvinciaOrigen = contrato.Provincia;
+                datosContrato.LocalidadOrigen = contrato.Localidad;
                 datosContrato.Kilos = contrato.Cantidad;
                 datosContrato.FechaFijacionDesde = contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("dd/MM/yyyy") : string.Empty;
                 datosContrato.FechaFijacionHasta = contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("dd/MM/yyyy") : string.Empty;
-                datosContrato.Bolsa = contrato.Bolsa.Descripcion;
-                datosContrato.TipoBoleto = contrato.Boleto.Descripcion;
+                datosContrato.Bolsa = contrato.BolsaDescripcion;
+                datosContrato.TipoBoleto = contrato.BoletoDescripcion;
             }
             return datosContrato;
         }

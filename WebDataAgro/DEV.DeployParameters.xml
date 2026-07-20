@@ -29,6 +29,8 @@
   <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
   <setParameter name="VersionClienteSTOP Key" value="2.0.0" />
 
+  <setParameter name="ApiTokenDataAgro Key" value="DATA_AGRO_QA_IA_2026" />
+
   <!-- Primary Producción -->
   <setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
   <setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
