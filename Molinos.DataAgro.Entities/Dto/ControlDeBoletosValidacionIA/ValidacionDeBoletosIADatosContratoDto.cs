@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletosValidacionIA
 
         public string PeriodoEntrega { get; set; }
 
-        public DateTime FechaOperacion { get; set; }
+        public string FechaOperacion { get; set; }
 
         public string ProvinciaOrigen { get; set; }
 
@@ -32,9 +32,9 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletosValidacionIA
 
         public string Cosecha { get; set; }
 
-        public DateTime? FechaFijacionDesde { get; set; }
+        public string FechaFijacionDesde { get; set; }
 
-        public DateTime? FechaFijacionHasta { get; set; }
+        public string FechaFijacionHasta { get; set; }
 
         public decimal? CantidadMinFijacion { get; set; }
 
