@@ -56,6 +56,9 @@
 
   <setParameter name="ActivarBLEND Key" value="No" />
 
+  <setParameter name="ApiTokenDataAgro Key" value="DATA_AGRO_PROD_IA_2026" />
+
+
   <setParameter name="PathBoletos Key" value="\\sapshareprd\share\ftproot\transf\matprim\boletosgap\" />
   <setParameter name="PathConfirmas Key" value="\\sapshareprd\share\ftproot\transf\matprim\confirmas\" />
   <setParameter name="LibraryNameResearch Key" value="Datos research" />
