@@ -33,7 +33,7 @@ namespace WebDataAgro.Controllers
             this.controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetContrato")]
         public JsonResult GetContrato(string contratoSAP)
         {
@@ -44,10 +44,27 @@ namespace WebDataAgro.Controllers
                 return Json(new
                 {
                     ok = false,
-                    mensaje = "No se encontró el contrato."
-                });
+                    mensaje = "No se encontró el contrato.",
+                }, JsonRequestBehavior.AllowGet);
             }
-            return Json(contrato);
+            return Json(contrato, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [Route("GetClausulas")]
+        public JsonResult GetClausulas(string contratoSAP)
+        {
+            var clausulas = controlDeBoletosEstadoManager.ObtenerClausulas(contratoSAP);
+            if (clausulas == null)
+            {
+                Response.StatusCode = 404;
+                return Json(new
+                {
+                    ok = false,
+                    mensaje = "No se encontraron las cláusulas."
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(clausulas, JsonRequestBehavior.AllowGet);
         }
     }
 }

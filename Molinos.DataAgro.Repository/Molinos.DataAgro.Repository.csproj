@@ -210,6 +210,7 @@
     <Compile Include="ConsultasEF\TraerBoletosConFiltro.cs" />
     <Compile Include="ConsultasEF\TraerBoletosParaModificar.cs" />
     <Compile Include="ConsultasEF\TraerConfirmasConFiltro.cs" />
+    <Compile Include="ConsultasEF\TraerContratoBoletoPorSAP.cs" />
     <Compile Include="ConsultasEF\TraerControlBoletosPendientes.cs" />
     <Compile Include="ConsultasEF\TraerLocalidades.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="ConsultasEF\TraerServicios.cs" />
     <Compile Include="ConsultasEF\TraerTodoPesificadoSinFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoPrecioMoaPizarra.cs" />
+    <Compile Include="ConsultasEF\TraerTodosContratosSinFiltroOptimizado.cs" />
     <Compile Include="ConsultasEF\TraerTodosCupoNoPropio.cs" />
     <Compile Include="ConsultasEF\TraerTodosReportePesificado.cs" />
     <Compile Include="ConsultasEF\TraerTodosNegocioPesificacion.cs" />

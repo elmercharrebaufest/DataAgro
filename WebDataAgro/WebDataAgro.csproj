@@ -384,6 +384,7 @@
     <Content Include="Scripts\App\ControlDeBoletosTracking.js" />
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
     <Content Include="Scripts\App\OptimizationCache.js" />
+    <Content Include="Scripts\App\ValidacionBoletoIA.js" />
     <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
@@ -399,6 +400,7 @@
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
+    <Compile Include="Controllers\ValidacionBoletoIAController.cs" />
     <Compile Include="Controllers\ValidacionBoletosController.cs" />
     <Compile Include="Filters\ApiRequestSecurityHelper.cs" />
     <Compile Include="Filters\ApiTokenAuthorizeAttribute.cs" />
@@ -3204,6 +3206,9 @@
     <Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

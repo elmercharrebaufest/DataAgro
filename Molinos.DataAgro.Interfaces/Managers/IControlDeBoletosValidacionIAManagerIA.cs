@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IControlDeBoletosValidacionIAManagerIA
     {
-        ControlDeBoletosValidacionIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP);
+        ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP);
+        List<ValidacionDeBoletosIAResultadoClausulaDto> ObtenerClausulas(string contratoSAP);
     }
 }
