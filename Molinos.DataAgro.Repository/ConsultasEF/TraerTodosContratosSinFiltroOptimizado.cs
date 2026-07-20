@@ -1,0 +1,285 @@
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Transactions;
+
+namespace Molinos.DataAgro.Repository.ConsultasEF
+{
+    /// <summary>
+    /// Consulta optimizada para obtener contratos de boletos sin filtro de equipo.
+    /// Clonada de TraerTodosContratosSinFiltro pero eliminando los filtros innecesarios de permisos y equipo.
+    /// </summary>
+    public static class TraerTodosContratosSinFiltroOptimizado
+    {
+        /// <summary>
+        /// Construye una query base sin filtros de equipo ni permisos, solo por contrato.
+        /// Esto es mucho más rápido para búsquedas puntuales por contratoSAP.
+        /// </summary>
+        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, string contratoSAP)
+        {
+            ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
+
+            var crearFason = PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason);
+            var crearAgente = PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente);
+            var crearAcuerdos = PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos);
+
+            var queryNegocios = from contrato in contexto.Set<Negocio>()
+                                where contrato.ContratoSAP == contratoSAP
+                                 && ((crearFason && contrato is Fason) || (crearAgente && contrato is AgenteCompra) || (crearAcuerdos && contrato is ContratoAcuerdo) || (!(contrato is Fason) && !(contrato is AgenteCompra) && !(contrato is ContratoAcuerdo)))
+                                select new BasicoContrato()
+                                {
+                                    Id = contrato.Id,
+                                    ContratoId = contrato is Contrato ? contrato.Id : contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).ContratoId ?? 0 : 0,
+                                    ProveedorId = contrato.ProveedorId ?? 0,
+                                    CorredorId = contrato.CorredorId ?? 0,
+                                    ComercialId = contrato.ComercialId,
+                                    ComercialZonaId = contrato.Comercial.GrupoDeComprasId,
+                                    ComercialZonaDescripcion = contrato.Comercial.GrupoDeCompras.Descripcion,
+                                    MaterialId = contrato.MaterialId,
+                                    TipoNegocioId = contrato.TipoNegocioId,
+                                    Cantidad = contrato.Cantidad,
+                                    Precio = contrato.Precio,
+                                    PrecioPlazo = contrato.TipoNegocioId == 1 ? SqlFunctions.DateName("day", (contrato as Contrato).HastaFijacion) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).HastaFijacion) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).HastaFijacion) : contrato.Precio.ToString(),
+                                    FechaEntrega = contrato.FechaEntrega,
+                                    CampanaId = contrato.CampanaId ?? 0,
+                                    FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
+                                    FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
+                                    MonedaId = contrato.MonedaId,
+                                    Moneda = contrato.Moneda == null ? "" : contrato.Moneda.Descripcion,
+                                    Fecha = DbFunctions.TruncateTime(contrato.Fecha),
+                                    Hora = (contrato.Fecha.Hour < 10 ? "0" : "") + SqlFunctions.DateName("hh", contrato.Fecha) + ":" + (contrato.Fecha.Minute < 10 ? "0" : "") + SqlFunctions.DateName("mi", contrato.Fecha),
+                                    Fecha_Order = contrato.Fecha,
+                                    GrupoCompra = contrato.Comercial != null ? contrato.Comercial.GrupoDeComprasId.Value : contrato.GrupoCompra ?? 0,
+                                    GrupoCompraDescripcion = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Comercial != null) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeCompras.Descripcion :
+                                     (contrato is Contrato && (contrato as Contrato).Comercial != null) ? (contrato as Contrato).Comercial.GrupoDeCompras.Descripcion : contrato.GrupoDeCompras.Descripcion,
+                                    Base = contrato.Base,
+                                    TarifaAConvenir = contrato.TarifaAConvenir,
+                                    Fecha_Dolarizado = DbFunctions.TruncateTime(contrato.FechaDolarizado),
+                                    Dias_Pesificado = contrato.DiasPesificado,
+                                    NoInformaSIO = contrato.NoInformaSio,
+                                    Estado = contrato.EstadoId,
+                                    Estado_Contrato = contrato.Estado.Descripcion,
+                                    Estado_Order = contrato.Estado.Orden,
+                                    UsuarioId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.UsuarioId : contrato.UsuarioId,
+                                    ContratoSAP = contrato.ContratoSAP,
+                                    Ampliaciones = contrato.Ampliaciones,
+                                    Cuit = contrato.Proveedor != null ? contrato.Proveedor.CUIT : contrato is AgenteCompra && (contrato as AgenteCompra).Operador.ProveedorId.HasValue ? (contrato as AgenteCompra).Operador.Proveedor.CUIT : "",
+                                    Proveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : !string.IsNullOrEmpty(contrato.Proveedor.Alias) ? contrato.Proveedor.Alias + " - " + contrato.Proveedor.RazonSocial : contrato.Proveedor.RazonSocial,
+                                    Corredor = contrato.Corredor == null ? "" : !string.IsNullOrEmpty(contrato.Corredor.Alias) ? contrato.Corredor.Alias + " - " + contrato.Corredor.RazonSocial : contrato.Corredor.RazonSocial,
+                                    CUITCorredor = contrato.Corredor == null ? "" : contrato.Corredor.CUIT,
+                                    Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
+                                    Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
+                                    Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
+                                    ProvinciaId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.ProvinciaId : contrato.ProvinciaId,
+                                    LocalidadId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.LocalidadId : contrato.LocalidadId,
+                                    Provincia = contrato.Provincia == null ? "" : contrato.Provincia.Nombre,
+                                    Localidad = contrato.Localidad == null ? "" : contrato.Localidad.Nombre,
+                                    TipoNegocio = contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" :
+                                    (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" :
+                                    (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
+                                    (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
+                                    (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRESTAMO DEVOLUCION" :
+                                    (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" : (contrato is Contrato && (contrato as Contrato).TipoPosicionCBOTId == 3) ? "A FIJAR PASE" :
+                                    (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
+                                    (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE" :
+                                    (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId == 3) ? "FIJACION PASE" :
+                                    contrato.TipoNegocio.Descripcion,
+                                    Observacion = contrato.Observacion ?? "",
+                                    FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
+                                    Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.Sustentable : contrato.Sustentable,
+                                    EPA = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.EPA : contrato.EPA,
+                                    EUDR = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.EUDR : contrato.EUDR,
+                                    SustentableTipoDBId = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.SustentableTipoDBId : contrato.SustentableTipoDBId,
+                                    Importe_Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.ImporteSustentable : contrato.ImporteSustentable,
+                                    MonedaId_Sustentable = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.MonedaSustentableId : contrato.MonedaSustentableId,
+                                    Moneda_Sustentable = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.MonedaSustentable.Descripcion : contrato.MonedaSustentable.Descripcion,
+                                    FechaDesde_Sustentable = (contrato is FijacionDePrecioContrato) ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).Contrato.FechaDesdeSustentable) : DbFunctions.TruncateTime(contrato.FechaDesdeSustentable),
+                                    FechaHasta_Sustentable = (contrato is FijacionDePrecioContrato) ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).Contrato.FechaHastaSustentable) : DbFunctions.TruncateTime(contrato.FechaHastaSustentable),
+                                    FechaDesde_SustentableFormateado = (contrato is FijacionDePrecioContrato) ? DbFunctions.Right("0" + (contrato as FijacionDePrecioContrato).Contrato.FechaDesdeSustentable.Value.Day, 2) + "/" + DbFunctions.Right("0" + (contrato as FijacionDePrecioContrato).Contrato.FechaDesdeSustentable.Value.Month, 2) + "/" + (contrato as FijacionDePrecioContrato).Contrato.FechaDesdeSustentable.Value.Year :
+                                        contrato.FechaDesdeSustentable != null ? DbFunctions.Right("0" + contrato.FechaDesdeSustentable.Value.Day, 2) + "/" + DbFunctions.Right("0" + contrato.FechaDesdeSustentable.Value.Month, 2) + "/" + contrato.FechaDesdeSustentable.Value.Year : "",
+                                    FechaHasta_SustentableFormateado = (contrato is FijacionDePrecioContrato) ? DbFunctions.Right("0" + (contrato as FijacionDePrecioContrato).Contrato.FechaHastaSustentable.Value.Day, 2) + "/" + DbFunctions.Right("0" + (contrato as FijacionDePrecioContrato).Contrato.FechaHastaSustentable.Value.Month, 2) + "/" + (contrato as FijacionDePrecioContrato).Contrato.FechaHastaSustentable.Value.Year :
+                                        contrato.FechaHastaSustentable != null ? DbFunctions.Right("0" + contrato.FechaHastaSustentable.Value.Day, 2) + "/" + DbFunctions.Right("0" + contrato.FechaHastaSustentable.Value.Month, 2) + "/" + contrato.FechaHastaSustentable.Value.Year : "",
+                                    Dolarizado = contrato.Dolarizado.Value,
+                                    Pesificado = contrato.DiasPesificado != null,
+                                    Negocio = (contrato is ContratoAcuerdo || contrato is AgenteCompra) ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
+                                    DestinoId = contrato.DestinoId,
+                                    DestinoDescripcion = contrato.Destino.Descripcion,
+                                    DestinoCodigoSap = contrato.Destino.CodigoSap,
+                                    CantidadCamiones = contrato.CantidadCamiones,
+                                    Consignatario = contrato.Consignatario,
+                                    PlanCanje = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PlanCanje : contrato.PlanCanje,
+                                    CD = contrato.CD,
+                                    Warrant = contrato.Warrant,
+                                    PagoDirectoVendedor = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PagoDirectoVendedor : contrato.PagoDirectoVendedor,
+                                    EstablecimientoPropio = contrato.EstablecimientoPropio,
+                                    BoletoId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BoletoId : contrato.BoletoId,
+                                    BolsaId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId : contrato.BolsaId,
+                                    BoletoDescripcion = contrato.Boleto != null ? contrato.Boleto.Descripcion : "",
+                                    BolsaDescripcion = contrato.Bolsa != null ? contrato.Bolsa.Descripcion : "",
+                                    DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
+                                    HastaFijacion = DbFunctions.TruncateTime(contrato.HastaFijacion),
+                                    CondicionFijacion = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.CondicionFijacionId : contrato.CondicionFijacionId,
+                                    CondicionFijacionDescripcion = contrato.CondicionFijacion != null ? contrato.CondicionFijacion.Descripcion : "",
+                                    ClasificacionId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.ClasificacionId : contrato.ClasificacionId,
+                                    ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
+                                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial" : "Cámara",
+                                    MercsDeposito = contrato.MercsDeposito,
+                                    MercaderiaDescripcion = contrato.MercsDeposito.HasValue ? contrato.MercsDeposito == true ? "SI" : "NO" : "",
+                                    CantidadDeposito = contrato.CantidadDeposito,
+                                    ComercialCreadorId = contrato.ComercialCreadorId ?? contrato.ProveedorCreadorId,
+                                    ComercialCreador = contrato.ProveedorCreadorId != null ? contrato.ProveedorCreador.RazonSocial : contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
+                                    ContratoCorredor = contrato.ContratoCorredor,
+                                    ContratoVendedor = contrato.ContratoVendedor,
+                                    SelCargoMOA = contrato.SelCargoMOA,
+                                    SelCargoVendedor = contrato.SelCargoVendedor,
+                                    Posicion = (contrato is Fason) ? (contrato as Fason).Posicion : (contrato is AgenteCompra) ? (contrato as AgenteCompra).Posicion : "",
+                                    TipoFason = (contrato is Fason) ? (contrato as Fason).TipoFason.Descripcion : "",
+                                    FasonId = (contrato is Fason) ? (contrato as Fason).Id : 0,
+                                    Operador = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : "",
+                                    OperadorId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Id : 0,
+                                    AgenteId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Id : 0,
+                                    PrecioNeto = contrato.PrecioNeto,
+                                    StandardDeCalidadId = contrato.StandardDeCalidadId,
+                                    StandardDeCalidadDescripcion = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.Descripcion : "",
+                                    Pizarra = contrato.Pizarra,
+                                    PagoDiferido = contrato.PagoDiferido,
+                                    ZonaId = contrato.ZonaId,
+                                    ZonaDescripcion = contrato.Zona != null ? contrato.Zona.Descripcion : "",
+                                    AcuerdoId = (contrato is ContratoAcuerdo) ? (int?)(contrato as ContratoAcuerdo).Id : null,
+                                    ImporteFinanciero = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Importe,
+                                    ImporteRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2).Importe,
+                                    PorcentajeComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje,
+                                    ImporteComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe,
+                                    ImporteBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
+                                    PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
+                                    ImporteBasis = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 5).Importe,
+                                    MonedaFinanciero = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Moneda.Descripcion,
+                                    MonedaRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2).Moneda.Descripcion,
+                                    MonedaComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Moneda.Descripcion,
+                                    MonedaBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Moneda.Descripcion,
+                                    MonedaBasis = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 5).Moneda.Descripcion,
+                                    NivelTarifaId = contrato.NivelTarifaId,
+                                    NivelTarifa = contrato.NivelTarifa != null ? contrato.NivelTarifa.Descripcion : "",
+                                    TarifaFlete = contrato.TarifaFlete,
+                                    Compensacion = contrato.Compensacion,
+                                    Acuerdo = (contrato is Contrato) ? (contrato as Contrato).ContratoAcuerdoId : null,
+                                    Rechazo = contrato.MotivoRechazo,
+                                    OcultarEnTablero = contrato.OcultarEnTablero,
+                                    FechaCierta = DbFunctions.TruncateTime(contrato.FechaCierta) ?? null,
+                                    EsFason = contrato.EsFason,
+                                    PorcentajeDePago = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.PorcentajeDePago : contrato.PorcentajeDePago,
+                                    FechaOperacion = DbFunctions.TruncateTime(contrato.FechaOperacion),
+                                    MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
+                                    DescripcionOperacionAnterior = contrato.DescripcionOperacionAnterior,
+                                    UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null ? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido : "Automática",
+                                    FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion : (DateTime?)null,
+                                    ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
+                                    DolarizadoExpress = contrato.DolarizadoExpress.Value,
+                                    DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
+                                    PagoCBU = contrato.PagoCBU,
+                                    CalidadTercero = contrato.CalidadTercero,
+                                    DolarizadoTercero = contrato.DolarizadoTercero,
+                                    PagoDiferidoTercero = contrato.PagoDiferidoTercero,
+                                    ObservacionTercero = contrato.ObservacionTercero,
+                                    Canje = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Canje : contrato.Canje,
+                                    MonedaCanjeId = contrato.MonedaCanjeId,
+                                    Monto = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Monto : contrato.Monto,
+                                    Insumo = contrato.Insumo,
+                                    PrestamoDevolucion = contrato.PrestamoDevolucion ?? false,
+                                    PlantaDestinoId = contrato.PlantaDestinoId ?? 0,
+                                    PlantaDestinoDescripcion = contrato.PlantaDestino != null ? contrato.PlantaDestino.Descripcion : "",
+                                    SustentableTercero = contrato.SustentableTercero,
+                                    Venta = contrato.Venta,
+                                    TipoAgenteCompraId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompraId : 0,
+                                    TipoAgenteCompra = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompra.Descripcion : "",
+                                    CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
+                                    ObligatoriedadCostoFinancieroDesc = !contrato.ObligatoriedadCostoFinanciero.HasValue ? "" : contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value == true ? "Si" : "No",
+                                    ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero,
+                                    PosicionCBOT = contrato.PosicionCBOT,
+                                    VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
+                                    TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                                    TipoPosicionCBOTId = contrato.TipoPosicionCBOTId,
+                                    Virtual = contrato.Virtual,
+                                    ProveedorCreador = contrato.ProveedorCreadorId,
+                                    UsuarioTercero = contrato.UsuarioTercero,
+                                    FechaCiertaTilde = contrato.FechaCierta.HasValue,
+                                    AnulaYReemplazaContratoId = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContratoId : null,
+                                    AnulaYReemplazaContratoSAP = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContrato.ContratoSAP : "",
+                                    MotivoReemplazo = (contrato is Contrato) ? (contrato as Contrato).MotivoReemplazo : "",
+                                    Cesion = contrato.Cesion,
+                                    ObligatoriedadBonificacionDesc = !contrato.ObligatoriedadBonificacion.HasValue ? "" : contrato.ObligatoriedadBonificacion.HasValue && contrato.ObligatoriedadBonificacion.Value == true ? "Si" : "No",
+                                    PrecioPonderado = contrato.PrecioPonderado ?? 0,
+                                    PrecioNetoPonderado = contrato.PrecioNetoPonderado ?? 0,
+                                    EsUsuarioExterno = string.IsNullOrEmpty(contrato.UsuarioTercero) ? (bool?)null : true,
+                                    Condicional = (contrato is Contrato) ? (contrato as Contrato).Condicional : null,
+                                    CondicionalCantidad = (contrato is Contrato) ? (contrato as Contrato).CondicionalCantidad : null,
+                                    CondicionalFecha = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha : null,
+                                    CondicionalFechaFormateado = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha != null ? SqlFunctions.DateName("day", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).CondicionalFecha) : "" : "",
+                                    CondicionalMonedaId = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId : null,
+                                    CondicionalPosicion = (contrato is Contrato) ? (contrato as Contrato).CondicionalPosicion : null,
+                                    CondicionalPrecio = (contrato is Contrato) ? (contrato as Contrato).CondicionalPrecio : null,
+                                    CondicionalContratoId = (contrato is Contrato) ? (contrato as Contrato).CondicionalContratoId : null,
+                                    CondicionalContratoSAP = (contrato is Contrato) ? (contrato as Contrato).CondicionalContrato.ContratoSAP : "",
+                                    MailVentaBoleto = contrato.MailVentaBoleto,
+                                    ProveedorComisionistaId = contrato.ProveedorComisionistaId,
+                                    RazonSocialProveedorComisionista = contrato.ProveedorComisionistaId != null ? contrato.ProveedorComisionista.RazonSocial : "",
+                                    KgMaximo = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMaximo ?? 0 : contrato.KgMaximo ?? 0,
+                                    KgMinimo = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMinimo ?? 0 : contrato.KgMinimo ?? 0,
+                                    BoletoContratoId = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.BoletoId : contrato.BoletoId,
+                                    BolsaContratoId = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId : contrato.BolsaId,
+                                    ProveedorDireccion = contrato.Proveedor.Direccion,
+                                    ProveedorLocalidad = contrato.Proveedor.Localidad != null ? contrato.Proveedor.Localidad.Nombre : contrato.Proveedor.LocalidadCompraNet != null ? contrato.Proveedor.LocalidadCompraNet.Nombre : "",
+                                    ProveedorProvincia = (contrato.Proveedor.Localidad != null && contrato.Proveedor.Localidad.Provincia != null) ?
+                                    contrato.Proveedor.Localidad.Provincia.Nombre : contrato.Proveedor.LocalidadCompraNet != null && contrato.Proveedor.LocalidadCompraNet.Provincia != null ? contrato.Proveedor.LocalidadCompraNet.Provincia.Nombre : "",
+                                    DestinoLocalidad = contrato.Destino.Localidad.Nombre,
+                                    DestinoProvincia = contrato.Destino.Localidad.Provincia.Nombre,
+                                    MonedaCanjeDescripcion = contrato.MonedaCanjeId != null ? contrato.MonedaCanje.Descripcion : "",
+                                    CondicionalMonedaDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId != null ? (contrato is Contrato) ? (contrato as Contrato).CondicionalMoneda.Descripcion : "" : "" : "",
+                                    RazonSocialProveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
+                                    RazonSocialCorredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
+                                    ProveedorCP = contrato.Proveedor.CodigoPostal,
+                                    FijacionSAP = contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
+                                    DolarizadoOriginal = contrato.FechaDolarizadoOriginal,
+                                    FechaDolarizadoOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaDolarizadoOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaDolarizadoOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaDolarizadoOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaDolarizadoOriginal) : "" : "",
+                                    HastaOriginal = contrato.FechaHastaOriginal,
+                                    FechaHastaOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaOriginal) : "" : "",
+                                    ServicioModificado = (contrato is Contrato) && (contrato as Contrato).Servicios.Any(x => x.Modificado == true),
+                                    ConDescarga = contrato.ConDescarga ?? false,
+                                    DolarExportador = (contrato is AgenteCompra) && ((contrato as AgenteCompra).DolarExportador ?? false),
+                                    TipoDeCambioId = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.TipoDeCambioId : contrato.TipoDeCambioId,
+                                    Madre = contrato.Madre,
+                                    ContratoMadre = contrato.ContratoMadre,
+                                    LocalidadConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Localidad.CodigoPostal + (contrato as FijacionDePrecioContrato).Contrato.Localidad.SubCodigoPostal : contrato.Localidad.CodigoPostal + contrato.Localidad.SubCodigoPostal,
+                                    BolsaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Bolsa.CodigoConfirma : contrato.Bolsa.CodigoConfirma,
+                                    CampanaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Campana.CodigoSIO : contrato.Campana.CodigoSIO,
+                                    ProvinciaConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Provincia.CodigoConfirma : contrato.Provincia.CodigoConfirma,
+                                    DestinoConfirma = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.Destino.CodigoConfirma : contrato.Destino.CodigoConfirma,
+                                    ConfirmadoSAP = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.ConfirmadoSAP : contrato.ConfirmadoSAP,
+                                    Descuentos = contrato.Descuentos.Select(y => new DescuentoBonificacionDto
+                                    {
+                                        ContratoId = y.ContratoId,
+                                        FechaDesde = y.FechaDesde.ToString(),
+                                        FechaHasta = y.FechaHasta.ToString(),
+                                        Importe = y.Importe,
+                                        MonedaId = y.MonedaId,
+                                        Moneda = y.Moneda.Descripcion,
+                                        Id = y.Id,
+                                        Porcentaje = y.Porcentaje,
+                                        TipoDBDesc = y.TipoDB.Descripcion,
+                                        TipoDBId = y.TipoDBId,
+                                        TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                                        TipoPeriodoDBId = y.TipoPeriodoDBId
+                                    }).ToList()
+                                };
+
+            return queryNegocios;
+        }
+    }
+}
