@@ -539,7 +539,32 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultadoSeguimiento;
 
                 // 2. Luego persistir en la base de datos local
+
+                var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
+                if (datosSeguimiento == null)
+                {
+                    if (!controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaEnvioAfip.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaEnvioBolsa.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaEnvioFirma.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaRecepcionAfip.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaRecepcionFirma.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto.HasValue &&
+                        !controlDeBoletosDatosSeguimiento.FechaEnvioSellado.HasValue &&
+                        controlDeBoletosDatosSeguimiento.BolsaCompraNetId == 0 &&
+                        string.IsNullOrWhiteSpace(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
+                        controlDeBoletosDatosSeguimiento.BoletoSapId == 0 &&
+                        string.IsNullOrWhiteSpace(controlDeBoletosDatosSeguimiento.BoletoSapCaracter)
+                       )
+                    {
+                        oResultado.Errores.Add(new ErrorMessage() { Message = "No se proporcionaron datos de seguimiento para registrar." });
+                        return oResultado;
+                    }
+                }
                 PersistirDatosDeSeguimientoLocal(controlDeBoletosDatosSeguimiento);
+
+
 
                 return oResultado;
             }
@@ -1309,6 +1334,37 @@ namespace Molinos.DataAgro.Business.Managers
                 bool operaSinOblea = VerificarOperaSinOblea(cuitProveedor, tipoProveedor) == "SI";
                 item.OperaSinOblea = operaSinOblea;
             }
+
+            if (!string.IsNullOrWhiteSpace(filtros?.ContratoSAP) && data != null && data.Count > 1)
+            {
+                var ordenContratos = filtros.ContratoSAP
+                    .Split(';')
+                    .Select(x => x?.Trim())
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(x => x.TrimStart('0').PadLeft(10, '0'))
+                    .Distinct()
+                    .ToList();
+
+                if (ordenContratos.Count > 0)
+                {
+                    var mapaOrden = ordenContratos
+                        .Select((contrato, indice) => new { contrato, indice })
+                        .ToDictionary(x => x.contrato, x => x.indice);
+
+                    data = data
+                        .Select((item, indiceOriginal) => new
+                        {
+                            item,
+                            indiceOriginal,
+                            contratoNormalizado = (item?.ContratoSAP ?? string.Empty).Trim().TrimStart('0').PadLeft(10, '0')
+                        })
+                        .OrderBy(x => mapaOrden.ContainsKey(x.contratoNormalizado) ? mapaOrden[x.contratoNormalizado] : int.MaxValue)
+                        .ThenBy(x => x.indiceOriginal)
+                        .Select(x => x.item)
+                        .ToList();
+                }
+            }
+
             return data;
         }
 

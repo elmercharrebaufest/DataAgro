@@ -25,9 +25,14 @@ var ControlBoletos = (function () {
         dirtyItems: {},
         selectedPasteField: null,
         selectedPasteRowIndex: 0,
+        selectedPasteColIndex: 0,
+        rangeAnchor: null,
+        selectedRange: null,
+        selectedCells: {},
         listaBolsaSAP: null,
         listaBolsa: null,
-        comboPopupAbierto: false
+        comboPopupAbierto: false,
+        _editandoCeldaExplicito: false
     };
 
     // Funciones privadas
@@ -44,7 +49,41 @@ var ControlBoletos = (function () {
         $("#mensajeModalBody").html(
             '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
         );
+
+        // Al cerrar el modal de validación, devolver foco a la celda actual de la grilla.
+        $("#mensajeModal").off("hidden.bs.modal.modifMasiva").one("hidden.bs.modal.modifMasiva", function () {
+            restaurarFocoGrilla();
+        });
+
         $("#mensajeModal").modal("show");
+    }
+
+    function restaurarFocoGrilla() {
+        if (!state.grid) return;
+
+        var rowIndex = Math.max(0, state.selectedPasteRowIndex || 0);
+        var colIndex = Math.max(0, state.selectedPasteColIndex || 0);
+        var $rows = state.grid.tbody.find("tr");
+        if (!$rows.length) return;
+
+        if (rowIndex >= $rows.length) rowIndex = $rows.length - 1;
+        var $cells = $rows.eq(rowIndex).find("td");
+        if (!$cells.length) return;
+        if (colIndex >= $cells.length) colIndex = $cells.length - 1;
+
+        var $cell = $cells.eq(colIndex);
+        if ($cell.length) {
+            state.grid.current($cell);
+            state.grid.wrapper.focus();
+        }
+
+        if (hayCeldasSeleccionadas()) {
+            refrescarSeleccionVisual();
+        } else if (state.selectedRange) {
+            aplicarSeleccionRango(state.selectedRange);
+        } else {
+            setAnchorYSeleccion(rowIndex, colIndex);
+        }
     }
 
     function actualizarBoton(selector, habilitado, texto) {
@@ -142,19 +181,49 @@ var ControlBoletos = (function () {
             table-layout: fixed;
         }
 
-        /* Solo los campos bloqueados permanecen grises */
-        #boletos-grid .k-grid-content td.campo-bloqueado {
-            background-color: #efefef !important;
-            color: #999 !important;
+        /* Celdas bloqueadas: siempre grises, máxima prioridad sobre hover, selección y rango */
+        #boletos-grid .k-grid-content tr td.campo-bloqueado,
+        #boletos-grid .k-grid-content tr.k-alt td.campo-bloqueado,
+        #boletos-grid .k-grid-content tr:hover td.campo-bloqueado,
+        #boletos-grid .k-grid-content tr.k-state-hover td.campo-bloqueado,
+        #boletos-grid .k-grid-content tr.k-state-selected td.campo-bloqueado,
+        #boletos-grid .k-grid-content tr.k-selected td.campo-bloqueado {
+            background-color: #e0e0e0 !important;
+            color: #a0a0a0 !important;
             cursor: not-allowed !important;
         }
 
-        #boletos-grid .k-grid-content td.campo-bloqueado .k-input,
-        #boletos-grid .k-grid-content td.campo-bloqueado .k-textbox,
-        #boletos-grid .k-grid-content td.campo-bloqueado .k-dropdown,
-        #boletos-grid .k-grid-content td.campo-bloqueado .k-datepicker {
-            background-color: #efefef !important;
-            color: #999 !important;
+        #boletos-grid .k-grid-content tr td.campo-bloqueado .k-input,
+        #boletos-grid .k-grid-content tr td.campo-bloqueado .k-textbox,
+        #boletos-grid .k-grid-content tr td.campo-bloqueado .k-dropdown,
+        #boletos-grid .k-grid-content tr td.campo-bloqueado .k-datepicker {
+            background-color: #e0e0e0 !important;
+            color: #a0a0a0 !important;
+        }
+
+        /* Selección de rango: no afecta a celdas bloqueadas */
+        #boletos-grid .k-grid-content td.range-selected:not(.campo-bloqueado) {
+            background-color: #e8f0ff !important;
+        }
+
+        #boletos-grid .k-grid-content tr.k-state-selected td.range-selected:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr.k-selected td.range-selected:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr:hover td.range-selected:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr.k-state-hover td.range-selected:not(.campo-bloqueado) {
+            background-color: #e8f0ff !important;
+        }
+
+        #boletos-grid .k-grid-content td.range-anchor:not(.campo-bloqueado) {
+            outline: 2px solid #4d90fe !important;
+            outline-offset: -2px;
+            background-color: #dbe9ff !important;
+        }
+
+        #boletos-grid .k-grid-content tr.k-state-selected td.range-anchor:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr.k-selected td.range-anchor:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr:hover td.range-anchor:not(.campo-bloqueado),
+        #boletos-grid .k-grid-content tr.k-state-hover td.range-anchor:not(.campo-bloqueado) {
+            background-color: #dbe9ff !important;
         }
     `).appendTo("head");
     }
@@ -647,6 +716,270 @@ var ControlBoletos = (function () {
         actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
     }
 
+    function obtenerMatrizDesdeTextoPortapapeles(texto) {
+        var raw = String(texto || "").replace(/\u0000/g, "");
+        var lineas = raw.split(/\r\n|\n|\r/).filter(function (linea) {
+            return linea !== "";
+        });
+        if (!lineas.length) return [];
+
+        return lineas.map(function (linea) {
+            return linea.split("\t").map(function (valor) {
+                return (valor || "").trim();
+            });
+        });
+    }
+
+    function normalizarTextoContratoSAP(texto) {
+        if (texto == null) return "";
+        return String(texto).trim();
+    }
+
+    function formatearValorParaCopiar(field, valor) {
+        if (valor == null) return "";
+        if (esCampoFecha(field)) return valor ? kendo.toString(valor, "dd/MM/yyyy") : "";
+        return String(valor);
+    }
+
+    function limpiarSeleccionRangoVisual() {
+        if (!state.grid || !state.grid.tbody) return;
+        state.grid.tbody.find("td").removeClass("range-selected range-anchor");
+    }
+
+    function obtenerKeyCelda(rowIndex, colIndex) {
+        return rowIndex + ":" + colIndex;
+    }
+
+    function limpiarSeleccionCeldas() {
+        state.selectedCells = {};
+    }
+
+    function setSeleccionCelda(rowIndex, colIndex, selected) {
+        var key = obtenerKeyCelda(rowIndex, colIndex);
+        if (selected) {
+            state.selectedCells[key] = true;
+        } else {
+            delete state.selectedCells[key];
+        }
+    }
+
+    function hayCeldasSeleccionadas() {
+        return Object.keys(state.selectedCells || {}).length > 0;
+    }
+
+    function obtenerCeldasSeleccionadasOrdenadas() {
+        return Object.keys(state.selectedCells || {})
+            .map(function (key) {
+                var parts = key.split(":");
+                return {
+                    row: parseInt(parts[0], 10),
+                    col: parseInt(parts[1], 10)
+                };
+            })
+            .filter(function (x) { return !isNaN(x.row) && !isNaN(x.col); })
+            .sort(function (a, b) {
+                if (a.row !== b.row) return a.row - b.row;
+                return a.col - b.col;
+            });
+    }
+
+    function refrescarSeleccionVisual() {
+        if (!state.grid || !state.grid.tbody) return;
+
+        var $rows = state.grid.tbody.find("tr");
+        limpiarSeleccionRangoVisual();
+
+        var seleccionadas = obtenerCeldasSeleccionadasOrdenadas();
+        for (var i = 0; i < seleccionadas.length; i++) {
+            var celda = seleccionadas[i];
+            $rows.eq(celda.row).find("td").eq(celda.col).addClass("range-selected");
+        }
+
+        var anchor = state.rangeAnchor;
+        if (anchor) {
+            $rows.eq(anchor.rowIndex).find("td").eq(anchor.colIndex).addClass("range-anchor");
+        }
+    }
+
+    function normalizarRango(rango) {
+        if (!rango) return null;
+        return {
+            startRow: Math.min(rango.startRow, rango.endRow),
+            endRow: Math.max(rango.startRow, rango.endRow),
+            startCol: Math.min(rango.startCol, rango.endCol),
+            endCol: Math.max(rango.startCol, rango.endCol)
+        };
+    }
+
+    function aplicarSeleccionRango(rango) {
+        if (!state.grid || !state.grid.tbody || !rango) return;
+
+        var normalizado = normalizarRango(rango);
+        limpiarSeleccionCeldas();
+
+        for (var r = normalizado.startRow; r <= normalizado.endRow; r++) {
+            for (var c = normalizado.startCol; c <= normalizado.endCol; c++) {
+                setSeleccionCelda(r, c, true);
+            }
+        }
+
+        refrescarSeleccionVisual();
+
+        state.selectedRange = {
+            startRow: normalizado.startRow,
+            endRow: normalizado.endRow,
+            startCol: normalizado.startCol,
+            endCol: normalizado.endCol
+        };
+    }
+
+    function setAnchorYSeleccion(rowIndex, colIndex) {
+        state.rangeAnchor = { rowIndex: rowIndex, colIndex: colIndex };
+        aplicarSeleccionRango({
+            startRow: rowIndex,
+            endRow: rowIndex,
+            startCol: colIndex,
+            endCol: colIndex
+        });
+    }
+
+    function expandirSeleccionHasta(rowIndex, colIndex) {
+        if (!state.rangeAnchor) {
+            setAnchorYSeleccion(rowIndex, colIndex);
+            return;
+        }
+
+        aplicarSeleccionRango({
+            startRow: state.rangeAnchor.rowIndex,
+            endRow: rowIndex,
+            startCol: state.rangeAnchor.colIndex,
+            endCol: colIndex
+        });
+    }
+
+    function copiarRangoSeleccionadoAlPortapapeles() {
+        if (!state.grid) return;
+
+        var seleccionadas = obtenerCeldasSeleccionadasOrdenadas();
+        if (!seleccionadas.length && state.selectedRange) {
+            var rango = normalizarRango(state.selectedRange);
+            if (rango) {
+                for (var rr = rango.startRow; rr <= rango.endRow; rr++) {
+                    for (var cc = rango.startCol; cc <= rango.endCol; cc++) {
+                        seleccionadas.push({ row: rr, col: cc });
+                    }
+                }
+            }
+        }
+        if (!seleccionadas.length) return;
+
+        var view = state.grid.dataSource.view();
+        var lineasPorFila = {};
+        var filas = [];
+
+        for (var i = 0; i < seleccionadas.length; i++) {
+            var sel = seleccionadas[i];
+            var item = view[sel.row];
+            if (!item) continue;
+
+            if (!lineasPorFila[sel.row]) {
+                lineasPorFila[sel.row] = [];
+                filas.push(sel.row);
+            }
+
+            var columna = state.grid.columns[sel.col];
+            var field = columna && columna.field ? columna.field : null;
+            var valor = field ? item.get(field) : "";
+            lineasPorFila[sel.row].push(formatearValorParaCopiar(field, valor));
+        }
+
+        filas.sort(function (a, b) { return a - b; });
+        var lineas = filas.map(function (row) {
+            return (lineasPorFila[row] || []).join("\t");
+        });
+
+        var texto = lineas.join("\n");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(texto);
+        }
+    }
+
+    function aplicarPegadoEnRango(startRow, startCol, matrizValores) {
+        if (!state.grid || !matrizValores || !matrizValores.length) return;
+
+        var view = state.grid.dataSource.view();
+        var huboValorInvalido = false;
+        var huboValorInvalidoOblea = false;
+        var huboCampoBloqueado = false;
+        var huboFechaInvalida = false;
+        var mensajesFechas = [];
+
+        for (var r = 0; r < matrizValores.length; r++) {
+            var rowIndex = startRow + r;
+            if (rowIndex >= view.length) break;
+
+            var item = view[rowIndex];
+            if (!item) continue;
+
+            var fila = matrizValores[r] || [];
+            for (var c = 0; c < fila.length; c++) {
+                var colIndex = startCol + c;
+                if (colIndex >= state.grid.columns.length) break;
+
+                var columna = state.grid.columns[colIndex];
+                var field = columna && columna.field ? columna.field : null;
+                if (!field || !esCampoEditablePegado(field)) continue;
+
+                var texto = (fila[c] || "").trim();
+                if (texto === "") continue;
+
+                if (!esCampoEditablePegadoEnFila(item, field)) {
+                    huboCampoBloqueado = true;
+                    continue;
+                }
+
+                var valor = normalizarValorPegado(field, texto);
+                if (esCampoComboBolsa(field) && !valor) {
+                    huboValorInvalido = true;
+                    continue;
+                }
+                if (field === "Oblea" && valor === null) {
+                    huboValorInvalidoOblea = true;
+                    continue;
+                }
+
+                if (esCampoFecha(field) && valor) {
+                    var errorFecha = validarFechaRelacional(item, field, valor);
+                    if (errorFecha) {
+                        mensajesFechas.push(
+                            "Para el contrato " + normalizarTextoContratoSAP(item.ContratoSAP) + ", se encontró la siguiente observación: " + errorFecha
+                        );
+                        huboFechaInvalida = true;
+                        continue;
+                    }
+                }
+
+                item.set(field, valor);
+                state.dirtyItems[item.ControlDeBoletosId] = item.toJSON();
+            }
+        }
+
+        if (huboValorInvalido) {
+            mostrarMensaje("Validación", "Se ignoraron valores pegados que no coinciden con códigos de bolsa válidos.", "warning");
+        }
+        if (huboValorInvalidoOblea) {
+            mostrarMensaje("Validación", "Se ignoraron valores de oblea porque superan el límite de 18 caracteres.", "warning");
+        }
+        if (huboCampoBloqueado) {
+            mostrarMensaje("Validación", "Se ignoraron valores pegados en celdas bloqueadas por reglas de negocio.", "warning");
+        }
+        if (huboFechaInvalida) {
+            mostrarMensaje("Validación", mensajesFechas.join("<br>"), "warning");
+        }
+
+        actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
+    }
+
     function marcarColumnaSeleccionada(field) {
         if (!state.grid) return;
 
@@ -704,6 +1037,10 @@ var ControlBoletos = (function () {
                 }
             }
 
+            if (colIndex >= 0) {
+                state.selectedPasteColIndex = colIndex;
+            }
+
             aplicarPegadoMasivoEnColumna(field, filaInicial, valores);
 
             if (colIndex >= 0) {
@@ -743,7 +1080,34 @@ var ControlBoletos = (function () {
             state.grid.current($cell);
             state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
             state.selectedPasteRowIndex = rowIndex >= 0 ? rowIndex : 0;
+            state.selectedPasteColIndex = colIndex >= 0 ? colIndex : 0;
             marcarColumnaSeleccionada(state.selectedPasteField);
+
+            if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
+                var key = obtenerKeyCelda(state.selectedPasteRowIndex, state.selectedPasteColIndex);
+                var estabaSeleccionada = !!state.selectedCells[key];
+                setSeleccionCelda(state.selectedPasteRowIndex, state.selectedPasteColIndex, !estabaSeleccionada);
+
+                if (!hayCeldasSeleccionadas()) {
+                    setSeleccionCelda(state.selectedPasteRowIndex, state.selectedPasteColIndex, true);
+                }
+
+                state.rangeAnchor = { rowIndex: state.selectedPasteRowIndex, colIndex: state.selectedPasteColIndex };
+                state.selectedRange = {
+                    startRow: state.selectedPasteRowIndex,
+                    endRow: state.selectedPasteRowIndex,
+                    startCol: state.selectedPasteColIndex,
+                    endCol: state.selectedPasteColIndex
+                };
+                refrescarSeleccionVisual();
+                return;
+            }
+
+            if (e.shiftKey && state.rangeAnchor) {
+                expandirSeleccionHasta(state.selectedPasteRowIndex, state.selectedPasteColIndex);
+            } else {
+                setAnchorYSeleccion(state.selectedPasteRowIndex, state.selectedPasteColIndex);
+            }
         });
 
         // ── Paste en el textarea trampa ──
@@ -801,9 +1165,6 @@ var ControlBoletos = (function () {
             var colIndex = current.index();
             var maxRow = $rows.length - 1;
             var maxCol = current.closest("tr").find("td").length - 1;
-            var currentItem = state.grid.dataSource.view()[rowIndex];
-            var currentField = state.grid.columns[colIndex] && state.grid.columns[colIndex].field ? state.grid.columns[colIndex].field : null;
-            if (esCampoBloqueadoPorFila(currentItem, currentField)) return;
 
             if (e.ctrlKey || e.metaKey) {
                 // Ctrl+flecha: ir a borde (inicio/fin) como Excel
@@ -827,10 +1188,80 @@ var ControlBoletos = (function () {
                 var field = col && col.field ? col.field : null;
                 state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
                 state.selectedPasteRowIndex = rowIndex;
+                state.selectedPasteColIndex = colIndex;
                 marcarColumnaSeleccionada(state.selectedPasteField);
+
+                if (e.shiftKey) {
+                    expandirSeleccionHasta(rowIndex, colIndex);
+                } else {
+                    setAnchorYSeleccion(rowIndex, colIndex);
+                }
 
                 e.preventDefault();
             }
+        });
+
+        // ── Teclado: Enter / F2 (abrir editor) y Escape (cerrar editor) ──
+        state.grid.wrapper.off("keydown.modifMasivaEditorCtrl").on("keydown.modifMasivaEditorCtrl", function (e) {
+            if (state.comboPopupAbierto) return;
+
+            var $editCell = state.grid.tbody.find("td.k-edit-cell");
+            var estaEditando = $editCell.length > 0;
+
+            // Escape: cerrar editor y volver a navegación
+            if (e.key === "Escape" || e.keyCode === 27) {
+                if (estaEditando) {
+                    state.grid.closeCell();
+                    setTimeout(function () { state.grid.wrapper.focus(); }, 0);
+                    e.preventDefault();
+                }
+                return;
+            }
+
+            // Enter o F2: abrir editor en la celda actual (solo si no estamos editando ya)
+            if (!estaEditando) {
+                var esEnter = (e.key === "Enter" || e.keyCode === 13) && !e.shiftKey;
+                var esF2 = e.key === "F2" || e.keyCode === 113;
+                if (esEnter || esF2) {
+                    var $target = $(e.target);
+                    if ($target.closest(".k-dropdown, .k-dropdownlist, .k-picker, .k-list-container, .k-animation-container, .k-popup").length) return;
+
+                    var current = state.grid.current();
+                    if (!current || !current.length) return;
+
+                    var colIdx = current.index();
+                    var rowIdx = current.closest("tr").index();
+                    var col = state.grid.columns[colIdx];
+                    var fld = col && col.field ? col.field : null;
+                    var view = state.grid.dataSource.view();
+                    var itm = view[rowIdx];
+
+                    if (fld && esCampoEditablePegado(fld) && !esCampoBloqueadoPorFila(itm, fld)) {
+                        state._editandoCeldaExplicito = true;
+                        state.grid.editCell(current);
+                    }
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // ── Doble clic: abrir editor de celda ──
+        state.grid.tbody.off("dblclick.modifMasivaEdit").on("dblclick.modifMasivaEdit", "td", function (e) {
+            if ($(e.target).closest(".k-animation-container, .k-list-container, .k-popup, .k-calendar-container").length) return;
+
+            var $cell = $(this);
+            var colIndex = $cell.index();
+            var rowIndex = $cell.closest("tr").index();
+            var columna = state.grid.columns[colIndex];
+            var field = columna && columna.field ? columna.field : null;
+            var view = state.grid.dataSource.view();
+            var item = view[rowIndex];
+
+            if (!field || !esCampoEditablePegado(field)) return;
+            if (esCampoBloqueadoPorFila(item, field)) return;
+
+            state._editandoCeldaExplicito = true;
+            state.grid.editCell($cell);
         });
 
         // ── Teclado: Delete/Supr + Ctrl+D ──
@@ -918,6 +1349,12 @@ var ControlBoletos = (function () {
 
             // Ctrl+C en campo editable: copiar valor actual al portapapeles
             if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C" || e.keyCode === 67)) {
+                if (hayCeldasSeleccionadas() || state.selectedRange) {
+                    e.preventDefault();
+                    copiarRangoSeleccionadoAlPortapapeles();
+                    return;
+                }
+
                 if (!esCampoEditablePegado(fieldActual) || rowIndexActual < 0) return;
 
                 var viewCopy = state.grid.dataSource.view();
@@ -938,7 +1375,7 @@ var ControlBoletos = (function () {
 
             // Ctrl+V en campo editable: pegar desde portapapeles comenzando en la celda actual
             if ((e.ctrlKey || e.metaKey) && (e.key === "v" || e.key === "V" || e.keyCode === 86)) {
-                if (!esCampoEditablePegado(fieldActual)) return;
+                if (!esCampoEditablePegado(fieldActual) && !state.selectedRange) return;
 
                 var viewPaste = state.grid.dataSource.view();
                 var itemPaste = viewPaste[rowIndexActual];
@@ -946,12 +1383,18 @@ var ControlBoletos = (function () {
 
                 state.selectedPasteField = fieldActual;
                 state.selectedPasteRowIndex = rowIndexActual >= 0 ? rowIndexActual : 0;
+                state.selectedPasteColIndex = colIndex >= 0 ? colIndex : state.selectedPasteColIndex;
                 marcarColumnaSeleccionada(state.selectedPasteField);
 
                 if (navigator.clipboard && navigator.clipboard.readText) {
                     e.preventDefault();
                     navigator.clipboard.readText().then(function (textoPegado) {
-                        manejarPegado(state.selectedPasteField, state.selectedPasteRowIndex, textoPegado);
+                        var matriz = obtenerMatrizDesdeTextoPortapapeles(textoPegado);
+                        if (matriz.length && (matriz.length > 1 || (matriz[0] && matriz[0].length > 1))) {
+                            aplicarPegadoEnRango(state.selectedPasteRowIndex, state.selectedPasteColIndex, matriz);
+                        } else {
+                            manejarPegado(state.selectedPasteField, state.selectedPasteRowIndex, textoPegado);
+                        }
                     }).catch(function () {
                         // Mantener foco/celda actual si no hay permiso de clipboard
                         state.grid.wrapper.focus();
@@ -959,6 +1402,12 @@ var ControlBoletos = (function () {
                 }
             }
         });
+
+        // Inicializa selección visible al primer foco de celda
+        var current = state.grid.current();
+        if (current && current.length) {
+            setAnchorYSeleccion(current.closest("tr").index(), current.index());
+        }
     }
 
     // Funciones públicas
@@ -1236,7 +1685,24 @@ var ControlBoletos = (function () {
                                 editor: dateCellEditor
                             },
                         ],
+                        beforeEdit: function (e) {
+                            // Evita apertura de editor por click simple (incluye fechas/calendario).
+                            // Solo permitimos edición iniciada explícitamente por doble click, Enter o F2.
+                            if (!state._editandoCeldaExplicito) {
+                                e.preventDefault();
+                            }
+                        },
+                        edit: function (e) {
+                            // Bloquear apertura automática de editor con un solo clic.
+                            // El editor solo abre con doble clic, Enter o F2.
+                            if (!state._editandoCeldaExplicito) {
+                                e.preventDefault();
+                                return;
+                            }
+                            state._editandoCeldaExplicito = false;
+                        },
                         cellClose: function (e) {
+                            state._editandoCeldaExplicito = false;
                             if (!e.model) return;
                             state.dirtyItems[e.model.ControlDeBoletosId] = e.model.toJSON();
                             actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
