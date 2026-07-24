@@ -3204,12 +3204,10 @@
     <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
+    <Content Include="Templates\AltaMasivaSugerenciaDeCupos.xlsx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
