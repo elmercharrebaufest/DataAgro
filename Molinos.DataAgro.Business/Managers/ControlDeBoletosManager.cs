@@ -330,6 +330,84 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
             }
 
+            // Paso 1.1: si el filtro trae contratos en NegocioSAP, registrar los que todavía no tengan ControlDeBoletos
+            var contratosNegocioSap = (filtros?.NegocioSAP ?? string.Empty)
+                .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct()
+                .ToList();
+
+            if (contratosNegocioSap.Count > 0)
+            {
+                var negociosSolicitados = repositorio.Listar<Negocio>(x =>
+                    contratosNegocioSap.Contains(x.ContratoSAP) &&
+                    x.ConfirmadoSAP.HasValue &&
+                    x.FechaConfirmadoSAP.HasValue).ToList();
+
+                if (negociosSolicitados.Count > 0)
+                {
+                    var negociosSolicitadosIdsBase = negociosSolicitados.Select(x => x.Id).ToList();
+
+                    var negociosConConfirma = repositorio.Listar<Confirma>(x =>
+                        negociosSolicitadosIdsBase.Contains(x.NegocioId))
+                        .Select(x => x.NegocioId)
+                        .Distinct()
+                        .ToHashSet();
+
+                    var negociosConBoleto = repositorio.Listar<Boleto>(x =>
+                        negociosSolicitadosIdsBase.Contains(x.NegocioId))
+                        .Select(x => x.NegocioId)
+                        .Distinct()
+                        .ToHashSet();
+
+                    var negociosSolicitadosValidos = negociosSolicitados
+                        .Where(x =>
+                            (x.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA && negociosConConfirma.Contains(x.Id)) ||
+                            ((x.BoletoId == (int)EnumBoletoCompraNet.FISICO || x.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA) && negociosConBoleto.Contains(x.Id)) ||
+                            (x.BoletoId != (int)EnumBoletoCompraNet.CONFIRMA && x.BoletoId != (int)EnumBoletoCompraNet.FISICO && x.BoletoId != (int)EnumBoletoCompraNet.CARTA_OFERTA)
+                        )
+                        .ToList();
+
+                    var negociosSolicitadosIds = negociosSolicitadosValidos
+                        .Select(x => x.Id)
+                        .ToList();
+
+                    var negociosConControl = repositorio.Listar<ControlDeBoletos>(x =>
+                        negociosSolicitadosIds.Contains(x.NegocioId))
+                        .Select(x => x.NegocioId)
+                        .Distinct()
+                        .ToList();
+
+                    var controlBoletosNuevosPorContrato = negociosSolicitadosValidos
+                        .Where(x => !negociosConControl.Contains(x.Id))
+                        .Select(x => new ControlDeBoletos
+                        {
+                            NegocioId = x.Id,
+                            FechaCreacion = DateTime.Now,
+                            EsConfirma = x.BoletoId == (int) EnumBoletoCompraNet.CONFIRMA,
+                            AltaIdLoteConfirma = null,
+                            AltaIdDocumentoConfirma = null,
+                            ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL,
+                            EstadoConfirmaId = (int?)null,
+                            ControlIniciado = false,
+                            ControlFinalizado = false,
+                            CertificacionCompletada = false,
+                            RegistroDatosOblea = false,
+                            EsConfirmaAltaBorrador = false
+                        }).ToList();
+
+                    if (controlBoletosNuevosPorContrato.Count > 0)
+                    {
+                        foreach(var control in controlBoletosNuevosPorContrato)
+                        {
+                            repositorio.Agregar(control);
+                            repositorio.GuardarCambios();
+                        }
+                    }
+                }
+            }
+
             // Paso 2: consulta principal vía SP (filtros + JOINs + seguimiento resueltos en SQL Server)
             return repositorio.ObtenerConsultaEscalar(new TraerControlBoletosPendientes(filtros));
         }
@@ -552,9 +630,9 @@ namespace Molinos.DataAgro.Business.Managers
                         !controlDeBoletosDatosSeguimiento.FechaRecepcionFirma.HasValue &&
                         !controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto.HasValue &&
                         !controlDeBoletosDatosSeguimiento.FechaEnvioSellado.HasValue &&
-                        controlDeBoletosDatosSeguimiento.BolsaCompraNetId == 0 &&
+                        controlDeBoletosDatosSeguimiento.BolsaCompraNetId == null &&
                         string.IsNullOrWhiteSpace(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
-                        controlDeBoletosDatosSeguimiento.BoletoSapId == 0 &&
+                        controlDeBoletosDatosSeguimiento.BoletoSapId == null &&
                         string.IsNullOrWhiteSpace(controlDeBoletosDatosSeguimiento.BoletoSapCaracter)
                        )
                     {
@@ -674,8 +752,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(controlDeBoletosDatosSeguimiento.Id);
 
-            if (controlDeBoletosDatosSeguimiento.BoletoSapId == 0 &&
-                controlDeBoletosDatosSeguimiento.BolsaCompraNetId == 0 &&
+            if (controlDeBoletosDatosSeguimiento.BoletoSapId == null &&
+                controlDeBoletosDatosSeguimiento.BolsaCompraNetId == null &&
                 string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
                 string.IsNullOrEmpty(controlDeBoletosDatosSeguimiento.BolsaSellado) &&
                 !controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto.HasValue &&
@@ -696,9 +774,11 @@ namespace Molinos.DataAgro.Business.Managers
                 return;
             }
 
-            datosSeguimiento.BoletoSap = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId);
+            datosSeguimiento.BoletoSapId = controlDeBoletosDatosSeguimiento.BoletoSapId;
+            datosSeguimiento.BoletoSap = controlDeBoletosDatosSeguimiento.BoletoSapId != null ? repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId.Value) : null;
             datosSeguimiento.BoletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter;
-            datosSeguimiento.BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId);
+            datosSeguimiento.BolsaCompraNetId = controlDeBoletosDatosSeguimiento.BolsaCompraNetId;
+            datosSeguimiento.BolsaCompraNet = controlDeBoletosDatosSeguimiento.BolsaCompraNetId != null ? repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId.Value) : null;
             datosSeguimiento.BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado;
             datosSeguimiento.FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto;
             datosSeguimiento.FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma;
@@ -721,9 +801,11 @@ namespace Molinos.DataAgro.Business.Managers
             var datosSeguimiento = new ControlDeBoletosSeguimiento
             {
                 ControlDeBoletosId = controlDeBoletosDatosSeguimiento.ControlDeBoletosId,
-                BoletoSap = repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId),
+                BoletoSapId = controlDeBoletosDatosSeguimiento.BoletoSapId,
+                BoletoSap = controlDeBoletosDatosSeguimiento.BoletoSapId != null ? repositorio.Obtener<BoletoSap>(controlDeBoletosDatosSeguimiento.BoletoSapId.Value) : null,
                 BoletoSapCaracter = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
-                BolsaCompraNet = repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId),
+                BolsaCompraNetId = controlDeBoletosDatosSeguimiento.BolsaCompraNetId,
+                BolsaCompraNet = controlDeBoletosDatosSeguimiento.BolsaCompraNetId != null ? repositorio.Obtener<BolsaCompraNet>(controlDeBoletosDatosSeguimiento.BolsaCompraNetId.Value) : null,
                 BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
                 FechaRecepcionBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto,
                 FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma,
@@ -1457,7 +1539,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ControlDeBoletosId = seguimiento.ControlDeBoletosId,
                     BoletoSapId = seguimiento.BoletoSapId,
                     BoletoSapCaracter = seguimiento.BoletoSapCaracter,
-                    BolsaCompraNetId = bolsa?.Id ?? 0,
+                    BolsaCompraNetId = bolsa?.Id,
                     BolsaSellado = bolsa?.CodigoSap ?? string.Empty,
                     FechaRecepcionBoleto = boleto.FechaRecepBoleto,
                     FechaEnvioFirma = boleto.FechaEnviadoFirma,
