@@ -640,11 +640,11 @@ var ControlBoletos = (function () {
                     data.Id +
                     ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
                 );
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.descargarPDFConfirma(' +
-                    data.Id +
-                    ')" title="Descargar PDF Confirma"><i class="fa fa-file-pdf-o"></i><span class="tooltiptext"></span></button>',
-                );
+                // botones.push(
+                //     '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.descargarPDFConfirma(' +
+                //     data.Id +
+                //     ')" title="Descargar PDF Confirma"><i class="fa fa-file-pdf-o"></i><span class="tooltiptext"></span></button>',
+                // );
             }
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
