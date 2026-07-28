@@ -321,7 +321,7 @@ namespace WebDataAgro.Controllers
                     {
                         var resultado = cupoManager.AltaMasivaSugerenciaCuposV2(dsExcel);
 
-                        if (resultado != null)
+                        if (resultado.Count != 0 && resultado.First().IsFatal == true)
                         {
                             errores.Add("Ninguno de los contratos ingresados existe en la base.");
                             return Json(new { Resume = errores, Resultado = false });
