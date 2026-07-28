@@ -3211,6 +3211,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DocumentacionCopilot\API Boletos IA\API_VALIDACION_BOLETOS_IA_DOCUMENTACION.md" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
