@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[ControlDeBoletosSeguimiento]
     BolsaCompraNetId INT NULL, 
     [BoletoSapId] INT NULL, 
     BoletoSapCaracter VARCHAR(20) NULL, 
-    BolsaSellado VARCHAR(100) NOT NULL, 
+    BolsaSellado VARCHAR(100) NULL, 
     [FechaRecepcionBoleto] DATETIME NULL,
     [FechaEnvioFirma] DATETIME NULL,
     [FechaEnvioBolsa] DATETIME NULL,

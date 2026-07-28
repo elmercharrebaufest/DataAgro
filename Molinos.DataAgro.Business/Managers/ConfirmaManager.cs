@@ -582,6 +582,17 @@ namespace Molinos.DataAgro.Business.Managers
 
                                         var prefijo = string.IsNullOrEmpty(tempConfirma.Mensaje) ? "WS: " : ".  WS: ";
                                         tempConfirma.Mensaje += prefijo + sbWS.ToString();
+
+                                        //Si el mensaje de error es muy largo se pasa un mensaje amigable
+                                        if (tempConfirma.Mensaje.Length > 200)
+                                        {
+                                            // Log del detalle técnico (queda en NLog para diagnóstico)
+                                            logger.Error($"WS Confirma - Contrato {contrato.ContratoSAP} falló. Detalle técnico: {sbWS}");
+
+                                            // Mensaje amigable para el usuario
+                                            const string mensajeAmigable = "Error en conexión de Confirma, por favor intentar nuevamente.";
+                                            tempConfirma.Mensaje += prefijo + mensajeAmigable;
+                                        }
                                     }
                                 }
                                 finally

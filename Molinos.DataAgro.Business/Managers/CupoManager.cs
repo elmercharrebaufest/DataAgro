@@ -1659,7 +1659,11 @@ namespace Molinos.DataAgro.Business.Managers
                   .Select(row => new AltaMasivaCupoDto
                   {
                       ContratoSAP = row["ContratoSAP"]?.ToString().PadLeft(10, '0'),
-                      FechaSugerida = DateTime.FromOADate(double.Parse(row["FechaSugerida"]?.ToString())),
+                      FechaSugerida = row["FechaSugerida"] is DateTime dt
+                            ? dt
+                            : double.TryParse(row["FechaSugerida"]?.ToString(), out var oa)
+                                ? DateTime.FromOADate(oa)
+                                : DateTime.Parse(row["FechaSugerida"]?.ToString()),
                       CantidadDeCupos = int.Parse(row["CantidadDeCupos"]?.ToString()),
                   })
                   .Where(x => !string.IsNullOrEmpty(x.ContratoSAP))
@@ -1667,6 +1671,21 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<string> contratosSAPdelExcel = ExcelData.Select(x => x.ContratoSAP).Distinct().ToList();
             List<Negocio> listaNegocios = repositorio.Listar<Negocio>(x => contratosSAPdelExcel.Contains(x.ContratoSAP)).ToList();
+
+
+            if (listaNegocios.Count == 0)
+            {
+                string mensaje = $"Ninguno de los contratos ingresados existe en la base. ";
+
+                return new List<ExcelValidatorResumeItem>
+                {
+                    new ExcelValidatorResumeItem
+                    {
+                      IsFatal = true,
+                      Errors = new List<string> { mensaje },
+                    }
+                };
+            }
 
             //List<SugerenciaCupo> sugerenciasExcelList = new List<SugerenciaCupo>();
             List<SugerenciaCupoDto> sugerenciasDtoExcelList = new List<SugerenciaCupoDto>();

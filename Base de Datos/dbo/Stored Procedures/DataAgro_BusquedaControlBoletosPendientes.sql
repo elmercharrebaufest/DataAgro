@@ -57,8 +57,8 @@ BEGIN
         prov.RazonSocial                                                         AS Proveedor,
         seg.Id                                                                   AS SeguimientoBoletoId,
         CASE
-            WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 1 THEN 'Alta Borrador'
-            WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 0 THEN 'Alta Definitiva'
+            WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 1 AND cb.AltaIdLoteConfirma IS NOT NULL THEN 'Alta Borrador'
+            WHEN cb.EsConfirma = 1 AND cb.EsConfirmaAltaBorrador = 0 AND cb.AltaIdDocumentoConfirma IS NOT NULL THEN 'Alta Definitiva'
             ELSE ''
         END                                                                      AS TipoAltaConfirma,
         (case when bc.Id = 1 then confirma.Version else boleto.Version end)                 AS Version,
