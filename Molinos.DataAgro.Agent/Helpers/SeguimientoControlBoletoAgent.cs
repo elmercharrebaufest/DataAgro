@@ -72,10 +72,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                     throw new Exception("No se recibió respuesta de SAP al registrar seguimiento de boleto.");
                 }
 
-                if (activarLogDebug)
-                {
-                    logger.Debug(response.ToXml());
-                }
+                //if (activarLogDebug)
+                //{
+                //    logger.Debug(response.ToXml());
+                //}
 
                 var mensaje = response.ExMensaje?.Trim() ?? string.Empty;
 
