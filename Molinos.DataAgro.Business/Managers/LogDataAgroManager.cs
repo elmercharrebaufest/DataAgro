@@ -721,7 +721,85 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosControlBoletos<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion,int id, string descripcion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, id, "ControlBoletos", descripcion);
+            return LogGuardarCambiosControlBoletos(cambios, tipoDeAccion, id, descripcion);
+        }
+
+        private int LogGuardarCambiosControlBoletos<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string descripcion)
+        {
+            var usuarioComercial = ObtenerUsuario();
+
+            string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                Formatting = Formatting.Indented,
+            });
+
+            var logAgregado = new LogDataAgro
+            {
+                Usuario = usuarioComercial,
+                Fecha = DateTime.Now,
+                DatoModificado = jsonObjeto,
+                Clase = "ControlBoletos",
+                Tipo = cambios.GetType().Name,
+                AccionRealizada = tipoDeAccion.ToString(),
+                ClaseId = id,
+                Descripcion = descripcion,
+                ProveedorId = null,
+                CorredorId = null,
+            };
+
+            bool hayCambiosControl = HayCambiosControlBoletosSeguro(logAgregado);
+            if (hayCambiosControl || tipoDeAccion == TipoAccionLogDataAgro.Eliminar)
+            {
+                if (!hayCambiosControl && tipoDeAccion == TipoAccionLogDataAgro.Eliminar)
+                {
+                    T obj = (T)Activator.CreateInstance(typeof(T));
+                    logAgregado.DatoModificado = JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                        PreserveReferencesHandling = PreserveReferencesHandling.None,
+                        Formatting = Formatting.Indented,
+                    });
+                }
+
+                try
+                {
+                    repositorio.Agregar(logAgregado);
+                    return repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"{cambios.GetType().Name} Guardado, error en LogDataAgro ControlBoletos. {e.Message}", e);
+                }
+            }
+
+            return 1;
+        }
+
+        private bool HayCambiosControlBoletosSeguro(LogDataAgro logActual)
+        {
+            var logAnterior = repositorio.Listar<LogDataAgro>(
+                x => x.ClaseId == logActual.ClaseId && x.Clase == "ControlBoletos")
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefault();
+
+            if (logAnterior == null)
+            {
+                return true;
+            }
+
+            try
+            {
+                var anteriorToken = JToken.Parse(string.IsNullOrWhiteSpace(logAnterior.DatoModificado) ? "{}" : logAnterior.DatoModificado);
+                var actualToken = JToken.Parse(string.IsNullOrWhiteSpace(logActual.DatoModificado) ? "{}" : logActual.DatoModificado);
+                return !JToken.DeepEquals(anteriorToken, actualToken);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex, "No se pudo comparar cambios de ControlBoletos. Se registra el log igualmente.");
+                return true;
+            }
         }
 
         public string AddSpacesToSentence(string text, char limite)
