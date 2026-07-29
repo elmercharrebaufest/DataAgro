@@ -323,6 +323,12 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             repositorio.GuardarCambios();
                             resultado.confirmasGenerados.Add(tempConfirma);
+                            // Se limpia el cache para que se vuelva a consultar el estado del boleto
+                            var cacheKey = $"EstadoBoleto_Fisico_{contrato.ContratoSAP}";
+                            if (HttpRuntime.Cache[cacheKey] != null)
+                            {
+                                HttpRuntime.Cache.Remove(cacheKey);
+                            }
                         }
                         catch (Exception ex)
                         {

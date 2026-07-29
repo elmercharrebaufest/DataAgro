@@ -170,6 +170,13 @@ namespace Molinos.DataAgro.Business.Managers
 
                             // 6. SEXTO: RegistrarDatosCertificacion Control de Boleto
                             controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
+
+                            // Se limpia el cache para que se vuelva a consultar el estado del boleto
+                            var cacheKey = $"EstadoBoleto_Fisico_{negocio.ContratoSAP}";
+                            if (HttpRuntime.Cache[cacheKey] != null)
+                            {
+                                HttpRuntime.Cache.Remove(cacheKey);
+                            }
                         }
                         catch (IOException ioEx)
                         {
