@@ -3217,6 +3217,9 @@
   <ItemGroup>
     <Content Include="DocumentacionCopilot\API Boletos IA\API_VALIDACION_BOLETOS_IA_DOCUMENTACION.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="DocumentacionCopilot\MATBA_Primary\MATBA.md" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
