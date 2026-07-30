@@ -40,6 +40,25 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulaConfirma = servicioClausulaConfirma;
         }
 
+
+
+
+        public List<ValidacionBoletosEstadoDto> ListarEstados()
+        {
+            List<ValidacionBoletosEstadoDto> listarEstados = new List<ValidacionBoletosEstadoDto>();
+            listarEstados = repositorio.Listar<ValidacionBoletosEstado, ValidacionBoletosEstadoDto>(x => new ValidacionBoletosEstadoDto()
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion
+            }).OrderBy(x => x.Id).ToList();
+            return listarEstados;
+        }
+        public List<ValidacionDeBoletosIAConsultaDto> GetValidacionBoletosPendientes(ValidacionBoletoFiltroBusquedaDto filtros)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerValidacionBoletosPendientes(filtros));
+        }
+
+        #region Metodos Publicos para el Api
         public ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP)
         {
             var datosContrato = new ValidacionDeBoletosIADatosContratoDto();
@@ -104,6 +123,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ? obtenerPorBoleto(basicoContrato)
                 : new List<ValidacionDeBoletosIAResultadoClausulaDto>();
         }
+
+        #endregion
 
         #region Metodos Privados
         private List<ValidacionDeBoletosIAResultadoClausulaDto> ObtenerClausulasConfirma(BasicoContrato basico)

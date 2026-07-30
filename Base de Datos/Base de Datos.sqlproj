@@ -381,6 +381,10 @@
     <Build Include="dbo\Tables\BoletoSap.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaControlBoletosPendientes.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaBoletosParaModificar.sql" />
+    <Build Include="dbo\Tables\ValidacionBoletos.sql" />
+    <Build Include="dbo\Tables\ValidacionBoletosResultado.sql" />
+    <Build Include="dbo\Tables\ValidacionBoletosEstado.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaValidacionBoletosPendientes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

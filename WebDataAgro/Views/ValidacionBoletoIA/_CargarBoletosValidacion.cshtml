@@ -1,0 +1,185 @@
+<!--Modal resultado boletos-->
+<div id="modalCargarBoleto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content clearfix modal-cargar-boleto">
+            <div class="modal-header">
+                <button type="button" class="modal-close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <div class="header-top">
+                    <h5 class="titulo-modal modal-titulo-contrato">
+                        Cargar Boletos
+                    </h5>
+                </div>
+            </div>
+            <div class="modal-body" id="modalCargarBoletoBody">
+                <form id="frmCargarBoleto">
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <!-- Contrato -->
+                            <div class="form-group">
+                                <label>Contrato SAP</label>
+                                <input type="text"
+                                       id="contratoSap"
+                                       class="form-control"
+                                       placeholder="Ingresá el número de contrato SAP">
+                            </div>
+                            <!-- Bolsa y Tipo -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Bolsa</label>
+                                        <input type="text"
+                                               id="bolsa" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Tipo de Boleto</label>
+                                        <input type="text"
+                                               id="tipoBoleto" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Titulo -->
+                            <div class="mt-3 mb-2">
+                                <label class="font-weight-bold">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                    Carga de PDF del boleto
+                                </label>
+                            </div>
+
+                            <!-- Caja -->
+                            <div class="upload-box" id="uploadBoxPDF">
+
+                                <input type="file"
+                                       id="filArchivoPDF"
+                                       accept=".pdf"
+                                       style="display:none;">
+
+                                <div class="upload-left">
+
+                                    <div class="pdf-icon">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="upload-title">
+                                            Seleccioná el PDF del boleto a validar
+                                        </div>
+
+                                        <div class="upload-subtitle">
+                                            Hacé clic en cualquier parte de este recuadro para seleccionar el archivo.
+                                            El sistema procesará el PDF y comparará automáticamente la información con DataAgro/SAP.
+                                        </div>
+
+                                        <div id="filNombreArchivoPDF" class="file-name">
+                                            <i class="fa fa-folder-open-o"></i>
+                                            Ningún archivo seleccionado
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white text-right">
+                            <button class="btn btn-light margin-top-10">
+                                Cancelar
+                            </button>
+                            <button class="btn btn-success margin-top-10">
+                                <i class="fa fa-upload"></i>
+                                Cargar y Validar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal-cargar-boleto {
+        background-color: white !important;
+    }
+
+    .modal-close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 0.2;
+        background: none !important;
+        text-indent: 0;
+        border-color: transparent !important;
+        cursor: pointer;
+    }
+
+    .upload-box {
+        border: 2px dashed #cfd8dc;
+        border-radius: 10px;
+        padding: 25px;
+        cursor: pointer;
+        transition: all .25s ease;
+        background: #fafafa;
+    }
+
+        .upload-box:hover {
+            border-color: #28a745;
+            background: #f6fff8;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+
+    .upload-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .pdf-icon {
+        font-size: 52px;
+        color: #dc3545;
+    }
+
+    .upload-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 6px;
+    }
+
+    .upload-subtitle {
+        color: #6c757d;
+        font-size: 14px;
+        line-height: 1.5;
+        max-width: 650px;
+    }
+
+    .file-name {
+        margin-top: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #198754;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #eee;
+    }
+
+    .card-footer {
+        border-top: 1px solid #eee;
+    }
+    #Archivo {
+        display: none !important;
+    }
+</style>

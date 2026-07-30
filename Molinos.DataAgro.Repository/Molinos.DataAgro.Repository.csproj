@@ -244,6 +244,7 @@
     <Compile Include="ConsultasEF\TraerTodosLogsDataAgro.cs" />
     <Compile Include="ConsultasEF\TraerToneladasSojaEPAyEUDR.cs" />
     <Compile Include="ConsultasEF\TraerToneladasSojaSustentable.cs" />
+    <Compile Include="ConsultasEF\TraerValidacionBoletosPendientes.cs" />
     <Compile Include="ConsultasEF\TraerVentaStock.cs" />
     <Compile Include="ConsultasEF\TraerSituacionCultivoParcial.cs" />
     <Compile Include="ConsultasEF\TraerBusquedaContactos.cs" />

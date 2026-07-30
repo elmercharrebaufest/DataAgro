@@ -386,6 +386,8 @@
     <Content Include="Scripts\App\ControlDeBoletosVisualizarContrato.js" />
     <Content Include="Scripts\App\OptimizationCache.js" />
     <Content Include="Scripts\App\ValidacionBoletoIA.js" />
+    <Content Include="Scripts\App\ValidacionBoletoIACargarContrato.js" />
+    <Content Include="Scripts\App\ValidacionBoletoIAResultados.js" />
     <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
@@ -3216,6 +3218,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DocumentacionCopilot\API Boletos IA\API_VALIDACION_BOLETOS_IA_DOCUMENTACION.md" />
+    <Content Include="Views\ValidacionBoletoIA\_ResultadoBoletosValidacion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ValidacionBoletoIA\_CargarBoletosValidacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DocumentacionCopilot\MATBA_Primary\MATBA.md" />

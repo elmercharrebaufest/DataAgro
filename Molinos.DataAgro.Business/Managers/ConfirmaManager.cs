@@ -84,6 +84,9 @@ namespace Molinos.DataAgro.Business.Managers
         public ConfirmaResult GrabarConfirmas(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var resultado = new ConfirmaResult();
+            var duracionMetodo = System.Diagnostics.Stopwatch.StartNew();
+
+            logger.Info("---- INICIO GrabarConfirmas ----");
 
             try
             {
@@ -102,6 +105,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (usarWebServiceConfirma && esModoTest)
                 {
                     logger.Info("---- PRUEBA: INICIO WS CONFIRMA ----");
+                    var duracionWsPrueba = System.Diagnostics.Stopwatch.StartNew();
 
                     try
                     {
@@ -110,9 +114,19 @@ namespace Molinos.DataAgro.Business.Managers
                             new TraerTodosContratosBoleto(new List<string> { codigoSapCompleto }, equipo));
                         var contratoPrueba = consultaIQ.First();
 
-                        var clausulasConfirma = (clausulas == null || !clausulas.Any())
-                            ? ObtenerClausulas(contratoPrueba)
-                            : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                        List<ResultadoClausula> clausulasConfirma;
+                        if (clausulas == null || !clausulas.Any())
+                        {
+                            logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmas PRUEBA. Negocio: {contratoPrueba.Negocio}");
+                            var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                            clausulasConfirma = ObtenerClausulas(contratoPrueba);
+                            duracionObtenerClausulas.Stop();
+                            logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmas PRUEBA. Negocio: {contratoPrueba.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                        }
+                        else
+                        {
+                            clausulasConfirma = clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                        }
 
                         var estadosConfirmaDto = new EstadosConfirmaDto
                         {
@@ -124,7 +138,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento })
                         };
 
+                        var duracionLlamadoConfirmaPrueba = System.Diagnostics.Stopwatch.StartNew();
                         var confirmaAltaLoteDocumentosResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulasConfirma, equipo, contratoPrueba, estadosConfirmaDto);
+                        duracionLlamadoConfirmaPrueba.Stop();
+                        logger.Info($"WS ConfirmaLoteDocumentos (PRUEBA) - Duracion: {duracionLlamadoConfirmaPrueba.ElapsedMilliseconds} ms.");
                         var tieneItems = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
 
                         logger.Info($"WS: altaIdLote = {confirmaAltaLoteDocumentosResult.altaIdLote}.  " +
@@ -165,7 +182,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     finally
                     {
-                        logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
+                        duracionWsPrueba.Stop();
+                        logger.Info($"---- PRUEBA: FIN WS CONFIRMA ---- Duracion: {duracionWsPrueba.ElapsedMilliseconds} ms.");
                     }
 
                     return resultado;
@@ -205,9 +223,13 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                         // Consultar estado en RFC
+                        logger.Info($"---- INICIO SAP EstadoBoleto ---- Negocio: {contrato.Negocio}");
+                        var duracionEstadoBoleto = System.Diagnostics.Stopwatch.StartNew();
                         var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(
                             contrato.ContratoSAP,
                             contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
+                        duracionEstadoBoleto.Stop();
+                        logger.Info($"---- FIN SAP EstadoBoleto ---- Negocio: {contrato.Negocio}. Duracion: {duracionEstadoBoleto.ElapsedMilliseconds} ms.");
 
                         // Verificar si ya existe
                         if (!string.IsNullOrEmpty(consultaConfirma.Generado) && !consultaConfirma.Anulado.Equals("X"))
@@ -248,15 +270,29 @@ namespace Molinos.DataAgro.Business.Managers
                             if (usarWebServiceConfirma && activarConfirmaWS == "1")
                             {
                                 logger.Info("---- INICIO WS CONFIRMA ----");
+                                var duracionWsConfirma = System.Diagnostics.Stopwatch.StartNew();
 
                                 try
                                 {
-                                    var clausulasConfirmaWS = (clausulas == null || !clausulas.Any())
-                                        ? ObtenerClausulas(contrato)
-                                        : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                                    List<ResultadoClausula> clausulasConfirmaWS;
+                                    if (clausulas == null || !clausulas.Any())
+                                    {
+                                        logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmas WS. Negocio: {contrato.Negocio}");
+                                        var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                                        clausulasConfirmaWS = ObtenerClausulas(contrato);
+                                        duracionObtenerClausulas.Stop();
+                                        logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmas WS. Negocio: {contrato.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                                    }
+                                    else
+                                    {
+                                        clausulasConfirmaWS = clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                                    }
 
+                                    var duracionLlamadoConfirma = System.Diagnostics.Stopwatch.StartNew();
                                     var confirmaAltaLoteDocumentosResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(
                                         clausulasConfirmaWS, equipo, contrato, estadosConfirmaDtoProduccion);
+                                    duracionLlamadoConfirma.Stop();
+                                    logger.Info($"WS ConfirmaLoteDocumentos - Negocio: {contrato.Negocio}. Duracion: {duracionLlamadoConfirma.ElapsedMilliseconds} ms.");
 
                                     var tieneItemsWS = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
                                     bool tieneErrores = confirmaAltaLoteDocumentosResult.altaItem?.Any(item => item.altaErrores != null && item.altaErrores.Any()) ?? false;
@@ -265,8 +301,12 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         // Enviar a RFC
                                         logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
+                                        logger.Info($"---- INICIO SAP EnviarBoleto ---- Negocio: {contrato.Negocio}");
+                                        var duracionEnviarBoleto = System.Diagnostics.Stopwatch.StartNew();
                                         var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
+                                        duracionEnviarBoleto.Stop();
                                         logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
+                                        logger.Info($"---- FIN SAP EnviarBoleto ---- Negocio: {contrato.Negocio}. Duracion: {duracionEnviarBoleto.ElapsedMilliseconds} ms.");
 
                                         if (respuestaRFC != "Se actualizan correctamente los datos")
                                         {
@@ -318,7 +358,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 finally
                                 {
-                                    logger.Info("---- FIN WS CONFIRMA ----");
+                                    duracionWsConfirma.Stop();
+                                    logger.Info($"---- FIN WS CONFIRMA ---- Duracion: {duracionWsConfirma.ElapsedMilliseconds} ms.");
                                 }
                             }
                             repositorio.GuardarCambios();
@@ -350,12 +391,20 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 resultado.Errores.Add(new ErrorMessage(400, e.Message));
             }
+            finally
+            {
+                duracionMetodo.Stop();
+                logger.Info($"---- FIN GrabarConfirmas ---- Duracion total: {duracionMetodo.ElapsedMilliseconds} ms.");
+            }
 
             return resultado;
         }
         public ConfirmaResult GrabarConfirmasAltaBorrador(int ComercialId, List<string> codigosSap, bool usarWebServiceConfirma, List<string> clausulas, List<int> equipo)
         {
             var resultado = new ConfirmaResult();
+            var duracionMetodo = System.Diagnostics.Stopwatch.StartNew();
+
+            logger.Info("---- INICIO GrabarConfirmasAltaBorrador ----");
 
             try
             {
@@ -374,6 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (usarWebServiceConfirma && esModoTest)
                 {
                     logger.Info("---- PRUEBA: INICIO WS CONFIRMA ----");
+                    var duracionWsPrueba = System.Diagnostics.Stopwatch.StartNew();
 
                     try
                     {
@@ -382,9 +432,19 @@ namespace Molinos.DataAgro.Business.Managers
                             new TraerTodosContratosBoleto(new List<string> { codigoSapCompleto }, equipo));
                         var contratoPrueba = consultaIQ.First();
 
-                        var clausulasConfirma = (clausulas == null || !clausulas.Any())
-                            ? ObtenerClausulas(contratoPrueba)
-                            : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                        List<ResultadoClausula> clausulasConfirma;
+                        if (clausulas == null || !clausulas.Any())
+                        {
+                            logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmasAltaBorrador PRUEBA. Negocio: {contratoPrueba.Negocio}");
+                            var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                            clausulasConfirma = ObtenerClausulas(contratoPrueba);
+                            duracionObtenerClausulas.Stop();
+                            logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmasAltaBorrador PRUEBA. Negocio: {contratoPrueba.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                        }
+                        else
+                        {
+                            clausulasConfirma = clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                        }
 
                         var estadosConfirmaDto = new EstadosConfirmaDto
                         {
@@ -396,7 +456,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 x => new ConfirmaAltaEstadoDocumentoDto { Id = x.Id, Descripcion = x.Descripcion, CodigoConfirmaAltaEstadoDocumento = x.CodigoConfirmaAltaEstadoDocumento })
                         };
 
+                        var duracionLlamadoConfirmaPrueba = System.Diagnostics.Stopwatch.StartNew();
                         var confirmaAltaLoteDocumentosResult = confirmaLoteBorradorAgent.ConfirmaLoteBorrador(clausulasConfirma, equipo, contratoPrueba, estadosConfirmaDto);
+                        duracionLlamadoConfirmaPrueba.Stop();
+                        logger.Info($"WS ConfirmaLoteBorrador (PRUEBA) - Duracion: {duracionLlamadoConfirmaPrueba.ElapsedMilliseconds} ms.");
                         var tieneItems = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
 
                         logger.Info($"WS: altaIdLote = {confirmaAltaLoteDocumentosResult.altaIdLote}.  " +
@@ -437,7 +500,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     finally
                     {
-                        logger.Info("---- PRUEBA: FIN WS CONFIRMA ----");
+                        duracionWsPrueba.Stop();
+                        logger.Info($"---- PRUEBA: FIN WS CONFIRMA ---- Duracion: {duracionWsPrueba.ElapsedMilliseconds} ms.");
                     }
 
                     return resultado;
@@ -477,9 +541,13 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                         // Consultar estado en RFC
+                        logger.Info($"---- INICIO SAP EstadoBoleto ---- Negocio: {contrato.Negocio}");
+                        var duracionEstadoBoleto = System.Diagnostics.Stopwatch.StartNew();
                         var consultaConfirma = oConsultarEstadoBoletoAgent.EstadoBoleto(
                             contrato.ContratoSAP,
                             contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : "");
+                        duracionEstadoBoleto.Stop();
+                        logger.Info($"---- FIN SAP EstadoBoleto ---- Negocio: {contrato.Negocio}. Duracion: {duracionEstadoBoleto.ElapsedMilliseconds} ms.");
 
                         // Verificar si ya existe
                         if (!string.IsNullOrEmpty(consultaConfirma.Generado) && !consultaConfirma.Anulado.Equals("X"))
@@ -520,15 +588,29 @@ namespace Molinos.DataAgro.Business.Managers
                             if (usarWebServiceConfirma && activarConfirmaWS == "1")
                             {
                                 logger.Info("---- INICIO WS CONFIRMA ----");
+                                var duracionWsConfirma = System.Diagnostics.Stopwatch.StartNew();
 
                                 try
                                 {
-                                    var clausulasConfirmaWS = (clausulas == null || !clausulas.Any())
-                                        ? ObtenerClausulas(contrato)
-                                        : clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                                    List<ResultadoClausula> clausulasConfirmaWS;
+                                    if (clausulas == null || !clausulas.Any())
+                                    {
+                                        logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmasAltaBorrador WS. Negocio: {contrato.Negocio}");
+                                        var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                                        clausulasConfirmaWS = ObtenerClausulas(contrato);
+                                        duracionObtenerClausulas.Stop();
+                                        logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmasAltaBorrador WS. Negocio: {contrato.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                                    }
+                                    else
+                                    {
+                                        clausulasConfirmaWS = clausulas.Select(x => new ResultadoClausula { Texto = x, Orden = 0 }).ToList();
+                                    }
 
+                                    var duracionLlamadoConfirma = System.Diagnostics.Stopwatch.StartNew();
                                     var confirmaAltaLoteDocumentosResult = confirmaLoteBorradorAgent.ConfirmaLoteBorrador(
                                         clausulasConfirmaWS, equipo, contrato, estadosConfirmaDtoProduccion);
+                                    duracionLlamadoConfirma.Stop();
+                                    logger.Info($"WS ConfirmaLoteBorrador - Negocio: {contrato.Negocio}. Duracion: {duracionLlamadoConfirma.ElapsedMilliseconds} ms.");
 
                                     var tieneItemsWS = confirmaAltaLoteDocumentosResult.altaItem != null && confirmaAltaLoteDocumentosResult.altaItem.Any();
                                     var altaItems = confirmaAltaLoteDocumentosResult.altaItem.FirstOrDefault();
@@ -540,8 +622,12 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         // Enviar a RFC
                                         logger.Debug($"Confirma:  Enviando Boleto confirma {tempConfirma}");
+                                        logger.Info($"---- INICIO SAP EnviarBoleto ---- Negocio: {contrato.Negocio}");
+                                        var duracionEnviarBoleto = System.Diagnostics.Stopwatch.StartNew();
                                         var respuestaRFC = oEnviarBoletoAgent.EnviarBoleto(ConfirmaABoletoDto(tempConfirma));
+                                        duracionEnviarBoleto.Stop();
                                         logger.Debug($"Confirma: Respuesta de la RFC {respuestaRFC}");
+                                        logger.Info($"---- FIN SAP EnviarBoleto ---- Negocio: {contrato.Negocio}. Duracion: {duracionEnviarBoleto.ElapsedMilliseconds} ms.");
 
                                         if (respuestaRFC != "Se actualizan correctamente los datos")
                                         {
@@ -603,7 +689,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 finally
                                 {
-                                    logger.Info("---- FIN WS CONFIRMA ----");
+                                    duracionWsConfirma.Stop();
+                                    logger.Info($"---- FIN WS CONFIRMA ---- Duracion: {duracionWsConfirma.ElapsedMilliseconds} ms.");
                                 }
                             }
                             repositorio.GuardarCambios();
@@ -629,6 +716,11 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 resultado.Errores.Add(new ErrorMessage(400, e.Message));
             }
+            finally
+            {
+                duracionMetodo.Stop();
+                logger.Info($"---- FIN GrabarConfirmasAltaBorrador ---- Duracion total: {duracionMetodo.ElapsedMilliseconds} ms.");
+            }
 
             return resultado;
         }
@@ -649,7 +741,18 @@ namespace Molinos.DataAgro.Business.Managers
                 IQueryable<BasicoContrato> consultaIQ = repositorio.ObtenerConsultaEscalar(new TraerTodosContratosBoleto(new List<string>() { CodigoSapCompleto }, equipo));
                 BasicoContrato contrato = consultaIQ.First();
                 List<ResultadoClausula> clausulasConfirma = new List<ResultadoClausula>();
-                clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                if (clausulas.Count() == 0)
+                {
+                    logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmasOriginal PRUEBA. Negocio: {contrato.Negocio}");
+                    var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                    clausulasConfirma = ObtenerClausulas(contrato);
+                    duracionObtenerClausulas.Stop();
+                    logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmasOriginal PRUEBA. Negocio: {contrato.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                }
+                else
+                {
+                    clausulasConfirma = clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                }
 
                 EstadosConfirmaDto estadosConfirmaDto = new EstadosConfirmaDto
                 {
@@ -757,7 +860,18 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     logger.Info("---- INICIO WS CONFIRMA ----");
                                     List<ResultadoClausula> clausulasConfirma = new List<ResultadoClausula>();
-                                    clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                                    if (clausulas.Count() == 0)
+                                    {
+                                        logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GrabarConfirmasOriginal WS. Negocio: {contrato.Negocio}");
+                                        var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                                        clausulasConfirma = ObtenerClausulas(contrato);
+                                        duracionObtenerClausulas.Stop();
+                                        logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GrabarConfirmasOriginal WS. Negocio: {contrato.Negocio}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                                    }
+                                    else
+                                    {
+                                        clausulasConfirma = clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                                    }
                                     ConfirmaAltaLoteResultDto confirmaAltaLoteDocumentosResult = confirmaLoteDocumentosAgent.ConfirmaLoteDocumentos(clausulasConfirma, equipo, contrato, estadosConfirmaDto);
 
                                     bool tieneItems = false;
@@ -1081,7 +1195,19 @@ namespace Molinos.DataAgro.Business.Managers
                     new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "2", NroContratoInterno = nroContratoInterno, CUIT = contrato.CUITCorredor, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } }
                     : new[] { new { CodLista = "1", NroContratoInterno = nroContratoInterno, CUIT = contrato.Cuit, Sucursal = string.Empty }, new { CodLista = "3", NroContratoInterno = nroContratoInterno + "V01", CUIT = CuitMolinos, Sucursal = string.Empty } };
                 logger.Info($"Datos Precalculados del Negocio de Confirma; Codigo:{(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}, esCanje:{esCanje}, esConvenio:{esConvenio}, Partes: {string.Join(" - ", Partes.Select(e => "NroInterno: " + e.NroContratoInterno + " Cuit:" + e.CUIT))}.");
-                var clausulasConfirma = clausulas.Count() == 0 ? ObtenerClausulas(contrato) : clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                List<ResultadoClausula> clausulasConfirma;
+                if (clausulas.Count() == 0)
+                {
+                    logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: GenerarXML. Negocio: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}");
+                    var duracionObtenerClausulas = System.Diagnostics.Stopwatch.StartNew();
+                    clausulasConfirma = ObtenerClausulas(contrato);
+                    duracionObtenerClausulas.Stop();
+                    logger.Info($"---- FIN ObtenerClausulas ---- Contexto: GenerarXML. Negocio: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}. Duracion: {duracionObtenerClausulas.ElapsedMilliseconds} ms.");
+                }
+                else
+                {
+                    clausulasConfirma = clausulas.Select(x => new ResultadoClausula() { Texto = x, Orden = 0 }).ToList();
+                }
                 if (clausulasConfirma is null || clausulasConfirma.Count == 0) throw new ArgumentNullException("Clausulas", $"Descargar XML Confirma - No se pudieron recuperar las clausulas asociadas al contrato: {(contrato.TipoNegocioId == (int)EnumTipoNegocio.FIJACION ? contrato.FijacionSAP : contrato.ContratoSAP)}.");
                 //Fin de carga de datos
 
@@ -1659,7 +1785,11 @@ namespace Molinos.DataAgro.Business.Managers
                 ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
                 Moneda = x.Moneda.Descripcion
             }, x => x.NegocioId == basicoContrato.Id).ToList();
+            logger.Info($"---- INICIO ObtenerClausulas ---- Contexto: ObtenerClausulasPorNegocio. Negocio: {basicoContrato?.Negocio ?? basicoContrato?.ContratoSAP}");
+            var duracionObtenerClausulasPorNegocio = System.Diagnostics.Stopwatch.StartNew();
             clausulas = ObtenerClausulas(basicoContrato).Select(x => x.Texto).ToList();
+            duracionObtenerClausulasPorNegocio.Stop();
+            logger.Info($"---- FIN ObtenerClausulas ---- Contexto: ObtenerClausulasPorNegocio. Negocio: {basicoContrato?.Negocio ?? basicoContrato?.ContratoSAP}. Duracion: {duracionObtenerClausulasPorNegocio.ElapsedMilliseconds} ms.");
             return clausulas;
         }
 
