@@ -4499,7 +4499,7 @@ function CargarDatosEditar(contrato, hijo) {
         viewModel.set("Servicios", contrato.Servicios);
         kendo.bind($("#ModalServicio"), viewModel);
         InicializarServicios();
-        //$("#servicioBtn").show();
+        $("#servicioBtn").show();
     } else {
         MostrarServiciosYCalidades();
     }
@@ -6612,6 +6612,10 @@ function TraerServicio() {
     var data = servicio;
     var result = MSExecuteOnServer(url, data);
     $.unblockUI();
+    result = result.filter(function (s) {
+        var desc = (s.Descripcion || "").toUpperCase();
+        return desc.indexOf("FUMIGACION") === -1 && desc.indexOf("ZARANDEO") === -1;
+    });
     ArmarDescripcionServicio(result);
     viewModel.set("Servicios", result);
     kendo.bind($("#ModalServicio"), viewModel);
@@ -6672,9 +6676,23 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
 }
 
 function MostrarServiciosYCalidades() {
-    $("#servicioBtn").hide();
-    LimpiarServicios();
-    return false;
+    var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+    //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
+    if (validar == false) {
+        $("#servicioBtn").hide();
+        LimpiarServicios();
+    } else {
+        $("#servicioBtn").show();
+        LimpiarServicios();
+        TraerServicio();
+    }
+
+    return validar;
 }
 
 function SustentableTipoDB() {
