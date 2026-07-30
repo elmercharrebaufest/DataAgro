@@ -7,8 +7,8 @@ var ControlBoletos = (function () {
             getMateriales: "/ControlDeBoletos/GetMateriales",
             getProveedores: "/ControlDeBoletos/GetProveedores",
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
-            getEstados: "/ControlDeBoletos/GetEstadosControl",
-            getBoletosValidados: "/ValidacionBoletoIA/GetBoletosValidados",
+            getEstados: "/ValidacionBoletoIA/GetEstadosValidacion",
+            getValidacionBoletosPendientes: "/ValidacionBoletoIA/GetValidacionBoletosPendientes",
             exportBoletosExcel: "/ValidacionBoletoIA/ExportarBoletosValidadosExcel",
             cargarBoletosValidacion: "/ValidacionBoletoIA/CargarBoletosValidacion",
 
@@ -16,7 +16,7 @@ var ControlBoletos = (function () {
     };
 
     let controlMaterial = $("#frmValidacionBoletos #materialId");
-    let controlEstadoControl = $("#frmValidacionBoletos #estadoControlId");
+    let controlEstadoValidacion = $("#frmValidacionBoletos #estadoValidacionId");
     let controlProveedor = $("#frmValidacionBoletos #proveedorId");
     let controlBolsaCompraNet = $("#frmValidacionBoletos #bolsaCompraNetId");
 
@@ -198,7 +198,6 @@ var ControlBoletos = (function () {
             if (state.datosInicializados) return;
             this.inicializarFechas();
             await this.cargarDatosIniciales();
-            controlEstadoControl.val(1).trigger('change');
             this.configurarEventos();
             this.inicializarGrid();
 
@@ -215,7 +214,7 @@ var ControlBoletos = (function () {
                 ),
                 cargarDropdown(
                     config.urls.getEstados,
-                    controlEstadoControl,
+                    controlEstadoValidacion,
                     "Cargando...",
                     "Todos los estados",
                 ),
@@ -241,7 +240,7 @@ var ControlBoletos = (function () {
                 .on("paste", function (e) {
 
                     e.preventDefault();
-                    controlEstadoControl.val("").trigger('change');
+                    controlEstadoValidacion.val("").trigger('change');
                     let texto = (e.originalEvent.clipboardData || window.clipboardData)
                         .getData("text");
 
@@ -280,6 +279,12 @@ var ControlBoletos = (function () {
                 .on("click", function () {
                     self.exportarExcel();
                 });
+
+            controlCargarBoleto
+                .off("click")
+                .on("click", function () {
+                    self.cargarBoleto();
+                });
         },
 
         inicializarGrid: function () {
@@ -310,16 +315,14 @@ var ControlBoletos = (function () {
                                         // Filtros personalizados
                                         negocioSAP: filtros.negocioSAP,
                                         materialId: filtros.materialId,
-                                        estadoControlId: filtros.estadoControlId,
-                                        esConfirma: filtros.esConfirma,
-                                        fechaCargaDesde: filtros.fechaCargaDesde,
-                                        fechaCargaHasta: filtros.fechaCargaHasta,
-                                        proveedor: filtros.proveedor,
-                                        bolsaId: filtros.bolsaId,
-                                        comercialId: filtros.comercialId,
+                                        estadoValidacionId: filtros.estadoValidacionId,
+                                        fechaValidacionDesde: filtros.fechaValidacionDesde,
+                                        fechaValidacionHasta: filtros.fechaValidacionHasta,
+                                        proveedorId: filtros.proveedorId,
+                                        bolsaId: filtros.bolsaId
                                     };
 
-                                    MSExecuteOnServerAsync(config.urls.getBoletos, parametros)
+                                    MSExecuteOnServerAsync(config.urls.getValidacionBoletosPendientes, parametros)
                                         .then(function (response) {
                                             options.success(response || { Data: [], Total: 0 });
                                         })
@@ -336,12 +339,16 @@ var ControlBoletos = (function () {
                                     id: "Id",
                                     fields: {
                                         Id: { type: "number" },
+                                        TipoBoleto: { type: "string" },
                                         ContratoSAP: { type: "string" },
-                                        Material: { type: "string" },
-                                        ControlDeBoletosEstado: { type: "string" },
+                                        Version: { type: "string" },
                                         FechaGeneracion: { type: "date" },
                                         Proveedor: { type: "string" },
+                                        Material: { type: "string" },
                                         Comercial: { type: "string" },
+                                        BolsaCompraNet: { type: "string" },
+                                        ValidacionBoletosEstado: { type: "string" },
+                                        FechaGeneracion: { type: "date" },
                                     },
                                 },
                             },
@@ -399,73 +406,89 @@ var ControlBoletos = (function () {
                         navigatable: false,
                         columns: [
                             {
-                                field: "TipoBoleto",
-                                title: "Boleto",
-                                width: 80,
+                                title: "Información del Boleto",
+                                headerAttributes: {
+                                    style: "text-align:center;font-weight:bold;"
+                                },
+                                columns: [
+                                    {
+                                        field: "TipoBoleto",
+                                        title: "Boleto",
+                                        width: 80
+                                    },
+                                    {
+                                        field: "ContratoSAP",
+                                        title: "Contrato SAP",
+                                        width: 120,
+                                        template: "<span class='font-weight-bold'>#=ContratoSAP#</span>"
+                                    },
+                                    {
+                                        field: "Version",
+                                        title: "Versión",
+                                        width: 80
+                                    },
+                                    {
+                                        field: "FechaGeneracion",
+                                        title: "Fecha Generación",
+                                        width: 100,
+                                        template: "#= formatearFecha(FechaGeneracion) #"
+                                    }
+                                ]
                             },
                             {
-                                field: "TipoAltaConfirma",
-                                title: "Tipo Alta Confirma",
-                                width: 80
+                                title: "Información Comercial",
+                                headerAttributes: {
+                                    style: "text-align:center;font-weight:bold;"
+                                },
+                                columns: [
+                                    {
+                                        field: "BolsaCompraNet",
+                                        title: "Bolsa",
+                                        width: 80
+                                    },
+                                    {
+                                        field: "Material",
+                                        title: "Material",
+                                        width: 80
+                                    },
+                                    {
+                                        field: "Proveedor",
+                                        title: "Proveedor",
+                                        width: 250
+                                    },
+                                ]
                             },
                             {
-                                field: "BolsaCompraNet",
-                                title: "Bolsa",
-                                width: 100
+                                title: "Validación",
+                                headerAttributes: {
+                                    style: "text-align:center;font-weight:bold;"
+                                },
+                                columns: [
+                                    {
+                                        field: "EstadoConfirma",
+                                        title: "Estado Validación",
+                                        width: 120
+                                    },
+                                    {
+                                        field: "FechaGeneracion",
+                                        title: "Fecha Validación",
+                                        width: 120,
+                                        template: "#= formatearFecha(FechaGeneracion) #"
+                                    }
+                                ]
                             },
                             {
-                                field: "ContratoSAP",
-                                title: "Contrato SAP",
-                                width: 120,
-                                template:
-                                    "<span class='font-weight-bold'>#=ContratoSAP#</span>",
-                            },
-                            {
-                                field: "Version",
-                                title: "Version",
-                                width: 80
-                            },
-                            {
-                                field: "FechaGeneracion",
-                                title: "Fecha Generación",
-                                width: 120,
-                                format: "{0:dd/MM/yyyy}",
-                                template: "#= formatearFecha(FechaGeneracion) #",
-                            },
-                            {
-                                field: "Material",
-                                title: "Material",
-                                width: 120,
-                            },
-                            {
-                                field: "EstadoConfirma",
-                                title: "Estado Confirma",
-                                width: 100,
-                            },
-                            {
-                                field: "ControlDeBoletosEstado",
-                                title: "Estado",
-                                width: 100,
-                            },
-                            {
-                                field: "Proveedor",
-                                title: "Proveedor",
-                                width: 250,
-                            },
-                            {
-                                field: "Comercial",
-                                title: "Comercial",
-                                width: 150,
-                            },
-                            {
-                                title: "Acciones",
-                                width: 150,
+                                title: "",
+                                width: 50,
                                 template: function (dataItem) {
                                     return self.generarBotonesAccion(dataItem);
                                 },
                                 sortable: false,
                                 filterable: false,
-                            },
+                                headerAttributes: {
+                                    style: "text-align:center;font-weight:bold;"
+                                }
+                            }
                         ],
                         dataBound: function (e) {
                             // Ejecutar autoFitColumnas solo en la primera carga
@@ -501,10 +524,10 @@ var ControlBoletos = (function () {
             return {
                 negocioSAP: controlNegocioSAP.val().trim() || null,
                 materialId: controlMaterial.val() || null,
-                estadoControlId: controlEstadoControl.val() || null,
+                estadoValidacionId: controlEstadoValidacion.val() || null,
                 fechaValidacionDesde: (function () { var dp = controlFechaValidacionDesde.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
                 fechaValidacionHasta: (function () { var dp = controlFechaValidacionHasta.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
-                proveedor: controlProveedor.val() || null,
+                proveedorId: controlProveedor.val() || null,
                 bolsaId: controlBolsaCompraNet.val() || null,
             };
         },
@@ -518,7 +541,7 @@ var ControlBoletos = (function () {
                 !filtros.fechaValidacionHasta;
 
             var sinFiltrosSecundarios =
-                !filtros.proveedor &&
+                !filtros.proveedorId &&
                 !filtros.materialId &&
                 !filtros.bolsaId;
 
@@ -547,8 +570,7 @@ var ControlBoletos = (function () {
         limpiarFiltros: function () {
             controlNegocioSAP.val("");
             controlMaterial.val("");
-            controlEstadoControl.val("");
-            controlComercial.val("");
+            controlEstadoValidacion.val("");
             controlProveedor.val("");
             controlBolsaCompraNet.val("");
 
@@ -585,7 +607,9 @@ var ControlBoletos = (function () {
             form.submit();
             document.body.removeChild(form);
         },
-
+        cargarBoleto: function () {
+            ValidacionBoletosCargarContrato.abrir();
+        },
         inicializarFechas: function () {
             const hoy = new Date();
             const desde = new Date(hoy);
@@ -622,6 +646,7 @@ var ControlBoletos = (function () {
                 '})" title="Gestión de control de boletos"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
             );
 
+            /*
             if (data.EsConfirma && data.TipoAltaConfirma == 'Alta Definitiva') {
 
                 botones.push(
@@ -635,6 +660,7 @@ var ControlBoletos = (function () {
                     ')" title="Descargar PDF Confirma"><i class="fa fa-file-pdf-o"></i><span class="tooltiptext"></span></button>',
                 );
             }
+            */
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
             );

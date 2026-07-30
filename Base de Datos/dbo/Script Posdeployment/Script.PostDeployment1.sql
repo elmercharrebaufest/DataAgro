@@ -1359,3 +1359,19 @@ Update BoletoSap set Confirma = 0,CartaOferta = 0,Fisico = 0,Ninguno = 1,SinBole
 Update BoletoSap set Confirma = 1,CartaOferta = 1,Fisico = 1,Ninguno = 1,SinBoleto = 1, Tipo='O' where Descripcion = 'Observado'
 Update BoletoSap set Caracter = 'C - F - K - O' where Descripcion = 'Ninguno'
 IF NOT EXISTS (SELECT TOP 1 1 FROM HabilitacionJob WHERE Nombre = 'ActualizarEstadoBoletosConfirmaHangfireJob') BEGIN INSERT INTO HabilitacionJob VALUES ('ActualizarEstadoBoletosConfirmaHangfireJob', 1) END
+
+--ValidacionBoletosEstado
+if not exists(select 1 from ValidacionBoletosEstado where Descripcion = 'Pendiente Revision')
+begin
+ insert into ValidacionBoletosEstado(Id, Descripcion) values (1, 'Pendiente Revision')
+end
+
+if not exists(select 1 from ValidacionBoletosEstado where Descripcion = 'Aprobado')
+begin
+ insert into ValidacionBoletosEstado(Id, Descripcion) values (2, 'Aprobado')
+end
+
+if not exists(select 1 from ValidacionBoletosEstado where Descripcion = 'Rechazado')
+begin
+ insert into ValidacionBoletosEstado(Id, Descripcion) values (3, 'Rechazado')
+end

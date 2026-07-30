@@ -635,18 +635,7 @@ const GenerarBoleto = (() => {
     }
 
     function gestionarClausulas(negocioSAP) {
-        MSExecuteOnServerAsync(config.urls.validarNegocio, { NegocioSAP: negocioSAP })
-            .then(function (response) {
-                if (response?.Mensaje) {
-                    MensErr(response.Mensaje);
-                } else {
-                    window.location.href = `${config.urls.gestionarClausulas}?numeroSap=${encodeURIComponent(negocioSAP)}`;
-                }
-            })
-            .catch(function (error) {
-                console.error("Error validando negocio:", error);
-                MensErr("Error al validar el negocio");
-            });
+        window.location.href = `${config.urls.gestionarClausulas}?numeroSap=${encodeURIComponent(negocioSAP)}`;
     }
 
     // ── API pública ──────────────────────────────────────────────────────────────

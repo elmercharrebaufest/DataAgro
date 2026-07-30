@@ -11,5 +11,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
     {
         ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP);
         List<ValidacionDeBoletosIAResultadoClausulaDto> ObtenerClausulas(string contratoSAP);
+        List<ValidacionBoletosEstadoDto> ListarEstados();
+        List<ValidacionDeBoletosIAConsultaDto> GetValidacionBoletosPendientes(ValidacionBoletoFiltroBusquedaDto filtros);
     }
 }

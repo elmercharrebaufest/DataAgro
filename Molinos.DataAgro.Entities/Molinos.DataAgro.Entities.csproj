@@ -333,6 +333,11 @@
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
     <Compile Include="Dto\ContactoComercialAuditoriaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionDeBoletosIAConsultaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletoFiltroBusquedaDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletosDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletosEstadoDto.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletosResultadoDto.cs" />
     <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionDeBoletosIADatosContratoDto.cs" />
     <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionDeBoletosIAResultadoClausulaDto.cs" />
     <Compile Include="Dto\ControlDeBoletos\ControlDeBoletoFiltroBusquedaDto.cs" />
@@ -954,6 +959,9 @@
     <Compile Include="Entities\Calidad.cs" />
     <Compile Include="Entities\DescuentoBonificacion.cs" />
     <Compile Include="Entities\TipoFason.cs" />
+    <Compile Include="Entities\ValidacionBoletos.cs" />
+    <Compile Include="Entities\ValidacionBoletosEstado.cs" />
+    <Compile Include="Entities\ValidacionBoletosResultado.cs" />
     <Compile Include="Entities\ZonaCupo.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Dto\BoletoHeaderFooter.cs" />
