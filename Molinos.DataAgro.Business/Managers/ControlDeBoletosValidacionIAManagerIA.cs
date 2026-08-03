@@ -1,3 +1,4 @@
+using Molinos.DataAgro.Business.ClausulasBoleto;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
@@ -65,24 +66,27 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.ObtenerConsultaEscalar(new TraerContratoBoletoPorSAP(contratoSAP));
             if (contrato != null)
             {
-
                 datosContrato.Material = contrato.Material;
                 datosContrato.Precio = contrato.Precio;
                 datosContrato.Destino = contrato.DestinoDescripcion;
-                datosContrato.Cosecha = contrato.Campania;
+                datosContrato.Cosecha = contrato.Campania.Replace("-","/");
                 datosContrato.TipoBoleto = contrato.BoletoDescripcion;
                 datosContrato.FechaOperacion = contrato.FechaOperacion != null ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : string.Empty;
-                datosContrato.PeriodoEntrega = contrato.FechaDesde != null ? contrato.FechaDesde.Value.ToString("dd/MM/yyyy") : string.Empty + " - " + contrato.FechaHasta != null ? contrato.FechaHasta.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.PeriodoEntrega = contrato.FechaDesde.Value.ToString("dd/MM/yyyy") + " - " + contrato.FechaHasta.Value.ToString("dd/MM/yyyy");
                 datosContrato.CuitVendedor = contrato.Cuit;
                 datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.CUITCorredor : string.Empty;
-                datosContrato.Moneda = contrato.Moneda;
+                datosContrato.Moneda = contrato.MonedaId.Trim();
                 datosContrato.ProvinciaOrigen = contrato.Provincia;
                 datosContrato.LocalidadOrigen = contrato.Localidad;
                 datosContrato.Kilos = contrato.Cantidad;
                 datosContrato.FechaFijacionDesde = contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("dd/MM/yyyy") : string.Empty;
                 datosContrato.FechaFijacionHasta = contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.CantidadMinFijacion = contrato.KgMinimo > 0 ? $"{MetodosUtiles.NumeroConSeparadores(contrato.KgMinimo)} Kg" : string.Empty;
+                datosContrato.CantidadMaxFijacion = contrato.KgMaximo > 0 ? $"{MetodosUtiles.NumeroConSeparadores(contrato.KgMaximo)} Kg" : string.Empty;
                 datosContrato.Bolsa = contrato.BolsaDescripcion;
-                datosContrato.TipoBoleto = contrato.BoletoDescripcion;
+                datosContrato.Clasificacion = contrato.ClasificacionDescripcion;
+                datosContrato.Consignatario = contrato.Consignatario != null && contrato.Consignatario.Value ? true : false;
+                datosContrato.TipoNegocio = contrato.TipoNegocio;
             }
             return datosContrato;
         }

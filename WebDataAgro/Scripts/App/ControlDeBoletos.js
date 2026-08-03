@@ -674,7 +674,7 @@ var ControlBoletos = (function () {
 
                 // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
                 var contrato = null;
-
+                console.log('response-->>', response);
                 if (response.Data !== undefined) {
                     if (Array.isArray(response.Data)) {
                         // Es un array, tomar el primer elemento

@@ -37,10 +37,20 @@ namespace WebDataAgro.Controllers
         [Route("GetContrato")]
         public JsonResult GetContrato(string contratoSAP)
         {
+            if (string.IsNullOrWhiteSpace(contratoSAP))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    ok = false,
+                    mensaje = "El parámetro contratoSAP es obligatorio."
+                }, JsonRequestBehavior.AllowGet);
+            }
+
             var contrato = controlDeBoletosEstadoManager.ObtenerDatosDeContrato(contratoSAP);
             if (contrato == null)
             {
-                Response.StatusCode = 404;
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return Json(new
                 {
                     ok = false,
@@ -54,10 +64,20 @@ namespace WebDataAgro.Controllers
         [Route("GetClausulas")]
         public JsonResult GetClausulas(string contratoSAP)
         {
-            var clausulas = controlDeBoletosEstadoManager.ObtenerClausulas(contratoSAP);
-            if (clausulas == null)
+            if (string.IsNullOrWhiteSpace(contratoSAP))
             {
-                Response.StatusCode = 404;
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    ok = false,
+                    mensaje = "El parámetro contratoSAP es obligatorio."
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            var clausulas = controlDeBoletosEstadoManager.ObtenerClausulas(contratoSAP);
+            if (clausulas == null || !clausulas.Any())
+            {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return Json(new
                 {
                     ok = false,

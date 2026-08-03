@@ -36,5 +36,23 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public bool? EsCartaOferta { get; set; }
         public bool? EsSinBoleto { get; set; }
         public int? BoletoCompraNetId { get; set; }
+        public string Proveedor { get; set; }
+        public string TipoNegocio { get; set; }
+        public string Comercial { get; set; }
+        public string PorcentajePago { get; set; }
+        public decimal? PrecioNeto { get; set; }
+        public string Bolsa { get; set; }
+        public string MercaderaDeposito { get; set; }
+        public double? CantidadDeposito { get; set; }
+        public double CantidadCamiones { get; set; }
+        public string FechaHastaOriginal { get; set; }
+        public double CantidadFijacionMinima { get; set; }
+        public double CantidadFijacionMaxima { get; set; }
+        public string FechaDolarizadoOriginal { get; set; }
+        public string MonedaRedespacho { get; set; }
+        public decimal? ImporteRedespacho { get; set; }
+        public string Consignatario { get; set; }
+        public int? VersionBoleto { get; set; }
+        public string FechaGeneracion { get; set; }
     }
 }

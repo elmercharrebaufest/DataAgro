@@ -566,6 +566,44 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.EsCartaOferta = contrato.BoletoId == (int)EnumBoletoCompraNet.CARTA_OFERTA;
                 datosContrato.EsSinBoleto = contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
                 datosContrato.BoletoCompraNetId = contrato.BoletoId;
+                datosContrato.Comercial = string.Format("{0} {1}", contrato.Comercial.Nombres, contrato.Comercial.Apellido);
+                datosContrato.Proveedor = contrato.Proveedor.RazonSocial;
+                datosContrato.TipoNegocio = contrato.TipoNegocio.Descripcion;
+                datosContrato.PrecioNeto = contrato.PrecioNeto;
+                datosContrato.PorcentajePago = contrato.PorcentajeDePago!=null ? string.Format("{0}%", contrato.PorcentajeDePago) : string.Empty;
+                datosContrato.Bolsa = contrato.Bolsa != null ? contrato.Bolsa.Descripcion : string.Empty;
+                datosContrato.MercaderaDeposito = (contrato.MercsDeposito != null && contrato.MercsDeposito == true) ? "SI" : "NO";
+                datosContrato.CantidadDeposito = contrato.CantidadDeposito != null ? contrato.CantidadDeposito : 0;
+                datosContrato.FechaHastaOriginal = contrato.FechaHastaOriginal.HasValue ? contrato.FechaHastaOriginal.Value.ToString("dd/MM/yyyy") : string.Empty;
+                datosContrato.CantidadFijacionMaxima = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMaximo ?? 0 : contrato.KgMaximo ?? 0;
+                datosContrato.CantidadFijacionMinima = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMinimo ?? 0 : contrato.KgMinimo ?? 0;
+                datosContrato.FechaDolarizadoOriginal = contrato.FechaDolarizadoOriginal.HasValue ? contrato.FechaDolarizadoOriginal.Value.ToString("dd/MM/yyyy") : string.Empty;
+                var aperturaPrecioRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2);
+                datosContrato.MonedaRedespacho = aperturaPrecioRedespacho?.Moneda!=null ? aperturaPrecioRedespacho?.Moneda.Descripcion : string.Empty;
+                datosContrato.ImporteRedespacho = aperturaPrecioRedespacho?.Importe;
+                datosContrato.Consignatario = contrato.Consignatario != null ? "SI" : "NO";
+                if (contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                {
+                    var maxVersion = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id).Max(x => x.Version);
+                    if (maxVersion != null)
+                    {
+                        var confirma = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id && x.Version == maxVersion).FirstOrDefault();
+                        datosContrato.VersionBoleto = confirma.Version;
+                        datosContrato.FechaGeneracion = confirma.FechaGeneracion!=null ? confirma.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                    }
+                }
+                else
+                {
+                    var maxVersion = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id).Max(x => x.Version);
+                    if (maxVersion != null)
+                    {
+                        var boleto = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id && x.Version == maxVersion).FirstOrDefault();
+                        datosContrato.VersionBoleto = boleto.Version;
+                        datosContrato.FechaGeneracion = boleto.FechaGeneracion != null ? boleto.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                    }
+
+                }
+
             }
 
             var cuitProveedor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : contrato.Proveedor.CUIT;
