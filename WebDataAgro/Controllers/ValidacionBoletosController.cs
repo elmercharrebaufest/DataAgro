@@ -39,23 +39,13 @@ namespace WebDataAgro.Controllers
         {
             if (string.IsNullOrWhiteSpace(contratoSAP))
             {
-                Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return Json(new
-                {
-                    ok = false,
-                    mensaje = "El parámetro contratoSAP es obligatorio."
-                }, JsonRequestBehavior.AllowGet);
+                return ApiError(HttpStatusCode.BadRequest, "El parámetro contratoSAP es obligatorio.");
             }
 
             var contrato = controlDeBoletosEstadoManager.ObtenerDatosDeContrato(contratoSAP);
             if (contrato == null)
             {
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return Json(new
-                {
-                    ok = false,
-                    mensaje = "No se encontró el contrato.",
-                }, JsonRequestBehavior.AllowGet);
+                return ApiError(HttpStatusCode.NotFound, "No se encontró el contrato.");
             }
             return Json(contrato, JsonRequestBehavior.AllowGet);
         }
@@ -66,25 +56,28 @@ namespace WebDataAgro.Controllers
         {
             if (string.IsNullOrWhiteSpace(contratoSAP))
             {
-                Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return Json(new
-                {
-                    ok = false,
-                    mensaje = "El parámetro contratoSAP es obligatorio."
-                }, JsonRequestBehavior.AllowGet);
+                return ApiError(HttpStatusCode.BadRequest, "El parámetro contratoSAP es obligatorio.");
             }
 
             var clausulas = controlDeBoletosEstadoManager.ObtenerClausulas(contratoSAP);
             if (clausulas == null || !clausulas.Any())
             {
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return Json(new
-                {
-                    ok = false,
-                    mensaje = "No se encontraron las cláusulas."
-                }, JsonRequestBehavior.AllowGet);
+                return ApiError(HttpStatusCode.NotFound, "No se encontraron las cláusulas.");
             }
             return Json(clausulas, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult ApiError(HttpStatusCode statusCode, string mensaje)
+        {
+            Response.StatusCode = (int)statusCode;
+            Response.SuppressFormsAuthenticationRedirect = true;
+            Response.TrySkipIisCustomErrors = true;
+
+            return Json(new
+            {
+                ok = false,
+                mensaje = mensaje
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

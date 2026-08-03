@@ -62,10 +62,11 @@ namespace Molinos.DataAgro.Business.Managers
         #region Metodos Publicos para el Api
         public ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP)
         {
-            var datosContrato = new ValidacionDeBoletosIADatosContratoDto();
+            ValidacionDeBoletosIADatosContratoDto datosContrato = null;
             var contrato = repositorio.ObtenerConsultaEscalar(new TraerContratoBoletoPorSAP(contratoSAP));
             if (contrato != null)
             {
+                datosContrato = new ValidacionDeBoletosIADatosContratoDto();
                 datosContrato.Material = contrato.Material;
                 datosContrato.Precio = contrato.Precio;
                 datosContrato.Destino = contrato.DestinoDescripcion;
