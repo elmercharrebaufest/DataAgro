@@ -1,4 +1,4 @@
-﻿var ModalVisualizar = (function () {
+var ModalVisualizar = (function () {
     "use strict";
 
     var modalId = "#modalVisualizar";
@@ -48,38 +48,35 @@
     function cargarDatos(d) {
         setText("visualizar_contratoSap", d.ContratoSAP);
         setText("visualizar_proveedor", d.Proveedor);
-        setText("visualizar_fecha_operacion", formatearFechaHora(d.FechaOperacion));
+        setText("visualizar_fecha_operacion", d.FechaOperacion);
         setText(
             "visualizar_fecha_desde_hasta_entrega",
-            formatearFechaHora(d.FechaDesde) +
-            " al " +
-            formatearFechaHora(d.FechaHasta),
+           d.PeriodoEntrega
         );
         setText(
             "visualizar_fecha_desde_hasta_original",
             formatearFechaHora(d.FechaDesde),
         );
-        setText("visualizar_clasificacion", d.ClasificacionDescripcion);
+        setText("visualizar_clasificacion", d.Clasificacion);
         setText("visualizar_material", d.Material);
-        setText("visualizar_campana", d.Campania);
+        setText("visualizar_campana", d.Campana);
         setText("visualizar_cantidad", formatNumber(d.Cantidad));
-        setText("visualizar_camiones", "");
-        setText("visualizar_fijacion_cantidad_minimo", "");
-        setText("visualizar_fijacion_cantidad_maximo", "");
-        setText("visualizar_precio", formatNumber(d.Precio));
+        setText("visualizar_fijacion_cantidad_minimo", formatNumber(d.CantidadFijacionMinima));
+        setText("visualizar_fijacion_cantidad_maximo", formatNumber(d.CantidadFijacionMaxima));
+        setText("visualizar_precio", formatNumber(d.Precio) + ' ' + d.Moneda);
         setText("visualizar_comercial", d.Comercial);
         setText("visualizar_porcentaje_pago", d.PorcentajeDePago);
-        setText("visualizar_precio_neto", formatNumber(d.PrecioNeto));
-        setText("visualizar_redespacho", formatNumber(d.ImporteRedespacho));
+        setText("visualizar_precio_neto", formatNumber(d.PrecioNeto) + ' ' + d.Moneda);
+        setText("visualizar_redespacho", formatNumber(d.ImporteRedespacho) + ' ' + d.MonedaRedespacho);
         setText("visualizar_tipo", d.TipoNegocio);
-        setText("visualizar_destino", d.DestinoDescripcion);
-        setText("visualizar_procedencia", d.Procedencia);
-        setText("visualizar_dolarizo_origen", "");
-        setText("visualizar_mercaderia_deposito", d.MercaderiaDescripcion);
+        setText("visualizar_destino", d.Destino);
+        setText("visualizar_procedencia", d.Localidad);
+        setText("visualizar_dolarizo_origen", d.FechaDolarizadoOriginal);
+        setText("visualizar_mercaderia_deposito", d.MercaderaDeposito);
         setText("visualizar_cantidad_deposito", d.CantidadDeposito);
-        setText("visualizar_boleto", d.BoletoDescripcion);
-        setText("visualizar_bolsa", d.BolsaDescripcion);
-        setText("visualizar_calidad", d.StandardDeCalidadDescripcion);
+        setText("visualizar_boleto", d.TipoBoleto);
+        setText("visualizar_bolsa", d.Bolsa);
+        setText("visualizar_calidad", d.StandarCalidad);
         setText("visualizar_observacion", d.Observacion);
     }
 

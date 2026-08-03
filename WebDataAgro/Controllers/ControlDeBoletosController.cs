@@ -526,50 +526,15 @@ namespace WebDataAgro.Controllers
         [HttpGet]
         public ActionResult ObtenerDetalleContrato(int id)
         {
-            if (id <= 0)
+            try
             {
-                return Json(null, JsonRequestBehavior.AllowGet);
+                var resultado = _controlDeBoletosManager.ObtenerDatosDeContrato(id);
+                return Json(resultado, JsonRequestBehavior.AllowGet);
             }
-
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-
-            var filtro = new Kendo.DynamicLinq.Filter
+            catch (Exception ex)
             {
-                Logic = "and",
-                Filters = new List<Kendo.DynamicLinq.Filter>
-                {
-                    new Kendo.DynamicLinq.Filter
-                    {
-                        Field = "Id",
-                        Operator = "eq",
-                        Value = id
-                    }
-                }
-            };
-
-            var request = new DataSourceRequest();
-            request.Filter = filtro;
-            request.Sort = new List<Sort> { new Sort { Field = "Estado_Order", Dir = "asc" }, new Sort { Field = "Fecha_Order", Dir = "desc" } };
-
-            var model = _contratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
-            // Convertir la colección de resultados a List<object>
-            List<object> dataList;
-            if (model != null && model.Data != null)
-            {
-                dataList = model.Data.Cast<object>().ToList();
+                return Json(new { success = false, message = "Error al obtener detalle del contrato: " + ex.Message });
             }
-            else
-            {
-                dataList = new List<object>();
-            }
-
-            var result = new
-            {
-                Data = dataList.FirstOrDefault(),
-                Total = dataList.Count
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
         #endregion
 

@@ -40,6 +40,8 @@ var ControlDeBoletosGestion = (function () {
     let controlPeriodoOperacion;
     let controlRecepcionBoleto;
     let controlMoneda;
+    let controlVersionBoleto;
+    let controlFechaGeneracion;
 
     async function configurarEventos() {
 
@@ -123,6 +125,8 @@ var ControlDeBoletosGestion = (function () {
         controlPeriodoOperacion = $form.find("#PeriodoOperacion");
         controlRecepcionBoleto = $form.find("#RecepcionBoleto");
         controlMoneda = $form.find("#Moneda");
+        controlVersionBoleto = $form.find("#VersionBoleto");
+        controlFechaGeneracion = $form.find("#FechaGeneracion");
     }
 
     async function cargarDatos() {
@@ -142,12 +146,14 @@ var ControlDeBoletosGestion = (function () {
             controlPrecioXTonelada.text(contrato.Precio);
             controlMoneda.text(contrato.Moneda);
             controlDestino.text(contrato.Destino);
-            controlClasificacionProveedor.text(contrato.Clasificacion);
+            controlClasificacionProveedor.text(contrato.Clasificacion + ' - Consignatario:' + contrato.Consignatario);
             controlStandardCalidad.text(contrato.StandarCalidad);
             controlPeriodoEntrega.text(contrato.PeriodoEntrega);
             controlCampania.text(contrato.Campana);
             controlTipoBoleto.text(contrato.TipoBoleto);
             controlPeriodoOperacion.text(contrato.FechaOperacion);
+            controlVersionBoleto.text(contrato.VersionBoleto);
+            controlFechaGeneracion.text(contrato.FechaGeneracion);
 
             state.operaSinOblea = contrato.OperaSinOblea;
             state.planCanje = contrato.PlanCanje;
