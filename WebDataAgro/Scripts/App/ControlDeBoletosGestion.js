@@ -152,8 +152,8 @@ var ControlDeBoletosGestion = (function () {
             controlCampania.text(contrato.Campana);
             controlTipoBoleto.text(contrato.TipoBoleto);
             controlPeriodoOperacion.text(contrato.FechaOperacion);
-            controlVersionBoleto.text(contrato.VersionBoleto);
-            controlFechaGeneracion.text(contrato.FechaGeneracion);
+            controlVersionBoleto.text(contrato.VersionBoleto != null ? contrato.VersionBoleto : '');
+            controlFechaGeneracion.text(contrato.FechaGeneracion != null ? contrato.FechaGeneracion : '');
 
             state.operaSinOblea = contrato.OperaSinOblea;
             state.planCanje = contrato.PlanCanje;

@@ -11,7 +11,6 @@ var ControlBoletos = (function () {
             getValidacionBoletosPendientes: "/ValidacionBoletoIA/GetValidacionBoletosPendientes",
             exportBoletosExcel: "/ValidacionBoletoIA/ExportarBoletosValidadosExcel",
             cargarBoletosValidacion: "/ValidacionBoletoIA/CargarBoletosValidacion",
-
         }
     };
 
@@ -608,7 +607,21 @@ var ControlBoletos = (function () {
             document.body.removeChild(form);
         },
         cargarBoleto: function () {
-            ValidacionBoletosCargarContrato.abrir();
+            if (
+                typeof window.ValidacionBoletosCargarContrato !== "undefined" &&
+                window.ValidacionBoletosCargarContrato &&
+                typeof window.ValidacionBoletosCargarContrato.abrir === "function"
+            ) {
+                window.ValidacionBoletosCargarContrato.abrir();
+                return;
+            }
+
+            console.error("ValidacionBoletosCargarContrato no está cargado.");
+            mostrarMensaje(
+                "Error",
+                "No se pudo abrir el formulario porque el script de carga no está disponible. Recargue la página (Ctrl+F5).",
+                "danger",
+            );
         },
         inicializarFechas: function () {
             const hoy = new Date();
@@ -646,21 +659,6 @@ var ControlBoletos = (function () {
                 '})" title="Gestión de control de boletos"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
             );
 
-            /*
-            if (data.EsConfirma && data.TipoAltaConfirma == 'Alta Definitiva') {
-
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletosTracking.abrir(' +
-                    data.Id +
-                    ')" title="Tracking Boleto"><i class="fa fa-history"></i><span class="tooltiptext"></span></button>',
-                );
-                botones.push(
-                    '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlBoletos.descargarPDFConfirma(' +
-                    data.Id +
-                    ')" title="Descargar PDF Confirma"><i class="fa fa-file-pdf-o"></i><span class="tooltiptext"></span></button>',
-                );
-            }
-            */
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
             );

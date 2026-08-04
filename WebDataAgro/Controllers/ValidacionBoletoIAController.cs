@@ -99,7 +99,25 @@ namespace WebDataAgro.Controllers
                 return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpGet]
+        public JsonResult GetValidacionBoletoSap(string contratoSAP)
+        {
+            try
+            {
+                var boletos = this.controlDeBoletosValidacionIAManagerIA.GetValidacionBoletoSap(contratoSAP);
+                var result = new
+                {
+                    Data = boletos
+                };
 
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetValidacionBoletoSap: {ex.Message}");
+                return Json(new { Data = new List<ValidacionDeBoletosIAConsultaDto>() }, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpPost]
         public JsonResult GetValidacionBoletosPendientes(ValidacionBoletoFiltroBusquedaDto filtros)
         {

@@ -13,6 +13,7 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,9 +42,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioClausulaConfirma = servicioClausulaConfirma;
         }
 
-
-
-
         public List<ValidacionBoletosEstadoDto> ListarEstados()
         {
             List<ValidacionBoletosEstadoDto> listarEstados = new List<ValidacionBoletosEstadoDto>();
@@ -57,6 +55,30 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ValidacionDeBoletosIAConsultaDto> GetValidacionBoletosPendientes(ValidacionBoletoFiltroBusquedaDto filtros)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerValidacionBoletosPendientes(filtros));
+        }
+
+        public List<ValidacionDeBoletosIADatosContratoDto> GetValidacionBoletoSap(string contratoSAP)
+        {
+            List<ValidacionDeBoletosIADatosContratoDto> datosContrato = null;
+
+            var negocio = repositorio.Obtener<Negocio>(x=> x.ContratoSAP == contratoSAP);
+            if (negocio == null)
+            {
+                throw new Exception($"No se encontró un negocio con el contrato SAP: {contratoSAP}");
+            }
+            var controlBoleto = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocio.Id);
+            if (controlBoleto == null)
+            {
+                throw new Exception($"No se encontró un control de boletos para contrato : {contratoSAP}");
+            }
+
+            datosContrato = new List<ValidacionDeBoletosIADatosContratoDto>();
+            datosContrato.Add(new ValidacionDeBoletosIADatosContratoDto()
+            {
+                TipoBoleto = negocio.Boleto != null ? negocio.Boleto.Descripcion : string.Empty,
+                Bolsa = negocio.Bolsa != null ? negocio.Bolsa.Descripcion : string.Empty
+            });
+            return datosContrato;
         }
 
         #region Metodos Publicos para el Api

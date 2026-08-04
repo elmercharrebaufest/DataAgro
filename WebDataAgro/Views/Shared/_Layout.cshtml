@@ -753,14 +753,6 @@
                             <a onclick="return false" id="boleto-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Boletos <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="boleto">
 
-                                @*@if (PermisosHelper.Is(PermisosDataAgro.Confirma))
-        {
-            <li>
-                <a href="~/Confirma" class="nav-link misreporteslink">
-                    <i class="icon-bar-chart"></i> Confirma
-                </a>
-            </li>
-        }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.GenerarBoleto))
                                 {
                                     <li>
@@ -808,6 +800,14 @@
                                     <li>
                                         <a href="~/ControlDeBoletos/SeguimientoBoletos" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Seguimiento
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Validacion_de_Boletos_IA))
+                                {
+                                    <li>
+                                        <a href="~/ValidacionBoletoIA/Index" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Validacion de Boletos
                                         </a>
                                     </li>
                                 }
