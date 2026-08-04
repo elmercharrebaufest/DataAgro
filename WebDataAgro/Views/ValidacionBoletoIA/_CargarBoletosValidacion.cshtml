@@ -1,4 +1,7 @@
-<!--Modal resultado boletos-->
+@section styles{
+    <link href="~/Content/control-boletos.css" rel="stylesheet" />
+    <link href="~/Content/control-boletos-contrato.css" rel="stylesheet" />
+}
 <div id="modalCargarBoleto" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content clearfix modal-cargar-boleto">
@@ -9,7 +12,8 @@
                 </button>
                 <div class="header-top">
                     <h5 class="titulo-modal modal-titulo-contrato">
-                        Cargar Boletos
+                        <i class="fa fa-clipboard-check" aria-hidden="true"></i>
+                        <strong>Cargar Boletos</strong>
                     </h5>
                 </div>
             </div>
@@ -20,7 +24,7 @@
                         <div class="card-body">
                             <!-- Contrato -->
                             <div class="form-group">
-                                <label>Contrato SAP</label>
+                                <label class="d-block"><strong>Contrato SAP</strong></label>
                                 <input type="text"
                                        id="contratoSap"
                                        class="form-control"
@@ -30,16 +34,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Bolsa</label>
-                                        <input type="text"
-                                               id="bolsa" disabled />
+                                        <label class="d-block"><strong>Bolsa</strong></label>
+                                        <label id="bolsa" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Tipo de Boleto</label>
-                                        <input type="text"
-                                               id="tipoBoleto" disabled />
+                                        <label class="d-block"><strong>Tipo de Boleto</strong></label>
+                                        <label id="tipoBoleto" />
                                     </div>
                                 </div>
                             </div>
@@ -50,48 +52,37 @@
                                     Carga de PDF del boleto
                                 </label>
                             </div>
-
                             <!-- Caja -->
                             <div class="upload-box" id="uploadBoxPDF">
-
                                 <input type="file"
                                        id="filArchivoPDF"
                                        accept=".pdf"
                                        style="display:none;">
-
                                 <div class="upload-left">
-
                                     <div class="pdf-icon">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </div>
-
                                     <div>
-
                                         <div class="upload-title">
                                             Seleccioná el PDF del boleto a validar
                                         </div>
-
                                         <div class="upload-subtitle">
                                             Hacé clic en cualquier parte de este recuadro para seleccionar el archivo.
                                             El sistema procesará el PDF y comparará automáticamente la información con DataAgro/SAP.
                                         </div>
-
                                         <div id="filNombreArchivoPDF" class="file-name">
                                             <i class="fa fa-folder-open-o"></i>
                                             Ningún archivo seleccionado
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-footer bg-white text-right">
                             <button class="btn btn-light margin-top-10">
                                 Cancelar
                             </button>
-                            <button class="btn btn-success margin-top-10">
+                            <button class="btn btn-success margin-top-10" id="btnCargarValidar">
                                 <i class="fa fa-upload"></i>
                                 Cargar y Validar
                             </button>
@@ -179,6 +170,7 @@
     .card-footer {
         border-top: 1px solid #eee;
     }
+
     #Archivo {
         display: none !important;
     }

@@ -584,26 +584,32 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.Consignatario = contrato.Consignatario != null ? "SI" : "NO";
                 if (contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                 {
-                    var maxVersion = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id).Max(x => x.Version);
-                    if (maxVersion != null)
+                    var confirmas = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id);
+                    if (confirmas!=null && confirmas.Count >0)
                     {
-                        var confirma = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id && x.Version == maxVersion).FirstOrDefault();
-                        datosContrato.VersionBoleto = confirma.Version;
-                        datosContrato.FechaGeneracion = confirma.FechaGeneracion!=null ? confirma.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                        var maxVersion = confirmas.Max(x => x.Version);
+                        if (maxVersion != null)
+                        {
+                            var confirma = confirmas.FirstOrDefault(x => x.Version == maxVersion);
+                            datosContrato.VersionBoleto = confirma.Version;
+                            datosContrato.FechaGeneracion = confirma.FechaGeneracion != null ? confirma.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                        }
                     }
                 }
                 else
                 {
-                    var maxVersion = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id).Max(x => x.Version);
-                    if (maxVersion != null)
+                    var boletos = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id);
+                    if (boletos != null && boletos.Count > 0)
                     {
-                        var boleto = repositorio.Listar<Boleto>(x => x.NegocioId == contrato.Id && x.Version == maxVersion).FirstOrDefault();
-                        datosContrato.VersionBoleto = boleto.Version;
-                        datosContrato.FechaGeneracion = boleto.FechaGeneracion != null ? boleto.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                        var maxVersion = boletos.Max(x => x.Version);
+                        if (maxVersion != null)
+                        {
+                            var boleto = boletos.FirstOrDefault(x => x.Version == maxVersion);
+                            datosContrato.VersionBoleto = boleto.Version;
+                            datosContrato.FechaGeneracion = boleto.FechaGeneracion != null ? boleto.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                        }
                     }
-
                 }
-
             }
 
             var cuitProveedor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : contrato.Proveedor.CUIT;

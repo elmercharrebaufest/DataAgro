@@ -7,8 +7,7 @@
 }
 <div id="modalGestionControlBoleto" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-
+        <div class="modal-content clearfix modal-cargar-boleto">
             <div class="modal-header">
                 <button type="button" class="modal-close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
@@ -126,14 +125,14 @@
                             </div>
                         </div>
                         @*<div class="row">
-            <div class="col-md-4">
-            </div>
-            <div class="col-md-4">
-                <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
-            </div>
-            <div class="col-md-4">
-            </div>
-        </div>*@
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>*@
                     </form>
 
                     <!-- ════════ 1. SEGUIMIENTO CONTROL BOLETO ════════ -->
@@ -156,7 +155,7 @@
                                 <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
                                     <button class="btn btn-danger"
                                             onclick="ControlDeBoletosSeguimiento.eliminar()">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar 
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
                                     </button>
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosSeguimiento.guardar()">
@@ -187,7 +186,7 @@
                                 <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
                                     <button class="btn btn-danger"
                                             onclick="ControlDeBoletosDatosCertificacion.eliminar()">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar 
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
                                     </button>
                                     <button class="btn btn-primary"
                                             onclick="ControlDeBoletosDatosCertificacion.guardar()">

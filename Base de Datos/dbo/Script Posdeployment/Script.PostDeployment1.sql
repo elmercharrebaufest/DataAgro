@@ -1375,3 +1375,17 @@ if not exists(select 1 from ValidacionBoletosEstado where Descripcion = 'Rechaza
 begin
  insert into ValidacionBoletosEstado(Id, Descripcion) values (3, 'Rechazado')
 end
+-- creacion Rol Validacion Boletos IA
+IF NOT EXISTS(SELECT 1 FROM Rol WHERE Descripcion = 'Validacion Boletos IA')
+   BEGIN
+		INSERT INTO Rol (Descripcion)VALUES('Validacion Boletos IA')
+   END
+
+DECLARE @RolValidacionBoletosIA int
+ SELECT @RolValidacionBoletosIA = Id from Rol 
+  WHERE Descripcion = 'Validacion Boletos IA'
+
+IF NOT EXISTS(SELECT 1 FROM RolPermiso WHERE RolId = @RolValidacionBoletosIA and Permiso = 923)
+   BEGIN
+		INSERT INTO RolPermiso (RolId,Permiso)VALUES(@RolValidacionBoletosIA, 923)
+   END

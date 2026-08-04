@@ -379,8 +379,8 @@ namespace WebDataAgro
                            ));
             bundles.Add(new ScriptBundle("~/bundles/ValidacionBoletoIA").Include(
                            "~/Scripts/App/Filtros.js",
-                           "~/Scripts/App/ValidacionBoletoIA.js",
                            "~/Scripts/App/ValidacionBoletoIACargarContrato.js",
+                           "~/Scripts/App/ValidacionBoletoIA.js",
                            "~/Scripts/KendoExtensions.js",
                            "~/Scripts/moment.js"
                            ));

@@ -398,5 +398,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Control_de_Boletos")]
         Control_de_Boletos = 922,
 
+        [Display(ResourceType = typeof(Text), Name = "Validacion_de_Boletos_IA")]
+        Validacion_de_Boletos_IA = 923,
+
     }
 }
