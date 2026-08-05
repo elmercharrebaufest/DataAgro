@@ -3115,15 +3115,29 @@ function AbrirModalCapacidadProductivaPendiente() {
 
 function CambioCalidades(calidades) {
     var tieneCalidadesCargadas = calidades !== undefined && calidades.length > 0;
-    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara"
-        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica"
-        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Bonif. SECO de 7% a 10% Por punto"
-        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Grado 2"
+    var textoCalidad = $("#calidadesEspecialesId").data("kendoDropDownList").text();
+
+    // Caso especial: Humedad -> solo habilita el botón de Servicios (#servicioBtn) para cargar servicios de secada.
+    // Humedad NO se agrega como fila de calidad, y NO se limpian las calidades previas (Dañados, Especial, etc.).
+    // La calidad real la debe seleccionar el usuario aparte y agregarla con el botón +.
+    if (textoCalidad === "Humedad") {
+        $(".calidadesEspecialesDatos").hide();
+        $(".calidad-no-grado").hide();
+        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+        $("#porcentajeDesdeId").data("kendoNumericTextBox").value("");
+        $("#porcentajeHastaId").data("kendoNumericTextBox").value("");
+        return;
+    }
+
+    if (textoCalidad !== "Camara"
+        && textoCalidad !== "Fabrica"
+        && textoCalidad !== "Bonif. SECO de 7% a 10% Por punto"
+        && textoCalidad !== "Grado 2"
         && $("#calidadesEspecialesId").val() !== "") {
         $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
+        if (textoCalidad === "Grado 2" ||
+            textoCalidad === "Grado" ||
+            textoCalidad === "Especial") {
             $(".calidad-no-grado").hide();
             if (!tieneCalidadesCargadas) {
                 LimpiarCalidades();
@@ -3141,29 +3155,29 @@ function CambioCalidades(calidades) {
     if (calidades !== undefined && calidades.length == 1) {
         $("#valorEspecialesId").data("kendoNumericTextBox").value(calidades[0].Valor);
     } else {
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
+        if (textoCalidad === "Grado") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2") {
+        } else if (textoCalidad === "Grado 2") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
             $(".calidadesEspecialesDatos").hide();
             $(".calidad-no-grado").hide();
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
+        } else if (textoCalidad === "Especial") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
             $(".calidad-no-grado").hide();
         }
-        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
+        else if (textoCalidad === "Bonif. SECO de 7% a 10% Por punto") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(0);
         }
-        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes") {
+        else if (textoCalidad === "Granos verdes") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0,20');
         }
-        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || 
-                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad") {
+        else if (textoCalidad === "Dañados") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value('0');
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }
-    } if ($("#material").val() == Materiales.GIRASOL_AO && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
+    }
+    if ($("#material").val() == Materiales.GIRASOL_AO && textoCalidad === "Bonif. SECO de 7% a 10% Por punto") {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").hide();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
@@ -6676,20 +6690,23 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
 }
 
 function MostrarServiciosYCalidades() {
-    var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+    var textoCalidad = $("#calidadesEspecialesId").data("kendoDropDownList").text();
+    var validar = textoCalidad === "Grado 2" ||
+        textoCalidad === "Grado" ||
+        textoCalidad === "Especial" ||
+        textoCalidad === "Materia Extraña" ||
+        textoCalidad === "Humedad" ;
     //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
     if (validar == false) {
         $("#servicioBtn").hide();
         LimpiarServicios();
     } else {
         $("#servicioBtn").show();
-        LimpiarServicios();
-        TraerServicio();
+        // Solo recargar servicios si aún no hay cargados; así se preservan los importes ya ingresados
+        // al cambiar entre calidades (por ejemplo Humedad -> Especial).
+        if (!viewModel.Servicios || viewModel.Servicios.length === 0) {
+            TraerServicio();
+        }
     }
 
     return validar;
