@@ -660,4 +660,24 @@
 						match="/configuration/appSettings/add[@key='SISA_con_campo_adicional']
                            /@value" />
   </parameter>
+
+  <!-- Parametros para servicio de Agente IA -->
+  <parameter name="UrlBaseControlBoletosIa Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='UrlBaseControlBoletosIa']
+					   /@value" />
+  </parameter>
+  <parameter name="ApiTokenControlBoletosIa Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ApiTokenControlBoletosIa']
+					   /@value" />
+  </parameter>
+
+  <!-- Parametros para ApiDataAgro que usara de Agente IA -->
+  <parameter name="ApiTokenDataAgro Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='ApiTokenDataAgro']
+					   /@value" />
+  </parameter>
+
 </parameters>

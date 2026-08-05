@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
+namespace Molinos.DataAgro.Entities.ControlBoletosAgenteIA
 {
     public class ValidateTicketRequest
     {

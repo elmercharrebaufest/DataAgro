@@ -129,13 +129,27 @@ var ControlBoletos = (function () {
         return Math.ceil(ctx.measureText(texto).width);
     }
 
+    // Extrae las columnas hoja (sin hijos) de una estructura multinivel
+    function getLeafColumns(cols) {
+        var result = [];
+        (cols || []).forEach(function (col) {
+            if (col.columns && col.columns.length) {
+                getLeafColumns(col.columns).forEach(function (c) { result.push(c); });
+            } else {
+                result.push(col);
+            }
+        });
+        return result;
+    }
+
     function autoFitColumnas(grid) {
         var $wrapper = grid.element;
         var $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
         var $contentCols = $wrapper.find(".k-grid-content   colgroup col");
-        var $headerCells = $wrapper.find(".k-grid-header-wrap tr:first th");
+        // tr:last selecciona la fila de cabeceras hoja (con cabeceras multinivel hay 2 filas)
+        var $headerCells = $wrapper.find(".k-grid-header-wrap tr:last th");
         var $rows = $wrapper.find(".k-grid-content tbody tr");
-        var columns = grid.columns;
+        var columns = getLeafColumns(grid.columns); // columnas hoja aplanadas
 
         state.columnWidths = []; // Resetear anchos guardados
 
@@ -347,7 +361,7 @@ var ControlBoletos = (function () {
                                         Comercial: { type: "string" },
                                         BolsaCompraNet: { type: "string" },
                                         ValidacionBoletosEstado: { type: "string" },
-                                        FechaGeneracion: { type: "date" },
+                                        FechaValidacion: { type: "date" },
                                     },
                                 },
                             },
@@ -413,25 +427,25 @@ var ControlBoletos = (function () {
                                     {
                                         field: "TipoBoleto",
                                         title: "Boleto",
-                                        width: 80
+                                        width: 80,
                                     },
                                     {
                                         field: "ContratoSAP",
                                         title: "Contrato SAP",
                                         width: 120,
-                                        template: "<span class='font-weight-bold'>#=ContratoSAP#</span>"
+                                        template: "<span class='font-weight-bold'>#=ContratoSAP#</span>",
                                     },
                                     {
                                         field: "Version",
                                         title: "Versión",
-                                        width: 80
+                                        width: 80,
                                     },
                                     {
                                         field: "FechaGeneracion",
                                         title: "Fecha Generación",
-                                        width: 100,
-                                        template: "#= formatearFecha(FechaGeneracion) #"
-                                    }
+                                        width: 140,
+                                        template: "#= formatearFecha(FechaGeneracion) #",
+                                    },
                                 ]
                             },
                             {
@@ -443,17 +457,17 @@ var ControlBoletos = (function () {
                                     {
                                         field: "BolsaCompraNet",
                                         title: "Bolsa",
-                                        width: 80
+                                        width: 100,
                                     },
                                     {
                                         field: "Material",
                                         title: "Material",
-                                        width: 80
+                                        width: 120,
                                     },
                                     {
                                         field: "Proveedor",
                                         title: "Proveedor",
-                                        width: 250
+                                        width: 250,
                                     },
                                 ]
                             },
@@ -464,21 +478,21 @@ var ControlBoletos = (function () {
                                 },
                                 columns: [
                                     {
-                                        field: "EstadoConfirma",
+                                        field: "ValidacionBoletosEstado",
                                         title: "Estado Validación",
-                                        width: 120
+                                        width: 135,
                                     },
                                     {
-                                        field: "FechaGeneracion",
+                                        field: "FechaValidacion",
                                         title: "Fecha Validación",
-                                        width: 120,
-                                        template: "#= formatearFecha(FechaGeneracion) #"
-                                    }
+                                        width: 130,
+                                        template: "#= formatearFecha(FechaValidacion) #",
+                                    },
                                 ]
                             },
                             {
-                                title: "",
-                                width: 50,
+                                title: "Acciones",
+                                width: 80,
                                 template: function (dataItem) {
                                     return self.generarBotonesAccion(dataItem);
                                 },
@@ -487,7 +501,7 @@ var ControlBoletos = (function () {
                                 headerAttributes: {
                                     style: "text-align:center;font-weight:bold;"
                                 }
-                            }
+                            },
                         ],
                         dataBound: function (e) {
                             // Ejecutar autoFitColumnas solo en la primera carga
@@ -645,19 +659,14 @@ var ControlBoletos = (function () {
         generarBotonesAccion: function (data) {
 
             var botones = [];
-            botones.push(
-                '<button class="btn btn-sm btn-outline-secondary btn-acciones tooltip-custom" onclick="ControlBoletos.visualizarContrato(' +
-                data.NegocioId +
-                ')" title="Visualizar Contrato"><i class="fa fa-file-text-o"></i><span class="tooltiptext"></span></button>',
-            );
-
-            botones.push(
-                '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlDeBoletosGestion.abrir({ControlDeBoletosId:' +
-                data.Id + ',SeguimientoBoletoId:' + (data.SeguimientoBoletoId || 0) +
-                ',PreCertificacionId:' + (data.PreCertificacionId || 0) +
-                ',NegocioId:' + data.NegocioId +
-                '})" title="Gestión de control de boletos"><i class="fa fa-tasks"></i><span class="tooltiptext"></span></button>',
-            );
+            botones.push(`
+                <button class="btn btn-sm btn-outline-secondary btn-acciones tooltip-custom"
+                    onclick="ValidacionBoletosResultados.abrir(${data.Id}, '${data.ContratoSAP}', '${data.BolsaCompraNet}', '${data.Material}', '${data.Proveedor}', '${data.EstadoValidacionAgente}', '${data.AccionesRecomendadas}', '${formatearFecha(data.FechaValidacion)}')"
+                    title="Visualizar Contrato">
+                    <i class="fa fa-info-circle"></i>
+                    <span class="tooltiptext"></span>
+                </button>
+            `);
 
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"

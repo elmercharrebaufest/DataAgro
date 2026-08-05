@@ -216,7 +216,6 @@
   <ItemGroup>
     <Compile Include="Helpers\AzureAgent.cs" />
     <Compile Include="Helpers\ControlBoletosAgenteIA\ControlBoletosIaAgent.cs" />
-    <Compile Include="Helpers\ControlBoletosAgenteIA\ControlBoletosIaModels.cs" />
     <Compile Include="Helpers\ControlBoletosAgenteIA\IControlBoletosIaRefitApi.cs" />
     <Compile Include="Helpers\ClienteBolsaRosarioAPIAgent.cs" />
     <Compile Include="Helpers\ClienteResearchAgent.cs" />

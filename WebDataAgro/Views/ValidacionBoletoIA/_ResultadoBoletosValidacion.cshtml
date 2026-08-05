@@ -1,47 +1,128 @@
-<!--Modal resultado boletos-->
 <div id="modalResultadoBoleto" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content clearfix modal-resultado">
-            <div class="modal-header">
-                <button type="button" class="modal-close" data-dismiss="modal">
-                    <span aria-hidden="true">×</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <div class="header-top">
-                    <h5 class="titulo-modal modal-titulo-contrato">
-                        Resultado Validación de Boletos
+    <div class="modal-dialog clearfix modal-lg">
+        <div class="modal-content modal-validacion">
+            <form id="frmValidacionBoleto">
+                <div class="modal-header">
+                    <button type="button" class="modal-close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h5 class="titulo-modal">
+                        <i class="fa fa-check-circle"></i>
+                        <strong>Resultado de Validación</strong>
                     </h5>
                 </div>
-            </div>
-            <div class="modal-body" id="modalResultadoBoletoBody">
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <div id="gridResultadoBoleto"></div>
-                        <label id="lblNoResultadoInfo" style="display:none; color:#888; font-size:1.1em; margin-top:20px;">
+                <div class="modal-body" id="modalResultadoBoletoBody">
+                    <!-- Resumen -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label><strong>Contrato SAP:</strong></label>
+                            <label id="lblContratoSap"></label>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Material:</strong></label>
+                            <label style="width: max-content" id="lblMaterial"></label>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Fecha Validación:</strong></label>
+                            <label id="lblFechaValidacion"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label><strong>Estado Validación Agente:</strong></label>
+                            <label id="lblEstadoValidacionAgente"></label>
+                        </div>
+                        <div class="col-md-12">
+                            <label><strong>Acciones Recomendadas:</strong></label>
+                            <label id="lblAccionesRecomendadas"></label>
+                        </div>
+                    </div>
+                    <!-- Grid -->
+                    <div class="seccion">
+                        <h5>
+                            <i class="fa fa-desktop"></i>
+                            Resultado de validación — Agente IA
+                        </h5>
+                        <div id="gridResultadoValidacion"></div>
+                        <label id="lblNoResultadoValidacionInfo" style="display:none; color:#888; font-size:1.1em; margin-top:20px;">
                             No existe información para mostrar.
                         </label>
                     </div>
+                    <!-- Aprobacion -->
+                    <div class="seccion">
+                        <h5>
+                            <i class="fa fa-pencil"></i>
+                            Aprobación / Rechazo
+                        </h5>
+                        <div class="form-group">
+                            <label>Observación</label>
+                            <textarea id="txtObservacion"
+                                      rows="3"
+                                      class="form-control"
+                                      placeholder="Ingresá una observación o comentario sobre la validación"></textarea>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" id="btnCancelar">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-danger" id="btnRechazar">
+                        <i class="fa fa-times"></i>
+                        Rechazar
+                    </button>
+                    <button class="btn btn-success" id="btnAprobar">
+                        <i class="fa fa-check"></i>
+                        Aprobar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 <style>
-    .modal-resultado {
+    .modal-validacion {
         background-color: white !important;
     }
 
-    .modal-close {
-        float: right;
-        font-size: 21px;
-        font-weight: bold;
-        line-height: 1;
-        color: #000000;
-        text-shadow: 0 1px 0 #ffffff;
-        opacity: 0.2;
-        background: none !important;
-        text-indent: 0;
-        border-color: transparent !important;
-        cursor: pointer;
+    .resumen-validacion {
+        margin-bottom: 20px;
+    }
+
+    .info-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px 15px;
+        background: #fafafa;
+        min-height: 30px;
+    }
+
+        .info-card .titulo {
+            display: block;
+            font-size: 12px;
+            color: #7a7a7a;
+            margin-bottom: 4px;
+        }
+
+        .info-card strong {
+            font-size: 17px;
+            color: #2b2b2b;
+        }
+
+    .seccion {
+        margin-top: 25px;
+    }
+
+        .seccion h5 {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+    .modal-footer {
+        border-top: 1px solid #e6e6e6;
+    }
+
+    textarea {
+        resize: none;
     }
 </style>

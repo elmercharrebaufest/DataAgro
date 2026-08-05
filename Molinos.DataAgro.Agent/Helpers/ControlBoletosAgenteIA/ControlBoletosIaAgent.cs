@@ -1,3 +1,5 @@
+using Molinos.DataAgro.Entities.ControlBoletosAgenteIA;
+using Molinos.DataAgro.Interfaces.Agent;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -9,17 +11,21 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
 {
-    public class ControlBoletosIaAgent
+    public class ControlBoletosIaAgent: IControlBoletosIaAgent
     {
-        private const string DefaultBaseUrl = "http://localhost:8000";
+        private const string UrlBaseKey = "UrlBaseControlBoletosIa";
+        private const string ApiTokenKey = "ApiTokenControlBoletosIa";
 
+        private static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes(2);
+
+        private readonly string defaultBaseUrl;
         private readonly string apiToken;
         private readonly IControlBoletosIaRefitApi api;
 
         public ControlBoletosIaAgent()
             : this(
-                  ConfigurationManager.AppSettings["UrlBaseControlBoletosIa"],
-                  ConfigurationManager.AppSettings["ApiTokenControlBoletosIa"])
+                ConfigurationManager.AppSettings[UrlBaseKey],
+                ConfigurationManager.AppSettings[ApiTokenKey])
         {
         }
 
@@ -27,24 +33,68 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+            this.defaultBaseUrl = ConfigurationManager.AppSettings[UrlBaseKey];
             this.apiToken = apiToken;
-            var resolvedBaseUrl = string.IsNullOrWhiteSpace(baseUrl) ? DefaultBaseUrl : baseUrl;
+
+            var resolvedBaseUrl = string.IsNullOrWhiteSpace(baseUrl)
+                ? defaultBaseUrl
+                : baseUrl;
+
+            if (string.IsNullOrWhiteSpace(resolvedBaseUrl))
+            {
+                throw new InvalidOperationException(
+                    $"No se encontró la configuración '{UrlBaseKey}'.");
+            }
+
+            if (!Uri.TryCreate(resolvedBaseUrl, UriKind.Absolute, out var uri))
+            {
+                throw new InvalidOperationException(
+                    $"La URL '{resolvedBaseUrl}' no es válida.");
+            }
 
             var httpClient = new HttpClient
             {
-                BaseAddress = new Uri(resolvedBaseUrl.TrimEnd('/')),
-                Timeout = TimeSpan.FromMinutes(2)
+                BaseAddress = uri,
+                Timeout = DefaultTimeout
             };
 
             api = RestService.For<IControlBoletosIaRefitApi>(httpClient);
         }
 
+        #region Metodos publicos
         public ValidationResponse ValidateTicket(ValidateTicketRequest request)
         {
-            return ValidateTicketAsync(request).GetAwaiter().GetResult();
+            return Execute(() => ValidateTicketAsync(request));
         }
+        public ContractLookupResponse GetContract(string contractId)
+        {
+            return Execute(() => GetContractAsync(contractId));
+        }
+        public ClauseComparisonResponse CompareClauses(ClauseCompareRequest request)
+        {
+            return Execute(() => CompareClausesAsync(request));
+        }
+        public Dictionary<string, object> Health()
+        {
+            return Execute(() => HealthAsync());
+        }
+        private static T Execute<T>(Func<Task<T>> action)
+        {
+            try
+            {
+                return action().GetAwaiter().GetResult();
+            }
+            catch (ApiException ex)
+            {
+                throw new InvalidOperationException(
+                    $"Error llamando al servicio. Código: {(int)ex.StatusCode}. Respuesta: {ex.Content}",
+                    ex);
+            }
+        }
+        #endregion
 
-        public async Task<ValidationResponse> ValidateTicketAsync(ValidateTicketRequest request)
+        #region Metodos privados
+        private async Task<ValidationResponse> ValidateTicketAsync(ValidateTicketRequest request)
         {
             EnsureApiToken();
             ValidateRequest(request);
@@ -66,13 +116,7 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
                     request.XSourceSystem);
             }
         }
-
-        public ContractLookupResponse GetContract(string contractId)
-        {
-            return GetContractAsync(contractId).GetAwaiter().GetResult();
-        }
-
-        public Task<ContractLookupResponse> GetContractAsync(string contractId)
+        private Task<ContractLookupResponse> GetContractAsync(string contractId)
         {
             EnsureApiToken();
             if (string.IsNullOrWhiteSpace(contractId))
@@ -82,13 +126,7 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
 
             return api.GetContractAsync(contractId, apiToken);
         }
-
-        public ClauseComparisonResponse CompareClauses(ClauseCompareRequest request)
-        {
-            return CompareClausesAsync(request).GetAwaiter().GetResult();
-        }
-
-        public Task<ClauseComparisonResponse> CompareClausesAsync(ClauseCompareRequest request)
+        private Task<ClauseComparisonResponse> CompareClausesAsync(ClauseCompareRequest request)
         {
             EnsureApiToken();
             if (request == null)
@@ -108,17 +146,10 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
 
             return api.CompareClausesAsync(request, apiToken);
         }
-
-        public Dictionary<string, object> Health()
-        {
-            return HealthAsync().GetAwaiter().GetResult();
-        }
-
-        public Task<Dictionary<string, object>> HealthAsync()
+        private Task<Dictionary<string, object>> HealthAsync()
         {
             return api.HealthAsync();
         }
-
         private void EnsureApiToken()
         {
             if (string.IsNullOrWhiteSpace(apiToken))
@@ -126,7 +157,6 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
                 throw new InvalidOperationException("ApiTokenControlBoletosIa no configurado en appSettings.");
             }
         }
-
         private static void ValidateRequest(ValidateTicketRequest request)
         {
             if (request == null)
@@ -152,7 +182,6 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
                 throw new FileNotFoundException("No se encontró el archivo a enviar.", request.FilePath);
             }
         }
-
         private static StreamPart BuildStreamPart(ValidateTicketRequest request, out Stream uploadStream)
         {
             if (request.FileContent != null && request.FileContent.Length > 0)
@@ -174,7 +203,6 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
 
             return new StreamPart(uploadStream, fileName, contentType);
         }
-
         private static string InferContentType(string fileName)
         {
             var extension = Path.GetExtension(fileName) ?? string.Empty;
@@ -196,5 +224,7 @@ namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
                     return "application/octet-stream";
             }
         }
+        #endregion
+
     }
 }

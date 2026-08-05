@@ -21,7 +21,7 @@ BEGIN
         WHERE LTRIM(RTRIM(value)) <> '';
 
     SELECT
-        cb.Id,
+        val.Id,
         bc.Descripcion                                                           AS TipoBoleto,
         n.ContratoSAP,
         (case when bc.Id = 1 then confirma.Version else boleto.Version end)                 AS Version,
@@ -31,7 +31,11 @@ BEGIN
         prov.RazonSocial                                                         AS Proveedor,
         est.Descripcion                                                          AS ValidacionBoletosEstado,
         est.Id                                                                   AS ValidacionBoletosEstadoId,
-        val.FechaCreacion                                                        AS FechaValidacion
+        val.FechaCreacion                                                        AS FechaValidacion,
+        val.RequestId                                                  AS RequestId,
+        ISNULL(val.EstadoValidacionAgente, '')                                   AS EstadoValidacionAgente,
+        ISNULL(val.AccionesRecomendadas, '')                                     AS AccionesRecomendadas,
+        ISNULL(val.Observacion, '')                                              AS Observacion
     FROM ControlDeBoletos cb
     INNER JOIN Negocio n
         ON cb.NegocioId = n.Id

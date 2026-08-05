@@ -27,10 +27,10 @@ namespace WebDataAgro.Controllers
     [RoutePrefix("api/ValidacionBoletos")]
     public class ValidacionBoletosDAController : Controller
     {
-        private readonly IControlDeBoletosValidacionIAManagerIA controlDeBoletosEstadoManager;
-        public ValidacionBoletosDAController(IControlDeBoletosValidacionIAManagerIA controlDeBoletosEstadoManager)
+        private readonly IControlDeBoletosValidacionIAManager controlDeBoletosValidacionIAManager;
+        public ValidacionBoletosDAController(IControlDeBoletosValidacionIAManager controlDeBoletosEstadoManager)
         {
-            this.controlDeBoletosEstadoManager = controlDeBoletosEstadoManager;
+            this.controlDeBoletosValidacionIAManager = controlDeBoletosEstadoManager;
         }
 
         [HttpGet]
@@ -42,7 +42,7 @@ namespace WebDataAgro.Controllers
                 return ApiError(HttpStatusCode.BadRequest, "El parámetro contratoSAP es obligatorio.");
             }
 
-            var contrato = controlDeBoletosEstadoManager.ObtenerDatosDeContrato(contratoSAP);
+            var contrato = controlDeBoletosValidacionIAManager.ObtenerDatosDeContrato(contratoSAP);
             if (contrato == null)
             {
                 return ApiError(HttpStatusCode.NotFound, "No se encontró el contrato.");
@@ -59,7 +59,7 @@ namespace WebDataAgro.Controllers
                 return ApiError(HttpStatusCode.BadRequest, "El parámetro contratoSAP es obligatorio.");
             }
 
-            var clausulas = controlDeBoletosEstadoManager.ObtenerClausulas(contratoSAP);
+            var clausulas = controlDeBoletosValidacionIAManager.ObtenerClausulas(contratoSAP);
             if (clausulas == null || !clausulas.Any())
             {
                 return ApiError(HttpStatusCode.NotFound, "No se encontraron las cláusulas.");

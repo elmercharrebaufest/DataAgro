@@ -18,14 +18,18 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletosValidacionIA
         public DateTime? FechaGeneracion { get; set; }
 
         // Información Comercial
-        public string Proveedor { get; set; }
-        public string Material { get; set; }
         public string BolsaCompraNet { get; set; }
-
+        public string Material { get; set; }
+        public string Proveedor { get; set; }
         // Validación
-        public int? ValidacionBoletosEstadoId { get; set; }
         public string ValidacionBoletosEstado { get; set; }
+        public int? ValidacionBoletosEstadoId { get; set; }
         public DateTime? FechaValidacion { get; set; }
+        public string RequestId { get; set; }
+        public string EstadoValidacionAgente { get; set; }
+        public string AccionesRecomendadas { get; set; }
+        public string Observacion { get; set; }
+
 
     }
 }
