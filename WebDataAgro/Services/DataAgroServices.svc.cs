@@ -29,7 +29,7 @@ namespace WebDataAgro.Services
     [ServiceBehavior(
         InstanceContextMode = InstanceContextMode.PerCall,
         IncludeExceptionDetailInFaults = true)]
-    public class DataAgroServices : IDataAgroServices
+    public class DataAgroServices : IDataAgroServices, IDataAgroServicesFull
     {
         private readonly ILogger logger;
         private readonly IRiesgoComercialManager riesgoComercial;

@@ -448,6 +448,7 @@
     <Compile Include="Jobs\ReportePagosDiferidosHangfireJob.cs" />
     <Compile Include="Jobs\SincronizarResearchHangfireJob.cs" />
     <Compile Include="Jobs\VerificarSolicitudesExtraordinariasPendientesHangfireJob.cs" />
+    <Compile Include="Services\IDataAgroServicesFull.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Atributos\AutorizacionAttribute.cs" />
     <Compile Include="Controllers\AuthController.cs" />
