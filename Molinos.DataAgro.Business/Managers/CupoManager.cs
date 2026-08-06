@@ -5517,7 +5517,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail se detallan los cupos sin activar con Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "Se detallan cupos de hoy sin activar con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "Material" + "</td>" +
                     th + "Fecha de Cupo" + "</td>" +
@@ -5533,11 +5533,9 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales," +
-                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
-                "<br /> <br /> www.molinosagro.com.ar";
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (<a href=\"mailto:" + emailComercial + "\">" + emailComercial + "</a>)." : ".") +
+                "<br /> <br />  Saludos Cordiales   <a href=\"https://www.molinosagro.com.ar\" target=\"_blank\">www.molinosagro.com.ar</a>" +
+                @"<img src='cid:" + res.ContentId + @"'/>";
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
