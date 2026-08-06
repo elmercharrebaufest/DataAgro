@@ -5497,7 +5497,7 @@ namespace Molinos.DataAgro.Business.Managers
                 string pathLogoMail = httpContextManager.ObtenerPathLogoMail();
                 AlternateView cuerpoMailSinCtg = CuerpoMailSinCtg(pathLogoMail, p.ToList(), comercial);
 
-                mailManager.EnviarMail(emailproveedor, "Estado de cupos", "", lista, cuerpoMailSinCtg);
+                mailManager.EnviarMail(emailproveedor, "Reclamo de cupos sin activar", "", lista, cuerpoMailSinCtg);
 
             }
         }
