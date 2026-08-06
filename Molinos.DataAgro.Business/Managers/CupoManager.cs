@@ -5534,7 +5534,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? " (<a href=\"mailto:" + emailComercial + "\">" + emailComercial + "</a>)." : ".") +
-                "<br /> <br />  Saludos Cordiales   <a href=\"https://www.molinosagro.com.ar\" target=\"_blank\">www.molinosagro.com.ar</a>" +
+                "<br /> <br />  Saludos Cordiales   <a href=\"https://www.molinosagro.com.ar\" target=\"_blank\">www.molinosagro.com.ar</a> <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>";
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
