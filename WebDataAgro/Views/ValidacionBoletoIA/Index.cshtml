@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Estado de Validación</label>
+                        <label class="form-label">Estado de Revisión DA</label>
                         <select id="estadoValidacionId" class="form-control">
                             <option value="">Cargando estados...</option>
                         </select>
@@ -58,13 +58,13 @@
             <div class="row form-row">
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Fecha de Validación Desde</label>
+                        <label class="form-label">Fecha de Revisión DA Desde</label>
                         <input id="fechaValidacionDesde" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-4">
                     <div class="form-group">
-                        <label class="form-label">Fecha de Validación Hasta</label>
+                        <label class="form-label">Fecha de Revisión DA Hasta</label>
                         <input id="fechaValidacionHasta" class="form-control" type="date" style="width: stretch" />
                     </div>
                 </div>
@@ -117,16 +117,29 @@
         </div>
         <br />
         <div class="card-body p-0">
-            <!-- Quick Actions Bar -->
-            <div class="quick-actions-bar">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                    </div>
-                    <div class="col-md-6 text-right">
-                    </div>
+            @*<div style="display: flex; justify-content:center">*@
+            <div>
+                <!-- Quick Actions Bar -->
+                <div class="leyenda-item">
+                    <i class="fa fa-circle" style="color:#28A745"></i>
+                    <span style="margin-left: 5px"><strong> OK:</strong> La validación fue exitosa.</span>
+                </div>
+
+                <div class="leyenda-item">
+                    <i class="fa fa-circle" style="color:#DC3545"></i>
+                    <span style="margin-left: 5px"><strong> RECHAZAR:</strong> Se detectaron errores que requieren rechazo.</span>
+                </div>
+
+                <div class="leyenda-item">
+                    <i class="fa fa-circle" style="color:#FFC107"></i>
+                    <span style="margin-left: 5px"><strong> REVISAR:</strong> Se recomienda una revisión manual.</span>
+                </div>
+
+                <div class="leyenda-item">
+                    <i class="fa fa-circle" style="color:#FD7E14"></i>
+                    <span style="margin-left: 5px"><strong> DIFERENCIA:</strong> Se encontraron diferencias.</span>
                 </div>
             </div>
-
             <!-- Grid Container -->
             <div id="boletos-grid" class="grid-container">
                 <div class="loading-spinner" id="loadingSpinner">
@@ -158,6 +171,15 @@
         </div>
     </div>
 </div>
+
+<style>
+    .leyenda-item {
+        display: flex;
+        align-items: center;
+        margin: 6px 0;
+        font-size: 12px;
+    }
+</style>
 
 @* Renderizar vistas parciales de modales *@
 @Html.Partial("_CargarBoletosValidacion")

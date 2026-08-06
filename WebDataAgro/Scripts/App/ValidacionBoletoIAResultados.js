@@ -208,57 +208,57 @@ var ValidacionBoletosResultados = (function () {
         controlAccionesRecomendadas.text('');
         controlObservaciones.val('');
 
-        controlAprobar.on("click", async function (e) {
+        controlAprobar.on("click", function (e) {
+            e.preventDefault();
             var request = {
                 validacionBoletosId: state.validacionBoletosId,
                 observacion: controlObservaciones.val(),
             };
-            BlockUi('Guardando...');
-            try {
-                var response = await MSExecuteOnServerAsync(config.urls.aprobarValidacionResultado, request);
-                if (!response) return;
-                if (response.success) {
-                    MensInfo(response.message);
-                    this.cerrar();
-                } else {
-                    MensErr(response.message);
+            Confirma('¿Desea aprobar la revision del boleto ' + state.contratoSAP + "?", async function () {
+                BlockUi('Aprobando Boleto...');
+                try {
+                    var response = await MSExecuteOnServerAsync(config.urls.aprobarValidacionResultado, request);
+                    if (!response) return;
+                    if (response.success) {
+                        MensInfo(response.message);
+                        ValidacionBoletosResultados.cerrar();
+                    } else {
+                        MensErr(response.message);
+                    }
+                } catch (e) {
+                    console.error("Error al aprobar la validación de resultados:", e);
+                } finally {
+                    $.unblockUI();
+                    state.cargando = false;
                 }
-            } catch (e) {
-                console.error("Error al aprobar la validación de resultados:", e);
-            } finally {
-                $.unblockUI();
-                state.cargando = false;
-            }
+            });
         });
 
-        controlRechazar.on("click", async function (e) {
+        controlRechazar.on("click", function (e) {
+            e.preventDefault();
             var request = {
                 validacionBoletosId: state.validacionBoletosId,
                 observacion: controlObservaciones.val(),
             };
-            BlockUi('Guardando...');
-            try {
-                var response = await MSExecuteOnServerAsync(config.urls.rechazarValidacionResultado, request);
-                if (!response) return;
-                if (response.success) {
-                    MensInfo(response.message);
-                    this.cerrar();
-                } else {
-                    MensErr(response.message);
+            Confirma('¿Desea rechazar la revision del boleto ' + state.contratoSAP + "?", async function () {
+                BlockUi('Rechazando Boleto...');
+                try {
+                    var response = await MSExecuteOnServerAsync(config.urls.rechazarValidacionResultado, request);
+                    if (!response) return;
+                    if (response.success) {
+                        MensInfo(response.message);
+                        ValidacionBoletosResultados.cerrar();
+                    } else {
+                        MensErr(response.message);
+                    }
+                } catch (e) {
+                    console.error("Error al rechazar la validación de resultados:", e);
+                } finally {
+                    $.unblockUI();
+                    state.cargando = false;
                 }
-            } catch (e) {
-                console.error("Error al rechazar la validación de resultados:", e);
-            } finally {
-                $.unblockUI();
-                state.cargando = false;
-            }
+            });
         });
-
-        controlCancelar.on("click", function (e) {
-            $(config.modalId).modal("hide");
-        });
-
-
     }
     // ======================
     // API pública
