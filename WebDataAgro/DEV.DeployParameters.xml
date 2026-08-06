@@ -47,6 +47,6 @@
 
   <!-- Parametros para servicio de Agente IA -->
   <setParameter name="UrlBaseControlBoletosIa Key" value="http://localhost:8000" />
-  <setParameter name="ApiTokenControlBoletosIa Key" value="" />
+  <setParameter name="ApiTokenControlBoletosIa Key" value="valorParaEvitarErrorDeCICD" />
   
 </parameters>
