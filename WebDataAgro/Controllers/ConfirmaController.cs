@@ -212,7 +212,7 @@ namespace WebDataAgro.Controllers
                     filtrosBusqueda.NegocioSAP = contratoSAP;
                 }
 
-                var resultado = confirmaManager.TraerNegociosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal);
+                var resultado = confirmaManager.TraerNegociosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal , true);
 
                 return Json(new { Data = resultado.Item1, Total = resultado.Item2 });
             }
