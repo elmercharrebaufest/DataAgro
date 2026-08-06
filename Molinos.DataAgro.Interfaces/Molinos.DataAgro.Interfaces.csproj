@@ -219,6 +219,7 @@
     <Compile Include="Agent\IConfirmaLoteDocumentosAgent.cs" />
     <Compile Include="Agent\IConfirmaLoteDocumentosAsyncAgent.cs" />
     <Compile Include="Agent\IConsultarAcuerdosGeneradosAgent.cs" />
+    <Compile Include="Agent\IControlBoletosIaAgent.cs" />
     <Compile Include="Agent\IDatosCertificacionControlBoletoAgent.cs" />
     <Compile Include="Agent\IModificacionContratoControlBoletoAgent.cs" />
     <Compile Include="Agent\IScoringCuposAgent.cs" />
@@ -289,7 +290,7 @@
     <Compile Include="Managers\IControlDeBoletosEstadoManager.cs" />
     <Compile Include="Managers\IControlDeBoletosManager.cs" />
     <Compile Include="Managers\IControlDeBoletosSAPManager.cs" />
-    <Compile Include="Managers\IControlDeBoletosValidacionIAManagerIA.cs" />
+    <Compile Include="Managers\IControlDeBoletosValidacionIAManager.cs" />
     <Compile Include="Managers\ICupoNoPropioManager.cs" />
     <Compile Include="Managers\IFAQManager.cs" />
     <Compile Include="Managers\IHabilitacionBoletoManager.cs" />

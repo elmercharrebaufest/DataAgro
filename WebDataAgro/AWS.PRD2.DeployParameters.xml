@@ -93,4 +93,9 @@
   <setParameter name="Default9 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaTrackingInteraccionesFechaService.svc" />
   <setParameter name="Default10 Endpoint Confirma" value="https://services.confirma.com.ar/ConsultaDocumentosBorradorService.svc" />
   <setParameter name="Default11 Endpoint Confirma" value="https://services.confirma.com.ar/LoteBorradorService.svc" />
+
+  <!-- Parametros para servicio de Agente IA -->
+  <setParameter name="UrlBaseControlBoletosIa Key" value="http://localhost:8000" />
+  <setParameter name="ApiTokenControlBoletosIa Key" value="" />
+
 </parameters>

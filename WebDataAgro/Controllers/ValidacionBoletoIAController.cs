@@ -26,14 +26,14 @@ namespace WebDataAgro.Controllers
 {
     public class ValidacionBoletoIAController : Controller
     {
-        private readonly IControlDeBoletosValidacionIAManagerIA controlDeBoletosValidacionIAManagerIA;
+        private readonly IControlDeBoletosValidacionIAManager controlDeBoletosValidacionIAManager;
         private static readonly object _cacheLock = new object();
         private const int CACHE_DURATION_MINUTES = 5;
         private const string VALID_BOLETOS_ESTADOS_CACHE_KEY = "CtrlValidacion_Estados_Cache";
 
-        public ValidacionBoletoIAController(IControlDeBoletosValidacionIAManagerIA controlDeBoletosValidacionIAManagerIA)
+        public ValidacionBoletoIAController(IControlDeBoletosValidacionIAManager controlDeBoletosValidacionIAManagerIA)
         {
-            this.controlDeBoletosValidacionIAManagerIA = controlDeBoletosValidacionIAManagerIA;
+            this.controlDeBoletosValidacionIAManager = controlDeBoletosValidacionIAManagerIA;
         }
 
         #region Vistas Principales
@@ -60,9 +60,8 @@ namespace WebDataAgro.Controllers
             return PartialView("_CargarBoletosValidacion");
         }
         [HttpGet]
-        public PartialViewResult _ResultadoBoletosValidacion(int id)
+        public PartialViewResult _ResultadoBoletosValidacion()
         {
-            ViewBag.NegocioId = id;
             return PartialView("_ResultadoBoletosValidacion");
         }
         #endregion
@@ -80,7 +79,7 @@ namespace WebDataAgro.Controllers
                         cachedData = HttpContext.Cache[VALID_BOLETOS_ESTADOS_CACHE_KEY] as List<SelectListItem>;
                         if (cachedData == null)
                         {
-                            var listaEstados = this.controlDeBoletosValidacionIAManagerIA.ListarEstados();
+                            var listaEstados = this.controlDeBoletosValidacionIAManager.ListarEstados();
                             cachedData = listaEstados.Select(x => new SelectListItem
                             {
                                 Text = x.Descripcion,
@@ -104,7 +103,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var boletos = this.controlDeBoletosValidacionIAManagerIA.GetValidacionBoletoSap(contratoSAP);
+                var boletos = this.controlDeBoletosValidacionIAManager.GetValidacionBoletoSap(contratoSAP);
                 var result = new
                 {
                     Data = boletos
@@ -118,10 +117,30 @@ namespace WebDataAgro.Controllers
                 return Json(new { Data = new List<ValidacionDeBoletosIAConsultaDto>() }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpGet]
+        public JsonResult GetValidacionBoletosResultados(int validacionBoletosId)
+        {
+            try
+            {
+                var resultados = this.controlDeBoletosValidacionIAManager.GetValidacionResultadosPorContrato(validacionBoletosId);
+                var result = new
+                {
+                    Data = resultados,
+                    Total = resultados.Count()
+                };
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error GetValidacionBoletosResultados : {ex.Message}");
+                return Json(new { Data = new List<ValidacionBoletosResultadoDto>() }, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpPost]
         public JsonResult GetValidacionBoletosPendientes(ValidacionBoletoFiltroBusquedaDto filtros)
         {
-            var boletos = this.controlDeBoletosValidacionIAManagerIA.GetValidacionBoletosPendientes(filtros);
+            var boletos = this.controlDeBoletosValidacionIAManager.GetValidacionBoletosPendientes(filtros);
             var result = new
             {
                 Data = boletos,
@@ -152,5 +171,37 @@ namespace WebDataAgro.Controllers
 
             return Json(result);
         }
+        [HttpPost]
+        public JsonResult RechazarValidacionResultado(AccionesValidacionBoletosDto accionesValidacionBoletos)
+        {
+            try
+            {
+                var resultado = controlDeBoletosValidacionIAManager.RechazarValidacionResultado(accionesValidacionBoletos);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Rechazo de resultados correctamente";
+                return Json(new { success = success, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al rechazar la validación de resultados: " + ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult AprobarValidacionResultado(AccionesValidacionBoletosDto accionesValidacionBoletos)
+        {
+            try
+            {
+                var resultado = controlDeBoletosValidacionIAManager.AprobarValidacionResultado(accionesValidacionBoletos);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Aprobacion de resultados correctamente";
+                return Json(new { success = success, message = mensaje });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al aprobar la validación de resultados: " + ex.Message });
+            }
+        }
+
+
     }
 }

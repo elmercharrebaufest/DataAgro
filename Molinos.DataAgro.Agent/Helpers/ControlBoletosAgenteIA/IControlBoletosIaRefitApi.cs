@@ -1,7 +1,7 @@
 using Refit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Molinos.DataAgro.Entities.ControlBoletosAgenteIA;
 namespace Molinos.DataAgro.Agent.Helpers.ControlBoletosAgenteIA
 {
     [Headers("Accept: application/json")]

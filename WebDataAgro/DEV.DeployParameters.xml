@@ -45,4 +45,8 @@
   <!--Parametro para nueva version de boletos-->
   <setParameter name="EmailCasillaBoletos Key" value="dataagro@molinosagro.com.ar"/>
 
+  <!-- Parametros para servicio de Agente IA -->
+  <setParameter name="UrlBaseControlBoletosIa Key" value="http://localhost:8000" />
+  <setParameter name="ApiTokenControlBoletosIa Key" value="" />
+  
 </parameters>

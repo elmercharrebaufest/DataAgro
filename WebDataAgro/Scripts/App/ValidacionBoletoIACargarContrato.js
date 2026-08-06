@@ -6,7 +6,6 @@ var ValidacionBoletosCargarContrato = (function () {
     // ======================
     var config = {
         urls: {
-            getTracking: "/ValidacionBoletoIA/GetTrackingBoleto",
             getValidacionBoletoSap: "/ValidacionBoletoIA/GetValidacionBoletoSap",
         },
         modalId: "#modalCargarBoleto",
@@ -98,7 +97,7 @@ var ValidacionBoletosCargarContrato = (function () {
 
         abrir: function () {
 
-            var url = "/ValidacionBoletoIA/_CargarBoletosValidacion";
+            var url = "/ValidacionBoletoIA/_CargarBoletosValidacion?id=12";
 
             $(config.modalId).remove();
 

@@ -316,6 +316,7 @@
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYTres.cs" />
     <Compile Include="ClausulasBoleto\Confirma\ClausulaConfirmaVeinteYUno.cs" />
     <Compile Include="Common\Enums\EnumConfirmaAltaEstadoLote.cs" />
+    <Compile Include="Common\Enums\EnumValidacionBoletosEstado.cs" />
     <Compile Include="Dto\AltaMasivaCupoDto.cs" />
     <Compile Include="Common\Enums\EnumConfirmaEstadoDocumento.cs" />
     <Compile Include="Dto\BoletoFiltroBusquedaDto.cs" />
@@ -333,6 +334,8 @@
     <Compile Include="Dto\BuscarMaterialesDto.cs" />
     <Compile Include="Dto\ComercialCambioDePerfilDto.cs" />
     <Compile Include="Dto\ContactoComercialAuditoriaDto.cs" />
+    <Compile Include="Dto\ControlBoletosAgenteIA\ControlBoletosIaModels.cs" />
+    <Compile Include="Dto\ControlDeBoletosValidacionIA\AccionesValidacionBoletosDto.cs" />
     <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionDeBoletosIAConsultaDto.cs" />
     <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletoFiltroBusquedaDto.cs" />
     <Compile Include="Dto\ControlDeBoletosValidacionIA\ValidacionBoletosDto.cs" />

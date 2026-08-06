@@ -21,7 +21,7 @@ using System.Web.Http.Results;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-    public class ControlDeBoletosValidacionIAManagerIA: IControlDeBoletosValidacionIAManagerIA
+    public class ControlDeBoletosValidacionIAManager : IControlDeBoletosValidacionIAManager
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioClausulasGenericos servicioClausulasGenericos;
         private readonly IServicioClausulasConfirma servicioClausulaConfirma;
 
-        public ControlDeBoletosValidacionIAManagerIA(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IServicioClausulasCartaOferta servicioClausulasCartaOferta, IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos, IServicioClausulasConfirma servicioClausulaConfirma)
+        public ControlDeBoletosValidacionIAManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IServicioClausulasCartaOferta servicioClausulasCartaOferta, IServicioClausulasBoletoFisico servicioClausulasBoletoFisico, IServicioClausulasGenericos servicioClausulasGenericos, IServicioClausulasConfirma servicioClausulaConfirma)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             List<ValidacionDeBoletosIADatosContratoDto> datosContrato = null;
 
-            var negocio = repositorio.Obtener<Negocio>(x=> x.ContratoSAP == contratoSAP);
+            var negocio = repositorio.Obtener<Negocio>(x => x.ContratoSAP == contratoSAP);
             if (negocio == null)
             {
                 throw new Exception($"No se encontró un negocio con el contrato SAP: {contratoSAP}");
@@ -81,6 +81,142 @@ namespace Molinos.DataAgro.Business.Managers
             return datosContrato;
         }
 
+        public Resultado RegistrarValidacion(ValidacionBoletosDto validacionBoletosDto)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var validacionBoletos = repositorio.Obtener<ValidacionBoletos>(x => x.ControlDeBoletosId == validacionBoletosDto.ControlDeBoletosId);
+                if (validacionBoletos == null)
+                {
+                    validacionBoletos = new ValidacionBoletos()
+                    {
+                        ControlDeBoletosId = validacionBoletosDto.ControlDeBoletosId,
+                        ValidacionBoletosEstadoId = (int) EnumValidacionBoletosEstado.PendienteRevision,
+                        FechaCreacion = DateTime.Now,
+                        EstadoValidacionAgente = validacionBoletosDto.EstadoValidacionAgente,
+                        AccionesRecomendadas = validacionBoletosDto.AccionesRecomendadas,
+                        RequestId = validacionBoletosDto.RequestId,
+                        UserId = validacionBoletosDto.UserId,
+                        RespuestaAgente = validacionBoletosDto.RespuestaAgente,
+                    };
+                    repositorio.Agregar(validacionBoletos);
+                    repositorio.GuardarCambios();
+                }
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+        public Resultado RegistrarValidacionResultado(ValidacionBoletosResultadoDto validacionBoletosDto)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var validacionBoletosResultado = repositorio.Obtener<ValidacionBoletosResultado>(x => x.ValidacionBoletosId == validacionBoletosDto.ValidacionBoletosId &&
+                                                                                                      x.Campo == validacionBoletosDto.Campo
+                                                                                                );
+                if (validacionBoletosResultado == null)
+                {
+                    var validacionBoletos = repositorio.Obtener<ValidacionBoletos>(x => x.Id == validacionBoletosDto.ValidacionBoletosId);
+
+
+                    validacionBoletosResultado = new ValidacionBoletosResultado()
+                    {
+                        ValidacionBoletos = validacionBoletos,
+                        Campo = validacionBoletosDto.Campo,
+                        ValorDocumento = validacionBoletosDto.ValorDocumento,
+                        ValorSistema = validacionBoletosDto.ValorSistema,
+                        Mensaje = validacionBoletosDto.Mensaje,
+                        Severidad = validacionBoletosDto.Severidad,
+                        TipoCoincidencia = validacionBoletosDto.TipoCoincidencia,
+                        ValidacionBoletosId = validacionBoletosDto.ValidacionBoletosId,
+                        FechaCreacion = DateTime.Now,
+                        Resultado = validacionBoletosDto.Resultado
+                    };
+                    repositorio.Agregar(validacionBoletosResultado);
+                    repositorio.GuardarCambios();
+                }
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+
+        public Resultado AprobarValidacionResultado(AccionesValidacionBoletosDto accionesValidacionBoletos)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var validacionBoletos = repositorio.Obtener<ValidacionBoletos>(x => x.Id == accionesValidacionBoletos.ValidacionBoletosId);
+                validacionBoletos.ValidacionBoletosEstadoId = (int)EnumValidacionBoletosEstado.Aprobado;
+                validacionBoletos.Observacion = accionesValidacionBoletos.Observacion;
+                validacionBoletos.FechaModificacion = DateTime.Now;
+                repositorio.GuardarCambios();
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+        public Resultado RechazarValidacionResultado(AccionesValidacionBoletosDto accionesValidacionBoletos)
+        {
+            var oResultado = new Resultado();
+            try
+            {
+                var validacionBoletos = repositorio.Obtener<ValidacionBoletos>(x => x.Id == accionesValidacionBoletos.ValidacionBoletosId);
+                validacionBoletos.ValidacionBoletosEstadoId = (int)EnumValidacionBoletosEstado.Rechazado;
+                validacionBoletos.Observacion = accionesValidacionBoletos.Observacion;
+                validacionBoletos.FechaRechazo = DateTime.Now;
+                validacionBoletos.FechaModificacion = DateTime.Now;
+                repositorio.GuardarCambios();
+                return oResultado;
+            }
+            catch (Exception ex)
+            {
+                oResultado.Errores.Add(new ErrorMessage() { Message = ex.Message });
+                logger.Error(ex.Message);
+                return oResultado;
+            }
+        }
+        public List<ValidacionBoletosResultadoDto> GetValidacionResultadosPorContrato(int validacionBoletosId)
+        {
+            var listadoValidacionResultados = new List<ValidacionBoletosResultadoDto>();
+            var validacionBoletosResultados = repositorio.Listar<ValidacionBoletosResultado>(x => x.ValidacionBoletosId == validacionBoletosId);
+            if (validacionBoletosResultados != null)
+            {
+                foreach(var item in validacionBoletosResultados)
+                {
+                    listadoValidacionResultados.Add(new ValidacionBoletosResultadoDto()
+                    {
+                        Id = item.Id,
+                        ValidacionBoletosId = item.ValidacionBoletosId,
+                        Campo = item.Campo,
+                        ValorDocumento = item.ValorDocumento,
+                        ValorSistema = item.ValorSistema,
+                        Resultado = item.Resultado,
+                        Severidad = item.Severidad,
+                        Mensaje = item.Mensaje,
+                        TipoCoincidencia = item.TipoCoincidencia,
+                        FechaCreacion = item.FechaCreacion
+                    });
+                }
+            }
+            return listadoValidacionResultados;
+        }
+
+
         #region Metodos Publicos para el Api
         public ValidacionDeBoletosIADatosContratoDto ObtenerDatosDeContrato(string contratoSAP)
         {
@@ -92,7 +228,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.Material = contrato.Material;
                 datosContrato.Precio = contrato.Precio;
                 datosContrato.Destino = contrato.DestinoDescripcion;
-                datosContrato.Cosecha = contrato.Campania.Replace("-","/");
+                datosContrato.Cosecha = contrato.Campania.Replace("-", "/");
                 datosContrato.TipoBoleto = contrato.BoletoDescripcion;
                 datosContrato.FechaOperacion = contrato.FechaOperacion != null ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : string.Empty;
                 datosContrato.PeriodoEntrega = contrato.FechaDesde.Value.ToString("dd/MM/yyyy") + " - " + contrato.FechaHasta.Value.ToString("dd/MM/yyyy");
@@ -174,8 +310,8 @@ namespace Molinos.DataAgro.Business.Managers
         /// Procesa un conjunto de cláusulas genéricas, ejecutando el servicio correspondiente
         /// </summary>
         private List<ValidacionDeBoletosIAResultadoClausulaDto> ProcesorClausulas<T>(
-            IEnumerable<T> clausulas, 
-            BasicoContrato basico, 
+            IEnumerable<T> clausulas,
+            BasicoContrato basico,
             Func<T, ResultadoClausula> devolverClausula) where T : class
         {
             Inicializar(basico);
@@ -186,7 +322,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 dynamic clausulaConBasico = item;
                 clausulaConBasico.Basico = basico;
-                
+
                 var clausula = devolverClausula(item);
                 if (clausula != null && !string.IsNullOrEmpty(clausula.Texto))
                 {
@@ -201,8 +337,8 @@ namespace Molinos.DataAgro.Business.Managers
             return AgregarClausulasGenericas(basico, orden, result);
         }
         private List<ValidacionDeBoletosIAResultadoClausulaDto> AgregarClausulasGenericas(
-            BasicoContrato basico, 
-            int ordenInicial, 
+            BasicoContrato basico,
+            int ordenInicial,
             List<ValidacionDeBoletosIAResultadoClausulaDto> result)
         {
             var clausulas = repositorio.Listar<ClausulaGenericos>();
@@ -264,8 +400,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var tipoRequerido in tiposRequeridos)
             {
-                var existe = descuentos.Any(x => 
-                    x.TipoPeriodoDBId == tipoRequerido.TipoPeriodo && 
+                var existe = descuentos.Any(x =>
+                    x.TipoPeriodoDBId == tipoRequerido.TipoPeriodo &&
                     x.TipoDBId == tipoRequerido.Tipo);
 
                 if (!existe)
@@ -279,7 +415,7 @@ namespace Molinos.DataAgro.Business.Managers
                     });
                 }
             }
-        }       
+        }
         #endregion
 
     }

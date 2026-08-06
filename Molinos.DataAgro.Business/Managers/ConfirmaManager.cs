@@ -959,7 +959,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var queryPendientes = AplicarOrden(data.AsQueryable(), filtro.Sort);
             return (queryPendientes.ToList(), totalPendientes);
         }
-        public (List<BasicoConfirma> Data, int Total) TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo)
+        public (List<BasicoConfirma> Data, int Total) TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo , bool Excel = false)
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerConfirmasConFiltro(filtro, equipo)) ?? throw new InvalidOperationException("El resultado de la consulta es nulo.");
             var data = result as List<BasicoConfirma> ?? result.ToList();
@@ -995,7 +995,12 @@ namespace Molinos.DataAgro.Business.Managers
                 // Paginar primero para llamar a la RFC solo sobre los registros de la página
                 var total = data.Count;
                 var query = AplicarOrden(data.AsQueryable(), filtro.Sort);
-                var pagina = query.Skip(filtro.Skip).Take(filtro.Take).ToList();
+                var pagina = query.ToList();
+                if (Excel == false)
+                {
+                     pagina = query.Skip(filtro.Skip).Take(filtro.Take).ToList();
+                }
+                
                 foreach (var confirma in pagina)
                 {
                     confirma.Estado_Version = ObtenerEstadoBoleto(confirma);

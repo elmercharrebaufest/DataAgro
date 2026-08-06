@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ResultadoClausula> ObtenerClausulas(BasicoContrato basico);
         string CorregirFormatoFecha(string cadena);
          (List<BasicoConfirma> Data, int Total) TraerNegociosPendientesFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo);
-        (List<BasicoConfirma> Data, int Total) TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo);
+        (List<BasicoConfirma> Data, int Total) TraerNegociosFiltrados(ConfirmaFiltroBusquedaDto filtro, List<int> equipo, bool Excel = false);
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
         List<string> ListarComerciales();
