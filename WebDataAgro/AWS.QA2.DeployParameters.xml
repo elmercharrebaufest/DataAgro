@@ -2,8 +2,8 @@
 <parameters>
   <setParameter name="IIS Web Application Name" value="QA2" />
 
-  <setParameter name="DataAgro-Web.config Connection String" value="Data Source=dataagroqa2.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; User ID=DATAAGRODEVUSR; Password=DAT44GR0D3VUSR!; Initial Catalog=DataAgroQA2" />
-  <setParameter name="HfContexto-Web.config Connection String" value="Data Source=dataagroqa2.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; User ID=DATAAGRODEVUSR; Password=DAT44GR0D3VUSR!; Initial Catalog=DataAgroHangFireQA2" />
+  <setParameter name="DataAgro-Web.config Connection String" value="Data Source=dataagroqa-de.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; User ID=DATAAGRODEVUSR; Password=DAT44GR0D3VUSR!; Initial Catalog=DataAgro" />
+  <setParameter name="HfContexto-Web.config Connection String" value="Data Source=dataagroqa-de.c65eyk8w0u6c.us-east-1.rds.amazonaws.com,1433; User ID=DATAAGRODEVUSR; Password=DAT44GR0D3VUSR!; Initial Catalog=DataAgroHangFireQA2" />
 
   <setParameter name="SmtpServer Key" value="smtpsap.molinosagro.com.ar" />
   <setParameter name="SmtpServerPort Key" value="25" />
