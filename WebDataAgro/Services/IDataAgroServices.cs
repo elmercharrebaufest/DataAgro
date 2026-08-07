@@ -7,7 +7,7 @@ using System.ServiceModel;
 
 namespace WebDataAgro.Services
 {
-    [ServiceContract]
+    [ServiceContract(Namespace = "http://dataagro.com/services/DataAgroServices")]
     public interface IDataAgroServices
     {
         [OperationContract]
