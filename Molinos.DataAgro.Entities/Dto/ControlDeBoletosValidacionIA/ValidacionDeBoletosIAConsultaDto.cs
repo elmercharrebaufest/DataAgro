@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletosValidacionIA
         public string ValidacionBoletosEstado { get; set; }
         public int? ValidacionBoletosEstadoId { get; set; }
         public DateTime? FechaValidacion { get; set; }
+        public DateTime? FechaRechazo { get; set; }
         public string RequestId { get; set; }
         public string EstadoValidacionAgente { get; set; }
         public string AccionesRecomendadas { get; set; }

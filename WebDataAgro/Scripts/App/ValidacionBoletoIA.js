@@ -9,9 +9,7 @@ var ControlBoletos = (function () {
             getBolsaCompraNet: "/ControlDeBoletos/GetBolsaCompraNet",
             getEstados: "/ValidacionBoletoIA/GetEstadosValidacion",
             getValidacionBoletosPendientes: "/ValidacionBoletoIA/GetValidacionBoletosPendientes",
-            exportBoletosExcel: "/ValidacionBoletoIA/ExportarBoletosValidadosExcel",
-            cargarBoletosValidacion: "/ValidacionBoletoIA/CargarBoletosValidacion",
-        }
+            exportBoletosExcel: "/ValidacionBoletoIA/ExportarBoletosValidadosExcel"        }
     };
 
     let controlMaterial = $("#frmValidacionBoletos #materialId");
@@ -165,6 +163,18 @@ var ControlBoletos = (function () {
                 return;
             }
 
+            // Solo la columna Proveedor ajusta su ancho al contenido;
+            // el resto conserva el ancho definido en la columna.
+            var isProveedor = colDef && colDef.field === "Proveedor";
+
+            if (!isProveedor) {
+                var definedW = (colDef && colDef.width) ? colDef.width : 80;
+                $headerCols.eq(colIdx).css("width", definedW + "px");
+                $contentCols.eq(colIdx).css("width", definedW + "px");
+                state.columnWidths.push(definedW + "px");
+                return;
+            }
+
             var headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
             var maxPx = medirTexto(headerText, "bold 13px Arial") + 32;
 
@@ -216,7 +226,6 @@ var ControlBoletos = (function () {
 
             state.datosInicializados = true;
         },
-
         cargarDatosIniciales: async function () {
             await Promise.all([
                 cargarDropdown(
@@ -245,7 +254,6 @@ var ControlBoletos = (function () {
                 ),
             ]);
         },
-
         configurarEventos: function () {
             var self = this;
 
@@ -299,13 +307,20 @@ var ControlBoletos = (function () {
                     self.cargarBoleto();
                 });
         },
-
         inicializarGrid: function () {
             var self = this;
-
             inyectarEstilosGrid();
-
             try {
+
+                $("#boletos-grid").kendoTooltip({
+                    filter: ".acciones-tooltip",
+                    position: "top",
+                    width: 400,
+                    content: function (e) {
+                        return e.target.data("texto");
+                    }
+                });
+
                 state.grid = $("#boletos-grid")
                     .kendoGrid({
                         dataSource: {
@@ -362,6 +377,7 @@ var ControlBoletos = (function () {
                                         BolsaCompraNet: { type: "string" },
                                         ValidacionBoletosEstado: { type: "string" },
                                         FechaValidacion: { type: "date" },
+                                        FechaRechazo: { type: "date" },
                                     },
                                 },
                             },
@@ -401,7 +417,6 @@ var ControlBoletos = (function () {
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [25, 50, 100, 200],
                             buttonCount: 5,
                             messages: {
                                 display: "Mostrando {0}-{1} de {2} registros",
@@ -419,6 +434,33 @@ var ControlBoletos = (function () {
                         navigatable: false,
                         columns: [
                             {
+                                template: function (dataItem) {
+
+                                    var color = "";
+
+                                    switch (dataItem.EstadoValidacionAgente) {
+                                        case "OK":
+                                            color = "#28A745";
+                                            break;
+                                        case "RECHAZAR":
+                                            color = "#DC3545";
+                                            break;
+                                        case "REVISAR":
+                                            color = "#FFC107";
+                                            break;
+                                        case "DIFERENCIA":
+                                            color = "#FD7E14";
+                                            break;
+                                    }
+
+                                    return '<i class="fa fa-circle" style="color:' + color + ';font-size:16px;" ' +
+                                        'title="' + dataItem.EstadoValidacionAgente + '"></i>';
+                                },
+                                attributes: {
+                                    style: "text-align:center;"
+                                }                                
+                            },
+                            {
                                 title: "Información del Boleto",
                                 headerAttributes: {
                                     style: "text-align:center;font-weight:bold;"
@@ -427,7 +469,7 @@ var ControlBoletos = (function () {
                                     {
                                         field: "TipoBoleto",
                                         title: "Boleto",
-                                        width: 80,
+                                        width: 100,
                                     },
                                     {
                                         field: "ContratoSAP",
@@ -443,7 +485,7 @@ var ControlBoletos = (function () {
                                     {
                                         field: "FechaGeneracion",
                                         title: "Fecha Generación",
-                                        width: 140,
+                                        width: 150,
                                         template: "#= formatearFecha(FechaGeneracion) #",
                                     },
                                 ]
@@ -472,27 +514,60 @@ var ControlBoletos = (function () {
                                 ]
                             },
                             {
-                                title: "Validación",
+                                title: "Revisión DataAgro",
                                 headerAttributes: {
                                     style: "text-align:center;font-weight:bold;"
                                 },
                                 columns: [
                                     {
                                         field: "ValidacionBoletosEstado",
-                                        title: "Estado Validación",
-                                        width: 135,
+                                        title: "Estado Revisión",
+                                        width: 150,
                                     },
                                     {
                                         field: "FechaValidacion",
-                                        title: "Fecha Validación",
-                                        width: 130,
+                                        title: "Fecha Revisión",
+                                        width: 120,
                                         template: "#= formatearFecha(FechaValidacion) #",
+                                    },
+                                    {
+                                        field: "FechaRechazo",
+                                        title: "Fecha Rechazo",
+                                        width: 120,
+                                        template: "#= formatearFecha(FechaRechazo) #",
+                                    },
+                                ]
+                            },
+                            {
+                                title: "Validación Agente IA",
+                                headerAttributes: {
+                                    style: "text-align:center;font-weight:bold;"
+                                },
+                                columns: [
+                                    {
+                                        field: "EstadoValidacionAgente",
+                                        title: "Estado Validación",
+                                        width: 150,
+                                    },
+                                    {
+                                        field: "AccionesRecomendadas",
+                                        title: "Acciones Recomendadas",
+                                        width: 180,
+                                        template: function (dataItem) {
+
+                                            var texto = dataItem.AccionesRecomendadas || "";
+
+                                            return '<span class="acciones-tooltip" data-texto="' +
+                                                kendo.htmlEncode(texto) + '">' +
+                                                kendo.htmlEncode(texto.length > 20 ? texto.substring(0, 20) + "..." : texto) +
+                                                '</span>';
+                                        }
                                     },
                                 ]
                             },
                             {
                                 title: "Acciones",
-                                width: 80,
+                                width: 100,
                                 template: function (dataItem) {
                                     return self.generarBotonesAccion(dataItem);
                                 },
@@ -500,6 +575,9 @@ var ControlBoletos = (function () {
                                 filterable: false,
                                 headerAttributes: {
                                     style: "text-align:center;font-weight:bold;"
+                                },
+                                attributes: {
+                                    style: "text-align:center;"
                                 }
                             },
                         ],
@@ -509,7 +587,6 @@ var ControlBoletos = (function () {
                                 autoFitColumnas(e.sender);
                                 state.columnasAjustadas = true;
                             }
-                            self.configurarEventosGrid();
                         },
                     })
                     .data("kendoGrid");
@@ -527,13 +604,7 @@ var ControlBoletos = (function () {
                 mostrarSpinner(false);
             }
         },
-
-        configurarEventosGrid: function () {
-        },
-
         obtenerFiltros: function () {
-
-
             return {
                 negocioSAP: controlNegocioSAP.val().trim() || null,
                 materialId: controlMaterial.val() || null,
@@ -544,7 +615,6 @@ var ControlBoletos = (function () {
                 bolsaId: controlBolsaCompraNet.val() || null,
             };
         },
-
         validarFiltros: function () {
             var filtros = this.obtenerFiltros();
 
@@ -560,7 +630,6 @@ var ControlBoletos = (function () {
 
             return !(sinFiltrosPrincipales && sinFiltrosSecundarios);
         },
-
         filtrarBoletos: function () {
             if (!this.validarFiltros()) {
                 mostrarMensaje("Error de Validación", "No se ha seleccionado ningún filtro para la búsqueda.", "warning");
@@ -579,7 +648,6 @@ var ControlBoletos = (function () {
                 this.inicializarGrid();
             }
         },
-
         limpiarFiltros: function () {
             controlNegocioSAP.val("");
             controlMaterial.val("");
@@ -599,7 +667,6 @@ var ControlBoletos = (function () {
 
             this.filtrarBoletos();
         },
-
         exportarExcel: function () {
             var filtros = this.obtenerFiltros();
             var form = document.createElement("form");
@@ -655,15 +722,14 @@ var ControlBoletos = (function () {
                 });
             });
         },
-
         generarBotonesAccion: function (data) {
 
             var botones = [];
             botones.push(`
                 <button class="btn btn-sm btn-outline-secondary btn-acciones tooltip-custom"
                     onclick="ValidacionBoletosResultados.abrir(${data.Id}, '${data.ContratoSAP}', '${data.BolsaCompraNet}', '${data.Material}', '${data.Proveedor}', '${data.EstadoValidacionAgente}', '${data.AccionesRecomendadas}', '${formatearFecha(data.FechaValidacion)}')"
-                    title="Visualizar Contrato">
-                    <i class="fa fa-info-circle"></i>
+                    title="Visualizar validación del boleto">
+                    <i class="fa fa-eye"></i>
                     <span class="tooltiptext"></span>
                 </button>
             `);
@@ -671,94 +737,7 @@ var ControlBoletos = (function () {
             return (
                 '<div class="btn-group" role="group">' + botones.join(" ") + "</div>"
             );
-        },
-
-        visualizarContrato: async function (id) {
-            // Mostrar loader o indicador de carga
-
-            if (!id || id <= 0) {
-                alert("Error: ID de contrato inválido");
-                return;
-            }
-
-            var loadingMessage = "Cargando datos del contrato...";
-            if (typeof showLoading === "function") {
-                showLoading(loadingMessage);
-            }
-
-            try {
-                var response = await MSExecuteGetOnServerAsync(config.urls.getContrato, { id: id });
-
-                if (!response) {
-                    alert("Error al obtener los datos del contrato: respuesta vacía");
-                    return;
-                }
-
-                // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
-                var contrato = null;
-
-                if (response.Data !== undefined) {
-                    if (Array.isArray(response.Data)) {
-                        // Es un array, tomar el primer elemento
-                        contrato = response.Data.length > 0 ? response.Data[0] : null;
-                    } else if (
-                        typeof response.Data === "object" &&
-                        response.Data !== null
-                    ) {
-                        // Es un objeto, usar directamente
-                        contrato = response.Data;
-                    }
-                } else {
-                    // La respuesta directamente es el contrato
-                    contrato = response;
-                }
-
-                if (contrato && typeof contrato === "object") {
-                    // Verificar que ModalVisualizar esté disponible
-                    if (
-                        typeof ModalVisualizar !== "undefined" &&
-                        typeof ModalVisualizar.abrir === "function"
-                    ) {
-                        ModalVisualizar.abrir(contrato);
-                    } else {
-                        console.error("ModalVisualizar no está disponible");
-                        alert("Error: El módulo de visualización no está cargado");
-                    }
-                } else {
-                    console.error("No se pudo extraer el contrato de la respuesta");
-                    alert("No se encontró el contrato solicitado.");
-                }
-            } catch (error) {
-                console.error("Error al obtener detalle del contrato:", error);
-
-                var mensajeError = "Error al comunicarse con el servidor.";
-                var status = error && error.xhr ? error.xhr.status : 0;
-                if (status === 404) {
-                    mensajeError = "No se encontró el contrato solicitado.";
-                } else if (status === 500) {
-                    mensajeError = "Error interno del servidor.";
-                }
-
-                alert(mensajeError + " Por favor, intente nuevamente.");
-            } finally {
-                if (typeof hideLoading === "function") {
-                    hideLoading();
-                }
-            }
-        },
-        descargarPDFConfirma: async function (id) {
-
-            try {
-
-                await MSDownloadFileAsync(
-                    config.urls.getDocumentoConfirmaPDF,
-                    { controlDeBoletoId: id }
-                );
-            } catch (error) {
-                console.error(error);
-            }
         }
-
     };
 })();
 

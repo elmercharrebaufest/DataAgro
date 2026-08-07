@@ -32,7 +32,8 @@ BEGIN
         est.Descripcion                                                          AS ValidacionBoletosEstado,
         est.Id                                                                   AS ValidacionBoletosEstadoId,
         val.FechaCreacion                                                        AS FechaValidacion,
-        val.RequestId                                                  AS RequestId,
+        val.FechaRechazo                                                         AS FechaRechazo,
+        val.RequestId                                                            AS RequestId,
         ISNULL(val.EstadoValidacionAgente, '')                                   AS EstadoValidacionAgente,
         ISNULL(val.AccionesRecomendadas, '')                                     AS AccionesRecomendadas,
         ISNULL(val.Observacion, '')                                              AS Observacion

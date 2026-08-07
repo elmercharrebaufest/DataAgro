@@ -7,7 +7,7 @@
                         <span>&times;</span>
                     </button>
                     <h5 class="titulo-modal">
-                        <i class="fa fa-check-circle"></i>
+                        <i class="fa fa-check-circle" style="color:#008000"></i>
                         <strong>Resultado de Validación</strong>
                     </h5>
                 </div>
@@ -28,10 +28,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label><strong>Estado Validación Agente:</strong></label>
                             <label id="lblEstadoValidacionAgente"></label>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12">
                             <label><strong>Acciones Recomendadas:</strong></label>
                             <label id="lblAccionesRecomendadas"></label>
@@ -40,7 +42,7 @@
                     <!-- Grid -->
                     <div class="seccion">
                         <h5>
-                            <i class="fa fa-desktop"></i>
+                            <i class="fa fa-desktop" style="color: #20b2aa"></i>
                             Resultado de validación — Agente IA
                         </h5>
                         <div id="gridResultadoValidacion"></div>
@@ -51,7 +53,7 @@
                     <!-- Aprobacion -->
                     <div class="seccion">
                         <h5>
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil" style="color: #008000"></i>
                             Aprobación / Rechazo
                         </h5>
                         <div class="form-group">
@@ -64,7 +66,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" id="btnCancelar">
+                    <button class="btn btn-default" id="btnCancelar" data-dismiss="modal">
                         Cancelar
                     </button>
                     <button class="btn btn-danger" id="btnRechazar">
