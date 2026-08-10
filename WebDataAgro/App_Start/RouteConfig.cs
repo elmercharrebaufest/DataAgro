@@ -9,6 +9,8 @@ namespace WebDataAgro
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(".well-known/{*pathInfo}");
+            routes.IgnoreRoute("Services/{resource}.svc/{*pathInfo}");
+            routes.IgnoreRoute("{resource}.svc/{*pathInfo}");
 
             // Habilitar Attribute Routing
             routes.MapMvcAttributeRoutes();
