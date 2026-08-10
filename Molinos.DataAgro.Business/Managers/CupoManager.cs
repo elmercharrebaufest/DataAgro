@@ -1485,24 +1485,28 @@ namespace Molinos.DataAgro.Business.Managers
 
         private string TrEncabezado(Cupo c, ref int linea)
         {
-            string style1, style2;
+            string style1, style2, style1Angosto, style2Angosto;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
-                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
-                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 175px;\">";
+                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 175px;\">";
+                style1Angosto = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 90px;\">";
+                style2Angosto = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 90px;\">";
             }
             else
             {
-                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
-                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 175px;\">";
+                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 175px;\">";
+                style1Angosto = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 90px;\">";
+                style2Angosto = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 90px;\">";
             }
             logger.Debug($"cupo numero: {c.Id}");
             linea += 1;
             if (linea % 2 == 0)
             {
                 return "<tr>" +
-                    "<td " + style1 + c.Material.Descripcion + "</td>" +
-                     "<td " + style1 + Split(c.FechaIngreso.ToShortDateString()) + "</td>" +
+                    "<td " + style1Angosto + c.Material.Descripcion + "</td>" +
+                     "<td " + style1Angosto + Split(c.FechaIngreso.ToShortDateString()) + "</td>" +
                      "<td " + style1 + c.Proveedor.RazonSocial + "</td>" +
                      "<td " + style1 + c.CupoSap + "</td>" +
                      "<td " + style1 + "Sin CTG" + "</td></ tr>";
@@ -1510,8 +1514,8 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 return "<tr>" +
-                        "<td " + style2 + c.Material.Descripcion + "</td>" +
-                        "<td " + style2 + Split(c.FechaIngreso.ToShortDateString()) + "</td>" +
+                        "<td " + style2Angosto + c.Material.Descripcion + "</td>" +
+                        "<td " + style2Angosto + Split(c.FechaIngreso.ToShortDateString()) + "</td>" +
                         "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
                         "<td " + style2 + c.CupoSap + "</td>" +
                         "<td " + style2 + "Sin CTG" + "</td></ tr>";
@@ -3945,7 +3949,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (calidadError.Count != 0)
             {
 
-                logger.Debug("ObtenerNegociosAltaMasivaV2 - Negocios con calidad Erronea : " + calidadError.Select(x=>x.Id).ToString());
+                logger.Debug("ObtenerNegociosAltaMasivaV2 - Negocios con calidad Erronea : " + calidadError.Select(x => x.Id).ToString());
             }
 
             // ========================================================================
@@ -5506,21 +5510,23 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
             LinkedResource res = new LinkedResource(filePath) { ContentId = Guid.NewGuid().ToString() };
-            string th;
+            string th, thAngosto;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+                thAngosto = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 90px;\">";
             }
             else
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+                thAngosto = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 90px;\">";
             }
             var linea = 0;
             string htmlBody = "";
             htmlBody += "Se detallan cupos de hoy sin activar con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + th + "Material" + "</td>" +
-                    th + "Fecha de Cupo" + "</td>" +
+            htmlBody += "<tr>" + thAngosto + "Material" + "</td>" +
+                    thAngosto + "Fecha de Cupo" + "</td>" +
                     th + "Productor/Corredor" + "</td>" +
                     th + "Cupos Generados" + "</td>" +
                     th + "Estado de cupo:" + "</td>" +
@@ -8879,7 +8885,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     asunto = "Resultado Algoritmo de Cupos";
                     nombreAdjunto = "Reporte Algoritmo.xlsx";
-                }                
+                }
 
                 mailManager.EnviarMail(mail, asunto, "", null, alterView, excel, nombreAdjunto);
 
