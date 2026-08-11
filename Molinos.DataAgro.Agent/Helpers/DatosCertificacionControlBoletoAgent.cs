@@ -62,13 +62,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     DatosCertificacion = datosCertificacion
                 };
                 logger.Debug(request.ToXml());
-
                 var response = agent.ZMprfcDatosCertificacion(request);
-
-                if (activarLogDebug)
-                {
-                    logger.Debug(response.ToXml());
-                }
+                logger.Debug(response.ToXml());
                 mensaje = response.ExMensaje?.Trim();
                 return response.ExMensaje?.Trim();
             }
