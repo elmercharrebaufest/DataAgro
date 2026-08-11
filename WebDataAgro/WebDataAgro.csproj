@@ -3227,6 +3227,9 @@
   <ItemGroup>
     <Content Include="DocumentacionCopilot\MATBA_Primary\MATBA.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="DocumentacionCopilot\Localidades\Localidad_SAP_Confirma.md" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

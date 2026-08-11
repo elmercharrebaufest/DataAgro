@@ -85,14 +85,14 @@ namespace WebDataAgro.Services
         [OperationContract]
         ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits);
 
-        [OperationContract]
-        InicializarContratoDto InicializarContrato(int? tipoNegocioId = null);
+        //[OperationContract]
+        //InicializarContratoDto InicializarContrato(int? tipoNegocioId = null);
 
-        [OperationContract]
-        DatosCompraNetDto ObtenerDatosCompraNet(int id);
+        //[OperationContract]
+        //DatosCompraNetDto ObtenerDatosCompraNet(int id);
 
-        [OperationContract]
-        List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false);
+        //[OperationContract]
+        //List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false);
 
         [OperationContract]
         AltaTempranaNRCODto ValidarProveedor(int proveedorId);
