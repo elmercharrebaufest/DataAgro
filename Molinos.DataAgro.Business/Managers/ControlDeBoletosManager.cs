@@ -874,22 +874,38 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var seguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosId);
-                var precertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
 
                 if (seguimiento != null) {
+                    var contratoSAP = seguimiento.ControlDeBoletos.Negocio.ContratoSAP;
+                    var seguimientoControlDeBoletos = new SeguimientoControlDeBoletosDto
+                    {
+                        Bolsa               = string.Empty,
+                        BolsaSellado        = string.Empty,
+                        Contrato            = contratoSAP ,
+                        FecAcopio           = string.Empty,
+                        Fecha               = string.Empty,
+                        Hora                = string.Empty,
+                        TipoBoleto          = string.Empty,
+                        Usuario             = string.Empty,
+                        FechaRecepBoleto    = string.Empty,
+                        FechaEnvioFirma     = string.Empty,
+                        FechaEnvioAfip      = string.Empty,
+                        FechaEnvioBolsa     = string.Empty,
+                        FechaRecepcionFirma = string.Empty,
+                        FechaRecepcionBolsa = string.Empty,
+                        FechaRecepcionAfip  = string.Empty,
+                        FechaEnvioSellado   = string.Empty,
+                        ObsCtrlBoleto       = string.Empty,
+                        ObsCtrlBoleto2      = string.Empty,
+                        RechazadoAfip       = string.Empty
+                    };
+                    seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
                     repositorio.Remover(seguimiento);
+                    repositorio.GuardarCambios();
                 }
 
-                if (precertificacion != null && precertificacion.Any())
-                {
-                    repositorio.RemoverTodos(precertificacion);
-                }
-                repositorio.GuardarCambios();
+                EliminarPreCertificacion(controlDeBoletosId);
 
-                if (precertificacion != null && precertificacion.Any())
-                {
-                    this.logDataAgroManager.LogCambiosControlBoletos(precertificacion, TipoAccionLogDataAgro.Eliminar, precertificacion.FirstOrDefault()?.Id ?? 0, "Eliminar de Certificacion - Control de Boletos");
-                }
                 if (seguimiento != null)
                 {
                     this.logDataAgroManager.LogCambiosControlBoletos(seguimiento, TipoAccionLogDataAgro.Eliminar, seguimiento.Id, "Eliminar de Seguimiento - Control de Boletos");
@@ -1221,14 +1237,35 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado EliminarPreCertificacion(int controlDeBoletosId)
         {
             var oResultado = new Resultado();
+            var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto();
+            var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto();
             try
             {
+                var controlDeBoletos = repositorio.Obtener<ControlDeBoletos>(controlDeBoletosId);
                 var precertificacion = repositorio.Listar<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == controlDeBoletosId);
 
                 if (precertificacion != null && precertificacion.Any())
                 {
-                    foreach(var datos in precertificacion)
+                    var negocio = repositorio.Obtener<Negocio>(x => x.Id == controlDeBoletos.NegocioId);
+
+                    var ahora = DateTime.Now;
+                    datosCertificacionCabeceraDto.Contrato = negocio?.ContratoSAP ?? string.Empty;
+                    datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
+                    datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
+                    datosCertificacionCabeceraDto.Fijacion = string.Empty;
+                    datosCertificacionCabeceraDto.Usuario = string.Empty;
+
+                    foreach (var datos in precertificacion)
                     {
+                        var tipoOblea = repositorio.Obtener<TipoOblea>(datos.TipoObleaId);
+                        datosCertificacionDetalleDto.Bolsa = string.Empty;
+                        datosCertificacionDetalleDto.Oblea = string.Empty;
+                        datosCertificacionDetalleDto.FeCertificacion = string.Empty;
+                        datosCertificacionDetalleDto.FeVencCerti = string.Empty;
+                        datosCertificacionDetalleDto.Rechazado = string.Empty;
+                        datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
+                        datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto };
+                        datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
                         repositorio.Remover(datos);
                     }
                     repositorio.GuardarCambios();

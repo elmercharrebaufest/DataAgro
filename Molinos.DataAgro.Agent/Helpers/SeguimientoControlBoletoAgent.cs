@@ -65,17 +65,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug(request.ToXml());
 
                 var response = agent.ZMprfcSeguimientoBoleto(request);
-
+                logger.Debug(response.ToXml());
                 if (response == null)
                 {
                     logger.Error("La respuesta de SAP es nula al registrar seguimiento de boleto.");
                     throw new Exception("No se recibió respuesta de SAP al registrar seguimiento de boleto.");
                 }
-
-                //if (activarLogDebug)
-                //{
-                //    logger.Debug(response.ToXml());
-                //}
 
                 var mensaje = response.ExMensaje?.Trim() ?? string.Empty;
 
