@@ -28,6 +28,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string FechaOperacion { get; set; }
         public string PeriodoEntrega { get; set; }
         public string CuitVendedor { get; set; }
+        public string Corredor { get; set; }
         public string CuitCorredor { get; set; }
         public string Moneda { get; set; }
         public int? CorredorId { get; set; }

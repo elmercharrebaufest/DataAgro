@@ -327,15 +327,6 @@ var ControlDeBoletosSeguimiento = (function () {
         var feRecepcionAfip  = getKendoDate(controlFechaRecepcionAfip);
         var feEnvioSellado = getKendoDate(controlFechaEnvioSellado);
 
-        /*
-        if (controlBoleto.val() == '' || controlCaracterBoleto.val() == '') {
-            return "Debe seleccionar un boleto y un carácter.";
-        }
-
-        if (controlBolsa.val() == '') {
-            return "Debe seleccionar una bolsa.";
-        }
-        */
         if(state.esSinBoleto) {
             return null;
         }

@@ -25,6 +25,8 @@ var ControlDeBoletosGestion = (function () {
     let controlContratoSAP;
     let controlCuitVendedor;
     let controlCuitCorredor;
+    let controlVendedor;
+    let controlCorredor;
     let controlPizarraReferencia;
     let controlMaterial;
     let controlProvincia;
@@ -110,6 +112,8 @@ var ControlDeBoletosGestion = (function () {
         controlContratoSAP = $form.find("#ContratoSAP");
         controlCuitVendedor = $form.find("#CuitVendedor");
         controlCuitCorredor = $form.find("#CuitCorredor");
+        controlVendedor = $form.find("#Vendedor");
+        controlCorredor = $form.find("#Corredor");
         controlPizarraReferencia = $form.find("#PizarraReferencia");
         controlMaterial = $form.find("#Material");
         controlProvincia = $form.find("#Provincia");
@@ -139,11 +143,13 @@ var ControlDeBoletosGestion = (function () {
             controlContratoSAP.text(contrato.ContratoSAP);
             controlCuitCorredor.text(contrato.CuitCorredor);
             controlCuitVendedor.text(contrato.CuitVendedor);
+            controlVendedor.text(contrato.Proveedor);
+            controlCorredor.text(contrato.Corredor);
             controlMaterial.text(contrato.Material);
             controlProvincia.text(contrato.Provincia);
             controlKilos.text(contrato.Cantidad);
             controlProcedencia.text(contrato.Localidad);
-            controlPrecioXTonelada.text(contrato.Precio);
+            controlPrecioXTonelada.text(contrato.PrecioNeto);
             controlMoneda.text(contrato.Moneda);
             controlDestino.text(contrato.Destino);
             controlClasificacionProveedor.text(contrato.Clasificacion + ' - Consignatario:' + contrato.Consignatario);

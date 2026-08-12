@@ -438,7 +438,6 @@ var ControlBoletos = (function () {
                 "FechaVueltaBolsa",
             ].indexOf(field) >= 0;
         }
-        console.log('esSinBoleto--->>', esSinBoleto);
         if (esSinBoleto) {
             return [
                 "Oblea",
