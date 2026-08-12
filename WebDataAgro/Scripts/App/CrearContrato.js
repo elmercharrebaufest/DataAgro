@@ -32,6 +32,32 @@ $(document).ready(function () {
     $("#material").data("kendoDropDownList").trigger("change");
 });
 
+// Copia el valor de un input al otro si el destino está vacío.
+// Llamar desde el HTML con onchange, por ejemplo:
+//   <input id="contVendedorId" onchange="SincronizarContratoVendedorCorredor('contVendedorId','contCorredorId')" ... />
+//   <input id="contCorredorId" onchange="SincronizarContratoVendedorCorredor('contCorredorId','contVendedorId')" ... />
+function SincronizarContratoVendedorCorredor(origenId, destinoId) {
+    var origen = document.getElementById(origenId);
+    var destino = document.getElementById(destinoId);
+    if (!origen || !destino) return;
+
+    var valor = (origen.value || '').toString().trim();
+    var valorDestino = (destino.value || '').toString().trim();
+    if (!valor || valorDestino) return;
+
+    destino.value = valor;
+
+    // Notificar a Kendo MVVM si corresponde para que el viewModel quede sincronizado.
+    if (typeof viewModel !== 'undefined' && viewModel && viewModel.Parametros
+        && typeof viewModel.Parametros.set === 'function') {
+        viewModel.Parametros.set(destinoId, valor);
+    }
+
+    if (window.jQuery) {
+        jQuery(destino).trigger('change');
+    }
+}
+
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
 });
@@ -4532,6 +4558,9 @@ function CargarDatosEditar(contrato, hijo) {
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
+    // En edición: sincronizar contrato vendedor/corredor si alguno quedó vacío.
+    SincronizarContratoVendedorCorredor('contCorredorId', 'contVendedorId');
+    SincronizarContratoVendedorCorredor('contVendedorId', 'contCorredorId');
     if (hijo != true) {
         if (contrato.Madre === true) {
             $("#fasonIdCheck").attr("disabled", true);
