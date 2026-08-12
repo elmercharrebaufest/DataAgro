@@ -560,6 +560,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.PeriodoEntrega = contrato.FechaDesde.ToString("dd/MM/yyyy") + " - " + contrato.FechaHasta.ToString("dd/MM/yyyy");
                 datosContrato.CuitVendedor = contrato.Proveedor.CUIT;
                 datosContrato.CuitCorredor = contrato.CorredorId > 0 ? contrato.Corredor.CUIT : string.Empty;
+                datosContrato.Corredor = contrato.CorredorId > 0 && contrato.Corredor !=null? contrato.Corredor.RazonSocial : string.Empty;
                 datosContrato.Moneda = contrato.Moneda?.MonedaId;
                 datosContrato.CorredorId = contrato.CorredorId;
                 datosContrato.PlanCanje = contrato.PlanCanje;
@@ -581,7 +582,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var aperturaPrecioRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2);
                 datosContrato.MonedaRedespacho = aperturaPrecioRedespacho?.Moneda!=null ? aperturaPrecioRedespacho?.Moneda.Descripcion : string.Empty;
                 datosContrato.ImporteRedespacho = aperturaPrecioRedespacho?.Importe;
-                datosContrato.Consignatario = contrato.Consignatario != null ? "SI" : "NO";
+                datosContrato.Consignatario = contrato.Consignatario != null && ((bool)contrato.Consignatario) ? "SI" : "NO";
                 if (contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                 {
                     var confirmas = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id);
@@ -1416,6 +1417,8 @@ namespace Molinos.DataAgro.Business.Managers
             bool esSinBoleto =
                 contrato.BoletoId == (int)EnumBoletoCompraNet.SIN_BOLETO;
 
+            bool esPlanCanje = contrato.PlanCanje != null ? (bool)contrato.PlanCanje : false;
+
             if (!certificaciones.Any() && !esSinBoleto)
             {
                 ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
@@ -1424,6 +1427,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             var tipoObleaBolsa = repositorio.Listar<TipoOblea>(x => x.Codigo == "O")
                                             .FirstOrDefault();
+            var tipoObleaCanje = repositorio.Listar<TipoOblea>(x => x.Codigo == "F")
+                                            .FirstOrDefault();
 
             var tipoObleaArca = repositorio.Listar<TipoOblea>(x => x.Codigo == "A")
                                            .FirstOrDefault();
@@ -1431,9 +1436,13 @@ namespace Molinos.DataAgro.Business.Managers
             bool tieneObleaBolsa =
                 certificaciones.Any(x => x.TipoObleaId == tipoObleaBolsa.Id);
 
+            bool tieneObleaCanje =
+                certificaciones.Any(x => x.TipoObleaId == tipoObleaCanje.Id);
+
             bool tieneCodigoArca =
                 certificaciones.Any(x => x.TipoObleaId == tipoObleaArca.Id && !string.IsNullOrEmpty(x.Oblea));
 
+            bool sinNingunaOblea =!tieneObleaBolsa && !tieneObleaCanje;
             // Sin boleto
             if (esSinBoleto)
             {
@@ -1444,23 +1453,51 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            // Requiere Oblea Bolsa
-            if (!operaSinOblea && !tieneObleaBolsa)
+            // Requiere alguna Oblea 
+            if (!operaSinOblea && sinNingunaOblea)
             {
                 ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
                 return;
             }
-            if (tieneObleaBolsa)
+
+            if (!esPlanCanje)
             {
-                var obleaBolsa = certificaciones.FirstOrDefault(x => x.TipoObleaId == tipoObleaBolsa.Id);
-                var noTieneOblea = string.IsNullOrEmpty(obleaBolsa?.Oblea);
-                if (noTieneOblea)
+                // Requiere Oblea Bolsa
+                if (!operaSinOblea && !tieneObleaBolsa)
                 {
                     ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
                     return;
                 }
+                if (tieneObleaBolsa)
+                {
+                    var obleaBolsa = certificaciones.FirstOrDefault(x => x.TipoObleaId == tipoObleaBolsa.Id);
+                    var noTieneOblea = string.IsNullOrEmpty(obleaBolsa?.Oblea);
+                    if (noTieneOblea)
+                    {
+                        ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                        return;
+                    }
+                }
             }
-
+            else
+            {
+                // Requiere Oblea Canje
+                if (!operaSinOblea && !tieneObleaCanje)
+                {
+                    ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                    return;
+                }
+                if (tieneObleaCanje)
+                {
+                    var obleaCanje = certificaciones.FirstOrDefault(x => x.TipoObleaId == tipoObleaCanje.Id);
+                    var noTieneOblea = string.IsNullOrEmpty(obleaCanje?.Oblea);
+                    if (noTieneOblea)
+                    {
+                        ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_OBLEA_BOLSA);
+                        return;
+                    }
+                }
+            }
             if (!tieneCodigoArca)
             {
                 ActualizarEstado(controlBoleto, EnumControlDeBoletosEstado.PENDIENTE_CODIGO_ARCA);

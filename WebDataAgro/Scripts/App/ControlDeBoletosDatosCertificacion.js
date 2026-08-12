@@ -274,7 +274,10 @@ var ControlDeBoletosDatosCertificacion = (function () {
     function cargarFechasPorDefecto() {
         var ahora = new Date();
         var ultimoDiaDelAnio = new Date(ahora.getFullYear(), 11, 31);
-
+        if (!state.operaSinOblea) {
+            setKendoDate(ctrl.fechaVencimiento, ultimoDiaDelAnio);
+        }
+        /*
         if (state.planCanje) {
             setKendoDate(ctrl.fechaVencimientoPlanCanje, ultimoDiaDelAnio);
         } else {
@@ -282,6 +285,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
                 setKendoDate(ctrl.fechaVencimiento, ultimoDiaDelAnio);
             }
         }
+        */
     }
     function bloqueaControlesSinOblea() {
         var enabledOperaSinOblea = state.operaSinOblea? true: false;
@@ -560,7 +564,17 @@ var ControlDeBoletosDatosCertificacion = (function () {
             Detalle: detalle
         };
     }
-
+    function sumar72HorasHabiles(fechaTexto) {
+        var partes = fechaTexto.split('/');
+        var fecha = new Date(
+            parseInt(partes[2], 10),
+            parseInt(partes[1], 10) - 1,
+            parseInt(partes[0], 10)
+        );
+        var incremento = [3, 3, 3, 5, 5, 5, 4][fecha.getDay()];
+        fecha.setDate(fecha.getDate() + incremento);
+        return fecha;
+    }
     // ======================
     // API pública
     // ======================
@@ -632,6 +646,20 @@ var ControlDeBoletosDatosCertificacion = (function () {
                         datePicker.enable(true);
                     }
                 });
+            ctrl.fechaCertificacionPlanCanje
+                .off("blur")
+                .on("blur", function () {
+                    var valor = $.trim($(this).val());
+                    if (!valor) {
+                        setKendoDate(ctrl.fechaVencimientoPlanCanje, null);
+                        return;
+                    }
+                    var fechaVencimiento = sumar72HorasHabiles(valor);
+                    setKendoDate(
+                        ctrl.fechaVencimientoPlanCanje,
+                        fechaVencimiento
+                    );
+                });
         },
         guardar: async function () {
 
@@ -683,7 +711,6 @@ var ControlDeBoletosDatosCertificacion = (function () {
             var request = new Object();
             request.controlDeBoletosId = state.controlDeBoletosId;
             try {
-                console.log('request--->>', request);
                 Confirma('¿Desea eliminar todo los datos de precertificación para el contrato ' + state.contratoSAP + "?", async function () {
                     var response = await MSExecuteOnServerAsync(config.urls.eliminarDatosPreCertificacion, request);
                     if (!response) return;
