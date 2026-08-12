@@ -1,4 +1,4 @@
-﻿@{
+@{
     var venta = PermisosHelper.Is(PermisosDataAgro.ModificarVenta);
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
     ViewBag.Title = "Crear Contrato";
@@ -876,7 +876,7 @@
                     <label>Contrato Vendedor</label>
                 </div>
                 <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
-                    <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10" />
+                    <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10" onchange="SincronizarContratoVendedorCorredor('contVendedorId','contCorredorId')" />
                     <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
@@ -905,7 +905,7 @@
                         <label>Contrato Corredor</label>
                     </div>
                     <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
-                        <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
+                        <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" onchange="SincronizarContratoVendedorCorredor('contCorredorId','contVendedorId')" />
                         <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                 </div>
