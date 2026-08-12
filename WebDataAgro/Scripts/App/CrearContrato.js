@@ -4558,6 +4558,9 @@ function CargarDatosEditar(contrato, hijo) {
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
+    // En edición: sincronizar contrato vendedor/corredor si alguno quedó vacío.
+    SincronizarContratoVendedorCorredor('contCorredorId', 'contVendedorId');
+    SincronizarContratoVendedorCorredor('contVendedorId', 'contCorredorId');
     if (hijo != true) {
         if (contrato.Madre === true) {
             $("#fasonIdCheck").attr("disabled", true);
