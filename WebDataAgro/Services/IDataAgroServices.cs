@@ -41,9 +41,6 @@ namespace WebDataAgro.Services
         ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit, bool? corredor);
 
         [OperationContract]
-        ResultadoValidarProveedorComercial ValidarProveedorComercialNuevo(string cuit, bool? corredor, string cuitCorredor);
-
-        [OperationContract]
         ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP);
 
         [OperationContract]
@@ -79,20 +76,25 @@ namespace WebDataAgro.Services
         [OperationContract]
         List<ApoderadoSapDto> ListarApoderadosPorProveedor(string cuit);
 
+        #region No son usados por SAP
+        /*
+        [OperationContract]
+        ResultadoValidarProveedorComercial ValidarProveedorComercialNuevo(string cuit, bool? corredor, string cuitCorredor);
+
         [OperationContract]
         CupoSapTerceroDto DatosCupoSap(string cupoSap);
 
         [OperationContract]
         ResultEstadoProveedores ObtenerEstadoProveedores(List<string> listaCuits);
 
-        //[OperationContract]
-        //InicializarContratoDto InicializarContrato(int? tipoNegocioId = null);
+        [OperationContract]
+        InicializarContratoDto InicializarContrato(int? tipoNegocioId = null);
 
-        //[OperationContract]
-        //DatosCompraNetDto ObtenerDatosCompraNet(int id);
+        [OperationContract]
+        DatosCompraNetDto ObtenerDatosCompraNet(int id);
 
-        //[OperationContract]
-        //List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false);
+        [OperationContract]
+        List<DatosFijacionDeContratoDto> ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual = false);
 
         [OperationContract]
         AltaTempranaNRCODto ValidarProveedor(int proveedorId);
@@ -188,6 +190,8 @@ namespace WebDataAgro.Services
         [OperationContract]
         RespuestaArchivoDto InformeComercial(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
+        */
+        #endregion No son usados por SAP
 
         /*
         [OperationContract]
