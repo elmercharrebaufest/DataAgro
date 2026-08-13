@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -34,8 +34,13 @@ namespace Molinos.DataAgro.Business
                 campaña = hoy.Year.ToString().Substring(2) + "-" + (hoy.Year + 1).ToString().Substring(2);
             }
             var campañaAñoFiscal = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
-            if (campañaAñoFiscal == null) logger.Info("En tabla Campaña no existe la campaña " + campaña);
             var listResult = new ObjetivoHome();
+            if (campañaAñoFiscal == null)
+            { 
+                logger.Info("En tabla Campaña no existe la campaña " + campaña);
+                return listResult;
+            }
+            
             var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercialLogeado);
             List<MaterialObjetivo> listaObjetivos = new List<MaterialObjetivo>();
             if (idComercialLogeado != null && oComercial.GrupoDeCompras.Corredor)

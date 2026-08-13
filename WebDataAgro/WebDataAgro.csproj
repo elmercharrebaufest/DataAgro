@@ -371,6 +371,7 @@
     <Content Include="Content\altaMasivaCupos.css" />
     <Content Include="Content\control-boletos.css" />
     <Content Include="Content\control-boletos-contrato.css" />
+    <Content Include="Content\distribucion-cupos.css" />
     <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
     <Content Include="Scripts\App\AltaMasivaCupos.js" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
@@ -388,6 +389,7 @@
     <Content Include="Scripts\App\ValidacionBoletoIA.js" />
     <Content Include="Scripts\App\ValidacionBoletoIACargarContrato.js" />
     <Content Include="Scripts\App\ValidacionBoletoIAResultados.js" />
+    <Content Include="Scripts\Distribucion\distribucion-cupos.js" />
     <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
@@ -399,6 +401,7 @@
     <Content Include="Views\ControlDeBoletos\_SeguimientoControlBoleto.cshtml" />
     <Content Include="Views\ControlDeBoletos\SeguimientoBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
+    <Content Include="Views\Distribucion\Index.cshtml" />
     <Content Include="MEJORAS_HOMECONTROLLER.md" />
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
@@ -820,6 +823,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\descargar-pdf-excel.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\distribucion-cupos-header-bg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\distribucion-cupos-logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\eliminar-agenda.png">
@@ -3296,4 +3305,10 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <ItemGroup>
+    <Compile Include="Controllers\DistribucionController.cs" />
+    <Compile Include="Controllers\ContratosApiController.cs" />
+    <Compile Include="Controllers\DistribucionApiController.cs" />
+    <Compile Include="Controllers\ConfiguracionDistribucionController.cs" />
+  </ItemGroup>
 </Project>

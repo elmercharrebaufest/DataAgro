@@ -1,0 +1,214 @@
+@{
+    ViewBag.Title = "Distribuidor de Cupos – Planta San Lorenzo";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/distribucion-cupos")
+}
+
+<div class="Titulo">
+    <h5>Distribuidor de Cupos – Planta San Lorenzo</h5>
+</div>
+
+<div class="main">
+
+<!-- ══ PASO 1: CARGAR ══ -->
+<div class="card" id="card-upload">
+  <div class="ch green"><span>📂</span><h2>Paso 1 — Cargar archivo "A Recibir"</h2></div>
+  <div class="cb">
+    <div id="uz" class="uz">
+      <input type="file" id="fi" accept=".xls,.xlsx,.txt,.tsv">
+      <div class="ico">📊</div>
+      <h3>Arrastrá el archivo o hacé clic para seleccionarlo</h3>
+      <p>Exportación SAP "A Recibir" (.xls) — Planta San Lorenzo</p>
+    </div>
+    <div id="file-info" class="fi hidden">
+      <span class="ico">📄</span>
+      <div><div class="nm" id="fname"></div><div class="mt" id="fmeta"></div></div>
+      <button class="btn-x" onclick="removeFile()">✕</button>
+    </div>
+    <div class="dr">
+      <label>📅 Fecha de distribución:</label>
+      <input type="date" id="today-date" onchange="if(S.multiDay)updateDayDates()">
+    </div>
+    <div id="multiday-section" class="hidden mt-14 pt-12 bt-border">
+      <div class="toggle-row mb-0">
+        <label class="toggle"><input type="checkbox" id="chk-multiday" onchange="onToggleMultiDay()"><span class="slider"></span></label>
+        <label for="chk-multiday">Distribuir en rango de días (máx. 7)</label>
+      </div>
+      <div id="multiday-config" class="hidden mt-10">
+        <div class="d-flex-center gap-12 mb-10">
+          <label class="fs-13 fw-600 minw-130">Cantidad de días:</label>
+          <select id="day-count" onchange="onDayCountChange()" class="input-ui-lg">
+            <option value="2">2 días</option><option value="3">3 días</option><option value="4">4 días</option><option value="5">5 días</option><option value="6">6 días</option><option value="7">7 días</option>
+          </select>
+        </div>
+        <div id="day-dates-preview" class="day-preview"></div>
+        <div class="toggle-row mt-12">
+          <label class="toggle"><input type="checkbox" id="chk-spread" checked onchange="S.spreadDays=this.checked"><span class="slider"></span></label>
+          <label for="chk-spread" class="fs-13">Distribuir cupos en partes iguales por día</label>
+        </div>
+        <div class="al al-i mt-8 fs-12"><span class="ico">ℹ️</span><div>Si activado, los cupos de cada contrato se dividen en partes iguales entre los días. Ej: 10 cupos / 5 días = 2 por día.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PASO 2: TOPES + CONFIG AVANZADA ══ -->
+<div class="card hidden" id="card-limits">
+  <div class="ch gold"><span>⚙️</span><h2>Paso 2 — Configurar topes y criterios de distribución</h2></div>
+  <div class="cb">
+
+    <!-- Topes por material -->
+    <div class="al al-i"><span class="ico">ℹ️</span>
+      <div>El <strong>tope diario</strong> es la capacidad total. El CCPP se descuenta por CUIT. Además, un mismo CUIT no puede recibir más del <strong>30% del tope diario</strong> por material para evitar concentración.</div>
+    </div>
+    <div id="lim-grid" class="lim-grid"></div>
+
+    <!-- ── SECCIÓN A: Por tipo de operador ── -->
+    <div class="sdiv open mt-20" id="sdiv-op" onclick="toggleSection('sec-op','sdiv-op')">
+      <div class="sl"></div>
+      <div class="stitle">🏢 Distribución por tipo de operador <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-op">
+      <div class="grid-2col mb-14">
+        <!-- Stats -->
+        <div>
+          <div class="section-caption-upper">DISTRIBUCIÓN ACTUAL EN EL ARCHIVO</div>
+          <div class="stats-box">
+            <div class="sb-hdr sb-hdr-op">📊 Por tipo de operador</div>
+            <table><thead><tr><th>Tipo</th><th class="r">Contratos</th><th class="r">Kg (M)</th><th class="r">%</th></tr></thead>
+            <tbody id="stats-op"></tbody></table>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="chk-op" onchange="onToggleOp()"><span class="slider"></span></label>
+            <label for="chk-op">Aplicar distribución por tipo de operador</label>
+          </div>
+          <div id="pct-op-wrap" class="hidden">
+            <div class="al al-p mb-10"><span class="ico">💡</span>
+              <div>Asigná el % de cupos que querés destinar a cada tipo. El total debe ser ≤ 100%; el resto queda como cupos libres sin restricción.</div>
+            </div>
+            <div id="pct-op" class="pct-grid"></div>
+            <div id="pct-op-total" class="pct-total"></div>
+          </div>
+          <div id="pct-op-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin restricción por tipo de operador. Activá el toggle para configurar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN B: Por clase de contrato ── -->
+    <div class="sdiv open mt-4" id="sdiv-cls" onclick="toggleSection('sec-cls','sdiv-cls')">
+      <div class="sl"></div>
+      <div class="stitle">📋 Distribución por clase de contrato <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-cls">
+      <div class="grid-2col mb-14">
+        <!-- Stats -->
+        <div>
+          <div class="section-caption-upper">DISTRIBUCIÓN ACTUAL EN EL ARCHIVO</div>
+          <div class="stats-box">
+            <div class="sb-hdr sb-hdr-cls">📊 Por clase de contrato</div>
+            <table><thead><tr><th>Clase</th><th class="r">Contratos</th><th class="r">Kg (M)</th><th class="r">%</th></tr></thead>
+            <tbody id="stats-cls"></tbody></table>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="chk-cls" onchange="onToggleCls()"><span class="slider"></span></label>
+            <label for="chk-cls">Aplicar distribución por clase de contrato</label>
+          </div>
+          <div id="pct-cls-wrap" class="hidden">
+            <div class="al al-p mb-10"><span class="ico">💡</span>
+              <div>Asigná el % de cupos para cada clase. El total debe ser ≤ 100%; el resto es libre. La prioridad original (Fasón &gt; Préstamo &gt; Fijo &gt; A Fijar) se aplica dentro de cada clase.</div>
+            </div>
+            <div id="pct-cls" class="pct-grid"></div>
+            <div id="pct-cls-total" class="pct-total"></div>
+          </div>
+          <div id="pct-cls-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin restricción por clase. Activá el toggle para configurar.</div>
+        </div>
+      </div>
+      <!-- Exclusiones de clase -->
+      <div class="excl-wrap">
+        <span class="fs-12 fw-700 txt-muted as-center mr-4">EXCLUIR:</span>
+        <label class="excl-label" id="lbl-excl-fason">
+          <input type="checkbox" id="chk-excl-fason" onchange="S.excludeFason=this.checked;updateExclBadge('fason')" class="checkbox-sm">
+          <span class="bp p1">MP-Fasón</span>
+        </label>
+        <label class="excl-label" id="lbl-excl-agcompra">
+          <input type="checkbox" id="chk-excl-agcompra" onchange="S.excludeAgCompra=this.checked;updateExclBadge('agcompra')" class="checkbox-sm">
+          <span class="txt-purple fw-700">Ag. de Compra</span>
+        </label>
+        <span class="fs-11 txt-muted as-center">Los contratos excluidos no reciben cupos en el cálculo.</span>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN C: Filtro por rango de fechas ── -->
+    <div class="sdiv open mt-4" id="sdiv-date" onclick="toggleSection('sec-date','sdiv-date')">
+      <div class="sl"></div>
+      <div class="stitle">📅 Filtro por rango de fechas de contrato <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-date">
+      <div id="date-filter-ui"></div>
+    </div>
+
+    <!-- ── SECCIÓN D: Precios y sustentabilidad ── -->
+    <div class="sdiv open mt-4" id="sdiv-prices" onclick="toggleSection('sec-prices','sdiv-prices')">
+      <div class="sl"></div>
+      <div class="stitle">💰 Precios de referencia y sustentabilidad <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-prices">
+      <div id="prices-sust-ui"></div>
+    </div>
+
+    <div class="brow">
+      <button id="btn-calcular" class="btn btn-g" onclick="runDistribution()">🔄 Calcular distribución</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PASO 3: RESULTADO ══ -->
+<div class="card hidden" id="card-results">
+  <div class="ch teal"><span>📋</span><h2>Resultado de la distribución</h2>
+    <span id="res-badge" class="res-badge"></span>
+  </div>
+  <div class="cb p-0">
+    <div class="tabs" id="res-tabs"></div>
+    <div id="res-contents"></div>
+  </div>
+</div>
+
+<!-- ══ EXPORTAR ══ -->
+<div class="card hidden" id="card-export">
+  <div class="ch green"><span>💾</span><h2>Exportar</h2></div>
+  <div class="cb">
+    <div class="brow">
+      <button id="btn-exportar" class="btn btn-gold" onclick="exportExcel()" disabled>⬇️ Descargar Excel (.xlsx)</button>
+      <button id="btn-procesar-dataagro" class="btn btn-g" onclick="procesarEnDataAgro()" disabled>⚡ Procesar en DataAgro</button>
+      <button id="btn-copiar" class="btn btn-out" onclick="copyOutput()" disabled>📋 Copiar tabla de cupos</button>
+    </div>
+    <p class="fn">El Excel incluye la hoja "Cupos" (FechaSugerida / CantidadDeCupos / ContratoSAP), resumen por material, y detalle completo con columnas de tipo de operador y clase de contrato.</p>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        var API_IMPORTAR = '@Url.Action("Importar", "ContratosApi")';
+        var API_CALCULAR = '@Url.Action("Calcular", "DistribucionApi")';
+        var API_CALCULAR_MD = '@Url.Action("CalcularMultiDia", "DistribucionApi")';
+        var API_PROCESAR_DATAAGRO = '@Url.Action("ProcesarEnDataAgro", "DistribucionApi")';
+        var API_CONFIG_GET = '@Url.Action("ObtenerConfiguracion", "ConfiguracionDistribucion")';
+        var API_CONFIG_PUT = '@Url.Action("GuardarConfiguracion", "ConfiguracionDistribucion")';
+    </script>
+    @Scripts.Render("~/bundles/distribucion-cupos")
+}

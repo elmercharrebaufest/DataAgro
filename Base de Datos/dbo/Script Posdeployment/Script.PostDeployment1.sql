@@ -1228,6 +1228,36 @@ IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'Re
     INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
     VALUES ('Recepción con falla', 2);
 
+-- ConfiguracionesDistribucionPlanta
+IF NOT EXISTS (SELECT 1 FROM ConfiguracionesDistribucionPlanta WHERE PlantaCodigo = 'SL')
+    INSERT INTO ConfiguracionesDistribucionPlanta (
+        Id,
+        PlantaCodigo,
+        PlantaNombre,
+        CupoKg,
+        CuitMaxPct,
+        CosechasValidas,
+        ClasesExcluidas,
+        LimitesPredeterminados,
+        PreciosReferencia,
+        CuotasPorOperador,
+        CuotasPorClase,
+        UltimaActualizacion
+    ) VALUES (
+        1,
+        'SL',
+        'Planta San Lorenzo',
+        30000,
+        0.3000,
+        '["23-24","24-25","25-26"]',
+        '[]',
+        '{"Soja":"30000","Maíz":"20000","Girasol":"15000"}',
+        '{"Soja":"580","Maíz":"450","Girasol":"350"}',
+        '{"con_corredor":0,"acopiador":0,"productor":0,"otros":0}',
+        '{"MP-Fason":0,"MP-Prest/Devolución":0,"Fijo":0,"Contrato Hijo":0,"A Fijar":0}',
+        GETDATE()
+    );
+
 IF NOT EXISTS (SELECT 1 FROM ConfirmaAltaEstadoDocumento WHERE Descripcion = 'En Proceso')
     INSERT INTO ConfirmaAltaEstadoDocumento (Descripcion, CodigoConfirmaAltaEstadoDocumento)
     VALUES ('En Proceso', 3);

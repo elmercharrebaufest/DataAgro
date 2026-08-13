@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Hangfire.Dashboard;
 using Owin;
 
@@ -30,7 +30,7 @@ namespace WebDataAgro.App_Start
                 WorkerCount = 1
             });
 
-            JobRegistration.HangfireJobRegistry.Register();
+            //JobRegistration.HangfireJobRegistry.Register();
         }
     }
 }
