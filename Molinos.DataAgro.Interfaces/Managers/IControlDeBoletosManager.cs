@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<TipoOblea> GetTipoOblea();
         List<BoletoSapDto> GetBoletoSap(int BoletoCompraNetId);
         Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false);
-        List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
+        (List<ControlDeBoletosConsultaDto> Data, int Total) GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros);
         Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto controlDeBoletosModificacion);
         ControlDeBoletosDatosContratoDto ObtenerDatosDeContrato(int negocioId);
         Resultado ActualizarEstadoBoletosConfirma();

@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Interfaces
         List<string> ObtenerClausulasPorNegocio(string contratoSap, List<int> equipo);
         (List<BasicoBoleto> Data, int Total) TraerNegociosPendientesFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo);
         (List<BasicoBoleto> Data, int Total) TraerContratosFiltrados(BoletoFiltroBusquedaDto filtro, List<int> equipo);
+        string ObtenerEstadoBoleto(BasicoBoleto boleto);
         string ValidarNegocio(string negocioSAP, List<int> equipo);
         string ValidarContratoTipoBoleto(string numeroSap, List<int> equipo);
 

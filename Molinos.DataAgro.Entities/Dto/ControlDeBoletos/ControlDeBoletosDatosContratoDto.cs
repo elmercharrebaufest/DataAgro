@@ -55,5 +55,6 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string Consignatario { get; set; }
         public int? VersionBoleto { get; set; }
         public string FechaGeneracion { get; set; }
+        public long NumeroSio { get; set; }
     }
 }
