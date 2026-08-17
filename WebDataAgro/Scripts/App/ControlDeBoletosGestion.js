@@ -150,8 +150,8 @@ var ControlDeBoletosGestion = (function () {
             controlProvincia.text(contrato.Provincia);
             controlKilos.text(contrato.Cantidad);
             controlProcedencia.text(contrato.Localidad);
-            controlPrecioXTonelada.text(contrato.PrecioNeto);
-            controlMoneda.text(contrato.Moneda);
+            controlPrecioXTonelada.text(contrato.PrecioNeto || '');
+            controlMoneda.text(contrato.Moneda || '') ;
             controlDestino.text(contrato.Destino);
             controlClasificacionProveedor.text(contrato.Clasificacion + ' - Consignatario:' + contrato.Consignatario);
             controlStandardCalidad.text(contrato.StandarCalidad);

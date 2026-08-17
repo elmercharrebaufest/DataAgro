@@ -62,7 +62,8 @@ BEGIN
             ELSE ''
         END                                                                      AS TipoAltaConfirma,
         (case when bc.Id = 1 then confirma.Version else boleto.Version end)                 AS Version,
-        (case when bc.Id = 1 then confirma.FechaGeneracion else boleto.FechaGeneracion end) AS FechaGeneracion 
+        (case when bc.Id = 1 then confirma.FechaGeneracion else boleto.FechaGeneracion end) AS FechaGeneracion,
+        n.BoletoId                                                               AS TipoBoletoId
     FROM ControlDeBoletos cb
 
     INNER JOIN Negocio n
