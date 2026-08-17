@@ -314,18 +314,18 @@ var ControlBoletos = (function () {
                             serverPaging: true,
                             serverSorting: true,
                             serverFiltering: true,
-                            pageSize: 20,
+                            pageSize: 10,
                             transport: {
                                 read: function (options) {
                                     var data = options.data || {};
                                     var filtros = self.obtenerFiltros();
                                     var parametros = {
                                         // Opciones de Kendo (paginación, sorting)
-                                        page: options.page || 1,
-                                        pageSize: 10,
-                                        skip: options.skip || 0,
-                                        take: 10,
-                                        sort: options.sort || [],
+                                        page: data.page || 1,
+                                        pageSize: data.pageSize || 10,
+                                        skip: data.skip || 0,
+                                        take: data.take || 10,
+                                        sort: data.sort || [],
                                         // Filtros personalizados
                                         negocioSAP: filtros.negocioSAP,
                                         materialId: filtros.materialId,
@@ -578,8 +578,11 @@ var ControlBoletos = (function () {
 
             if (state.grid) {
                 // Si el grid ya existe, solo recargar los datos
-                state.grid.dataSource.page(1); // Volver a la página 1
-                state.grid.dataSource.read(); // Recargar datos con los nuevos filtros
+                if (state.grid.dataSource.page() !== 1) {
+                    state.grid.dataSource.page(1); // Volver a la página 1 (ya dispara read)
+                } else {
+                    state.grid.dataSource.read(); // Si ya está en página 1, forzar recarga
+                }
             } else {
                 // Si el grid no existe, inicializarlo
                 this.inicializarGrid();
@@ -655,7 +658,11 @@ var ControlBoletos = (function () {
                 data.NegocioId +
                 ')" title="Visualizar Contrato"><i class="fa fa-file-text-o"></i><span class="tooltiptext"></span></button>',
             );
-            var esValidoParaControl = data.EstadoVersion == "Vigente";
+            var esValidoParaControl = true;
+            if (data.TipoBoleto == 'Confirma' || data.TipoBoleto == 'Físico' || data.TipoBoleto == 'Carta Oferta') {
+                esValidoParaControl = data.EstadoVersion == "Vigente";
+            }
+            
             if (esValidoParaControl) {
                 botones.push(
                     '<button class="btn btn-sm btn-outline-primary btn-acciones tooltip-custom" onclick="ControlDeBoletosGestion.abrir({ControlDeBoletosId:' +
@@ -707,7 +714,6 @@ var ControlBoletos = (function () {
 
                 // Normalizar la respuesta - el backend devuelve { Data: [objetos], Total: n }
                 var contrato = null;
-                console.log('response-->>', response);
                 if (response.Data !== undefined) {
                     if (Array.isArray(response.Data)) {
                         // Es un array, tomar el primer elemento

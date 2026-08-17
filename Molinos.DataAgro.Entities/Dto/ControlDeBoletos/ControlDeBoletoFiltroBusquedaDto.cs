@@ -21,9 +21,9 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
 
         // Propiedades de paginación de Kendo Grid
         public int Page { get; set; } = 1;
-        public int PageSize { get; set; } = 50;
+        public int PageSize { get; set; } = 10;
         public int Skip { get; set; } = 0;
-        public int Take { get; set; } = 50;
+        public int Take { get; set; } = 10;
         public List<SortDescriptor> Sort { get; set; }
     }
 

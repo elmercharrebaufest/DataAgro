@@ -434,7 +434,9 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (pagina.Count > 0)
             {
-                foreach (var item in pagina.Where(x => !x.EsConfirma && !string.IsNullOrWhiteSpace(x.ContratoSAP)))
+                foreach (var item in pagina.Where(x => !x.EsConfirma && !string.IsNullOrWhiteSpace(x.ContratoSAP) && (x.TipoBoletoId == (int) EnumBoletoCompraNet.CARTA_OFERTA ||
+                                                                                                                      x.TipoBoletoId == (int)EnumBoletoCompraNet.FISICO ||
+                                                                                                                      x.TipoBoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ))
                 {
                     var estado = ObtenerEstadoBoleto(new BasicoBoleto
                     {
@@ -1998,7 +2000,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
                     HttpRuntime.Cache.Insert(cacheKey, consultaBoleto, null,
-                        DateTime.UtcNow.AddMinutes(5), System.Web.Caching.Cache.NoSlidingExpiration);
+                        DateTime.UtcNow.AddSeconds(30), System.Web.Caching.Cache.NoSlidingExpiration);
                 }
                 var version = Int32.Parse(consultaBoleto.Version);
                 if (version > boleto.Version)
