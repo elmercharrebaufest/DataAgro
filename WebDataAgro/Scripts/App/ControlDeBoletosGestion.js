@@ -21,7 +21,6 @@ var ControlDeBoletosGestion = (function () {
         bolsa: null
     };
 
-
     let controlContratoSAP;
     let controlCuitVendedor;
     let controlCuitCorredor;
@@ -44,6 +43,7 @@ var ControlDeBoletosGestion = (function () {
     let controlMoneda;
     let controlVersionBoleto;
     let controlFechaGeneracion;
+    let controlNumeroSio;
 
     async function configurarEventos() {
 
@@ -131,6 +131,7 @@ var ControlDeBoletosGestion = (function () {
         controlMoneda = $form.find("#Moneda");
         controlVersionBoleto = $form.find("#VersionBoleto");
         controlFechaGeneracion = $form.find("#FechaGeneracion");
+        controlNumeroSio = $form.find("#NumeroSio");
     }
 
     async function cargarDatos() {
@@ -160,6 +161,7 @@ var ControlDeBoletosGestion = (function () {
             controlPeriodoOperacion.text(contrato.FechaOperacion);
             controlVersionBoleto.text(contrato.VersionBoleto != null ? contrato.VersionBoleto : '');
             controlFechaGeneracion.text(contrato.FechaGeneracion != null ? contrato.FechaGeneracion : '');
+            controlNumeroSio.text(contrato.NumeroSio != null ? contrato.NumeroSio : '');
 
             state.operaSinOblea = contrato.OperaSinOblea;
             state.planCanje = contrato.PlanCanje;

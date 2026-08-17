@@ -1,3 +1,4 @@
+using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
@@ -13,12 +14,15 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
+using ControlBoletosSortDescriptor = Molinos.DataAgro.Entities.Dto.ControlDeBoletos.SortDescriptor;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -34,6 +38,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IConfirmaConsultaDocumentosRegistradosAgent confirmaConsultaDocumentosRegistradosAgent;
+        private readonly IStatusContratoAgent statusContratoAgent;
+        private readonly IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent;
         public ControlDeBoletosManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager,
                                        IModificacionContratoControlBoletoAgent modificacionContratoControlBoletoAgent,
                                        ISeguimientoControlBoletoAgent seguimientoControlBoletoAgent,
@@ -41,7 +47,9 @@ namespace Molinos.DataAgro.Business.Managers
                                        IDatosCertificacionControlBoletoAgent datosCertificacionControlBoletoAgent,
                                        IAltaTempranaAgent altaTempranaAgent,
                                        ILogDataAgroManager logDataAgroManager,
-                                       IConfirmaConsultaDocumentosRegistradosAgent confirmaConsultaDocumentosRegistradosAgent
+                                       IConfirmaConsultaDocumentosRegistradosAgent confirmaConsultaDocumentosRegistradosAgent,
+                                       IStatusContratoAgent statusContratoAgent,
+                                       IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent
                                        )
         {
             this.logger = logger;
@@ -54,6 +62,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.altaTempranaAgent = altaTempranaAgent;
             this.logDataAgroManager = logDataAgroManager;
             this.confirmaConsultaDocumentosRegistradosAgent = confirmaConsultaDocumentosRegistradosAgent;
+            this.statusContratoAgent = statusContratoAgent;
+            this.oConsultarEstadoBoletoAgent = oConsultarEstadoBoletoAgent;
         }
 
         #region Reporte Seguimiento Boletos
@@ -304,8 +314,10 @@ namespace Molinos.DataAgro.Business.Managers
         #endregion
 
         #region Pendientes de Control
-        public List<ControlDeBoletosConsultaDto> GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
+        public (List<ControlDeBoletosConsultaDto> Data, int Total) GetControlBoletosPendientes(ControlDeBoletoFiltroBusquedaDto filtros)
         {
+            filtros = filtros ?? new ControlDeBoletoFiltroBusquedaDto();
+
             // Paso 1: detectar negocios SAP confirmados sin registro en ControlDeBoletos e insertarlos vía EF
             var negociosIds = repositorio.ObtenerConsultaEscalar(new TraerNegociosPendientesControlBoleto());
 
@@ -409,7 +421,37 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             // Paso 2: consulta principal vía SP (filtros + JOINs + seguimiento resueltos en SQL Server)
-            return repositorio.ObtenerConsultaEscalar(new TraerControlBoletosPendientes(filtros));
+            var data = repositorio.ObtenerConsultaEscalar(new TraerControlBoletosPendientes(filtros)) ?? new List<ControlDeBoletosConsultaDto>();
+            var total = data.Count;
+            var query = AplicarOrdenControlBoletos(data.AsQueryable(), filtros.Sort);
+            var skip = filtros.Skip < 0 ? 0 : filtros.Skip;
+            var take = filtros.Take > 0 ? filtros.Take : total;
+
+            var pagina = query
+                .Skip(skip)
+                .Take(take)
+                .ToList();
+
+            if (pagina.Count > 0)
+            {
+                foreach (var item in pagina.Where(x => !x.EsConfirma && !string.IsNullOrWhiteSpace(x.ContratoSAP)))
+                {
+                    var estado = ObtenerEstadoBoleto(new BasicoBoleto
+                    {
+                        ContratoSAP = item.ContratoSAP,
+                        NegocioSAP = item.ContratoSAP,
+                        Version = item.Version,
+                        Estado_Version = "Pendiente"
+                    });
+                    item.EstadoVersion = estado;
+                    if (estado == "Anulado")
+                    {
+                        item.Version = (item.Version ?? 0) + 1;
+                    }
+                }
+            }
+            
+            return (pagina, total);
         }
         public Resultado RegistroContratoPendienteDeControl(int negocioId, int? altaIdLoteConfirma = null, int? altaIdDocumentoConfirma = null, bool? esConfirmaAltaBorrador = false)
         {
@@ -489,7 +531,6 @@ namespace Molinos.DataAgro.Business.Managers
             };
             this.logDataAgroManager.LogCambiosControlBoletos(objetoLog, TipoAccionLogDataAgro.Modificar, negocio.Id, "Modificacion de Contrato - Control de Boletos");
         }
-
         public Resultado ModificacionContrato(ControlDeBoletosModificacionContratoDto dto)
         {
             var resultado = new Resultado();
@@ -539,6 +580,11 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Negocio>(x => x.Id == negocioId);
             if (contrato != null)
             {
+                var estadoContratoSap = this.statusContratoAgent.ValidarEstado(contrato.ContratoSAP);
+                if (estadoContratoSap != null)
+                {
+                    datosContrato.NumeroSio = estadoContratoSap.NumeroSio;
+                }
                 datosContrato.NegocioId = contrato.Id;
                 datosContrato.BolsaId = contrato.Bolsa != null ? contrato.Bolsa.Id : 0;
                 datosContrato.LocalidadId = contrato.LocalidadId;
@@ -1934,6 +1980,71 @@ namespace Molinos.DataAgro.Business.Managers
             string cuit = negocio.CorredorId > 0 ? negocio.Corredor.CUIT : negocio.Proveedor.CUIT;
             var documentoConfirmaPDF = confirmaConsultaDocumentosRegistradosAgent.ConfirmaConsultaDocumentosRegistrados(bolsa, documento, cuit);
             return documentoConfirmaPDF;
+        }
+        #endregion
+
+        #region Metodos Privados
+        private string ObtenerEstadoBoleto(BasicoBoleto boleto)
+        {
+            var mensaje = boleto.Estado_Version;
+            try
+            {
+                boleto.FijacionSAP = " ";
+
+                var cacheKey = $"ControlBoleto_EstadoBoleto_{boleto.ContratoSAP}";
+                var consultaBoleto = HttpRuntime.Cache[cacheKey] as DatosEstadoBoletoDto;
+
+                if (consultaBoleto == null)
+                {
+                    consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(boleto.ContratoSAP, boleto.FijacionSAP ?? string.Empty);
+                    HttpRuntime.Cache.Insert(cacheKey, consultaBoleto, null,
+                        DateTime.UtcNow.AddMinutes(5), System.Web.Caching.Cache.NoSlidingExpiration);
+                }
+                var version = Int32.Parse(consultaBoleto.Version);
+                if (version > boleto.Version)
+                {
+                    mensaje = "Anulado";
+                }
+                else if (version == boleto.Version)
+                {
+                    if (consultaBoleto.Anulado == "X")
+                    {
+                        mensaje = "Anulado";
+                    }
+                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
+                    {
+                        mensaje = "Vigente";
+                    }
+                    else
+                    {
+                        mensaje = "Pendiente";
+                    }
+                }
+                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
+                {
+                    mensaje = "Pendiente";
+                }
+                else
+                {
+                    logger.Info($"Control de Boleto - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Info($"Control de Boleto - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Mensaje: {ex.Message}.");
+            }
+
+            return mensaje;
+        }
+        private static IQueryable<ControlDeBoletosConsultaDto> AplicarOrdenControlBoletos(IQueryable<ControlDeBoletosConsultaDto> query, List<ControlBoletosSortDescriptor> sort)
+        {
+            if (sort != null && sort.Any())
+            {
+                var orderBy = string.Join(",", sort.Select(s => s.Field + (s.Dir == "desc" ? " descending" : " ascending")));
+                return query.OrderBy(orderBy);
+            }
+
+            return query;
         }
         #endregion
     }

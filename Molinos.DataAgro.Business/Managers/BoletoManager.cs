@@ -1221,7 +1221,7 @@ namespace Molinos.DataAgro.Business.Managers
             return request;
         }
 
-        private string ObtenerEstadoBoleto(BasicoBoleto boleto)
+        public string ObtenerEstadoBoleto(BasicoBoleto boleto)
         {
             var mensaje = boleto.Estado_Version;
             try

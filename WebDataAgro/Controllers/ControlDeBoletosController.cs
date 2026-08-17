@@ -101,32 +101,12 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-
-                // Obtener todos los boletos con los filtros aplicados
-                var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
-
-                // Aplicar paginación
-                var boletosQuery = todosBoletos.AsQueryable();
-                var totalRegistros = boletosQuery.Count();
-
-                // Aplicar ordenamiento si existe
-                if (filtrosBusqueda.Sort != null && filtrosBusqueda.Sort.Any())
-                {
-                    var sortDescriptor = filtrosBusqueda.Sort.First();
-                    var orderBy = sortDescriptor.Field + (sortDescriptor.Dir == "desc" ? " descending" : " ascending");
-                    boletosQuery = boletosQuery.OrderBy(orderBy);
-                }
-
-                // Aplicar skip y take para paginación
-                var boletos = boletosQuery
-                    .Skip(filtrosBusqueda.Skip)
-                    .Take(filtrosBusqueda.Take)
-                    .ToList();
+                var resultadoPaginado = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
 
                 var result = new
                 {
-                    Data = boletos,
-                    Total = totalRegistros
+                    Data = resultadoPaginado.Item1,
+                    Total = resultadoPaginado.Item2
                 };
 
                 return Json(result);
@@ -151,7 +131,13 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda);
+                filtrosBusqueda = filtrosBusqueda ?? new ControlDeBoletoFiltroBusquedaDto();
+                filtrosBusqueda.Skip = 0;
+                filtrosBusqueda.Take = int.MaxValue;
+
+                var todosBoletos = this._controlDeBoletosManager.GetControlBoletosPendientes(filtrosBusqueda).Item1;
+
+
 
                 // Definir encabezados según la grilla principal
                 string[] headers = new string[] {

@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         //Versiones Boleto
         public int? Version { get; set; }
         public DateTime? FechaGeneracion { get; set; }
+        public string EstadoVersion { get; set; }
 
         // Campos BIT para control de procesos
         public bool ControlIniciado { get; set; }

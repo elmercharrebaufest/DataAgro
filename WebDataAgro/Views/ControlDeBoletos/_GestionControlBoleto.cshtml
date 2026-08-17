@@ -23,13 +23,25 @@
 
             <div class="modal-body">
                 <div id="accordionGestionBoleto">
-
                     <form id="frmGestionarContrato">
-
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Contrato</strong></label>
                                 <label id="ContratoSAP" class="d-block ancho-campos-fijo"></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="d-block"><strong>Version Boleto</strong></label>
+                                <label id="VersionBoleto" class="d-block ancho-campos-fijo"></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="d-block"><strong>FechaGeneracion</strong></label>
+                                <label id="FechaGeneracion" class="d-block ancho-campos-fijo"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="d-block"><strong>Numero Sio</strong></label>
+                                <label id="NumeroSio" class="d-block ancho-campos-fijo"></label>
                             </div>
                             <div class="col-md-4">
                                 <label class="d-block"><strong>CUIT Vendedor</strong></label>
@@ -52,38 +64,23 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="d-block"><strong>Version Boleto</strong></label>
-                                <label id="VersionBoleto" class="d-block ancho-campos-fijo"></label>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>FechaGeneracion</strong></label>
-                                <label id="FechaGeneracion" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
                                 <label class="d-block"><strong>Material</strong></label>
                                 <label id="Material" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Provincia</strong></label>
                                 <label id="Provincia" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Kilos</strong></label>
                                 <label id="Kilos" class="d-block ancho-campos-fijo"></label>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Procedencia</strong></label>
                                 <label id="Procedencia" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label><strong>Precio x Tonelada</strong></label>
 
@@ -92,57 +89,49 @@
                                     <label id="Moneda" class="ancho-campos-fijo"></label>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Destino</strong></label>
                                 <label id="Destino" class="ancho-campos-fijo"></label>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Clasificación Proveedor</strong></label>
                                 <label id="ClasificacionProveedor" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Estándar Calidad</strong></label>
                                 <label id="StandardCalidad" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Período Entrega</strong></label>
                                 <label id="PeriodoEntrega" class="d-block ancho-campos-fijo"></label>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Campaña</strong></label>
                                 <label id="Campania" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Tipo Boleto</strong></label>
                                 <label id="TipoBoleto" class="d-block ancho-campos-fijo"></label>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="d-block"><strong>Período Operación</strong></label>
                                 <label id="PeriodoOperacion" class="d-block ancho-campos-fijo"></label>
                             </div>
                         </div>
                         @*<div class="row">
-                            <div class="col-md-4">
-                            </div>
-                            <div class="col-md-4">
-                                <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
-                            </div>
-                            <div class="col-md-4">
-                            </div>
-                        </div>*@
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-4">
+                                    <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>*@
                     </form>
-
                     <!-- ════════ 1. SEGUIMIENTO CONTROL BOLETO ════════ -->
                     <div class="panel panel-default" style="margin-bottom:10px;">
                         <div class="panel-heading" id="headingSeguimiento">
@@ -173,7 +162,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- ════════ 2. DATOS DE CERTIFICACIÓN ════════ -->
                     <div class="panel panel-default" style="margin-bottom:10px;">
                         <div class="panel-heading" id="headingCertificacion">
@@ -204,7 +192,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- ════════ 3. MODIFICAR DATOS DEL CONTRATO ════════ -->
                     <div class="panel panel-default" style="margin-bottom:10px; margin-top: 10px">
                         <div class="panel-heading" id="headingModificar">
@@ -231,7 +218,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="modal-footer">
@@ -248,9 +234,11 @@
         margin-bottom: 0px;
         margin-top: 0px;
     }
+
     .col-md-4 > label {
         display: block;
     }
+
     #modalGestionControlBoleto .modal-content {
         background-color: #fff;
     }
@@ -274,14 +262,14 @@
         border-bottom: 0px;
     }
 
-    #accordionGestionBoleto .panel-heading .btn-link {
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        text-decoration: none;
-    }
+        #accordionGestionBoleto .panel-heading .btn-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+        }
 
-    #accordionGestionBoleto .panel-heading .btn-link:hover {
-        color: #fff;
-    }
+            #accordionGestionBoleto .panel-heading .btn-link:hover {
+                color: #fff;
+            }
 </style>
