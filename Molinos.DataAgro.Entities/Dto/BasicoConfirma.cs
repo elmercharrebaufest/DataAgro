@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -38,5 +38,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaConfirmadoSAP { get; set; }
         public int? ComercialId { get; set; }
         public int? ProveedorId { get; set; }
+        public string Obsevacion { get; set; }
+        public decimal? AperturaPrecio { get; set; }
     }
 }
