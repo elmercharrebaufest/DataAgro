@@ -434,9 +434,9 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (pagina.Count > 0)
             {
-                foreach (var item in pagina.Where(x => !x.EsConfirma && !string.IsNullOrWhiteSpace(x.ContratoSAP) && (x.TipoBoletoId == (int) EnumBoletoCompraNet.CARTA_OFERTA ||
-                                                                                                                      x.TipoBoletoId == (int)EnumBoletoCompraNet.FISICO ||
-                                                                                                                      x.TipoBoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ))
+                foreach (var item in pagina.Where(x => !string.IsNullOrWhiteSpace(x.ContratoSAP) && (x.TipoBoletoId == (int) EnumBoletoCompraNet.CARTA_OFERTA ||
+                                                                                                     x.TipoBoletoId == (int)EnumBoletoCompraNet.FISICO ||
+                                                                                                     x.TipoBoletoId == (int)EnumBoletoCompraNet.CONFIRMA) ).ToList())
                 {
                     var estado = ObtenerEstadoBoleto(new BasicoBoleto
                     {
@@ -448,6 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.EstadoVersion = estado;
                     if (estado == "Anulado")
                     {
+                        item.FechaGeneracion = null;
                         item.Version = (item.Version ?? 0) + 1;
                     }
                 }
