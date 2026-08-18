@@ -47,13 +47,13 @@ var ControlDeBoletosGestion = (function () {
 
     async function configurarEventos() {
 
-        $("#collapseModificar").on("show.bs.collapse", async function () {
+        $('a[href="#tabContrato"]').on("shown.bs.tab", async function () {
             if (state.negocioId > 0) {
                 ControlDeBoletosModificarContrato.inicializar(state.negocioId);
             }
         });
 
-        $("#collapseCertificacion").on("shown.bs.collapse", async function () {
+        $('a[href="#tabCertificacion"]').on("shown.bs.tab", async function () {
             // state.EsSinBoleto = true;
             // state.OperaSinOblea = true;
 
@@ -67,7 +67,7 @@ var ControlDeBoletosGestion = (function () {
             );
         });
 
-        $("#collapseSeguimiento").on("shown.bs.collapse", async function () {
+        $('a[href="#tabSeguimiento"]').on("shown.bs.tab", async function () {
             await ControlDeBoletosSeguimiento.inicializar(
                 state.controlDeBoletosId,
                 state.operaSinOblea,
@@ -103,7 +103,7 @@ var ControlDeBoletosGestion = (function () {
 
     }
     function bindControls() {
-        let $form = $("#accordionGestionBoleto #frmGestionarContrato");
+        let $form = $("#tabsGestionBoleto #frmGestionarContrato");
 
         if (!$form.length) {
             $form = $("#frmGestionarContrato").first();

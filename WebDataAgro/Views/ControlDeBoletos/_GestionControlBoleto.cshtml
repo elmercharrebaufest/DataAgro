@@ -22,199 +22,178 @@
             </div>
 
             <div class="modal-body">
-                <div id="accordionGestionBoleto">
-                    <form id="frmGestionarContrato">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Contrato</strong></label>
-                                <label id="ContratoSAP" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Version Boleto</strong></label>
-                                <label id="VersionBoleto" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>FechaGeneracion</strong></label>
-                                <label id="FechaGeneracion" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Numero Sio</strong></label>
-                                <label id="NumeroSio" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>CUIT Vendedor</strong></label>
-                                <label id="CuitVendedor" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Vendedor</strong></label>
-                                <label id="Vendedor" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>CUIT Corredor</strong></label>
-                                <label id="CuitCorredor" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="d-block"><strong>Corredor</strong></label>
-                                <label id="Corredor" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Material</strong></label>
-                                <label id="Material" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Provincia</strong></label>
-                                <label id="Provincia" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Kilos</strong></label>
-                                <label id="Kilos" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Procedencia</strong></label>
-                                <label id="Procedencia" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label><strong>Precio x Tonelada</strong></label>
+                <div id="tabsGestionBoleto">
+                    <ul class="nav gestion-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#tabInformacionContrato" aria-controls="tabInformacionContrato" role="tab" data-toggle="tab">
+                                Informacion Contrato
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tabSeguimiento" aria-controls="tabSeguimiento" role="tab" data-toggle="tab">
+                                Seguimiento
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tabCertificacion" aria-controls="tabCertificacion" role="tab" data-toggle="tab">
+                                PreCertificación
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tabContrato" aria-controls="tabContrato" role="tab" data-toggle="tab">
+                                Contrato
+                            </a>
+                        </li>
+                    </ul>
 
-                                <div style="display:flex">
-                                    <label id="PrecioXTonelada" class="ancho-campos-fijo"></label>
-                                    <label id="Moneda" class="ancho-campos-fijo"></label>
+                    <div class="tab-content gestion-tab-content" style="margin-top: 10px;border:none;">
+                        <div role="tabpanel" class="tab-pane active" id="tabInformacionContrato">
+                            <form id="frmGestionarContrato">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Contrato</strong></label>
+                                        <label id="ContratoSAP" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Version Boleto</strong></label>
+                                        <label id="VersionBoleto" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>FechaGeneracion</strong></label>
+                                        <label id="FechaGeneracion" class="d-block ancho-campos-fijo"></label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Destino</strong></label>
-                                <label id="Destino" class="ancho-campos-fijo"></label>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Numero Sio</strong></label>
+                                        <label id="NumeroSio" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>CUIT Vendedor</strong></label>
+                                        <label id="CuitVendedor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Vendedor</strong></label>
+                                        <label id="Vendedor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>CUIT Corredor</strong></label>
+                                        <label id="CuitCorredor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="d-block"><strong>Corredor</strong></label>
+                                        <label id="Corredor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Material</strong></label>
+                                        <label id="Material" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Provincia</strong></label>
+                                        <label id="Provincia" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Kilos</strong></label>
+                                        <label id="Kilos" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Procedencia</strong></label>
+                                        <label id="Procedencia" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label><strong>Precio x Tonelada</strong></label>
+
+                                        <div style="display:flex">
+                                            <label id="PrecioXTonelada" class="ancho-campos-fijo"></label>
+                                            <label id="Moneda" class="ancho-campos-fijo"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Destino</strong></label>
+                                        <label id="Destino" class="ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Clasificación Proveedor</strong></label>
+                                        <label id="ClasificacionProveedor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Estándar Calidad</strong></label>
+                                        <label id="StandardCalidad" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Período Entrega</strong></label>
+                                        <label id="PeriodoEntrega" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Campaña</strong></label>
+                                        <label id="Campania" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Tipo Boleto</strong></label>
+                                        <label id="TipoBoleto" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Período Operación</strong></label>
+                                        <label id="PeriodoOperacion" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+                                @*<div class="row">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                        </div>
+                                    </div>*@
+                            </form>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Clasificación Proveedor</strong></label>
-                                <label id="ClasificacionProveedor" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Estándar Calidad</strong></label>
-                                <label id="StandardCalidad" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Período Entrega</strong></label>
-                                <label id="PeriodoEntrega" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Campaña</strong></label>
-                                <label id="Campania" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Tipo Boleto</strong></label>
-                                <label id="TipoBoleto" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="d-block"><strong>Período Operación</strong></label>
-                                <label id="PeriodoOperacion" class="d-block ancho-campos-fijo"></label>
-                            </div>
-                        </div>
-                        @*<div class="row">
-                                <div class="col-md-4">
-                                </div>
-                                <div class="col-md-4">
-                                    <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
-                                </div>
-                                <div class="col-md-4">
-                                </div>
-                            </div>*@
-                    </form>
-                    <!-- ════════ 1. SEGUIMIENTO CONTROL BOLETO ════════ -->
-                    <div class="panel panel-default" style="margin-bottom:10px;">
-                        <div class="panel-heading" id="headingSeguimiento">
-                            <h5 style="margin-bottom:0;">
-                                <button class="btn btn-link" data-toggle="collapse"
-                                        data-target="#collapseSeguimiento"
-                                        aria-expanded="true"
-                                        aria-controls="collapseSeguimiento">
-                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
-                                    Seguimiento de Boleto
+
+                        <div role="tabpanel" class="tab-pane" id="tabSeguimiento">
+                            @Html.Partial("_FormSeguimientoControlBoleto")
+                            <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
+                                <button class="btn btn-danger"
+                                        onclick="ControlDeBoletosSeguimiento.eliminar()">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
                                 </button>
-                            </h5>
-                        </div>
-                        <div id="collapseSeguimiento" class="panel-collapse collapse"
-                             data-parent="#accordionGestionBoleto">
-                            <div class="panel-body" style="padding-top: 2px;">
-                                @Html.Partial("_FormSeguimientoControlBoleto")
-                                <div class="text-right" style="margin-top: 5px; padding-top: 5px;">
-                                    <button class="btn btn-danger"
-                                            onclick="ControlDeBoletosSeguimiento.eliminar()">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                                    </button>
-                                    <button class="btn btn-primary"
-                                            onclick="ControlDeBoletosSeguimiento.guardar()">
-                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
-                                    </button>
-                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="ControlDeBoletosSeguimiento.guardar()">
+                                    <i class="fa fa-save" aria-hidden="true"></i> Guardar
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <!-- ════════ 2. DATOS DE CERTIFICACIÓN ════════ -->
-                    <div class="panel panel-default" style="margin-bottom:10px;">
-                        <div class="panel-heading" id="headingCertificacion">
-                            <h5 style="margin-bottom:0;">
-                                <button class="btn btn-link" data-toggle="collapse"
-                                        data-target="#collapseCertificacion"
-                                        aria-expanded="false"
-                                        aria-controls="collapseCertificacion">
-                                    <i class="fa fa-certificate" aria-hidden="true"></i>
-                                    PreCertificación de Boleto
+
+                        <div role="tabpanel" class="tab-pane" id="tabCertificacion">
+                            @Html.Partial("_FormDatosCertificacion")
+                            <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
+                                <button class="btn btn-danger"
+                                        onclick="ControlDeBoletosDatosCertificacion.eliminar()">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
                                 </button>
-                            </h5>
-                        </div>
-                        <div id="collapseCertificacion" class="panel-collapse collapse"
-                             data-parent="#accordionGestionBoleto">
-                            <div class="panel-body" style="padding-top: 2px;">
-                                @Html.Partial("_FormDatosCertificacion")
-                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
-                                    <button class="btn btn-danger"
-                                            onclick="ControlDeBoletosDatosCertificacion.eliminar()">
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                                    </button>
-                                    <button class="btn btn-primary"
-                                            onclick="ControlDeBoletosDatosCertificacion.guardar()">
-                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
-                                    </button>
-                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="ControlDeBoletosDatosCertificacion.guardar()">
+                                    <i class="fa fa-save" aria-hidden="true"></i> Guardar
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <!-- ════════ 3. MODIFICAR DATOS DEL CONTRATO ════════ -->
-                    <div class="panel panel-default" style="margin-bottom:10px; margin-top: 10px">
-                        <div class="panel-heading" id="headingModificar">
-                            <h5 style="margin-bottom:0;">
-                                <button class="btn btn-link" data-toggle="collapse"
-                                        data-target="#collapseModificar"
-                                        aria-expanded="false"
-                                        aria-controls="collapseModificar">
-                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                    Datos del Contrato
+
+                        <div role="tabpanel" class="tab-pane" id="tabContrato">
+                            @Html.Partial("_FormModificarDatosDelContrato")
+                            <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
+                                <button class="btn btn-primary"
+                                        onclick="ControlDeBoletosModificarContrato.guardar()">
+                                    <i class="fa fa-save" aria-hidden="true"></i> Guardar
                                 </button>
-                            </h5>
-                        </div>
-                        <div id="collapseModificar" class="panel-collapse collapse"
-                             data-parent="#accordionGestionBoleto">
-                            <div class="panel-body" style="padding-top: 2px;">
-                                @Html.Partial("_FormModificarDatosDelContrato")
-                                <div class="text-right" style="margin-top: 5px; padding-top: 5px; ">
-                                    <button class="btn btn-primary"
-                                            onclick="ControlDeBoletosModificarContrato.guardar()">
-                                        <i class="fa fa-save" aria-hidden="true"></i> Guardar
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -257,19 +236,55 @@
         cursor: pointer;
     }
 
-    #accordionGestionBoleto .panel-heading {
-        background-color: #26337B;
-        border-bottom: 0px;
+    #tabsGestionBoleto .gestion-tabs {
+        margin: 0 0 10px 0;
+        border: 1px solid #1f2c67;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
     }
 
-        #accordionGestionBoleto .panel-heading .btn-link {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            text-decoration: none;
+        #tabsGestionBoleto .gestion-tabs > li {
+            margin: 0;
+            flex: 1 1 0;
         }
 
-            #accordionGestionBoleto .panel-heading .btn-link:hover {
-                color: #fff;
+            #tabsGestionBoleto .gestion-tabs > li + li {
+                border-left: 1px solid #1f2c67;
             }
+
+            #tabsGestionBoleto .gestion-tabs > li > a {
+                border: 0;
+                border-radius: 0;
+                background-color: #26337B;
+                color: #fff;
+                font-size: 13px;
+                font-weight: 600;
+                padding: 8px 10px;
+                text-align: center;
+                text-decoration: none;
+                margin: 0;
+            }
+
+                #tabsGestionBoleto .gestion-tabs > li > a:hover,
+                #tabsGestionBoleto .gestion-tabs > li > a:focus {
+                    background-color: #1f2c67;
+                    border-color: #1f2c67;
+                    color: #fff;
+                }
+
+        #tabsGestionBoleto .gestion-tabs > li.active > a,
+        #tabsGestionBoleto .gestion-tabs > li.active > a:hover,
+        #tabsGestionBoleto .gestion-tabs > li.active > a:focus {
+            background-color: #0f1b4a;
+            border-color: #0f1b4a;
+            color: #fff;
+        }
+
+    #tabsGestionBoleto .gestion-tab-content {
+        border-top: 1px solid #dfe3f0;
+        padding-top: 8px;
+    }
 </style>
