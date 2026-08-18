@@ -82,7 +82,7 @@ BEGIN
 
         n.TipoNegocioId,
 
-        -- TipoNegocio
+         -- TipoNegocio: replica la lógica de is/as en EF (orden importante)
         CASE
             WHEN n.Discriminator = 'Contrato'
                  AND n.Madre = 1
@@ -152,7 +152,7 @@ BEGIN
             ELSE 'Pendiente'
         END AS Estado_Version,
 
-        -- BoletoId / TipoBoleto
+        -- BoletoId / TipoBoleto: para FIJACION viene del contrato padre
         CASE
             WHEN n.TipoNegocioId = 3
                 THEN nPadre.BoletoId
@@ -171,7 +171,7 @@ BEGIN
             ELSE 'NO'
         END AS Canje,
 
-        -- Bolsa
+        -- Bolsa: para FIJACION viene del contrato padre
         CASE
             WHEN n.TipoNegocioId = 3
                 THEN nPadre.BolsaId
@@ -291,7 +291,7 @@ BEGIN
     WHERE
         n.ConfirmadoSAP = 1
 
-        AND n.EstadoId = 5
+        AND n.EstadoId = 5 -- EnumEstadoContrato.Finalizado
 
         -- Boleto FISICO o CARTA_OFERTA
         AND (
@@ -317,6 +317,7 @@ BEGIN
                 )
             )
         )
+        AND n.TipoNegocioId <> 3 
 
         -- Bloque NegocioSAP
         AND (
