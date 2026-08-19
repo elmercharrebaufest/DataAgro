@@ -49,10 +49,16 @@
                     <div class="tab-content gestion-tab-content" style="margin-top: 10px;border:none;">
                         <div role="tabpanel" class="tab-pane active" id="tabInformacionContrato">
                             <form id="frmGestionarContrato">
+                                <!-- Información del Boleto -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="d-block"><strong><u>Información del Boleto</u></strong></label>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Contrato</strong></label>
-                                        <label id="ContratoSAP" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>Tipo Boleto</strong></label>
+                                        <label id="TipoBoleto" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="d-block"><strong>Version Boleto</strong></label>
@@ -63,51 +69,41 @@
                                         <label id="FechaGeneracion" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                 </div>
+
+                                <!-- Información del Contrato -->
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <label class="d-block"><strong>Numero Sio</strong></label>
-                                        <label id="NumeroSio" class="d-block ancho-campos-fijo"></label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="d-block"><strong>CUIT Vendedor</strong></label>
-                                        <label id="CuitVendedor" class="d-block ancho-campos-fijo"></label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="d-block"><strong>Vendedor</strong></label>
-                                        <label id="Vendedor" class="d-block ancho-campos-fijo"></label>
+                                    <div class="col-md-12">
+                                        <label class="d-block"><strong><u>Información del Contrato</u></strong></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>CUIT Corredor</strong></label>
-                                        <label id="CuitCorredor" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>Contrato</strong></label>
+                                        <label id="ContratoSAP" class="d-block ancho-campos-fijo"></label>
                                     </div>
-                                    <div class="col-md-8">
-                                        <label class="d-block"><strong>Corredor</strong></label>
-                                        <label id="Corredor" class="d-block ancho-campos-fijo"></label>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-4">
                                         <label class="d-block"><strong>Material</strong></label>
                                         <label id="Material" class="d-block ancho-campos-fijo"></label>
+
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Provincia</strong></label>
-                                        <label id="Provincia" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>Campaña</strong></label>
+                                        <label id="Campania" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Período Operación</strong></label>
+                                        <label id="PeriodoOperacion" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Período Entrega</strong></label>
+                                        <label id="PeriodoEntrega" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="d-block"><strong>Kilos</strong></label>
                                         <label id="Kilos" class="d-block ancho-campos-fijo"></label>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Procedencia</strong></label>
-                                        <label id="Procedencia" class="d-block ancho-campos-fijo"></label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label><strong>Precio x Tonelada</strong></label>
+                                        <label><strong>Precio</strong></label>
 
                                         <div style="display:flex">
                                             <label id="PrecioXTonelada" class="ancho-campos-fijo"></label>
@@ -115,11 +111,17 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
+                                        <label class="d-block"><strong>Provincia</strong></label>
+                                        <label id="Provincia" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
                                         <label class="d-block"><strong>Destino</strong></label>
                                         <label id="Destino" class="ancho-campos-fijo"></label>
                                     </div>
-                                </div>
-                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Procedencia</strong></label>
+                                        <label id="Procedencia" class="d-block ancho-campos-fijo"></label>
+                                    </div>
                                     <div class="col-md-4">
                                         <label class="d-block"><strong>Clasificación Proveedor</strong></label>
                                         <label id="ClasificacionProveedor" class="d-block ancho-campos-fijo"></label>
@@ -129,33 +131,93 @@
                                         <label id="StandardCalidad" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Período Entrega</strong></label>
-                                        <label id="PeriodoEntrega" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>Numero Sio</strong></label>
+                                        <label id="NumeroSio" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+
+                                <!-- Información Comercial -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="d-block"><strong><u>Información Comercial</u></strong></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Campaña</strong></label>
-                                        <label id="Campania" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>CUIT Vendedor</strong></label>
+                                        <label id="CuitVendedor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="d-block"><strong>Vendedor</strong></label><br />
+                                        <label id="Vendedor" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="d-block"><strong>Tipo Boleto</strong></label>
-                                        <label id="TipoBoleto" class="d-block ancho-campos-fijo"></label>
+                                        <label class="d-block"><strong>CUIT Corredor</strong></label>
+                                        <label id="CuitCorredor" class="d-block ancho-campos-fijo"></label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="d-block"><strong>Período Operación</strong></label>
-                                        <label id="PeriodoOperacion" class="d-block ancho-campos-fijo"></label>
+                                    <div class="col-md-8">
+                                        <label class="d-block"><strong>Corredor</strong></label><br />
+                                        <label id="Corredor" class="d-block ancho-campos-fijo"></label>
                                     </div>
                                 </div>
-                                @*<div class="row">
-                                        <div class="col-md-4">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label id="btnEliminarControlBoleto" style="cursor: pointer; color: orangered"><strong>Eliminar control del boleto <i class="fa fa-trash-o" /></strong></label>
-                                        </div>
-                                        <div class="col-md-4">
-                                        </div>
-                                    </div>*@
+
+                                <!-- Información Adicional -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="d-block"><strong><u>Información Adicional</u></strong></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>FechaCierta</strong></label>
+                                        <label id="FechaCierta" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>CantidadFijacionMaxima</strong></label>
+                                        <label id="CantidadFijacionMaxima" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>CantidadFijacionMinima</strong></label>
+                                        <label id="CantidadFijacionMinima" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Cesion</strong></label>
+                                        <label id="Cesion" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Compensacion</strong></label>
+                                        <label id="Compensacion" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Dolarizado Express</strong></label>
+                                        <label id="DolarizadoExpress" class="d-block ancho-campos-fijo"></label>
+                                    </div>        
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>EUDR</strong></label>
+                                        <label id="EUDR" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>EPA</strong></label>
+                                        <label id="EPA" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Sustentable</strong></label>
+                                        <label id="Sustentable" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>CD</strong></label>
+                                        <label id="CD" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Pago Directo Vendedor</strong></label>
+                                        <label id="PagoDirectoVendedor" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="d-block"><strong>Plan de Canje</strong></label>
+                                        <label id="Canje" class="d-block ancho-campos-fijo"></label>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
 
@@ -275,13 +337,13 @@
                     color: #fff;
                 }
 
-        #tabsGestionBoleto .gestion-tabs > li.active > a,
-        #tabsGestionBoleto .gestion-tabs > li.active > a:hover,
-        #tabsGestionBoleto .gestion-tabs > li.active > a:focus {
-            background-color: #0f1b4a;
-            border-color: #0f1b4a;
-            color: #fff;
-        }
+            #tabsGestionBoleto .gestion-tabs > li.active > a,
+            #tabsGestionBoleto .gestion-tabs > li.active > a:hover,
+            #tabsGestionBoleto .gestion-tabs > li.active > a:focus {
+                background-color: #0f1b4a;
+                border-color: #0f1b4a;
+                color: #fff;
+            }
 
     #tabsGestionBoleto .gestion-tab-content {
         border-top: 1px solid #dfe3f0;

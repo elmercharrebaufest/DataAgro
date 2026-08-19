@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string Moneda { get; set; }
         public int? CorredorId { get; set; }
         public bool? PlanCanje { get; set; }
+        public bool? CD { get; set; }
+        public bool? PagoDirectoVendedor { get; set; }
         public bool? OperaSinOblea { get; set; }
         public bool? EsCartaOferta { get; set; }
         public bool? EsSinBoleto { get; set; }
@@ -56,5 +58,14 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int? VersionBoleto { get; set; }
         public string FechaGeneracion { get; set; }
         public long NumeroSio { get; set; }
+        public string FechaCierta { get; set; }
+
+        public bool Cesion { get; set; }
+        public bool Compensacion { get; set; }
+        public bool DolarizadoExpress { get; set; }
+        public bool EUDR { get; set; }
+        public bool EPA { get; set; }
+        public bool Sustentable { get; set; }
+        public bool Canje { get; set; }
     }
 }

@@ -301,23 +301,11 @@ BEGIN
         )
 
         -- Filtro de equipo (siempre obligatorio)
-        AND (
-            (
-                n.ComercialId IS NOT NULL
-                AND n.ComercialId IN (
-                    SELECT ComercialId
-                    FROM #Equipo
-                )
-            )
-            OR
-            (
-                n.ComercialCreadorId IS NOT NULL
-                AND n.ComercialCreadorId IN (
-                    SELECT ComercialId
-                    FROM #Equipo
-                )
-            )
-        )
+        --AND (
+        --    (n.ComercialId        IS NOT NULL AND n.ComercialId        IN (SELECT ComercialId FROM #Equipo))
+        --    OR
+        --    (n.ComercialCreadorId IS NOT NULL AND n.ComercialCreadorId IN (SELECT ComercialId FROM #Equipo))
+        --)
 
         -- ── Bloque NegocioSAP ──────────────────────────────────────────────────────
         -- Si se proporciona NegocioSAP, filtra por él (incluye fijaciones).

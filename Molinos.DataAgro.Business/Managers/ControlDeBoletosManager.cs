@@ -624,14 +624,28 @@ namespace Molinos.DataAgro.Business.Managers
                 datosContrato.Bolsa = contrato.Bolsa != null ? contrato.Bolsa.Descripcion : string.Empty;
                 datosContrato.MercaderaDeposito = (contrato.MercsDeposito != null && contrato.MercsDeposito == true) ? "SI" : "NO";
                 datosContrato.CantidadDeposito = contrato.CantidadDeposito != null ? contrato.CantidadDeposito : 0;
+
                 datosContrato.FechaHastaOriginal = contrato.FechaHastaOriginal.HasValue ? contrato.FechaHastaOriginal.Value.ToString("dd/MM/yyyy") : string.Empty;
                 datosContrato.CantidadFijacionMaxima = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMaximo ?? 0 : contrato.KgMaximo ?? 0;
                 datosContrato.CantidadFijacionMinima = (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.KgMinimo ?? 0 : contrato.KgMinimo ?? 0;
                 datosContrato.FechaDolarizadoOriginal = contrato.FechaDolarizadoOriginal.HasValue ? contrato.FechaDolarizadoOriginal.Value.ToString("dd/MM/yyyy") : string.Empty;
+
                 var aperturaPrecioRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2);
                 datosContrato.MonedaRedespacho = aperturaPrecioRedespacho?.Moneda!=null ? aperturaPrecioRedespacho?.Moneda.Descripcion : string.Empty;
                 datosContrato.ImporteRedespacho = aperturaPrecioRedespacho?.Importe;
                 datosContrato.Consignatario = contrato.Consignatario != null && ((bool)contrato.Consignatario) ? "SI" : "NO";
+                datosContrato.CD = contrato.CD != null && ((bool)contrato.CD) ? true : false;
+                datosContrato.PagoDirectoVendedor = contrato.PagoDirectoVendedor != null && ((bool)contrato.PagoDirectoVendedor) ? true : false;
+                datosContrato.FechaCierta = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("dd/MM/yyyy") : string.Empty;
+
+                datosContrato.Cesion = contrato.Cesion != null && ((bool)contrato.Cesion) ? true: false;
+                datosContrato.Compensacion = contrato.Compensacion != null && ((bool)contrato.Compensacion) ? true : false;
+                datosContrato.DolarizadoExpress = contrato.DolarizadoExpress != null && ((bool)contrato.DolarizadoExpress) ? true : false;
+                datosContrato.EUDR = contrato.EUDR != null && ((bool)contrato.EUDR) ? true : false;
+                datosContrato.EPA = contrato.EPA != null && ((bool)contrato.EPA) ? true : false;
+                datosContrato.Sustentable = contrato.Sustentable != null && ((bool)contrato.Sustentable) ? true : false;
+                datosContrato.Canje = contrato.Canje != null && ((bool)contrato.Canje) ? true : false;
+
                 if (contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
                 {
                     var confirmas = repositorio.Listar<Confirma>(x => x.NegocioId == contrato.Id);
