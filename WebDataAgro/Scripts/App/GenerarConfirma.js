@@ -347,17 +347,24 @@ const GenerarConfirma = (() => {
         });
 
         const columnasExcel = [
-            { field: "NegocioSAP", title: "Negocio SAP" },
-            { field: "ContratoSAP", title: "Contrato SAP" },
-            { field: "FijacionSAP", title: "Fijación SAP" },
-            { field: "TipoBoleto", title: "Tipo Boleto" },
+            { field: "NegocioSAP", title: "Contrato" },
             { field: "Material", title: "Material" },
-            { field: "Estado_Version", title: "Estado" },
-            { field: "FechaConfirmadoSAP", title: "Fecha Confirmado SAP" },
-            { field: "FechaGeneracion", title: "Fecha Generación" },
-            { field: "Comercial", title: "Comercial" },
+            { field: "Version", title: "Versión" },
+            { field: "FechaConfirmacion", title: "Fecha de confirmación cto" },
+            { field: "Moneda", title: "Moneda" },
+            { field: "AperturaPrecio", title: "Importe Bonificación" },
+            { field: "Precio", title: "Precio (base)" },
+            { field: "ContratoVendedor", title: "Número Cto. Vendedor" },
+            { field: "ContratoCorredor", title: "Número Cto. Corredor" },
             { field: "Vendedor", title: "Vendedor" },
-            { field: "Bolsa", title: "Bolsa" }
+            { field: "Corredor", title: "Corredor" },
+            { field: "FechaGeneracion", title: "Fecha de Generación Boleto" },
+            { field: "FechaAnulacion", title: "Fecha Anulación Boleto" },
+            { field: "Estado_Version", title: "Estado Boleto en Data" },
+            { field: "TipoNegocio", title: "Tipo de contrato" },
+            { field: "TipoBoleto", title: "Tipo de Boleto" },
+            { field: "Observacion", title: "Observaciones" },
+            { field: "Comercial", title: "Comercial" }
         ];
 
         state.grid = $grid.kendoGrid({
@@ -442,21 +449,22 @@ const GenerarConfirma = (() => {
                 },
                 { field: "NegocioSAP", title: "Contrato", type: "string", headerAttributes: { title: "Contrato" } },
                 { field: "Material", title: "Material", type: "string", headerAttributes: { title: "Material" }, editable: false },
-                { field: "TipoBoleto", title: "Tipo Boleto", type: "string", headerAttributes: { title: "Tipo Boleto" } },
-                { field: "Bolsa", title: "Bolsa", type: "string", editable: false },
-                { field: "Version", title: "Vers.", type: "number", headerAttributes: { title: "Versión" } },
-                { field: "Estado_Version", title: "Estado V.", type: "string", headerAttributes: { title: "Estado Versión" }, editable: false },
-                { field: "FechaGeneracion", title: "F. Generación", type: "date", headerAttributes: { title: "Fecha Generación" }, format: "{0:dd/MM/yyyy}" },
-                { field: "FechaConfirmadoSAP", title: "F. Confirmación SAP", type: "date", headerAttributes: { title: "Fecha Confirmación SAP" }, format: "{0:dd/MM/yyyy}" },
-                { field: "FechaAnulacion", title: "F. Anulación", type: "date", headerAttributes: { title: "Fecha Anulación" }, format: "{0:dd/MM/yyyy}" },
-                { field: "ContratoVendedor", title: "C. Vendedor", type: "string", headerAttributes: { title: "Contrato Vendedor" } },
-                { field: "ContratoCorredor", title: "C. Corredor", type: "string", headerAttributes: { title: "Contrato Corredor" } },
+                { field: "Version", title: "Versión", type: "number", headerAttributes: { title: "Versión" } },
+                { field: "FechaConfirmacion", title: "Fecha de confirmación cto", type: "date", headerAttributes: { title: "Fecha de confirmación cto" }, format: "{0:dd/MM/yyyy}" },
+                { field: "Moneda", title: "Moneda", type: "string", headerAttributes: { title: "Moneda" }, editable: false },
+                { field: "AperturaPrecio", title: "Importe Bonificación", headerAttributes: { title: "Importe Bonificación" }, sortable: false, filterable: false },
+                { field: "Precio", title: "Precio (base)", type: "number", headerAttributes: { title: "Precio (base)" }, format: "{0:#,##0.00}" },
+                { field: "ContratoVendedor", title: "Número Cto. Vendedor", type: "string", headerAttributes: { title: "Número Cto. Vendedor" } },
+                { field: "ContratoCorredor", title: "Número Cto. Corredor", type: "string", headerAttributes: { title: "Número Cto. Corredor" } },
                 { field: "Vendedor", title: "Vendedor", headerAttributes: { title: "Vendedor" } },
                 { field: "Corredor", title: "Corredor", headerAttributes: { title: "Corredor" } },
-                { field: "Comercial", title: "Comercial", headerAttributes: { title: "Comercial" } },
-                { field: "Precio", title: "Precio", type: "number", headerAttributes: { title: "Precio" }, format: "{0:#,##0.00}" },
-                { field: "Moneda", title: "Moneda", type: "string", headerAttributes: { title: "Moneda" }, editable: false },
-                { field: "TipoNegocio", title: "Tipo Contrato", type: "string", headerAttributes: { title: "Tipo Contrato" }, editable: false }
+                { field: "FechaGeneracion", title: "Fecha de Generación Boleto", type: "date", headerAttributes: { title: "Fecha de Generación Boleto" }, format: "{0:dd/MM/yyyy}" },
+                { field: "FechaAnulacion", title: "Fecha Anulación Boleto", type: "date", headerAttributes: { title: "Fecha Anulación Boleto" }, format: "{0:dd/MM/yyyy}" },
+                { field: "Estado_Version", title: "Estado Boleto en Data", type: "string", headerAttributes: { title: "Estado Boleto en Data" }, editable: false },
+                { field: "TipoNegocio", title: "Tipo de contrato", type: "string", headerAttributes: { title: "Tipo de contrato" }, editable: false },
+                { field: "TipoBoleto", title: "Tipo de Boleto", type: "string", headerAttributes: { title: "Tipo de Boleto" } },
+                { field: "Observacion", title: "Observacion", headerAttributes: { title: "Observacion" }, sortable: false, filterable: false },
+                { field: "Comercial", title: "Comercial", headerAttributes: { title: "Comercial" } }
             ],
             dataBound(e) {
                 autoFitColumnas(e.sender);

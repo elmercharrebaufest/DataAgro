@@ -1,4 +1,4 @@
-CREATE PROCEDURE dbo.DataAgro_BusquedaBoletoFisico
+CREATE PROCEDURE [dbo].[DataAgro_BusquedaBoletoFisico]
     @NegocioSAP             NVARCHAR(MAX) = NULL,   -- SAP separados por ';'
     @MaterialId             INT           = NULL,
     @ProveedorId            INT           = NULL,
@@ -13,7 +13,10 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
     -- Tabla temporal: IDs de equipo
-    CREATE TABLE #Equipo (ComercialId INT);
+    CREATE TABLE #Equipo (
+        ComercialId INT
+    );
+
     IF @Equipo IS NOT NULL AND LEN(@Equipo) > 0
         INSERT INTO #Equipo (ComercialId)
         SELECT CAST(LTRIM(RTRIM(value)) AS INT)
@@ -21,7 +24,10 @@ BEGIN
         WHERE LTRIM(RTRIM(value)) <> '';
 
     -- Tabla temporal: contratos SAP buscados
-    CREATE TABLE #NegocioSAP (ContratoSAP NVARCHAR(50));
+    CREATE TABLE #NegocioSAP (
+        ContratoSAP NVARCHAR(50)
+    );
+
     IF @NegocioSAP IS NOT NULL AND LEN(@NegocioSAP) > 0
         INSERT INTO #NegocioSAP (ContratoSAP)
         SELECT LTRIM(RTRIM(value))
@@ -38,155 +44,352 @@ BEGIN
         GROUP BY b.NegocioId
     ),
     BoletoDetalle AS (
-        SELECT b.NegocioId, b.Version, b.FechaGeneracion, b.FechaAnulacion
+        SELECT
+            b.NegocioId,
+            b.Version,
+            b.FechaGeneracion,
+            b.FechaAnulacion
         FROM Boleto b
         INNER JOIN UltimoBoleto ub
-            ON b.NegocioId = ub.NegocioId AND b.Version = ub.MaxVersion
+            ON b.NegocioId = ub.NegocioId
+            AND b.Version = ub.MaxVersion
         WHERE b.FechaAnulacion IS NULL
     )
+
     SELECT
         n.Id,
 
         -- NegocioSAP: para FIJACION usa FijacionSAP
-        CASE WHEN n.TipoNegocioId = 3 THEN n.FijacionSAP ELSE n.ContratoSAP END AS NegocioSAP,
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN n.FijacionSAP
+            ELSE n.ContratoSAP
+        END AS NegocioSAP,
+
         n.ContratoSAP,
-        CASE WHEN n.TipoNegocioId = 3 THEN n.FijacionSAP ELSE '' END            AS FijacionSAP,
+
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN n.FijacionSAP
+            ELSE ''
+        END AS FijacionSAP,
 
         -- ClaseNegocioId: 1 = Contrato, 2 = FijacionDePrecioContrato
-        CASE WHEN n.Discriminator = 'Contrato' THEN '1' ELSE '2' END            AS ClaseNegocioId,
+        CASE
+            WHEN n.Discriminator = 'Contrato' THEN '1'
+            ELSE '2'
+        END AS ClaseNegocioId,
+
         n.TipoNegocioId,
 
-        -- TipoNegocio: replica la lógica de is/as en EF (orden importante)
+         -- TipoNegocio: replica la lógica de is/as en EF (orden importante)
         CASE
-            WHEN n.Discriminator = 'Contrato'             AND n.Madre              = 1 THEN 'CONVENIO'
-            WHEN n.Discriminator = 'Contrato'             AND n.Madre              = 0 THEN 'FIJ. CONVENIO'
-            WHEN n.Discriminator = 'Contrato'             AND n.EsFason            = 1 THEN 'FASON MP'
-            WHEN n.Discriminator = 'Contrato'             AND n.TipoAgenteCompraId > 0 THEN 'AGENTE DE COMPRAS MP'
-            WHEN n.Discriminator = 'ContratoAcuerdo'      AND n.TipoAgenteCompraId > 0 THEN 'ACUERDO AGENTE'
-            WHEN n.Discriminator = 'Contrato'             AND n.Canje              = 1 THEN 'CANJE'
-            WHEN n.Discriminator = 'Contrato'             AND n.PrestamoDevolucion = 1 THEN 'PRESTAMO DEVOLUCION'
-            WHEN n.Discriminator = 'Contrato'             AND n.Venta              = 1 THEN 'VENTA'
-            WHEN n.Discriminator = 'Contrato'             AND n.TipoPosicionCBOTId = 3 THEN 'A FIJAR PASE'
-            WHEN n.Discriminator = 'FijacionDePrecioContrato' AND n.Virtual        = 1 THEN 'FIJACION VIRTUAL'
-            WHEN n.Discriminator = 'FijacionDePrecioContrato' AND n.Canje          = 1 THEN 'FIJACION CANJE'
-            WHEN n.Discriminator = 'FijacionDePrecioContrato' AND n.TipoPosicionCBOTId = 3 THEN 'FIJACION PASE'
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.Madre = 1
+                THEN 'CONVENIO'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.Madre = 0
+                THEN 'FIJ. CONVENIO'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.EsFason = 1
+                THEN 'FASON MP'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.TipoAgenteCompraId > 0
+                THEN 'AGENTE DE COMPRAS MP'
+
+            WHEN n.Discriminator = 'ContratoAcuerdo'
+                 AND n.TipoAgenteCompraId > 0
+                THEN 'ACUERDO AGENTE'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.Canje = 1
+                THEN 'CANJE'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.PrestamoDevolucion = 1
+                THEN 'PRESTAMO DEVOLUCION'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.Venta = 1
+                THEN 'VENTA'
+
+            WHEN n.Discriminator = 'Contrato'
+                 AND n.TipoPosicionCBOTId = 3
+                THEN 'A FIJAR PASE'
+
+            WHEN n.Discriminator = 'FijacionDePrecioContrato'
+                 AND n.Virtual = 1
+                THEN 'FIJACION VIRTUAL'
+
+            WHEN n.Discriminator = 'FijacionDePrecioContrato'
+                 AND n.Canje = 1
+                THEN 'FIJACION CANJE'
+
+            WHEN n.Discriminator = 'FijacionDePrecioContrato'
+                 AND n.TipoPosicionCBOTId = 3
+                THEN 'FIJACION PASE'
+
             ELSE tn.Descripcion
         END AS TipoNegocio,
 
         -- Versión del boleto
-        CASE WHEN bd.Version > 1 THEN bd.Version ELSE 1 END AS Version,
+        CASE
+            WHEN bd.Version > 1 THEN bd.Version
+            ELSE 1
+        END AS Version,
 
         -- Estado del boleto
         CASE
-            WHEN bd.FechaAnulacion  IS NOT NULL THEN 'Anulado'
-            WHEN bd.FechaGeneracion IS NOT NULL THEN 'Vigente'
+            WHEN bd.FechaAnulacion IS NOT NULL
+                THEN 'Anulado'
+
+            WHEN bd.FechaGeneracion IS NOT NULL
+                THEN 'Vigente'
+
             ELSE 'Pendiente'
         END AS Estado_Version,
 
         -- BoletoId / TipoBoleto: para FIJACION viene del contrato padre
-        CASE WHEN n.TipoNegocioId = 3 THEN nPadre.BoletoId    ELSE n.BoletoId          END AS BoletoId,
-        CASE WHEN n.TipoNegocioId = 3 THEN bcPadre.Descripcion ELSE bc.Descripcion     END AS TipoBoleto,
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN nPadre.BoletoId
+            ELSE n.BoletoId
+        END AS BoletoId,
+
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN bcPadre.Descripcion
+            ELSE bc.Descripcion
+        END AS TipoBoleto,
 
         -- Canje
-        CASE WHEN n.Canje = 1 THEN 'SI' ELSE 'NO' END AS Canje,
+        CASE
+            WHEN n.Canje = 1 THEN 'SI'
+            ELSE 'NO'
+        END AS Canje,
 
         -- Bolsa: para FIJACION viene del contrato padre
-        CASE WHEN n.TipoNegocioId = 3 THEN nPadre.BolsaId        ELSE n.BolsaId          END AS BolsaId,
-        CASE WHEN n.TipoNegocioId = 3 THEN bolsaPadre.Descripcion ELSE bolsa.Descripcion  END AS Bolsa,
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN nPadre.BolsaId
+            ELSE n.BolsaId
+        END AS BolsaId,
+
+        CASE
+            WHEN n.TipoNegocioId = 3
+                THEN bolsaPadre.Descripcion
+            ELSE bolsa.Descripcion
+        END AS Bolsa,
 
         n.Precio,
+
         CASE
-            WHEN LTRIM(RTRIM(n.MonedaId)) = 'ARP'  THEN 'ARP'
-            WHEN LTRIM(RTRIM(n.MonedaId)) = 'USDM' THEN 'USD'
+            WHEN LTRIM(RTRIM(n.MonedaId)) = 'ARP'
+                THEN 'ARP'
+
+            WHEN LTRIM(RTRIM(n.MonedaId)) = 'USDM'
+                THEN 'USD'
+
             ELSE ''
         END AS Moneda,
 
         bd.FechaGeneracion,
+
         n.FechaOperacion,
-        n.Fecha             AS FechaCarga,
+
+        n.Fecha AS FechaCarga,
+
         n.FechaConfirmacion,
+
         bd.FechaAnulacion,
 
-        ISNULL(corredor.RazonSocial,  '') AS Corredor,
+        ISNULL(corredor.RazonSocial, '') AS Corredor,
+
         ISNULL(proveedor.RazonSocial, '') AS Vendedor,
+
         n.MaterialId,
-        mat.Descripcion                   AS Material,
+
+        mat.Descripcion AS Material,
+
         n.ContratoVendedor,
+
         n.ContratoCorredor,
+
         com.Apellido + ', ' + com.Nombres AS Comercial,
+
         n.FechaConfirmadoSAP,
+
         n.ComercialId,
-        n.ProveedorId
+
+        n.ProveedorId,
+
+        -- Observaciones del negocio
+        n.Observaciones,
+
+        -- Apertura de precio - Concepto 4
+        ap.Importe AS AperturaPrecio
 
     FROM Negocio n
 
     -- Contrato padre (solo para FijacionDePrecioContrato)
-    LEFT JOIN Negocio nPadre           ON n.TipoNegocioId = 3 AND n.ContratoId = nPadre.Id
+    LEFT JOIN Negocio nPadre
+        ON n.TipoNegocioId = 3
+        AND n.ContratoId = nPadre.Id
 
     -- Bolsa del negocio y del padre
-    LEFT JOIN BolsaCompraNet bolsa      ON n.BolsaId       = bolsa.Id
-    LEFT JOIN BolsaCompraNet bolsaPadre ON nPadre.BolsaId  = bolsaPadre.Id
+    LEFT JOIN BolsaCompraNet bolsa
+        ON n.BolsaId = bolsa.Id
+
+    LEFT JOIN BolsaCompraNet bolsaPadre
+        ON nPadre.BolsaId = bolsaPadre.Id
 
     -- BoletoCompraNet del negocio y del padre
-    LEFT JOIN BoletoCompraNet bc        ON n.BoletoId      = bc.Id
-    LEFT JOIN BoletoCompraNet bcPadre   ON nPadre.BoletoId = bcPadre.Id
+    LEFT JOIN BoletoCompraNet bc
+        ON n.BoletoId = bc.Id
+
+    LEFT JOIN BoletoCompraNet bcPadre
+        ON nPadre.BoletoId = bcPadre.Id
 
     -- Material
-    LEFT JOIN Material mat              ON n.MaterialId    = mat.MaterialId    -- verificar PK de Material
+    LEFT JOIN Material mat
+        ON n.MaterialId = mat.MaterialId
 
     -- Comercial
-    LEFT JOIN Comercial com             ON n.ComercialId   = com.ComercialId
+    LEFT JOIN Comercial com
+        ON n.ComercialId = com.ComercialId
 
     -- Corredor / Vendedor
-    LEFT JOIN Proveedor corredor        ON n.CorredorId    = corredor.ProveedorId
-    LEFT JOIN Proveedor proveedor       ON n.ProveedorId   = proveedor.ProveedorId
+    LEFT JOIN Proveedor corredor
+        ON n.CorredorId = corredor.ProveedorId
+
+    LEFT JOIN Proveedor proveedor
+        ON n.ProveedorId = proveedor.ProveedorId
+
     -- TipoNegocio
-    LEFT JOIN TipoNegocio tn            ON n.TipoNegocioId = tn.TipoNegocioId
+    LEFT JOIN TipoNegocio tn
+        ON n.TipoNegocioId = tn.TipoNegocioId
 
     -- Último boleto
-    LEFT JOIN BoletoDetalle bd          ON n.Id            = bd.NegocioId
+    LEFT JOIN BoletoDetalle bd
+        ON n.Id = bd.NegocioId
+
+    -- Apertura de precio
+    -- Se trae UNA SOLA fila por negocio.
+    -- Si existen varias, toma la de mayor Id.
+    OUTER APPLY (
+        SELECT TOP (1)
+            ap.Importe
+        FROM AperturaPrecio ap
+        WHERE ap.NegocioId = n.Id
+          AND ap.ConceptoAperturaPrecioId = 4
+        ORDER BY ap.Id DESC
+    ) ap
 
     WHERE
         n.ConfirmadoSAP = 1
-        AND n.EstadoId  = 5   -- EnumEstadoContrato.Finalizado
+
+        AND n.EstadoId = 5 -- EnumEstadoContrato.Finalizado
+
+        -- Boleto FISICO o CARTA_OFERTA
         AND (
-            n.BoletoId = 2    -- FISICO
-            OR n.BoletoId = 4 -- CARTA_OFERTA
+            n.BoletoId = 2
+            OR n.BoletoId = 4
         )
+
         -- Filtro de equipo (siempre obligatorio)
         AND (
-            (n.ComercialId        IS NOT NULL AND n.ComercialId        IN (SELECT ComercialId FROM #Equipo))
+            (
+                n.ComercialId IS NOT NULL
+                AND n.ComercialId IN (
+                    SELECT ComercialId
+                    FROM #Equipo
+                )
+            )
             OR
-            (n.ComercialCreadorId IS NOT NULL AND n.ComercialCreadorId IN (SELECT ComercialId FROM #Equipo))
+            (
+                n.ComercialCreadorId IS NOT NULL
+                AND n.ComercialCreadorId IN (
+                    SELECT ComercialId
+                    FROM #Equipo
+                )
+            )
         )
         AND n.TipoNegocioId <> 3 
-        -- ── Bloque NegocioSAP ──────────────────────────────────────────────────────
+
+        -- Bloque NegocioSAP
         AND (
             @NegocioSAP IS NULL
-            OR n.ContratoSAP IN (SELECT ContratoSAP FROM #NegocioSAP)
-            OR (n.TipoNegocioId = 3 AND n.FijacionSAP IN (SELECT ContratoSAP FROM #NegocioSAP))
+            OR n.ContratoSAP IN (
+                SELECT ContratoSAP
+                FROM #NegocioSAP
+            )
+            OR (
+                n.TipoNegocioId = 3
+                AND n.FijacionSAP IN (
+                    SELECT ContratoSAP
+                    FROM #NegocioSAP
+                )
+            )
         )
-        -- Excluir fijaciones cuando no se busca por SAP
-        AND (@NegocioSAP IS NOT NULL OR n.TipoNegocioId <> 3)
 
-        -- ── Filtros opcionales (solo cuando no se busca por SAP) ──────────────────
-        AND (@NegocioSAP IS NOT NULL OR @MaterialId IS NULL
-             OR n.MaterialId = @MaterialId)
-        AND (@NegocioSAP IS NOT NULL OR @ProveedorId IS NULL
-             OR n.ProveedorId = @ProveedorId)
-        AND (@NegocioSAP IS NOT NULL OR @ComercialId IS NULL
-             OR n.ComercialId = @ComercialId)
-        AND (@NegocioSAP IS NOT NULL OR @BolsaCompraNetId IS NULL
-             OR n.BolsaId = @BolsaCompraNetId
-             OR (n.TipoNegocioId = 3 AND nPadre.BolsaId = @BolsaCompraNetId))
-        AND (@NegocioSAP IS NOT NULL OR @FechaConfirmacionDesde IS NULL
-             OR n.FechaConfirmacion >= @FechaConfirmacionDesde)
-        AND (@NegocioSAP IS NOT NULL OR @FechaConfirmacionHasta IS NULL
-             OR n.FechaConfirmacion <= DATEADD(DAY, 1, CAST(@FechaConfirmacionHasta AS DATE)))
+        -- Excluir fijaciones cuando no se busca por SAP
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR n.TipoNegocioId <> 3
+        )
+
+        -- Filtros opcionales
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @MaterialId IS NULL
+            OR n.MaterialId = @MaterialId
+        )
+
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @ProveedorId IS NULL
+            OR n.ProveedorId = @ProveedorId
+        )
+
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @ComercialId IS NULL
+            OR n.ComercialId = @ComercialId
+        )
+
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @BolsaCompraNetId IS NULL
+            OR n.BolsaId = @BolsaCompraNetId
+            OR (
+                n.TipoNegocioId = 3
+                AND nPadre.BolsaId = @BolsaCompraNetId
+            )
+        )
+
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @FechaConfirmacionDesde IS NULL
+            OR n.FechaConfirmacion >= @FechaConfirmacionDesde
+        )
+
+        AND (
+            @NegocioSAP IS NOT NULL
+            OR @FechaConfirmacionHasta IS NULL
+            OR n.FechaConfirmacion <= DATEADD(
+                DAY,
+                1,
+                CAST(@FechaConfirmacionHasta AS DATE)
+            )
+        )
 
     ORDER BY n.Id DESC;
 
     DROP TABLE #Equipo;
     DROP TABLE #NegocioSAP;
+
 END;
 GO
