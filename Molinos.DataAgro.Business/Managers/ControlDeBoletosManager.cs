@@ -465,7 +465,6 @@ namespace Molinos.DataAgro.Business.Managers
                 var controlDeBoletosExiste = repositorio.Obtener<ControlDeBoletos>(x => x.NegocioId == negocioId);
                 if (controlDeBoletosExiste == null)
                 {
-
                     var controlDeBoletos = new ControlDeBoletos()
                     {
                         NegocioId = negocioId,
@@ -490,6 +489,7 @@ namespace Molinos.DataAgro.Business.Managers
                     controlDeBoletosExiste.EstadoConfirmaId = (int)EnumEstadoConfirma.ANULADO;
                     repositorio.GuardarCambios();
 
+                    this.EliminarDatosSeguimiento(controlDeBoletosExiste.Id);
                     var controlDeBoletosSustitutorio = new ControlDeBoletos()
                     {
                         NegocioId = negocioId,
@@ -761,7 +761,6 @@ namespace Molinos.DataAgro.Business.Managers
                 return oResultado;
             }
         }
-
         private Resultado RegistrarSeguimientoEnSAP(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var oResultado = new Resultado();
@@ -787,7 +786,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oResultado;
         }
-
         private SeguimientoControlDeBoletosDto ConstruirSeguimientoDto(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             string tipoBoleto = string.Empty;
@@ -840,7 +838,6 @@ namespace Molinos.DataAgro.Business.Managers
                 RechazadoAfip = string.Empty // TODO: Verificar si debe venir del DTO de entrada
             };
         }
-
         private void PersistirDatosDeSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(x => x.ControlDeBoletosId == controlDeBoletosDatosSeguimiento.ControlDeBoletosId);
@@ -855,7 +852,6 @@ namespace Molinos.DataAgro.Business.Managers
                 InsertarSeguimientoLocal(controlDeBoletosDatosSeguimiento);
             }
         }
-
         private void ActualizarSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var datosSeguimiento = repositorio.Obtener<ControlDeBoletosSeguimiento>(controlDeBoletosDatosSeguimiento.Id);
@@ -903,7 +899,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager.LogCambiosControlBoletos(controlDeBoletosDatosSeguimiento, TipoAccionLogDataAgro.Modificar, datosSeguimiento.Id, "Modificacion de Seguimiento - Control de Boletos");
             EstablecerEstadoBoleto(datosSeguimiento.ControlDeBoletosId);
         }
-
         private void InsertarSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
         {
             var datosSeguimiento = new ControlDeBoletosSeguimiento
@@ -984,7 +979,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oResultado;
         }
-
         #endregion
 
         #region Datos de PreCertificacion
