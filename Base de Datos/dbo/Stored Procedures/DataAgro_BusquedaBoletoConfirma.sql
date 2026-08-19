@@ -228,7 +228,7 @@ BEGIN
         n.FechaConfirmadoSAP,
 
         -- Observaciones del negocio
-        n.Observacion,
+        n.Observacion as Observaciones,
 
         -- Apertura de precio - Concepto 4
         ap.Importe AS AperturaPrecio
