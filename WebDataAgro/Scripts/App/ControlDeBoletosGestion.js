@@ -44,6 +44,19 @@ var ControlDeBoletosGestion = (function () {
     let controlVersionBoleto;
     let controlFechaGeneracion;
     let controlNumeroSio;
+    let controlFechaCierta;
+    let controlCantidadFijacionMaxima;
+    let controlCantidadFijacionMinima;
+    let controlCesion;
+    let controlCompensacion;
+    let controlDolarizadoExpress;
+    let controlEUDR;
+    let controlEPA;
+    let controlSustentable;
+    let controlCD;
+    let controlPagoDirectoVendedor;
+    let controlCanje;
+
 
     async function configurarEventos() {
 
@@ -132,6 +145,18 @@ var ControlDeBoletosGestion = (function () {
         controlVersionBoleto = $form.find("#VersionBoleto");
         controlFechaGeneracion = $form.find("#FechaGeneracion");
         controlNumeroSio = $form.find("#NumeroSio");
+        controlFechaCierta = $form.find("#FechaCierta");
+        controlCantidadFijacionMaxima = $form.find("#CantidadFijacionMaxima");
+        controlCantidadFijacionMinima = $form.find("#CantidadFijacionMinima");
+        controlCesion = $form.find("#Cesion");
+        controlCompensacion = $form.find("#Compensacion");
+        controlDolarizadoExpress = $form.find("#DolarizadoExpress");
+        controlEUDR = $form.find("#EUDR");
+        controlEPA = $form.find("#EPA");
+        controlSustentable = $form.find("#Sustentable");
+        controlCD = $form.find("#CD");
+        controlPagoDirectoVendedor = $form.find("#PagoDirectoVendedor");
+        controlCanje = $form.find("#Canje");
     }
 
     async function cargarDatos() {
@@ -162,6 +187,19 @@ var ControlDeBoletosGestion = (function () {
             controlVersionBoleto.text(contrato.VersionBoleto != null ? contrato.VersionBoleto : '');
             controlFechaGeneracion.text(contrato.FechaGeneracion != null ? contrato.FechaGeneracion : '');
             controlNumeroSio.text(contrato.NumeroSio != null ? contrato.NumeroSio : '');
+
+            controlFechaCierta.text(contrato.FechaCierta != null ? contrato.FechaCierta : '');
+            controlCantidadFijacionMaxima.text(contrato.CantidadFijacionMaxima != null ? contrato.CantidadFijacionMaxima : '');
+            controlCantidadFijacionMinima.text(contrato.CantidadFijacionMinima != null ? contrato.CantidadFijacionMinima : '');
+            controlCesion.text(contrato.Cesion? 'SI' : 'NO');
+            controlCompensacion.text(contrato.Compensacion? 'SI' : 'NO');
+            controlDolarizadoExpress.text(contrato.DolarizadoExpress? 'SI' : 'NO');
+            controlEUDR.text(contrato.EUDR? 'SI' : 'NO');
+            controlEPA.text(contrato.EPA? 'SI' : 'NO');
+            controlSustentable.text(contrato.Sustentable? 'SI' : 'NO');
+            controlCD.text(contrato.CD? 'SI' : 'NO');
+            controlPagoDirectoVendedor.text(contrato.PagoDirectoVendedor? 'SI' : 'NO');
+            controlCanje.text(contrato.Canje? 'SI' : 'NO');
 
             state.operaSinOblea = contrato.OperaSinOblea;
             state.planCanje = contrato.PlanCanje;

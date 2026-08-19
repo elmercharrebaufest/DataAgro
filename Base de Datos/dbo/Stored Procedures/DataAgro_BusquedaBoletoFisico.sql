@@ -298,25 +298,12 @@ BEGIN
             n.BoletoId = 2
             OR n.BoletoId = 4
         )
-
-        -- Filtro de equipo (siempre obligatorio)
-        AND (
-            (
-                n.ComercialId IS NOT NULL
-                AND n.ComercialId IN (
-                    SELECT ComercialId
-                    FROM #Equipo
-                )
-            )
-            OR
-            (
-                n.ComercialCreadorId IS NOT NULL
-                AND n.ComercialCreadorId IN (
-                    SELECT ComercialId
-                    FROM #Equipo
-                )
-            )
-        )
+        ---- Filtro de equipo (siempre obligatorio)
+        --AND (
+        --    (n.ComercialId        IS NOT NULL AND n.ComercialId        IN (SELECT ComercialId FROM #Equipo))
+        --    OR
+        --    (n.ComercialCreadorId IS NOT NULL AND n.ComercialCreadorId IN (SELECT ComercialId FROM #Equipo))
+        --)
         AND n.TipoNegocioId <> 3 
 
         -- Bloque NegocioSAP

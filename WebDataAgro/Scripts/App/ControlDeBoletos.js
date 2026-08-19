@@ -383,7 +383,7 @@ var ControlBoletos = (function () {
                                 actualizarBoton(controlExportarExcel, true);
                             },
                         },
-                        height: 550,
+                        height: 450,
                         scrollable: { virtual: false },
                         sortable: {
                             mode: "single",
