@@ -227,7 +227,7 @@ BEGIN
         n.ProveedorId,
 
         -- Observaciones del negocio
-        n.Observaciones,
+        Negocio.Observaciones,
 
         -- Apertura de precio - Concepto 4
         ap.Importe AS AperturaPrecio
