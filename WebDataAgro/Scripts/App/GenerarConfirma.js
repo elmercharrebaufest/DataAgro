@@ -26,6 +26,27 @@ const GenerarConfirma = (() => {
         columnWidths: []
     };
 
+    const columnasExcel = [
+        { field: "NegocioSAP", title: "Contrato" },
+        { field: "Material", title: "Material" },
+        { field: "Version", title: "Versión" },
+        { field: "FechaConfirmacion", title: "Fecha de confirmación cto" },
+        { field: "Moneda", title: "Moneda" },
+        { field: "AperturaPrecio", title: "Importe Bonificación" },
+        { field: "Precio", title: "Precio (base)" },
+        { field: "ContratoVendedor", title: "Número Cto. Vendedor" },
+        { field: "ContratoCorredor", title: "Número Cto. Corredor" },
+        { field: "Vendedor", title: "Vendedor" },
+        { field: "Corredor", title: "Corredor" },
+        { field: "FechaGeneracion", title: "Fecha de Generación Boleto" },
+        { field: "FechaAnulacion", title: "Fecha Anulación Boleto" },
+        { field: "Estado_Version", title: "Estado Boleto en Data" },
+        { field: "TipoNegocio", title: "Tipo de contrato" },
+        { field: "TipoBoleto", title: "Tipo de Boleto" },
+        { field: "Observacion", title: "Observaciones" },
+        { field: "Comercial", title: "Comercial" }
+    ];
+
     const el = {
         negocioSAP: () => $("#NegocioSAP"),
         fechaConfirmacionDesde: () => $("#fechaConfirmacionDesde"),
@@ -346,58 +367,13 @@ const GenerarConfirma = (() => {
             requestEnd: () => spinner(false)
         });
 
-        const columnasExcel = [
-            { field: "NegocioSAP", title: "Contrato" },
-            { field: "Material", title: "Material" },
-            { field: "Version", title: "Versión" },
-            { field: "FechaConfirmacion", title: "Fecha de confirmación cto" },
-            { field: "Moneda", title: "Moneda" },
-            { field: "AperturaPrecio", title: "Importe Bonificación" },
-            { field: "Precio", title: "Precio (base)" },
-            { field: "ContratoVendedor", title: "Número Cto. Vendedor" },
-            { field: "ContratoCorredor", title: "Número Cto. Corredor" },
-            { field: "Vendedor", title: "Vendedor" },
-            { field: "Corredor", title: "Corredor" },
-            { field: "FechaGeneracion", title: "Fecha de Generación Boleto" },
-            { field: "FechaAnulacion", title: "Fecha Anulación Boleto" },
-            { field: "Estado_Version", title: "Estado Boleto en Data" },
-            { field: "TipoNegocio", title: "Tipo de contrato" },
-            { field: "TipoBoleto", title: "Tipo de Boleto" },
-            { field: "Observacion", title: "Observaciones" },
-            { field: "Comercial", title: "Comercial" }
-        ];
-
         state.grid = $grid.kendoGrid({
-            toolbar: ["excel"],
-            excel: { fileName: "Reporte Confirmas Seleccionados.xlsx", allPages: false },
-            excelExport(e) {
-                const selectedRows = [];
-                $grid.find("tbody input.row-checkbox:checked").each(function () {
-                    selectedRows.push(state.grid.dataItem($(this).closest("tr")));
-                });
-
-                if (!selectedRows.length) {
-                    MensAlerta("No hay filas seleccionadas para exportar.");
-                    e.preventDefault();
-                    return;
-                }
-
-                const sheet = e.workbook.sheets[0];
-                sheet.name = "Datos Seleccionados";
-                sheet.rows = [];
-                sheet.columns = columnasExcel.map(() => ({ width: 150 }));
-                sheet.rows.push({
-                    cells: columnasExcel.map(c => ({ value: c.title, background: "#f4f4f4", bold: true }))
-                });
-                selectedRows.forEach(item => {
-                    sheet.rows.push({
-                        cells: columnasExcel.map(c => {
-                            const v = item[c.field];
-                            return { value: v instanceof Date ? kendo.toString(v, "dd/MM/yyyy") : v };
-                        })
-                    });
-                });
-            },
+            toolbar: [{
+                name: "excelServer",
+                text: "Exportar a Excel",
+                className: "k-grid-excelServer",
+                iconClass: "k-icon k-i-file-excel"
+            }],
             dataSource,
             height: 550,
             scrollable: { virtual: false },
@@ -474,6 +450,11 @@ const GenerarConfirma = (() => {
     }
 
     function configurarEventosGrid() {
+        el.grid().find(".k-grid-excelServer").off("click").on("click", function (e) {
+            e.preventDefault();
+            exportarExcelServidor();
+        });
+
         $("#select-all").off("change").on("change", function () {
             el.grid().find("input.row-checkbox").prop("checked", $(this).is(":checked"));
             const esSoloPendientes = el.contratosPendientesCheck().is(":checked")
@@ -572,6 +553,82 @@ const GenerarConfirma = (() => {
                 spinner(false);
             }
         }, 200);
+    }
+
+    function exportarExcelServidor() {
+        if (!validarFiltros()) {
+            MensErr("No se ha seleccionado ningun filtro para la busqueda.");
+            return;
+        }
+        if (!esNegocioSAPValido()) {
+            MensErr("Solo se admiten números y el ';' en el campo Negocio SAP.");
+            return;
+        }
+        if (!validarFechas()) {
+            MensErr("El Rango de Negocios o Fechas no es válido. El campo Desde debe tener un valor menor al campo Hasta.");
+            return;
+        }
+        if (!validarFechasConfirmacion()) {
+            MensErr("El rango de fechas de confirmación no puede superar los 3 meses.");
+            return;
+        }
+
+        spinner(true);
+
+        const payload = {
+            page: 1,
+            pageSize: 0,
+            skip: 0,
+            take: 0,
+            sort: [],
+            ...construirFiltros()
+        };
+
+        $.ajax({
+            url: config.urls.buscaDatosTabla + "?Excel=true",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: kendo.stringify(payload)
+        })
+        .done(function (resp) {
+            const filas = (resp && resp.Data) || [];
+            if (!filas.length) {
+                MensAlerta("No hay datos para exportar.");
+                return;
+            }
+
+            const fechas = ["FechaGeneracion", "FechaOperacion", "FechaConfirmacion", "FechaAnulacion", "FechaConfirmadoSAP"];
+            filas.forEach(item => fechas.forEach(f => {
+                if (item[f] && typeof item[f] === "string") {
+                    const ms = parseInt(item[f].replace(/\/Date\((\d+)\)\//, "$1"));
+                    item[f] = isNaN(ms) ? null : new Date(ms);
+                }
+            }));
+
+            const workbook = new kendo.ooxml.Workbook({
+                sheets: [{
+                    name: "Datos",
+                    columns: columnasExcel.map(() => ({ width: 150 })),
+                    rows: [
+                        { cells: columnasExcel.map(c => ({ value: c.title, background: "#f4f4f4", bold: true })) },
+                        ...filas.map(item => ({
+                            cells: columnasExcel.map(c => {
+                                const v = item[c.field];
+                                return { value: v instanceof Date ? kendo.toString(v, "dd/MM/yyyy") : v };
+                            })
+                        }))
+                    ]
+                }]
+            });
+
+            kendo.saveAs({ dataURI: workbook.toDataURL(), fileName: "Reporte Confirmas.xlsx" });
+        })
+        .fail(function (xhr) {
+            console.error("Error export Excel:", xhr);
+            MensErr("Error al exportar a Excel.");
+        })
+        .always(() => spinner(false));
     }
 
     function generarConfirmaIndividual(negocioSAP) {
