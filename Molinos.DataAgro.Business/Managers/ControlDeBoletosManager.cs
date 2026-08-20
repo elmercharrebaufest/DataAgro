@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Dto.ControlDeBoletos;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Agent;
 using Molinos.DataAgro.Interfaces.Managers;
@@ -824,7 +825,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
                 TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter ?? string.Empty,
-                Usuario = string.Empty,
+                Usuario = PermisosHelper.ObtenerUsuario(),
                 FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
                 FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma?.ToString("yyyy-MM-dd"),
                 FechaEnvioAfip = controlDeBoletosDatosSeguimiento.FechaEnvioAfip?.ToString("yyyy-MM-dd"),
@@ -945,7 +946,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Fecha               = string.Empty,
                         Hora                = string.Empty,
                         TipoBoleto          = string.Empty,
-                        Usuario             = string.Empty,
+                        Usuario             = PermisosHelper.ObtenerUsuario(),
                         FechaRecepBoleto    = string.Empty,
                         FechaEnvioFirma     = string.Empty,
                         FechaEnvioAfip      = string.Empty,
@@ -1201,7 +1202,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
                 datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
                 datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                datosCertificacionCabeceraDto.Usuario = string.Empty;
+                datosCertificacionCabeceraDto.Usuario = PermisosHelper.ObtenerUsuario();
 
                 if (sinValores)
                 {
@@ -1223,7 +1224,6 @@ namespace Molinos.DataAgro.Business.Managers
                     datosCertificacionDetalleDto.Rechazado = string.Empty;
                     datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
                 }
-
                 datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto };
 
                 datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
@@ -1278,7 +1278,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datosCertificacionCabeceraDto.Fecha = fechaActual.ToString("yyyy-MM-dd");
                     datosCertificacionCabeceraDto.Hora = fechaActual.ToString("HH:mm:ss");
                     datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                    datosCertificacionCabeceraDto.Usuario = string.Empty;
+                    datosCertificacionCabeceraDto.Usuario = PermisosHelper.ObtenerUsuario();
 
                     datosCertificacionDetalleDto.Bolsa = contrato.Bolsa?.CodigoSap ?? string.Empty;
                     datosCertificacionDetalleDto.Oblea = contrato.ContratoSAP;
@@ -1311,7 +1311,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
                     datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
                     datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                    datosCertificacionCabeceraDto.Usuario = string.Empty;
+                    datosCertificacionCabeceraDto.Usuario = PermisosHelper.ObtenerUsuario();
 
                     foreach (var datos in precertificacion)
                     {
@@ -1823,7 +1823,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosCertificacionCabeceraDto.Fecha = ahora.ToString("yyyy-MM-dd");
                 datosCertificacionCabeceraDto.Hora = ahora.ToString("HH:mm:ss");
                 datosCertificacionCabeceraDto.Fijacion = string.Empty;
-                datosCertificacionCabeceraDto.Usuario = string.Empty;
+                datosCertificacionCabeceraDto.Usuario = PermisosHelper.ObtenerUsuario();
                 datosCertificacionDetalleDto.Bolsa = bolsa?.CodigoSap ?? string.Empty;
                 datosCertificacionDetalleDto.Oblea = boleto.Oblea;
                 datosCertificacionDetalleDto.FeCertificacion = FormatDate(boleto.FechaCertificacion);
@@ -1908,7 +1908,7 @@ namespace Molinos.DataAgro.Business.Managers
                     tipoObleaCodigo = repositorio.Obtener<TipoOblea>(certificacion.TipoObleaId)?.Codigo ?? string.Empty;
                 }
 
-                var datosCertificacionDetalle = new RegistroDatosCertificacionControlDeBoletosDetalleDto
+                var datosCertificacionDetalleDto = new RegistroDatosCertificacionControlDeBoletosDetalleDto
                 {
                     Bolsa = string.Empty,
                     FeCertificacion = string.Empty,
@@ -1918,17 +1918,17 @@ namespace Molinos.DataAgro.Business.Managers
                     Tipo = tipoObleaCodigo
                 };
 
-                var datosCertificacionCabecera = new RegistroDatosCertificacionControlDeBoletosDto
+                var datosCertificacionCabeceraDto = new RegistroDatosCertificacionControlDeBoletosDto
                 {
                     Contrato = contratoSap,
-                    Usuario = string.Empty,
+                    Usuario = PermisosHelper.ObtenerUsuario(),
                     Fecha = string.Empty,
                     Hora = string.Empty,
                     Fijacion = string.Empty,
-                    Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalle }
+                    Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto }
                 };
 
-                datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabecera);
+                datosCertificacionControlBoletoAgent.RegistrarDatosCertificacion(datosCertificacionCabeceraDto);
             }
         }
 
@@ -1962,7 +1962,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ObsCtrlBoleto2 = string.Empty,
                 RechazadoAfip = string.Empty,
                 TipoBoleto = string.Empty,
-                Usuario = string.Empty
+                Usuario = PermisosHelper.ObtenerUsuario()
             };
         }
 
