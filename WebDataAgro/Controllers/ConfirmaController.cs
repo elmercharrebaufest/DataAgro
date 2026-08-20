@@ -196,7 +196,7 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public JsonResult BuscaDatosTabla(ConfirmaFiltroBusquedaDto filtrosBusqueda)
+        public JsonResult BuscaDatosTabla(ConfirmaFiltroBusquedaDto filtrosBusqueda,bool Excel = false)
         {
             try
             {
@@ -212,7 +212,7 @@ namespace WebDataAgro.Controllers
                     filtrosBusqueda.NegocioSAP = contratoSAP;
                 }
 
-                var resultado = confirmaManager.TraerNegociosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal , true);
+                var resultado = confirmaManager.TraerNegociosFiltrados(filtrosBusqueda, GlobalVariables.EquipoReal, Excel);
 
                 return Json(new { Data = resultado.Item1, Total = resultado.Item2 });
             }
