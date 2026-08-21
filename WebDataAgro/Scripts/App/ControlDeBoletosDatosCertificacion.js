@@ -469,13 +469,13 @@ var ControlDeBoletosDatosCertificacion = (function () {
                     ctrl.bolsa.val(item.BolsaCompraNetId || '').trigger('change');
                     setKendoDate(ctrl.fechaCertificacion, item.FechaCertificacion);
                     setKendoDate(ctrl.fechaVencimiento,   item.FechaVencimiento);
-                    ctrl.rechazado.prop('checked', item.Rechazado === 'X');
+                    ctrl.rechazado.prop('checked', item.Rechazado == 'X');
                 }
                 if (codigo === 'A') {
                     // Registración AFIP
                     ctrl.codigoRegistracionAfip.val(item.Oblea || '');
                     setKendoDate(ctrl.fechaRegistracionAfip, item.FechaCertificacion);
-                    ctrl.rechazadoAfip.prop('checked', item.Rechazado === 'X');
+                    ctrl.rechazadoAfip.prop('checked', item.Rechazado == 'X');
                 }
                 if (codigo === 'P') {
                     // Oblea Provisoria
