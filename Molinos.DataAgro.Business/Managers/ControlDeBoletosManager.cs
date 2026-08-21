@@ -1089,11 +1089,11 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             // Modificar - solo actualizar propiedades escalares y FK, NO navegaciones
                             existente.Oblea = item.Oblea?.Trim();
-                            existente.FechaCertificacion = item.FechaCertificacion ?? existente.FechaCertificacion;
-                            existente.FechaVencimiento = item.FechaVencimiento ?? existente.FechaVencimiento;
-                            existente.BolsaCompraNetId = item.BolsaCompraNetId ?? existente.BolsaCompraNetId;
+                            existente.FechaCertificacion = item.FechaCertificacion;
+                            existente.FechaVencimiento = item.FechaVencimiento;
+                            existente.BolsaCompraNetId = item.BolsaCompraNetId;
                             existente.TipoObleaId = tipoOblea.Id;
-                            existente.Rechazado = item.Rechazado ?? existente.Rechazado;
+                            existente.Rechazado = item.Rechazado;
                             existente.FechaModificacion = ahora;
                             this.logDataAgroManager.LogCambiosControlBoletos(item, TipoAccionLogDataAgro.Modificar, existente.Id, "Modificacion de Certificacion - Control de Boletos");
                             hayCambiosEnBd = true;
