@@ -3165,17 +3165,11 @@ function CambioCalidades(calidades) {
             textoCalidad === "Grado" ||
             textoCalidad === "Especial") {
             $(".calidad-no-grado").hide();
-            if (!tieneCalidadesCargadas) {
-                LimpiarCalidades();
-            }
         } else {
             $(".calidad-no-grado").show();
         }
     } else {
         $(".calidadesEspecialesDatos").hide();
-        if (!tieneCalidadesCargadas) {
-            LimpiarCalidades();
-        }
     }
 
     if (calidades !== undefined && calidades.length == 1) {
@@ -3352,6 +3346,16 @@ function windowsResize() {
 
 function CargarCalidadPorMaterial(value) {
     ApiCacheManager.getCalidades(value, function (calidadGrano) {
+        // Guard anti race-condition: si mientras esperabamos la respuesta cambio el material
+        // (p. ej. AsignarDatos setea SOJA y luego CargarDatosEditar setea MAIZ), descartamos
+        // esta respuesta para no pisar EspecialesCombo con las calidades del material anterior.
+        var ddlMaterial = $("#material").data("kendoDropDownList");
+        var currentMaterialId = ddlMaterial ? ddlMaterial.value() : value;
+        if (currentMaterialId !== undefined && currentMaterialId !== null
+            && currentMaterialId.toString() !== value.toString()) {
+            return;
+        }
+
         if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
             $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == Materiales.SOJA) {
             for (var i = 0; i < calidadGrano.length; i++) {
@@ -3362,20 +3366,78 @@ function CargarCalidadPorMaterial(value) {
         }
         viewModel.set("EspecialesCombo", calidadGrano);
 
-        if (viewModel.Calidades.length === 0) {
-            if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-                $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
-            } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
-                $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
+        // El texto por defecto del combo debe reflejar SIEMPRE la calidad base del material,
+        // tanto al crear como al editar (donde viewModel.Calidades ya trae filas guardadas).
+        var ddlCalidad = $("#calidadesEspecialesId").data("kendoDropDownList");
+        if (ddlCalidad) {
+            if (value === "3") {
+                ddlCalidad.text("Fabrica");
+            } else if (value === "2" || value === "1") {
+                ddlCalidad.text("Grado");
             } else {
-                $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+                ddlCalidad.text("Camara");
             }
             if ($("#material").val() == Materiales.TRIGO) {
-                $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
+                ddlCalidad.text("Grado 2");
             }
+        }
+
+        if (viewModel.Calidades.length === 0) {
             CambioCalidades();
+            AplicarCalidadesPorDefectoMaterial(value);
         }
     });
+}
+
+// Precarga en viewModel.Calidades las calidades por defecto segun material.
+// Solo se ejecuta para negocios A_FIJAR, A_PRECIO y CONTRATO_ACUERDO y cuando la lista esta vacia.
+// Los valores por defecto se completan luego en la "Edicion de Servicios".
+function AplicarCalidadesPorDefectoMaterial(materialId) {
+    // No aplicar defaults cuando se está editando un contrato existente.
+    if (Id !== undefined && Id !== null && Id !== "" && Id != 0) return;
+
+    var tipoId = $("#tipoId").val();
+    var permitido = tipoId == TIPO_NEGOCIO.A_FIJAR
+        || tipoId == TIPO_NEGOCIO.A_PRECIO
+        || tipoId == TIPO_NEGOCIO.CONTRATO_ACUERDO;
+    if (!permitido) return;
+    if (viewModel.Calidades.length > 0) return;
+
+    var defaults = [];
+    // CalidadEspecialId segun EnumCalidadEspecial (BD):
+    //   DAÑADOS=1, GRANOS_VERDES=2, GRADO=4, GRADO_2=5, MATERIA_EXTRAÑA=8,
+    //   MATERIA_EXTRAÑA_AO=9, ESPECIAL=10, HUMEDO=11
+    // StandardDeCalidadId segun EnumStandarCalidad:
+    //   CAMARA=1, ESPECIAL=2, FABRICA=3, MATERIA_EXTRANA=6, GRADO_2=7
+    if (materialId == Materiales.MAIZ) {
+        defaults.push({ desc: "Grado", id: 4, valor: "2", desde: null, hasta: null, standard: 2 });
+    } else if (materialId == Materiales.TRIGO) {
+        defaults.push({ desc: "Grado 2", id: 5, valor: "2", desde: null, hasta: null, standard: 7 });
+        defaults.push({ desc: "Especial", id: 10, valor: null, desde: null, hasta: null, standard: 2 });
+    } else if (materialId == Materiales.SOJA) {
+        defaults.push({ desc: "Dañados", id: 1, valor: "0", desde: "0", hasta: "5", standard: 2 });
+        defaults.push({ desc: "Granos verdes", id: 2, valor: "0,20", desde: "0", hasta: "5", standard: 2 });
+        defaults.push({ desc: "Humedad", id: 11, valor: null, desde: "0", hasta: "5", standard: 2 });
+    } else if (materialId == Materiales.GIRASOL || materialId == Materiales.GIRASOL_AO) {
+        var esAO = materialId == Materiales.GIRASOL_AO;
+        defaults.push({ desc: "Materia Extraña", id: esAO ? 9 : 8, valor: null, desde: "0", hasta: "5", standard: 6 });
+    }
+
+    for (var i = 0; i < defaults.length; i++) {
+        var d = defaults[i];
+        viewModel.Calidades.push({
+            Id: 0,
+            CalidadEspecialDesc: d.desc,
+            CalidadEspecialId: d.id,
+            Valor: d.valor,
+            PorcentajeDesde: d.desde,
+            PorcentajeHasta: d.hasta,
+            StandardDeCalidadId: d.standard,
+            Borrar: function () {
+                viewModel.Calidades.remove(this);
+            }
+        });
+    }
 }
 
 function LimpiarCalidades() {
