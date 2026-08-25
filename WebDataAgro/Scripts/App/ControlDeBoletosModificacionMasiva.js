@@ -2,6 +2,8 @@
 var ControlBoletos = (function () {
     "use strict";
 
+    var ui = window.ControlDeBoletosUI;
+
     var config = {
         urls: {
             getBoletosParaModificar: "/ControlDeBoletos/GetBoletosParaModificar",
@@ -31,31 +33,24 @@ var ControlBoletos = (function () {
         selectedCells: {},
         listaBolsaSAP: null,
         listaBolsa: null,
+        opcionesBolsa: [],
+        bolsaLookup: {},
         comboPopupAbierto: false,
         _editandoCeldaExplicito: false
     };
 
     // Funciones privadas
     function mostrarSpinner(mostrar) {
-        var spinner = document.getElementById("loadingSpinner");
-        if (spinner) {
-            spinner.style.display = mostrar ? "flex" : "none";
-        }
+        ui.toggleSpinner(mostrar);
     }
 
     function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || "info";
-        $("#mensajeModalTitle").text(titulo);
-        $("#mensajeModalBody").html(
-            '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
-        );
+        ui.showModalMessage(titulo, mensaje, tipo);
 
         // Al cerrar el modal de validación, devolver foco a la celda actual de la grilla.
         $("#mensajeModal").off("hidden.bs.modal.modifMasiva").one("hidden.bs.modal.modifMasiva", function () {
             restaurarFocoGrilla();
         });
-
-        $("#mensajeModal").modal("show");
     }
 
     function restaurarFocoGrilla() {
@@ -87,39 +82,41 @@ var ControlBoletos = (function () {
     }
 
     function actualizarBoton(selector, habilitado, texto) {
-        var btn = selector;
-        btn.prop("disabled", !habilitado);
-        if (texto) {
-            btn.find("span").text(texto);
-        }
+        ui.setButtonState(selector, habilitado, texto);
     }
 
     async function cargarBolsaSAP() {
         state.listaBolsaSAP = await MSExecuteGetOnServerAsync(config.urls.getBolsaSAP);
         state.listaBolsa = await MSExecuteGetOnServerAsync(config.urls.getBolsa);
-
+        reconstruirCacheBolsas();
     }
 
-    async function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = selector;
-        $select.html('<option value="">' + textoCarga + "</option>");
+    function reconstruirCacheBolsas() {
+        var listaBase = state.listaBolsa || [];
+        var listaSap = state.listaBolsaSAP || [];
 
-        try {
-            var data = await MSExecuteGetOnServerAsync(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Value + "</option>",
-                    );
-                });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
+        var sapPorId = {};
+        for (var i = 0; i < listaSap.length; i++) {
+            var idKey = String(listaSap[i].Text || "").trim();
+            var sapValue = String(listaSap[i].Value || "").trim();
+            if (idKey && sapValue) sapPorId[idKey] = sapValue;
         }
+
+        var opciones = [];
+        var lookup = {};
+        for (var j = 0; j < listaBase.length; j++) {
+            var item = listaBase[j];
+            var id = String(item.Value || "").trim();
+            var codigoSap = sapPorId[id] || "";
+            if (!codigoSap) continue;
+
+            opciones.push({ Text: item.Text, Value: codigoSap });
+            lookup[codigoSap.toUpperCase()] = codigoSap;
+        }
+
+        state.opcionesBolsa = opciones;
+        state.bolsaLookup = lookup;
+
     }
 
     // ── Estilos globales del grid ────────────────────────────────────────────
@@ -275,26 +272,6 @@ var ControlBoletos = (function () {
 
         var totalWidth = Array.from($headerCols).reduce(function (sum, col) {
             return sum + (parseInt($(col).css("width")) || 0);
-        }, 0);
-        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
-    }
-
-    // ── Restaurar anchos de columnas ────────────────────────────────────────
-
-    function restaurarAnchosColumnas(grid) {
-        if (!state.columnWidths || state.columnWidths.length === 0) return;
-
-        var $wrapper = grid.element;
-        var $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
-        var $contentCols = $wrapper.find(".k-grid-content colgroup col");
-
-        state.columnWidths.forEach(function (width, idx) {
-            $headerCols.eq(idx).css("width", width);
-            $contentCols.eq(idx).css("width", width);
-        });
-
-        var totalWidth = state.columnWidths.reduce(function (sum, widthStr) {
-            return sum + (parseInt(widthStr) || 0);
         }, 0);
         $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
     }
@@ -522,39 +499,15 @@ var ControlBoletos = (function () {
     }
 
     function obtenerOpcionesBolsaParaCombo() {
-        var listaBase = state.listaBolsa || [];
-        var listaSap = state.listaBolsaSAP || [];
-
-        var sapPorId = {};
-        for (var i = 0; i < listaSap.length; i++) {
-            var idKey = String(listaSap[i].Text || "").trim();
-            var sapValue = String(listaSap[i].Value || "").trim();
-            if (idKey && sapValue) sapPorId[idKey] = sapValue;
-        }
-
-        var opciones = [];
-        for (var j = 0; j < listaBase.length; j++) {
-            var item = listaBase[j];
-            var id = String(item.Value || "").trim();
-            var codigoSap = sapPorId[id] || "";
-            if (!codigoSap) continue;
-            opciones.push({ Text: item.Text, Value: codigoSap });
-        }
-
-        return opciones;
+        return state.opcionesBolsa || [];
     }
 
     function obtenerValorComboBolsaValido(valorTexto) {
         var texto = (valorTexto || "").trim();
         if (!texto) return null;
 
-        var opciones = obtenerOpcionesBolsaParaCombo();
-        var upper = texto.toUpperCase();
-        for (var i = 0; i < opciones.length; i++) {
-            var value = String(opciones[i].Value || "").trim();
-            if (value && value.toUpperCase() === upper) return value;
-        }
-        return null;
+        var lookup = state.bolsaLookup || {};
+        return lookup[texto.toUpperCase()] || null;
     }
 
     function comboBolsaEditor(container, options) {
@@ -1010,11 +963,6 @@ var ControlBoletos = (function () {
         }
         $trap.attr("readonly", false);
 
-        function enfocarTrap() {
-            $trap.val("");
-            $trap[0].focus();
-        }
-
         function manejarPegado(field, filaInicial, textoClipboard) {
             if (!esCampoEditablePegado(field)) return;
             var valores = parsearValoresPegadosPorCampo(field, textoClipboard);
@@ -1423,27 +1371,9 @@ var ControlBoletos = (function () {
             var self = this;
 
             controlNegocioSAP
-                .on("paste", function (e) {
-
-                    e.preventDefault();
-
-                    let texto = (e.originalEvent.clipboardData || window.clipboardData)
-                        .getData("text");
-
-                    // Separar por saltos de línea
-                    let valores = texto
-                        .split(/\r?\n/)           // soporta Excel / Windows / Linux
-                        .map(v => v.trim())       // quitar espacios
-                        .filter(v => v !== "");   // eliminar vacíos
-
-                    // eliminar duplicados
-                    valores = [...new Set(valores)];
-
-                    // unir en una sola línea con ;
-                    $(this).val(valores.join(";"));
-                })
-                .on("keypress", e => {
-                    if (e.which === 32) e.preventDefault(); // bloquear espacios
+                .off("paste keypress")
+                .each(function () {
+                    ui.bindContractsPaste($(this));
                 });
 
             // Eventos de botones

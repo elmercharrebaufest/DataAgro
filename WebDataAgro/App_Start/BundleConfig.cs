@@ -344,6 +344,7 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletos").Include(
                                        "~/Scripts/App/Filtros.js",
+                                       "~/Scripts/App/ControlDeBoletosHelpers.js",
                                        "~/Scripts/App/ControlDeBoletos.js",
                                        "~/Scripts/App/ControlDeBoletosModificarContrato.js",
                                        "~/Scripts/App/ControlDeBoletosTracking.js",
@@ -357,6 +358,7 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosGestion").Include(
                            "~/Scripts/App/Filtros.js",
+                           "~/Scripts/App/ControlDeBoletosHelpers.js",
                            "~/Scripts/App/ControlDeBoletosModificarContrato.js",
                            "~/Scripts/App/ControlDeBoletosDatosCertificacion.js",
                            "~/Scripts/App/ControlDeBoletosSeguimiento.js",
@@ -367,12 +369,14 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosReporteSeguimiento").Include(
                            "~/Scripts/App/Filtros.js",
+                           "~/Scripts/App/ControlDeBoletosHelpers.js",
                            "~/Scripts/App/ControlDeBoletosReporteSeguimiento.js",
                            "~/Scripts/KendoExtensions.js",
                            "~/Scripts/moment.js"
                            ));
             bundles.Add(new ScriptBundle("~/bundles/ControlDeBoletosModificacionMasiva").Include(
                            "~/Scripts/App/Filtros.js",
+                           "~/Scripts/App/ControlDeBoletosHelpers.js",
                            "~/Scripts/App/ControlDeBoletosModificacionMasiva.js",
                            "~/Scripts/KendoExtensions.js",
                            "~/Scripts/moment.js"

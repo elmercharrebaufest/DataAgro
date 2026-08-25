@@ -1,5 +1,6 @@
 var ControlDeBoletosModificarContrato = (function () {
     "use strict";
+    var ui = window.ControlDeBoletosUI;
     var config = {
         urls: {
             getProvincias: "/ControlDeBoletos/GetProvincias",
@@ -38,30 +39,10 @@ var ControlDeBoletosModificarContrato = (function () {
     // ======================
 
     function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || "info";
-        $("#mensajeModalTitle").text(titulo);
-        $("#mensajeModalBody").html(
-            '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
-        );
-        $("#mensajeModal").modal("show");
+        ui.showModalMessage(titulo, mensaje, tipo);
     }
     async function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = selector;
-        $select.html('<option value="">' + textoCarga + "</option>");
-        try {
-            var data = await MSExecuteGetOnServerAsync(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
-                });
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown:", error);
-            $select.html('<option value="">Error al cargar</option>');
-        }
+        return ui.loadDropdown(url, selector, textoCarga, textoDefault);
     }
 
     function obtenerRequest() {
