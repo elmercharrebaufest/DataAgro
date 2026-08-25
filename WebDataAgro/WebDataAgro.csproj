@@ -3230,6 +3230,10 @@
   <ItemGroup>
     <Content Include="DocumentacionCopilot\Localidades\Localidad_SAP_Confirma.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="DocumentacionCopilot\Jobs\Jobs_Hangfire_ventana_Sab22h_Dom06h.md" />
+    <Content Include="DocumentacionCopilot\Jobs\Resumen_Gerencial_Apagado_Server_Sab22h_Dom06h.md" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
